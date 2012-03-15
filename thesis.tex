@@ -22,8 +22,14 @@
 % template since I prefer this to some complicated sprawling directory tree with
 % makefiles.
 
+\definecolor{ValidRed}{rgb}{0.5,0,0}
+\definecolor{TrueRed}{rgb}{1,0.6,0.2}
+\definecolor{ValidBlue}{rgb}{0,0,0.5}
+\definecolor{TrueBlue}{rgb}{0.2,0.6,1}
+
 % some useful packages
 \usepackage{times}
+\usepackage{proof}
 \usepackage{fullpage}
 \usepackage{graphicx}
 \usepackage{amsmath}
@@ -118,6 +124,82 @@ My advisor is cool.
 
 
 \chapter{Introduction}
+
+\part{Substructural logic}
+
+\chapter{Focusing intuitionstic logics}
+
+\chapter{Substructural logical specifications}
+
+Logical framework time!
+
+\part{Logical correspondance and approximation}
+
+\chapter{Logical correspondance}
+
+\chapter{Transformations on logical specifications}
+
+\chapter{Linear logical approximation}
+
+\part{Reasoning about substructural logical specifications}
+
+\part{Case studies}
+
+% \chapter{Programming with canonical forms}
+
+% \newcommand{\F}[1]{\ensuremath{F({#1})}}
+% \newcommand{\G}[1]{\ensuremath{G(\textcolor{TrueBlue}{#1})}}
+% \newcommand{\upX}[1]{\ensuremath{{\uparrow}\textcolor{ValidBlue}{#1}}}
+% \newcommand{\downX}[1]{\ensuremath{{\downarrow}\textcolor{ValidRed}{#1}}}
+% \newcommand{\upA}[1]{\ensuremath{{\uparrow}\textcolor{TrueBlue}{#1}}}
+% \newcommand{\downA}[1]{\ensuremath{{\downarrow}\textcolor{TrueRed}{#1}}}
+
+% \newcommand{\valid}[1]{\ensuremath{{\downarrow}\textcolor{ValidBlue}{{#1}\,\mathit{valid}}}}
+% \newcommand{\true}[1]{\ensuremath{{\downarrow}\textcolor{TrueBlue}{{#1}\,\mathit{true}}}}
+
+% \newcommand{\ajseq}[2]{\ensuremath{\mathstrut{#1} \vdash {#2}}}
+% \newcommand{\ajinv}[3]{\ajseq{{#1}; {#2}}{\textcolor{ValidRed}{#3}}}
+% \newcommand{\ajrfoc}[2]{\ajseq{{#1}}{[\textcolor{ValidBlue}{#2}]}}
+% \newcommand{\ajlfoc}[3]{\ajseq{{#1} [{#2}]}{\textcolor{ValidRed}{#3}}}
+% \newcommand{\ajAseq}[3]{\ensuremath{\mathstrut{#1} \vdash {#2}}}
+% \newcommand{\ajAinv}[4]{\ajseq{{#1}; {#2}}{\textcolor{ValidRed}{#3}}}
+% \newcommand{\ajArfoc}[3]{\ajseq{{#1}}{[\textcolor{ValidBlue}{#2}]}}
+% \newcommand{\ajAlfoc}[4]{\ajseq{{#1} [{#2}]}{\textcolor{ValidRed}{#3}}}
+% \newcommand{\ajXseq}[2]{\ensuremath{\mathstrut{#1} \vdash {#2}}}
+% \newcommand{\ajXinv}[3]{\ajseq{{#1}; {#2}}{\textcolor{ValidRed}{#3}}}
+% \newcommand{\ajXrfoc}[2]{\ajseq{{#1}}{[\textcolor{ValidBlue}{#2}]}}
+% \newcommand{\ajXlfoc}[3]{\ajseq{{#1} [{#2}]}{\textcolor{ValidRed}{#3}}}
+
+% \begin{figure}
+% \fbox{\ajXrfoc{\Gamma}{X^+}}
+% \[
+% \infer[x^+_R]
+% {\ajrfoc{\valid{x^+}}{x^+}}
+% {}
+% \qquad
+% \infer[{\downarrow}_{XR}]
+% {\ajXrfoc{\Gamma}{\downX{X^-}}}
+% {\ajXinv{\Gamma}{\cdot}{X^-}}
+% \qquad
+% \infer[G_R]
+% {\ajXrfoc{\Gamma}{\G{A}}}
+% {\ajArfoc{\Gamma}{\cdot}{A}}
+% \]
+
+% \fbox{\ajArfoc{\Gamma}{\Delta}{A^+}}
+% \[
+% \infer[a^+_R]
+% {\ajArfoc{\cdot}{a^+}{a^+}}
+% {}
+% \qquad
+% \infer[{\downarrow}_{AR}]
+% {\ajArfoc{\Gamma}{\Delta}{\downA{A^-}}}
+% {\ajAinv{\Gamma}{\Delta}{\cdot}{A^-}}
+% \]
+
+% \caption{Focused adjoint logic}
+% \end{figure}
+
 \chapter{Conclusion}
 
 %\appendix
