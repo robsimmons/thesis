@@ -14,19 +14,19 @@ Linear logic, which was popularized by Girard \cite{girard87linear},
 treats evidence as an {\it ephemeral} resource, which is generally
 consumed when it is used. Linear logic, like persistent logic, comes
 in classical and intuitionistic flavors. We will favor intuitionistic
-linear logic in part because the propositions of intuitionistic
-linear logic (written $A$, $B$, $C$, \ldots) have a more natural
+linear logic in part because the propositions of intuitionistic linear
+logic (written $A$, $B$, $C$, \ldots) have a more natural
 correspondence with physical resources. Linear conjunction $A \tensor
 B$ represents the resource built from the resources $A$ and $B$; if
-you have both soup {\it and} a sandwich, that resource can be
-represented by the proposition ${\sf soup} \otimes {\sf
+you have both a bowl of soup {\it and} a sandwich, that resource can
+be represented by the proposition ${\sf soup} \otimes {\sf
   sandwich}$. Linear implication $A \lolli B$ represents a resource
 that can interact with another resource $A$ to produce a resource
 $B$. A robot with batteries not included could be represented as the
 resource ${\sf batteries} \lolli {\sf robot}$, and the linear resource
 ${\sf dollars} \lolli {\sf soup} \tensor {\sf sandwich}$ represents
-the ability to use some dollars to obtain lunch but only
-once.\footnote{Conjunction will always bind more tightly than
+the ability to use some dollars to obtain lunch -- but only
+once!\footnote{Conjunction will always bind more tightly than
   implication, so this is equivalent to the proposition ${\sf dollars}
   \lolli ({\sf soup} \tensor {\sf sandwich})$.} Linear logic also has
 a modality ${!}A$ representing a resource that can be used to generate
@@ -40,28 +40,34 @@ components any number of times.
 
 \input{figs/fig-linear.tex}
 
-
-
-
-in classical and intuitionistic varieties; 
-
-varieties) the truth of a proposition is a {\it persistent resource} --
-if we have evidence 
-
-Another name that would work
-is {\it structural} logic. In formal presentations of logic, this
-persistence manifests itself as the so-called {\it structural
-  properties} of hypothetical reasoning -- {\it weakening} (which
-allows hypotheses to go unused), {\it contraction} (which allows
-hypotheses to be duplicated for reuse), and {\it exchange} (which
-enforces that the ordering of hypotheses is not meaningful)
-\cite{gentzen35untersuchungen}.
+The propositions of linear logic, and linear implication in
+particular, capture a notion of state change: we can {\it transition}
+from a state where we have ${\sf batteries}$ and the powered-off robot
+${\sf batteries} \lolli {\sf robot}$ to a state where we have the
+powered on robot ${\sf robot}$. One interpretation of the following derivation
+(which follows the rules in Figure~\ref{fig:linear})
+is that expresses the possibility of this transition:
+\[
+\infer[{\lolli}L]
+{\seq{\Gamma}{{\sf batteries}, {\sf batteries} \lolli {\sf robot}}{{\sf robot}}}
+{\infer[{\it init}^+]
+ {\seq{\Gamma}{{\sf batteries}}{{\sf batteries}}}
+ {}
+ &
+ \infer[{\it init}^+]
+ {\seq{\Gamma}{{\sf robot}}{{\sf robot}}}
+ {}}
+\] 
+There is one unusual aspect to the presentation in Figure~\ref{fig:linear}
+relative to most presentations, which is that we define two separate classes
+of atomic propositions, $p^+$ and $p^-$, and give two identitial rules
+for using them, ${\it init}^+$ and ${\it init}^-$.
 
 Linear logic, popularized by Girard \cite{girard87linear}, is a rich
 logic with an inherent notion of state and stateful change. This
 natural expression of stateful change makes linear logic a plausible
 basis for a logical framework for the formalization of stateful
-systems. 
+systems.
 
 
 The proof theory of linear logic -- both the classical linear logic
@@ -124,3 +130,14 @@ Andreoli's original presentation of linear logic; this system is
 presented in Figure~\ref{fig:focused}.
 
 \section{Positive atomic propositions}
+
+\chapter{Substructural logic}
+
+Another name that would work
+is {\it structural} logic. In formal presentations of logic, this
+persistence manifests itself as the so-called {\it structural
+  properties} of hypothetical reasoning -- {\it weakening} (which
+allows hypotheses to go unused), {\it contraction} (which allows
+hypotheses to be duplicated for reuse), and {\it exchange} (which
+enforces that the ordering of hypotheses is not meaningful)
+\cite{gentzen35untersuchungen}.
