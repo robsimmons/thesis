@@ -1,0 +1,126 @@
+
+\chapter{Linear logic}
+
+Logic as it has been traditionally understood and studied -- both in
+its classical and intuitionstic varities -- treats the truth of a
+proposition as a {\it persistent resource}. That is, if we have
+evidence for the truth of a proposition, we can ignore that evidence
+if it is not needed and reuse the evidence as many times as we need
+to. Throughout this thesis, ``logic as it has been traditionally
+understood as studied'' will be referred to as {\it persistent} logic
+to emphasize its treatment of evidence. 
+
+Linear logic, which was popularized by Girard \cite{girard87linear},
+treats evidence as an {\it ephemeral} resource, which is generally
+consumed when it is used. Linear logic, like persistent logic, comes
+in classical and intuitionstic flavors. We will favor intuitionstic
+linear logic in part because the propositionsions of intuitionstic
+linear logic (written $A$, $B$, $C$, \ldots) have a more natural
+correspondance with physical resources. Linear conjunction $A \tensor
+B$ represents the resource built from the resources $A$ and $B$; if
+you have both soup {\it and} a sandwitch, that resource can be
+represented by the proposition ${\sf soup} \otimes {\sf
+  sandwich}$. Linear implication $A \lolli B$ represents a resource
+that can interact with another resource $A$ to produce a resource
+$B$. A robot with batteries not included could be represented as the
+resource ${\sf batteries} \lolli {\sf robot}$, and the linear resource
+${\sf dollars} \lolli {\sf soup} \tensor {\sf sandwich}$ represents
+the ability to use some dollars to obtain lunch but only
+once.\footnote{Conjunction will always bind more tightly than
+  implication, so this is equivalent to the proposition ${\sf dollars}
+  \lolli ({\sf soup} \tensor {\sf sandwich})$.} Linear logic also has
+a modality ${!}A$ representing a resource that can be used to generate
+any number of $A$ resources, including zero. The Panera ``You Pick
+Two'' menu might be represented as
+\[ {!}({\sf dollars} \lolli {\sf soup} \tensor {\sf sandwich}) \otimes
+{!}({\sf dollars} \lolli {\sf soup} \tensor {\sf salad}) \otimes
+{!}({\sf dollars} \lolli {\sf sandwich} \tensor {\sf salad}),\] as the
+menu gives you the opportunity to trade dollars for two of the three
+components any number of times.
+
+\input{figs/fig-linear.tex}
+
+
+
+
+in classical and intuitionstic varieties; 
+
+varities) the truth of a proposition is a {\it persistent resource} --
+if we have evidence 
+
+Another name that would work
+is {\it structural} logic. In formal presentations of logic, this
+persistence manifests itself as the so-called {\it structural
+  properties} of hypothetical reasoning -- {\it weakening} (which
+allows hypotheses to go unused), {\it contraction} (which allows
+hypotheses to be duplicated for reuse), and {\it exchange} (which
+enforces that the ordering of hypotheses is not meaningful)
+\cite{gentzen35untersuchungen}.
+
+Linear logic, popularized by Girard \cite{girard87linear}, is a rich
+logic with an inherent notion of state and stateful change. This
+natural expression of stateful change makes linear logic a plausible
+basis for a logical framework for the formalization of stateful
+systems. 
+
+
+The proof theory of linear logic -- both the classical linear logic
+favored by Girard and the intuitionstic variant -- are by now
+relatively standard. The presentation of the so-called {\it
+  multiplicative, exponential} fragment of intuitionstic linear logic
+(or {\it MELL}) in Figure~\ref{fig:linear} corresponds to Andreoli's
+dyadic system \cite{andreoli92logic}, Barber's dual intuitionstic
+linear logic \cite{barber96dual}, and Chang et al.'s judgmental
+analysis of intuitionstic linear logic \cite{chang03judgmental}.  The
+only oddity in this presentation is that there are two separate
+categories of atomic proposition, named {\it positive} ($p^+$) and
+{\it negative} ($p^-$); the two initial rules ${\it init}^+$ and ${\it
+  init}^-$ demand that both are treated the same way.
+
+Linear logic, in both its intuitionstic and classical variants, has
+many uses throughout logic and computer science. While this thesis
+will make some general observations about, and contributions to, the
+proof theory of intuitionstic substructural logic,\footnote{Linear logic is
+just one of the many substructural logics, a point we will return to
+later.} I do so in pursuit of a very specific goal: I want to {\it encode
+stateful evolving systems in substructural logic.}
+
+\section{Focused logic and synthetic inference rules}
+
+
+ This can be phrased
+in one of two ways: we can say that there are now three judgment
+forms:
+\begin{itemize}
+\item $\mildrfoc{\Gamma}{\Delta}{C}$ (the {\it right focus} judgment),
+\item $\mildinv{\Gamma}{\Delta}{C}$ (the {\it inversion} judgment), and
+\item $\mildlfoc{\Gamma}{\Delta}{A}{C}$ (the {\it left focus} judgment).
+\end{itemize}
+
+\[
+\infer[{\it focus}R]
+{\seq{\Gamma}{\Delta}{A^+}}
+{\seq{\Gamma}{\Delta}{[A^+]}}
+\qquad
+\infer[{\it focus}L]
+{\seq{\Gamma}{\Delta,A^-}{C}}
+{\seq{\Gamma}{\Delta,[A^-]}{C}}
+\]\[
+\infer[{\it blur}R]
+{\seq{\Gamma}{\Delta}{[A^-]}}
+{\seq{\Gamma}{\Delta}{A^-}}
+\qquad
+\infer[{\it blur}L]
+{\seq{\Gamma}{\Delta, [A^+]}{C}}
+{\seq{\Gamma}{\Delta, A^+}{C}}
+\]
+
+
+The story of {\it focusing} in linear logic is not quite so 
+obviously settled, however, especially when it comes to the treatment
+of atoms. To try and explan why, we will first consider at 
+an intuitionstic system that is, I believe, faithfully adapted from 
+Andreoli's original presentation of linear logic; this system is
+presented in Figure~\ref{fig:focused}.
+
+\section{Positive atomic propositions}

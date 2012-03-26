@@ -1,0 +1,30 @@
+\usepackage{latexsym}
+\usepackage{amssymb}            % for \multimap (-o)
+\usepackage{stmaryrd}           % for \binampersand (&), \bindnasrepma (\paar)
+
+% symbols of linear logic
+\newcommand{\lolli}{\multimap}
+\newcommand{\tensor}{\otimes}
+\newcommand{\with}{\mathbin{\binampersand}}
+\newcommand{\paar}{\mathbin{\bindnasrepma}}
+\newcommand{\one}{\mathbf{1}}
+\newcommand{\zero}{\mathbf{0}}
+\newcommand{\bang}{{!}}
+\newcommand{\whynot}{{?}}
+\newcommand{\bilolli}{\mathrel{\raisebox{1pt}{\ensuremath{\scriptstyle\circ}}{\lolli}}}
+% \oplus, \top, \bot
+
+% judgments of linear logic
+\newcommand{\seq}[3]{{#1};{#2} \longrightarrow {#3} \mathstrut}
+
+\newcommand{\mildrfoc}[3]{{#1};{#2} \longrightarrow [{#3}] \mathstrut}
+\newcommand{\mildinv}[3]{{#1};{#2} \longrightarrow {#3} \mathstrut}
+\newcommand{\mildlfoc}[4]{{#1};{#2}, [{#3}] \longrightarrow {#4} \mathstrut}
+
+
+\newcommand{\urfoc}[3]{{#1};{#2} \longrightarrow [{#3}] \mathstrut}
+\newcommand{\ulfoc}[4]{{#1};{#2} \,[#3] \longrightarrow {#4} \mathstrut}
+\newcommand{\uinv}[4]{{#1};{#2};{#3} \longrightarrow {#4} \mathstrut}
+
+\newcommand{\stableR}[1]{{#1}\,\mathit{stable_R} \mathstrut}
+\newcommand{\stableL}[1]{{#1}\,\mathit{stable_L} \mathstrut}

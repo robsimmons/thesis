@@ -33,6 +33,8 @@
 \usepackage{fullpage}
 \usepackage{graphicx}
 \usepackage{amsmath}
+\usepackage{amssymb}
+\input{macros.tex}
 \usepackage[numbers,sort]{natbib}
 \usepackage[backref,pageanchor=true,plainpages=false, pdfpagelabels, bookmarks,bookmarksnumbered,
 %pdfborder=0 0 0,  %removes outlines around hyper links in online display
@@ -130,9 +132,10 @@ My advisor is cool.
 
 \part{Substructural logic}
 
-\chapter{Substructural intuitionstic logics}
+% Focusing substructural logics
+\input{chapter-foc.tex}
 
-\chapter{Focusing substructural logics}
+\chapter{Substructural intuitionstic logics}
 
 \section{Explicit shifts in focusing}
 
@@ -254,7 +257,7 @@ Logical framework time!
 \renewcommand{\bibsection}{\chapter{\bibname}}
 %\newcommand{\bibpreamble}{This text goes between the ``Bibliography''
 %  header and the actual list of references}
-\bibliographystyle{plainnat}
-\bibliography{register} %your bib file
+\bibliographystyle{alpha}
+\bibliography{ref} %your bib file
 
 \end{document}
