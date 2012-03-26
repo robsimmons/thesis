@@ -1,0 +1,66 @@
+\begin{figure}[t]
+\begin{tabbing}
+\quad $A ::= p^+ \mid p^- \mid {!}A \mid A \lolli B \mid \one \mid A \tensor B$\\
+\quad $\Gamma ::= \cdot \mid \Gamma, A$ \qquad \= {\it (multiset)}\\
+\quad $\Delta ::= \cdot \mid \Delta, A$ \> {\it (multiset)}\\
+\end{tabbing}
+%
+%
+\quad \fbox{$\seq{\Gamma}{\Delta}{A}$}
+\[
+\infer[{\it init}^+]
+{\seq{\Gamma}{p^+}{p^+}}
+{}
+\qquad
+\infer[{\it init}^-]
+{\seq{\Gamma}{p^-}{p^-}}
+{}
+\qquad
+\infer[{\it copy}]
+{\seq{\Gamma, A}{\Delta}{C}}
+{\seq{\Gamma, A}{\Delta, A}{C}}
+%
+\]\[
+%
+\infer[{!}_R]
+{\seq{\Gamma}{\cdot}{{!}A}}
+{\seq{\Gamma}{\cdot}{A}}
+\qquad
+\infer[{!}_L]
+{\seq{\Gamma}{\Delta, {!}A}{C}}
+{\seq{\Gamma, A}{\Delta}{C}}
+\qquad
+\infer[\one_R]
+{\seq{\Gamma}{\cdot}{\one}}
+{}
+\qquad
+\infer[\one_L]
+{\seq{\Gamma}{\Delta, \one}{C}}
+{\seq{\Gamma}{\Delta}{C}}
+\]\[
+%
+\infer[{\tensor}_R]
+{\seq{\Gamma}{\Delta_1,\Delta_2}{A \tensor B}}
+{\seq{\Gamma}{\Delta_1}{A}
+ &
+ \seq{\Gamma}{\Delta_2}{B}}
+\qquad
+\infer[{\tensor}_L]
+{\seq{\Gamma}{\Delta, A \tensor B}{C}}
+{\seq{\Gamma}{\Delta, A, B}{C}}
+\]\[
+%
+\infer[{\lolli}_R]
+{\seq{\Gamma}{\Delta}{A \lolli B}}
+{\seq{\Gamma}{\Delta, A}{B}}
+\qquad
+\infer[{\lolli}_L]
+{\seq{\Gamma}{\Delta_1,\Delta_2, A \lolli B}{C}}
+{\seq{\Gamma}{\Delta_1}{A}
+ &
+ \seq{\Gamma}{\Delta_2, B}{C}}
+%
+\]
+\caption{Intuitionstic linear logic}
+\label{fig:linear}
+\end{figure}
