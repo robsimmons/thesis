@@ -8,7 +8,7 @@ evidence for the truth of a proposition, we can ignore that evidence
 if it is not needed and reuse the evidence as many times as we need
 to. Throughout this thesis, ``logic as it has been traditionally
 understood as studied'' will be referred to as {\it persistent} logic
-to emphasize its treatment of evidence. 
+to emphasize this treatment of evidence. 
 
 Linear logic, which was popularized by Girard \cite{girard87linear},
 treats evidence as an {\it ephemeral} resource, which is generally
@@ -23,8 +23,8 @@ be represented by the proposition ${\sf soup} \otimes {\sf
   sandwich}$. Linear implication $A \lolli B$ represents a resource
 that can interact with another resource $A$ to produce a resource
 $B$. A robot with batteries not included could be represented as the
-resource ${\sf batteries} \lolli {\sf robot}$, and the linear resource
-${\sf dollars} \lolli {\sf soup} \tensor {\sf sandwich}$ represents
+resource $({\sf batteries} \lolli {\sf robot})$, and the linear resource
+$({\sf dollars} \lolli {\sf soup} \tensor {\sf sandwich})$ represents
 the ability to use some dollars to obtain lunch -- but only
 once!\footnote{Conjunction will always bind more tightly than
   implication, so this is equivalent to the proposition ${\sf dollars}
@@ -35,53 +35,123 @@ Two'' menu might be represented as
 \[ {!}({\sf dollars} \lolli {\sf soup} \tensor {\sf sandwich}) \otimes
 {!}({\sf dollars} \lolli {\sf soup} \tensor {\sf salad}) \otimes
 {!}({\sf dollars} \lolli {\sf sandwich} \tensor {\sf salad}),\] as the
-menu gives you the opportunity to trade dollars for two of the three
+menu gives you the opportunity to exchange dollars for two of the three
 components any number of times.
 
 \input{figs/fig-linear.tex}
 
+Figure~\ref{fig:linear} presents a formal system for linear logic, in
+particular the so-called {\it multiplicative, exponential} fragment of
+intuitionistic linear logic (or {\it MELL}). There is one quirk to
+this presentation: I've presented two identical rules for atomic
+propositions, $p^+$ and $p^-$, and given two identitial rules for using
+them, ${\it init}^+$ and ${\it init}^-$.
+
+There is one unusual aspect to this presentation: 
+There is one unusual aspect to the presentation in
+Figure~\ref{fig:linear} relative to most presentations of linear
+logic, which is that we define two separate classes of atomic
+propositions, $p^+$ and $p^-$, and give two identitial rules for using
+them, ${\it init}^+$ and ${\it init}^-$. Other than that,
+Figure~\ref{fig:linear} is a standard presentation of the so-called
+{\it multiplicative, exponential} fragment of intuitionistic linear
+logic (or {\it MELL}) in Figure~\ref{fig:linear}. It corresponds to
+Andreoli's dyadic system \cite{andreoli92logic}, Barber's dual
+intuitionistic linear logic \cite{barber96dual}, and Chang et al.'s
+judgmental analysis of intuitionistic linear logic
+\cite{chang03judgmental}.  
+
 The propositions of linear logic, and linear implication in
 particular, capture a notion of state change: we can {\it transition}
-from a state where we have ${\sf batteries}$ and the powered-off robot
-${\sf batteries} \lolli {\sf robot}$ to a state where we have the
-powered on robot ${\sf robot}$. One interpretation of the following derivation
-(which follows the rules in Figure~\ref{fig:linear})
-is that expresses the possibility of this transition:
+from a state where we have both ${\sf batteries}$ and the powered-off
+robot (represented, as before, by the proposition ${\sf batteries}
+\lolli {\sf robot}$) to a state where we have the powered on robot
+(represented by the proposition ${\sf robot}$). In other words, the
+proposition
+%
+\[{\sf batteries} \otimes ({\sf batteries} \lolli {\sf robot}) \lolli
+{\sf robot}\] 
+%
+is provable in linear logic. These transitions can be chained
+together in a natural way as well: if we start out with ${\sf
+  dollars}$ instead of ${\sf batteries}$ but we also have the
+persistent ability to turn ${\sf dollars}$ into ${\sf batteries}$
+(just like we turned them into a bowl of soup and a salad at Panera),
+then we can ultimately get our working robot as well. This boils down
+to the statement that it is possible to prove
+\[{!}({\sf dollars} \lolli {\sf batteries}) \otimes {\sf dollars}
+\otimes ({\sf batteries} \lolli {\sf robot}) \lolli {\sf robot}\] in
+linear logic; a derivation of this proposition is given in
+Figure~\ref{fig:unfocused-robot}.\footnote{In Chapter XXX, I will
+  argue that this view isn't quite precise enough, and that the most
+  natural representation of state change from the state $A$ to the
+  state $B$ isn't really captured by derivations of the proposition $A
+  \lolli B$ or by derivations of the hypothetical judgment
+  $\seq{\cdot}{A}{B}$.  However, this view remains a simple and useful
+  one; Cervesato and Scedrov cover it thoroughly in the context of
+  intuitionstic linear logic \cite{cervesato09relating}.}
+
+If we have ${\sf dollars}$ instead of 
+${\sf batteries}$ but the persistent context $\Gamma$ contains the 
+persistent proposition $({\sf dollars} \lolli {\sf batteries})$, we can
+transition, with a little bit more work
+
+We view see the following derivation, which
+follows the rules for linear logic given in Figure~\ref{fig:linear},
+as justifying or witnessing that transition:
+\begin{figure}
 \[
 \infer[{\lolli}L]
-{\seq{\Gamma}{{\sf batteries}, {\sf batteries} \lolli {\sf robot}}{{\sf robot}}}
-{\infer[{\it init}^+]
- {\seq{\Gamma}{{\sf batteries}}{{\sf batteries}}}
- {}
+{\seq{\cdot}{\cdot}{{!}({\sf dollars} \lolli {\sf batteries}) \otimes
+                    {\sf dollars} \otimes 
+                    ({\sf batteries} \lolli {\sf robot}) \lolli {\sf robot}}}
+{\infer[{\otimes}L]
+{\seq{\cdot}{{!}({\sf dollars} \lolli {\sf batteries}) \otimes
+                    {\sf dollars} \otimes 
+                    ({\sf batteries} \lolli {\sf robot})}{{\sf robot}}}
+{\infer[{!}L]
+{\seq{\cdot}{{!}({\sf dollars} \lolli {\sf batteries}),
+                    {\sf dollars} \otimes 
+                    ({\sf batteries} \lolli {\sf robot})}{{\sf robot}}}
+{\infer[{\otimes}L]
+{\seq{\Gamma}{{\sf dollars} \otimes 
+                    ({\sf batteries} \lolli {\sf robot})}{{\sf robot}}}
+{\infer[{\lolli}L]
+{\seq{\Gamma}{{\sf dollars}, {\sf batteries} \lolli {\sf robot}}{{\sf robot}}}
+{\infer[{\it copy}]
+ {\seq{\Gamma}{{\sf dollars}}{{\sf batteries}}}
+ {\infer[{\lolli}L] 
+  {\seq{\Gamma}{{\sf dollars}, {\sf dollars} \lolli {\sf batteries}}{{\sf batteries}}}
+  {\infer[{\it init}^+]
+   {\seq{\Gamma}{{\sf dollars}}{{\sf dollars}}}
+   {}
+   &
+   \infer[{\it init}^+]
+   {\seq{\Gamma}{{\sf batteries}}{{\sf batteries}}}
+   {}}}
  &
  \infer[{\it init}^+]
  {\seq{\Gamma}{{\sf robot}}{{\sf robot}}}
- {}}
+ {}}}}}}
 \] 
-There is one unusual aspect to the presentation in Figure~\ref{fig:linear}
-relative to most presentations, which is that we define two separate classes
-of atomic propositions, $p^+$ and $p^-$, and give two identitial rules
-for using them, ${\it init}^+$ and ${\it init}^-$.
+\caption{Proving that a transition is possible 
+(where we let $\Gamma = {\sf dollars} \lolli {\sf batteries}$).}
+\label{fig:unfocused-robot}
+\end{figure}
+It is precisely because linear logic contains this natural notion of
+state and state transition that a rich line of work, dating back to
+Chirmar's Ph.D. thesis, has sought to use linear logic as a {\it
+  logical framework} for describing stateful systems
+\cite{chirimar95proof,cervesato02linear,
+  cervesato02concurrent,pfenning04substructural,miller09formalizing,
+  pfenning09substructural,cervesato09relating}.
 
-Linear logic, popularized by Girard \cite{girard87linear}, is a rich
-logic with an inherent notion of state and stateful change. This
-natural expression of stateful change makes linear logic a plausible
-basis for a logical framework for the formalization of stateful
-systems.
+While linear logic has many uses in computer science, I'll be
+exclusively concentrating on its use as a logical framework for
+describing stateful systems. Logical frameworks use the {\it
+  structure} of proofs in a logic to describe
 
-
-The proof theory of linear logic -- both the classical linear logic
-favored by Girard and the intuitionistic variant -- are by now
-relatively standard. The presentation of the so-called {\it
-  multiplicative, exponential} fragment of intuitionistic linear logic
-(or {\it MELL}) in Figure~\ref{fig:linear} corresponds to Andreoli's
-dyadic system \cite{andreoli92logic}, Barber's dual intuitionistic
-linear logic \cite{barber96dual}, and Chang et al.'s judgmental
-analysis of intuitionistic linear logic \cite{chang03judgmental}.  The
-only oddity in this presentation is that there are two separate
-categories of atomic proposition, named {\it positive} ($p^+$) and
-{\it negative} ($p^-$); the two initial rules ${\it init}^+$ and ${\it
-  init}^-$ demand that both are treated the same way.
+ To that end, I will describe 
 
 Linear logic, in both its intuitionistic and classical variants, has
 many uses throughout logic and computer science. While this thesis
