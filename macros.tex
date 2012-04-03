@@ -1,6 +1,7 @@
 \usepackage{latexsym}
 \usepackage{amssymb}            % for \multimap (-o)
 \usepackage{stmaryrd}           % for \binampersand (&), \bindnasrepma (\paar)
+\usepackage{wasysym}            % for \ocircle
 
 % symbols of linear logic
 \newcommand{\lolli}{\multimap}
@@ -14,12 +15,31 @@
 \newcommand{\bilolli}{\mathrel{\raisebox{1pt}{\ensuremath{\scriptstyle\circ}}{\lolli}}}
 % \oplus, \top, \bot
 
+% symbols of ordered logic
+\newcommand{\fuse}{\mathbin{\bullet}}
+\newcommand{\righti}{\twoheadrightarrow}
+\newcommand{\lefti}{\rightarrowtail}
+\newcommand{\gnab}{\mbox{\textexclamdown}}
+\newcommand{\islax}[1]{{#1}~{\it lax}}
+\newcommand{\istrue}[1]{{#1}~{\it true}}
+
+
 % judgments of linear logic
 \newcommand{\seq}[3]{{#1};{#2} \longrightarrow {#3} \mathstrut}
 
-\newcommand{\mildrfoc}[3]{{#1};{#2} \longrightarrow [{#3}] \mathstrut}
-\newcommand{\mildinv}[3]{{#1};{#2} \longrightarrow {#3} \mathstrut}
-\newcommand{\mildlfoc}[4]{{#1};{#2}, [{#3}] \longrightarrow {#4} \mathstrut}
+\newcommand{\mildseq}[3]{{#1};{#2} \vdash {#3} \mathstrut}
+\newcommand{\mildrfoc}[3]{{#1};{#2} \vdash [{#3}] \mathstrut}
+\newcommand{\mildinv}[3]{{#1};{#2} \vdash {#3} \mathstrut}
+\newcommand{\mildlfoc}[4]{{#1};{#2}, [{#3}] \vdash {#4} \mathstrut}
+
+\newcommand{\ofirstseq}[5]{{#1};{#2};{#3};{#4} \Rightarrow {#5} \mathstrut}
+\newcommand{\oseq}[4]{{#1};{#2};{#3} \Rightarrow {#4} \mathstrut}
+\newcommand{\oiseq}[2]{\oseq{#1}{\cdot}{/{#2}/}{/{#2}/}}
+\newcommand{\orseq}[4]{\oseq{#1}{#2}{{#3}}{/{#4}/}}
+\newcommand{\otseq}[4]{\oseq{#1}{#2}{{#3}}{\istrue{#4}}}
+\newcommand{\olseq}[5]{\oseq{#1}{#2}{{#3}/{#4}/{#5}}{U}}
+\newcommand{\opseq}[4]{\oseq{#1}{#2}{{#3},{#4}}{U}}
+
 
 
 \newcommand{\urfoc}[3]{{#1};{#2} \longrightarrow [{#3}] \mathstrut}

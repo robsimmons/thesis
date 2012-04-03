@@ -1,0 +1,87 @@
+\begin{figure}[t]
+\begin{tabbing}
+\quad $A$ \,\, \= $::= p^+ \mid p^- \mid {!}A \mid A \lolli B \mid \one \mid A \tensor B$\\
+\quad $A^+$ \> $::= p^+ \mid {!}A \mid \one \mid A \otimes B$\\
+\quad $A^-$ \> $::= p^- \mid A \lolli B$\\
+\quad $\Gamma$ \> $::= \cdot \mid \Gamma, A$ \qquad\qquad \= {\it (multiset)}\\
+\quad $\Delta$ \> $::= \cdot \mid \Delta, A \mid \Delta, [A]$ \> {\it (multiset)}\\
+\quad $U$ \> $::= A \mid [ A ]$\\
+\end{tabbing}
+%
+%
+\quad \fbox{$\mildseq{\Gamma}{\Delta}{U}$}
+\[
+\infer[{\it focus}_R]
+{\mildseq{\Gamma}{\Delta}{A^+}}
+{\mildseq{\Gamma}{\Delta}{[A^+]}}
+\qquad
+\infer[{\it blur}_L]
+{\mildseq{\Gamma}{\Delta, [A^+]}{U}}
+{\mildseq{\Gamma}{\Delta, A^+}{U}}
+\]
+\[
+\infer[{\it blur}_R]
+{\mildseq{\Gamma}{\Delta}{[A^-]}}
+{\mildseq{\Gamma}{\Delta}{A^-}}
+\qquad
+\infer[{\it focus}_L]
+{\mildseq{\Gamma}{\Delta,A^-}{U}}
+{\mildseq{\Gamma}{\Delta,[A^-]}{U}}
+\]
+\[
+\infer[{\it init}^+]
+{\mildseq{\Gamma}{p^+}{[p^+]}}
+{}
+\qquad
+\infer[{\it init}^-]
+{\mildseq{\Gamma}{[p^-]}{p^-}}
+{}
+\qquad
+\infer[{\it copy}]
+{\mildseq{\Gamma, A}{\Delta}{U}}
+{\mildseq{\Gamma, A}{\Delta, [A]}{U}}
+%
+\]\[
+%
+\infer[{!}_R]
+{\mildseq{\Gamma}{\cdot}{[{!}A]}}
+{\mildseq{\Gamma}{\cdot}{A}}
+\qquad
+\infer[{!}_L]
+{\mildseq{\Gamma}{\Delta, {!}A}{U}}
+{\mildseq{\Gamma, A}{\Delta}{U}}
+\qquad
+\infer[\one_R]
+{\mildseq{\Gamma}{\cdot}{[\one]}}
+{}
+\qquad
+\infer[\one_L]
+{\mildseq{\Gamma}{\Delta, \one}{U}}
+{\mildseq{\Gamma}{\Delta}{U}}
+\]\[
+%
+\infer[{\tensor}_R]
+{\mildseq{\Gamma}{\Delta_1,\Delta_2}{[A \tensor B]}}
+{\mildseq{\Gamma}{\Delta_1}{[A]}
+ &
+ \mildseq{\Gamma}{\Delta_2}{[B]}}
+\qquad
+\infer[{\tensor}_L]
+{\mildseq{\Gamma}{\Delta, A \tensor B}{U}}
+{\mildseq{\Gamma}{\Delta, A, B}{U}}
+\]\[
+%
+\infer[{\lolli}_R]
+{\mildseq{\Gamma}{\Delta}{A \lolli B}}
+{\mildseq{\Gamma}{\Delta, A}{B}}
+\qquad
+\infer[{\lolli}_L]
+{\mildseq{\Gamma}{\Delta_1,\Delta_2, [A \lolli B]}{U}}
+{\mildseq{\Gamma}{\Delta_1}{[A]}
+ &
+ \mildseq{\Gamma}{\Delta_2, [B]}{U}}
+%
+\]
+\caption{Focused intuitionstic linear logic}
+\label{fig:kaustuv-focused}
+\end{figure}

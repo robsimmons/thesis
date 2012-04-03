@@ -16,71 +16,66 @@ consumed when it is used. Linear logic, like persistent logic, comes
 in classical and intuitionistic flavors. We will favor intuitionistic
 linear logic in part because the propositions of intuitionistic linear
 logic (written $A$, $B$, $C$, \ldots) have a more natural
-correspondence with physical resources. Linear conjunction $A \tensor
-B$ represents the resource built from the resources $A$ and $B$; if
-you have both a bowl of soup {\it and} a sandwich, that resource can
-be represented by the proposition ${\sf soup} \otimes {\sf
-  sandwich}$. Linear implication $A \lolli B$ represents a resource
-that can interact with another resource $A$ to produce a resource
-$B$. A robot with batteries not included could be represented as the
-resource $({\sf batteries} \lolli {\sf robot})$, and the linear resource
-$({\sf dollars} \lolli {\sf soup} \tensor {\sf sandwich})$ represents
-the ability to use some dollars to obtain lunch -- but only
-once!\footnote{Conjunction will always bind more tightly than
-  implication, so this is equivalent to the proposition ${\sf dollars}
-  \lolli ({\sf soup} \tensor {\sf sandwich})$.} Linear logic also has
-a modality ${!}A$ representing a resource that can be used to generate
-any number of $A$ resources, including zero. The Panera ``You Pick
-Two'' menu might be represented as
-\[ {!}({\sf dollars} \lolli {\sf soup} \tensor {\sf sandwich}) \otimes
-{!}({\sf dollars} \lolli {\sf soup} \tensor {\sf salad}) \otimes
-{!}({\sf dollars} \lolli {\sf sandwich} \tensor {\sf salad}),\] as the
-menu gives you the opportunity to exchange dollars for two of the three
-components any number of times.
+correspondence with our physical intuitions about consumable
+resources. Linear conjunction $A \tensor B$ represents the resource
+built from the resources $A$ and $B$; if you have both a bowl of soup
+{\it and} a sandwich, that resource can be represented by the
+proposition ${\sf soup} \otimes {\sf sandwich}$. Linear implication $A
+\lolli B$ represents a resource that can interact with another
+resource $A$ to produce a resource $B$. A robot with batteries not
+included could be represented as the resource $({\sf battery} \lolli
+{\sf robot})$, and the linear resource $({\sf 6bucks} \lolli {\sf
+  soup} \tensor {\sf sandwich})$ represents the ability to use \$6 to
+obtain lunch -- but only once!\footnote{Conjunction will always bind
+  more tightly than implication, so this is equivalent to the
+  proposition ${\sf 6bucks} \lolli ({\sf soup} \tensor {\sf
+    sandwich})$.} Linear logic also has a modality ${!}A$ representing
+a resource that can be used to generate any number of $A$ resources,
+including zero. The Panera ``You Pick Two'' menu might be represented
+as
+\[ {!}({\sf 6bucks} \lolli {\sf soup} \tensor {\sf sandwich}) \otimes
+{!}({\sf 6bucks} \lolli {\sf soup} \tensor {\sf salad}) \otimes
+{!}({\sf 6bucks} \lolli {\sf sandwich} \tensor {\sf salad}),\] as the
+menu gives you the opportunity to exchange dollars for two distinct
+members of the set $\{ {\sf soup}, {\sf salad}, {\sf sandwich} \}$
+any number of times.
 
 \input{figs/fig-linear.tex}
 
-Figure~\ref{fig:linear} presents a formal system for linear logic, in
-particular the so-called {\it multiplicative, exponential} fragment of
-intuitionistic linear logic (or {\it MELL}). There is one quirk to
+Figure~\ref{fig:linear} presents a sequent calculus for linear logic,
+in particular the so-called {\it multiplicative, exponential} fragment
+of intuitionistic linear logic (or {\it MELL}). There is one quirk to
 this presentation: I've presented two identical rules for atomic
-propositions, $p^+$ and $p^-$, and given two identitial rules for using
-them, ${\it init}^+$ and ${\it init}^-$.
+propositions, $p^+$ and $p^-$, and given two identitial rules for
+using them, ${\it init}^+$ and ${\it init}^-$. Other than that,
+Figure~\ref{fig:linear} is a standard presentation. It corresponds
+closely to Andreoli's dyadic system \cite{andreoli92logic}, Barber's
+dual intuitionistic linear logic \cite{barber96dual}, and Chang et
+al.'s judgmental analysis of intuitionistic linear logic
+\cite{chang03judgmental}.
 
-There is one unusual aspect to this presentation: 
-There is one unusual aspect to the presentation in
-Figure~\ref{fig:linear} relative to most presentations of linear
-logic, which is that we define two separate classes of atomic
-propositions, $p^+$ and $p^-$, and give two identitial rules for using
-them, ${\it init}^+$ and ${\it init}^-$. Other than that,
-Figure~\ref{fig:linear} is a standard presentation of the so-called
-{\it multiplicative, exponential} fragment of intuitionistic linear
-logic (or {\it MELL}) in Figure~\ref{fig:linear}. It corresponds to
-Andreoli's dyadic system \cite{andreoli92logic}, Barber's dual
-intuitionistic linear logic \cite{barber96dual}, and Chang et al.'s
-judgmental analysis of intuitionistic linear logic
-\cite{chang03judgmental}.  
+\subsection*{Transitions in linear logic}
 
-The propositions of linear logic, and linear implication in
-particular, capture a notion of state change: we can {\it transition}
-from a state where we have both ${\sf batteries}$ and the powered-off
-robot (represented, as before, by the proposition ${\sf batteries}
-\lolli {\sf robot}$) to a state where we have the powered on robot
-(represented by the proposition ${\sf robot}$). In other words, the
-proposition
+The propositions of intuitionstic linear logic, and linear implication
+in particular, capture a notion of state change: we can {\it
+  transition} from a state where we have both a ${\sf battery}$ and
+the battery-less robot (represented, as before, by the proposition
+${\sf battery} \lolli {\sf robot}$) to a state where we have the
+powered on robot (represented by the proposition ${\sf robot}$). In
+other words, the proposition
 %
-\[{\sf batteries} \otimes ({\sf batteries} \lolli {\sf robot}) \lolli
+\[{\sf battery} \otimes ({\sf battery} \lolli {\sf robot}) \lolli
 {\sf robot}\] 
 %
 is provable in linear logic. These transitions can be chained
-together in a natural way as well: if we start out with ${\sf
-  dollars}$ instead of ${\sf batteries}$ but we also have the
-persistent ability to turn ${\sf dollars}$ into ${\sf batteries}$
-(just like we turned them into a bowl of soup and a salad at Panera),
+together as well: if we start out with ${\sf
+  6bucks}$ instead of ${\sf battery}$ but we also have the
+persistent ability to turn ${\sf 6bucks}$ into a ${\sf battery}$ --
+just like we turned \$6 into a bowl of soup and a salad at Panera --
 then we can ultimately get our working robot as well. This boils down
 to the statement that it is possible to prove
-\[{!}({\sf dollars} \lolli {\sf batteries}) \otimes {\sf dollars}
-\otimes ({\sf batteries} \lolli {\sf robot}) \lolli {\sf robot}\] in
+\[{!}({\sf 6bucks} \lolli {\sf battery}) \otimes {\sf 6bucks}
+\otimes ({\sf battery} \lolli {\sf robot}) \lolli {\sf robot}\] in
 linear logic; a derivation of this proposition is given in
 Figure~\ref{fig:unfocused-robot}.\footnote{In Chapter XXX, I will
   argue that this view isn't quite precise enough, and that the most
@@ -91,43 +86,35 @@ Figure~\ref{fig:unfocused-robot}.\footnote{In Chapter XXX, I will
   one; Cervesato and Scedrov cover it thoroughly in the context of
   intuitionstic linear logic \cite{cervesato09relating}.}
 
-If we have ${\sf dollars}$ instead of 
-${\sf batteries}$ but the persistent context $\Gamma$ contains the 
-persistent proposition $({\sf dollars} \lolli {\sf batteries})$, we can
-transition, with a little bit more work
-
-We view see the following derivation, which
-follows the rules for linear logic given in Figure~\ref{fig:linear},
-as justifying or witnessing that transition:
 \begin{figure}
 \[
-\infer[{\lolli}L]
-{\seq{\cdot}{\cdot}{{!}({\sf dollars} \lolli {\sf batteries}) \otimes
-                    {\sf dollars} \otimes 
-                    ({\sf batteries} \lolli {\sf robot}) \lolli {\sf robot}}}
-{\infer[{\otimes}L]
-{\seq{\cdot}{{!}({\sf dollars} \lolli {\sf batteries}) \otimes
-                    {\sf dollars} \otimes 
-                    ({\sf batteries} \lolli {\sf robot})}{{\sf robot}}}
-{\infer[{!}L]
-{\seq{\cdot}{{!}({\sf dollars} \lolli {\sf batteries}),
-                    {\sf dollars} \otimes 
-                    ({\sf batteries} \lolli {\sf robot})}{{\sf robot}}}
-{\infer[{\otimes}L]
-{\seq{\Gamma}{{\sf dollars} \otimes 
-                    ({\sf batteries} \lolli {\sf robot})}{{\sf robot}}}
-{\infer[{\lolli}L]
-{\seq{\Gamma}{{\sf dollars}, {\sf batteries} \lolli {\sf robot}}{{\sf robot}}}
+\infer[{\lolli}_R]
+{\seq{\cdot}{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}) \otimes
+                    {\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot}) \lolli {\sf robot}}}
+{\infer[{\otimes}_L]
+{\seq{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}) \otimes
+                    {\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
+{\infer[{!}_L]
+{\seq{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}),
+                    {\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
+{\infer[{\otimes}_L]
+{\seq{\Gamma}{{\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
+{\infer[{\lolli}_L]
+{\seq{\Gamma}{{\sf 6bucks}, {\sf battery} \lolli {\sf robot}}{{\sf robot}}}
 {\infer[{\it copy}]
- {\seq{\Gamma}{{\sf dollars}}{{\sf batteries}}}
- {\infer[{\lolli}L] 
-  {\seq{\Gamma}{{\sf dollars}, {\sf dollars} \lolli {\sf batteries}}{{\sf batteries}}}
+ {\seq{\Gamma}{{\sf 6bucks}}{{\sf battery}}}
+ {\infer[{\lolli}_L] 
+  {\seq{\Gamma}{{\sf 6bucks}, {\sf 6bucks} \lolli {\sf battery}}{{\sf battery}}}
   {\infer[{\it init}^+]
-   {\seq{\Gamma}{{\sf dollars}}{{\sf dollars}}}
+   {\seq{\Gamma}{{\sf 6bucks}}{{\sf 6bucks}}}
    {}
    &
    \infer[{\it init}^+]
-   {\seq{\Gamma}{{\sf batteries}}{{\sf batteries}}}
+   {\seq{\Gamma}{{\sf battery}}{{\sf battery}}}
    {}}}
  &
  \infer[{\it init}^+]
@@ -135,71 +122,255 @@ as justifying or witnessing that transition:
  {}}}}}}
 \] 
 \caption{Proving that a transition is possible 
-(where we let $\Gamma = {\sf dollars} \lolli {\sf batteries}$).}
+(where we let $\Gamma = {\sf 6bucks} \lolli {\sf battery}$).}
 \label{fig:unfocused-robot}
 \end{figure}
+
 It is precisely because linear logic contains this natural notion of
 state and state transition that a rich line of work, dating back to
-Chirmar's Ph.D. thesis, has sought to use linear logic as a {\it
+Chirmar's 1995 Ph.D. thesis, has sought to use linear logic as a {\it
   logical framework} for describing stateful systems
 \cite{chirimar95proof,cervesato02linear,
   cervesato02concurrent,pfenning04substructural,miller09formalizing,
   pfenning09substructural,cervesato09relating}.
 
+\subsection*{Linear logical frameworks}
+
 While linear logic has many uses in computer science, I'll be
 exclusively concentrating on its use as a logical framework for
 describing stateful systems. Logical frameworks use the {\it
-  structure} of proofs in a logic to describe
+  structure} of proofs in a logic to describe the structure's we're
+really interested in. Linear logic as described in Figure~\ref{fig:linear}
+has too much flexibility to be useful as a logical framework. This can be
+seen in 
+Figure~\ref{fig:unfocused-robot}, which doesn't really match the intuitive
+structure of the transitions we skeched out at all:
+\[
+\begin{array}{ccccc}
+\begin{array}{c}
+\mbox{\it \$6 (1)}\medskip\\ 
+\mbox{\it battery-free robot (1)} \medskip\\ 
+\mbox{\it turn \$6 into a battery}\\
+\mbox{\it (all you want)}
+\end{array}
+& \leadsto &
+\begin{array}{c}
+\mbox{\it battery  (1)}\medskip\\ 
+\mbox{\it battery-free robot (1)} \medskip\\ 
+\mbox{\it turn \$6 into a battery}\\
+\mbox{\it (all you want)}
+\end{array}
+& \leadsto &
+\begin{array}{c}
+\mbox{\it robot (1)} \medskip\\ 
+\mbox{\it turn \$6 into a battery}\\
+\mbox{\it (all you want)}\medskip\\~\\
+\end{array}
+\end{array}
+\]
+A different (but related) criticism are that there are {\it lots} of
+derivations of our example proposition according to the rules in
+Figure~\ref{fig:linear}, even though there's only one ``real'' series
+of transitions. The use of ${!}L$, for instance, could be permuted up
+past the ${\otimes}L$ and then past the ${\lolli}L$ (the latter step
+would cause ${!}L$ to appear in both branches of the proof). These
+differences are completely inessential nondeterminism in proof
+construction or in proof search -- they just get in the way of the
+structure that we are trying to capture.
 
- To that end, I will describe 
+When there are lots of derivations that correspond to the same formal
+artifact, a natural solution is to see if all the derivations that
+correspond to the same formal artifact in an equivalence class.  This
+was the approach pioneered by Harper, Honsell, and Plotkin in the
+logical framework LF \cite{harper93framework}. Derivations in LF are
+represented as typed lambda calculus terms, and two derivations/lambda
+calculus terms are in the same equivalence class if they normalize to
+the same $\beta$-normal, $\eta$-long terms. These $\beta$-normal,
+$\eta$-long terms are called the {\it canonical forms} of LF. In
+practice, it turns out that many deductive systems (like logics and
+programming languages) can be put into a compositional bijection with
+the canonical forms of some LF type; we say that such a deductive
+system is {\it adequately encoded} in LF.
 
-Linear logic, in both its intuitionistic and classical variants, has
-many uses throughout logic and computer science. While this thesis
-will make some general observations about, and contributions to, the
-proof theory of intuitionistic substructural logic,\footnote{Linear logic is
-just one of the many substructural logics, a point we will return to
-later.} I do so in pursuit of a very specific goal: I want to {\it encode
-stateful evolving systems in substructural logic.}
+One analouge to the canonical forms of LF will be the {\it focused
+  derivations} of linear logic that are presented in the next
+section. We will see that there is only
+one focused derivation of 
+\[{!}({\sf 6bucks} \lolli {\sf battery}) \otimes {\sf 6bucks} \otimes
+({\sf battery} \lolli {\sf robot}) \lolli {\sf robot}\] and therefore
+the focused derivations of linear logic are our first candidate for
+adequateny encoding transition systems. In this chapter, we will
+survey related work on focusing intuitionstic logic, starting from
+Chaudhuri's formulation \cite{chaudhuri06focused}, and issues with
+each of these formulations.
 
 \section{Focused logic and synthetic inference rules}
 
+Andreoli's original motivation for introducing focusing was not to
+describe a logical framework, it was to describe a logic programming
+language based on proof search in classical linear logic
+\cite{andreoli92logic}. The existance of multiple proofs that differ
+in inessential ways is particularly problematic for proof search, as
+inessential differences between derivations correspond to unnecessary
+choice points that a proof search procedure will need to backtrack
+over. 
 
- This can be phrased
-in one of two ways: we can say that there are now three judgment
-forms:
+The first step in describing a focused sequent calculus is to classify
+connectives into two groups.  Some connectives, such as linear
+implication $A \lolli B$, are called {\it asynchronous} because their
+right rules can always be applied eagerly, without backtracking,
+during bottom-up proof search. Other connectives, such as disjunction
+$A \tensor B$, are called {\it synchronous} because their right rules
+cannot be applied eagerly. For instance, if we are trying to prove
+$\seq{\Gamma}{A \tensor B}{B \tensor A}$, the ${\tensor}R$ rule cannot
+be applied eagerly; we first have to decompose $A \tensor B$ on the
+left using the ${\tensor}L$ rule.\footnote{Andreoli dealt with a
+  one-sided classical sequent calculus; in intuitionistic logics, it
+  is common to call asynchronous connectives {\it right}-asynchronous
+  and {\it left}-synchronous. Similarly, it is common to call
+  synchronous connectives {\it right}-synchronous and {\it
+    left}-asynchronous.
+
+  Synchronicity, a property of connectives, is closely connected to
+  (and sometimes conflated with) a property of rules called {\it
+    invertibility}; a rule is invertible if the conclusion of the rule
+  implies the premises. So ${\lolli}R$ is invertible
+  ($\seq{\Gamma}{\Delta}{A \lolli B}$ implies $\seq{\Gamma}{\Delta,
+    A}{B}$) but ${\lolli}L$ is not ($\seq{\Gamma}{\Delta, A \lolli
+    B}{C}$ does not imply that $\Delta = \Delta_1, \Delta_2$ such that
+  $\seq{\Gamma}{\Delta_1}{A}$ and $\seq{\Gamma}{\Delta_2, B}{C}$).
+  Rules that can be applied eagerly need to be invertible, so
+  asynchronous connectives have invertible right rules and synchronous
+  connectives have invertible left rules. Therefore, another synonym
+  for asynchronous/negative is {\it right-invertible}, and another
+  synonym for synchronous/positive is {\it left-invertible}.}  We call
+the asynchronous connectives {\it negative} and write them as $A^-$,
+and call the synchronous connectives {\it positive} and write them as
+$A^+$. In the fragment of linear logic presented earlier, the
+propositions end up classified like this:
+\begin{align*}
+A^+ & ::= p^+ \mid {!}A \mid \one \mid A \otimes B\\
+A^- & ::= p^- \mid A \lolli B
+\end{align*}
+Note that our previously indistinguishable atomic propositions $p^+$
+and $p^-$ are now distinguishable: $p^+$ is a positive atomic proposition and 
+can be treated as a stand-in for an arbitrary positive propositions,
+whereas $p^-$ is a negative atomic proposition and can be treated 
+as a stand-in for an arbitrary negative propositions.
+
+We next need some extra proof-theoretic machinery that is 
+aware of proofs in order to put
+propositions {\it in focus} (a proposition in focus will be written as
+$[A]$). This extra machinery will then be used to enforce that right
+rules can only be applied to positive propositions when they are in
+focus, and likewise for negative propositions and left rules.  This
+extra machinery is usually described by presenting multiple judgments.
+The number differes, but at least three are necessary:
+
 \begin{itemize}
-\item $\mildrfoc{\Gamma}{\Delta}{C}$ (the {\it right focus} judgment),
-\item $\mildinv{\Gamma}{\Delta}{C}$ (the {\it inversion} judgment), and
-\item $\mildlfoc{\Gamma}{\Delta}{A}{C}$ (the {\it left focus} judgment).
+\item $\mildrfoc{\Gamma}{\Delta}{A}$ (the {\it right focus} sequent),
+\item $\mildinv{\Gamma}{\Delta}{C}$ (the {\it inversion} sequent), and
+\item $\mildlfoc{\Gamma}{\Delta}{A}{C}$ (the {\it left focus} sequent).
 \end{itemize}
 
+\input{figs/fig-kaustuv-focused.tex}
+
+Another reasonable presentation of linear logic uses only one sequent
+$\mildseq{\Gamma}{\Delta}{U}$, but generalizes what is to allowed to
+to appear in the linear context $\Delta$ or as the succeedent, which
+we write $U$.  This presentation, shown in
+Figure~\ref{fig:kaustuv-focused}, does not actually reduce the number
+of derivations relative to Figure~\ref{fig:linear} until we make a few
+extra global restrictions on rules:
+
+\begin{enumerate}
+\item The rules that introduces a focus (${\it focus}_R$, ${\it focus}_L$, 
+  and ${\it copy}$) only applies if there is not already a proposition 
+  in focus in $\Delta$ and if the succeedent $U$ is not in focus. 
+\item Every focused rule (${\it focus}_R$, ${\it blur}_L$, ${\it
+    blur}_R$, ${\it focus}_R$, ${\it init}^+$, ${\it init}^-$, ${\it
+    copy}$, ${!}_R$, ${\one}_R$, ${\otimes}_R$, ${\lolli}_L$) can only
+  apply if no non-focused rule applies -- that is, if the
+  linear context $\Delta$ contains only negative propositions or positive
+  atomic proposition and the succeedent $U$ is either a positive proposition
+  or a negative atomic proposition.
+\item When two non-focused rules (${!}_L$, ${\one}_L$, ${\tensor}_L$,
+  ${\lolli}_R$) both apply, there is some (fixed but arbitrary) way of
+  deciding which rule applies.
+\end{enumerate}
+
+\noindent
+Condition (1) alone ensures that this presentation is equivalent to
+the presentation with three judgments. The system with only condition
+(1) is what Laurent called a {\it weakly focused} system
+\cite{laurent04proof} and what Pfenning calls a {\it chaining} system.
+The system with conditions (1) and (2) is what Laurent called a {\it
+  strongly +-focused} system and what I have previously called a
+weakly focused system (oops). The combination of all three global
+conditions gives a fully focused system that is consistent with
+Chaudhuri's presentation of focused linear logic
+\cite{chaudhuri06focused}.
+
+\subsection{Synthetic inference rules}
+
+\begin{figure}
 \[
-\infer[{\it focus}R]
-{\seq{\Gamma}{\Delta}{A^+}}
-{\seq{\Gamma}{\Delta}{[A^+]}}
-\qquad
-\infer[{\it focus}L]
-{\seq{\Gamma}{\Delta,A^-}{C}}
-{\seq{\Gamma}{\Delta,[A^-]}{C}}
-\]\[
-\infer[{\it blur}R]
-{\seq{\Gamma}{\Delta}{[A^-]}}
-{\seq{\Gamma}{\Delta}{A^-}}
-\qquad
-\infer[{\it blur}L]
-{\seq{\Gamma}{\Delta, [A^+]}{C}}
-{\seq{\Gamma}{\Delta, A^+}{C}}
-\]
+\infer[{\lolli}_R]
+{\mildseq{\cdot}{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}) \otimes
+                    {\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot}) \lolli {\sf robot}}}
+{\infer[{\otimes}_L]
+{\mildseq{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}) \otimes
+                    {\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
+{\infer[{!}_L]
+{\mildseq{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}),
+                    {\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
+{\infer[{\otimes}_L]
+{\mildseq{\Gamma}{{\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
+{\infer[{\it copy}]
+{\mildseq{\Gamma}{{\sf 6bucks}, {\sf battery} \lolli {\sf robot}}{{\sf robot}}}
+{\infer[{\lolli}_L]
+{\mildseq{\Gamma}{{\sf 6bucks}, {\sf battery} \lolli {\sf robot}, [{\sf 6bucks} \lolli {\sf battery}]}{{\sf robot}}}
+{\infer[{\it init}^+]
+ {\mildseq{\Gamma}{{\sf 6bucks}}{[{\sf 6bucks}]}}
+ {}
+ &
+ \infer[{\it blur}_L]
+ {\mildseq{\Gamma}{{\sf battery} \lolli {\sf robot}, [{\sf battery}]}{{\sf robot}}}
+ {\infer[{\it focus}_L]
+ {\mildseq{\Gamma}{{\sf battery} \lolli {\sf robot}, {\sf battery}}{{\sf robot}}}
+ {\infer[{\lolli}_L]
+ {\mildseq{\Gamma}{{\sf battery}, [{\sf battery} \lolli {\sf robot}]}{{\sf robot}}}
+ {\infer[{\it init^+}]
+  {\mildseq{\Gamma}{{\sf battery}}{[{\sf battery}]}}
+  {}
+  &
+  \infer[{\it blur}_L]
+  {\mildseq{\Gamma}{[{\sf robot}]}{{\sf robot}}}
+  {\infer[{\it focus}_R]
+  {\mildseq{\Gamma}{{\sf robot}}{{\sf robot}}}
+  {\infer[{\it init}^+]
+  {\mildseq{\Gamma}{{\sf robot}}{[{\sf robot}]}}
+  {}}}}}}}}}}}}
+\] 
+\caption{Proving that a transition is possible 
+(where we let $\Gamma = {\sf 6bucks} \lolli {\sf battery}$).}
+\label{fig:unfocused-robot}
+\end{figure}
 
 
-The story of {\it focusing} in linear logic is not quite so 
-obviously settled, however, especially when it comes to the treatment
-of atoms. To try and explain why, we will first consider at 
-an intuitionistic system that is, I believe, faithfully adapted from 
-Andreoli's original presentation of linear logic; this system is
-presented in Figure~\ref{fig:focused}.
+\subsection{Atom optimization}
 
-\section{Positive atomic propositions}
+\subsection{Bang optimization}
+
+\subsection{A more primitive logic?}
+
+\section{Adjoint logic}
+
+\section{Tensor logic}
 
 \chapter{Substructural logic}
 
@@ -211,3 +382,296 @@ allows hypotheses to go unused), {\it contraction} (which allows
 hypotheses to be duplicated for reuse), and {\it exchange} (which
 enforces that the ordering of hypotheses is not meaningful)
 \cite{gentzen35untersuchungen}.
+
+\begin{figure}
+\small
+\[
+\infer[{\it init}^+]
+{\oiseq{\Gamma}{p^+}}
+{}
+\quad
+\infer[{\it init}^-]
+{\oiseq{\Gamma}{p^-}}
+{}
+\]
+
+\medskip
+{\it Disjunction}
+\[
+\infer[{\zero}_L]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{\zero}{\Omega_R}}
+{}
+\quad
+\infer[{\oplus}_{R1}]
+{\orseq{\Gamma}{\Delta}{\Omega}{A \oplus B}}
+{\otseq{\Gamma}{\Delta}{\Omega}{A}}
+\quad
+\infer[{\oplus}_{R2}]
+{\orseq{\Gamma}{\Delta}{\Omega}{A \oplus B}}
+{\otseq{\Gamma}{\Delta}{\Omega}{B}}
+\]
+\[
+\infer[{\oplus}_{L}]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{A \oplus B}{\Omega_R}}
+{\opseq{\Gamma}{\Delta}{\Omega_L}{A,\Omega_R}
+ &
+ \opseq{\Gamma}{\Delta}{\Omega_L}{B,\Omega_R}}
+\]
+
+\medskip
+{\it Multiplicative conjunction}
+\[
+\infer[{\one}_R]
+{\orseq{\Gamma}{\cdot}{\cdot}{\one}}
+{}
+\quad
+\infer[{\one}_L]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{\one}{\Omega_R}}
+{\opseq{\Gamma}{\Delta}{\Omega_L}{\Omega_R}}
+\]
+\[
+\infer[{\fuse}_R]
+{\orseq{\Gamma}{\Delta_1,\Delta_2}{\Omega_L,\Omega_R}{A \fuse B}}
+{\otseq{\Gamma}{\Delta}{\Omega_L}{A}
+ &
+ \otseq{\Gamma}{\Delta}{\Omega_R}{B}}
+\quad
+\infer[{\fuse}_L]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{A \fuse B}{\Omega_R}}
+{\opseq{\Gamma}{\Delta}{\Omega_L}{A,B,\Omega_R}}
+\]
+
+\medskip
+{\it Implication}
+\[
+\infer[{\righti}_R]
+{\orseq{\Gamma}{\Delta}{\Omega}{A \righti B}}
+{\otseq{\Gamma}{\Delta}{\Omega, A}{B}}
+\quad
+\infer[{\righti}_L]
+{\olseq{\Gamma}{\Delta_A, \Delta}{\Omega_L}{A \righti B}{\Omega_A, \Omega_R}}
+{\otseq{\Gamma}{\Delta_A}{\Omega_A}{A}
+ &
+ \opseq{\Gamma}{\Delta}{\Omega_L}{B, \Omega_R}}
+\]
+\[
+\infer[{\lefti}_R]
+{\orseq{\Gamma}{\Delta}{\Omega}{A \lefti B}}
+{\otseq{\Gamma}{\Delta}{A, \Omega}{B}}
+\quad
+\infer[{\lefti}_L]
+{\olseq{\Gamma}{\Delta_A, \Delta}{\Omega_L, \Omega_A}{A \lefti B}{\Omega_R}}
+{\otseq{\Gamma}{\Delta_A}{\Omega_A}{A}
+ &
+ \opseq{\Gamma}{\Delta}{\Omega_L}{B,\Omega_R}}
+\]
+
+\medskip
+{\it Additive conjunction}
+\[
+\infer[{\with}_{L1}]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{A \with B}{\Omega_R}}
+{\opseq{\Gamma}{\Delta}{\Omega_L}{A, \Omega_R}}
+\quad
+\infer[{\with}_{L2}]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{A \with B}{\Omega_R}}
+{\opseq{\Gamma}{\Delta}{\Omega_L}{B, \Omega_R}}
+\]
+\[
+\infer[{\with}_R]
+{\orseq{\Gamma}{\Delta}{\Omega}{A \with B}}
+{\otseq{\Gamma}{\Delta}{\Omega}{A}
+ &
+ \otseq{\Gamma}{\Delta}{\Omega}{B}}
+\]
+
+\medskip
+{\it Modalities}
+\[
+\infer[{!}_R]
+{\orseq{\Gamma}{\cdot}{\cdot}{{!}A}}
+{\otseq{\Gamma}{\cdot}{\cdot}{A}}
+\quad
+\infer[{!}_L]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{{!}A}{\Omega_R}}
+{\opseq{\Gamma,A}{\Delta}{\Omega_L}{\Omega_R}}
+\]
+\[
+\infer[{\gnab}_R]
+{\orseq{\Gamma}{\Delta}{\cdot}{{\gnab}A}}
+{\otseq{\Gamma}{\Delta}{\cdot}{A}}
+\quad
+\infer[{\gnab}_L]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{{\gnab}A}{\Omega_R}}
+{\opseq{\Gamma}{\Delta, A}{\Omega_L}{\Omega_R}}
+\]
+\[
+\infer[{\ocircle}_R]
+{\orseq{\Gamma}{\Delta}{\Omega}{{\ocircle}A}}
+{\oseq{\Gamma}{\Delta}{\Omega}{\islax{A}}}
+\quad
+\infer[{\ocircle}_L]
+{\oseq{\Gamma}{\Delta}{\Omega_L /{\ocircle}A/ \Omega_R}{\islax{C}}}
+{\oseq{\Gamma}{\Delta}{\Omega_L, A, \Omega_R}{\islax{C}}}
+\]
+
+% {\it First-order}
+% \[
+% \infer[{\exists}_R]
+% {\orseq{\Gamma}{\Delta}{\Omega}{\exists x.B}}
+% {\Psi \vdash t 
+%  &
+%  \otseq{\Gamma}{\Delta}{\Omega}{B[t/x]}}
+% \quad
+% \infer[{\exists}_L]
+% {\olseq{\Gamma}{\Delta}{\Omega_L}{\exists x.B}{\Omega_R}}
+% {\ofirstseq{\Psi,x}{\Gamma}{\Delta}{\Omega_L,B,\Omega_R}{U}}
+% \]
+% \[
+% \infer[{\forall}_R]
+% {\orseq{\Gamma}{\Delta}{\Omega}{\forall x.B}}
+% {\ofirstseq{\Psi,x}{\Gamma}{\Delta}{\Omega}{\istrue{B}}}
+% \quad
+% \infer[{\forall}_L]
+% {\olseq{\Gamma}{\Delta}{\Omega_L}{\forall x.B}{\Omega_R}}
+% {\Psi \vdash t
+%  &
+%  \opseq{\Gamma}{\Delta}{\Omega_L}{B[t/x],\Omega_R}}
+% \]
+% \[
+% \infer[{\doteq}_R]
+% {\orseq{\Gamma}{\Delta}{\Omega}{t \doteq s}}
+% {}
+% \]
+% \[
+% \infer[{\doteq}_L]
+% {\olseq{\Gamma}{\Delta}{\Omega_L}{t \doteq s}{\Omega_R}}
+% {\forall(\Psi' \vdash \theta : \Psi). 
+%  &
+%  \theta t \doteq \theta s 
+%  &
+%  \longrightarrow
+%  &
+%  \ofirstseq{\Psi'}{\theta\Gamma}{\theta\Delta}{\theta\Omega_L,\theta\Omega_R}{\theta U}}
+% \]
+\caption{Ordered linear logic.}
+\end{figure}
+
+
+\section{Substructural contexts}
+
+We will treat {\it substructural contexts} $\Delta$ are maps from {\it
+  variables} to {\it judgments}. There are two kinds of variables: 
+those that map {\it extent}.
+
+${\mbox{\it [}}$
+
+
+Two of the fundamental propeties of $\Delta$ are 
+$x{:}\langle A^+ \rangle_l \sqsubseteq \Delta$. In linear logic, this
+is the statement that $x{:}A \in \Gamma$, whereas in 
+
+\[\small
+\begin{array}{|c|c|c|c|}
+%
+\begin{array}{c}
+\makebox[1.8in]{\it Dual intuitionstic linear logic}\medskip
+\\
+\infer
+{\Gamma; p^+ \vdash p^+ \mathstrut}
+{\mathstrut}
+\end{array}
+%
+&
+%
+\begin{array}{c}
+\makebox[1.8in]{\it Pfenning-Davies S4}\medskip
+\\
+\infer
+{\Delta; \Gamma, p^+ \mathstrut \vdash p^+}
+{\mathstrut}
+\end{array}
+%
+&
+%
+\begin{array}{c}
+\makebox[1.8in]{\it Unified}\medskip
+\\
+\infer
+{\Delta \vdash [ p^+ ]_l \mathstrut}
+{x{:}\langle p^+ \rangle_l \subseteq \Delta \mathstrut}
+\end{array}
+%
+\end{array}
+\]
+
+\[\small
+\begin{array}{|c|c|c|c|}
+%
+\begin{array}{c}
+\makebox[1.8in]{\it Dual intuitionstic linear logic}\medskip
+\\
+\infer
+{\Gamma; \Delta, A \with B \vdash C \mathstrut}
+{\Gamma; \Delta, A \vdash C \mathstrut}
+\end{array}
+%
+&
+%
+\begin{array}{c}
+\makebox[1.8in]{\it Pfenning-Davies S4}\medskip
+\\
+\infer
+{\Delta; \Gamma, A \wedge^- B \mathstrut \vdash C}
+{\Delta; \Gamma, A \wedge^- B, A \vdash C \mathstrut}
+\end{array}
+%
+&
+%
+\begin{array}{c}
+\makebox[1.8in]{\it Unified}\medskip
+\\
+\infer
+{\Theta\{ x{:} A \with B \} \vdash U \mathstrut}
+{\Theta\{ x_1{:} A \} \vdash U \mathstrut}
+\end{array}
+%
+\end{array}
+\]
+
+
+\[\small
+\begin{array}{|c|c|c|c|}
+%
+\begin{array}{c}
+\makebox[1.8in]{\it Dual intuitionstic linear logic}\medskip
+\\
+\infer
+{\Gamma; \Delta_1, \Delta_2 \vdash A \otimes B \mathstrut}
+{\Gamma; \Delta_1 \vdash A & \Gamma; \Delta_2 \vdash B \mathstrut}
+\end{array}
+%
+&
+%
+\begin{array}{c}
+\makebox[1.8in]{\it Pfenning-Davies S4}\medskip
+\\
+\infer
+{\Delta; \Gamma \vdash A \wedge^+ B \mathstrut}
+{\Delta; \Gamma \vdash A & \Delta; \Gamma \vdash B \mathstrut}
+\end{array}
+%
+&
+%
+\begin{array}{c}
+\makebox[1.8in]{\it Unified}\medskip
+\\
+\infer
+{\Delta_1 \bowtie \Delta_2 \vdash A \otimes B \mathstrut}
+{\Delta \vdash A & \Delta_2 \vdash B \mathstrut}
+\end{array}
+%
+\end{array}
+\]
+
+
