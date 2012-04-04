@@ -12,16 +12,16 @@
 \quad \fbox{$\mildseq{\Gamma}{\Delta}{U}$}
 \[
 \infer[\eta^+]
-{\mildseq{\Gamma}{\Delta, A}{U}}
-{\mildseq{\Gamma}{\Delta, \langle A \rangle}{U}}
+{\mildseq{\Gamma}{\Delta, p^+}{U}}
+{\mildseq{\Gamma}{\Delta, \langle p^+ \rangle}{U}}
 \quad
 \infer[{\it id}^+]
 {\mildseq{\Gamma}{\langle A \rangle}{[A]}}
 {}
 \quad
 \infer[\eta^-]
-{\mildseq{\Gamma}{\Delta}{A}}
-{\mildseq{\Gamma}{\Delta}{\langle A \rangle}}
+{\mildseq{\Gamma}{\Delta}{p^-}}
+{\mildseq{\Gamma}{\Delta}{\langle p^- \rangle}}
 \quad
 \infer[{\it id}^-]
 {\mildseq{\Gamma}{[A]}{\langle A \rangle}}

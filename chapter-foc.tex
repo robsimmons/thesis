@@ -309,30 +309,32 @@ $\langle A^+ \rangle$,.
 {\small 
 \[
 \infer-[\eta^+]
-{\mildseq{\Gamma}{\Delta, A^-}{U}}
+{\mildseq{\Gamma}{\Delta, {\downarrow}A}{U}}
 {\deduce
- {\mildseq{\Gamma}{\Delta, \langle A^- \rangle}{U}}
+ {\mildseq{\Gamma}{\Delta, \langle {\downarrow}A \rangle}{U}}
  {\mathcal D}}
 \quad
-\Longrightarrow
+\deduce{\mathstrut}{\Longrightarrow}
 \quad
-\infer-[{\it subst}^+]
-{\mildseq{\Gamma}{\Delta, A^-}{U}}
-{\infer[{\it blur}_R]
- {\mildseq{\Gamma}{A^-}{[ A^- ]}}
- {\infer-[{\eta}^-]
-  {\mildseq{\Gamma}{A^-}{A^-}}
-  {\infer-[{\it focus}_L]
-   {\mildseq{\Gamma}{A^-}{\langle A^- \rangle}}
-   {\infer[{\it id}^-]
-    {\mildseq{\Gamma}{[ A^- ]}{\langle A^- \rangle}}
-    {}}}}
- &
- \deduce
- {\mildseq{\Gamma}{\Delta, \langle A^- \rangle}{U}}
- {\mathcal D}}
+\infer[{\downarrow}_L]
+{\mildseq{\Gamma}{\Delta, {\downarrow}A}{U}}
+{\infer-[{\it subst}^+]
+ {\mildseq{\Gamma}{\Delta, A}{U}}
+ {\infer[{\downarrow}_R]
+  {\mildseq{\Gamma}{A}{[ {\downarrow}A ]}}
+  {\infer-[{\eta}^-]
+   {\mildseq{\Gamma}{A}{A}}
+   {\infer-[{\it focus}_L]
+    {\mildseq{\Gamma}{A}{\langle A \rangle}}
+    {\infer[{\it id}^-]
+     {\mildseq{\Gamma}{[ A ]}{\langle A \rangle}}
+     {}}}}
+  &
+  \deduce
+  {\mildseq{\Gamma}{\Delta, \langle {\downarrow}A \rangle}{U}}
+  {\mathcal D}}}
 \]
-\vspace{1.4pt}
+
 \[
 \infer-[\eta^+]
 {\mildseq{\Gamma}{\Delta,{!}A}{U}}
@@ -340,7 +342,7 @@ $\langle A^+ \rangle$,.
  {\mildseq{\Gamma}{\Delta, \langle {!}A \rangle}{U}}
  {\mathcal D}}
 \quad
-\Longrightarrow
+\deduce{\mathstrut}{\Longrightarrow}
 \infer[{!}_L]
 {\mildseq{\Gamma}{\Delta,{!}A}{U}}
 {\infer-[{\it subst}^+]
@@ -361,34 +363,13 @@ $\langle A^+ \rangle$,.
    {\mildseq{\Gamma}{\Delta, \langle {!}A \rangle}{U}}
    {\mathcal D}}}}
 \]
-\vspace{1.4pt}
-\[
-\infer-[\eta^+]
-{\mildseq{\Gamma}{\Delta, \one}{U}}
-{\deduce
- {\mildseq{\Gamma}{\Delta, \langle \one \rangle}{U}}
- {\mathcal D}}
-\quad
-\Longrightarrow
-\infer[{\one}_L]
-{\mildseq{\Gamma}{\Delta, \one}{U}}
-{\infer-[{\it subst}^+]
- {\mildseq{\Gamma}{\Delta}{U}}
- {\infer[{\one}_R]
-  {\mildseq{\Gamma}{\cdot}{[ \one ]}}
-  {}
-  &
-  \deduce
-  {\mildseq{\Gamma}{\Delta, \langle \one \rangle}{U}}
-  {\mathcal D}}}
-\]
-\vspace{1.4pt}
+
 \[
 \infer-[\eta^+]
 {\mildseq{\Gamma}{\Delta, A \otimes B}{U}}
 {\deduce{\mildseq{\Gamma}{\Delta, \langle A \otimes B \rangle}{U}}{\mathcal D}}
 \quad
-\Longrightarrow
+\deduce{\mathstrut}{\Longrightarrow}
 \!\!\!\!\!\!\!\!\!
 \infer[{\otimes}_L]
 {\mildseq{\Gamma}{\Delta, A \otimes B}{U}}
@@ -410,33 +391,35 @@ $\langle A^+ \rangle$,.
    {\mildseq{\Gamma}{\Delta, \langle A \otimes B \rangle}{U}}
    {\mathcal D}}}}
 \]
-\vspace{1.4pt}
+
 \[
 \infer-[\eta^-]
-{\mildseq{\Gamma}{\Delta}{A^+}}
+{\mildseq{\Gamma}{\Delta}{{\uparrow}A}}
 {\deduce
- {\mildseq{\Gamma}{\Delta}{\langle A^+ \rangle}}
+ {\mildseq{\Gamma}{\Delta}{\langle {\uparrow}A \rangle}}
  {\mathcal D}}
 \quad
-\Longrightarrow
+\deduce{\mathstrut}{\Longrightarrow}
 \quad
-\infer-[{\it subst}^-]
-{\mildseq{\Gamma}{\Delta}{A^+}}
-{\deduce
- {\mildseq{\Gamma}{\Delta}{\langle A^+ \rangle}}
- {\mathcal D}
- &
- \infer[{\it blur}_L]
- {\mildseq{\Gamma}{[A^+]}{A^+}}
- {\infer-[\eta^+]
-  {\mildseq{\Gamma}{A^+}{A^+}}
-  {\infer[{\it focus}_R]
-   {\mildseq{\Gamma}{\langle A^+ \rangle}{A^+}} 
-   {\infer[{\it id}^+]
-    {\mildseq{\Gamma}{\langle A^+ \rangle}{[ A^+ ]}}
-    {}}}}}
+\infer[{\uparrow}_R]
+{\mildseq{\Gamma}{\Delta}{{\uparrow}A}}
+{\infer-[{\it subst}^-]
+ {\mildseq{\Gamma}{\Delta}{A}}
+ {\deduce
+  {\mildseq{\Gamma}{\Delta}{\langle {\uparrow}A \rangle}}
+  {\mathcal D}
+  &
+  \infer[{\uparrow}_L]
+  {\mildseq{\Gamma}{[{\uparrow}A]}{A}}
+  {\infer-[\eta^+]
+   {\mildseq{\Gamma}{A}{A}}
+   {\infer[{\it focus}_R]
+    {\mildseq{\Gamma}{\langle A \rangle}{A}} 
+    {\infer[{\it id}^+]
+     {\mildseq{\Gamma}{\langle A \rangle}{[ A ]}}
+     {}}}}}}
 \]
-\vspace{1.4pt}
+
 \[
 \infer-[\eta^-]
 {\mildseq{\Gamma}{\Delta}{A \lolli B}}
@@ -444,7 +427,7 @@ $\langle A^+ \rangle$,.
  {\mildseq{\Gamma}{\Delta}{\langle A \lolli B \rangle}}
  {\mathcal D}}
 \quad
-\Longrightarrow
+\deduce{\mathstrut}{\Longrightarrow}
 \!\!\!\!\!\!
 \infer[{\lolli}_R]
 {\mildseq{\Gamma}{\Delta}{A \lolli B}}
@@ -472,8 +455,33 @@ $\langle A^+ \rangle$,.
  propositions.}
 \end{figure}
 
+
+
+
 \begin{figure}
 {\small
+
+\[
+\infer-[\eta^+]
+{\mildseq{\Gamma}{\Delta, \one}{U}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta, \langle \one \rangle}{U}}
+ {\mathcal D}}
+\quad
+\Longrightarrow
+\infer[{\one}_L]
+{\mildseq{\Gamma}{\Delta, \one}{U}}
+{\infer-[{\it subst}^+]
+ {\mildseq{\Gamma}{\Delta}{U}}
+ {\infer[{\one}_R]
+  {\mildseq{\Gamma}{\cdot}{[ \one ]}}
+  {}
+  &
+  \deduce
+  {\mildseq{\Gamma}{\Delta, \langle \one \rangle}{U}}
+  {\mathcal D}}}
+\]
+
 \[
 \infer-[\eta^+]
 {\mildseq{\Gamma}{\Delta, A \oplus B}{U}}
@@ -520,7 +528,7 @@ $\langle A^+ \rangle$,.
 {}
 \]}
 
-\caption{Identity expansion for the additive connectives}
+\caption{Identity expansion for units and additive connectives.}
 \end{figure}
 
 
