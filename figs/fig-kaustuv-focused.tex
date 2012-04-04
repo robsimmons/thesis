@@ -3,15 +3,32 @@
 \quad $A$ \,\, \= $::= p^+ \mid p^- \mid {!}A \mid A \lolli B \mid \one \mid A \tensor B$\\
 \quad $A^+$ \> $::= p^+ \mid {!}A \mid \one \mid A \otimes B$\\
 \quad $A^-$ \> $::= p^- \mid A \lolli B$\\
-\quad $\Gamma$ \> $::= \cdot \mid \Gamma, A$ \qquad\qquad \= {\it (multiset)}\\
-\quad $\Delta$ \> $::= \cdot \mid \Delta, A \mid \Delta, [A]$ \> {\it (multiset)}\\
-\quad $U$ \> $::= A \mid [ A ]$\\
+\quad $\Gamma$ \> $::= \cdot \mid \Gamma, A$ \qquad\qquad\qquad\qquad \= {\it (multiset)}\\
+\quad $\Delta$ \> $::= \cdot \mid \Delta, A \mid \Delta, [A] \mid \Delta, \langle A^+ \rangle$ \> {\it (multiset)}\\
+\quad $U$ \> $::= A \mid [ A ] \mid \langle A^- \rangle$\\
 \end{tabbing}
 %
 %
 \quad \fbox{$\mildseq{\Gamma}{\Delta}{U}$}
 \[
-\infer[{\it focus}_R]
+\infer[\eta^+]
+{\mildseq{\Gamma}{\Delta, A}{U}}
+{\mildseq{\Gamma}{\Delta, \langle A \rangle}{U}}
+\quad
+\infer[{\it id}^+]
+{\mildseq{\Gamma}{\langle A \rangle}{[A]}}
+{}
+\quad
+\infer[\eta^-]
+{\mildseq{\Gamma}{\Delta}{A}}
+{\mildseq{\Gamma}{\Delta}{\langle A \rangle}}
+\quad
+\infer[{\it id}^-]
+{\mildseq{\Gamma}{[A]}{\langle A \rangle}}
+{}
+\]
+\[
+\infer[{\it focus}^*_R]
 {\mildseq{\Gamma}{\Delta}{A^+}}
 {\mildseq{\Gamma}{\Delta}{[A^+]}}
 \qquad
@@ -24,20 +41,20 @@
 {\mildseq{\Gamma}{\Delta}{[A^-]}}
 {\mildseq{\Gamma}{\Delta}{A^-}}
 \qquad
-\infer[{\it focus}_L]
+\infer[{\it focus}^*_L]
 {\mildseq{\Gamma}{\Delta,A^-}{U}}
 {\mildseq{\Gamma}{\Delta,[A^-]}{U}}
 \]
 \[
-\infer[{\it init}^+]
-{\mildseq{\Gamma}{p^+}{[p^+]}}
+\infer[{\it id}^+]
+{\mildseq{\Gamma}{\langle A^+ \rangle}{[A^+]}}
 {}
 \qquad
-\infer[{\it init}^-]
-{\mildseq{\Gamma}{[p^-]}{p^-}}
+\infer[{\it id}^-]
+{\mildseq{\Gamma}{[A^-]}{\langle A^- \rangle}}
 {}
 \qquad
-\infer[{\it copy}]
+\infer[{\it copy}^*]
 {\mildseq{\Gamma, A}{\Delta}{U}}
 {\mildseq{\Gamma, A}{\Delta, [A]}{U}}
 %
@@ -82,6 +99,6 @@
  \mildseq{\Gamma}{\Delta_2, [B]}{U}}
 %
 \]
-\caption{Focused intuitionstic linear logic}
+\caption{Focused intuitionstic linear logic.}
 \label{fig:kaustuv-focused}
 \end{figure}

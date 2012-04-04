@@ -1,0 +1,174 @@
+\begin{figure}
+\small
+\[
+\infer[{\it init}^+]
+{\oiseq{\Gamma}{p^+}}
+{}
+\quad
+\infer[{\it init}^-]
+{\oiseq{\Gamma}{p^-}}
+{}
+\]
+
+\medskip
+{\it Disjunction}
+\[
+\infer[{\zero}_L]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{\zero}{\Omega_R}}
+{}
+\quad
+\infer[{\oplus}_{R1}]
+{\orseq{\Gamma}{\Delta}{\Omega}{A \oplus B}}
+{\otseq{\Gamma}{\Delta}{\Omega}{A}}
+\quad
+\infer[{\oplus}_{R2}]
+{\orseq{\Gamma}{\Delta}{\Omega}{A \oplus B}}
+{\otseq{\Gamma}{\Delta}{\Omega}{B}}
+\]
+\[
+\infer[{\oplus}_{L}]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{A \oplus B}{\Omega_R}}
+{\opseq{\Gamma}{\Delta}{\Omega_L}{A,\Omega_R}
+ &
+ \opseq{\Gamma}{\Delta}{\Omega_L}{B,\Omega_R}}
+\]
+
+\medskip
+{\it Multiplicative conjunction}
+\[
+\infer[{\one}_R]
+{\orseq{\Gamma}{\cdot}{\cdot}{\one}}
+{}
+\quad
+\infer[{\one}_L]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{\one}{\Omega_R}}
+{\opseq{\Gamma}{\Delta}{\Omega_L}{\Omega_R}}
+\]
+\[
+\infer[{\fuse}_R]
+{\orseq{\Gamma}{\Delta_1,\Delta_2}{\Omega_L,\Omega_R}{A \fuse B}}
+{\otseq{\Gamma}{\Delta}{\Omega_L}{A}
+ &
+ \otseq{\Gamma}{\Delta}{\Omega_R}{B}}
+\quad
+\infer[{\fuse}_L]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{A \fuse B}{\Omega_R}}
+{\opseq{\Gamma}{\Delta}{\Omega_L}{A,B,\Omega_R}}
+\]
+
+\medskip
+{\it Implication}
+\[
+\infer[{\righti}_R]
+{\orseq{\Gamma}{\Delta}{\Omega}{A \righti B}}
+{\otseq{\Gamma}{\Delta}{\Omega, A}{B}}
+\quad
+\infer[{\righti}_L]
+{\olseq{\Gamma}{\Delta_A, \Delta}{\Omega_L}{A \righti B}{\Omega_A, \Omega_R}}
+{\otseq{\Gamma}{\Delta_A}{\Omega_A}{A}
+ &
+ \opseq{\Gamma}{\Delta}{\Omega_L}{B, \Omega_R}}
+\]
+\[
+\infer[{\lefti}_R]
+{\orseq{\Gamma}{\Delta}{\Omega}{A \lefti B}}
+{\otseq{\Gamma}{\Delta}{A, \Omega}{B}}
+\quad
+\infer[{\lefti}_L]
+{\olseq{\Gamma}{\Delta_A, \Delta}{\Omega_L, \Omega_A}{A \lefti B}{\Omega_R}}
+{\otseq{\Gamma}{\Delta_A}{\Omega_A}{A}
+ &
+ \opseq{\Gamma}{\Delta}{\Omega_L}{B,\Omega_R}}
+\]
+
+\medskip
+{\it Additive conjunction}
+\[
+\infer[{\with}_{L1}]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{A \with B}{\Omega_R}}
+{\opseq{\Gamma}{\Delta}{\Omega_L}{A, \Omega_R}}
+\quad
+\infer[{\with}_{L2}]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{A \with B}{\Omega_R}}
+{\opseq{\Gamma}{\Delta}{\Omega_L}{B, \Omega_R}}
+\]
+\[
+\infer[{\with}_R]
+{\orseq{\Gamma}{\Delta}{\Omega}{A \with B}}
+{\otseq{\Gamma}{\Delta}{\Omega}{A}
+ &
+ \otseq{\Gamma}{\Delta}{\Omega}{B}}
+\]
+
+\medskip
+{\it Modalities}
+\[
+\infer[{!}_R]
+{\orseq{\Gamma}{\cdot}{\cdot}{{!}A}}
+{\otseq{\Gamma}{\cdot}{\cdot}{A}}
+\quad
+\infer[{!}_L]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{{!}A}{\Omega_R}}
+{\opseq{\Gamma,A}{\Delta}{\Omega_L}{\Omega_R}}
+\]
+\[
+\infer[{\gnab}_R]
+{\orseq{\Gamma}{\Delta}{\cdot}{{\gnab}A}}
+{\otseq{\Gamma}{\Delta}{\cdot}{A}}
+\quad
+\infer[{\gnab}_L]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{{\gnab}A}{\Omega_R}}
+{\opseq{\Gamma}{\Delta, A}{\Omega_L}{\Omega_R}}
+\]
+\[
+\infer[{\ocircle}_R]
+{\orseq{\Gamma}{\Delta}{\Omega}{{\ocircle}A}}
+{\oseq{\Gamma}{\Delta}{\Omega}{\islax{A}}}
+\quad
+\infer[{\ocircle}_L]
+{\oseq{\Gamma}{\Delta}{\Omega_L /{\ocircle}A/ \Omega_R}{\islax{C}}}
+{\oseq{\Gamma}{\Delta}{\Omega_L, A, \Omega_R}{\islax{C}}}
+\]
+
+% {\it First-order}
+% \[
+% \infer[{\exists}_R]
+% {\orseq{\Gamma}{\Delta}{\Omega}{\exists x.B}}
+% {\Psi \vdash t 
+%  &
+%  \otseq{\Gamma}{\Delta}{\Omega}{B[t/x]}}
+% \quad
+% \infer[{\exists}_L]
+% {\olseq{\Gamma}{\Delta}{\Omega_L}{\exists x.B}{\Omega_R}}
+% {\ofirstseq{\Psi,x}{\Gamma}{\Delta}{\Omega_L,B,\Omega_R}{U}}
+% \]
+% \[
+% \infer[{\forall}_R]
+% {\orseq{\Gamma}{\Delta}{\Omega}{\forall x.B}}
+% {\ofirstseq{\Psi,x}{\Gamma}{\Delta}{\Omega}{\istrue{B}}}
+% \quad
+% \infer[{\forall}_L]
+% {\olseq{\Gamma}{\Delta}{\Omega_L}{\forall x.B}{\Omega_R}}
+% {\Psi \vdash t
+%  &
+%  \opseq{\Gamma}{\Delta}{\Omega_L}{B[t/x],\Omega_R}}
+% \]
+% \[
+% \infer[{\doteq}_R]
+% {\orseq{\Gamma}{\Delta}{\Omega}{t \doteq s}}
+% {}
+% \]
+% \[
+% \infer[{\doteq}_L]
+% {\olseq{\Gamma}{\Delta}{\Omega_L}{t \doteq s}{\Omega_R}}
+% {\forall(\Psi' \vdash \theta : \Psi). 
+%  &
+%  \theta t \doteq \theta s 
+%  &
+%  \longrightarrow
+%  &
+%  \ofirstseq{\Psi'}{\theta\Gamma}{\theta\Delta}{\theta\Omega_L,\theta\Omega_R}{\theta U}}
+% \]
+\caption{Propositional ordered linear logic.}
+\label{fig:ordered-prop}
+\end{figure}

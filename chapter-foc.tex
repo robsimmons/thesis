@@ -11,28 +11,28 @@ understood as studied'' will be referred to as {\it persistent} logic
 to emphasize this treatment of evidence. 
 
 Linear logic, which was popularized by Girard \cite{girard87linear},
-treats evidence as an {\it ephemeral} resource, which is generally
-consumed when it is used. Linear logic, like persistent logic, comes
-in classical and intuitionistic flavors. We will favor intuitionistic
-linear logic in part because the propositions of intuitionistic linear
-logic (written $A$, $B$, $C$, \ldots) have a more natural
-correspondence with our physical intuitions about consumable
-resources. Linear conjunction $A \tensor B$ represents the resource
-built from the resources $A$ and $B$; if you have both a bowl of soup
-{\it and} a sandwich, that resource can be represented by the
-proposition ${\sf soup} \otimes {\sf sandwich}$. Linear implication $A
-\lolli B$ represents a resource that can interact with another
-resource $A$ to produce a resource $B$. A robot with batteries not
-included could be represented as the resource $({\sf battery} \lolli
-{\sf robot})$, and the linear resource $({\sf 6bucks} \lolli {\sf
-  soup} \tensor {\sf sandwich})$ represents the ability to use \$6 to
-obtain lunch -- but only once!\footnote{Conjunction will always bind
-  more tightly than implication, so this is equivalent to the
-  proposition ${\sf 6bucks} \lolli ({\sf soup} \tensor {\sf
-    sandwich})$.} Linear logic also has a modality ${!}A$ representing
-a resource that can be used to generate any number of $A$ resources,
-including zero. The Panera ``You Pick Two'' menu might be represented
-as
+treats evidence as an {\it ephemeral} resource; the use of an
+ephemeral resource consumes it, at which point it is unavailable for
+further use.  Linear logic, like persistent logic, comes in classical
+and intuitionistic flavors. We will favor intuitionistic linear logic
+in part because the propositions of intuitionistic linear logic
+(written $A$, $B$, $C$, \ldots) have a more natural correspondence
+with our physical intuitions about consumable resources. Linear
+conjunction $A \tensor B$ represents the resource built from the
+resources $A$ and $B$; if you have both a bowl of soup {\it and} a
+sandwich, that resource can be represented by the proposition ${\sf
+  soup} \otimes {\sf sandwich}$. Linear implication $A \lolli B$
+represents a resource that can interact with another resource $A$ to
+produce a resource $B$. One robot with batteries not included could be
+represented as the linear resource $({\sf battery} \lolli {\sf
+  robot})$, and the linear resource $({\sf 6bucks} \lolli {\sf soup}
+\tensor {\sf sandwich})$ represents the ability to use \$6 to obtain
+lunch -- but only once!\footnote{Conjunction will always bind more
+  tightly than implication, so this is equivalent to the proposition
+  ${\sf 6bucks} \lolli ({\sf soup} \tensor {\sf sandwich})$.} Linear
+logic also has a modality ${!}A$ representing a resource that can be
+used to generate any number of $A$ resources, including zero. The
+Panera ``You Pick Two'' menu might be represented as
 \[ {!}({\sf 6bucks} \lolli {\sf soup} \tensor {\sf sandwich}) \otimes
 {!}({\sf 6bucks} \lolli {\sf soup} \tensor {\sf salad}) \otimes
 {!}({\sf 6bucks} \lolli {\sf sandwich} \tensor {\sf salad}),\] as the
@@ -59,10 +59,11 @@ al.'s judgmental analysis of intuitionistic linear logic
 The propositions of intuitionstic linear logic, and linear implication
 in particular, capture a notion of state change: we can {\it
   transition} from a state where we have both a ${\sf battery}$ and
-the battery-less robot (represented, as before, by the proposition
-${\sf battery} \lolli {\sf robot}$) to a state where we have the
-powered on robot (represented by the proposition ${\sf robot}$). In
-other words, the proposition
+the battery-less robot (represented, as before, by the linear
+implication ${\sf battery} \lolli {\sf robot}$) to a state where we
+have the battery-endowed (and therefore presumably functional) robot
+(represented by the proposition ${\sf robot}$). In other words, the
+proposition
 %
 \[{\sf battery} \otimes ({\sf battery} \lolli {\sf robot}) \lolli
 {\sf robot}\] 
@@ -74,9 +75,9 @@ persistent ability to turn ${\sf 6bucks}$ into a ${\sf battery}$ --
 just like we turned \$6 into a bowl of soup and a salad at Panera --
 then we can ultimately get our working robot as well. This boils down
 to the statement that it is possible to prove
-\[{!}({\sf 6bucks} \lolli {\sf battery}) \otimes {\sf 6bucks}
-\otimes ({\sf battery} \lolli {\sf robot}) \lolli {\sf robot}\] in
-linear logic; a derivation of this proposition is given in
+\[{!}({\sf 6bucks} \lolli {\sf battery}) \otimes {\sf 6bucks} \otimes
+({\sf battery} \lolli {\sf robot}) \lolli {\sf robot}\] in linear
+logic; a derivation of this proposition is given in
 Figure~\ref{fig:unfocused-robot}.\footnote{In Chapter XXX, I will
   argue that this view isn't quite precise enough, and that the most
   natural representation of state change from the state $A$ to the
@@ -84,7 +85,11 @@ Figure~\ref{fig:unfocused-robot}.\footnote{In Chapter XXX, I will
   \lolli B$ or by derivations of the hypothetical judgment
   $\seq{\cdot}{A}{B}$.  However, this view remains a simple and useful
   one; Cervesato and Scedrov cover it thoroughly in the context of
-  intuitionstic linear logic \cite{cervesato09relating}.}
+  intuitionstic linear logic \cite{cervesato09relating}.}  (Note that
+this figure imples that I've assigned all relevant atomic propsitions
+in this discussion to the $p^+$ category rather than the $p^-$
+category. That was not an arbitrary choice, but it's not a relevant
+choice yet.)
 
 \begin{figure}
 \[
@@ -139,7 +144,7 @@ Chirmar's 1995 Ph.D. thesis, has sought to use linear logic as a {\it
 While linear logic has many uses in computer science, I'll be
 exclusively concentrating on its use as a logical framework for
 describing stateful systems. Logical frameworks use the {\it
-  structure} of proofs in a logic to describe the structure's we're
+  structure} of proofs in a logic to describe the structure we're
 really interested in. Linear logic as described in Figure~\ref{fig:linear}
 has too much flexibility to be useful as a logical framework. This can be
 seen in 
@@ -171,15 +176,30 @@ structure of the transitions we skeched out at all:
 A different (but related) criticism are that there are {\it lots} of
 derivations of our example proposition according to the rules in
 Figure~\ref{fig:linear}, even though there's only one ``real'' series
-of transitions. The use of ${!}L$, for instance, could be permuted up
-past the ${\otimes}L$ and then past the ${\lolli}L$ (the latter step
-would cause ${!}L$ to appear in both branches of the proof). These
-differences are completely inessential nondeterminism in proof
-construction or in proof search -- they just get in the way of the
-structure that we are trying to capture.
+of transitions that get us to a working robot. The use of ${!}L$, for
+instance, could be permuted up past the ${\otimes}L$ and then past the
+${\lolli}L$ (the latter move would cause ${!}L$ to appear in both
+branches of the proof). These differences are completely inessential
+nondeterminism in proof construction or in proof search -- they just
+get in the way of the structure that we are trying to capture.
+
+To recap: for propositions $A$ and $B$ of the appropriate form, we can
+create a derivation of $A \lolli B$ if and only if there
+is a sequence of transitions that take us from a state described by 
+$A$ to the state described by $B$. However, there may be {\it lots}
+of derivations even if there is just one transition, and many of 
+
+
+
+We {\it do} have the property that some derivations exist if and only if
+a sequence of transitions exists. 
 
 When there are lots of derivations that correspond to the same formal
-artifact, a natural solution is to see if all the derivations that
+artifact, a natural solution is to form equivalence classes of derivations
+in such a way that there is a one-to-one correspondence between 
+the formal artifacts and the equivalence classes of derivations.
+
+see if all the derivations that
 correspond to the same formal artifact in an equivalence class.  This
 was the approach pioneered by Harper, Honsell, and Plotkin in the
 logical framework LF \cite{harper93framework}. Derivations in LF are
@@ -275,10 +295,239 @@ The number differes, but at least three are necessary:
 
 \input{figs/fig-kaustuv-focused.tex}
 
+
 Another reasonable presentation of linear logic uses only one sequent
 $\mildseq{\Gamma}{\Delta}{U}$, but generalizes what is to allowed to
 to appear in the linear context $\Delta$ or as the succeedent, which
-we write $U$.  This presentation, shown in
+we write $U$. The three focusing rules
+${\it focus}_R$, ${\it focus}_L$, and ${\it copy}$ carry the extra condition
+that the conclusion must be stable: the context $\Delta$ can only contain 
+negative propositions $A^-$ and suspended positive propositions 
+$\langle A^+ \rangle$,.
+
+\begin{figure}[f]
+{\small 
+\[
+\infer-[\eta^+]
+{\mildseq{\Gamma}{\Delta, A^-}{U}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta, \langle A^- \rangle}{U}}
+ {\mathcal D}}
+\quad
+\Longrightarrow
+\quad
+\infer-[{\it subst}^+]
+{\mildseq{\Gamma}{\Delta, A^-}{U}}
+{\infer[{\it blur}_R]
+ {\mildseq{\Gamma}{A^-}{[ A^- ]}}
+ {\infer-[{\eta}^-]
+  {\mildseq{\Gamma}{A^-}{A^-}}
+  {\infer-[{\it focus}_L]
+   {\mildseq{\Gamma}{A^-}{\langle A^- \rangle}}
+   {\infer[{\it id}^-]
+    {\mildseq{\Gamma}{[ A^- ]}{\langle A^- \rangle}}
+    {}}}}
+ &
+ \deduce
+ {\mildseq{\Gamma}{\Delta, \langle A^- \rangle}{U}}
+ {\mathcal D}}
+\]
+\vspace{1.4pt}
+\[
+\infer-[\eta^+]
+{\mildseq{\Gamma}{\Delta,{!}A}{U}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta, \langle {!}A \rangle}{U}}
+ {\mathcal D}}
+\quad
+\Longrightarrow
+\infer[{!}_L]
+{\mildseq{\Gamma}{\Delta,{!}A}{U}}
+{\infer-[{\it subst}^+]
+ {\mildseq{\Gamma,A}{\Delta}{U}}
+ {\infer[{!}_R]
+  {\mildseq{\Gamma, A}{\cdot}{[{!}A]}}
+  {\infer-[\eta^-]
+   {\mildseq{\Gamma, A}{\cdot}{A}}
+   {\infer[\it copy]
+    {\mildseq{\Gamma, A}{\cdot}{\langle A \rangle}}
+    {\infer[{\it id}^-]
+     {\mildseq{\Gamma, A}{[ A ]}{\langle A \rangle}}
+     {}}}}
+  &
+  \infer-[{\it weaken}]
+  {\mildseq{\Gamma,A}{\Delta, \langle {!}A \rangle}{U}}
+  {\deduce
+   {\mildseq{\Gamma}{\Delta, \langle {!}A \rangle}{U}}
+   {\mathcal D}}}}
+\]
+\vspace{1.4pt}
+\[
+\infer-[\eta^+]
+{\mildseq{\Gamma}{\Delta, \one}{U}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta, \langle \one \rangle}{U}}
+ {\mathcal D}}
+\quad
+\Longrightarrow
+\infer[{\one}_L]
+{\mildseq{\Gamma}{\Delta, \one}{U}}
+{\infer-[{\it subst}^+]
+ {\mildseq{\Gamma}{\Delta}{U}}
+ {\infer[{\one}_R]
+  {\mildseq{\Gamma}{\cdot}{[ \one ]}}
+  {}
+  &
+  \deduce
+  {\mildseq{\Gamma}{\Delta, \langle \one \rangle}{U}}
+  {\mathcal D}}}
+\]
+\vspace{1.4pt}
+\[
+\infer-[\eta^+]
+{\mildseq{\Gamma}{\Delta, A \otimes B}{U}}
+{\deduce{\mildseq{\Gamma}{\Delta, \langle A \otimes B \rangle}{U}}{\mathcal D}}
+\quad
+\Longrightarrow
+\!\!\!\!\!\!\!\!\!
+\infer[{\otimes}_L]
+{\mildseq{\Gamma}{\Delta, A \otimes B}{U}}
+{\infer-[\eta^+]
+ {\mildseq{\Gamma}{\Delta, \langle A \rangle, B}{U}}
+ {\infer-[{\it subst}^+]
+  {\mildseq{\Gamma}{\Delta, \langle A \rangle, \langle B \rangle}{U}}
+  {\infer
+   {\mildseq{\Gamma}{\langle A \rangle, \langle B \rangle}{[A \otimes B]}}
+   {\infer[{\it id}^+]
+    {\mildseq{\Gamma}{\langle A \rangle}{[A]}}
+    {}
+    & 
+    \infer[{\it id}^+]
+    {\mildseq{\Gamma}{\langle B \rangle}{[B]}}
+    {}}
+   & 
+   \deduce
+   {\mildseq{\Gamma}{\Delta, \langle A \otimes B \rangle}{U}}
+   {\mathcal D}}}}
+\]
+\vspace{1.4pt}
+\[
+\infer-[\eta^-]
+{\mildseq{\Gamma}{\Delta}{A^+}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta}{\langle A^+ \rangle}}
+ {\mathcal D}}
+\quad
+\Longrightarrow
+\quad
+\infer-[{\it subst}^-]
+{\mildseq{\Gamma}{\Delta}{A^+}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta}{\langle A^+ \rangle}}
+ {\mathcal D}
+ &
+ \infer[{\it blur}_L]
+ {\mildseq{\Gamma}{[A^+]}{A^+}}
+ {\infer-[\eta^+]
+  {\mildseq{\Gamma}{A^+}{A^+}}
+  {\infer[{\it focus}_R]
+   {\mildseq{\Gamma}{\langle A^+ \rangle}{A^+}} 
+   {\infer[{\it id}^+]
+    {\mildseq{\Gamma}{\langle A^+ \rangle}{[ A^+ ]}}
+    {}}}}}
+\]
+\vspace{1.4pt}
+\[
+\infer-[\eta^-]
+{\mildseq{\Gamma}{\Delta}{A \lolli B}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta}{\langle A \lolli B \rangle}}
+ {\mathcal D}}
+\quad
+\Longrightarrow
+\!\!\!\!\!\!
+\infer[{\lolli}_R]
+{\mildseq{\Gamma}{\Delta}{A \lolli B}}
+{\infer-[\eta^+]
+ {\mildseq{\Gamma}{\Delta, A}{B}}
+ {\infer-[\eta^-]
+  {\mildseq{\Gamma}{\Delta, \langle A \rangle}{B}}
+  {\infer-[{\it subst}^-]
+   {\mildseq{\Gamma}{\Delta, \langle A \rangle}{\langle B \rangle}}
+   {\deduce
+    {\mildseq{\Gamma}{\Delta}{\langle A \lolli B \rangle}}
+    {\mathcal D}
+    &
+    \infer[{\lolli}_L]
+    {\mildseq{\Gamma}{\langle A \rangle, [ A \lolli B ]}{\langle B \rangle}}
+    {\infer[{\it id}^+]
+     {\mildseq{\Gamma}{\langle A \rangle}{[ A ]}}
+     {}
+     &
+     \infer[{\it id}^-]
+     {\mildseq{\Gamma}{[ B ]}{\langle B \rangle}}
+     {}}}}}}
+\]}
+\caption{Identity expansion -- restricting $\eta^+$ and $\eta^-$ to atomic 
+ propositions.}
+\end{figure}
+
+\begin{figure}
+{\small
+\[
+\infer-[\eta^+]
+{\mildseq{\Gamma}{\Delta, A \oplus B}{U}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta, \langle A \oplus B \rangle}{U}}
+ {\mathcal D}}
+\quad
+\Longrightarrow
+\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+\infer[{\oplus}_R]
+{\mildseq{\Gamma}{\Delta, A \oplus B}{U}}
+{\infer-[\eta^+]
+ {\mildseq{\Gamma}{\Delta, A}{U}}
+ {\infer-[{\it subst}^+]
+  {\mildseq{\Gamma}{\Delta, \langle A \rangle}{U}}
+  {\infer[{\oplus}_{R1}]
+   {\mildseq{\Gamma}{\Delta, \langle A \rangle}{[ A \oplus B ]}}
+   {\infer[{\it id}^+]
+    {\mildseq{\Gamma}{\langle A \rangle}{[ A ]}}
+    {}}
+   &
+   \deduce
+   {\mildseq{\Gamma}{\Delta, \langle A \oplus B \rangle}{U}}
+   {\mathcal D}}}
+ &
+ \deduce
+ {\mildseq{\Gamma}{\Delta, B}{U}}
+ {\vdots}
+ }
+\]
+
+
+\[
+\infer-[\eta^-]
+{\mildseq{\Gamma}{\Delta}{\top}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta}{\langle \top \rangle}}
+ {\mathcal D}}
+\quad
+\Longrightarrow
+\quad
+\infer[{\top}_R]
+{\mildseq{\Gamma}{\Delta}{\top}}
+{}
+\]}
+
+\caption{Identity expansion for the additive connectives}
+\end{figure}
+
+
+\newpage
+
+
+  This presentation, shown in
 Figure~\ref{fig:kaustuv-focused}, does not actually reduce the number
 of derivations relative to Figure~\ref{fig:linear} until we make a few
 extra global restrictions on rules:
@@ -372,6 +621,7 @@ Chaudhuri's presentation of focused linear logic
 
 \section{Tensor logic}
 
+
 \chapter{Substructural logic}
 
 Another name that would work
@@ -383,179 +633,12 @@ hypotheses to be duplicated for reuse), and {\it exchange} (which
 enforces that the ordering of hypotheses is not meaningful)
 \cite{gentzen35untersuchungen}.
 
-\begin{figure}
-\small
-\[
-\infer[{\it init}^+]
-{\oiseq{\Gamma}{p^+}}
-{}
-\quad
-\infer[{\it init}^-]
-{\oiseq{\Gamma}{p^-}}
-{}
-\]
+\section{Ordered linear logic}
 
-\medskip
-{\it Disjunction}
-\[
-\infer[{\zero}_L]
-{\olseq{\Gamma}{\Delta}{\Omega_L}{\zero}{\Omega_R}}
-{}
-\quad
-\infer[{\oplus}_{R1}]
-{\orseq{\Gamma}{\Delta}{\Omega}{A \oplus B}}
-{\otseq{\Gamma}{\Delta}{\Omega}{A}}
-\quad
-\infer[{\oplus}_{R2}]
-{\orseq{\Gamma}{\Delta}{\Omega}{A \oplus B}}
-{\otseq{\Gamma}{\Delta}{\Omega}{B}}
-\]
-\[
-\infer[{\oplus}_{L}]
-{\olseq{\Gamma}{\Delta}{\Omega_L}{A \oplus B}{\Omega_R}}
-{\opseq{\Gamma}{\Delta}{\Omega_L}{A,\Omega_R}
- &
- \opseq{\Gamma}{\Delta}{\Omega_L}{B,\Omega_R}}
-\]
+Ordered linear logic 
 
-\medskip
-{\it Multiplicative conjunction}
-\[
-\infer[{\one}_R]
-{\orseq{\Gamma}{\cdot}{\cdot}{\one}}
-{}
-\quad
-\infer[{\one}_L]
-{\olseq{\Gamma}{\Delta}{\Omega_L}{\one}{\Omega_R}}
-{\opseq{\Gamma}{\Delta}{\Omega_L}{\Omega_R}}
-\]
-\[
-\infer[{\fuse}_R]
-{\orseq{\Gamma}{\Delta_1,\Delta_2}{\Omega_L,\Omega_R}{A \fuse B}}
-{\otseq{\Gamma}{\Delta}{\Omega_L}{A}
- &
- \otseq{\Gamma}{\Delta}{\Omega_R}{B}}
-\quad
-\infer[{\fuse}_L]
-{\olseq{\Gamma}{\Delta}{\Omega_L}{A \fuse B}{\Omega_R}}
-{\opseq{\Gamma}{\Delta}{\Omega_L}{A,B,\Omega_R}}
-\]
+\input{figs/fig-ordered-prop}
 
-\medskip
-{\it Implication}
-\[
-\infer[{\righti}_R]
-{\orseq{\Gamma}{\Delta}{\Omega}{A \righti B}}
-{\otseq{\Gamma}{\Delta}{\Omega, A}{B}}
-\quad
-\infer[{\righti}_L]
-{\olseq{\Gamma}{\Delta_A, \Delta}{\Omega_L}{A \righti B}{\Omega_A, \Omega_R}}
-{\otseq{\Gamma}{\Delta_A}{\Omega_A}{A}
- &
- \opseq{\Gamma}{\Delta}{\Omega_L}{B, \Omega_R}}
-\]
-\[
-\infer[{\lefti}_R]
-{\orseq{\Gamma}{\Delta}{\Omega}{A \lefti B}}
-{\otseq{\Gamma}{\Delta}{A, \Omega}{B}}
-\quad
-\infer[{\lefti}_L]
-{\olseq{\Gamma}{\Delta_A, \Delta}{\Omega_L, \Omega_A}{A \lefti B}{\Omega_R}}
-{\otseq{\Gamma}{\Delta_A}{\Omega_A}{A}
- &
- \opseq{\Gamma}{\Delta}{\Omega_L}{B,\Omega_R}}
-\]
-
-\medskip
-{\it Additive conjunction}
-\[
-\infer[{\with}_{L1}]
-{\olseq{\Gamma}{\Delta}{\Omega_L}{A \with B}{\Omega_R}}
-{\opseq{\Gamma}{\Delta}{\Omega_L}{A, \Omega_R}}
-\quad
-\infer[{\with}_{L2}]
-{\olseq{\Gamma}{\Delta}{\Omega_L}{A \with B}{\Omega_R}}
-{\opseq{\Gamma}{\Delta}{\Omega_L}{B, \Omega_R}}
-\]
-\[
-\infer[{\with}_R]
-{\orseq{\Gamma}{\Delta}{\Omega}{A \with B}}
-{\otseq{\Gamma}{\Delta}{\Omega}{A}
- &
- \otseq{\Gamma}{\Delta}{\Omega}{B}}
-\]
-
-\medskip
-{\it Modalities}
-\[
-\infer[{!}_R]
-{\orseq{\Gamma}{\cdot}{\cdot}{{!}A}}
-{\otseq{\Gamma}{\cdot}{\cdot}{A}}
-\quad
-\infer[{!}_L]
-{\olseq{\Gamma}{\Delta}{\Omega_L}{{!}A}{\Omega_R}}
-{\opseq{\Gamma,A}{\Delta}{\Omega_L}{\Omega_R}}
-\]
-\[
-\infer[{\gnab}_R]
-{\orseq{\Gamma}{\Delta}{\cdot}{{\gnab}A}}
-{\otseq{\Gamma}{\Delta}{\cdot}{A}}
-\quad
-\infer[{\gnab}_L]
-{\olseq{\Gamma}{\Delta}{\Omega_L}{{\gnab}A}{\Omega_R}}
-{\opseq{\Gamma}{\Delta, A}{\Omega_L}{\Omega_R}}
-\]
-\[
-\infer[{\ocircle}_R]
-{\orseq{\Gamma}{\Delta}{\Omega}{{\ocircle}A}}
-{\oseq{\Gamma}{\Delta}{\Omega}{\islax{A}}}
-\quad
-\infer[{\ocircle}_L]
-{\oseq{\Gamma}{\Delta}{\Omega_L /{\ocircle}A/ \Omega_R}{\islax{C}}}
-{\oseq{\Gamma}{\Delta}{\Omega_L, A, \Omega_R}{\islax{C}}}
-\]
-
-% {\it First-order}
-% \[
-% \infer[{\exists}_R]
-% {\orseq{\Gamma}{\Delta}{\Omega}{\exists x.B}}
-% {\Psi \vdash t 
-%  &
-%  \otseq{\Gamma}{\Delta}{\Omega}{B[t/x]}}
-% \quad
-% \infer[{\exists}_L]
-% {\olseq{\Gamma}{\Delta}{\Omega_L}{\exists x.B}{\Omega_R}}
-% {\ofirstseq{\Psi,x}{\Gamma}{\Delta}{\Omega_L,B,\Omega_R}{U}}
-% \]
-% \[
-% \infer[{\forall}_R]
-% {\orseq{\Gamma}{\Delta}{\Omega}{\forall x.B}}
-% {\ofirstseq{\Psi,x}{\Gamma}{\Delta}{\Omega}{\istrue{B}}}
-% \quad
-% \infer[{\forall}_L]
-% {\olseq{\Gamma}{\Delta}{\Omega_L}{\forall x.B}{\Omega_R}}
-% {\Psi \vdash t
-%  &
-%  \opseq{\Gamma}{\Delta}{\Omega_L}{B[t/x],\Omega_R}}
-% \]
-% \[
-% \infer[{\doteq}_R]
-% {\orseq{\Gamma}{\Delta}{\Omega}{t \doteq s}}
-% {}
-% \]
-% \[
-% \infer[{\doteq}_L]
-% {\olseq{\Gamma}{\Delta}{\Omega_L}{t \doteq s}{\Omega_R}}
-% {\forall(\Psi' \vdash \theta : \Psi). 
-%  &
-%  \theta t \doteq \theta s 
-%  &
-%  \longrightarrow
-%  &
-%  \ofirstseq{\Psi'}{\theta\Gamma}{\theta\Delta}{\theta\Omega_L,\theta\Omega_R}{\theta U}}
-% \]
-\caption{Ordered linear logic.}
-\end{figure}
 
 
 \section{Substructural contexts}
