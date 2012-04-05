@@ -36,9 +36,9 @@ Panera ``You Pick Two'' menu might be represented as
 \[ {!}({\sf 6bucks} \lolli {\sf soup} \tensor {\sf sandwich}) \otimes
 {!}({\sf 6bucks} \lolli {\sf soup} \tensor {\sf salad}) \otimes
 {!}({\sf 6bucks} \lolli {\sf sandwich} \tensor {\sf salad}),\] as the
-menu gives you the opportunity to exchange dollars for two distinct
-members of the set $\{ {\sf soup}, {\sf salad}, {\sf sandwich} \}$
-any number of times.
+menu gives you the opportunity to exchange six dollars for two
+distinct members of the set $\{ {\sf soup}, {\sf salad}, {\sf
+  sandwich} \}$ any number of times.
 
 \input{figs/fig-linear.tex}
 
@@ -628,141 +628,5 @@ Chaudhuri's presentation of focused linear logic
 \section{Adjoint logic}
 
 \section{Tensor logic}
-
-
-\chapter{Substructural logic}
-
-Another name that would work
-is {\it structural} logic. In formal presentations of logic, this
-persistence manifests itself as the so-called {\it structural
-  properties} of hypothetical reasoning -- {\it weakening} (which
-allows hypotheses to go unused), {\it contraction} (which allows
-hypotheses to be duplicated for reuse), and {\it exchange} (which
-enforces that the ordering of hypotheses is not meaningful)
-\cite{gentzen35untersuchungen}.
-
-\section{Ordered linear logic}
-
-Ordered linear logic 
-
-\input{figs/fig-ordered-prop}
-
-
-
-\section{Substructural contexts}
-
-We will treat {\it substructural contexts} $\Delta$ are maps from {\it
-  variables} to {\it judgments}. There are two kinds of variables: 
-those that map {\it extent}.
-
-${\mbox{\it [}}$
-
-
-Two of the fundamental propeties of $\Delta$ are 
-$x{:}\langle A^+ \rangle_l \sqsubseteq \Delta$. In linear logic, this
-is the statement that $x{:}A \in \Gamma$, whereas in 
-
-\[\small
-\begin{array}{|c|c|c|c|}
-%
-\begin{array}{c}
-\makebox[1.8in]{\it Dual intuitionstic linear logic}\medskip
-\\
-\infer
-{\Gamma; p^+ \vdash p^+ \mathstrut}
-{\mathstrut}
-\end{array}
-%
-&
-%
-\begin{array}{c}
-\makebox[1.8in]{\it Pfenning-Davies S4}\medskip
-\\
-\infer
-{\Delta; \Gamma, p^+ \mathstrut \vdash p^+}
-{\mathstrut}
-\end{array}
-%
-&
-%
-\begin{array}{c}
-\makebox[1.8in]{\it Unified}\medskip
-\\
-\infer
-{\Delta \vdash [ p^+ ]_l \mathstrut}
-{x{:}\langle p^+ \rangle_l \subseteq \Delta \mathstrut}
-\end{array}
-%
-\end{array}
-\]
-
-\[\small
-\begin{array}{|c|c|c|c|}
-%
-\begin{array}{c}
-\makebox[1.8in]{\it Dual intuitionstic linear logic}\medskip
-\\
-\infer
-{\Gamma; \Delta, A \with B \vdash C \mathstrut}
-{\Gamma; \Delta, A \vdash C \mathstrut}
-\end{array}
-%
-&
-%
-\begin{array}{c}
-\makebox[1.8in]{\it Pfenning-Davies S4}\medskip
-\\
-\infer
-{\Delta; \Gamma, A \wedge^- B \mathstrut \vdash C}
-{\Delta; \Gamma, A \wedge^- B, A \vdash C \mathstrut}
-\end{array}
-%
-&
-%
-\begin{array}{c}
-\makebox[1.8in]{\it Unified}\medskip
-\\
-\infer
-{\Theta\{ x{:} A \with B \} \vdash U \mathstrut}
-{\Theta\{ x_1{:} A \} \vdash U \mathstrut}
-\end{array}
-%
-\end{array}
-\]
-
-
-\[\small
-\begin{array}{|c|c|c|c|}
-%
-\begin{array}{c}
-\makebox[1.8in]{\it Dual intuitionstic linear logic}\medskip
-\\
-\infer
-{\Gamma; \Delta_1, \Delta_2 \vdash A \otimes B \mathstrut}
-{\Gamma; \Delta_1 \vdash A & \Gamma; \Delta_2 \vdash B \mathstrut}
-\end{array}
-%
-&
-%
-\begin{array}{c}
-\makebox[1.8in]{\it Pfenning-Davies S4}\medskip
-\\
-\infer
-{\Delta; \Gamma \vdash A \wedge^+ B \mathstrut}
-{\Delta; \Gamma \vdash A & \Delta; \Gamma \vdash B \mathstrut}
-\end{array}
-%
-&
-%
-\begin{array}{c}
-\makebox[1.8in]{\it Unified}\medskip
-\\
-\infer
-{\Delta_1 \bowtie \Delta_2 \vdash A \otimes B \mathstrut}
-{\Delta \vdash A & \Delta_2 \vdash B \mathstrut}
-\end{array}
-%
-\end{array}
-\]
 
 
