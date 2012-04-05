@@ -73,8 +73,32 @@ together as well: if we start out with ${\sf
   6bucks}$ instead of ${\sf battery}$ but we also have the
 persistent ability to turn ${\sf 6bucks}$ into a ${\sf battery}$ --
 just like we turned \$6 into a bowl of soup and a salad at Panera --
-then we can ultimately get our working robot as well. This boils down
-to the statement that it is possible to prove
+then we can ultimately get our working robot as well.
+\[
+\begin{array}{ccccc}
+\begin{array}{c}
+\mbox{\it \$6 (1)}\medskip\\ 
+\mbox{\it battery-free robot (1)} \medskip\\ 
+\mbox{\it turn \$6 into a battery}\\
+\mbox{\it (all you want)}
+\end{array}
+& \leadsto &
+\begin{array}{c}
+\mbox{\it battery  (1)}\medskip\\ 
+\mbox{\it battery-free robot (1)} \medskip\\ 
+\mbox{\it turn \$6 into a battery}\\
+\mbox{\it (all you want)}
+\end{array}
+& \leadsto &
+\begin{array}{c}
+\mbox{\it robot (1)} \medskip\\ 
+\mbox{\it turn \$6 into a battery}\\
+\mbox{\it (all you want)}\medskip\\~\\
+\end{array}
+\end{array}
+\]
+This series of transitions is captured by the statement that it is 
+possible to prove
 \[{!}({\sf 6bucks} \lolli {\sf battery}) \otimes {\sf 6bucks} \otimes
 ({\sf battery} \lolli {\sf robot}) \lolli {\sf robot}\] in linear
 logic; a derivation of this proposition is given in
@@ -137,51 +161,76 @@ Chirmar's 1995 Ph.D. thesis, has sought to use linear logic as a {\it
   logical framework} for describing stateful systems
 \cite{chirimar95proof,cervesato02linear,
   cervesato02concurrent,pfenning04substructural,miller09formalizing,
-  pfenning09substructural,cervesato09relating}.
+  pfenning09substructural,cervesato09relating}.  Logical frameworks
+use the {\it structure} of proofs in a logic (like linear logic) to
+describe the structures we're really interested in (like the process
+of obtaining a robot).  
 
-\subsection*{Linear logical frameworks}
+There are two related reasons why linear logic as described in
+Figure~\ref{fig:linear} is not immediately useful as a logical
+framework. First, the structure of the proof in
+Figure~\ref{fig:unfocused-robot}, which doesn't really match the
+intuitive two-step transition that we sketched out. Second, there are
+{\it lots} of derivations of our example proposition according to the
+rules in Figure~\ref{fig:linear}, even though there's only one
+``real'' series of transitions that get us to a working robot. The use
+of ${!}L$, for instance, could be permuted up past the ${\otimes}L$
+and then past the ${\lolli}L$ (the latter move would cause ${!}L$ to
+appear in both branches of the proof). These differences represent
+inessential nondeterminism in proof construction or in proof search --
+they just get in the way of the structure that we are trying to
+capture.
 
-While linear logic has many uses in computer science, I'll be
-exclusively concentrating on its use as a logical framework for
-describing stateful systems. Logical frameworks use the {\it
-  structure} of proofs in a logic to describe the structure we're
-really interested in. Linear logic as described in Figure~\ref{fig:linear}
-has too much flexibility to be useful as a logical framework. This can be
-seen in 
-Figure~\ref{fig:unfocused-robot}, which doesn't really match the intuitive
-structure of the transitions we skeched out at all:
+\subsection*{Logical frameworks}
+
+
+Can we perhaps just define away the problem? If the the permutability
+of rules like ${!}_L$ and ${\otimes}_L$ is problematic, we can
+consider reasoning about {\it equivalence classes} of derivations
+where proofs that differ only in the ordering of ${!}_L$ and
+${\otimes}_L$ rules are treated as equivalent (that is, as members of
+the same equivalence class):
 \[
-\begin{array}{ccccc}
-\begin{array}{c}
-\mbox{\it \$6 (1)}\medskip\\ 
-\mbox{\it battery-free robot (1)} \medskip\\ 
-\mbox{\it turn \$6 into a battery}\\
-\mbox{\it (all you want)}
-\end{array}
-& \leadsto &
-\begin{array}{c}
-\mbox{\it battery  (1)}\medskip\\ 
-\mbox{\it battery-free robot (1)} \medskip\\ 
-\mbox{\it turn \$6 into a battery}\\
-\mbox{\it (all you want)}
-\end{array}
-& \leadsto &
-\begin{array}{c}
-\mbox{\it robot (1)} \medskip\\ 
-\mbox{\it turn \$6 into a battery}\\
-\mbox{\it (all you want)}\medskip\\~\\
-\end{array}
-\end{array}
+\infer[{!}_L]
+{\seq{\Gamma}{\Delta, {!}A, B \otimes C}{D}}
+{\infer[{\otimes}_L]
+ {\seq{\Gamma,A}{\Delta, B \otimes C}{D}}
+ {\deduce{\seq{\Gamma,A}{\Delta, B, C}{D}}{\mathcal D}}}
+\quad
+\deduce{\mathstrut}{\mathstrut{\equiv}}
+\quad
+\infer[{\otimes}_L]
+{\seq{\Gamma}{\Delta, {!}A, B \otimes C}{D}}
+{\infer[{!}_L]
+ {\seq{\Gamma}{\Delta, {!}A, B, C}{D}}
+ {\deduce{\seq{\Gamma,A}{\Delta, B, C}{D}}{\mathcal D}}}
 \]
-A different (but related) criticism are that there are {\it lots} of
-derivations of our example proposition according to the rules in
-Figure~\ref{fig:linear}, even though there's only one ``real'' series
-of transitions that get us to a working robot. The use of ${!}L$, for
-instance, could be permuted up past the ${\otimes}L$ and then past the
-${\lolli}L$ (the latter move would cause ${!}L$ to appear in both
-branches of the proof). These differences are completely inessential
-nondeterminism in proof construction or in proof search -- they just
-get in the way of the structure that we are trying to capture.
+This approach is the key to the original formulation of the
+dependently-typed logical framework {\it LF}, which has proved to be a
+suitable means of encoding a wide variety of deductive systems (like
+logics and programming languages). Given any two terms in LF, it is possible
+to determine if they are in the same equivalence class that includes
+\begin{itemize}
+\item $\alpha$-equivalence ($\lambda x.\,N \equiv \lambda y.N[y/x]$ if 
+$y \not\in {\it FV}(N)$), 
+\item $\beta$-equivalence 
+($(\lambda x.\,M)N \equiv M[N/x]$ if $x \not\in {\it FV}(N)$), and 
+\item $\eta$-equivalence ($N \equiv \lambda x.\,N\,x$).
+\end{itemize}
+Furthermore, each equivalence class includes only one $\beta$-normal
+and $\eta$-long term, which can act as a convienent canonical
+representative of the equivalence class. 
+
+
+
+
+An approach to this problem is to describe a restricted set of
+derivations that {\it do} capture both the structure and number of
+. In the logical framework LF, the $\beta$-{\it normal forms} of the
+simple dependently-typed lambda calculus have been wildly successful
+as representatives of formal structures
+
+Another, related approach 
 
 To recap: for propositions $A$ and $B$ of the appropriate form, we can
 create a derivation of $A \lolli B$ if and only if there
@@ -224,7 +273,7 @@ survey related work on focusing intuitionstic logic, starting from
 Chaudhuri's formulation \cite{chaudhuri06focused}, and issues with
 each of these formulations.
 
-\section{Focused logic and synthetic inference rules}
+\section{Focused linear logic}
 
 Andreoli's original motivation for introducing focusing was not to
 describe a logical framework, it was to describe a logic programming
@@ -568,8 +617,6 @@ conditions gives a fully focused system that is consistent with
 Chaudhuri's presentation of focused linear logic
 \cite{chaudhuri06focused}.
 
-\subsection{Synthetic inference rules}
-
 \begin{figure}
 \[
 \infer[{\lolli}_R]
@@ -618,6 +665,10 @@ Chaudhuri's presentation of focused linear logic
 \label{fig:unfocused-robot}
 \end{figure}
 
+\section{Synthetic inference rules}
+
+
+\section{Hacking the focusing system}
 
 \subsection{Atom optimization}
 
@@ -625,8 +676,11 @@ Chaudhuri's presentation of focused linear logic
 
 \subsection{A more primitive logic?}
 
-\section{Adjoint logic}
+\paragraph{Adjoint logic}
 
-\section{Tensor logic}
+\paragraph{Tensor logic}
 
+\subsection{Concurrent equality}
+
+\section{Revisiting our notation}
 
