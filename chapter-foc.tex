@@ -241,13 +241,21 @@ which we will continue in the next chapter.
 \label{sec:foclinlog}
 
 Andreoli's original motivation for introducing focusing was not to
-describe a logical framework, it was to describe a logic programming
-language based on proof search in classical linear logic
+describe a logical framework, it was to describe a paradigm of logic
+programming based on proof search in classical linear logic
 \cite{andreoli92logic}. The existence of multiple proofs that differ
 in inessential ways is particularly problematic for proof search, as
 inessential differences between derivations correspond to unnecessary
 choice points that a proof search procedure will need to backtrack
-over. Follows Chaudhuri \cite{chaudhuri06focused}, but not to closely.
+over. The presentation of focusing for intuitionstic linear logic in
+this section most closely resembles Chaudhiri's focused intuitionstic
+linear logic \cite{chaudhuri06focused} and my presentation of
+polarized intuitionstic persistent logic
+\cite{simmons11structural}. The major exception is the treatment of
+asynchronous rules as confluent rather than fixed and arbitrary
+(discussed in Section~\ref{sec:confluent-v-fixed}).
+
+\subsection{Polaraization}
 
 The first step in describing a focused sequent calculus is to classify
 connectives into two groups.  Some connectives, such as linear
@@ -277,15 +285,100 @@ left using the ${\tensor}L$ rule.\footnote{Andreoli dealt with a
   asynchronous connectives have invertible right rules and synchronous
   connectives have invertible left rules. Therefore, another synonym
   for asynchronous/negative is {\it right-invertible}, and another
-  synonym for synchronous/positive is {\it left-invertible}.}  We call
-the asynchronous connectives {\it negative} and write them as $A^-$,
-and call the synchronous connectives {\it positive} and write them as
-$A^+$. In the fragment of linear logic presented earlier, the
-propositions end up classified like this:
+  synonym for synchronous/positive is {\it left-invertible}.}  
+The nontrivial result of focusing is that it is possible to separate a
+proof into phases: inversion phases in which all asynchronous rules
+are applied exhaustively, and focused phases where synchronous rules
+are applied repeatedly and exhaustively to a single proposition (the
+proposition {\it in focus}). 
+
+We call the asynchronous connectives {\it negative} ($\lolli$, $\top$,
+$\with$ in full propositional linear logic) and call the synchronous
+connectives {\it positive} ($\zero$, $\oplus$, $\one$, and $\otimes$
+in full propositional linear logic). Each atomic proposition,
+furthermore, must be assigned to be either positive or negative,
+though this assignment can be arbitrary. At this point, there is an
+important choice to make. One way forward is to treat positive and
+negative propositions as a syntactic refinements of all propositions,
+in which case we end up focusing a standard intuitionstic linear
+logic. The other way forward is to treat positive and negative
+propositions as distinct syntactic classes $A^+$ and $A^-$ with
+syntactic inclusions between them. In this second case, we end up
+focusing a {\it polarized} linear logic.  These inclusions are
+traditionally called {\it shifts}. The positive proposition
+${\downarrow}A^-$, pronounced ``downshift $A$,'' has a subterm that is
+a negative proposition; the negative proposition ${\uparrow}A^+$,
+pronounced ``upshift $A$,'' has a subterm that is a positive
+proposition.
+
+The choice doesn't make a large difference for our purposes.
+Polarized logics are interesting, and polarized linear logic is a bit
+more expressive than regular linear logic, as heavily-shifted
+propositions like ${\uparrow}{\downarrow}{\uparrow}{\downarrow}A^-$
+can be expressed. This extra expressiveness won't help us in
+the design of logical frameworks, but the use of shifts is helpful
+when explaining identity expansion in Section~\ref{sec:linindentity}, 
+so we include the shifts. 
+
+\input{figs/fig-lin-shift}
+
+The relationship between unpolarized and polarized linear logic is
+given by two erasure functions $(A^+)^\circ$ and $(A^-)^\circ$ that
+wipe away all the shifts; this function is defined in
+Figure~\ref{fig:lin-shift}. While shifts turn out to have a profound
+impact on the structure of focused proofs, they are intended to have
+no impact on provability. Therefore, the strongest statement of the
+correctness of focusing is based on erasure: there is an unfocused
+derivation of $(A^-)^\circ$ if and only if there is a focused
+derivation of $A^-$.\footnote{It would have been equally valid to say
+  $(A^+)^\circ$ is derivable if and only if $A^+$ is derivable.}
+However, most proofs of the correctness of focusing prove a slightly
+weaker property. Every proposition in linear logic has an obvious
+polarized analouge with a minimal number of shifts, given by the two
+functions $A^\oplus$ and $A^\ominus$ in Figure~\ref{fig:lin-shift}, so
+almost all proofs of correctness of focusing establish that there is
+an unfocused proof of $A$ if and only if there is a focused proof of
+$A^\ominus$.\footnote{The two exceptions are Zeilberger completeness
+  proof in classical persistent logic \cite{zeilberger08unity} and my
+  proof in intuitionstic persistent logic \cite{simmons11structural}.}
+The weaker formulation is sufficient for our current purposes, so we
+will discuss the weaker property of polarization-based correctness,
+not erasure-based correctness.
+
+\subsection{Logic}
+
+\input{figs/fig-kaustuv-focused.tex}
+
+
+
+propositions 
+
+The views are quite similar -- the primary difference 
+
+{\it negative} and write them as
+$A^-$, and call the synchronous connectives {\it positive} and write
+them as $A^+$. At this point, there is a choice to make.
+
+
+
+
+It is possible to
+treat the positive and negative connectives as syntactically distinct
+
+ due to the
+syntactic differentiation of these classes, 
+
+ In the fragment of
+linear logic presented earlier, the propositions end up classified
+like this:
 \begin{align*}
-A^+ & ::= p^+ \mid {!}A \mid \one \mid A \otimes B\\
-A^- & ::= p^- \mid A \lolli B
+A^+ & ::= p^+ \mid {\downarrow}A^- \mid {!}A^- \mid \one \mid A^+ \otimes B^+\\
+A^- & ::= p^- \mid {\uparrow}A^+ \mid A^+ \lolli B^-
 \end{align*}
+There are two issues to note. First, the premise of linear implication $A \lolli
+B$ is positive, even though the connective itself is negative. This is
+because, in order to stay in focus. 
+
 Note that our previously indistinguishable atomic propositions $p^+$
 and $p^-$ are now distinguishable: $p^+$ is a positive atomic proposition and 
 can be treated as a stand-in for an arbitrary positive propositions,
@@ -307,7 +400,6 @@ The number differes, but at least three are necessary:
 \item $\mildlfoc{\Gamma}{\Delta}{A}{C}$ (the {\it left focus} sequent).
 \end{itemize}
 
-\input{figs/fig-kaustuv-focused.tex}
 
 
 Another reasonable presentation of linear logic uses only one sequent
@@ -318,6 +410,9 @@ ${\it focus}_R$, ${\it focus}_L$, and ${\it copy}$ carry the extra condition
 that the conclusion must be stable: the context $\Delta$ can only contain 
 negative propositions $A^-$ and suspended positive propositions 
 $\langle A^+ \rangle$,.
+
+\subsection{Identity expansion}
+\label{sec:linindentity}
 
 \begin{figure}[f]
 {\small 
@@ -546,9 +641,6 @@ $\langle A^+ \rangle$,.
 \end{figure}
 
 
-\newpage
-
-
   This presentation, shown in
 Figure~\ref{fig:kaustuv-focused}, does not actually reduce the number
 of derivations relative to Figure~\ref{fig:linear} until we make a few
@@ -582,6 +674,9 @@ conditions gives a fully focused system that is consistent with
 Chaudhuri's presentation of focused linear logic
 \cite{chaudhuri06focused}.
 
+
+\subsection{Confluent versus fixed inversion}
+\label{sec:confluent-v-fixed}
 
 \section{Synthetic inference rules}
 \label{sec:linsynthetic}
