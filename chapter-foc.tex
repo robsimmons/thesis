@@ -10,7 +10,8 @@ to. Throughout this thesis, ``logic as it has been traditionally
 understood as studied'' will be referred to as {\it persistent} logic
 to emphasize this treatment of evidence. 
 
-Linear logic, which was popularized by Girard \cite{girard87linear},
+Linear logic, which was studied and
+popularized by Girard \cite{girard87linear},
 treats evidence as an {\it ephemeral} resource; the use of an
 ephemeral resource consumes it, at which point it is unavailable for
 further use.  Linear logic, like persistent logic, comes in classical
@@ -30,7 +31,8 @@ represented as the linear resource $({\sf battery} \lolli {\sf
 lunch -- but only once!\footnote{Conjunction will always bind more
   tightly than implication, so this is equivalent to the proposition
   ${\sf 6bucks} \lolli ({\sf soup} \tensor {\sf sandwich})$.} Linear
-logic also has a modality ${!}A$ representing a resource that can be
+logic also has a modal connective ${!}A$ representing a persistent
+resource that can be
 used to generate any number of $A$ resources, including zero. The
 Panera ``You Pick Two'' menu might be represented as
 \[ {!}({\sf 6bucks} \lolli {\sf soup} \tensor {\sf sandwich}) \otimes
@@ -42,17 +44,13 @@ distinct members of the set $\{ {\sf soup}, {\sf salad}, {\sf
 
 \input{figs/fig-linear.tex}
 
-Figure~\ref{fig:linear} presents a sequent calculus for linear logic,
-in particular the so-called {\it multiplicative, exponential} fragment
-of intuitionistic linear logic (or {\it MELL}). There is one quirk to
-this presentation: I've presented two identical rules for atomic
-propositions, $p^+$ and $p^-$, and given two identitial rules for
-using them, ${\it init}^+$ and ${\it init}^-$. Other than that,
-Figure~\ref{fig:linear} is a standard presentation. It corresponds
-closely to Andreoli's dyadic system \cite{andreoli92logic}, Barber's
-dual intuitionistic linear logic \cite{barber96dual}, and Chang et
-al.'s judgmental analysis of intuitionistic linear logic
-\cite{chang03judgmental}.
+Figure~\ref{fig:linear} presents a standard sequent calculus for
+linear logic, in particular the so-called {\it multiplicative,
+  exponential} fragment of intuitionistic linear logic (or {\it
+  MELL}). It corresponds most closely to Barber's dual intuitionistic
+linear logic \cite{barber96dual}, but also to Andreoli's dyadic system
+\cite{andreoli92logic} and Chang et al.'s judgmental analysis of
+intuitionistic linear logic \cite{chang03judgmental}.
 
 \subsection*{Transitions in linear logic}
 
@@ -74,6 +72,7 @@ together as well: if we start out with ${\sf
 persistent ability to turn ${\sf 6bucks}$ into a ${\sf battery}$ --
 just like we turned \$6 into a bowl of soup and a salad at Panera --
 then we can ultimately get our working robot as well.
+Written as a series of transitions, the picture looks like this:
 \[
 \begin{array}{ccccc}
 \begin{array}{c}
@@ -97,11 +96,11 @@ then we can ultimately get our working robot as well.
 \end{array}
 \end{array}
 \]
-This series of transitions is captured by the statement that it is 
-possible to prove
+In linear logic, these transitions correspond to the provability
+of the proposition
 \[{!}({\sf 6bucks} \lolli {\sf battery}) \otimes {\sf 6bucks} \otimes
-({\sf battery} \lolli {\sf robot}) \lolli {\sf robot}\] in linear
-logic; a derivation of this proposition is given in
+({\sf battery} \lolli {\sf robot}) \lolli {\sf robot}.\] 
+A derivation of this proposition is given in
 Figure~\ref{fig:unfocused-robot}.\footnote{In Chapter XXX, I will
   argue that this view isn't quite precise enough, and that the most
   natural representation of state change from the state $A$ to the
@@ -109,51 +108,9 @@ Figure~\ref{fig:unfocused-robot}.\footnote{In Chapter XXX, I will
   \lolli B$ or by derivations of the hypothetical judgment
   $\seq{\cdot}{A}{B}$.  However, this view remains a simple and useful
   one; Cervesato and Scedrov cover it thoroughly in the context of
-  intuitionstic linear logic \cite{cervesato09relating}.}  (Note that
-this figure imples that I've assigned all relevant atomic propsitions
-in this discussion to the $p^+$ category rather than the $p^-$
-category. That was not an arbitrary choice, but it's not a relevant
-choice yet.)
+  intuitionstic linear logic \cite{cervesato09relating}.}  
 
-\begin{figure}
-\[
-\infer[{\lolli}_R]
-{\seq{\cdot}{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}) \otimes
-                    {\sf 6bucks} \otimes 
-                    ({\sf battery} \lolli {\sf robot}) \lolli {\sf robot}}}
-{\infer[{\otimes}_L]
-{\seq{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}) \otimes
-                    {\sf 6bucks} \otimes 
-                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
-{\infer[{!}_L]
-{\seq{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}),
-                    {\sf 6bucks} \otimes 
-                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
-{\infer[{\otimes}_L]
-{\seq{\Gamma}{{\sf 6bucks} \otimes 
-                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
-{\infer[{\lolli}_L]
-{\seq{\Gamma}{{\sf 6bucks}, {\sf battery} \lolli {\sf robot}}{{\sf robot}}}
-{\infer[{\it copy}]
- {\seq{\Gamma}{{\sf 6bucks}}{{\sf battery}}}
- {\infer[{\lolli}_L] 
-  {\seq{\Gamma}{{\sf 6bucks}, {\sf 6bucks} \lolli {\sf battery}}{{\sf battery}}}
-  {\infer[{\it init}^+]
-   {\seq{\Gamma}{{\sf 6bucks}}{{\sf 6bucks}}}
-   {}
-   &
-   \infer[{\it init}^+]
-   {\seq{\Gamma}{{\sf battery}}{{\sf battery}}}
-   {}}}
- &
- \infer[{\it init}^+]
- {\seq{\Gamma}{{\sf robot}}{{\sf robot}}}
- {}}}}}}
-\] 
-\caption{Proving that a transition is possible 
-(where we let $\Gamma = {\sf 6bucks} \lolli {\sf battery}$).}
-\label{fig:unfocused-robot}
-\end{figure}
+\input{figs/fig-unfocused-robot}
 
 It is precisely because linear logic contains this natural notion of
 state and state transition that a rich line of work, dating back to
@@ -161,35 +118,43 @@ Chirmar's 1995 Ph.D. thesis, has sought to use linear logic as a {\it
   logical framework} for describing stateful systems
 \cite{chirimar95proof,cervesato02linear,
   cervesato02concurrent,pfenning04substructural,miller09formalizing,
-  pfenning09substructural,cervesato09relating}.  Logical frameworks
-use the {\it structure} of proofs in a logic (like linear logic) to
-describe the structures we're really interested in (like the process
-of obtaining a robot).  
-
-There are two related reasons why linear logic as described in
-Figure~\ref{fig:linear} is not immediately useful as a logical
-framework. First, the structure of the proof in
-Figure~\ref{fig:unfocused-robot}, which doesn't really match the
-intuitive two-step transition that we sketched out. Second, there are
-{\it lots} of derivations of our example proposition according to the
-rules in Figure~\ref{fig:linear}, even though there's only one
-``real'' series of transitions that get us to a working robot. The use
-of ${!}L$, for instance, could be permuted up past the ${\otimes}L$
-and then past the ${\lolli}L$ (the latter move would cause ${!}L$ to
-appear in both branches of the proof). These differences represent
-inessential nondeterminism in proof construction or in proof search --
-they just get in the way of the structure that we are trying to
-capture.
+  pfenning09substructural,cervesato09relating}.  
 
 \subsection*{Logical frameworks}
 
+Generally speaking, logical frameworks use the {\it structure} of
+proofs in a logic (like linear logic) to describe the structures we're
+really interested in (like the process of obtaining a robot).  There
+are two related reasons why linear logic as described in
+Figure~\ref{fig:linear} is not immediately useful as a logical
+framework. First, the structure of the proof in
+Figure~\ref{fig:unfocused-robot} doesn't really match the intuitive
+two-step transition that we sketched out above. Second, there are {\it
+  lots} of derivations of our example proposition according to the
+rules in Figure~\ref{fig:linear}, even though there's only one
+``real'' series of transitions that get us to a working robot. The use
+of ${!}L$, for instance, could be permuted up past the ${\otimes}L$
+and then past the ${\lolli}L$ into the left branch of the proof. These
+differences represent inessential nondeterminism in proof construction
+or in proof search -- they just get in the way of the structure that
+we are trying to capture. 
 
-Can we perhaps just define away the problem? If the the permutability
-of rules like ${!}_L$ and ${\otimes}_L$ is problematic, we can
-consider reasoning about {\it equivalence classes} of derivations
-where proofs that differ only in the ordering of ${!}_L$ and
-${\otimes}_L$ rules are treated as equivalent (that is, as members of
-the same equivalence class):
+This is a general problem in the construction of logical frameworks,
+and we'll discuss two solutions in the context of LF, a logical
+framework based on dependent type theory that has proved to be a
+suitable means of encoding a wide variety of deductive systems, such
+as logics and programming languages \cite{harper93framework}.  The
+first solution is to define an appropriate equivalence class of
+proofs, and the second solution is to define an appropriate fragment
+of canonical proofs.
+
+Using an appropriate equvialence class of proofs can be an effective
+way of defining away the problem of inessential nondeterminism.  In
+linear logic as presented above, if the permutability of rules like
+${!}_L$ and ${\otimes}_L$ is problematic, we can instead reason about
+{\it equivalence classes} of derivations where proofs that differ only
+in the ordering of ${!}_L$ and ${\otimes}_L$ rules are treated as
+equivalent (that is, as members of the same equivalence class):
 \[
 \infer[{!}_L]
 {\seq{\Gamma}{\Delta, {!}A, B \otimes C}{D}}
@@ -205,61 +170,50 @@ the same equivalence class):
  {\seq{\Gamma}{\Delta, {!}A, B, C}{D}}
  {\deduce{\seq{\Gamma,A}{\Delta, B, C}{D}}{\mathcal D}}}
 \]
-This approach is the key to the original formulation of the
-dependently-typed logical framework {\it LF}, which has proved to be a
-suitable means of encoding a wide variety of deductive systems (like
-logics and programming languages). Given any two terms in LF, it is possible
-to determine if they are in the same equivalence class that includes
+
+In LF, lambda calculus terms (which correspond to derivations by the
+Curry-Howard) are considered modulo the least equivalence class that
+includes
 \begin{itemize}
-\item $\alpha$-equivalence ($\lambda x.\,N \equiv \lambda y.N[y/x]$ if 
+\item $\alpha$-equivalence ($\lambda x.N \equiv \lambda y.N[y/x]$ if 
 $y \not\in {\it FV}(N)$), 
 \item $\beta$-equivalence 
 ($(\lambda x.\,M)N \equiv M[N/x]$ if $x \not\in {\it FV}(N)$), and 
-\item $\eta$-equivalence ($N \equiv \lambda x.\,N\,x$).
+\item $\eta$-equivalence ($N \equiv \lambda x.N\,x$).
 \end{itemize}
-Furthermore, each equivalence class includes only one $\beta$-normal
-and $\eta$-long term, which can act as a convienent canonical
-representative of the equivalence class. 
+The weak normalization property for LF establishes that given any
+typed LF term, we can find an equivalent term that is $\beta$-normal
+(no $\beta$-redexes of the form $(\lambda x.M) N$ exist) and
+$\eta$-long (replacing $N$ with $\lambda x.N\,x$ anywhere would
+introduce a $\beta$-redex or make the term ill-typed).  Furthermore,
+in any given equivalence class of typed LF terms, all the
+$\beta$-normal and $\eta$-long terms are $\alpha$-equivalent.
+Therefore, because $\alpha$-equivalence is decidable, the equvalence
+of typed LF terms is also decidable. 
 
+The uniqueness of $\beta$-normal and $\eta$-long terms within an
+equivalence class of lambda calculus terms (modulo
+$\alpha$-equivalence, which we will henceforth take for granted) makes
+these terms useful as canonical representatives of equivalence
+classes. In Harper, Honsell, and Plotkin's original formulation
+of LF, a deductive system was said to be {\it adequately encoded} as
+an LF type family in the case that there is a compositional bijection
+between the formal objects in the deductive system and these
+$\beta$-normal, $\eta$-long representatives of equivalence classes.
 
+More modern presentations of LF, such as Harper and Licata's
+\cite{harper07mechanizing}, follow the approach developed by Watkins
+et al.~\cite{watkins02concurrent} and define the logical framework so
+that it only contains these $\beta$-normal, $\eta$-long {\it canonical
+  forms} of LF. This presentations of LF is called Canonical LF to
+distinguish it from the original presentation of LF in which the
+canonicla forms are just a subset of the possible terms. A central
+component in this approach is {\it hereditary substitution}, which can
+also be used to take any regular LF term and transform it into a
+Canonical LF term.
 
-
-An approach to this problem is to describe a restricted set of
-derivations that {\it do} capture both the structure and number of
-. In the logical framework LF, the $\beta$-{\it normal forms} of the
-simple dependently-typed lambda calculus have been wildly successful
-as representatives of formal structures
-
-Another, related approach 
-
-To recap: for propositions $A$ and $B$ of the appropriate form, we can
-create a derivation of $A \lolli B$ if and only if there
-is a sequence of transitions that take us from a state described by 
-$A$ to the state described by $B$. However, there may be {\it lots}
-of derivations even if there is just one transition, and many of 
-
-
-
-We {\it do} have the property that some derivations exist if and only if
-a sequence of transitions exists. 
-
-When there are lots of derivations that correspond to the same formal
-artifact, a natural solution is to form equivalence classes of derivations
-in such a way that there is a one-to-one correspondence between 
-the formal artifacts and the equivalence classes of derivations.
-
-see if all the derivations that
-correspond to the same formal artifact in an equivalence class.  This
-was the approach pioneered by Harper, Honsell, and Plotkin in the
-logical framework LF \cite{harper93framework}. Derivations in LF are
-represented as typed lambda calculus terms, and two derivations/lambda
-calculus terms are in the same equivalence class if they normalize to
-the same $\beta$-normal, $\eta$-long terms. These $\beta$-normal,
-$\eta$-long terms are called the {\it canonical forms} of LF. In
-practice, it turns out that many deductive systems (like logics and
-programming languages) can be put into a compositional bijection with
-the canonical forms of some LF type; we say that such a deductive
-system is {\it adequately encoded} in LF.
+We will generally follow this second appraoach, defining our a
+restricted form of
 
 One analouge to the canonical forms of LF will be the {\it focused
   derivations} of linear logic that are presented in the next
@@ -617,53 +571,6 @@ conditions gives a fully focused system that is consistent with
 Chaudhuri's presentation of focused linear logic
 \cite{chaudhuri06focused}.
 
-\begin{figure}
-\[
-\infer[{\lolli}_R]
-{\mildseq{\cdot}{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}) \otimes
-                    {\sf 6bucks} \otimes 
-                    ({\sf battery} \lolli {\sf robot}) \lolli {\sf robot}}}
-{\infer[{\otimes}_L]
-{\mildseq{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}) \otimes
-                    {\sf 6bucks} \otimes 
-                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
-{\infer[{!}_L]
-{\mildseq{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}),
-                    {\sf 6bucks} \otimes 
-                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
-{\infer[{\otimes}_L]
-{\mildseq{\Gamma}{{\sf 6bucks} \otimes 
-                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
-{\infer[{\it copy}]
-{\mildseq{\Gamma}{{\sf 6bucks}, {\sf battery} \lolli {\sf robot}}{{\sf robot}}}
-{\infer[{\lolli}_L]
-{\mildseq{\Gamma}{{\sf 6bucks}, {\sf battery} \lolli {\sf robot}, [{\sf 6bucks} \lolli {\sf battery}]}{{\sf robot}}}
-{\infer[{\it init}^+]
- {\mildseq{\Gamma}{{\sf 6bucks}}{[{\sf 6bucks}]}}
- {}
- &
- \infer[{\it blur}_L]
- {\mildseq{\Gamma}{{\sf battery} \lolli {\sf robot}, [{\sf battery}]}{{\sf robot}}}
- {\infer[{\it focus}_L]
- {\mildseq{\Gamma}{{\sf battery} \lolli {\sf robot}, {\sf battery}}{{\sf robot}}}
- {\infer[{\lolli}_L]
- {\mildseq{\Gamma}{{\sf battery}, [{\sf battery} \lolli {\sf robot}]}{{\sf robot}}}
- {\infer[{\it init^+}]
-  {\mildseq{\Gamma}{{\sf battery}}{[{\sf battery}]}}
-  {}
-  &
-  \infer[{\it blur}_L]
-  {\mildseq{\Gamma}{[{\sf robot}]}{{\sf robot}}}
-  {\infer[{\it focus}_R]
-  {\mildseq{\Gamma}{{\sf robot}}{{\sf robot}}}
-  {\infer[{\it init}^+]
-  {\mildseq{\Gamma}{{\sf robot}}{[{\sf robot}]}}
-  {}}}}}}}}}}}}
-\] 
-\caption{Proving that a transition is possible 
-(where we let $\Gamma = {\sf 6bucks} \lolli {\sf battery}$).}
-\label{fig:unfocused-robot}
-\end{figure}
 
 \section{Synthetic inference rules}
 
@@ -684,3 +591,7 @@ Chaudhuri's presentation of focused linear logic
 
 \section{Revisiting our notation}
 
+\section{A note on }
+
+Talk about equivalence, Chris's unpublished work, and where
+the focalization theorem given by this approach is deficient -- 

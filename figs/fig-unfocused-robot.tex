@@ -1,0 +1,39 @@
+\begin{figure}
+\[
+\infer[{\lolli}_R]
+{\seq{\cdot}{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}) \otimes
+                    {\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot}) \lolli {\sf robot}}}
+{\infer[{\otimes}_L]
+{\seq{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}) \otimes
+                    {\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
+{\infer[{!}_L]
+{\seq{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}),
+                    {\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
+{\infer[{\otimes}_L]
+{\seq{\Gamma}{{\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
+{\infer[{\lolli}_L]
+{\seq{\Gamma}{{\sf 6bucks}, {\sf battery} \lolli {\sf robot}}{{\sf robot}}}
+{\infer[{\it copy}]
+ {\seq{\Gamma}{{\sf 6bucks}}{{\sf battery}}}
+ {\infer[{\lolli}_L] 
+  {\seq{\Gamma}{{\sf 6bucks}, {\sf 6bucks} \lolli {\sf battery}}{{\sf battery}}}
+  {\infer[{\it init}]
+   {\seq{\Gamma}{{\sf 6bucks}}{{\sf 6bucks}}}
+   {}
+   &
+   \infer[{\it init}]
+   {\seq{\Gamma}{{\sf battery}}{{\sf battery}}}
+   {}}}
+ &
+ \infer[{\it init}]
+ {\seq{\Gamma}{{\sf robot}}{{\sf robot}}}
+ {}}}}}}
+\] 
+\caption{Proving that a transition is possible 
+(where we let $\Gamma = {\sf 6bucks} \lolli {\sf battery}$).}
+\label{fig:unfocused-robot}
+\end{figure}
