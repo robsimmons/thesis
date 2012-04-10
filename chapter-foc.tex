@@ -624,7 +624,7 @@ do not contain any non-atomic suspended propositions:
       then $\mildseq{\Gamma}{\Delta',\Delta}{U}$.
 \item If $\mildseq{\Gamma}{\Delta}{A^-}$
       and $\mildseq{\Gamma}{\Delta', [A^-]}{U}$
-      (where $\Delta$, $\Delta'$, and $U$ are stable),
+      (where $\Delta'$ and $U$ are stable),
       then $\mildseq{\Gamma}{\Delta',\Delta}{U}$. 
 \item If $\mildseq{\Gamma}{\Delta}{A^-}$
       and $\mildseq{\Gamma}{\Delta', A^-}{U}$
@@ -652,6 +652,8 @@ metrics stay the same while the first given derivation gets smaller.
 \end{proof}
 
 \subsection{Correctness of focusing}
+
+\input{figs/fig-lin-shift-ctx}
 
 Now we will make precise the correctness for a focused, polarized logic
 that was discussed in Section~\ref{sec:linpolar}: that there is a unfocused
@@ -683,17 +685,48 @@ then $\mildseq{\Gamma^\bullet}{\Delta^\bullet}{C^\bullet}$.
 
 \begin{proof}
   By induction on the first given derivation. Each rule in 
-  Figure~\ref{fig:linear}
+  Figure~\ref{fig:linear} corresponds to one {\it unfocused admissibility 
+  lemma} that we must prove in the focused system; we give three examples
+  of these unfocused admissibility lemmas here.
 
-  Rule {\it copy}:
+  Rule {\it copy}: Given
+  $\mildseq{(\Gamma, A)^\bullet}{(\Delta, A)^\bullet}{C^\bullet}$, we
+  have to prove $\mildseq{(\Gamma, A)^\bullet}{\Delta^\bullet}{C^\bullet}$.
+  If $A$ is a positive atomic proposition, then this is derivable:
   \[
+  \infer[{\it copy}]
+  {\mildseq{\Gamma^\bullet, {\uparrow}p^+}{\Delta^\bullet}{C^\bullet}}
+  {\infer[{\uparrow}_R]
+   {\mildseq{\Gamma^\bullet, {\uparrow}p^+}{\Delta^\bullet, [{\uparrow}p^+]}{C^\bullet}}
+   {\infer[\eta^+]
+    {\mildseq{\Gamma^\bullet, {\uparrow}p^+}{\Delta^\bullet, p^+}{C^\bullet}}
+    {\mildseq{\Gamma^\bullet, {\uparrow}p^+}{\Delta^\bullet, \langle p^+ \rangle}{C^\bullet}}}}
+  \]
+  Otherwise, the proof proceeds as follows:
+  \[
+  \infer-[{\it cut}(3)]
+  {\mildseq{\Gamma^\bullet, A^\ominus}{\Delta^\bullet}{C^\bullet}}
+  {\infer-[\eta^-]
+   {\mildseq{\Gamma^\bullet, A^\ominus}{\cdot}{A^\ominus}}
+   {\infer[{\it id}^-]
+    {\mildseq{\Gamma^\bullet, A^\ominus}{\cdot}{\langle A^\ominus \rangle}}
+    {}}
+   &
+   \mildseq{\Gamma^\bullet, A^\ominus}{\Delta^\bullet, A^\ominus}{C^\bullet}}
   \]
 
   Rule $\lolli_L$:
   \[
   \]
 
-  Rule $\lolli_R$:
+  Rule $\lolli_R$: Given 
+  $\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{B^\bullet}$, we must
+  prove 
+  $\mildseq{\Gamma^\bullet}{\Delta^\bullet}{(A \lolli B)^\bullet}$ which is the
+  same as 
+   $\mildseq{\Gamma^\bullet}{\Delta^\bullet}
+    {{\downarrow}(A^\oplus \lolli B^\ominus)}$. The core of the 
+  proof is this derivation:
   {\small \[
   \infer-[{\it cut}(3)]
   {\mildseq{\Gamma^\bullet}{\Delta^\bullet}
@@ -768,22 +801,80 @@ then $\mildseq{\Gamma^\bullet}{\Delta^\bullet}{C^\bullet}$.
              {\mildseq{\Gamma^\bullet}{[B^\ominus]}{\langle B^\ominus \rangle}}
              {}}}}}}}}}}}}
   \]}
-\end{proof}
 
-The correctness of focusing is established as in the structural focalization
-methadology, except that we establish a weaker polarization-strategy-based
-proof of completeness rather than an erasure-based proof as in 
-\cite{simmons11structural}. Both the soundness and completeness of focusing
+  \noindent
+  Then, we show that 
+  $\mildseq{\Gamma^\bullet}{\Delta^\bullet, {\uparrow}A^\oplus}
+   {{\downarrow}B^\ominus}$ is derivable from 
+  $\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{B^\bullet}$ in two steps.
+  First, by case analysis on $A$, we show that 
+  $\mildseq{\Gamma^\bullet}{\Delta^\bullet, {\uparrow}A^\oplus}
+   {{\downarrow}B^\ominus}$ is derivable from 
+  $\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{{\downarrow}B^\ominus}$.
+  Either $A$ is
+  a negative connective (in which case $A^\oplus = {\downarrow}A^\ominus$
+  and $(\Delta, A)^\bullet = \Delta^\bullet, A^\ominus$), 
+  a positive atomic proposition $p^+$
+  (in which case $(\Delta, A)^\bullet = \Delta^\bullet, \langle p^+ \rangle$), 
+  or some other positive connective
+  (in which case $(\Delta, A)^\bullet = \Delta^\bullet, {\uparrow}A^\oplus$): 
+  \[
+  \infer[{\it focus}_L]
+  {\mildseq{\Gamma^\bullet}{\Delta^\bullet, {\uparrow}{\downarrow}A^\ominus}
+     {{\downarrow}B^\ominus}} 
+  {\infer[{\uparrow}_L]
+   {\mildseq{\Gamma^\bullet}{\Delta^\bullet, [{\uparrow}{\downarrow}A^\ominus]}
+     {{\downarrow}B^\ominus}}
+   {\infer[{\downarrow_L}]
+    {\mildseq{\Gamma^\bullet}{\Delta^\bullet, {\downarrow}A^\ominus}
+     {{\downarrow}B^\ominus}}
+    {\mildseq{\Gamma^\bullet}{\Delta^\bullet, A^\ominus}
+     {{\downarrow}B^\ominus}}}}
+  \qquad
+  \infer[{\it focus}_L]
+  {\mildseq{\Gamma^\bullet}{\Delta^\bullet, {\uparrow}p^+}{{\downarrow}B^-}}
+  {\infer[{\uparrow}_L]
+   {\mildseq{\Gamma^\bullet}{\Delta^\bullet, [{\uparrow}p^+]}{{\downarrow}B^-}}
+   {\infer[\eta^+]
+    {\mildseq{\Gamma^\bullet}{\Delta^\bullet, p^+}{{\downarrow}B^-}}
+    {\mildseq{\Gamma^\bullet}{\Delta^\bullet, \langle p^+ \rangle}
+       {{\downarrow}B^-}}}}
+  \qquad
+  \mildseq{\Gamma^\bullet}{\Delta^\bullet, {\uparrow}A^+}{{\downarrow}B^-}
+  \]
 
+  \noindent
+  Second, by case analysis on $B$, we show that 
+  $\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{{\downarrow}B^\ominus}$
+  is derivable from $\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{B^\bullet}$.
+  Either $B$ is a positive connective
+  (in which case $B^\ominus = {\uparrow}B^\oplus$ and $B^\bullet = B^\oplus$),
+  a negative atomic proposition $p^-$ 
+  (in which case $B^\bullet = \langle p^- \rangle$), or some other negative
+  connective (in which case $B^\bullet = {\downarrow}B^-$):
+  \[
+  \infer[{\it focus}_R]
+  {\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{{\downarrow}{\uparrow}B^\oplus}} 
+  {\infer[{\downarrow}_R]
+   {\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}
+      {[{\downarrow}{\uparrow}B^\oplus]}}
+   {\infer[{\uparrow}_R]
+    {\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{{\uparrow}B^\oplus}}
+    {\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{B^\oplus}}}}
+  \qquad
+  \infer[{\it focus}_R]
+  {\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{{\downarrow}p^-}} 
+  {\infer[{\downarrow}_R]
+   {\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{[{\downarrow}p^-]}}
+   {\infer[\eta^-]
+    {\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{p^-}}
+    {\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{\langle p^- \rangle}}}}
+  \qquad
+  \mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{{\downarrow}B^\ominus}
+  \]
 
-\input{figs/fig-lin-shift-ctx}
-
-
-
-\begin{proof}
-
-The reverse direction is the soundness of focusing. It is completely
-straightforward, 
+  \noindent
+  This completes the case for rule ${\lolli}_R$.
 \end{proof}
 
 \subsection{Confluent versus fixed inversion}
