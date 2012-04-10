@@ -329,9 +329,9 @@ Figure~\ref{fig:lin-shift}. While shifts turn out to have a profound
 impact on the structure of focused proofs, they are intended to have
 no impact on provability. Therefore, the strongest statement of the
 correctness of focusing is based on erasure: there is an unfocused
-derivation of $(A^-)^\circ$ if and only if there is a focused
-derivation of $A^-$.\footnote{I chose $A^-$ only to be brief; the
-  condition that $(A^+)^\circ$ is derivable iff $A^+$ is could, of
+derivation of $(A^+)^\circ$ if and only if there is a focused
+derivation of $A^+$.\footnote{I chose $A^+$ mostly to be brief; the
+  condition that $(A^-)^\circ$ is derivable iff $A^-$ is could, of
   course, be added.}  However, most proofs of the correctness of
 focusing prove a weaker property. Every proposition in linear logic
 has an obvious polarized analogue with a minimal number of shifts;
@@ -342,7 +342,7 @@ functions are partial inverses of erasure: $(A^\oplus)^\circ =
 focusing work on the basis of these partial inverses, which we call
 {\it polarization strategies}, establishing that there is an unfocused
 proof of $A$ if and only if there is a focused proof of
-$A^\ominus$.\footnote{The two exceptions are Zeilberger completeness
+$A^\oplus$.\footnote{The two exceptions are Zeilberger completeness
   proof in classical persistent logic \cite{zeilberger08unity} and my
   proof in intuitionistic persistent logic \cite{simmons11structural}.}
 The weaker formulation is sufficient for our current purposes, so we
@@ -655,15 +655,15 @@ metrics stay the same while the first given derivation gets smaller.
 
 \input{figs/fig-lin-shift-ctx}
 
-Now we will make precise the correctness for a focused, polarized logic
-that was discussed in Section~\ref{sec:linpolar}: that there is a unfocused
-proof of $A$ if and only if there is a focused proof of $A^\oplus$. The
-proof require lifting of our erasure function and our ``obvious'' 
-polarization strategy to contexts and succeedents, which is done
-in Figure~\ref{fig:lin-shift-ctx}. Soundness is established on the 
-basis of erasure as in \cite{simmons11structural}, but as discussed
-we give the slightly simpler polarization-strategy-based proof of
-completeness.
+Now we will make precise the correctness for a focused, polarized
+logic that was discussed in Section~\ref{sec:linpolar}: that there is
+a unfocused proof of $A$ if and only if there is a focused proof of
+$A^\oplus$. The proof require lifting of our erasure function and our
+natural polarization strategy to contexts and succeedents, which is
+done in Figure~\ref{fig:lin-shift-ctx}. Soundness is established on
+the basis of erasure as in \cite{simmons11structural}, but as
+discussed Section~\ref{sec:linpolar}, we will give the slightly
+simpler polarization-strategy-based proof of completeness.
 
 \bigskip
 \begin{theorem}[Soundness of focusing]
@@ -680,7 +680,7 @@ atomic suspensions, then $\seq{\Gamma^\circ}{\Delta^\circ}{U^\circ}$.
 
 \begin{theorem}[Completeness of focusing]
 If $\seq{\Gamma}{\Delta}{C}$,
-then $\mildseq{\Gamma^\bullet}{\Delta^\bullet}{C^\bullet}$. 
+then $\mildseq{\Gamma^\ominus}{\Delta^\ominus}{C^\oplus}$. 
 \end{theorem}
 
 \begin{proof}
@@ -690,29 +690,20 @@ then $\mildseq{\Gamma^\bullet}{\Delta^\bullet}{C^\bullet}$.
   of these unfocused admissibility lemmas here.
 
   Rule {\it copy}: Given
-  $\mildseq{(\Gamma, A)^\bullet}{(\Delta, A)^\bullet}{C^\bullet}$, we
-  have to prove $\mildseq{(\Gamma, A)^\bullet}{\Delta^\bullet}{C^\bullet}$.
-  If $A$ is a positive atomic proposition, then this is derivable:
-  \[
-  \infer[{\it copy}]
-  {\mildseq{\Gamma^\bullet, {\uparrow}p^+}{\Delta^\bullet}{C^\bullet}}
-  {\infer[{\uparrow}_R]
-   {\mildseq{\Gamma^\bullet, {\uparrow}p^+}{\Delta^\bullet, [{\uparrow}p^+]}{C^\bullet}}
-   {\infer[\eta^+]
-    {\mildseq{\Gamma^\bullet, {\uparrow}p^+}{\Delta^\bullet, p^+}{C^\bullet}}
-    {\mildseq{\Gamma^\bullet, {\uparrow}p^+}{\Delta^\bullet, \langle p^+ \rangle}{C^\bullet}}}}
-  \]
-  Otherwise, the proof proceeds as follows:
+  $\mildseq{\Gamma^\ominus, A^\ominus}{\Delta^\ominus, A^\ominus}{C^\oplus}$, we
+  have to prove 
+  $\mildseq{\Gamma^\ominus, A^\ominus}{\Delta^\ominus}{C^\oplus}$:
   \[
   \infer-[{\it cut}(3)]
-  {\mildseq{\Gamma^\bullet, A^\ominus}{\Delta^\bullet}{C^\bullet}}
+  {\mildseq{\Gamma^\ominus, A^\ominus}{\Delta^\ominus}{C^\oplus
+}}
   {\infer-[\eta^-]
-   {\mildseq{\Gamma^\bullet, A^\ominus}{\cdot}{A^\ominus}}
+   {\mildseq{\Gamma^\ominus, A^\ominus}{\cdot}{A^\ominus}}
    {\infer[{\it id}^-]
-    {\mildseq{\Gamma^\bullet, A^\ominus}{\cdot}{\langle A^\ominus \rangle}}
+    {\mildseq{\Gamma^\ominus, A^\ominus}{\cdot}{\langle A^\ominus \rangle}}
     {}}
    &
-   \mildseq{\Gamma^\bullet, A^\ominus}{\Delta^\bullet, A^\ominus}{C^\bullet}}
+   \mildseq{\Gamma^\bullet, A^\ominus}{\Delta^\bullet, A^\ominus}{C^\oplus}}
   \]
 
   Rule $\lolli_L$:
@@ -720,157 +711,131 @@ then $\mildseq{\Gamma^\bullet}{\Delta^\bullet}{C^\bullet}$.
   \]
 
   Rule $\lolli_R$: Given 
-  $\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{B^\bullet}$, we must
+  $\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\ominus}{B^\oplus}$, we must
   prove 
-  $\mildseq{\Gamma^\bullet}{\Delta^\bullet}{(A \lolli B)^\bullet}$ which is the
+  $\mildseq{\Gamma^\ominus}{\Delta^\ominus}{(A \lolli B)^\oplus}$ which is the
   same as 
-   $\mildseq{\Gamma^\bullet}{\Delta^\bullet}
+   $\mildseq{\Gamma^\ominus}{\Delta^\ominus}
     {{\downarrow}(A^\oplus \lolli B^\ominus)}$. The core of the 
   proof is this derivation:
   {\small \[
   \infer-[{\it cut}(3)]
-  {\mildseq{\Gamma^\bullet}{\Delta^\bullet}
+  {\mildseq{\Gamma^\ominus}{\Delta^\ominus}
     {{\downarrow}(A^\oplus \lolli B^\ominus)}}
   {\infer[{\lolli}_R]
-   {\mildseq{\Gamma^\bullet}{\Delta^\bullet}
+   {\mildseq{\Gamma^\ominus}{\Delta^\ominus}
      {{\downarrow}{\uparrow}A^\oplus \lolli {\uparrow}{\downarrow}B^\ominus}}  
    {\infer[{\downarrow}_L]
-    {\mildseq{\Gamma^\bullet}{\Delta^\bullet, {\downarrow}{\uparrow}A^\oplus}
+    {\mildseq{\Gamma^\ominus}{\Delta^\ominus, {\downarrow}{\uparrow}A^\oplus}
       {{\uparrow}{\downarrow}B^\ominus}}
     {\infer[{\uparrow}_R]
-     {\mildseq{\Gamma^\bullet}{\Delta^\bullet, {\uparrow}A^\oplus}
+     {\mildseq{\Gamma^\ominus}{\Delta^\ominus, {\uparrow}A^\oplus}
       {{\uparrow}{\downarrow}B^\ominus}}
-     {\mildseq{\Gamma^\bullet}{\Delta^\bullet, {\uparrow}A^\oplus}
+     {\mildseq{\Gamma^\ominus}{\Delta^\ominus, {\uparrow}A^\oplus}
       {{\downarrow}B^\ominus}}}}
    &
    \infer[{\it focus}_R]
    {\mildseq{\Gamma}{{\downarrow}{\uparrow}A^\oplus \multimap B^\ominus}
       {{\downarrow}(A^\oplus \lolli B^\ominus)}}
    {\infer[{\downarrow}_R]
-    {\mildseq{\Gamma^\bullet}
+    {\mildseq{\Gamma^\ominus}
       {{\downarrow}{\uparrow}A^\oplus \multimap {\uparrow}{\downarrow}B^\ominus}
       {[ {\downarrow}(A^\oplus \lolli B^\ominus)} ]}
     {\infer[{\lolli}_R]
-     {\mildseq{\Gamma^\bullet}
+     {\mildseq{\Gamma^\ominus}
        {{\downarrow}{\uparrow}A^\oplus \multimap {\uparrow}{\downarrow}B^\ominus}
        {A^\oplus \lolli B^\ominus}}
      {\infer-[\eta^+]
-      {\mildseq{\Gamma^\bullet}
+      {\mildseq{\Gamma^\ominus}
         {{\downarrow}{\uparrow}A^\oplus 
            \multimap {\uparrow}{\downarrow}B^\ominus, 
          A^\oplus}
         {B^\ominus}}
       {\infer-[\eta^-]
-       {\mildseq{\Gamma^\bullet}
+       {\mildseq{\Gamma^\ominus}
          {{\downarrow}{\uparrow}A^\oplus
             \multimap {\uparrow}{\downarrow}B^\ominus, 
           \langle A^\oplus \rangle}
          {B^\ominus}}
        {\infer[{\it focus}_L]
-        {\mildseq{\Gamma^\bullet}
+        {\mildseq{\Gamma^\ominus}
           {{\downarrow}{\uparrow}A^\oplus 
              \multimap {\uparrow}{\downarrow}B^\ominus, 
            \langle A^\oplus \rangle}
           {\langle B^\ominus \rangle}}
         {\infer[{\lolli}_L]
-         {\mildseq{\Gamma^\bullet}
+         {\mildseq{\Gamma^\ominus}
            {[ {\downarrow}{\uparrow}A^\oplus 
               \multimap {\uparrow}{\downarrow}B^\ominus ], 
             \langle A^\oplus \rangle}
            {\langle B^\ominus \rangle}}
          {\infer[{\downarrow}_R]
-          {\mildseq{\Gamma^\bullet}{\langle A^\oplus \rangle}
+          {\mildseq{\Gamma^\ominus}{\langle A^\oplus \rangle}
            {[{\downarrow}{\uparrow}A^\oplus]}}
           {\infer[{\uparrow}_R]
-           {\mildseq{\Gamma^\bullet}{\langle A^+ \rangle}{{\uparrow}A^+}}
+           {\mildseq{\Gamma^\ominus}{\langle A^+ \rangle}{{\uparrow}A^+}}
            {\infer[{\it focus}_R]
-            {\mildseq{\Gamma^\bullet}{\langle A^+ \rangle}{A^+}} 
+            {\mildseq{\Gamma^\ominus}{\langle A^+ \rangle}{A^+}} 
             {\infer[{\it id}^+]
-             {\mildseq{\Gamma^\bullet}{\langle A^+ \rangle}{[A^+]}}
+             {\mildseq{\Gamma^\ominus}{\langle A^+ \rangle}{[A^+]}}
              {}}}}
           &
           \infer[{\uparrow}_L]
-          {\mildseq{\Gamma^\bullet}{[{\uparrow}{\downarrow}B^\ominus]}
+          {\mildseq{\Gamma^\ominus}{[{\uparrow}{\downarrow}B^\ominus]}
              {\langle B^\ominus \rangle}}
           {\infer[{\downarrow}_L]
-           {\mildseq{\Gamma^\bullet}{{\downarrow}B^\ominus}
+           {\mildseq{\Gamma^\ominus}{{\downarrow}B^\ominus}
              {\langle B^\ominus \rangle}}
            {\infer[{\it focus}_L]
-            {\mildseq{\Gamma^\bullet}{B^\ominus}{\langle B^\ominus \rangle}}
+            {\mildseq{\Gamma^\ominus}{B^\ominus}{\langle B^\ominus \rangle}}
             {\infer[{\it id}^-]
-             {\mildseq{\Gamma^\bullet}{[B^\ominus]}{\langle B^\ominus \rangle}}
+             {\mildseq{\Gamma^\ominus}{[B^\ominus]}{\langle B^\ominus \rangle}}
              {}}}}}}}}}}}}
   \]}
 
   \noindent
-  Then, we show that 
-  $\mildseq{\Gamma^\bullet}{\Delta^\bullet, {\uparrow}A^\oplus}
-   {{\downarrow}B^\ominus}$ is derivable from 
-  $\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{B^\bullet}$ in two steps.
-  First, by case analysis on $A$, we show that 
-  $\mildseq{\Gamma^\bullet}{\Delta^\bullet, {\uparrow}A^\oplus}
-   {{\downarrow}B^\ominus}$ is derivable from 
-  $\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{{\downarrow}B^\ominus}$.
-  Either $A$ is
-  a negative connective (in which case $A^\oplus = {\downarrow}A^\ominus$
-  and $(\Delta, A)^\bullet = \Delta^\bullet, A^\ominus$), 
-  a positive atomic proposition $p^+$
-  (in which case $(\Delta, A)^\bullet = \Delta^\bullet, \langle p^+ \rangle$), 
-  or some other positive connective
-  (in which case $(\Delta, A)^\bullet = \Delta^\bullet, {\uparrow}A^\oplus$): 
+  To conclude, we show that $\mildseq{\Gamma^\ominus}{\Delta^\ominus,
+    {\uparrow}A^\oplus} {{\downarrow}B^\ominus}$ is derivable from
+  $\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\ominus}{B^\oplus}$ in
+  two steps.  First, by case analysis on $A$, we show that
+  $\mildseq{\Gamma^\ominus}{\Delta^\ominus, {\uparrow}A^\oplus}
+  {{\downarrow}B^\ominus}$ is derivable from
+  $\mildseq{\Gamma^\ominus}{\Delta^\ominus,
+    A^\ominus}{{\downarrow}B^\ominus}$.  Either $A$ is a
+  right-synchronous connective, in which case $A^\ominus =
+  {\uparrow}A^\oplus$ and the result is immediate, or else it is a
+  right-asynchronous connective, in which case $A^\oplus =
+  {\downarrow}A^\ominus$ and we can proceed as follows:
   \[
   \infer[{\it focus}_L]
-  {\mildseq{\Gamma^\bullet}{\Delta^\bullet, {\uparrow}{\downarrow}A^\ominus}
+  {\mildseq{\Gamma^\ominus}{\Delta^\ominus, {\uparrow}{\downarrow}A^\ominus}
      {{\downarrow}B^\ominus}} 
   {\infer[{\uparrow}_L]
-   {\mildseq{\Gamma^\bullet}{\Delta^\bullet, [{\uparrow}{\downarrow}A^\ominus]}
+   {\mildseq{\Gamma^\ominus}{\Delta^\ominus, [{\uparrow}{\downarrow}A^\ominus]}
      {{\downarrow}B^\ominus}}
    {\infer[{\downarrow_L}]
-    {\mildseq{\Gamma^\bullet}{\Delta^\bullet, {\downarrow}A^\ominus}
+    {\mildseq{\Gamma^\ominus}{\Delta^\ominus, {\downarrow}A^\ominus}
      {{\downarrow}B^\ominus}}
-    {\mildseq{\Gamma^\bullet}{\Delta^\bullet, A^\ominus}
+    {\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\ominus}
      {{\downarrow}B^\ominus}}}}
-  \qquad
-  \infer[{\it focus}_L]
-  {\mildseq{\Gamma^\bullet}{\Delta^\bullet, {\uparrow}p^+}{{\downarrow}B^-}}
-  {\infer[{\uparrow}_L]
-   {\mildseq{\Gamma^\bullet}{\Delta^\bullet, [{\uparrow}p^+]}{{\downarrow}B^-}}
-   {\infer[\eta^+]
-    {\mildseq{\Gamma^\bullet}{\Delta^\bullet, p^+}{{\downarrow}B^-}}
-    {\mildseq{\Gamma^\bullet}{\Delta^\bullet, \langle p^+ \rangle}
-       {{\downarrow}B^-}}}}
-  \qquad
-  \mildseq{\Gamma^\bullet}{\Delta^\bullet, {\uparrow}A^+}{{\downarrow}B^-}
   \]
-
-  \noindent
-  Second, by case analysis on $B$, we show that 
-  $\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{{\downarrow}B^\ominus}$
-  is derivable from $\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{B^\bullet}$.
-  Either $B$ is a positive connective
-  (in which case $B^\ominus = {\uparrow}B^\oplus$ and $B^\bullet = B^\oplus$),
-  a negative atomic proposition $p^-$ 
-  (in which case $B^\bullet = \langle p^- \rangle$), or some other negative
-  connective (in which case $B^\bullet = {\downarrow}B^-$):
+  Second, by case analysis on $B$, we show that
+  $\mildseq{\Gamma^\ominus}{\Delta^\ominus,
+    A^\ominus}{{\downarrow}B^\ominus}$ is derivable from
+  $\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\ominus}{B^\oplus}$.
+  Either $B$ is a right-asychronous connective, in which case
+  $B^\oplus = {\downarrow}B^\ominus$ and the result is immediate, or
+  else $B$ is a right-synchronous connective, in which case 
+  $B^\ominus = {\uparrow}B^\oplus$ and we can proceed as follows:
   \[
   \infer[{\it focus}_R]
-  {\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{{\downarrow}{\uparrow}B^\oplus}} 
+  {\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\ominus}{{\downarrow}{\uparrow}B^\oplus}} 
   {\infer[{\downarrow}_R]
-   {\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}
+   {\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\ominus}
       {[{\downarrow}{\uparrow}B^\oplus]}}
    {\infer[{\uparrow}_R]
-    {\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{{\uparrow}B^\oplus}}
-    {\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{B^\oplus}}}}
-  \qquad
-  \infer[{\it focus}_R]
-  {\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{{\downarrow}p^-}} 
-  {\infer[{\downarrow}_R]
-   {\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{[{\downarrow}p^-]}}
-   {\infer[\eta^-]
-    {\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{p^-}}
-    {\mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{\langle p^- \rangle}}}}
-  \qquad
-  \mildseq{\Gamma^\bullet}{(\Delta, A)^\bullet}{{\downarrow}B^\ominus}
+    {\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\ominus}{{\uparrow}B^\oplus}}
+    {\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\ominus}{B^\oplus}}}}
   \]
 
   \noindent
