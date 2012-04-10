@@ -586,16 +586,34 @@ corollaries of identity expansion:
 \subsection{Cut admissibility}
 \label{sec:lincut}
 
-Cut admissibility for this focused linear logic is mostly standard, so
-we defer a discussion to the next chapter, where the use of structural
-focalization will allow us to give a tidier proof of the theorem.
-
+Theorem~\ref{thm:lincut} mostly follows the well-worn contours of a
+structural cut admissibility argument \cite{pfenning00structural}, so
+we defer a full discussion of cut admissibility until the next
+chapter, where the use of structural focalization will allow us to
+give a tidier proof of the theorem.\footnote{The main ``untidy''
+  aspect of Theorem~\ref{thm:lincut} is that the lack of a forced
+  inversion order means that the right commutative cases dealing with
+  invertible rules must be repeated in parts 1 and 3, and likewise for
+  the left commutative cases dealing with invertible rules and parts 2
+  and 4. The repetition of {\it all} cases between parts 3 and 5 will
+  also be addressed in the next chapter.}
+%
 The only important caveat to emphasize about Theorem~\ref{thm:lincut}
 is that cut admissibility is only applicable in the absence of any
-non-atomic suspended propositions. 
+non-atomic suspended propositions. If we did not make this
+restriction, then in Theorem~\ref{thm:lincut}, part 1, we might encounter
+a derivation of $\mildseq{\Gamma}{\langle A \tensor B \rangle}{[ A \tensor B ]}$
+being cut into the derivation
+\[
+\infer[{\otimes}_R]
+{\mildseq{\Gamma}{\Delta',A \tensor B}{U}}
+{\deduce{\mildseq{\Gamma}{\Delta', A, B}{U}}{\mathcal E}}
+\]
+in which case there is no clear way to proceed and prove 
+$\mildseq{\Gamma}{\Delta', \langle A \tensor B \rangle}{U}$. 
 
 \bigskip
-\begin{theorem}[Cut admissibility]\label{thm:lincut}~\\
+\begin{theorem}[Cut admissibility]\label{thm:lincut}
 For all $\Gamma$, $A^+$, $A^-$, $\Delta$, $\Delta'$, and $U$ that
 do not contain any non-atomic suspended propositions:
 \begin{enumerate}
@@ -632,9 +650,9 @@ second given derivation gets smaller, and within part 4, the first two
 metrics stay the same while the first given derivation gets smaller.
 \end{proof}
 
-The proof of this theorem is not quite as tidy as the 
-
 \subsection{Correctness of focusing}
+
+The correctness of focusing 
 
 \subsection{Confluent versus fixed inversion}
 \label{sec:confluent-v-fixed}
