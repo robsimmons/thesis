@@ -247,15 +247,15 @@ programming based on proof search in classical linear logic
 in inessential ways is particularly problematic for proof search, as
 inessential differences between derivations correspond to unnecessary
 choice points that a proof search procedure will need to backtrack
-over. The presentation of focusing for intuitionstic linear logic in
-this section most closely resembles Chaudhiri's focused intuitionstic
+over. The presentation of focusing for intuitionistic linear logic in
+this section most closely resembles Chaudhuri's focused intuitionistic
 linear logic \cite{chaudhuri06focused} and my presentation of
-polarized intuitionstic persistent logic
+polarized intuitionistic persistent logic
 \cite{simmons11structural}. The major exception is the treatment of
 asynchronous rules as confluent rather than fixed and arbitrary
 (discussed in Section~\ref{sec:confluent-v-fixed}).
 
-\subsection{Polaraization}
+\subsection{Polarization}
 
 The first step in describing a focused sequent calculus is to classify
 connectives into two groups.  Some connectives, such as linear
@@ -292,24 +292,23 @@ are applied exhaustively, and focused phases where synchronous rules
 are applied repeatedly and exhaustively to a single proposition (the
 proposition {\it in focus}). 
 
-We call the asynchronous connectives {\it negative} ($\lolli$, $\top$,
-$\with$ in full propositional linear logic) and call the synchronous
-connectives {\it positive} ($\zero$, $\oplus$, $\one$, and $\otimes$
-in full propositional linear logic). Each atomic proposition,
-furthermore, must be assigned to be either positive or negative,
-though this assignment can be arbitrary. At this point, there is an
-important choice to make. One way forward is to treat positive and
-negative propositions as a syntactic refinements of all propositions,
-in which case we end up focusing a standard intuitionstic linear
-logic. The other way forward is to treat positive and negative
-propositions as distinct syntactic classes $A^+$ and $A^-$ with
-syntactic inclusions between them. In this second case, we end up
-focusing a {\it polarized} linear logic.  These inclusions are
-traditionally called {\it shifts}. The positive proposition
-${\downarrow}A^-$, pronounced ``downshift $A$,'' has a subterm that is
-a negative proposition; the negative proposition ${\uparrow}A^+$,
-pronounced ``upshift $A$,'' has a subterm that is a positive
-proposition.
+We call the asynchronous connectives {\it negative} ($\lolli$, $\top$
+and $\with$ in full propositional linear logic) and call the
+synchronous connectives {\it positive} ($\zero$, $\oplus$, $\one$, and
+$\otimes$ in full propositional linear logic). Each atomic proposition
+must be assigned to be either positive or negative, though this
+assignment can be arbitrary. At this point, there is an important
+choice to make. One way forward is to treat positive and negative
+propositions as a syntactic refinements of all propositions, in which
+case we end up focusing a standard intuitionistic linear logic. The
+other way forward is to treat positive and negative propositions as
+distinct syntactic classes $A^+$ and $A^-$ with explicit inclusions
+between them. In this second case, we end up focusing a {\it
+  polarized} linear logic.  These inclusions are traditionally called
+{\it shifts}. The positive proposition ${\downarrow}A^-$, pronounced
+``downshift $A$,'' has a subterm that is a negative proposition; the
+negative proposition ${\uparrow}A^+$, pronounced ``upshift $A$,'' has
+a subterm that is a positive proposition.
 
 The choice doesn't make a large difference for our purposes.
 Polarized logics are interesting, and polarized linear logic is a bit
@@ -318,7 +317,7 @@ propositions like ${\uparrow}{\downarrow}{\uparrow}{\downarrow}A^-$
 can be expressed. This extra expressiveness won't help us in
 the design of logical frameworks, but the use of shifts is helpful
 when explaining identity expansion in Section~\ref{sec:linindentity}, 
-so we include the shifts. 
+so we will focus a polarized linear logic with shifts.
 
 \input{figs/fig-lin-shift}
 
@@ -330,353 +329,367 @@ impact on the structure of focused proofs, they are intended to have
 no impact on provability. Therefore, the strongest statement of the
 correctness of focusing is based on erasure: there is an unfocused
 derivation of $(A^-)^\circ$ if and only if there is a focused
-derivation of $A^-$.\footnote{It would have been equally valid to say
-  $(A^+)^\circ$ is derivable if and only if $A^+$ is derivable.}
-However, most proofs of the correctness of focusing prove a slightly
-weaker property. Every proposition in linear logic has an obvious
-polarized analouge with a minimal number of shifts, given by the two
-functions $A^\oplus$ and $A^\ominus$ in Figure~\ref{fig:lin-shift}, so
-almost all proofs of correctness of focusing establish that there is
-an unfocused proof of $A$ if and only if there is a focused proof of
+derivation of $A^-$.\footnote{I chose $A^-$ only to be brief; the
+  condition that $(A^+)^\circ$ is derivable iff $A^+$ is could, of
+  course, be added.}  However, most proofs of the correctness of
+focusing prove a weaker property. Every proposition in linear logic
+has an obvious polarized analogue with a minimal number of shifts;
+this analogue is formalized as the two functions $A^\oplus$ and
+$A^\ominus$ in Figure~\ref{fig:lin-shift}. Note that both of these
+functions are partial inverses of erasure: $(A^\oplus)^\circ =
+(A^\ominus)^\circ = A$. Almost all proofs of the correctness of
+focusing work on the basis of these partial inverses, which we call
+{\it polarization strategies}, establishing that there is an unfocused
+proof of $A$ if and only if there is a focused proof of
 $A^\ominus$.\footnote{The two exceptions are Zeilberger completeness
   proof in classical persistent logic \cite{zeilberger08unity} and my
-  proof in intuitionstic persistent logic \cite{simmons11structural}.}
+  proof in intuitionistic persistent logic \cite{simmons11structural}.}
 The weaker formulation is sufficient for our current purposes, so we
-will discuss the weaker property of polarization-based correctness,
-not erasure-based correctness.
+will discuss the weaker property of polarization-strategy-based
+correctness, not erasure-based correctness.
 
-\subsection{Logic}
+\subsection{Sequent calculus}
+
+Usually, focused logics are described as
+having multiple judgments:
+\begin{itemize}
+\item $\mildrfoc{\Gamma}{\Delta}{A^+}$ (the {\it right focus} sequent, where
+the proposition $A^+$ is in focus),
+\item $\mildinv{\Gamma}{\Delta}{C}$ (the {\it inversion} sequent), and
+\item $\mildlfoc{\Gamma}{\Delta}{A^-}{C}$ (the {\it left focus} sequent,
+where the proposition $A^-$ is in focus).
+\end{itemize}
+Another reasonable presentation of linear logic uses only one sequent
+$\mildseq{\Gamma}{\Delta}{U}$, but generalizes what is to allowed to
+to appear in the linear context $\Delta$ or in the succeedant, which
+we write $U$. We will use this interpretation to understand the logic
+described in Figure~\ref{fig:kaustuv-focused}.
 
 \input{figs/fig-kaustuv-focused.tex}
 
+By adding a side condition to the three rules ${\it focus}_R$, ${\it
+  focus}_L$, and ${\it copy}$ that neither the context $\Delta$ nor
+the succeedant $U$ can contain an in-focus proposition $[A^+]$ or
+$[A^-]$, derivations can maintain the invariant that there is always
+at most one proposition in focus, effectively restoring the situation
+in which there are three distinct judgments.  This restriction alone
+gives us what Pfenning calls a {\it chaining} logic
+\cite{pfenning02chaining} and which Laurent calls a {\it weakly
+  focused} logic \cite{laurent04proof}.\footnote{This is not what I
+  called a weakly focused logic \cite{simmons09weak}. That weakly
+  focused system had an additional restriction that invertible rules
+  could not be applied when any other proposition was in focus; this
+  corresponded to what Laurent called a strongly $+$-focused logic.}
+We obtain a fully focused logic by further restricting these three
+rules so that they only apply when the sequent below the line is {\it
+  stable}.  A sequent $\mildseq{\Gamma}{\Delta}{U}$ is stable if the
+context $\Delta$ contains only negative propositions $A^-$ and
+suspended positive propositions $\langle A^+ \rangle$ and the
+succeedant $U$ is either a positive proposition $A^+$ or a suspended
+negative proposition $\langle A^- \rangle$. 
 
+We will now turn our attention to the meaning of these suspended
+propositions and the four rules that interact with them: ${\it id}^+$,
+${\it id}^-$, $\eta^+$, and $\eta^-$.
 
-propositions 
+\subsection{Suspended propositions}
 
-The views are quite similar -- the primary difference 
+In unfocused sequent calculi, such as the one for linear logic in
+Figure~\ref{fig:linear}, initial sequents are restricted to atomic
+propositions. All sequent calculi, focused or unfocused, have the
+subformula property: every rule breaks down a proposition, either on
+the left or the right. Since the logical interpretation of atomic
+propositions is that they are stand-ins for unknown propositions, we
+are unable to break them down any further. We are therefore only able
+to derive an atomic conclusion or use an atomic premise with the {\it
+  init} rule that concludes $\seq{\Gamma}{p}{p}$ and has no premises.
+This {\it init} rule is the only instance of the admissible identity
+theorem $\seq{\Gamma}{A}{A}$ that must be explicitly included as a
+proof rule. If we substitute in a proposition for an atomic
+propositions, the structure of the proof stays exactly the same,
+except that instances of initial sequents become admissible instances
+of the general identity theorem.
 
-{\it negative} and write them as
-$A^-$, and call the synchronous connectives {\it positive} and write
-them as $A^+$. At this point, there is a choice to make.
+To my knowledge, all published proof systems for focused logic have
+attempted to replicate this initial rule {\it init}. This is a design
+error, and it is one that has historically made it enormously (and
+unnecessarily) difficult to prove the identity theorem for focused
+systems. Our presentation uses {\it suspensions}: suspended positive
+propositions $\langle A^+ \rangle$ only appear in the linear context
+$\Delta$, and suspended negative propositions $\langle A^- \rangle$
+only appear as succeedants. They treated as stable (we never break
+down a suspended proposition) and are only used to immediately
+prove a proposition in focus with one of the identity rules
+${\it id}^+$ or ${\it id}^-$.
 
+Suspended positive propositions act much like regular variables in a
+natural deduction system. The positive identity rule ${\it id}^+$
+allows us to prove any positive proposition given that positive
+proposition appears suspended in the context.  There is a
+corresponding substitution principle for focal substitutions that has
+a natural-deduction-like flavor: we can substitute a derivation
+right-focused on $A^+$ for a suspended positive proposition $\langle
+A^+ \rangle$ in a context.
 
+\bigskip
+\begin{theorem}[Focal substitution (positive)]\label{thm:fsubst-pos}~\\
+For stable $\Delta$,
+if $\mildseq{\Gamma}{\Delta}{[A^+]}$ 
+and $\mildseq{\Gamma}{\Delta', \langle A^+ \rangle}{U}$, 
+then $\mildseq{\Gamma}{\Delta', \Delta}{U}$.
+\end{theorem}
 
-
-It is possible to
-treat the positive and negative connectives as syntactically distinct
-
- due to the
-syntactic differentiation of these classes, 
-
- In the fragment of
-linear logic presented earlier, the propositions end up classified
-like this:
-\begin{align*}
-A^+ & ::= p^+ \mid {\downarrow}A^- \mid {!}A^- \mid \one \mid A^+ \otimes B^+\\
-A^- & ::= p^- \mid {\uparrow}A^+ \mid A^+ \lolli B^-
-\end{align*}
-There are two issues to note. First, the premise of linear implication $A \lolli
-B$ is positive, even though the connective itself is negative. This is
-because, in order to stay in focus. 
-
-Note that our previously indistinguishable atomic propositions $p^+$
-and $p^-$ are now distinguishable: $p^+$ is a positive atomic proposition and 
-can be treated as a stand-in for an arbitrary positive propositions,
-whereas $p^-$ is a negative atomic proposition and can be treated 
-as a stand-in for an arbitrary negative propositions.
-
-We next need some extra proof-theoretic machinery that is 
-aware of proofs in order to put
-propositions {\it in focus} (a proposition in focus will be written as
-$[A]$). This extra machinery will then be used to enforce that right
-rules can only be applied to positive propositions when they are in
-focus, and likewise for negative propositions and left rules.  This
-extra machinery is usually described by presenting multiple judgments.
-The number differes, but at least three are necessary:
-
-\begin{itemize}
-\item $\mildrfoc{\Gamma}{\Delta}{A}$ (the {\it right focus} sequent),
-\item $\mildinv{\Gamma}{\Delta}{C}$ (the {\it inversion} sequent), and
-\item $\mildlfoc{\Gamma}{\Delta}{A}{C}$ (the {\it left focus} sequent).
-\end{itemize}
-
-
-
-Another reasonable presentation of linear logic uses only one sequent
-$\mildseq{\Gamma}{\Delta}{U}$, but generalizes what is to allowed to
-to appear in the linear context $\Delta$ or as the succeedent, which
-we write $U$. The three focusing rules
-${\it focus}_R$, ${\it focus}_L$, and ${\it copy}$ carry the extra condition
-that the conclusion must be stable: the context $\Delta$ can only contain 
-negative propositions $A^-$ and suspended positive propositions 
-$\langle A^+ \rangle$,.
-
-\subsection{Identity expansion}
-\label{sec:linindentity}
-
-\begin{figure}[f]
-{\small 
-\[
-\infer-[\eta^+]
-{\mildseq{\Gamma}{\Delta, {\downarrow}A}{U}}
-{\deduce
- {\mildseq{\Gamma}{\Delta, \langle {\downarrow}A \rangle}{U}}
- {\mathcal D}}
-\quad
-\deduce{\mathstrut}{\Longrightarrow}
-\quad
-\infer[{\downarrow}_L]
-{\mildseq{\Gamma}{\Delta, {\downarrow}A}{U}}
-{\infer-[{\it subst}^+]
- {\mildseq{\Gamma}{\Delta, A}{U}}
- {\infer[{\downarrow}_R]
-  {\mildseq{\Gamma}{A}{[ {\downarrow}A ]}}
-  {\infer-[{\eta}^-]
-   {\mildseq{\Gamma}{A}{A}}
-   {\infer-[{\it focus}_L]
-    {\mildseq{\Gamma}{A}{\langle A \rangle}}
-    {\infer[{\it id}^-]
-     {\mildseq{\Gamma}{[ A ]}{\langle A \rangle}}
-     {}}}}
-  &
-  \deduce
-  {\mildseq{\Gamma}{\Delta, \langle {\downarrow}A \rangle}{U}}
-  {\mathcal D}}}
-\]
-
-\[
-\infer-[\eta^+]
-{\mildseq{\Gamma}{\Delta,{!}A}{U}}
-{\deduce
- {\mildseq{\Gamma}{\Delta, \langle {!}A \rangle}{U}}
- {\mathcal D}}
-\quad
-\deduce{\mathstrut}{\Longrightarrow}
-\infer[{!}_L]
-{\mildseq{\Gamma}{\Delta,{!}A}{U}}
-{\infer-[{\it subst}^+]
- {\mildseq{\Gamma,A}{\Delta}{U}}
- {\infer[{!}_R]
-  {\mildseq{\Gamma, A}{\cdot}{[{!}A]}}
-  {\infer-[\eta^-]
-   {\mildseq{\Gamma, A}{\cdot}{A}}
-   {\infer[\it copy]
-    {\mildseq{\Gamma, A}{\cdot}{\langle A \rangle}}
-    {\infer[{\it id}^-]
-     {\mildseq{\Gamma, A}{[ A ]}{\langle A \rangle}}
-     {}}}}
-  &
-  \infer-[{\it weaken}]
-  {\mildseq{\Gamma,A}{\Delta, \langle {!}A \rangle}{U}}
-  {\deduce
-   {\mildseq{\Gamma}{\Delta, \langle {!}A \rangle}{U}}
-   {\mathcal D}}}}
-\]
-
-\[
-\infer-[\eta^+]
-{\mildseq{\Gamma}{\Delta, A \otimes B}{U}}
-{\deduce{\mildseq{\Gamma}{\Delta, \langle A \otimes B \rangle}{U}}{\mathcal D}}
-\quad
-\deduce{\mathstrut}{\Longrightarrow}
-\!\!\!\!\!\!\!\!\!
-\infer[{\otimes}_L]
-{\mildseq{\Gamma}{\Delta, A \otimes B}{U}}
-{\infer-[\eta^+]
- {\mildseq{\Gamma}{\Delta, \langle A \rangle, B}{U}}
- {\infer-[{\it subst}^+]
-  {\mildseq{\Gamma}{\Delta, \langle A \rangle, \langle B \rangle}{U}}
-  {\infer
-   {\mildseq{\Gamma}{\langle A \rangle, \langle B \rangle}{[A \otimes B]}}
-   {\infer[{\it id}^+]
-    {\mildseq{\Gamma}{\langle A \rangle}{[A]}}
-    {}
-    & 
-    \infer[{\it id}^+]
-    {\mildseq{\Gamma}{\langle B \rangle}{[B]}}
-    {}}
-   & 
-   \deduce
-   {\mildseq{\Gamma}{\Delta, \langle A \otimes B \rangle}{U}}
-   {\mathcal D}}}}
-\]
-
-\[
-\infer-[\eta^-]
-{\mildseq{\Gamma}{\Delta}{{\uparrow}A}}
-{\deduce
- {\mildseq{\Gamma}{\Delta}{\langle {\uparrow}A \rangle}}
- {\mathcal D}}
-\quad
-\deduce{\mathstrut}{\Longrightarrow}
-\quad
-\infer[{\uparrow}_R]
-{\mildseq{\Gamma}{\Delta}{{\uparrow}A}}
-{\infer-[{\it subst}^-]
- {\mildseq{\Gamma}{\Delta}{A}}
- {\deduce
-  {\mildseq{\Gamma}{\Delta}{\langle {\uparrow}A \rangle}}
-  {\mathcal D}
-  &
-  \infer[{\uparrow}_L]
-  {\mildseq{\Gamma}{[{\uparrow}A]}{A}}
-  {\infer-[\eta^+]
-   {\mildseq{\Gamma}{A}{A}}
-   {\infer[{\it focus}_R]
-    {\mildseq{\Gamma}{\langle A \rangle}{A}} 
-    {\infer[{\it id}^+]
-     {\mildseq{\Gamma}{\langle A \rangle}{[ A ]}}
-     {}}}}}}
-\]
-
-\[
-\infer-[\eta^-]
-{\mildseq{\Gamma}{\Delta}{A \lolli B}}
-{\deduce
- {\mildseq{\Gamma}{\Delta}{\langle A \lolli B \rangle}}
- {\mathcal D}}
-\quad
-\deduce{\mathstrut}{\Longrightarrow}
-\!\!\!\!\!\!
-\infer[{\lolli}_R]
-{\mildseq{\Gamma}{\Delta}{A \lolli B}}
-{\infer-[\eta^+]
- {\mildseq{\Gamma}{\Delta, A}{B}}
- {\infer-[\eta^-]
-  {\mildseq{\Gamma}{\Delta, \langle A \rangle}{B}}
-  {\infer-[{\it subst}^-]
-   {\mildseq{\Gamma}{\Delta, \langle A \rangle}{\langle B \rangle}}
-   {\deduce
-    {\mildseq{\Gamma}{\Delta}{\langle A \lolli B \rangle}}
-    {\mathcal D}
-    &
-    \infer[{\lolli}_L]
-    {\mildseq{\Gamma}{\langle A \rangle, [ A \lolli B ]}{\langle B \rangle}}
-    {\infer[{\it id}^+]
-     {\mildseq{\Gamma}{\langle A \rangle}{[ A ]}}
-     {}
-     &
-     \infer[{\it id}^-]
-     {\mildseq{\Gamma}{[ B ]}{\langle B \rangle}}
-     {}}}}}}
-\]}
-\caption{Identity expansion -- restricting $\eta^+$ and $\eta^-$ to atomic 
- propositions.}
-\end{figure}
-
-
-
-
-\begin{figure}
-{\small
-
-\[
-\infer-[\eta^+]
-{\mildseq{\Gamma}{\Delta, \one}{U}}
-{\deduce
- {\mildseq{\Gamma}{\Delta, \langle \one \rangle}{U}}
- {\mathcal D}}
-\quad
-\Longrightarrow
-\infer[{\one}_L]
-{\mildseq{\Gamma}{\Delta, \one}{U}}
-{\infer-[{\it subst}^+]
- {\mildseq{\Gamma}{\Delta}{U}}
- {\infer[{\one}_R]
-  {\mildseq{\Gamma}{\cdot}{[ \one ]}}
-  {}
-  &
-  \deduce
-  {\mildseq{\Gamma}{\Delta, \langle \one \rangle}{U}}
-  {\mathcal D}}}
-\]
-
-\[
-\infer-[\eta^+]
-{\mildseq{\Gamma}{\Delta, A \oplus B}{U}}
-{\deduce
- {\mildseq{\Gamma}{\Delta, \langle A \oplus B \rangle}{U}}
- {\mathcal D}}
-\quad
-\Longrightarrow
-\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
-\infer[{\oplus}_R]
-{\mildseq{\Gamma}{\Delta, A \oplus B}{U}}
-{\infer-[\eta^+]
- {\mildseq{\Gamma}{\Delta, A}{U}}
- {\infer-[{\it subst}^+]
-  {\mildseq{\Gamma}{\Delta, \langle A \rangle}{U}}
-  {\infer[{\oplus}_{R1}]
-   {\mildseq{\Gamma}{\Delta, \langle A \rangle}{[ A \oplus B ]}}
-   {\infer[{\it id}^+]
-    {\mildseq{\Gamma}{\langle A \rangle}{[ A ]}}
-    {}}
-   &
-   \deduce
-   {\mildseq{\Gamma}{\Delta, \langle A \oplus B \rangle}{U}}
-   {\mathcal D}}}
- &
- \deduce
- {\mildseq{\Gamma}{\Delta, B}{U}}
- {\vdots}
- }
-\]
-
-
-\[
-\infer-[\eta^-]
-{\mildseq{\Gamma}{\Delta}{\top}}
-{\deduce
- {\mildseq{\Gamma}{\Delta}{\langle \top \rangle}}
- {\mathcal D}}
-\quad
-\Longrightarrow
-\quad
-\infer[{\top}_R]
-{\mildseq{\Gamma}{\Delta}{\top}}
-{}
-\]}
-
-\caption{Identity expansion for units and additive connectives.}
-\end{figure}
-
-
-  This presentation, shown in
-Figure~\ref{fig:kaustuv-focused}, does not actually reduce the number
-of derivations relative to Figure~\ref{fig:linear} until we make a few
-extra global restrictions on rules:
-
-\begin{enumerate}
-\item The rules that introduces a focus (${\it focus}_R$, ${\it focus}_L$, 
-  and ${\it copy}$) only applies if there is not already a proposition 
-  in focus in $\Delta$ and if the succeedent $U$ is not in focus. 
-\item Every focused rule (${\it focus}_R$, ${\it blur}_L$, ${\it
-    blur}_R$, ${\it focus}_R$, ${\it init}^+$, ${\it init}^-$, ${\it
-    copy}$, ${!}_R$, ${\one}_R$, ${\otimes}_R$, ${\lolli}_L$) can only
-  apply if no non-focused rule applies -- that is, if the
-  linear context $\Delta$ contains only negative propositions or positive
-  atomic proposition and the succeedent $U$ is either a positive proposition
-  or a negative atomic proposition.
-\item When two non-focused rules (${!}_L$, ${\one}_L$, ${\tensor}_L$,
-  ${\lolli}_R$) both apply, there is some (fixed but arbitrary) way of
-  deciding which rule applies.
-\end{enumerate}
+\begin{proof}
+  Straightforward induction over the second given derivation, as in a
+  proof of regular substitution in a natural deduction system. If the
+  second derivation is the axiom ${\it id}^+$, the result follows
+  immediately using the first given derivation.
+\end{proof}
 
 \noindent
-Condition (1) alone ensures that this presentation is equivalent to
-the presentation with three judgments. The system with only condition
-(1) is what Laurent called a {\it weakly focused} system
-\cite{laurent04proof} and what Pfenning calls a {\it chaining} system.
-The system with conditions (1) and (2) is what Laurent called a {\it
-  strongly +-focused} system and what I have previously called a
-weakly focused system (oops). The combination of all three global
-conditions gives a fully focused system that is consistent with
-Chaudhuri's presentation of focused linear logic
-\cite{chaudhuri06focused}.
+Note that, in the statement of Theorem~\ref{thm:fsubst-pos}, the
+second premise $\mildseq{\Gamma}{\Delta', \langle A^+ \rangle}{U}$ may
+be a right-focused sequent $\mildseq{\Gamma}{\Delta', \langle A^+
+  \rangle}{[B^+]}$, a left-focused sequent $\mildseq{\Gamma}{\Delta'',
+  [B^-], \langle A^+ \rangle}{U}$, or an inverting sequent. 
 
+Suspended negative propositions are a bit weirder. While a derivation
+of $\mildseq{\Gamma}{\Delta', \langle A^+ \rangle}{U}$ is missing a
+premise that can be satisfied by a derivation of
+$\mildseq{\Gamma}{\Delta}{[A^+]}$, a derivation of 
+$\mildseq{\Gamma}{\Delta}{\langle A^- \rangle}$ is missing a 
+{\it continuation} that can be satisfied by a derivation of
+$\mildseq{\Gamma}{\Delta', [A^-]}{U}$. The focal substitution principle,
+however, still takes the basic form of a substitution principle.
+
+\bigskip
+\begin{theorem}[Focal substitution (negative)]\label{thm:fsubst-neg}~\\
+For stable $\Delta'$ and $U$, 
+if $\mildseq{\Gamma}{\Delta}{\langle A^- \rangle}$
+and $\mildseq{\Gamma}{\Delta', [A^-]}{U}$, 
+then $\mildseq{\Gamma}{\Delta', \Delta}{U}$. 
+\end{theorem}
+
+\begin{proof}
+  Straightforward induction over the {\it first} given derivation; if
+  the first derivation is the axiom ${\it id}^-$, the result follows
+  immediately using the second given derivation.
+\end{proof}
+
+\noindent
+As a regular substitution principle that is inductive over the structure
+of the first given proposition, focal substitution is reminiscent of 
+the {\it leftist substitutions} introduced by Pfenning and Davies in the 
+context of the possibility modality \cite{pfenning01judgmental}.
+
+Unlike cut admissibility, which we discuss in Section~\ref{sec:lincut}, both
+of the focal substitution principles are straightforward inductions
+over the structure of the derivation containing the suspended
+proposition. In the development of structural focalization, I discuss
+how, in a focused presentation of persistent intuitionistic logic that
+is encoded in LF, a suspended positive premise can be encoded as a
+hypothetical right focus. This encoding makes the ${\it id}^+$ rule an
+instance of the hypothesis rule provided by LF and establishes
+Theorem~\ref{thm:fsubst-pos} ``for free'' as an instance of LF
+substitution. This is possible to do for negative focal substitution
+as well, but it is somewhat counter-intuitive
+\cite{simmons11structural}.
+
+The two substitution
+principles can be phrased as admissible rules for building derivations,
+which we indicate using a dashed line:
+\[
+\infer-[{\it subst}^+]
+{\mildseq{\Gamma}{\Delta', \Delta}{U}}
+{\mildseq{\Gamma}{\Delta}{[A^+]}
+ &
+ \mildseq{\Gamma}{\Delta', \langle A^+ \rangle}{U}}
+\qquad
+\infer-[{\it subst}^-]
+{\mildseq{\Gamma}{\Delta', \Delta}{U}}
+{\mildseq{\Gamma}{\Delta}{\langle A^- \rangle}
+ &
+ \mildseq{\Gamma}{\Delta', [A^-]}{U}}
+\]
+
+\subsection{Identity expansions}
+\label{sec:linindentity}
+
+Suspended propositions appear in Figure~\ref{fig:kaustuv-focused} in
+two places: first in the identity rules that we have just discussed
+and connected with the focal substitution principles, and second in
+the rules marked $\eta^+$ and $\eta^-$, which are also the only
+mention of atomic propositions in the presentation. It is here that we
+need to make an absolutely critical shift of perspective from
+unfocused to focused logic. In an unfocused logic, the rules
+nondeterministically break down propositions, and the initial rule {\it
+  init} puts an end to this process when an atomic proposition is
+reached. In a focused logic, the focus and inversion phases {\it must}
+break down a proposition all the way until a shift is reached. The two
+$\eta$ rules are what put an end to this when an atomic proposition is
+reached, and they correspond to the two ${\it id}$ rules that allow
+these necessarily suspended propositions to successfully conclude a
+right or left focus.
+
+\input{figs/fig-lineta-1}
+\input{figs/fig-lineta-2}
+
+Just as the {\it init} rule is a particular instance of the admissible
+identity sequent $\seq{\Gamma}{A}{A}$ in unfocused linear logic, the
+atomic suspension rules $\eta^+$ and $\eta^-$ are instances of an admissible
+identity expansion rule in focused linear logic:
+\[
+\infer-[\eta^+]
+{\mildseq{\Gamma}{\Delta, A^+}{U}}
+{\mildseq{\Gamma}{\Delta, \langle A^+ \rangle}{U}}
+\qquad
+\infer-[\eta^-]
+{\mildseq{\Gamma}{\Delta}{A^-}}
+{\mildseq{\Gamma}{\Delta}{\langle A^- \rangle}}
+\]
+This admissible rule must be established by mutual recursion; the
+proof is structurally inductive on the structure of the proposition,
+and uses focal substitution in a critical way. Most of the cases of
+this proof are represented in Figure~\ref{fig:lineta-1}. (Note that in
+this figure we omit polarity annotations from propositions as they are
+always clear from the context.) The remaining case (for the
+multiplicative unit $\one$) is presented in Figure~\ref{fig:lineta-2}
+along with the cases for the additive connectives $\zero$, $\oplus$,
+$\top$, and $\with$, which are neglected elsewhere in this chapter.
+
+The admissible identity expansion rules fit with an interpretation of
+positive atomic propositions as stand-ins for arbitrary positive
+propositions and of negative atomic propositions as stand-ins for
+negative atomic propositions: if we substitute a proposition in for
+some atomic proposition, all the instances of atomic suspension
+corresponding to that rule become admissible instances of identity
+expansion. Furthermore, the usual identity principles are simple
+corollaries of identity expansion:
+\[
+\infer-[\eta^+]
+{\mildseq{\Gamma}{A^+}{A^+}}
+{\infer[{\it focus}_R]
+ {\mildseq{\Gamma}{\langle A^+ \rangle}{A^+}}
+ {\infer[{\it id}^+]
+  {\mildseq{\Gamma}{\langle A^+ \rangle}{[A^+]}}
+  {}}}
+\qquad
+\infer-[\eta^-]
+{\mildseq{\Gamma}{A^-}{A^-}}
+{\infer[{\it focus}_L]
+ {\mildseq{\Gamma}{A^-}{\langle A^- \rangle}}
+ {\infer[{\it id}^-]
+  {\mildseq{\Gamma}{[A^-]}{\langle A^- \rangle}}
+  {}}}
+\]
+
+\subsection{Cut admissibility}
+\label{sec:lincut}
+
+Cut admissibility for this focused linear logic is mostly standard, so
+we defer a discussion to the next chapter, where the use of structural
+focalization will allow us to give a tidier proof of the theorem.
+
+The only important caveat to emphasize about Theorem~\ref{thm:lincut}
+is that cut admissibility is only applicable in the absence of any
+non-atomic suspended propositions. 
+
+\bigskip
+\begin{theorem}[Cut admissibility]\label{thm:lincut}~\\
+For all $\Gamma$, $A^+$, $A^-$, $\Delta$, $\Delta'$, and $U$ that
+do not contain any non-atomic suspended propositions:
+\begin{enumerate}
+\item If $\mildseq{\Gamma}{\Delta}{[A^+]}$
+      and $\mildseq{\Gamma}{\Delta',A^+}{U}$
+      (where $\Delta$ is stable), 
+      then $\mildseq{\Gamma}{\Delta',\Delta}{U}$.
+\item If $\mildseq{\Gamma}{\Delta}{A^-}$
+      and $\mildseq{\Gamma}{\Delta', [A^-]}{U}$
+      (where $\Delta$, $\Delta'$, and $U$ are stable),
+      then $\mildseq{\Gamma}{\Delta',\Delta}{U}$. 
+\item If $\mildseq{\Gamma}{\Delta}{A^-}$
+      and $\mildseq{\Gamma}{\Delta', A^-}{U}$
+      (where $\Delta$ is stable), 
+      then $\mildseq{\Gamma}{\Delta',\Delta}{U}$. 
+\item If $\mildseq{\Gamma}{\Delta}{A^+}$
+      and $\mildseq{\Gamma}{\Delta', A^+}{U}$
+      (where $\Delta'$ and $U$ are stable),
+      then $\mildseq{\Gamma}{\Delta',\Delta}{U}$. 
+\item If $\mildseq{\Gamma}{\cdot}{A^-}$
+      and $\mildseq{\Gamma, A^-}{\Delta}{U}$,
+      then $\mildseq{\Gamma}{\Delta}{U}$. 
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+By lexicographic induction. In each invocation of the induction
+hypothesis, either the principal cut formula $A^+$ or $A^-$ gets 
+smaller, or else it stays the same and the number of the part
+gets smaller (as when we invoke part 2 when proving part 5). 
+
+Within parts 3 and 5, the first two metrics stay the same while the
+second given derivation gets smaller, and within part 4, the first two
+metrics stay the same while the first given derivation gets smaller.
+\end{proof}
+
+The proof of this theorem is not quite as tidy as the 
+
+\subsection{Correctness of focusing}
 
 \subsection{Confluent versus fixed inversion}
 \label{sec:confluent-v-fixed}
+
+\subsection{Running example}
+
+\begin{figure}
+\[
+\infer[{\lolli}_R]
+{\mildseq{\cdot}{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}) \otimes
+                    {\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot}) \lolli {\sf robot}}}
+{\infer[{\otimes}_L]
+{\mildseq{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}) \otimes
+                    {\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
+{\infer[{!}_L]
+{\mildseq{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}),
+                    {\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
+{\infer[{\otimes}_L]
+{\mildseq{\Gamma}{{\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
+{\infer[{\it copy}]
+{\mildseq{\Gamma}{{\sf 6bucks}, {\sf battery} \lolli {\sf robot}}{{\sf robot}}}
+{\infer[{\lolli}_L]
+{\mildseq{\Gamma}{{\sf 6bucks}, {\sf battery} \lolli {\sf robot}, [{\sf 6bucks} \lolli {\sf battery}]}{{\sf robot}}}
+{\infer[{\it init}^+]
+ {\mildseq{\Gamma}{{\sf 6bucks}}{[{\sf 6bucks}]}}
+ {}
+ &
+ \infer[{\it blur}_L]
+ {\mildseq{\Gamma}{{\sf battery} \lolli {\sf robot}, [{\sf battery}]}{{\sf robot}}}
+ {\infer[{\it focus}_L]
+ {\mildseq{\Gamma}{{\sf battery} \lolli {\sf robot}, {\sf battery}}{{\sf robot}}}
+ {\infer[{\lolli}_L]
+ {\mildseq{\Gamma}{{\sf battery}, [{\sf battery} \lolli {\sf robot}]}{{\sf robot}}}
+ {\infer[{\it init^+}]
+  {\mildseq{\Gamma}{{\sf battery}}{[{\sf battery}]}}
+  {}
+  &
+  \infer[{\it blur}_L]
+  {\mildseq{\Gamma}{[{\sf robot}]}{{\sf robot}}}
+  {\infer[{\it focus}_R]
+  {\mildseq{\Gamma}{{\sf robot}}{{\sf robot}}}
+  {\infer[{\it init}^+]
+  {\mildseq{\Gamma}{{\sf robot}}{[{\sf robot}]}}
+  {}}}}}}}}}}}}
+\] 
+\caption{The single focused transition is possible 
+(where we let $\Gamma = {\sf 6bucks} \lolli {\sf battery}$).}
+\label{fig:focused-robot}
+\end{figure}
+
+Figure
 
 \section{Synthetic inference rules}
 \label{sec:linsynthetic}

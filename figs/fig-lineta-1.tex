@@ -1,0 +1,150 @@
+\begin{figure}
+{\small 
+\[
+\infer-[\eta^+]
+{\mildseq{\Gamma}{\Delta, {\downarrow}A}{U}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta, \langle {\downarrow}A \rangle}{U}}
+ {\mathcal D}}
+\quad
+\deduce{\mathstrut}{\Longrightarrow}
+\quad
+\infer[{\downarrow}_L]
+{\mildseq{\Gamma}{\Delta, {\downarrow}A}{U}}
+{\infer-[{\it subst}^+]
+ {\mildseq{\Gamma}{\Delta, A}{U}}
+ {\infer[{\downarrow}_R]
+  {\mildseq{\Gamma}{A}{[ {\downarrow}A ]}}
+  {\infer-[{\eta}^-]
+   {\mildseq{\Gamma}{A}{A}}
+   {\infer-[{\it focus}_L]
+    {\mildseq{\Gamma}{A}{\langle A \rangle}}
+    {\infer[{\it id}^-]
+     {\mildseq{\Gamma}{[ A ]}{\langle A \rangle}}
+     {}}}}
+  &
+  \deduce
+  {\mildseq{\Gamma}{\Delta, \langle {\downarrow}A \rangle}{U}}
+  {\mathcal D}}}
+\]
+
+\[
+\infer-[\eta^+]
+{\mildseq{\Gamma}{\Delta,{!}A}{U}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta, \langle {!}A \rangle}{U}}
+ {\mathcal D}}
+\quad
+\deduce{\mathstrut}{\Longrightarrow}
+\infer[{!}_L]
+{\mildseq{\Gamma}{\Delta,{!}A}{U}}
+{\infer-[{\it subst}^+]
+ {\mildseq{\Gamma,A}{\Delta}{U}}
+ {\infer[{!}_R]
+  {\mildseq{\Gamma, A}{\cdot}{[{!}A]}}
+  {\infer-[\eta^-]
+   {\mildseq{\Gamma, A}{\cdot}{A}}
+   {\infer[\it copy]
+    {\mildseq{\Gamma, A}{\cdot}{\langle A \rangle}}
+    {\infer[{\it id}^-]
+     {\mildseq{\Gamma, A}{[ A ]}{\langle A \rangle}}
+     {}}}}
+  &
+  \infer-[{\it weaken}]
+  {\mildseq{\Gamma,A}{\Delta, \langle {!}A \rangle}{U}}
+  {\deduce
+   {\mildseq{\Gamma}{\Delta, \langle {!}A \rangle}{U}}
+   {\mathcal D}}}}
+\]
+
+\[
+\infer-[\eta^+]
+{\mildseq{\Gamma}{\Delta, A \otimes B}{U}}
+{\deduce{\mildseq{\Gamma}{\Delta, \langle A \otimes B \rangle}{U}}{\mathcal D}}
+\quad
+\deduce{\mathstrut}{\Longrightarrow}
+\!\!\!\!\!\!\!\!\!
+\infer[{\otimes}_L]
+{\mildseq{\Gamma}{\Delta, A \otimes B}{U}}
+{\infer-[\eta^+]
+ {\mildseq{\Gamma}{\Delta, \langle A \rangle, B}{U}}
+ {\infer-[{\it subst}^+]
+  {\mildseq{\Gamma}{\Delta, \langle A \rangle, \langle B \rangle}{U}}
+  {\infer
+   {\mildseq{\Gamma}{\langle A \rangle, \langle B \rangle}{[A \otimes B]}}
+   {\infer[{\it id}^+]
+    {\mildseq{\Gamma}{\langle A \rangle}{[A]}}
+    {}
+    & 
+    \infer[{\it id}^+]
+    {\mildseq{\Gamma}{\langle B \rangle}{[B]}}
+    {}}
+   & 
+   \deduce
+   {\mildseq{\Gamma}{\Delta, \langle A \otimes B \rangle}{U}}
+   {\mathcal D}}}}
+\]
+
+\[
+\infer-[\eta^-]
+{\mildseq{\Gamma}{\Delta}{{\uparrow}A}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta}{\langle {\uparrow}A \rangle}}
+ {\mathcal D}}
+\quad
+\deduce{\mathstrut}{\Longrightarrow}
+\quad
+\infer[{\uparrow}_R]
+{\mildseq{\Gamma}{\Delta}{{\uparrow}A}}
+{\infer-[{\it subst}^-]
+ {\mildseq{\Gamma}{\Delta}{A}}
+ {\deduce
+  {\mildseq{\Gamma}{\Delta}{\langle {\uparrow}A \rangle}}
+  {\mathcal D}
+  &
+  \infer[{\uparrow}_L]
+  {\mildseq{\Gamma}{[{\uparrow}A]}{A}}
+  {\infer-[\eta^+]
+   {\mildseq{\Gamma}{A}{A}}
+   {\infer[{\it focus}_R]
+    {\mildseq{\Gamma}{\langle A \rangle}{A}} 
+    {\infer[{\it id}^+]
+     {\mildseq{\Gamma}{\langle A \rangle}{[ A ]}}
+     {}}}}}}
+\]
+
+\[
+\infer-[\eta^-]
+{\mildseq{\Gamma}{\Delta}{A \lolli B}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta}{\langle A \lolli B \rangle}}
+ {\mathcal D}}
+\quad
+\deduce{\mathstrut}{\Longrightarrow}
+\!\!\!\!\!\!
+\infer[{\lolli}_R]
+{\mildseq{\Gamma}{\Delta}{A \lolli B}}
+{\infer-[\eta^+]
+ {\mildseq{\Gamma}{\Delta, A}{B}}
+ {\infer-[\eta^-]
+  {\mildseq{\Gamma}{\Delta, \langle A \rangle}{B}}
+  {\infer-[{\it subst}^-]
+   {\mildseq{\Gamma}{\Delta, \langle A \rangle}{\langle B \rangle}}
+   {\deduce
+    {\mildseq{\Gamma}{\Delta}{\langle A \lolli B \rangle}}
+    {\mathcal D}
+    &
+    \infer[{\lolli}_L]
+    {\mildseq{\Gamma}{\langle A \rangle, [ A \lolli B ]}{\langle B \rangle}}
+    {\infer[{\it id}^+]
+     {\mildseq{\Gamma}{\langle A \rangle}{[ A ]}}
+     {}
+     &
+     \infer[{\it id}^-]
+     {\mildseq{\Gamma}{[ B ]}{\langle B \rangle}}
+     {}}}}}}
+\]}
+\caption{Identity expansion -- restricting $\eta^+$ and $\eta^-$ to atomic 
+ propositions.}
+\label{fig:lineta-1}
+\end{figure}

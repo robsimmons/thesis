@@ -1,0 +1,116 @@
+\begin{figure}[t]
+{\small
+
+\[
+\infer-[\eta^+]
+{\mildseq{\Gamma}{\Delta, \one}{U}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta, \langle \one \rangle}{U}}
+ {\mathcal D}}
+\quad
+\Longrightarrow
+\infer[{\one}_L]
+{\mildseq{\Gamma}{\Delta, \one}{U}}
+{\infer-[{\it subst}^+]
+ {\mildseq{\Gamma}{\Delta}{U}}
+ {\infer[{\one}_R]
+  {\mildseq{\Gamma}{\cdot}{[ \one ]}}
+  {}
+  &
+  \deduce
+  {\mildseq{\Gamma}{\Delta, \langle \one \rangle}{U}}
+  {\mathcal D}}}
+\]
+
+\[
+\infer-[\eta^+]
+{\mildseq{\Gamma}{\Delta, \zero}{U}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta, \langle \zero \rangle}{U}}
+ {\mathcal D}}
+\quad
+\Longrightarrow
+\infer[\zero_L]
+{\mildseq{\Gamma}{\Delta, \zero}{U}}
+{}
+\]
+
+\[
+\infer-[\eta^+]
+{\mildseq{\Gamma}{\Delta, A \oplus B}{U}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta, \langle A \oplus B \rangle}{U}}
+ {\mathcal D}}
+\quad
+\Longrightarrow
+\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+\infer[{\oplus}_L]
+{\mildseq{\Gamma}{\Delta, A \oplus B}{U}}
+{\infer-[\eta^+]
+ {\mildseq{\Gamma}{\Delta, A}{U}}
+ {\infer-[{\it subst}^+]
+  {\mildseq{\Gamma}{\Delta, \langle A \rangle}{U}}
+  {\infer[{\oplus}_{R1}]
+   {\mildseq{\Gamma}{\Delta, \langle A \rangle}{[ A \oplus B ]}}
+   {\infer[{\it id}^+]
+    {\mildseq{\Gamma}{\langle A \rangle}{[ A ]}}
+    {}}
+   &
+   \deduce
+   {\mildseq{\Gamma}{\Delta, \langle A \oplus B \rangle}{U}}
+   {\mathcal D}}}
+ &
+ \deduce
+ {\mildseq{\Gamma}{\Delta, B}{U}}
+ {\vdots}
+ }
+\]
+
+
+\[
+\infer-[\eta^-]
+{\mildseq{\Gamma}{\Delta}{\top}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta}{\langle \top \rangle}}
+ {\mathcal D}}
+\quad
+\Longrightarrow
+\quad
+\infer[{\top}_R]
+{\mildseq{\Gamma}{\Delta}{\top}}
+{}
+\]
+
+\[
+\infer-[\eta^-]
+{\mildseq{\Gamma}{\Delta}{A \with B}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta}{\langle A \with B \rangle}}
+ {\mathcal D}}
+\quad
+\Longrightarrow
+\!\!\!\!
+\infer[{\with}_R]
+{\mildseq{\Gamma}{\Delta}{A \with B}}
+{\infer[\eta^-]
+ {\mildseq{\Gamma}{\Delta}{A}}
+ {\infer-[{\it subst}^-]
+  {\mildseq{\Gamma}{\Delta}{\langle A \rangle}}
+  {\deduce
+   {\mildseq{\Gamma}{\Delta}{\langle A \with B \rangle}}
+   {\mathcal D}
+   &
+   \infer[{\with}_{L1}]
+   {\mildseq{\Gamma}{[A \with B]}{\langle A \rangle}}
+   {\infer[{\it id}^-]
+    {\mildseq{\Gamma}{[A]}{\langle A \rangle}}
+    {}}}}
+ & 
+ \deduce
+ {\mildseq{\Gamma}{\Delta}{B}}
+ {\vdots}}
+\]}
+
+\caption{Identity expansion for units and additive connectives.}
+\label{fig:lineta-2}
+\end{figure}
