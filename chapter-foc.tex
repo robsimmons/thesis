@@ -256,6 +256,7 @@ asynchronous rules as confluent rather than fixed and arbitrary
 (discussed in Section~\ref{sec:confluent-v-fixed}).
 
 \subsection{Polarization}
+\label{sec:linpolar}
 
 The first step in describing a focused sequent calculus is to classify
 connectives into two groups.  Some connectives, such as linear
@@ -652,7 +653,138 @@ metrics stay the same while the first given derivation gets smaller.
 
 \subsection{Correctness of focusing}
 
-The correctness of focusing 
+Now we will make precise the correctness for a focused, polarized logic
+that was discussed in Section~\ref{sec:linpolar}: that there is a unfocused
+proof of $A$ if and only if there is a focused proof of $A^\oplus$. The
+proof require lifting of our erasure function and our ``obvious'' 
+polarization strategy to contexts and succeedents, which is done
+in Figure~\ref{fig:lin-shift-ctx}. Soundness is established on the 
+basis of erasure as in \cite{simmons11structural}, but as discussed
+we give the slightly simpler polarization-strategy-based proof of
+completeness.
+
+\bigskip
+\begin{theorem}[Soundness of focusing]
+If $\mildseq{\Gamma}{\Delta}{U}$, where $\Delta$ and $U$ contain only
+atomic suspensions, then $\seq{\Gamma^\circ}{\Delta^\circ}{U^\circ}$.
+\end{theorem}
+
+\begin{proof}
+  By straightforward induction on the given derivation; in each case,
+  the result either follows directly by invoking the induction
+  hypothesis or by invoking the induction hypothesis and applying one
+  rule from Figure~\ref{fig:linear}.
+\end{proof}
+
+\begin{theorem}[Completeness of focusing]
+If $\seq{\Gamma}{\Delta}{C}$,
+then $\mildseq{\Gamma^\bullet}{\Delta^\bullet}{C^\bullet}$. 
+\end{theorem}
+
+\begin{proof}
+  By induction on the first given derivation. Each rule in 
+  Figure~\ref{fig:linear}
+
+  Rule {\it copy}:
+  \[
+  \]
+
+  Rule $\lolli_L$:
+  \[
+  \]
+
+  Rule $\lolli_R$:
+  {\small \[
+  \infer-[{\it cut}(3)]
+  {\mildseq{\Gamma^\bullet}{\Delta^\bullet}
+    {{\downarrow}(A^\oplus \lolli B^\ominus)}}
+  {\infer[{\lolli}_R]
+   {\mildseq{\Gamma^\bullet}{\Delta^\bullet}
+     {{\downarrow}{\uparrow}A^\oplus \lolli {\uparrow}{\downarrow}B^\ominus}}  
+   {\infer[{\downarrow}_L]
+    {\mildseq{\Gamma^\bullet}{\Delta^\bullet, {\downarrow}{\uparrow}A^\oplus}
+      {{\uparrow}{\downarrow}B^\ominus}}
+    {\infer[{\uparrow}_R]
+     {\mildseq{\Gamma^\bullet}{\Delta^\bullet, {\uparrow}A^\oplus}
+      {{\uparrow}{\downarrow}B^\ominus}}
+     {\mildseq{\Gamma^\bullet}{\Delta^\bullet, {\uparrow}A^\oplus}
+      {{\downarrow}B^\ominus}}}}
+   &
+   \infer[{\it focus}_R]
+   {\mildseq{\Gamma}{{\downarrow}{\uparrow}A^\oplus \multimap B^\ominus}
+      {{\downarrow}(A^\oplus \lolli B^\ominus)}}
+   {\infer[{\downarrow}_R]
+    {\mildseq{\Gamma^\bullet}
+      {{\downarrow}{\uparrow}A^\oplus \multimap {\uparrow}{\downarrow}B^\ominus}
+      {[ {\downarrow}(A^\oplus \lolli B^\ominus)} ]}
+    {\infer[{\lolli}_R]
+     {\mildseq{\Gamma^\bullet}
+       {{\downarrow}{\uparrow}A^\oplus \multimap {\uparrow}{\downarrow}B^\ominus}
+       {A^\oplus \lolli B^\ominus}}
+     {\infer-[\eta^+]
+      {\mildseq{\Gamma^\bullet}
+        {{\downarrow}{\uparrow}A^\oplus 
+           \multimap {\uparrow}{\downarrow}B^\ominus, 
+         A^\oplus}
+        {B^\ominus}}
+      {\infer-[\eta^-]
+       {\mildseq{\Gamma^\bullet}
+         {{\downarrow}{\uparrow}A^\oplus
+            \multimap {\uparrow}{\downarrow}B^\ominus, 
+          \langle A^\oplus \rangle}
+         {B^\ominus}}
+       {\infer[{\it focus}_L]
+        {\mildseq{\Gamma^\bullet}
+          {{\downarrow}{\uparrow}A^\oplus 
+             \multimap {\uparrow}{\downarrow}B^\ominus, 
+           \langle A^\oplus \rangle}
+          {\langle B^\ominus \rangle}}
+        {\infer[{\lolli}_L]
+         {\mildseq{\Gamma^\bullet}
+           {[ {\downarrow}{\uparrow}A^\oplus 
+              \multimap {\uparrow}{\downarrow}B^\ominus ], 
+            \langle A^\oplus \rangle}
+           {\langle B^\ominus \rangle}}
+         {\infer[{\downarrow}_R]
+          {\mildseq{\Gamma^\bullet}{\langle A^\oplus \rangle}
+           {[{\downarrow}{\uparrow}A^\oplus]}}
+          {\infer[{\uparrow}_R]
+           {\mildseq{\Gamma^\bullet}{\langle A^+ \rangle}{{\uparrow}A^+}}
+           {\infer[{\it focus}_R]
+            {\mildseq{\Gamma^\bullet}{\langle A^+ \rangle}{A^+}} 
+            {\infer[{\it id}^+]
+             {\mildseq{\Gamma^\bullet}{\langle A^+ \rangle}{[A^+]}}
+             {}}}}
+          &
+          \infer[{\uparrow}_L]
+          {\mildseq{\Gamma^\bullet}{[{\uparrow}{\downarrow}B^\ominus]}
+             {\langle B^\ominus \rangle}}
+          {\infer[{\downarrow}_L]
+           {\mildseq{\Gamma^\bullet}{{\downarrow}B^\ominus}
+             {\langle B^\ominus \rangle}}
+           {\infer[{\it focus}_L]
+            {\mildseq{\Gamma^\bullet}{B^\ominus}{\langle B^\ominus \rangle}}
+            {\infer[{\it id}^-]
+             {\mildseq{\Gamma^\bullet}{[B^\ominus]}{\langle B^\ominus \rangle}}
+             {}}}}}}}}}}}}
+  \]}
+\end{proof}
+
+The correctness of focusing is established as in the structural focalization
+methadology, except that we establish a weaker polarization-strategy-based
+proof of completeness rather than an erasure-based proof as in 
+\cite{simmons11structural}. Both the soundness and completeness of focusing
+
+
+\input{figs/fig-lin-shift-ctx}
+
+
+
+\begin{proof}
+
+The reverse direction is the soundness of focusing. It is completely
+straightforward, 
+\end{proof}
 
 \subsection{Confluent versus fixed inversion}
 \label{sec:confluent-v-fixed}
