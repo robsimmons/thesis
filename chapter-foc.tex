@@ -659,7 +659,7 @@ Now we will make precise the correctness for a focused, polarized
 logic that was discussed in Section~\ref{sec:linpolar}: that there is
 a unfocused proof of $A$ if and only if there is a focused proof of
 $A^\oplus$. The proof require lifting of our erasure function and our
-natural polarization strategy to contexts and succeedents, which is
+natural polarization strategy to contexts and succeedants, which is
 done in Figure~\ref{fig:lin-shift-ctx}. Soundness is established on
 the basis of erasure as in \cite{simmons11structural}, but as
 discussed Section~\ref{sec:linpolar}, we will give the slightly
@@ -693,7 +693,7 @@ then $\mildseq{\Gamma^\ominus}{\Delta^\ominus}{C^\oplus}$.
   $\mildseq{\Gamma^\ominus, A^\ominus}{\Delta^\ominus, A^\ominus}{C^\oplus}$, we
   have to prove 
   $\mildseq{\Gamma^\ominus, A^\ominus}{\Delta^\ominus}{C^\oplus}$:
-  \[
+  {\small \[
   \infer-[{\it cut}(3)]
   {\mildseq{\Gamma^\ominus, A^\ominus}{\Delta^\ominus}{C^\oplus
 }}
@@ -704,11 +704,62 @@ then $\mildseq{\Gamma^\ominus}{\Delta^\ominus}{C^\oplus}$.
     {}}
    &
    \mildseq{\Gamma^\bullet, A^\ominus}{\Delta^\bullet, A^\ominus}{C^\oplus}}
-  \]
+  \]}
 
-  Rule $\lolli_L$:
-  \[
-  \]
+  Rule $\lolli_L$: Given
+  $\mildseq{\Gamma^\ominus}{\Delta^\ominus}{A^\oplus}$ and
+  $\mildseq{\Gamma^\ominus}{\Delta_A^\ominus, B^\ominus}{C^\oplus}$, we must prove
+  $\mildseq{\Gamma^\ominus}{\Delta^\ominus, \Delta_A^\ominus, (A \lolli B)^\ominus}
+    {C^\oplus}$ which is 
+  the same as
+  $\mildseq{\Gamma^\ominus}{\Delta^\ominus, \Delta', A^\oplus \lolli B^\ominus}
+    {C^\oplus}$.
+  {\small \[
+  \infer-[{\it cut}(4)] 
+  {\mildseq{\Gamma^\ominus}
+    {\Delta^\ominus, \Delta_A^\ominus, A^\oplus \lolli B^\ominus}
+    {C^\oplus}}
+  {\infer-[{\it cut}(4)]
+   {\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\oplus \lolli B^\ominus}
+     {{\downarrow}B^\ominus}}
+   {{\mildseq{\Gamma^\ominus}{\Delta^\ominus}{A^\oplus}}
+    &
+    \infer-[{\eta}^+]
+    {\mildseq{\Gamma^\ominus}{A^\oplus \lolli B^\ominus, A^\oplus}
+     {{\downarrow}B^\ominus}}
+    {\infer[{\it focus}_R]
+     {\mildseq{\Gamma^\ominus}{A^\oplus \lolli B^\ominus, \langle A^\oplus \rangle}
+       {{\downarrow}B^\ominus}}
+     {\infer[{\downarrow}_R]
+      {\mildseq{\Gamma^\ominus}
+        {A^\oplus \lolli B^\ominus, \langle A^\oplus \rangle}
+        {[{\downarrow}B^\ominus}]}
+      {\infer-[\eta^-]
+       {\mildseq{\Gamma^\ominus}
+         {A^\oplus \lolli B^\ominus, \langle A^\oplus \rangle}
+         {B^\ominus}}
+       {\infer[{\it focus}_L]
+        {\mildseq{\Gamma^\ominus}
+         {A^\oplus \lolli B^\ominus, \langle A^\oplus \rangle}
+         {\langle B^\ominus \rangle}}
+        {\infer[{\lolli}_L]
+         {\mildseq{\Gamma^\ominus}
+         {[A^\oplus \lolli B^\ominus], \langle A^\oplus \rangle}
+         {\langle B^\ominus \rangle}}
+         {\infer[{\it id}^+]
+          {\mildseq{\Gamma^\ominus}{\langle A^\oplus \rangle}{[A^\oplus]}}
+          {}
+          &
+          \infer[{\it id}^-]
+          {\mildseq{\Gamma^\ominus}{[B^\ominus]}{\langle B^\ominus \rangle}}
+          {}}}}}}}}
+   &
+   {\infer[{\downarrow}_L]
+    {\mildseq{\Gamma^\ominus}{\Delta_A^\ominus, {\downarrow}B^\ominus}
+      {C^\oplus}}
+    {\mildseq{\Gamma^\ominus}{\Delta_A^\ominus, B^\ominus}
+      {C^\oplus}}}}
+  \]}
 
   Rule $\lolli_R$: Given 
   $\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\ominus}{B^\oplus}$, we must
@@ -823,7 +874,7 @@ then $\mildseq{\Gamma^\ominus}{\Delta^\ominus}{C^\oplus}$.
   $\mildseq{\Gamma^\ominus}{\Delta^\ominus,
     A^\ominus}{{\downarrow}B^\ominus}$ is derivable from
   $\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\ominus}{B^\oplus}$.
-  Either $B$ is a right-asychronous connective, in which case
+  Either $B$ is a right-asynchronous connective, in which case
   $B^\oplus = {\downarrow}B^\ominus$ and the result is immediate, or
   else $B$ is a right-synchronous connective, in which case 
   $B^\ominus = {\uparrow}B^\oplus$ and we can proceed as follows:
