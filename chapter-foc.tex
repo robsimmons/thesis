@@ -375,7 +375,7 @@ $[A^-]$, derivations can maintain the invariant that there is always
 at most one proposition in focus, effectively restoring the situation
 in which there are three distinct judgments.  This restriction alone
 gives us what Pfenning calls a {\it chaining} logic
-\cite{pfenning02chaining} and which Laurent calls a {\it weakly
+\cite{pfenning12chaining} and which Laurent calls a {\it weakly
   focused} logic \cite{laurent04proof}.\footnote{This is not what I
   called a weakly focused logic \cite{simmons09weak}. That weakly
   focused system had an additional restriction that invertible rules
@@ -678,7 +678,7 @@ atomic suspensions, then $\seq{\Gamma^\circ}{\Delta^\circ}{U^\circ}$.
   rule from Figure~\ref{fig:linear}.
 \end{proof}
 
-\begin{theorem}[Completeness of focusing]
+\begin{theorem}[Completeness of focusing]\label{thm:linfoccomplete}
 If $\seq{\Gamma}{\Delta}{C}$,
 then $\mildseq{\Gamma^\ominus}{\Delta^\ominus}{C^\oplus}$. 
 \end{theorem}
@@ -898,60 +898,228 @@ then $\mildseq{\Gamma^\ominus}{\Delta^\ominus}{C^\oplus}$.
 \subsection{Confluent versus fixed inversion}
 \label{sec:confluent-v-fixed}
 
+A salient feature of this presentation of focusing is that invertible,
+non-focused rules need not be applied in any particular order.
+Therefore, the last step in a proof of $\mildseq{\Gamma}{\Delta, A
+  \tensor B, \one, {!}C}{D \lolli E}$ could be ${\otimes}_L$,
+${\one}_L$ ${!}_L$, or ${\lolli}_R$. Allowing for this inessential
+nondeterminism simplifies the presentation a bit, but it also gets in
+the way of effective proof search if we do not address it in some way.
+Addressing this nondetermism within aninversion phase echos the
+discussion of LF from the beginning of the chapter. 
+
+We can say, as suggested in that introduction, decleare that all
+proofs which differ only by the order of their invertible, non-focused
+rules be treated as equivalent. It is possible to establish that all
+possible inversion orderings will lead to the same set of stable
+sequents, which lets us know that all of these reorderings do not
+fundamentally change the structure of the rest of the proof, and it
+should furthermore be possible to show that this equivalence relation
+on derivations is decidable. This is fundamentally a confluence
+property, and so we can call this style of focusing a {\it confluent}
+presentation; it is exemplified by Liang and Miller's LJF
+\cite{liang09focusing}, and the confluent presentation in this chapter
+is closely faithful to Pfenning's course notes on linear logic
+\cite{pfenning12chaining}.  There are several ways to state this
+confluence property.
+
+%; one of them
+%is Proposition~\ref{prop:confluence-lin}:
+%
+%\bigskip
+%\begin{proposition}
+%\label{prop:confluence-lin}
+%Let $\Xi$ be a set of derivations of stable sequents. If 
+%$\mildseq{\Gamma}{\Delta}{U}$, where $\Delta$ and $U$ contain no 
+%focused propositions, can be derived from $\Xi$ using only non-focused
+%rules, then for all non-focused rules that can be used to derive
+%$\mildseq{\Gamma}{\Delta}{U}$, its premises can be derived
+%from $\Xi$ using only non-focused rules.
+%\end{proposition}
+%\bigskip
+
+Given this decidable equivalence on proofs, we can pick some member of
+each to serve as a canonical representative; this will suffice
+to solve the problems with proof search, as we can search for 
+the canonical representatives of focused proofs rather than the 
+much larger set of all focused proofs. The most common canonical
+representatives force all invertible rules to be applied so that
+propositions are decomposed in a depth-first ordering. 
+
+Then, remenicient of the move from LF to Canonical LF, the logic
+itself can be restricted so that only the canonical representatives
+are admitted. The most convienent way of forcing a left-most,
+depth-first ordering is to isolate the invertible propositions ($A^+$
+on the left and $A^-$ on the right) in separate, ordered inversion
+contexts, and then to only work on the left-most proposition in the
+context. This is the way most focused logics are defined, including
+those by Andreoli, Chaudhuri, and myself (both in the Structural
+Focalization development and in the next chapter). This style of 
+presenting a focusing logic can be called a {\it fixed} presentation,
+as the shape of the inversion phase is fixed in a particular, though
+fundamentally arbitrary, shape. 
+
+The completeness of focusing for a fixed presentation of focusing is
+implied by the completeness of focusing for a confluent presentation
+of the same logic along with the appropriate confluence property for
+that logic, whereas the reverse is not true. Therefore, the confluent
+presentation, in a certain sense, proving a stronger theorem than the
+fixed presentation, though the fixed presentation will be sufficient
+for our purposes.
+
 \subsection{Running example}
 
-\begin{figure}
-\[
-\infer[{\lolli}_R]
-{\mildseq{\cdot}{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}) \otimes
-                    {\sf 6bucks} \otimes 
-                    ({\sf battery} \lolli {\sf robot}) \lolli {\sf robot}}}
-{\infer[{\otimes}_L]
-{\mildseq{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}) \otimes
-                    {\sf 6bucks} \otimes 
-                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
-{\infer[{!}_L]
-{\mildseq{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}),
-                    {\sf 6bucks} \otimes 
-                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
-{\infer[{\otimes}_L]
-{\mildseq{\Gamma}{{\sf 6bucks} \otimes 
-                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
-{\infer[{\it copy}]
-{\mildseq{\Gamma}{{\sf 6bucks}, {\sf battery} \lolli {\sf robot}}{{\sf robot}}}
-{\infer[{\lolli}_L]
-{\mildseq{\Gamma}{{\sf 6bucks}, {\sf battery} \lolli {\sf robot}, [{\sf 6bucks} \lolli {\sf battery}]}{{\sf robot}}}
-{\infer[{\it init}^+]
- {\mildseq{\Gamma}{{\sf 6bucks}}{[{\sf 6bucks}]}}
- {}
- &
- \infer[{\it blur}_L]
- {\mildseq{\Gamma}{{\sf battery} \lolli {\sf robot}, [{\sf battery}]}{{\sf robot}}}
- {\infer[{\it focus}_L]
- {\mildseq{\Gamma}{{\sf battery} \lolli {\sf robot}, {\sf battery}}{{\sf robot}}}
- {\infer[{\lolli}_L]
- {\mildseq{\Gamma}{{\sf battery}, [{\sf battery} \lolli {\sf robot}]}{{\sf robot}}}
- {\infer[{\it init^+}]
-  {\mildseq{\Gamma}{{\sf battery}}{[{\sf battery}]}}
-  {}
-  &
-  \infer[{\it blur}_L]
-  {\mildseq{\Gamma}{[{\sf robot}]}{{\sf robot}}}
-  {\infer[{\it focus}_R]
-  {\mildseq{\Gamma}{{\sf robot}}{{\sf robot}}}
-  {\infer[{\it init}^+]
-  {\mildseq{\Gamma}{{\sf robot}}{[{\sf robot}]}}
-  {}}}}}}}}}}}}
-\] 
-\caption{The single focused transition is possible 
-(where we let $\Gamma = {\sf 6bucks} \lolli {\sf battery}$).}
-\label{fig:focused-robot}
-\end{figure}
+\input{figs/fig-focused-robot}
 
-Figure
+Figure~\ref{fig:focused-robot} gives the result of taking our 
+robot example, Figure~\ref{fig:unfocused-robot}, through the 
+polarization and focalization process described by 
+Theorem~\ref{thm:linfoccomplete}. There is indeed only one 
+proof of this focused proposition up to the reordering of 
+invertible rules, and only one proof period if we always
+decompose invertible propositions in a left-most, depth-first
+ordering (as we do in Figure~\ref{fig:focused-robot}). 
+
+We have therefore successfully used focusing to get a canonical
+proof structure that correctly corresponds to our 
+informal series of transitions:
+\[
+\begin{array}{ccccc}
+\begin{array}{c}
+\mbox{\it \$6 (1)}\medskip\\ 
+\mbox{\it battery-free robot (1)} \medskip\\ 
+\mbox{\it turn \$6 into a battery}\\
+\mbox{\it (all you want)}
+\end{array}
+& \leadsto &
+\begin{array}{c}
+\mbox{\it battery  (1)}\medskip\\ 
+\mbox{\it battery-free robot (1)} \medskip\\ 
+\mbox{\it turn \$6 into a battery}\\
+\mbox{\it (all you want)}
+\end{array}
+& \leadsto &
+\begin{array}{c}
+\mbox{\it robot (1)} \medskip\\ 
+\mbox{\it turn \$6 into a battery}\\
+\mbox{\it (all you want)}\medskip\\~\\
+\end{array}
+\end{array}
+\]
+But at what cost? Figure~\ref{fig:focused-robot} definitely contains a
+fair amount of burecracy compared to the original
+Figure~\ref{fig:unfocused-robot}, even if does a better job of
+matching, when read from bottom to top, the series of transitions. A
+less cluttered way of looking at these proofs is in terms of what
+Andreoli called {\it bipoles} \cite{andreoli01focussing} and what we,
+following Chaudhuri, call {\it synthetic inference rules}
+\cite{chaudhuri08focusing}.
 
 \section{Synthetic inference rules}
 \label{sec:linsynthetic}
+
+Synthetic inference rules were introduced by Andreoli as {\it bipoles}
+for the purpose of giving a more abstract way of looking at focused
+logics and focused derivations \cite{andreoli01focussing}. The first
+observation behind synthetic inference rules is that the stable
+sequents are the ones that are most clearly endowed with meaning in a
+focused sequent calculus; this was reflected by the polarization
+strategy used in the completeness of linear logic, which only produced
+stable sequents. The second observation is that, once we know 
+whether the last rule in the proof 
+is ${\it focus}_L$ on some proposition $A^-$ in $\Delta$,
+${\it copy}$ on some proposition $A^-$ from $\Gamma$, or 
+${\it focus}_R$ on the conclusion $A^+$ (it must be one of these
+three), then the structure of the proof is completely determined
+up to the next occurance of a stable sequent. 
+
+For example, consider the act of focusing on the proposition
+$a^+ \lolli {\uparrow}b^+$ in $\Gamma$ using the ${\it copy}$ rule,
+where $a^+$ and $b^+$ are positive atomic propositions. 
+This must mean that a suspended atomic proposition $a^+$ appears
+in the context $\Delta$, or else the proof could not be completed:
+\[
+\infer[{\it copy}]
+{\mildseq{\Gamma, a^+ \lolli {\uparrow}b^+}{\Delta, \langle a^+ \rangle}{U}}
+{\infer[{\lolli}_L]
+ {\mildseq{\Gamma, a^+ \lolli {\uparrow}b^+}
+   {\Delta, \langle a^+ \rangle, [a^+ \lolli {\uparrow}b^+]}{U}}
+ {\infer[{\it id}^+]
+  {\mildseq{\Gamma, a^+ \lolli {\uparrow}b^+}
+   {\langle a^+ \rangle}{[ a^+ ]}}
+  {}
+  &
+  \infer[{\uparrow}_L]
+  {\mildseq{\Gamma, a^+ \lolli {\uparrow}b^+}{\Delta, [{\uparrow}b^+]}{U}}
+  {\infer[\eta^+]
+   {\mildseq{\Gamma, a^+ \lolli {\uparrow}b^+}{\Delta, b^+}{U}}
+   {\mildseq{\Gamma, a^+ \lolli {\uparrow}b^+}
+    {\Delta, \langle b^+ \rangle}{U}}}}}
+\]
+The non-stable sequents in the middle are not interesting parts 
+of the structure of the proof, as they are fully determined by the
+choice of focus, so we can collapse this series of transitions
+into a single synthetic rule:
+\[
+\infer[{\sf CP}_{a^+ \lolli {\uparrow}b^+}]
+{\mildseq{\Gamma, a^+ \lolli {\uparrow}b^+}{\Delta, \langle a^+ \rangle}{U}}
+{\mildseq{\Gamma, a^+ \lolli {\uparrow}b^+}{\Delta, \langle b^+ \rangle}{U}}
+\]
+Similar rules can be given for focusing phases associated with the
+${\it focus}_L$ and ${\it focus}_R$ rule:
+\[
+\infer[{\sf LP}_{a^+ \lolli {\uparrow}b^+}]
+{\mildseq{\Gamma}{\Delta, \langle a^+ \rangle, a^+ \lolli {\uparrow}b^+}{U}}
+{\mildseq{\Gamma}{\Delta, \langle b^+ \rangle}{U}}
+\]
+\[
+\infer[{\sf RF}_{{\downarrow}({!}A^- \otimes b^+ \otimes {\downarrow}C^- \lolli 
+   {\uparrow}D^+)}]
+{\mildseq{\Gamma}{\Delta}
+  {{\downarrow}({!}A^- \otimes b^+ \otimes {\downarrow}C^- \lolli 
+   {\uparrow}D^+)}}
+{\mildseq{\Gamma, A^-}{\Delta, \langle b^+ \rangle, C^-}{D^+}}
+\quad
+\infer[{\sf RF}_{a^+}]
+{\mildseq{\Gamma}{\langle a^+ \rangle}{a^+}}
+{}
+\]
+
+Focused proofs of stable sequents are, by definition, in a 1-to-1
+correspondance with proofs using synthetic inference rules. If we look
+at our running example as a derivation using inference rules, we see
+that the system takes four steps. The last two steps, furthermore,
+correspond precisely to the intermediate steps in our informal
+description of the system. 
+{\small\[
+\infer[{\sf RF}_{{\downarrow}({!}A^- \otimes b^+ \otimes {\downarrow}C^- \lolli 
+   {\uparrow}D^+)}]
+{\mildseq{\cdot}{\cdot}
+   {{\downarrow}({!}({\sf 6bucks} \lolli {\uparrow}{\sf battery}) \otimes
+             {\sf 6bucks} \otimes 
+             {\downarrow}({\sf battery} \lolli {\uparrow}{\sf robot}) \lolli 
+             {\uparrow}{\sf robot})}}
+{\infer[{\sf CP}_{a^+ \lolli {\uparrow}b^+}]
+ {\mildseq{{\sf 6bucks} \lolli {\uparrow}{\sf battery}\quad}
+    {\quad\langle {\sf 6bucks} \rangle, ~~
+     {\sf battery} \lolli {\uparrow}{\sf robot}\quad}{\quad{\sf robot}}}
+ {\infer[{\sf LF}_{a^+\lolli{\uparrow}b^+}]
+  {\mildseq{{\sf 6bucks} \lolli {\uparrow}{\sf battery}\quad}
+    {\quad{\sf battery} \lolli {\uparrow}{\sf robot}, ~~
+     \langle {\sf battery} \rangle\quad}{\quad{\sf robot}}}
+  {\infer[{\sf RF}_{a^+}]
+   {\mildseq{{\sf 6bucks} \lolli {\uparrow}{\sf battery}\quad}
+       {\quad\langle {\sf robot} \rangle\quad}{\quad{\sf robot}}}
+   {}}}}
+\]}
+
+In important side note: the fact that the structure of propositions is {\it
+  entirely} determined is an artifact of our restriction to MALL. If
+we also consider additive connectives, then we would be in a similar
+situation except that we would be able to identify some number of
+synthetic rules for each right focus, left focus, or copy (possibly
+zero, as would be the case for right focus on $\zero$).
+
 
 \section{Hacking the focusing system}
 \label{sec:linhack}

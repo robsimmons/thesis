@@ -1,0 +1,84 @@
+\begin{figure}[t]
+\[
+\infer[{\it focus}_R]
+{\mildseq{\cdot}{\cdot}
+   {{\downarrow}({!}({\sf 6bucks} \lolli {\uparrow}{\sf battery}) \otimes
+                 {\sf 6bucks} \otimes 
+                 {\downarrow}({\sf battery} \lolli {\uparrow}{\sf robot}) \lolli 
+                 {\uparrow}{\sf robot})}}
+{\infer[{\downarrow}_R]
+{\mildseq{\cdot}{\cdot}
+   {[{\downarrow}({!}({\sf 6bucks} \lolli {\uparrow}{\sf battery}) \otimes
+                 {\sf 6bucks} \otimes 
+                 {\downarrow}({\sf battery} \lolli {\uparrow}{\sf robot}) \lolli 
+                 {\uparrow}{\sf robot})]}}
+{\infer[{\lolli}_R]
+{\mildseq{\cdot}{\cdot}
+   {{!}({\sf 6bucks} \lolli {\uparrow}{\sf battery}) \otimes
+                 {\sf 6bucks} \otimes 
+                 {\downarrow}({\sf battery} \lolli {\uparrow}{\sf robot}) \lolli 
+                 {\uparrow}{\sf robot}}}
+{\infer[{\otimes}_L]
+{\mildseq{\cdot}{{!}({\sf 6bucks} \lolli {\uparrow}{\sf battery}) \otimes
+                    {\sf 6bucks} \otimes 
+                    {\downarrow}({\sf battery} \lolli {\uparrow}{\sf robot})}
+                    {{\uparrow}{\sf robot}}}
+{\infer[{!}_L]
+{\mildseq{\cdot}{{!}({\sf 6bucks} \lolli {\uparrow}{\sf battery}),
+                    {\sf 6bucks} \otimes 
+                    {\downarrow}({\sf battery} \lolli {\uparrow}{\sf robot})}
+                    {{\uparrow}{\sf robot}}}
+{\infer[{\otimes}_L]
+{\mildseq{\Gamma}{{\sf 6bucks} \otimes 
+                  {\downarrow}({\sf battery} \lolli {\uparrow}{\sf robot})}
+                  {{\uparrow}{\sf robot}}}
+{\infer[\eta^+]
+{\mildseq{\Gamma}{{\sf 6bucks},
+                  {\downarrow}({\sf battery} \lolli {\uparrow}{\sf robot})}
+                  {{\uparrow}{\sf robot}}}
+{\infer[{\downarrow}_L]
+{\mildseq{\Gamma}{\langle {\sf 6bucks} \rangle,
+                  ({\sf battery} \lolli {\uparrow}{\sf robot})}
+                  {{\uparrow}{\sf robot}}}
+{\infer[{\uparrow}_R]
+{\mildseq{\Gamma}{\langle {\sf 6bucks} \rangle,
+                  {\downarrow}({\sf battery} \lolli {\uparrow}{\sf robot})}
+                  {{\uparrow}{\sf robot}}}
+{\infer[{\it copy}]
+{\mildseq{\Gamma}{\langle {\sf 6bucks} \rangle, 
+                  {\sf battery} \lolli {\uparrow}{\sf robot}}
+                  {{\sf robot}}}
+{\infer[{\lolli}_L]
+{\mildseq{\Gamma}{\langle {\sf 6bucks} \rangle, 
+                  {\sf battery} \lolli {\uparrow}{\sf robot}, 
+                  [{\sf 6bucks} \lolli {\uparrow}{\sf battery}]}{{\sf robot}}}
+{\infer[{\it id}^+]
+ {\mildseq{\Gamma}{\langle {\sf 6bucks} \rangle}{[{\sf 6bucks}]}}
+ {}
+ &
+ \infer[{\uparrow}_L] 
+{\mildseq{\Gamma}{{\sf battery} \lolli {\uparrow}{\sf robot}, [{\uparrow}{\sf battery}]}{{\sf robot}}}
+ {\infer[\eta^+]
+ {\mildseq{\Gamma}{{\sf battery} \lolli {\uparrow}{\sf robot}, {\sf battery}}{{\sf robot}}}
+ {\infer[{\it focus}_L]
+ {\mildseq{\Gamma}{{\sf battery} \lolli {\uparrow}{\sf robot}, \langle {\sf battery} \rangle}{{\sf robot}}}
+ {\infer[{\lolli}_L]
+ {\mildseq{\Gamma}{\langle {\sf battery} \rangle, [{\sf battery} \lolli {\uparrow}{\sf robot}]}{{\sf robot}}}
+ {\infer[{\it id}^+]
+  {\mildseq{\Gamma}{\langle {\sf battery} \rangle}{[{\sf battery}]}}
+  {}
+  &
+  \infer[{\uparrow}_L]
+  {\mildseq{\Gamma}{[{\uparrow}{\sf robot}]}{{\sf robot}}}
+  {\infer[\eta^+]
+  {\mildseq{\Gamma}{{\sf robot}}{{\sf robot}}}
+  {\infer[{\it focus}_R]
+  {\mildseq{\Gamma}{\langle {\sf robot} \rangle}{{\sf robot}}}
+  {\infer[{\it id}^+]
+  {\mildseq{\Gamma}{\langle {\sf robot} \rangle}{[{\sf robot}]}}
+  {}}}}}}}}}}}}}}}}}}}
+\] 
+\caption{The single focused transition is possible 
+(where we let $\Gamma = {\sf 6bucks} \lolli {\uparrow}{\sf battery}$).}
+\label{fig:focused-robot}
+\end{figure}
