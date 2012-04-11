@@ -1021,15 +1021,19 @@ following Chaudhuri, call {\it synthetic inference rules}
 Synthetic inference rules were introduced by Andreoli as {\it bipoles}
 for the purpose of giving a more abstract way of looking at focused
 logics and focused derivations \cite{andreoli01focussing}. The first
-observation behind synthetic inference rules is that the stable
+idea behind synthetic inference rules is that the stable
 sequents are the ones that are most clearly endowed with meaning in a
 focused sequent calculus; this was reflected by the polarization
-strategy used in the completeness of linear logic, which only produced
-stable sequents. The second observation is that, once we know 
-whether the last rule in the proof 
-is ${\it focus}_L$ on some proposition $A^-$ in $\Delta$,
-${\it copy}$ on some proposition $A^-$ from $\Gamma$, or 
-${\it focus}_R$ on the conclusion $A^+$ (it must be one of these
+strategy used in the completeness theorem for linear logic
+(Theorem~\ref{thm:linfoccomplete}), which only produced
+stable sequents. The second idea is that, once we know 
+whether the last rule in the proof of a stable sequent is
+is 
+\begin{itemize}
+\item ${\it copy}$ on some proposition $A^-$ from $\Gamma$, 
+\item ${\it focus}_L$ on some proposition $A^-$ in $\Delta$, or
+\item ${\it focus}_R$ on the succeedant $A^+$
+\end{itemize} (it must be one of these
 three), then the structure of the proof is completely determined
 up to the next occurrence of a stable sequent. 
 
@@ -1085,12 +1089,7 @@ ${\it focus}_L$ and ${\it focus}_R$ rule:
 {}
 \]
 
-Focused proofs of stable sequents are, by definition, in a 1-to-1
-correspondence with proofs using synthetic inference rules. If we look
-at our running example as a derivation using inference rules, we see
-that the system takes four steps. The last two steps, furthermore,
-correspond precisely to the intermediate steps in our informal
-description of the system. 
+\begin{figure}
 {\small\[
 \infer[{\sf RF}_{{\downarrow}({!}A^- \otimes b^+ \otimes {\downarrow}C^- \lolli 
    {\uparrow}D^+)}]
@@ -1112,23 +1111,293 @@ description of the system.
        {\quad\langle {\sf robot} \rangle\quad}{\quad{\sf robot}}}
    {}}}}
 \]}
+\caption{Our running example, presented with synthetic rules.}
+\label{fig:synthetic-robot}
+\end{figure}
+
+Focused proofs of stable sequents are, by definition, in a 1-to-1
+correspondence with proofs using synthetic inference rules. If we look
+at our running example as a derivation using synthetic inference rules
+(Figure~\ref{fig:synthetic-robot}), we see that the system takes four
+steps. The last three steps, furthermore, correspond precisely to the
+three steps in our informal description of the robot-battery-store
+system.
 
 In important side note: the fact that the structure of propositions is {\it
   entirely} determined is an artifact of our restriction to MALL. If
 we also consider additive connectives, then we would be in a similar
 situation except that we would be able to identify some number of
 synthetic rules for each right focus, left focus, or copy (possibly
-zero, as would be the case for right focus on $\zero$).
+zero; there's no way to successfully right focus on a proposition
+like $\zero \otimes {\uparrow}{\downarrow}A^+$).
 
 
 \section{Hacking the focusing system}
 \label{sec:linhack}
 
+Despite the novel treatement of suspended propositions in
+Section~\ref{sec:foclinlog}, the presentation of linear logic given
+there is essentially the same as the presentation in Chaudhuri's
+thesis \cite{chaudhuri06focused}, in the sense that the logic gives
+rise to the same synthetic inference rules. It is {\it not} a faithful
+intuitionstic analouge to Andreoli's original presentation of focusing
+\cite{andreoli92logic}, as Pfenning's course notes is
+\cite{pfenning12chaining}.\footnote{We will blur the lines, in this
+  section, between Androli's original presentation of focused
+  classical linear logic and Pfenning's adaptation to intuitionstic
+  linear logic. In particular We will mostly use the notation of
+  Pfenning's presentation, but the observations are equally applicable
+  in Andreoli's focused triadic system.}  Nor does it have the same
+synthetic inference rules as the focused presentation used in the
+language of ordered logical specefications presented by Pfenning and I
+\cite{pfenning09substructural}.
+
+The difference, in each case, lies in the treatment of positive atomic
+propositions, which can be a suprisingly rich source of fungible
+behavior in focused systems. My justification for presenting
+Chaudhuri's system as the canonical focusing system for linear logic
+in Section~\ref{sec:foclinlog} is because the treatment of suspended
+positive propositions fits beautifully with the idea that atomic
+propositions are just placeholders for unspecified
+propositions. However, our current goal is not to study focused
+logics, it is to use the structure of proofs in focused logics as a
+logical framework for encoding systems we are interested in. 
+
+In this section, we will discuss three ideas that modify the structure
+of focused proofs (though not the underlying fact that the focused
+proofs are complete) and that. Two of them, Andreoli's atom
+optimization and the bang optimization, seem to complicate the elegant
+interpretation of positive atoms as stand-ins for positive atomic
+propositions; the implications of this are discussed in
+Section~\ref{sec:moreprim}. The third, concurrent equality, is a
+notion of proof equivalence that operates on synthetic inference
+rules. It represents an intermediate point between focusing and
+multifocusing \cite{chaudhuri08canonical}, which defines an even more
+coarse-grained notion of equivalence than focusing does.  All three of
+these modifications will play a role in the focused ordered lax logic
+described in Chapter~3.
+
 \subsection{Atom optimization}
 
+Andreoli's original focused system isn't polarized, so propositions
+that are syntactically invalid in a polarized presentation, like
+${!}(p^+ \otimes q^+)$ or ${!}p^+$ are valid in his system (we would
+have to write ${!}{\uparrow}{(p^+ \otimes q^+)}$ and
+${!}{\uparrow}p^+$). It's therefore possible to use the ${\it copy}$
+rule to copy a positive proposition out of the context and into focus,
+but the focus immediately blurs, as in the this proof
+fragment:\footnote{We will use the sequent form
+  $\andseq{\Gamma}{\Delta}{C}$ in this section for focused but
+  unpolarized systems.}
+\[
+\infer[{\it copy}]
+{\andseq{p^+ \otimes q^+}{\cdot}{q^+ \otimes p^+}}
+{\infer[{\it blur}_L]
+ {\andseq{p^+ \otimes q^+}{[p^+ \otimes q^+]}{q^+ \otimes p^+}}
+ {\infer[{\otimes}_L]
+  {\andseq{p^+ \otimes q^+}{p^+ \otimes q^+}{q^+ \otimes p^+}}
+  {\deduce
+   {\andseq{p^+ \otimes q^+}{p^+, q^+}{q^+ \otimes p^+}}
+   {\vdots}}}}
+\]
+Note that, in the polarized setting we have used up to this point, the
+effect of the ${\it blur}_L$ rule has been accomplished by the
+${\downarrow}_L$ rule.
+
+However, Andreoli's system makes a single restriction on the copy
+rule: it cannot apply to a positive atomic proposition in the
+persistent context. On its own, this restriction would make the system
+incomplete -- there would be no focused proof of ${!}p^+ \lolli p^+$
+-- and so Andreoli-style focusing systems restore completeness by
+creating a second initial sequent for positive atomic propositions that
+allows a positive right focus on an atomic proposition to succeed if 
+the atomic proposition appears in the persistent context:
+\[
+\infer[{\it init}^+]
+{\andseq{\Gamma}{p^+}{[p^+]}}
+{}
+\qquad
+\infer[{\it init}^+_p]
+{\andseq{\Gamma, p^+}{\cdot}{[p^+]}}
+{}
+\]
+With the second initial rule, we can once again prove ${!}p^+ \lolli p^+$,
+and more generally, the system becomes complete again.
+\[
+\infer[{\lolli}_R]
+{\andseq{\cdot}{\cdot}{{!}p^+ \lolli p^+}}
+{\infer[{!}_L]
+ {\andseq{\cdot}{{!}p^+}{p^+}}
+ {\infer[{\it focus}_R]
+  {\andseq{p^+}{\cdot}{p^+}}
+  {\infer[{\it init}^+_2]
+   {\andseq{p^+}{\cdot}{[p^+]}}
+   {}}}}
+\]
+This modified treatment of positive atoms can be called the 
+{\it atom optimization} as it reduces the number of focusing steps that 
+need to be applied: it takes only one right focus to prove
+${!}p^+ \lolli p^+$ in Andreoli's system, but it would take two focusing
+steps to prove the same proposition in Chaudhuri's system (or to prove
+${!}{\uparrow}p^+ \lolli {\uparrow}p^+$ in the focusing system we have
+presented). 
+
+There seem to be three ways of adapting the atom optimization to a polarized
+setting. The first option would be to add an initial sequent that 
+directly mimics the one in an Andreoli style system, while adding an additional
+requirement to the {\it copy} rule that $A^-$ is not a shifted positive
+atomic proposition:
+\[
+\infer[{\it init}^+]
+{\mildseq{\Gamma,{\uparrow}p^+}{\cdot}{[p^+]}}
+{}
+\quad
+\infer[{\it copy}^*]
+{\mildseq{\Gamma, A^-}{\Delta}{U}}
+{A \neq {\uparrow}p^+
+ &
+ \mildseq{\Gamma, A^-}{\Delta, [A^-]}{U}}
+\]
+The second approach is to extend suspended propositions to
+the persistent context, add a corresponding rule for right focus,
+and modify the left rule for ${!}$ to notice
+the presence of a positive atomic proposition:
+\[
+\infer[{!}_{L1}]
+{\mildseq{\Gamma}{\Delta, {!}A^-}{U}}
+{A^- \neq {\uparrow}p^+
+ &
+ \mildseq{\Gamma, A^-}{\Delta}{U}}
+\quad
+\infer[{!}_{L2}]
+{\mildseq{\Gamma}{\Delta, {!}{\uparrow}p^+}{U}}
+{\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
+\quad
+\infer[{\it id}^+_p]
+{\mildseq{\Gamma, \langle A^+ \rangle}{\cdot}{[A^+]}}
+{}
+\]
+The third approach is to introduce a third connective, $\pbang$, that
+can only be applied to positive atomic propositions, just as ${!}$ can
+only be applied to negative propositions. We can initially view this
+option as equivalent to the previous one by defining ${\pbang}p^+$ as
+a sort of synthetic connective equivalent to ${!}{\uparrow}p^+$ in the
+second approach above:
+\[
+\infer[{\pbang}_R]
+{\mildseq{\Gamma}{\cdot}{[{\pbang}p^+]}}
+{\mildseq{\Gamma}{\cdot}{p^+}}
+\quad
+\infer[{\pbang}_L]
+{\mildseq{\Gamma}{\Delta, {\pbang}p^+}{U}}
+{\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
+\quad
+\infer[{\it id}^+_p]
+{\mildseq{\Gamma, \langle A^+ \rangle}{\cdot}{[A^+]}}
+{}
+\]
+
+All three of these options are essentially similar;
+
+\subsection{The unsatisfactory nature of the atom optimization}
+
+All three alternatives for characterizing the atom optimization are
+similarly unsatisfactory from the point of view that positive atomic
+propositions are stand-ins for arbitrary positive propositions. None
+of the rules involving positive atomic propositions -- ${\it init}^+$
+in the first proposied alternative, ${!}_{L2}$ in the second proposed
+alternative, or ${\pbang}_L$ in the third alternative -- can be
+gracefully generalized (as $\eta^+$ and $\eta^-$ can be) to account
+for the substitution of a positive atomic proposition with a positive
+proposition. 
+
+The key issue, which is illustrated by each of these three
+alternatives, is that linear logic does not allow positive
+propositions to decomposed once they enter the persistent context.
+When we substitue a positive atomic proposition $A^+$ for a positive
+atomic proposition $p^+$, all instances of $\langle p^+
+\rangle$ in the persistent context must become instances of
+${\uparrow}A^+$, and in the third proposal, all instances of
+${\pbang}p^+$ must become instances of ${!}{\uparrow}A^+$. The structure
+of proofs must change in an unusual way, as well: before a focusing
+phase begins, it is necessary to insert, below that focusing phase,
+a series of focusing phases that copy a shifted positive proposition
+into the linear context and decompose it, one for each occurance of
+${\it id}^+_p$ for a substituted proposition in the focusing phase.
+One instance of this pheonemna 
+is illustrated in Figure~\ref{fig:replacement-breaks}.
+
+\begin{figure}
+\[
+\infer[{\pbang}_L]
+{\mildseq{\cdot}{{\pbang}p^+}{p^+ \otimes p^+}}
+{\infer[{\it focus}_R]
+ {\mildseq{\langle p^+ \rangle}{\cdot}{p^+ \otimes p^+}}
+ {\infer[{\otimes}_R]
+  {\mildseq{\langle p^+ \rangle}{\cdot}{[ p^+ \otimes p^+ ]}}
+  {\infer[{\it id}^+_p]
+   {\mildseq{\langle p^+ \rangle}{\cdot}{[p^+]}}
+   {}
+   &
+   \infer[{\it id}^+_p]
+   {\mildseq{\langle p^+ \rangle}{\cdot}{[p^+]}}
+   {}}}}
+~~
+\mbox{vs.}
+\!\!\!
+\infer[{!}_L]
+{\mildseq{\cdot}{{!}{\uparrow}{A^+}}{A^+ \otimes A^+}}
+{\infer[\it copy]
+ {\mildseq{{\uparrow}{A^+}}{\cdot}{A^+ \otimes A^+}}
+ {\infer[{\uparrow}_L]
+  {\mildseq{{\uparrow}{A^+}}{[{\uparrow}A^+]}{A^+ \otimes A^+}}
+  {\infer-[\eta^+]
+   {\mildseq{{\uparrow}{A^+}}{A^+}{A^+ \otimes A^+}}
+   {\infer[{\it copy}]
+    {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle}{A^+ \otimes A^+}}
+    {\infer[{\uparrow}_L]
+     {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle, [{\uparrow}A^+]}
+        {A^+ \otimes A^+}}
+     {\infer-[\eta^+]
+      {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle, A^+}
+         {A^+ \otimes A^+}}
+      {\infer[{\it focus}_R]
+       {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle, \langle A^+ \rangle}
+          {A^+ \otimes A^+}}
+       {\infer[{\otimes}_R]
+        {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle, \langle A^+ \rangle}
+           {[A^+ \otimes A^+]}}
+        {\infer[{\it id}^+]
+         {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle}
+            {[A^+]}}
+         {}
+         &
+         \infer[{\it id}^+]
+         {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle}
+            {[A^+]}}
+         {}}}}}}}}}}
+\]
+\caption{In systems with the atom optimization, substituting a 
+positive proposition $A^+$ for a position atomic proposition $p^+$ 
+is more complicated than just replacing atomic instances of $\eta^+$
+with admissible non-atomic instances of $\eta^+$.}
+\label{fig:replacement-breaks}
+\end{figure}
+
+To emphasize, the polarized formulation is not at fault here:
+Anderoli's focusing system exhibits the same issues. It is probably
+for this reason that there is very little discussion of the menaing of
+atomic propositions within focused logics; the only example we are
+aware of is Miller \cite{miller08proof}. The atom optimization, and
+the bang optimization considered below, are both {\it useful} for the
+construction of expressive synthetic connectives even if they are not,
+in a certain sense, canonical for presentations of linear logic.
+
 \subsection{Bang optimization}
+\label{sec:bangopt}
 
 \subsection{A more primitive logic?}
+\label{sec:moreprim}
 
 \paragraph{Adjoint logic}
 
