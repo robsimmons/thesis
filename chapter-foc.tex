@@ -1135,25 +1135,25 @@ like $\zero \otimes {\uparrow}{\downarrow}A^+$).
 \section{Hacking the focusing system}
 \label{sec:linhack}
 
-Despite the novel treatement of suspended propositions in
+Despite the novel treatment of suspended propositions in
 Section~\ref{sec:foclinlog}, the presentation of linear logic given
 there is essentially the same as the presentation in Chaudhuri's
 thesis \cite{chaudhuri06focused}, in the sense that the logic gives
 rise to the same synthetic inference rules. It is {\it not} a faithful
-intuitionstic analouge to Andreoli's original presentation of focusing
+intuitionistic analogue to Andreoli's original presentation of focusing
 \cite{andreoli92logic}, as Pfenning's course notes is
 \cite{pfenning12chaining}.\footnote{We will blur the lines, in this
-  section, between Androli's original presentation of focused
-  classical linear logic and Pfenning's adaptation to intuitionstic
+  section, between Andreoli's original presentation of focused
+  classical linear logic and Pfenning's adaptation to intuitionistic
   linear logic. In particular We will mostly use the notation of
   Pfenning's presentation, but the observations are equally applicable
   in Andreoli's focused triadic system.}  Nor does it have the same
 synthetic inference rules as the focused presentation used in the
-language of ordered logical specefications presented by Pfenning and I
+language of ordered logical specifications presented by Pfenning and I
 \cite{pfenning09substructural}.
 
 The difference, in each case, lies in the treatment of positive atomic
-propositions, which can be a suprisingly rich source of fungible
+propositions, which can be a surprisingly rich source of fungible
 behavior in focused systems. My justification for presenting
 Chaudhuri's system as the canonical focusing system for linear logic
 in Section~\ref{sec:foclinlog} is because the treatment of suspended
@@ -1297,7 +1297,55 @@ second approach above:
 {}
 \]
 
-All three of these options are essentially similar;
+All three of these options are essentially similar; we will go with the
+last, as it allows us to preserve the original meaning of ${!}{\uparrow}p^+$
+if that is our actual intent. 
+
+This addition to the language creates one new case of identity
+expansion:
+\[
+\infer-[\eta^+]
+{\mildseq{\Gamma}{\Delta, {\pbang}p^+}{U}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta, \langle {\pbang}p^+ \rangle}{U}}
+ {\mathcal D}}
+\quad
+\Longrightarrow
+\infer[{\pbang}_L]
+{\mildseq{\Gamma}{\Delta, {\pbang}p^+}{U}}
+{\infer-[{\it subst}^+]
+ {\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
+ {\infer[{\pbang}_R]
+  {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{[{\pbang}p^+}]}
+  {\infer[{\it focus}_R]
+   {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{p^+}}
+   {\infer[{\it id}^+_p]
+    {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{[ p^+ ]}}
+    {}}}
+  &
+  \infer-[{\it weaken}]
+  {\mildseq{\Gamma, \langle p^+ \rangle}{\Delta, \langle {\pbang}p^+ \rangle}
+     {U}}
+  {\deduce
+   {\mildseq{\Gamma}{\Delta, \langle {\pbang}p^+ \rangle}{U}}
+   {\mathcal D}}}}
+\]
+
+While we could also prove another focal substitution principle,
+namely that $\mildseq{\Gamma}{\cdot}{[A^+]}$ and 
+$\mildseq{\Gamma, \langle A^+ \rangle}{\Delta}{U}$ imply
+$\mildseq{\Gamma}{\Delta}{U}$, it's notable that such a principle 
+isn't necessary in order to establish the identity property in this
+system. 
+
+Our change does force us to add a new part to the cut admissibility
+theorem that is closely related to the new focal substitution
+principle, proving that $\mildseq{\Gamma}{\cdot}{p^+}$ and
+$\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}$ imply
+$\mildseq{\Gamma}{\Delta}{U}$ by induction on the second given
+derivation. This is used to satisfy the principal cut for
+${\pbang}p^+$. All other necessary modifications to the cut
+admissibility theorem are straightforward.
 
 \subsection{The unsatisfactory nature of the atom optimization}
 
@@ -1305,7 +1353,7 @@ All three alternatives for characterizing the atom optimization are
 similarly unsatisfactory from the point of view that positive atomic
 propositions are stand-ins for arbitrary positive propositions. None
 of the rules involving positive atomic propositions -- ${\it init}^+$
-in the first proposied alternative, ${!}_{L2}$ in the second proposed
+in the first proposed alternative, ${!}_{L2}$ in the second proposed
 alternative, or ${\pbang}_L$ in the third alternative -- can be
 gracefully generalized (as $\eta^+$ and $\eta^-$ can be) to account
 for the substitution of a positive atomic proposition with a positive
@@ -1314,7 +1362,7 @@ proposition.
 The key issue, which is illustrated by each of these three
 alternatives, is that linear logic does not allow positive
 propositions to decomposed once they enter the persistent context.
-When we substitue a positive atomic proposition $A^+$ for a positive
+When we substitute a positive atomic proposition $A^+$ for a positive
 atomic proposition $p^+$, all instances of $\langle p^+
 \rangle$ in the persistent context must become instances of
 ${\uparrow}A^+$, and in the third proposal, all instances of
@@ -1322,9 +1370,9 @@ ${\pbang}p^+$ must become instances of ${!}{\uparrow}A^+$. The structure
 of proofs must change in an unusual way, as well: before a focusing
 phase begins, it is necessary to insert, below that focusing phase,
 a series of focusing phases that copy a shifted positive proposition
-into the linear context and decompose it, one for each occurance of
+into the linear context and decompose it, one for each occurrence of
 ${\it id}^+_p$ for a substituted proposition in the focusing phase.
-One instance of this pheonemna 
+One instance of this phenomena 
 is illustrated in Figure~\ref{fig:replacement-breaks}.
 
 \begin{figure}
@@ -1385,8 +1433,8 @@ with admissible non-atomic instances of $\eta^+$.}
 \end{figure}
 
 To emphasize, the polarized formulation is not at fault here:
-Anderoli's focusing system exhibits the same issues. It is probably
-for this reason that there is very little discussion of the menaing of
+Andreoli's focusing system exhibits the same issues. It is probably
+for this reason that there is very little discussion of the meaning of
 atomic propositions within focused logics; the only example we are
 aware of is Miller \cite{miller08proof}. The atom optimization, and
 the bang optimization considered below, are both {\it useful} for the
