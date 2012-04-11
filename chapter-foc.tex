@@ -1547,24 +1547,119 @@ suspended proposition $\langle p^+ \rangle$ in the persistent
 context. This is the reason for arguing that ${\pbang}$ captures ony
 the first, purely positive, component of the ${!}$ connective.
 
-If 
+If the $\pbang$ connective is the first part of the $!$ connective,
+can we characterize the rest of the connective? Giving a reasonable
+answer necessarily requires a more general account of the $\pbang$
+connective in the form of a logic where it is generally applicable
+rather than restricted to positive atomic propositions. In other
+words, to account for the behavior of $\pbang$, we must give a more
+primitive logic into which focused linear logic, with or without the
+atom and bang optimizations, may be faithfully encoded. There seem to
+be two reasonable choices for such a logic: the adjoint logic of
+Benton and Wadler, and the tensor logic of Melli{\`e}s and Tabareu.
 
 \subsubsection*{Adjoint logic}
+
+\begin{figure}
+\[
+\infer[G_R]
+{\pseq{\Gamma}{G A}}
+{\seq{\Gamma}{\cdot}{A}}
+\quad
+\infer[G_L]
+{\seq{\Gamma, G A}{\Delta}{C}}
+{\seq{\Gamma, G A}{\Delta, A}{C}}
+\quad
+\infer[{\it init}_x]
+{\pseq{\Gamma, x}{x}}
+{}
+\]
+
+\[
+\infer[F_R]
+{\seq{\Gamma}{\cdot}{F X}}
+{\pseq{\Gamma}{X}}
+\quad
+\infer[F_L]
+{\seq{\Gamma}{\Delta, F X}{C}}
+{\seq{\Gamma, X}{\Delta}{C}}
+\quad
+\infer[{\it init}_a]
+{\seq{\Gamma}{a}{a}}
+{}
+\]
+\caption{Some relevant sequent calculus rules for adjoint logic.}
+\label{fig:fragment-adjoint}
+\end{figure}
+
+Adjoint logic was first characterized by Benton and Wadler as a
+natural deduction system \cite{benton96linear} and then substantially
+generalized by Reed in a sequent calculus setting
+\cite{reed09judgmental}. It has characterized much of my own work on
+focused logics with the atom and bang optimizations
+\cite{pfenning09substructural,simmons09weak,simmons11logical}.
+Adjoint logic, in Benton and Wadler's formulation, generalizes both
+linear logic and lax logic as sublanguages of a common logic, whose
+propositions come in two categories that are connected by the adjoint
+operators $F$ and $G$:
+\begin{align*}
+\mbox{\it Persistent propositions} & &
+X, Y, Z & ::= G A \mid x \mid X \supset Y \mid X \times Y\\
+\mbox{\it Linear propositions} & & 
+A, B, C & ::= F X \mid a \mid A \lolli B \mid A \otimes B
+\end{align*}
+In adjoint logic, persistent propositions $X$ are contained in the
+persistent context $\Gamma$ and as the succeedents of sequents
+$\pseq{\Gamma}{X}$, and linear propositions $A$ are contained in the
+linear context $\Delta$ and as the succeedents of sequents
+$\seq{\Gamma}{\Delta}{A}$. A fragment of the logic is shown in
+Figure~\ref{fig:fragment-adjoint}.  Note the similarity between the
+$G_L$ rule and our unfocused ${\it copy}$ rule, as well as the
+similarity between $F_R$ and $G_R$ in
+Figure~\ref{fig:fragment-adjoint} and the rules ${!}_R$ and ${\it
+  pers}$ in the previous discussion.  Linear logic is recovered as a
+fragment of adjoint logic by removing all of the persistent
+propositions except for $GA$; the usual ${!}A$ is then definable as
+$FGA$. Lax logic, on the other hand, is recovered by removing all of
+the linear propositions except for $FX$; the usual lax modality
+$\ocircle X$ is then definable as $GFX$.
+
+In previous work, I have generally required that focused substructural
+logics enforce {\it separation}. In our current development, the
+separation condition says that each atomic proposition either {\it
+  always} appears as a subformula of ${\pbang}p^+$ or it {\it never}
+appears as a subformula of ${\pbang}p^+$. If we enforce separation,
+then it is easy to encode our optimized focused logic as a fragment of
+a naturally focused adjoint logic. Positive atomic propositions that
+are always associated with ${\pbang}$ are encoded as {\it persistent}
+positive atomic propositions $x^+$, and positive atomic propositions
+that are never associated with ${\pbang}$ are encoded as {\it linear}
+positive atomic propositions $a^+$. The proposition ${\pbang}p^+$ can
+then be translated as $F x^+$, where $x^+$ is the translation of $p^+$
+as a persistent positive atomic proposition.
+
+This gives one solution to why, in linear logic, we can't naturally
+substitute positive propsitions for positive atomic propositions when
+those positive atomic propositions appear suspended in the persistent
+linear context: because these propositions are actually stand-ins for
+{\it persistent} propositions, not for linear propositions, and we are
+working in a fragment of the logic that has no interesting persistent
+propositions.
 
 \subsubsection*{Tensor logic}
 
 \subsubsection*{Conclusion}
 
-Our treatment of identity expansion suggests that focused linear logic
-without the atom or bang optimizations is the most natural focused
-variant of pure linear logic. The structure of the atom and bang
-optimziations points towards the existance of more expressive logics
-in which linear logic can be embedded in a way that is faithful to
-either the natural focusing system or to the various modifications to
-focusing that we have discussed. Both Benton and Wadler's adjoint
-logic and Melli{\`e}s and Tabareu's tensor logic are reasonable
-candidate systems and deserve further consideration, but this
-consideration is beyond the scope of this thesis.
+Our discussion of identity expansion leads to the conclusion that
+focused linear logic without the atom or bang optimizations is the
+most natural focused variant of pure linear logic. The structure of
+the atom and bang optimziations points towards the existance of more
+expressive logics in which linear logic can be embedded in a way that
+is faithful to either the natural focusing system or to the various
+modifications to focusing that we have discussed. Both Benton and
+Wadler's adjoint logic and Melli{\`e}s and Tabareu's tensor logic are
+reasonable candidate systems and deserve further consideration, but
+further consideration is beyond the scope of this thesis.
 
 \subsection{Concurrent equality}
 
