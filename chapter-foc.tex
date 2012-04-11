@@ -1444,6 +1444,45 @@ in a certain sense, canonical for presentations of linear logic.
 \subsection{Bang optimization}
 \label{sec:bangopt}
 
+The choice of adding ${\pbang}p^+$ as a special new connective instead
+of defining it as ${!}{\uparrow}p^+$ paves the way for us to modify its
+meaning further. For instance, there turns out to be no particular
+need for the ${\pbang}_R$ rule to lose focus in its premise, even though
+it is critical that ${!}_R$ lose focus in its premise.\robnote{I can't
+remember the snappy counterexample right now.} 
+\[
+\infer[{\pbang}_R]
+{\mildseq{\Gamma}{\cdot}{[{\pbang}p^+]}}
+{\mildseq{\Gamma}{\cdot}{[p^+]}}
+\quad
+\infer[{\pbang}_L]
+{\mildseq{\Gamma}{\Delta, {\pbang}p^+}{U}}
+{\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
+\quad
+\infer[{\it id}^+_p]
+{\mildseq{\Gamma, \langle A^+ \rangle}{\cdot}{[A^+]}}
+{}
+\]
+This further optimization
+will be called the {\it bang optimization}, as it, like the atom 
+optimization, potentially reduces the number of focusing phases.
+
+This additional change actually simplifies both the identity
+expansion theorem, which no longer needs the ${\it focus}_R$ rule
+in the left branch of the derivation. The cut admissibility
+theorem is simplified as well: the extra case establishing that
+$\mildseq{\Gamma}{\cdot}{p^+}$ and 
+$\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}$ imply
+$\mildseq{\Gamma}{\Delta}{U}$ is unnecessary, as the principal cut on
+${\pbang}p^+$ no longer needs to invoke the induction hypothesis.
+
+If we think of ${\pbang}p^+$ as being naturally defined as 
+${!}{\uparrow}p^+$, then the atom optimization modifies the left rule
+and the bang optimization modifies the right rule. It is not, however,
+possible to think about the bang optimization independently from the
+atom optimization: identity expansion would fail on a system that 
+only provided a modified right rule for this connective. 
+
 \subsection{A more primitive logic?}
 \label{sec:moreprim}
 
