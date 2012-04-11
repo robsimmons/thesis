@@ -1486,9 +1486,85 @@ only provided a modified right rule for this connective.
 \subsection{A more primitive logic?}
 \label{sec:moreprim}
 
-\paragraph{Adjoint logic}
+We introduced ${\pbang}p^+$ as a connective defined as
+${!}{\downarrow}p^+$ -- that is, the regular ${!}A^-$ connective plus
+a little something extra, the shift. Having modified the rules of
+${\pbang}$ significantly, we may now view to look at ${\pbang}$ as a
+more primitive connective -- that is, to view ${!}$ as ${\pbang}$ plus
+a little something extra.
 
-\paragraph{Tensor logic}
+It is frequently observed that the exponential ${!}A$ of linear logic
+appears to have two or more parts; the general idea is that ${\pbang}$
+represents just one of those pieces. More judgmental accounts of
+linear logic, such as the analysis by Chang et al.'s
+\cite{chang03judgmental}, emphasize that the regular hypothetical
+sequent $\seq{\Gamma}{\Delta}{A}$ of linear logic is establishing the
+judgment that $A$ is ephemerally true: we can write
+$\seq{\Gamma}{\Delta}{\iseph{A}}$ to emphasize this. Persistent truth,
+represented by the judgment $\ispers{A}$, is defined as ephemeral
+truth using no ephemeral resources, and ${!}A$ is understood as the
+internalization of persistent truth:
+\[
+\infer[{\it pers}]
+{\pseq{\Gamma}{\ispers{A}}}
+{\seq{\Gamma}{\cdot}{\iseph{A}}}
+\quad
+\infer[{!}'_R]
+{\seq{\Gamma}{\Delta}{\iseph{{!}A}}}
+{\Delta = \cdot ~~~ & \pseq{\Gamma}{\ispers{A}}}
+\]
+The ${\it pers}$ rule is invertible, so if we ever need to prove
+$\pseq{\Gamma}{\ispers{A}}$, we asynchronously transition to proving
+$\seq{\Gamma}{\cdot}{\iseph{A}}$. This observation is used to explain
+why we don't usually consider persistent truth on the right (we
+consider it on the left, of course, as all the propositions of
+$\Gamma$ are judged as being persistently true). Our more familiar
+rule for ${!}_R$ is derivable using these two rules:
+\[
+\infer[{!}'_R]
+{\Gamma; \Delta \vdash {!}\iseph{A} \mathstrut}
+{\Delta = \cdot
+ &
+ \infer[{\it pers}]
+ {\Gamma \vdash \ispers{A} \mathstrut}
+ {\Gamma; \cdot \vdash \iseph{A}} \mathstrut}
+\]
+
+Note that the ${!}'_R$ rule is naturally synchronous (positive),
+because it forces the linear context to be empty. The ${\it pers}$
+rule, on the other hand, is invertable and so naturally negative,
+because it represents the invertible step of deciding to prove that
+$A$ is {\it persistently} true by proving that it is {\it ephemerally}
+true in a context with no ephemeral resources. This combination of
+positive and negative actions explains why ${!}A^-$ is a positive
+proposition with a negative subformula, and similarly explains why we
+must break focus when we reach ${!}A$ on the right and why we must
+stop decomposing the proposition when we reach ${!}A$ on the left.
+The salient feature of our modified rules for ${\pbang}p^+$, of
+course, is that they do {\it not} break focus on the right and that
+they continue to decompose the proposition on the left into a
+suspended proposition $\langle p^+ \rangle$ in the persistent
+context. This is the reason for arguing that ${\pbang}$ captures ony
+the first, purely positive, component of the ${!}$ connective.
+
+If 
+
+\subsubsection*{Adjoint logic}
+
+\subsubsection*{Tensor logic}
+
+\subsubsection*{Conclusion}
+
+Our treatment of identity expansion suggests that focused linear logic
+without the atom or bang optimizations is the most natural focused
+variant of pure linear logic. The structure of the atom and bang
+optimziations points towards the existance of more expressive logics
+in which linear logic can be embedded in a way that is faithful to
+either the natural focusing system or to the various modifications to
+focusing that we have discussed. Both Benton and Wadler's adjoint
+logic and Melli{\`e}s and Tabareu's tensor logic are reasonable
+candidate systems and deserve further consideration, but this
+consideration is beyond the scope of this thesis.
 
 \subsection{Concurrent equality}
 
