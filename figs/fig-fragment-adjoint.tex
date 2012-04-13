@@ -1,0 +1,63 @@
+\begin{figure}
+\[
+\infer[G_R]
+{\pseq{\Gamma}{G A}}
+{\seq{\Gamma}{\cdot}{A}}
+\quad
+\infer[G_L]
+{\seq{\Gamma, G A}{\Delta}{C}}
+{\seq{\Gamma, G A}{\Delta, A}{C}}
+\quad
+\infer[{\it init}_x]
+{\pseq{\Gamma, x}{x}}
+{}
+\]
+
+\[
+\infer[{\supset}_R]
+{\pseq{\Gamma}{X \supset Y}}
+{\pseq{\Gamma, X}{Y}}
+\quad
+\infer[{\supset}_L]
+{\pseq{\Gamma, X \supset Y}{Z}}
+{\pseq{\Gamma, X \supset Y}{X}
+ &
+ \pseq{\Gamma, X \supset Y, Y}{Z}}
+\]
+
+\[
+\infer[{\supset}'_L]
+{\seq{\Gamma, X \supset Y}{\Delta}{C}}
+{\pseq{\Gamma, X \supset Y}{X}
+ & 
+ \seq{\Gamma, X \supset Y, Y}{\Delta}{C}}
+\]
+
+\[
+\infer[F_R]
+{\seq{\Gamma}{\cdot}{F X}}
+{\pseq{\Gamma}{X}}
+\quad
+\infer[F_L]
+{\seq{\Gamma}{\Delta, F X}{C}}
+{\seq{\Gamma, X}{\Delta}{C}}
+\quad
+\infer[{\it init}_a]
+{\seq{\Gamma}{a}{a}}
+{}
+\]
+
+\[
+\infer[{\lolli}_R]
+{\seq{\Gamma}{\Delta}{A \lolli B}}
+{\seq{\Gamma}{\Delta, A}{B}}
+\quad
+\infer[{\lolli}_L]
+{\seq{\Gamma}{\Delta_A, \Delta, A \lolli B}{C}}
+{\seq{\Gamma}{\Delta_A}{A}
+ &
+ \seq{\Gamma}{\Delta, B}{C}}
+\]
+\caption{Some relevant sequent calculus rules for adjoint logic.}
+\label{fig:fragment-adjoint}
+\end{figure}

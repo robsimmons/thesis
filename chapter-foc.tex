@@ -1448,8 +1448,9 @@ The choice of adding ${\pbang}p^+$ as a special new connective instead
 of defining it as ${!}{\uparrow}p^+$ paves the way for us to modify its
 meaning further. For instance, there turns out to be no particular
 need for the ${\pbang}_R$ rule to lose focus in its premise, even though
-it is critical that ${!}_R$ lose focus in its premise.\robnote{I can't
-remember the snappy counterexample right now.} 
+it is critical that ${!}_R$ lose focus in its premise; if we fail
+to do so propositions like ${!}(A \otimes B) \lolli {!}(B \otimes A)$
+will have no proof. 
 \[
 \infer[{\pbang}_R]
 {\mildseq{\Gamma}{\cdot}{[{\pbang}p^+]}}
@@ -1489,14 +1490,15 @@ only provided a modified right rule for this connective.
 We introduced ${\pbang}p^+$ as a connective defined as
 ${!}{\downarrow}p^+$ -- that is, the regular ${!}A^-$ connective plus
 a little something extra, the shift. Having modified the rules of
-${\pbang}$ significantly, we may now view to look at ${\pbang}$ as a
-more primitive connective -- that is, to view ${!}$ as ${\pbang}$ plus
-a little something extra.
+${\pbang}$ significantly, we will now take a crack at viewing
+${\pbang}$ as a more primitive connective -- that is, we will view
+${!}$ as ${\pbang}$ plus a little something extra.
 
 It is frequently observed that the exponential ${!}A$ of linear logic
 appears to have two or more parts; the general idea is that ${\pbang}$
-represents just one of those pieces. More judgmental accounts of
-linear logic, such as the analysis by Chang et al.'s
+represents just one of those pieces. Accounts of linear logic that
+follow the judgmental methodology of Martin-L{\"o}f
+\cite{lof96meanings}, such as the analysis by Chang et al.'s
 \cite{chang03judgmental}, emphasize that the regular hypothetical
 sequent $\seq{\Gamma}{\Delta}{A}$ of linear logic is establishing the
 judgment that $A$ is ephemerally true: we can write
@@ -1516,9 +1518,9 @@ internalization of persistent truth:
 The ${\it pers}$ rule is invertible, so if we ever need to prove
 $\pseq{\Gamma}{\ispers{A}}$, we asynchronously transition to proving
 $\seq{\Gamma}{\cdot}{\iseph{A}}$. This observation is used to explain
-why we don't usually consider persistent truth on the right (we
-consider it on the left, of course, as all the propositions of
-$\Gamma$ are judged as being persistently true). Our more familiar
+why we don't normally consider persistent truth on the right in linear
+logic (we consider it on the left, of course, as all the propositions
+of $\Gamma$ are judged as being persistently true). Our more familiar
 rule for ${!}_R$ is derivable using these two rules:
 \[
 \infer[{!}'_R]
@@ -1535,70 +1537,51 @@ because it forces the linear context to be empty. The ${\it pers}$
 rule, on the other hand, is invertible and so naturally negative,
 because it represents the invertible step of deciding to prove that
 $A$ is {\it persistently} true by proving that it is {\it ephemerally}
-true in a context with no ephemeral resources. This combination of
+true (in a context with no ephemeral resources). This combination of
 positive and negative actions explains why ${!}A^-$ is a positive
 proposition with a negative subformula, and similarly explains why we
 must break focus when we reach ${!}A$ on the right and why we must
 stop decomposing the proposition when we reach ${!}A$ on the left.
 The salient feature of our modified rules for ${\pbang}p^+$, of
 course, is that they do {\it not} break focus on the right and that
-they continue to decompose the proposition on the left into a
+they continue to decompose the proposition on the left (into a
 suspended proposition $\langle p^+ \rangle$ in the persistent
-context. This is the reason for arguing that ${\pbang}$ captures only
+context). This is the reason for arguing that ${\pbang}$ captures only
 the first, purely positive, component of the ${!}$ connective.
 
 If the $\pbang$ connective is the first part of the $!$ connective,
 can we characterize the rest of the connective? Giving a reasonable
 answer necessarily requires a more general account of the $\pbang$
-connective in the form of a logic where it is generally applicable
-rather than restricted to positive atomic propositions. In other
-words, to account for the behavior of $\pbang$, we must give a more
-primitive logic into which focused linear logic, with or without the
-atom and bang optimizations, may be faithfully encoded. There seem to
-be two reasonable choices for such a logic: the adjoint logic of
-Benton and Wadler, and the tensor logic of Melli{\`e}s and Tabareu.
+connective -- a logic where it is generally applicable rather than
+restricted to positive atomic propositions. In other words, to account
+for the behavior of $\pbang$, we must give a more primitive logic into
+which focused linear logic, with or without the atom and bang
+optimizations, may be faithfully encoded. 
 
-\subsubsection*{Adjoint logic}
+\input{figs/fig-fragment-adjoint}
 
-\begin{figure}
-\[
-\infer[G_R]
-{\pseq{\Gamma}{G A}}
-{\seq{\Gamma}{\cdot}{A}}
-\quad
-\infer[G_L]
-{\seq{\Gamma, G A}{\Delta}{C}}
-{\seq{\Gamma, G A}{\Delta, A}{C}}
-\quad
-\infer[{\it init}_x]
-{\pseq{\Gamma, x}{x}}
-{}
-\]
-
-\[
-\infer[F_R]
-{\seq{\Gamma}{\cdot}{F X}}
-{\pseq{\Gamma}{X}}
-\quad
-\infer[F_L]
-{\seq{\Gamma}{\Delta, F X}{C}}
-{\seq{\Gamma, X}{\Delta}{C}}
-\quad
-\infer[{\it init}_a]
-{\seq{\Gamma}{a}{a}}
-{}
-\]
-\caption{Some relevant sequent calculus rules for adjoint logic.}
-\label{fig:fragment-adjoint}
-\end{figure}
-
-Adjoint logic was first characterized by Benton and Wadler as a
-natural deduction system \cite{benton96linear} and then substantially
-generalized by Reed in a sequent calculus setting
-\cite{reed09judgmental}. The logic generalizes both
-linear logic and lax logic as sub-languages of a common logic, whose
-propositions come in two categories that are connected by the adjoint
-operators $F$ and $G$:
+A candidate for a more primitive logic, and one that has formed the
+basis of much of my previous work on logic programming in
+substructural logic
+\cite{pfenning09substructural,simmons09weak,simmons11logical}, is {\it
+  adjoint logic}.  Adjoint logic was first characterized by Benton and
+Wadler as a natural deduction system \cite{benton96linear} and was
+substantially generalized by Reed in a sequent calculus setting
+\cite{reed09judgmental}. The logic generalizes both linear logic and
+lax logic as sub-languages of a common logic, whose propositions come
+in two syntactically distinct categories that are connected by the
+adjoint operators $F$ and $G$:\footnote{Note this syntactic
+  distinction is very different than the syntactic distinction between
+  positive and negative propositions. A polarized presentation of
+  adjoint logic would have four syntactic categories: $X^+$, $X^-$,
+  $A^+$, and $A^-$, with one pair of shifts mediating between $X^+$
+  and $X^-$ and another pair of shifts mediating between $A^+$ and
+  $A^-$. To make matters worse, in Levy's Call-By-Push-Value language,
+  the programming language formalism that corresponds to polarized
+  logic, ${\uparrow}$ and ${\downarrow}$ are characterized as adjoints
+  as well ($F$ and $U$, respectively), so a fully polarized adjoint
+  logic has {\it three} distinct pairs of unary connectives that can
+  be characterized as adjoints!}
 \begin{align*}
 \mbox{\it Persistent propositions} & &
 X, Y, Z & ::= G A \mid x \mid X \supset Y \mid X \times Y\\
@@ -1607,8 +1590,8 @@ A, B, C & ::= F X \mid a \mid A \lolli B \mid A \otimes B
 \end{align*}
 In adjoint logic, persistent propositions $X$ are contained in the
 persistent context $\Gamma$ and as the succeedants of sequents
-$\pseq{\Gamma}{X}$, and linear propositions $A$ are contained in the
-linear context $\Delta$ and as the succeedants of sequents
+$\pseq{\Gamma}{X}$, whereas linear propositions $A$ are contained in
+the linear context $\Delta$ and as the succeedants of sequents
 $\seq{\Gamma}{\Delta}{A}$. A fragment of the logic is shown in
 Figure~\ref{fig:fragment-adjoint}.  Note the similarity between the
 $G_L$ rule and our unfocused ${\it copy}$ rule, as well as the
@@ -1621,12 +1604,9 @@ $FGA$. Lax logic, on the other hand, is recovered by removing all of
 the linear propositions except for $FX$; the usual lax modality
 $\ocircle X$ is then definable as $GFX$.
 
-Adjoint logic forms the basis of much of my own work on focused logics
-with the atom and bang optimizations
-\cite{pfenning09substructural,simmons09weak,simmons11logical}. All of
-these presentations use the language of normal linear logic, but they
-enforce an extra condition I call {\it separation}. In our current
-development, the separation condition says that each atomic
+My previous work has used the language of normal linear logic,
+but they enforces an extra condition of {\it separation}. In our
+current development, the separation condition says that each atomic
 proposition either {\it always} appears as a subformula of
 ${\pbang}p^+$ or it {\it never} appears as a subformula of
 ${\pbang}p^+$. If we enforce separation, then it is easy to encode our
@@ -1639,30 +1619,114 @@ propositions $a^+$. The proposition ${\pbang}p^+$ can then be
 translated as $F x^+$, where $x^+$ is the translation of $p^+$ as a
 persistent positive atomic proposition.
 
-This gives one solution to why, in linear logic, we can't naturally
-substitute positive propositions for positive atomic propositions when
-those positive atomic propositions appear suspended in the persistent
-linear context: because these propositions are actually stand-ins for
-{\it persistent} propositions, not for linear propositions, and we are
-working in a fragment of the logic that has no interesting persistent
-propositions.
+In this way, adjoint logic explains why, in linear logic, we can't
+naturally substitute positive propositions for positive atomic
+propositions when those positive atomic propositions appear suspended
+in the persistent linear context: because these propositions are
+actually stand-ins for {\it persistent} propositions, not for linear
+propositions, and we are working in a fragment of the logic that has
+no interesting persistent propositions other than atomic propositions
+$x$ and the negative inclusion $G A$ back into linear propositions.
 
-\subsubsection*{Tensor logic}
+Adjoint logic, because it requires a syntactic differentiation of
+persistent and linear atomic propositions, still does not allow us to
+pleasantly embed the structure of focused linear logic with the atom
+and bang optimizations when separation is not enforced.  The flaw is
+due to the atom optimization, which allows us to successfully right
+focus on an positive atomic proposition $p^+$ if the proposition
+appears suspended in the linear context {\it or} in the persistent
+context. This is not natural in adjoint logic, which forces us to
+syntactically specify the context where we expect to find the
+proposition. A more complicated translation in to adjoint logic that
+associated each atomic proposition $p^+$ with a persistent proposition
+$x_p^+$ and a linear proposition $a_p^+$ would suffice; a subgoal
+$p^+$ could be represented as $a_p^+ \oplus F x_p^+$, for instance.
+Such a translation would be unsatisfactory both because it further
+complicates the previously simple interpretation of atomic
+propositions and because the translation of an atomic proposition is
+non-uniform -- it depends on the contextual information of whether
+that proposition it will ultimately appear on the left and the right
+of the sequent.
 
-\subsubsection*{Conclusion}
-
-Our discussion of identity expansion leads to the conclusion that
-focused linear logic without the atom or bang optimizations is the
-most natural focused variant of pure linear logic. The structure of
-the atom and bang optimizations points towards the existence of more
-expressive logics in which linear logic can be embedded in a way that
-is faithful to either the natural focusing system or to the various
-modifications to focusing that we have discussed. Both Benton and
-Wadler's adjoint logic and Melli{\`e}s and Tabareu's tensor logic are
-reasonable candidate systems and deserve further consideration, but
-further consideration is beyond the scope of this thesis.
+I have conjectured that a variant of adjoint logic which does {\it
+  not} syntactically differentiate between persistent and linear
+propositions might be a better target for faithfully embedding focused
+linear logic with and without the atom and bang optimizations; but
+this is outside the scope of this thesis.
 
 \subsection{Concurrent equality}
+
+Consider the sequent:
+\[
+\mildseq{a^+ \lolli {\uparrow}b^+, ~
+  c^+ \lolli {\uparrow}d^+ ~~}
+  {~~
+  \langle a^+ \rangle,~
+  \langle c^+ \rangle
+  ~~}
+  {~~b^+ \otimes d^+}
+\]
+
+There are effectively two different focused derivations of this
+sequent, the one that transitions $\langle a^+ \rangle$ to $\langle
+b^+ \rangle$ first, and the one that transitions 
+$\langle c^+ \rangle$ to $\langle d^+ \rangle$ first:
+\[
+\infer[{\sf CP}_{a^+ \lolli {\uparrow}b^+}]
+{\mildseq{a^+ \lolli {\uparrow}b^+, ~
+  c^+ \lolli {\uparrow}d^+ ~~}
+  {~~
+  \langle a^+ \rangle,~
+  \langle c^+ \rangle
+  ~~}
+  {~~b^+ \otimes d^+}}
+{\infer[{\sf CP}_{c^+ \lolli {\uparrow}d^+}]
+{\mildseq{a^+ \lolli {\uparrow}b^+, ~
+  c^+ \lolli {\uparrow}d^+ ~~}
+  {~~
+  \langle b^+ \rangle,~
+  \langle c^+ \rangle
+  ~~}
+  {~~b^+ \otimes d^+}}
+{\infer[{\sf RF}_{b^+ \otimes d^+}]
+ {\mildseq{a^+ \lolli {\uparrow}b^+, ~
+  c^+ \lolli {\uparrow}d^+ ~~}
+  {~~
+  \langle b^+ \rangle,~
+  \langle d^+ \rangle
+  ~~}
+  {~~b^+ \otimes d^+}}
+ {}}}
+\]\begin{center}vs.\end{center}
+
+\[
+\infer[{\sf CP}_{c^+ \lolli {\uparrow}d^+}]
+{\mildseq{a^+ \lolli {\uparrow}b^+, ~
+  c^+ \lolli {\uparrow}d^+ ~~}
+  {~~
+  \langle a^+ \rangle,~
+  \langle c^+ \rangle
+  ~~}
+  {~~b^+ \otimes d^+}}
+{\infer[{\sf CP}_{a^+ \lolli {\uparrow}b^+}]
+{\mildseq{a^+ \lolli {\uparrow}b^+, ~
+  c^+ \lolli {\uparrow}d^+ ~~}
+  {~~
+  \langle a^+ \rangle,~
+  \langle d^+ \rangle
+  ~~}
+  {~~b^+ \otimes d^+}}
+{\infer[{\sf RF}_{b^+ \otimes d^+}]
+ {\mildseq{a^+ \lolli {\uparrow}b^+, ~
+  c^+ \lolli {\uparrow}d^+ ~~}
+  {~~
+  \langle b^+ \rangle,~
+  \langle d^+ \rangle
+  ~~}
+  {~~b^+ \otimes d^+}}
+ {}}}
+\]
+
 
 \section{Revisiting our notation}
 \label{sec:linnote}
