@@ -1560,8 +1560,8 @@ optimizations, may be faithfully encoded.
 
 \input{figs/fig-fragment-adjoint}
 
-A candidate for a more primitive logic, and one that has formed the
-basis of much of my previous work on logic programming in
+A candidate for a more primitive logic, and one that has tacitly
+formed the basis of much of my previous work on logic programming in
 substructural logic
 \cite{pfenning09substructural,simmons09weak,simmons11logical}, is {\it
   adjoint logic}.  Adjoint logic was first characterized by Benton and
@@ -1656,80 +1656,267 @@ this is outside the scope of this thesis.
 
 \subsection{Concurrent equality}
 
-Consider the sequent:
+Consider the sequent in focused linear logic:
 \[
-\mildseq{a^+ \lolli {\uparrow}b^+, ~
-  c^+ \lolli {\uparrow}d^+ ~~}
+\mildseq{a^+ \lolli {\uparrow}(b^+ \otimes c^+), ~
+  b^+ \lolli {\uparrow}d^+, ~
+  c^+ \lolli {\uparrow}e^+, ~
+  d^+ \otimes e^+ \lolli {\uparrow}f^+ ~~}
   {~~
-  \langle a^+ \rangle,~
-  \langle c^+ \rangle
+  \langle a^+ \rangle
   ~~}
-  {~~b^+ \otimes d^+}
+  {~~f^+}
 \]
-
-There are effectively two different focused derivations of this
-sequent, the one that transitions $\langle a^+ \rangle$ to $\langle
-b^+ \rangle$ first, and the one that transitions 
-$\langle c^+ \rangle$ to $\langle d^+ \rangle$ first:
+Let $\Gamma = \left(a^+ \lolli {\uparrow}(b^+ \otimes c^+), ~
+  b^+ \lolli {\uparrow}d^+, ~
+  c^+ \lolli {\uparrow}e^+, ~
+  d^+ \otimes e^+ \lolli {\uparrow}f^+ \right)$.
+There are two different focused derivations of this
+sequent, the one that transitions $\langle b^+ \rangle$ to $\langle
+d^+ \rangle$ first, and the one that transitions 
+$\langle c^+ \rangle$ to $\langle e^+ \rangle$ first:
 \[
-\infer[{\sf CP}_{a^+ \lolli {\uparrow}b^+}]
-{\mildseq{a^+ \lolli {\uparrow}b^+, ~
-  c^+ \lolli {\uparrow}d^+ ~~}
-  {~~
-  \langle a^+ \rangle,~
-  \langle c^+ \rangle
-  ~~}
-  {~~b^+ \otimes d^+}}
-{\infer[{\sf CP}_{c^+ \lolli {\uparrow}d^+}]
-{\mildseq{a^+ \lolli {\uparrow}b^+, ~
-  c^+ \lolli {\uparrow}d^+ ~~}
-  {~~
-  \langle b^+ \rangle,~
-  \langle c^+ \rangle
-  ~~}
-  {~~b^+ \otimes d^+}}
-{\infer[{\sf RF}_{b^+ \otimes d^+}]
- {\mildseq{a^+ \lolli {\uparrow}b^+, ~
-  c^+ \lolli {\uparrow}d^+ ~~}
-  {~~
-  \langle b^+ \rangle,~
-  \langle d^+ \rangle
-  ~~}
-  {~~b^+ \otimes d^+}}
- {}}}
-\]\begin{center}vs.\end{center}
-
-\[
-\infer[{\sf CP}_{c^+ \lolli {\uparrow}d^+}]
-{\mildseq{a^+ \lolli {\uparrow}b^+, ~
-  c^+ \lolli {\uparrow}d^+ ~~}
-  {~~
-  \langle a^+ \rangle,~
-  \langle c^+ \rangle
-  ~~}
-  {~~b^+ \otimes d^+}}
-{\infer[{\sf CP}_{a^+ \lolli {\uparrow}b^+}]
-{\mildseq{a^+ \lolli {\uparrow}b^+, ~
-  c^+ \lolli {\uparrow}d^+ ~~}
-  {~~
-  \langle a^+ \rangle,~
-  \langle d^+ \rangle
-  ~~}
-  {~~b^+ \otimes d^+}}
-{\infer[{\sf RF}_{b^+ \otimes d^+}]
- {\mildseq{a^+ \lolli {\uparrow}b^+, ~
-  c^+ \lolli {\uparrow}d^+ ~~}
-  {~~
-  \langle b^+ \rangle,~
-  \langle d^+ \rangle
-  ~~}
-  {~~b^+ \otimes d^+}}
- {}}}
+\infer
+{\mildseq{\Gamma}{\langle a^+ \rangle}{f^+}}
+{\infer
+{\mildseq{\Gamma}{\langle b^+ \rangle, \langle c^+ \rangle}{f^+}}
+{\infer
+{\mildseq{\Gamma}{\langle d^+ \rangle, \langle c^+ \rangle}{f^+}}
+{\infer
+{\mildseq{\Gamma}{\langle d^+ \rangle, \langle e^+ \rangle}{f^+}}
+{\infer
+{\mildseq{\Gamma}{\langle f^+ \rangle}{f^+}}
+{}}}}}
+\qquad
+\deduce
+{\mathstrut}
+{\deduce
+{\mathstrut}
+{\deduce
+{\mathstrut}
+{\mbox{\it vs.}}}}
+\qquad
+\infer
+{\mildseq{\Gamma}{\langle a^+ \rangle}{f^+}}
+{\infer
+{\mildseq{\Gamma}{\langle b^+ \rangle, \langle c^+ \rangle}{f^+}}
+{\infer
+{\mildseq{\Gamma}{\langle b^+ \rangle, \langle e^+ \rangle}{f^+}}
+{\infer
+{\mildseq{\Gamma}{\langle d^+ \rangle, \langle e^+ \rangle}{f^+}}
+{\infer
+{\mildseq{\Gamma}{\langle f^+ \rangle}{f^+}}
+{}}}}}
 \]
+If we think about these two proofs in terms of the series of
+transitions they embody, it's not so clear that they are different. In
+both cases, there is an $a^+$ resource that transitions to a $b^+$
+resource and a $c^+$ resource, and then $b^+$ transitions to $d^+$
+while, independently, the $c^+$ transitions to $e^+$. Then, finally,
+the $d^+$ and $e^+$ combine to transition to $f^+$, which completes
+the trace. The independence here is key: if two focusing phases
+consume different resources and both end focus with ${\uparrow}_L$ (as
+opposed to ${\it id}^-$), then we can treat them as independent and
+concurrent steps in the process of proving the same right hand side;
+{\it concurrent equality} is the equivalence relation on focused
+proofs that treats all proofs that differ only in the interleaving of
+independent and concurrent steps as equal.  This equivalence
+relation was used in the definition of CLF \cite{watkins02concurrent},
+but only in conjunction with the lax modality, an approach we will
+follow in Chapter 4.
+
+The equivalence relation on focused proofs that concurrent equality
+gives rise to is related to the equivalence relation on proofs given
+by {\it multifocusing} \cite{chaudhuri08canonical}.  Multifocusing 
+appears to provide an even coarser notion of equivalence on focused
+proofs than concurrent equality does. In particular, these two 
+distinct focusing proofs are {\it not} concurrently equal: the
+proof on the right succeeds at proving $\langle c^- \rangle$ in one
+step, but leaves a subgoal in which $b^+$ is proved indirectly,
+whereas the proof at the right first transitions 
+from having $\langle a^+ \rangle$ and $a^+ \lolli {\uparrow} b^+$ 
+resources to having a $\langle b^+ \rangle$ resource, and only
+then proves $\langle c^- \rangle$, leaving a subgoal in which $b^+$
+is proved directly. 
+\[
+\infer
+{\mildseq{\cdot}
+  {~~
+   \langle a^+ \rangle, ~
+   a^+ \lolli {\uparrow}b^+, ~
+   {\downarrow}{\uparrow}b^+ \lolli c^-
+   ~~}
+  {~~\langle c^- \rangle}}
+{\infer
+{\mildseq{\cdot}
+  {~~
+   \langle a^+ \rangle, ~
+   a^+ \lolli {\uparrow}b^+
+   ~~}
+  {b^+}}
+{\infer
+{\mildseq{\cdot}
+  {~~
+   \langle b^+ \rangle
+   ~~}
+  {b^+}}
+{}}}
+\deduce{\mathstrut}
+{\deduce{\mathstrut}
+{\mbox{\it vs.}\mathstrut}}
+\infer
+{\mildseq{\cdot}
+  {~~
+   \langle a^+ \rangle, ~
+   a^+ \lolli {\uparrow}b^+, ~
+   {\downarrow}{\uparrow}b^+ \lolli c^-
+   ~~}
+  {~~\langle c^- \rangle}}
+{\infer
+{\mildseq{\cdot}
+  {~~
+   \langle b^+ \rangle, ~
+   {\downarrow}{\uparrow}b^+ \lolli c^-
+   ~~}
+  {~~\langle c^- \rangle}}
+{\infer
+{\mildseq{\cdot}
+  {~~
+   \langle b^+ \rangle
+   ~~}
+  {~~b^+}}
+{}}}
+\]
+While there is no full account of multifocusing in intuitionistic
+logic, the analogue of this sequent in classical linear logic has only
+one multifocused proof. In classical linear logic, multifocusing
+offers a very fundamental normal form: any two proofs that can be made
+equal by locally permuting inference rules have the same multifocused
+proof. 
+
+CLF's concurrent equality, restricted to an association with the lax
+modality, will be sufficient for the logical framework in Chapter
+4. In fact, for the fragment of the the logic in Chapter 3 that
+comprises our logical framework in Chapter 4, I conjecture that
+concurrent equality and the equality given by multifocusing
+coincide.\footnote{This obviously means that the example above will be
+  outside the logical that comprises the logical framework.}  This
+conjecture is obviously difficult to make precise, much less prove,
+without a general theory of multifocusing in intuitionistic logic.
 
 
 \section{Revisiting our notation}
 \label{sec:linnote}
+
+Andreoli, in his 2001 paper introducing the idea of synthetic
+inference rules \cite{andreoli01focussing}, observed that the atom
+optimization can lead to an exponential explosion in the number of
+synthetic rules associated with a proposition.  For instance, if $a^+
+\otimes b^+ \lolli {\uparrow}c^+$ appears in $\Gamma$, the atom
+optimization means that the following are all synthetic inference
+rules for that proposition:
+\[
+\infer
+{\mildseq{\Gamma}{\Delta, \langle a^+ \rangle, \langle b^+ \rangle}{U}}
+{\mildseq{\Gamma}{\Delta, \langle c^+ \rangle}{U}}
+\quad
+\infer
+{\mildseq{\Gamma, \langle a^+ \rangle}{\Delta, \langle b^+ \rangle}{U}}
+{\mildseq{\Gamma, \langle a^+ \rangle}{\Delta, \langle c^+ \rangle}{U}}
+\]\[
+\infer
+{\mildseq{\Gamma, \langle b^+ \rangle}{\Delta, \langle a^+ \rangle}{U}}
+{\mildseq{\Gamma, \langle b^+ \rangle}{\Delta, \langle c^+ \rangle}{U}}
+\quad
+\infer
+{\mildseq{\Gamma, \langle a^+ \rangle, \langle b^+ \rangle}{\Delta}{U}}
+{\mildseq{\Gamma, \langle a^+ \rangle, \langle b^+ \rangle}
+   {\Delta, \langle c^+ \rangle}{U}}
+\]
+Andreoli suggests coping with this problem by restricting the form of
+propositions so that positive atoms never appear in the persistent
+context. From our perspective, this is a rather unusual
+recommendation, since it just returns us to linear logic without the
+atom optimization!
+
+The proliferation of inference rules under the atom optimization is a
+problem if, for instance, we need to represent synthetic inference
+rules on a computer. Correctly viewed, however, the problem is merely
+one of notation. It's already the case that, in writing sequent
+calculus rules, we generally tacit use of a fairly large number of
+notational conventions, at least relative to Gentzen's original
+formulation where all contexts were treated as sequences of
+propositions \cite{gentzen35untersuchungen}.  For instance, the
+bottom-up reading of the ${\one}_R$ rule's conclusion,
+$\mildseq{\Gamma}{\cdot}{[\one]}$, indicates the presence of an
+additional premise checking that the linear context is empty, and the
+conclusion $\mildseq{\Gamma}{\Delta_1, \Delta_2}{[A \otimes B]}$ of
+the ${\tensor}_R$ rule indicates the condition that the context can be
+split into two parts.
+
+We deal with the apparent proliferation of rules by adding a new
+matching construct for the conclusion of rules: we can say that
+$\Gamma; \Delta$ matches $\Gamma; \Delta' / \langle p^+ \rangle$
+either when $\langle p^+ \rangle \in \Gamma$ and $\Delta = \Delta'$ or
+when $\Delta = \Delta', \langle p^+ \rangle$. We can also iterate
+this construction, so that $\Gamma; \Delta$ matches
+$\Gamma; \Delta_n / \langle p^+_1 \rangle, \ldots, \langle p^+_n \rangle$
+if $\Gamma; \Delta$ matches $\Gamma; \Delta_1 / \langle p^+_1 \rangle$,
+$\Gamma; \Delta_1$ matches $\Gamma; \Delta_2 / \langle p^+_2 \rangle$,
+\ldots and $\Gamma; \Delta_{n-1}$ matches 
+$\Gamma; \Delta_n / \langle p^+_n \rangle$.  Armed with this notation,
+we can create a concise synthetic connective:
+\[
+\infer
+{\mildseq{\Gamma}{\Delta/\langle a^+ \rangle, \langle b^+ \rangle}{U}}
+{\mildseq{\Gamma}{\Delta, \langle c^+ \rangle}{U}}
+\]
+
+This modified notation need not only be used in synthetic connectives: we 
+can also use it to combine the two positive identity rules. Furthermore, 
+by giving $\Gamma; \Delta / A^-$ the obviously analogous me meaning, we can
+fuse the ${\it focus}_L$ rule and the ${\it copy}_L$ rule into a single
+rule that is unconcerned with whether the proposition in question came
+from the persistent or linear contexts: 
+\[
+\infer[{\it id}^+]
+{\mildseq{\Gamma}{\cdot/\langle A^+ \rangle}{[A^+]}}
+{}
+\quad
+\infer[{\it focus}^*_L]
+{\mildseq{\Gamma}{\Delta/A^-}{U}}
+{\mildseq{\Gamma}{\Delta, [A^-]}{U}}
+\]
+
+\input{figs/fig-linear-alt}
+
+Going yet one more step, we could use this notation to revise
+the original definition of linear logic in Figure~\ref{fig:linear}.
+The {\it copy} rule in that presentation sticks out as the only 
+rule that doesn't deal directly with a connective, but we can eliminate
+it by using the $\Gamma; \Delta/A$ matching construct. The resulting
+presentation, shown in Figure~\ref{fig:linear-alt}, is equivalent
+to the presentation in Figure~\ref{fig:linear}.
+
+\bigskip
+\begin{theorem}
+$\seq{\Gamma}{\Delta}{C}$ if and only if $\altseq{\Gamma}{\Delta}{C}$.
+\end{theorem}
+
+\begin{proof}
+The reverse direction is a straightforward induction: each rule in 
+Figure~\ref{fig:linear-alt} can be translated as the related rule
+in Figure~\ref{fig:linear} along with (potentially) an instance of 
+the ${\it copy}$ rule.
+
+The forward direction requires a lemma that the {\it copy} rule is
+admissible according to the rules of Figure~\ref{fig:linear-alt}; this
+lemma can be established by straightforward induction. Having
+established the lemma, the forward direction is a straightforward
+induction on derivations, applying the admissibility lemma whenever the 
+{\it copy} rule is encountered.
+\end{proof}
+
 
 \section{A warning about normalization}
 \label{sec:warning}

@@ -1,0 +1,52 @@
+\begin{figure}
+\[
+\infer[{\it init}]
+{\altseq{\Gamma}{\cdot/p}{p}}
+{}
+\]
+
+\[
+\infer[{!}_R]
+{\altseq{\Gamma}{\cdot}{{!}A}}
+{\altseq{\Gamma}{\cdot}{A}}
+\quad
+\infer[{!}_L]
+{\altseq{\Gamma}{\Delta/{!}A}{C}}
+{\altseq{\Gamma, A}{\Delta}{C}}
+\quad
+\infer[{\one}_R]
+{\altseq{\Gamma}{\cdot}{\one}}
+{}
+\quad
+\infer[{\one}_L]
+{\altseq{\Gamma}{\Delta/{\one}}{C}}
+{\altseq{\Gamma}{\Delta}{C}}
+\]
+
+\[
+\infer[{\otimes}_R]
+{\altseq{\Gamma}{\Delta_1, \Delta_2}{A \otimes B}}
+{\altseq{\Gamma}{\Delta}{A} & \altseq{\Gamma}{\Delta}{B}}
+\quad
+\infer[{\otimes}_L]
+{\altseq{\Gamma}{\Delta/A \otimes B}{C}}
+{\altseq{\Gamma}{\Delta, A, B}{C}}
+\]
+
+\[
+\infer[{\lolli}_R]
+{\altseq{\Gamma}{\Delta}{A \lolli B}}
+{\altseq{\Gamma}{\Delta, A}{B}}
+\quad
+\infer[{\lolli}_L]
+{\altseq{\Gamma}{\Delta_1, \Delta_2 / A \lolli B}{C}}
+{\altseq{\Gamma}{\Delta_1}{A}
+ &
+ \altseq{\Gamma}{\Delta_2, B}{C}}
+\]
+
+\caption{Alternate presentation of intuitionstic linear logic}
+\label{fig:linear-alt}
+\end{figure}
+
+
