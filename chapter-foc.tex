@@ -666,7 +666,7 @@ discussed Section~\ref{sec:linpolar}, we will give the slightly
 simpler polarization-strategy-based proof of completeness.
 
 \bigskip
-\begin{theorem}[Soundness of focusing]
+\begin{theorem}[Soundness of focusing]\label{thm:linfocsound}
 If $\mildseq{\Gamma}{\Delta}{U}$, where $\Delta$ and $U$ contain only
 atomic suspensions, then $\seq{\Gamma^\circ}{\Delta^\circ}{U^\circ}$.
 \end{theorem}
@@ -1655,6 +1655,7 @@ linear logic with and without the atom and bang optimizations; but
 this is outside the scope of this thesis.
 
 \subsection{Concurrent equality}
+\label{sec:linconcurrenteq}
 
 Consider the sequent in focused linear logic:
 \[
@@ -1920,6 +1921,62 @@ induction on derivations, applying the admissibility lemma whenever the
 
 \section{A warning about normalization}
 \label{sec:warning}
+
+In our earlier discussion of hereditatry substitution and canonical
+forms, we mentioned that the normalizaiton theorem provided by
+hereditary substitution was weaker than the so-called weak
+normalization theorem for LF. That is because the weak normalization
+theorem says that any well-typed term can be converted into a
+canonical ($\beta$-normal and $\eta$-long) term by a particular series
+of $\beta$ and $\eta$ conversions. It is self-evident, by this statement
+of the theorem, that the resulting canonical term is equivalent
+to the original term. 
+
+On the other hand, when we perform hereditary substitution to obtain a
+Canonical LF term from an arbitrary non-canonical LF term, we gain
+{\it no guarantees} about the relationship between the non-canonical
+LF term and the Canonical LF term. The statment of the theorem does
+not preclude taking a $\beta$-normal, $\eta$-long LF term (like
+$\lambda x. \lambda y. x$ of type $A \rightarrow A \rightarrow A$)
+into a structurally different Canonical LF term (like $\lambda
+x. \lambda y. y$, which also has type $A \rightarrow A \rightarrow
+A$). It is possible to gain such a guarantee for LF, as Martens and
+Crary have shown in unpublished work \cite{martens11mechanizing}, but
+this result is non-trivial.
+
+In our setting, we should be concerned that we might take a focused
+proof, turn it into an unfocused proof by way of the obvious
+translation (the constructive content of
+Theorem~\ref{thm:linfocsound}), and then turn it back into a focused
+proof by way of the constructive content of
+Theorem~\ref{thm:linfoccomplete}, only to obtain a proof that was not
+identital or even related. This is not at all a merely hypothetical
+concern. In the structural focalization development, the proofs are
+mechanized and so their constructive content can easily be obtained.
+Our example in Section~\ref{sec:linconcurrenteq} of a proposition
+with two multifocusing-equivalent proofs that are not concurrently
+equal is also representable in intuitionstic logic as the proposition
+   $a^+ \supset 
+   {\downarrow}(a^+ \supset {\uparrow}b^+) \supset
+   {\downarrow}({\downarrow}{\uparrow}b^+ \lolli c^-) \supset
+   c^-$.
+
+and it is pos
+
+The proposition in Section~\ref{sec:linconcurrenteq} demonstrating
+the difference between concurrent equality and multifocusing. 
+The mechanization of the structural focalization development.
+
+   $a^+ \supset 
+   {\downarrow}(a^+ \supset {\uparrow}b^+) \supset
+   {\downarrow}({\downarrow}{\uparrow}b^+ \lolli c^-) \supset
+   c^-$
+-- was chosen carefully. 
+
+
+While multifocusing does correspond to a natural
+notion of proof equivalence -- the equivalnce relation that includes
+all permissible permutations of individual rules -- we did not give.
 
 Talk about equivalence, Chris's unpublished work, and where
 the focalization theorem given by this approach is deficient -- 
