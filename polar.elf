@@ -1403,105 +1403,31 @@ myprop1 = [a⁺][b⁺][c⁻]
   ↓ (↓ (↑ (c b⁺)) ⊃ c c⁻) ⊃
   c c⁻. 
 
+focused: {a⁺}{b⁺}{c⁻} conc · (myprop1 a⁺ b⁺ c⁻ true) = [a⁺][b⁺][c⁻]
+  ⊃R (cL [xa] 
+  ⊃R (↓L [xab] 
+  ⊃R (↓L [xbc] 
+  foc xab sa
+    (⊃L (cR xa) 
+    (↑L (cL [xa]
+     foc xbc sa
+       (⊃L (↓R (↑R (cR xa))) p⁻))))))).
+
 %define myprop1⁼ = P
 %solve tmyprop1: {a⁺}{b⁺}{c⁻} t (myprop1 a⁺ b⁺ c⁻) (P a⁺ b⁺ c⁻).
 
-d1-main-branch : {a}{b}{c} right (myprop1⁼ a b c) = [a][b][c]
-  impR [xa]
-  impR [xab]
-  impR [xbc]
-  impL
-    (init xa)
-    ([xb]
-      impL 
-        (init xb)
-        init
-        xbc)
-    xab.
+%define unfocused = D
+%solve _: {a⁺}{b⁺}{c⁻} 
+  soundN (focused a⁺ b⁺ c⁻) t· (tmyprop1 a⁺ b⁺ c⁻) (nil (D a⁺ b⁺ c⁻)).
 
-d1-side-branch : {a}{b}{c} right (myprop1⁼ a b c) = [a][b][c]
-  impR [xa]
-  impR [xab]
-  impR [xbc]
-  impL
-    (impL 
-      (init xa)
-      init
-      xab)
-    (init)
-    xbc.
+%define refocused = N
+%solve _: {a⁺}{b⁺}{c⁻}
+  complete (b s) (unfocused a⁺ b⁺ c⁻) (tmyprop1 a⁺ b⁺ c⁻) (N a⁺ b⁺ c⁻).
 
-%query 2 * {a}{b}{c}
-  complete _ (d1-side-branch a b c) (tmyprop1 a b c) (N a b c).
+id: conc · Suc -> conc · Suc -> type.
+refl: id D D.
 
-%query 1 * {a}{b}{c}
-  complete _ (d1-main-branch a b c) (tmyprop1 a b c) (N a b c).
+%query 1 * {a⁺}{b⁺}{c⁻} id (focused a⁺ b⁺ c⁻)   (focused a⁺ b⁺ c⁻).
+%query 1 * {a⁺}{b⁺}{c⁻} id (refocused a⁺ b⁺ c⁻) (refocused a⁺ b⁺ c⁻).
+%query 0 * {a⁺}{b⁺}{c⁻} id (focused a⁺ b⁺ c⁻)   (refocused a⁺ b⁺ c⁻).
 
-%{ Unfocused derivations of a⁺, b⁺, a⁺ ⊃ b⁺ ⊃ ↑c⁺, ↓↑c⁺ ⊃ d⁻ = d⁻ }%
-
-myprop = [a⁺][b⁺][c⁺][d⁻] 
-  c a⁺ ⊃ 
-  c b⁺ ⊃ 
-  ↓ (c a⁺ ⊃ c b⁺ ⊃ ↑ (c c⁺)) ⊃
-  ↓ (↓ (↑ (c c⁺)) ⊃ c d⁻) ⊃
-  c d⁻.
-
-%define myprop⁼ = P⁼
-%solve tmyprop: {a⁺}{b⁺}{c⁺}{d⁻} t (myprop a⁺ b⁺ c⁺ d⁻) (P⁼ a⁺ b⁺ c⁺ d⁻).
-
-d-main-branch : {a}{b}{c}{d} right (myprop⁼ a b c d) = [a][b][c][d]
-  impR [xa]
-  impR [xb]
-  impR [xabc]
-  impR [xcd]
-  impL
-    (init xa) 
-    (impL 
-       (init xb)
-       ([xc]
-          impL
-          (init xc)
-          init
-          xcd))
-    xabc.
-
-d-side-branch : {a}{b}{c}{d} right (myprop⁼ a b c d) = [a][b][c][d]
-  impR [xa]
-  impR [xb]
-  impR [xabc]
-  impR [xcd]
-  impL
-    (impL
-       (init xa)
-       (impL 
-          (init xb)
-          init)
-       xabc)
-    init
-    xcd.
-
-d-mixed : {a}{b}{c}{d} right (myprop⁼ a b c d) = [a][b][c][d]
-  impR [xa]
-  impR [xb]
-  impR [xabc]
-  impR [xcd]
-  impL
-    (init xa) 
-    ([xbc]
-       impL 
-       (impL
-          (init xb)
-          init
-          xbc)
-       init
-       xcd)
-    xabc.
-
-%query 1 * {a}{b}{c}{d} 
-  complete _ (d-main-branch a b c d) (tmyprop a b c d) (N a b c d).
-
-%query 2 * {a}{b}{c}{d} 
-  complete _ (d-mixed a b c d) (tmyprop a b c d) (N a b c d).
-
-%query 3 * {a}{b}{c}{d} 
-  complete _ (d-side-branch a b c d) (tmyprop a b c d) (N a b c d).
