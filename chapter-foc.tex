@@ -1,6 +1,47 @@
 
 \chapter{Linear logic}
 
+In this chapter, we present linear logic
+(Section~\ref{sec:introlinlog}) as a logic with the ability to express
+aspects of state and state transitions in a natural way. In
+Section~\ref{sec:linlogicalframeworks}, we discuss why the normal
+presentation of linear logic is insufficient as {\it logical
+  frameworks} -- proofs in linear logic suffice to establish the
+existance of a series of state transitions but do not adequately
+capture the structure of those transitions. 
+
+Our remedy for this insufficiency comes in the form of {\it focusing},
+Andreoli's restricted normal form for derivations in linear logic. We
+discuss focusing for a polarized presentation of linear logic in
+Section~\ref{sec:foclinlog}. With focusing, we can describe {\it
+  synthetic inference rules} (Section~\ref{sec:linsynthetic}) that do
+a much better job of capturing the structure of focused
+transitions. There are still two deficiencies, however. The first
+defeciency is that the natural interpretation of positive atomic
+propositions does not allow us to express certain desirable state
+transitions. We propose a modification to the focused sequent calculus
+that addresses this first problem in Section~???; we also explain why
+the resulting system is less natural and discuss the implications of
+that observation. The second deficiency is that focusing gives us a
+highly sequential transition system, whereas our goal is to give an
+interpretation of concurrent transition systems. In Section~???, we
+describe {\it concurrent equality}, an equivalence relation on focused
+derivations introduced by Watkins et. al. to solve this problem, and
+also consider its limitiations in a fully focused setting.
+
+In Chapter 3, we will define a much richer ordered lax logic and prove
+a focusing result that incorporates the atom and bang optimizations
+from Section~???. In Chapter 4 we will carve out a fragment of this
+logic that forms the basis of the logical framework of substructural
+logical specifications; this framework will also incorporate the
+concurrent equality sketched out in Section~???. The purpose of this
+chapter is to consider the issues that arise in our rich substructural
+setting within the comparatively simple setting of intuitionstic
+linear logic.
+
+\section{Introduction to linear logic}
+\label{sec:introlinlog}
+
 Logic as it has been traditionally understood and studied -- both in
 its classical and intuitionistic varieties -- treats the truth of a
 proposition as a {\it persistent resource}. That is, if we have
@@ -101,7 +142,7 @@ of the proposition
 \[{!}({\sf 6bucks} \lolli {\sf battery}) \otimes {\sf 6bucks} \otimes
 ({\sf battery} \lolli {\sf robot}) \lolli {\sf robot}.\] 
 A derivation of this proposition is given in
-Figure~\ref{fig:unfocused-robot}.\footnote{In Chapter XXX, I will
+Figure~\ref{fig:unfocused-robot}.\footnote{In Chapter 4, I will
   argue that this view isn't quite precise enough, and that the most
   natural representation of state change from the state $A$ to the
   state $B$ isn't really captured by derivations of the proposition $A
@@ -120,7 +161,8 @@ Chirmar's 1995 Ph.D. thesis, has sought to use linear logic as a {\it
   cervesato02concurrent,pfenning04substructural,miller09formalizing,
   pfenning09substructural,cervesato09relating}.  
 
-\subsection*{Logical frameworks}
+\section{Logical frameworks}
+\label{sec:linlogicalframeworks}
 
 Generally speaking, logical frameworks use the {\it structure} of
 proofs in a logic (like linear logic) to describe the structures we're
