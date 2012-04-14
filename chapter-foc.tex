@@ -1922,8 +1922,8 @@ induction on derivations, applying the admissibility lemma whenever the
 \section{A warning about normalization}
 \label{sec:warning}
 
-In our earlier discussion of hereditatry substitution and canonical
-forms, we mentioned that the normalizaiton theorem provided by
+In our earlier discussion of hereditary substitution and canonical
+forms, we mentioned that the normalization theorem provided by
 hereditary substitution was weaker than the so-called weak
 normalization theorem for LF. That is because the weak normalization
 theorem says that any well-typed term can be converted into a
@@ -1935,7 +1935,7 @@ to the original term.
 On the other hand, when we use hereditary substitution in the obvious
 way to obtain a Canonical LF term from an arbitrary non-canonical LF
 term, we gain {\it no guarantees} about the relationship between the
-non-canonical LF term and the Canonical LF term. The statment of the
+non-canonical LF term and the Canonical LF term. The statement of the
 theorem does not preclude taking a $\beta$-normal, $\eta$-long LF term
 (like $\lambda x. \lambda y. x$ of type $p \rightarrow p \rightarrow
 p$ for some atomic type $p$) into a structurally different Canonical
@@ -1951,9 +1951,9 @@ translation (the constructive content of
 Theorem~\ref{thm:linfocsound}), and then turn it back into a focused
 proof by focalization (the constructive content of
 Theorem~\ref{thm:linfoccomplete}) only to obtain a proof that was not
-identital or even related. This is not at all a merely hypothetical
+identical or even related. This is not at all a merely hypothetical
 concern. We can run the mechanized structural focalization result from
-\cite{simmons11structural} on an intuitonistic proposition,
+\cite{simmons11structural} on an intuitionistic proposition,
 %
    $a^+ \supset 
    {\downarrow}(a^+ \supset {\uparrow}b^+) \supset
@@ -1970,7 +1970,7 @@ section. However, if we take the focused proof that focuses
 first on $a^+ \supset {\uparrow}b^+$, transform it into an unfocused 
 proof, and then re-focus it, we will get the proof that focuses 
 first on ${\downarrow}{\uparrow}b^+ \supset c^-$. Focalization,
-in other words, is not a partial inverse of erasue in the structural
+in other words, is not a partial inverse of erasure in the structural
 focalization development, except maybe modulo the equivalence
 relation established by multifocusing. 
 
@@ -1978,11 +1978,11 @@ This illustrates why we must be careful, but it is not a fatal flaw
 for two reasons. First, for the restricted logical fragment defined in
 Chapter 4 as the basis of our logical framework, I conjecture it {\it
   is} the case that the focalization of two proofs is concurrently
-equal if and only if the original proofs are convertable by local
-permutations of rules, the same canonicity condition that
+equal if and only if the original proofs are convertible by local
+permutations of rules, the same condition that
 multifocusing satisfies. Second, what is really at stake here is our
 ability to write down non-normal proofs in a logical framework that
-then focalizes them -- which is what the Twelf implementation of LF
+then normalizes them -- which is what the Twelf implementation of LF
 and the Celf implementation of CLF do -- with the confidence that we
 can look at a non-normal proof and know the form of its corresponding
 canonical form. In this thesis, we will be content to work throughout
