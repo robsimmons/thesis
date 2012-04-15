@@ -7,7 +7,7 @@ aspects of state and state transition in a natural way. In
 Section~\ref{sec:linlogicalframeworks}, we discuss why the normal
 presentation of linear logic is insufficient as a {\it logical
   framework} -- proofs in linear logic suffice to establish the
-existance of a series of state transitions but do not adequately
+existence of a series of state transitions but do not adequately
 capture the structure of those transitions. 
 
 Our remedy for this insufficiency comes in the form of {\it focusing},
@@ -17,7 +17,7 @@ Section~\ref{sec:foclinlog}. With focusing, we can describe {\it
   synthetic inference rules} (Section~\ref{sec:linsynthetic}) that do
 a much better job of capturing the structure of focused
 transitions. There are still two deficiencies, however. The first
-defeciency is that the natural interpretation of positive atomic
+deficiency is that the natural interpretation of positive atomic
 propositions does not allow us to express certain desirable state
 transitions. We propose a modification to the focused sequent calculus
 that addresses this first problem in Section~\ref{sec:linhack}; we
@@ -28,7 +28,7 @@ goal is to give an interpretation of concurrent transition systems. In
 Section~\ref{sec:linconcurrenteq}, we describe {\it concurrent
   equality}, an equivalence relation on focused derivations introduced
 by Watkins et.~al to solve this problem, and also consider the
-limitiations of concurrent equality in a fully focused setting.
+limitations of concurrent equality in a fully focused setting.
 
 In Chapter 3, we will define a much richer ordered lax logic and prove
 a focusing result that incorporates the atom and bang optimizations
@@ -38,7 +38,7 @@ of substructural logical specifications; this framework will also
 incorporate the concurrent equality sketched out in
 Section~\ref{sec:linconcurrenteq}. The purpose of this chapter is to
 consider the issues that arise in our rich substructural setting
-within the comparatively simple setting of intuitionstic linear logic.
+within the comparatively simple setting of intuitionistic linear logic.
 
 \section{Introduction to linear logic}
 \label{sec:introlinlog}
@@ -395,7 +395,7 @@ correctness.\robnote{Revisit this decision; It really seems like it
 \subsection{Focused sequent calculus}
 
 Usually, focused logics are described as having multiple
-sequent forms. For intuitionstic logics, there are at least three
+sequent forms. For intuitionistic logics, there are at least three
 sequent forms:
 \begin{itemize}
 \item $\mildrfoc{\Gamma}{\Delta}{A^+}$ (the {\it right focus} sequent, where
@@ -451,7 +451,7 @@ are unable to break them down any further. We are therefore only able
 to derive an atomic conclusion or use an atomic premise with the {\it
   init} rule that concludes $\seq{\Gamma}{p}{p}$ and has no premises.
 While the {\it init} rule must be explicitly included as a proof rule,
-it is an instacne of an admissible identity theorem:
+it is an instance of an admissible identity theorem:
 $\seq{\Gamma}{A}{A}$ for all $A$. If we substitute in a concrete
 proposition for some atomic proposition, the structure of the proof
 stays exactly the same, except that instances of initial sequents
@@ -540,7 +540,7 @@ makes the ${\it id}^+$ rule an instance of the hypothesis rule
 provided by LF and establishes Theorem~\ref{thm:fsubst-pos} ``for
 free'' as an instance of LF substitution. This is possible to do for
 negative focal substitution as well, but it is somewhat
-counterintuitive and relies on a very higher-order use of LF's unform
+counterintuitive and relies on a very higher-order use of LF's uniform
 function space \cite{simmons11structural}.
 
 The two substitution
@@ -610,7 +610,7 @@ then $\mildseq{\Gamma}{\Delta}{A^-}$.
 \end{theorem}
 
 \begin{proof}
-Mutual induction over the strucure of the proposition $A^+$ or $A^-$,
+Mutual induction over the structure of the proposition $A^+$ or $A^-$,
 with a critical use of focal substitution in each case.
 
 Most of the cases of
@@ -1838,16 +1838,10 @@ induction on derivations, applying the admissibility lemma whenever the
 \section{Concurrent equality}
 \label{sec:linconcurrenteq}
 
-
- The third, concurrent equality, is a
-notion of proof equivalence that operates on synthetic inference
-rules. It represents an intermediate point between focusing and
-multifocusing \cite{chaudhuri08canonical}, which defines an even more
-coarse-grained notion of equivalence than focusing does.  All three of
-these modifications will play a role in the focused ordered lax logic
-described in Chapter~3.
-
-
+Concurrent equality, is a
+notion of equivalence that operates on synthetic derivations.
+It represents an intermediate point between focusing and
+multifocusing \cite{chaudhuri08canonical}. 
 Consider the sequent in focused linear logic:
 \[
 \mildseq{a^+ \lolli {\uparrow}(b^+ \otimes c^+), ~
@@ -1901,35 +1895,34 @@ $\langle c^+ \rangle$ to $\langle e^+ \rangle$ first:
 {}}}}}
 \]
 If we think about these two proofs in terms of the series of
-transitions they embody, it's not so clear that they are different. In
-both cases, there is an $a^+$ resource that transitions to a $b^+$
-resource and a $c^+$ resource, and then $b^+$ transitions to $d^+$
-while, independently, the $c^+$ transitions to $e^+$. Then, finally,
-the $d^+$ and $e^+$ combine to transition to $f^+$, which completes
-the trace. The independence here is key: if two focusing phases
-consume different resources and both end focus with ${\uparrow}_L$ (as
-opposed to ${\it id}^-$), then we can treat them as independent and
-concurrent steps in the process of proving the same right hand side;
-{\it concurrent equality} is the equivalence relation on focused
-proofs that treats all proofs that differ only in the interleaving of
-independent and concurrent steps as equal.  This equivalence
-relation was used in the definition of CLF \cite{watkins02concurrent},
-but only in conjunction with the lax modality, an approach we will
-follow in Chapter 4.
+transitions they embody, it's not so clear we want to think of them as
+different. In both cases, there is an $a^+$ resource that transitions
+to a $b^+$ resource and a $c^+$ resource, and then $b^+$ transitions
+to $d^+$ while, independently, the $c^+$ transitions to $e^+$. Then,
+finally, the $d^+$ and $e^+$ combine to transition to $f^+$, which
+completes the trace. The independence here is key: if two focusing
+phases consume different resources and both end focus with
+${\uparrow}_L$ (as opposed to ${\it id}^-$), then we can treat them as
+independent and concurrent steps in the process of proving the same
+right hand side; {\it concurrent equality} is the equivalence relation
+on focused proofs that treats all proofs that differ only in the
+interleaving of independent and concurrent steps as equal.  This
+equivalence relation was used in the definition of CLF
+\cite{watkins02concurrent}, but only in conjunction with the lax
+modality, an approach we will follow in Chapter 4.
 
-The equivalence relation on focused proofs that concurrent equality
-gives rise to is related to the equivalence relation on proofs given
-by {\it multifocusing} \cite{chaudhuri08canonical}.  Multifocusing 
+The equivalence relation on focused derivations that concurrent
+equality gives rise to is related to the equivalence relation induced
+by {\it multifocusing} \cite{chaudhuri08canonical}.  Multifocusing
 appears to provide an even coarser notion of equivalence on focused
-proofs than concurrent equality does. In particular, these two 
-distinct focusing proofs are {\it not} concurrently equal: the
-proof on the right succeeds at proving $\langle c^- \rangle$ in one
-step, but leaves a subgoal in which $b^+$ is proved indirectly,
-whereas the proof at the right first transitions 
-from having $\langle a^+ \rangle$ and $a^+ \lolli {\uparrow} b^+$ 
-resources to having a $\langle b^+ \rangle$ resource, and only
-then proves $\langle c^- \rangle$, leaving a subgoal in which $b^+$
-is proved directly. 
+proofs than concurrent equality does. In particular, these two
+distinct focusing proofs are not concurrently equal: the proof
+on the right succeeds at proving $\langle c^- \rangle$ in one step,
+but leaves a subgoal in which $b^+$ is proved indirectly, whereas the
+proof at the right first transitions from having $\langle a^+ \rangle$
+and $a^+ \lolli {\uparrow} b^+$ resources to having a $\langle b^+
+\rangle$ resource, and only then proves $\langle c^- \rangle$, leaving
+a subgoal in which $b^+$ is proved directly.
 \[
 \infer
 {\mildseq{\cdot}
@@ -2031,7 +2024,7 @@ proof by focalization (the constructive content of
 Theorem~\ref{thm:linfoccomplete}) only to obtain a proof that was not
 identical or even related. This is not at all a merely hypothetical
 concern. We can run the mechanized structural focalization result from
-\cite{simmons11structural} on an intuitionistic proposition,
+\cite{simmons11structural} on an persistent proposition,
 %
    $a^+ \supset 
    {\downarrow}(a^+ \supset {\uparrow}b^+) \supset
@@ -2041,28 +2034,31 @@ concern. We can run the mechanized structural focalization result from
 that is similar to the example from
 Section~\ref{sec:linconcurrenteq}.  In persistent logic (as in
 linear logic) that proposition has two focused propositions that
-are probably multifocusing equivalent (given a intuitionistic
+are probably multifocusing equivalent (given a reasonable intuitionistic
 notion of multifocusing) but that are not concurrently equivalent
-under the proposed definition of concurrent equality from that
-section. However, if we take the focused proof that focuses 
+under the proposed definition of concurrent equality. 
+However, if we take the focused proof that focuses 
 first on $a^+ \supset {\uparrow}b^+$, transform it into an unfocused 
 proof, and then re-focus it, we will get the proof that focuses 
 first on ${\downarrow}{\uparrow}b^+ \supset c^-$. Focalization,
 in other words, is not a partial inverse of erasure in the structural
-focalization development, except maybe modulo the equivalence
-relation established by multifocusing. 
+focalization development, except maybe modulo the (as yet undefined)
+equivalence relation established by multifocusing. 
 
 This illustrates why we must be careful, but it is not a fatal flaw
-for two reasons. First, for the restricted logical fragment defined in
-Chapter 4 as the basis of our logical framework, I conjecture it {\it
-  is} the case that the focalization of two proofs is concurrently
+for two reasons. The first is the aforementioned conjecture
+that, for the restricted logical fragment defined in
+Chapter 4 as the basis of our logical framework, the focalizations of 
+two proofs are concurrently
 equal if and only if the original proofs are convertible by local
 permutations of rules, the same condition that
-multifocusing satisfies. Second, what is really at stake here is our
+multifocusing satisfies; it ought to be the case that
+focalization is a partial inverse of erasure modulo this courser
+equivalence. Second, what is really at stake here is our
 ability to write down non-normal proofs in a logical framework that
 then normalizes them -- which is what the Twelf implementation of LF
 and the Celf implementation of CLF do -- with the confidence that we
-can look at a non-normal proof and know the form of its corresponding
+can look at a non-normal proof and know its corresponding
 canonical form. In this thesis, we will be content to work throughout
-with focused proofs and their analouges, so we can afford to leave
-questions about convertability and weak normalization for future work.
+with focused proofs and their analogues, so we can afford to leave
+questions about convertability and weak normalization to future work.
