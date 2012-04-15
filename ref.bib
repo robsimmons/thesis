@@ -40,6 +40,17 @@
   pages =        "19--75",
 }
 
+@article{cervesato09relating,
+  author =       "Iliano Cervesato and Andre Scedrov",
+  title =        "Relating state-based and process-based concurrency through
+                  linear logic (full-version)",
+  journal =      "Information and Computation",
+  year =         2009,
+  volume =       207,
+  number =       10,
+  pages =        "1044--1077",
+}
+
 @article{chaudhuri10logical,
   author =       "Kaustuv Chaudhuri and Frank Pfenning and Greg Price",
   title =        "A Logical Characterization of Forward and Backward Chaining 
@@ -58,6 +69,15 @@
   volume =       39,
   number =       2,
   pages =        "176--210",
+}
+
+@article{girard87linear,
+  author =       "Jean-Yves Girard",
+  title =        "Linear logic",
+  journal =      "Theoretical Computer Science",
+  year =         1987,
+  volume =       50,
+  pages =        "1--102",
 }
 
 @article{girard93unity,
@@ -110,13 +130,13 @@
   pages =        "573--588",
 }
 
-@article{girard87linear,
-  author =       "Jean-Yves Girard",
-  title =        "Linear logic",
-  journal =      "Theoretical Computer Science",
-  year =         1987,
-  volume =       50,
-  pages =        "1--102",
+@article{lambek58mathematics,
+  author = 	 "Joachim Lambek",
+  title = 	 "The Mathematics of Sentence Structure",
+  journal =	 "American Mathematical Monthly",
+  year =	 1958,
+  volume =	 65,
+  pages =	 "363-386"
 }
 
 @article{liang09focusing,
@@ -171,13 +191,23 @@
 }
 
 @article{miller09formalizing,
-  author =     "Dale Miller",
-  title =      "Formalizing Operational Semantic Specifications in Logic",
-  journal =    "Electronic Notes in Theoretical Computer Science",
-  year =       2009,
-  volume =     246,
-  pages =      "147--165",
-  note =       "Proceedings of WFLP 2008",
+  author =       "Dale Miller",
+  title =        "Formalizing Operational Semantic Specifications in Logic",
+  journal =      "Electronic Notes in Theoretical Computer Science",
+  year =         2009,
+  volume =       246,
+  pages =        "147--165",
+  note =         "Proceedings of WFLP 2008",
+}
+
+@article{pfenning00structural,
+  author =       "Frank Pfenning",
+  title =        "Structural Cut Elimination
+                  1. Intuitionistic and Classical Logic",
+  journal =      "Information and Computation",
+  year =         2000,
+  volume =       157,
+  pages =        "84--141",
 }
 
 @article{pfenning01judgmental,
@@ -193,34 +223,13 @@
 		  Trento, Italy, July 1999",
 }
 
-@article{cervesato09relating,
-  author =       "Iliano Cervesato and Andre Scedrov",
-  title =        "Relating state-based and process-based concurrency through
-                  linear logic (full-version)",
-  journal =      "Information and Computation",
-  year =         2009,
-  volume =       207,
-  number =       10,
-  pages =        "1044--1077",
-}
-
-@article{pfenning00structural,
-  author =       "Frank Pfenning",
-  title =        "Structural Cut Elimination
-                  1. Intuitionistic and Classical Logic",
-  journal =      "Information and Computation",
-  year =         2000,
-  volume =       157,
-  pages =        "84--141",
-}
-
 @article{simmons11logical, 
   author =       "Robert J. Simmons and Frank Pfenning",
   title =        "Logical approximation for program analysis",
   journal =      "Higher-Order and Symbolic Computation",
   year =         2011,
   note =         "Online First.
-   \url{http://dx.doi.org/10.1007/s10990-011-9071-2}",
+  \url{http://dx.doi.org/10.1007/s10990-011-9071-2}",
 }
 
 @article{zeilberger08unity,
@@ -233,6 +242,7 @@
   pages =        "66-96",
 }  
 
+%%% Books
 @book{levy04call,
   author =       "Paul B. Levy",
   title =        "Call-by-push-value. A functional/imperative synthesis",
@@ -248,6 +258,7 @@
   year =         1989,
 }
 
+%%% Collection chapters
 @incollection{miller08proof,
   author =       "Dale Miller",
   title =        "A Proof-Theoretic Approach to the Static Analysis of
@@ -277,6 +288,16 @@
   series = 	 "Studies in Logic"}
 
 
+%%% Springer proceedings
+@inproceedings{brock10focused,
+  author = 	 "Taus Brock-Nannestad and Carsten Sch{\"u}rmann",
+  title = 	 "Focused Natural Deduction",
+  booktitle =    "Logic for Programming, Artificial Intelligence, 
+                  and Reasoning (LPAR-17)",
+  pages = 	 "157--171",
+  year = 	 2010,
+  publisher =    "Springer LNCS 6397",
+}
 
 @inproceedings{chaudhuri08focusing,
   author =       "Kaustuv Chaudhuri",
@@ -289,25 +310,6 @@
   publisher =    "Springer LNCS 5330",
 }
 
-@inproceedings{brock10focused,
-  author = 	 "Taus Brock-Nannestad and Carsten Sch{\"u}rmann",
-  title = 	 "Focused Natural Deduction",
-  booktitle =    "Logic for Programming, Artificial Intelligence, 
-                  and Reasoning (LPAR-17)",
-  pages = 	 "157--171",
-  year = 	 2010,
-  publisher =    "Springer LNCS 6397",
-}
-
-@inproceedings{chaudhuri08canonical,
-  author =       "Kaustuv Chaudhuri and Dale Miller and Alexis Saurin",
-  title =        "Canonical Sequent Proofs via Multi-Focusing",
-  booktitle =    "Fifth IFIP International Conference on Theoretical Computer 
-                  Science (TCS 2008, Track B)",
-  pages =        "383--396",
-  year =         2009,
-}
-
 @inproceedings{jagadeesan05testing,
   author =       "Rada Jagadeesan and Gopalan Nadathur and Vijay Saraswat",
   title =        "Testing Concurrent Systems: An Interpretation of 
@@ -317,6 +319,41 @@
   pages =        "517--528",
   year =         2005,
   publisher =    "Springer LNCS 3821",
+}
+
+@inproceedings{pfenning04substructural,
+  author =       "Frank Pfenning",
+  title =        "Substructural Operational Semantics and Linear 
+                  Destination-Passing Style",
+  booktitle =    "Programming Languages and Systems",
+  year =         2004,
+  pages =        196,
+  publisher =    "Springer LNCS 3302",
+  note =         "Abstract of invited talk",
+}
+
+@inproceedings{pfenning99system,
+  author =       "Frank Pfenning and Carsten Sch{\"u}rmann",
+  title =        "System description: 
+                  Twelf --- a meta-logical framework for deductive systems",
+  editor =       "H. Ganzinger",
+  booktitle =    "Proceedings of the 16th International Conference on Automated 
+                  Deduction (CADE-16)",
+  publisher =    "Springer LNAI 1632",
+  location =     "Trento, Italy",
+  pages =        "202--206",
+  year =         1999,
+}
+
+
+%%% Non-Springer proceedings
+@inproceedings{chaudhuri08canonical,
+  author =       "Kaustuv Chaudhuri and Dale Miller and Alexis Saurin",
+  title =        "Canonical Sequent Proofs via Multi-Focusing",
+  booktitle =    "Fifth IFIP International Conference on Theoretical Computer 
+                  Science (TCS 2008, Track B)",
+  pages =        "383--396",
+  year =         2009,
 }
 
 @inproceedings{krishnaswami09focusing,
@@ -348,30 +385,6 @@
   address = 	 "Pittsburgh, Pennsylvania",
 }
 
-@inproceedings{pfenning99system,
-  author =       "Frank Pfenning and Carsten Sch{\"u}rmann",
-  title =        "System description: 
-                  Twelf --- a meta-logical framework for deductive systems",
-  editor =       "H. Ganzinger",
-  booktitle =    "Proceedings of the 16th International Conference on Automated 
-                  Deduction (CADE-16)",
-  publisher =    "Springer LNAI 1632",
-  location =     "Trento, Italy",
-  pages =        "202--206",
-  year =         1999,
-}
-
-@inproceedings{pfenning04substructural,
-  author = 	"Frank Pfenning",
-  title = 	"Substructural Operational Semantics and Linear 
-                 Destination-Passing Style",
-  booktitle = 	"Programming Languages and Systems",
-  year =	2004,
-  pages = 	196,
-  publisher =	"Springer LNCS 3302",
-  note =        "Abstract of invited talk",
-}
-
 @inproceedings{pfenning09substructural,
   author = 	 "Frank Pfenning and Robert J. Simmons",
   title =  	 "Substructural Operational Semantics as
@@ -399,41 +412,43 @@
   year =         2009,
 }
 
-@misc{martens11mechanizing,
-  author =       "Chris Martens and Karl Crary",
-  title =        "Mechanizing the Metatheory of LF in Twelf",
-  year =         2011,
-  note =         "Slides from a talk given at ITU Denmark, available online: 
-                  \url{http://www.cs.cmu.edu/~cmartens/lfinlf-talk.pdf}"
-}
 
-
-@unpublished{pfenning12chaining,
-  author =       "Frank Pfenning",
-  title =        "Lecture Notes on Chaining and Focusing",
-  year =         2012,
-  note =         "Lecture notes for 15-816: Linear Logic at Carnegie
-                  Mellon University, available online:
-                  \url{http://www.cs.cmu.edu/~fp/courses/15816-s12/lectures/09-focusing.pdf}",
-}
-
-
-@misc{laurent04proof,
-  author =       "Olivier Laurent",
-  title =        "A proof of the focalization property of Linear Logic",
-  month =        may,
-  year =         2004,
-  note =         "Unpublished note, available from 
-   \url{http://perso.ens-lyon.fr/olivier.laurent/llfoc.pdf}",
-  }
-
+%%% Unpublished, with URLs
 @misc{girard91sex,
   author =       "Jean-Yves Girard",
   title =        "On the sex of angels",
   month =        dec,
   year =         1991,
   note =         "Post to {LINEAR} mailing list, archived at
-   \url{http://www.seas.upenn.edu/~sweirich/types/archive/1991/msg00123.html}"
+  \url{http://www.seas.upenn.edu/~sweirich/types/archive/1991/msg00123.html}"
+}
+
+@misc{laurent04proof,
+  author =       "Olivier Laurent",
+  title =        "A proof of the focalization property of Linear Logic",
+  month =        may,
+  year =         2004,
+  note =         "Unpublished note, available online:
+  \url{http://perso.ens-lyon.fr/olivier.laurent/llfoc.pdf}",
+}
+
+@misc{martens11mechanizing,
+  author =       "Chris Martens and Karl Crary",
+  title =        "Mechanizing the Metatheory of LF in Twelf",
+  month =        aug,
+  year =         2011,
+  note =         "Slides from a talk given at ITU Denmark, available online: 
+  \url{http://www.cs.cmu.edu/~cmartens/lfinlf-talk.pdf}"
+}
+
+@misc{pfenning12chaining,
+  author =       "Frank Pfenning",
+  title =        "Lecture Notes on Chaining and Focusing",
+  month =        feb,
+  year =         2012,
+  note =         "Lecture notes for 15-816: Linear Logic at Carnegie
+                  Mellon University, available online:
+  \url{http://www.cs.cmu.edu/~fp/courses/15816-s12/lectures/09-focusing.pdf}",
 }
 
 @misc{reed08focalizing,
@@ -441,8 +456,8 @@
   title =        "Focalizing Linear Logic in Itself",
   month =        dec,
   year =         2008,
-  note =         "Unpublished note, available from 
-   \url{http://www.cs.cmu.edu/~jcreed/papers/synfocus.pdf}"
+  note =         "Unpublished note, available online: 
+  \url{http://www.cs.cmu.edu/~jcreed/papers/synfocus.pdf}"
 }
 
 @misc{reed09judgmental,
@@ -450,8 +465,8 @@
   title =        "A Judgmental Deconstruction of Modal Logic",
   month =        jan,
   year =         2009,
-  note =         "Unpublished note, available from
-   \url{http://www.cs.cmu.edu/~jcreed/papers/jdml.pdf}"
+  note =         "Unpublished note, available online:
+  \url{http://www.cs.cmu.edu/~jcreed/papers/jdml.pdf}"
 }
 
 @misc{reed10focus,
@@ -460,18 +475,21 @@
                   Intuitionistic Logic",
   month =        jan,
   year =         2010,
-  note =         "Draft manuscript, available from 
-   \url{http://www.cs.cmu.edu/~fp/papers/substruct10.pdf}",
+  note =         "Draft manuscript, available online: 
+  \url{http://www.cs.cmu.edu/~fp/papers/substruct10.pdf}",
 }
 
 @misc{simmons09weak,
   author =       "Robert J. Simmons",
   title =        "Weak Focusing",
+  month =        feb,
   year =         2009,
-  note =         "The Twelf Wiki
-    \url{http://twelf.org/wiki/Weak_focusing}",
+  note =         "The Twelf Wiki. Available online:
+  \url{http://twelf.org/wiki/Weak_focusing}",
 }
 
+
+%%% Dissertations
 @PhdThesis{chaudhuri06focused,
   author =       "Kaustuv Chaudhuri",
   title =        "The Focused Inverse Method for Linear Logic",
@@ -516,16 +534,20 @@
   year = 	 2009,
 }
 
+
+%%% Technical reports
 @techreport{barber96dual,
   author =       "Andrew Barber",
   title =        "Dual Intuitionistic Linear Logic",
   number =       "ECS-LFCS-96-347",
-  institution =  "Laboratory for Foundations of Computer Sciences, University if Edinburgh",
+  institution =  "Laboratory for Foundations of Computer Sciences, University 
+                  of Edinburgh",
   year =         1996,
 }
 
 @techreport{cervesato02concurrent,
-  author =       "Iliano Cervesato and Frank Pfenning and David Walker and Kevin Watkins",
+  author =       "Iliano Cervesato and Frank Pfenning and David Walker and 
+                  Kevin Watkins",
   title =        "A Concurrent Logical Framework {II}: Examples and Applications",
   number =       "CMU-CS-2002-002",
   institution =  "Department of Computer Science, Carnegie Mellon University",
@@ -554,7 +576,8 @@
 }
 
 @techreport{watkins02concurrent,
-  author =       "Kevin Watkins and Iliano Cervesato and Frank Pfenning and David Walker",
+  author =       "Kevin Watkins and Iliano Cervesato and Frank Pfenning and 
+                  David Walker",
   title =        "A Concurrent Logical Framework {I}: Judgments and Properties",
   number =       "CMU-CS-2002-101",
   institution =  "Department of Computer Science, Carnegie Mellon University",
