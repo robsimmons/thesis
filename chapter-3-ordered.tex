@@ -11,41 +11,127 @@ by programming language designers) has exchange and weakening, and
 {\it ordered} logic, first investigated as a proof theory by Lambek
 \cite{lambek58mathematics}, lacks all three. 
 
-Calling logics like linear, affine, and ordered logic 
-substructural relative to persistent logic, which is structural
-is arguably unfair to the substructural logics. Girard's linear
-logic can express persistent provability using the exponential
+Calling logics like linear, affine, and ordered logic
+\underline{sub}structural relative to persistent logic (which is
+structural) is arguably unfair to the substructural logics. Girard's
+linear logic can express persistent provability using the exponential
 connective ${!}A$, and this idea is generally applicable in
-substructural logics, as observed by Polakow and Pfenning who
-applied it to Lambek's ordered logic \cite{}.
+substructural logics -- for instance, it was applied by Polakow and
+Pfenning to Lambek's ordered logic
+\cite{polakow99natural}.\robnote{Check citation.} 
 
-it was applied to Lambek's ordered
-logic)
+This section defines a first-order ordered logic that includes a lax
+modality; a fragment of this system will form the basis of our logical
+framework in the next section. The full focusing system for ordered
+lax logic is presented in this chapter in keeping with Andreoli's
+insistance that we avoid the confusion that results from conflating
+``defining a foundational paradigm or a [logic] programming language
+(two objectives that should clearly be kept separate)''
+\cite{andreoli01focussing}. This concern is applicable for logical
+frameworks as well as for logic programming langauges. This is, in a
+sense, obviously true -- as Twelf, Lollimon, and Celf show, logical
+frameworks can frequently be given straightforward life as logic
+programming languages
+\cite{pfenning99system,lopez05monadic,schacknielsen08celf}. In this
+case, I believe that a full exposition of this logic is useful because
+of the possibility that many other interesting and tractable logic
+programming languages can be defined as fragments of this logic.
 
- who can generally
-recover all the power of persistent logic through the use of 
-the exponential connective ${!}A$. 
+\section{Ordered linear lax logic}
 
-The name ``substructural logic'' arguably gives short schrift to the
-these logics, which 
-
-
-Another name that would work
-is {\it structural} logic. In formal presentations of logic, this
-persistence manifests itself as the so-called {\it structural
-  properties} of hypothetical reasoning -- {\it weakening} (which
-allows hypotheses to go unused), {\it contraction} (which allows
-hypotheses to be duplicated for reuse), and {\it exchange} (which
-enforces that the ordering of hypotheses is not meaningful)
-\cite{gentzen35untersuchungen}.
-
-\section{Ordered linear logic}
-
-Ordered linear logic 
+Ordered linear logic was the subject of Polakow's thesis
+\cite{polakow01ordered}, and the adaptation of Fairtlough and
+Mendler's lax logic \cite{fairtlough95propositional} (as reconstructed
+by Pfenning and Davies \cite{pfenning01judgmental}) to linear logic is
+the basis of the CLF logical framework
+\cite{watkins02concurrent}. Putting the pieces together 
+is a straightforward proof-theoretic exercise. There are three contexts
+relevant to the propositional presentation of ordered linear lax logic.
+The persistent context $\Gamma$ and the linear context $\Delta$
+are multisets as before (so we think of $\Delta_1, \Delta_2$ as being
+equal to $\Delta_2, \Delta_1$, for instance). The ordered context
+$\Omega$ is a sequence of propositions (as in Gentzen's original
+presentation of sequent calculi) and not a multiset, so the two ordered
+contexts $\Omega_1, \Omega_2$ and $\Omega_2, \Omega_1$ are, in general,
+not the same.
 
 \input{figs/fig-ordered-prop}
 
+There are two judgments in ordered linear lax logic. The primary
+judgment is $\oseq{\Gamma}{\Delta}{\Omega}{\istrue{A}}$, which says
+that $A$ is an (ephemeral, ordered) resource derivable from the
+persistent resources in $\Gamma$, the ephemeral resources in $\Delta$,
+and the ephemeral, ordered resources in $\Omega$. There is also a
+second judgment, $\oseq{\Gamma}{\Delta}{\Omega}{\islax{A}}$. The
+judgment $\islax{A}$ is usually interpreted as truth under an
+unspecified constraint; one defining characteristic of the lax
+modality is that it if $\istrue{A}$ is derivable with 
+some resources then $\islax{A}$ is derivable with the same resources.
 
+Compare this to the relationship between persistent and lax truth in
+linear logic, where the defining characteristic is that a persistent
+resource (associated with judgments of the form 
+$\ispers{A}$ in $\Gamma$) can
+always satisfy the need for an ephemeral resource (associated with
+judgments of the form $\iseph{A}$ in $\Delta$). In the previous
+chapter, we first encoded this relationship as an explicit rule
+${\it copy}$ rule:
+\[
+\infer[{\it copy}]
+{\seq{\Gamma, \ispers{A}}{\Delta}{\iseph{C}}}
+{\seq{\Gamma, \ispers{A}}{\Delta, \iseph{A}}{\iseph{C}}}
+\]
+In Section~\ref{sec:linnote}, based on a discussion of synthetic
+connectives under the atom optimization, we considered a revision
+to this notaiton 
+\[
+\infer[{\oplus}_L]
+{\altseq{\Gamma}{\Delta/A \otimes B}{\iseph{C}}}
+{\altseq{\Gamma}{\Delta, \iseph{A}}{\iseph{C}}
+ &
+ \altseq{\Gamma}{\Delta, \iseph{B}}{\iseph{C}}}
+\]
+
+Lax truth can be considered along the same lines, accoutning for the
+fact that we're now using the much briefer $\istrue{A}$ instead of
+$\iseph{A}$ to capture the judgment assocated with ordered, ephemeral
+resources.  To follow existing judgmental presentations of lax logic,
+we would include a distinct rule ${\it lax}$ that derives lax truth
+from regular truth.
+\[
+\infer[{\it lax}]
+{\Gamma; \Delta; \Omega \longrightarrow \islax{A}}
+{\Gamma; \Delta; \Omega \longrightarrow \istrue{A}}
+\]
+The alternative is to rewrite all the right rules with a notation
+$\orseq{\Gamma}{\Delta}{\Omega}{A}$ that matches both 
+judgments of the form $\otseq{\Gamma}{\Delta}{\Omega}{A}$
+and judgments of the form $\oseq{\Gamma}{\Delta}{\Omega}{\islax{A}}$.
+\[
+\infer[{\oplus}_{R1}]
+{\orseq{\Gamma}{\Delta}{\Omega}{A \oplus B}}
+{\otseq{\Gamma}{\Delta}{\Omega}{A}}
+\qquad
+\infer[{\oplus}_{R2}]
+{\orseq{\Gamma}{\Delta}{\Omega}{A \oplus B}}
+{\otseq{\Gamma}{\Delta}{\Omega}{B}}
+\]
+
+The related notation on the left-hand side is 
+$\olseq{\Gamma}{\Delta}{\Omega_L}{A}{\Omega_R}$, which matches
+the $\oseq{\Gamma}{\Delta'}{\Omega'}{U}$ if
+\begin{itemize}
+\item $\Omega' = \Omega_L, A, \Omega_R$ and $\Delta' = \Delta$;
+\item $\Omega' = \Omega_L, \Omega_R$ and $\Delta' = \Delta, A$;
+\item $\Omega' = \Omega_L, \Omega_R$, $\Delta' = \Delta$, and $A \in \Gamma$.
+\end{itemize}
+This style of presentation, expressed in Figure~\ref{fig:ordered-prop},
+leaves both the ${\it copy}$ and ${\it place}$ rules of Polakow's 
+presentation as admissible.
+
+\subsection{First-order logic}
+
+The presentation in Figure~\ref{fig:ordered-prop} is 
 
 \section{Substructural contexts}
 
@@ -177,4 +263,4 @@ is the statement that $x{:}A \in \Gamma$, whereas in
 
 \section{Soundness and completeness}
 
-\section{Ordered linear logic}
+
