@@ -70,11 +70,15 @@
 \newcommand{\oseq}[4]{{#1};{#2};{#3} \Rightarrow {#4} \mathstrut}
 \newcommand{\oiseq}[2]{\oseq{#1}{\cdot}{/{#2}/}{/{#2}/}}
 \newcommand{\orseq}[4]{\oseq{#1}{#2}{{#3}}{/{#4}/}}
+\newcommand{\orfseq}[4]{\ofirstseq{\Psi}{#1}{#2}{{#3}}{/{#4}/}}
 \newcommand{\otseq}[4]{\oseq{#1}{#2}{{#3}}{\istrue{#4}}}
 \newcommand{\olseq}[5]{\oseq{#1}{#2}{{#3}/{#4}/{#5}}{U}}
+\newcommand{\olfseq}[5]{\ofirstseq{\Psi}{#1}{#2}{{#3}/{#4}/{#5}}{U}}
 \newcommand{\opseq}[4]{\oseq{#1}{#2}{{#3},{#4}}{U}}
+\newcommand{\opfseq}[4]{\ofirstseq{\Psi}{#1}{#2}{{#3},{#4}}{U}}
 
-
+\newcommand{\frameoff}[2]{{#1}\mbox{\it [}{#2}\mbox{\it ]}}
+\newcommand{\tackon}[2]{{#1}\mbox{\it [\hspace{-3pt}[}{#2}\mbox{\it ]\hspace{-3pt}]}}
 
 \newcommand{\urfoc}[3]{{#1};{#2} \longrightarrow [{#3}] \mathstrut}
 \newcommand{\ulfoc}[4]{{#1};{#2} \,[#3] \longrightarrow {#4} \mathstrut}

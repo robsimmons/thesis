@@ -1,0 +1,43 @@
+\begin{figure}
+\[
+\infer[{\exists}_R]
+{\orfseq{\Gamma}{\Delta}{\Omega}{\exists x{:}\tau.B}}
+{\Psi \vdash t : \tau 
+ &
+ \otseq{\Gamma}{\Delta}{\Omega}{B[t/x]}}
+\quad
+\infer[{\exists}_L]
+{\olfseq{\Gamma}{\Delta}{\Omega_L}{\exists x{:}\tau.B}{\Omega_R}}
+{\ofirstseq{\Psi,x{:}\tau}{\Gamma}{\Delta}{\Omega_L,B,\Omega_R}{U}}
+\]
+\[
+\infer[{\forall}_R]
+{\orfseq{\Gamma}{\Delta}{\Omega}{\forall x{:}\tau.B}}
+{\ofirstseq{\Psi,x{:}\tau}{\Gamma}{\Delta}{\Omega}{\istrue{B}}}
+\quad
+\infer[{\forall}_L]
+{\olfseq{\Gamma}{\Delta}{\Omega_L}{\forall x{:}\tau.B}{\Omega_R}}
+{\Psi \vdash t : \tau
+ &
+ \opfseq{\Gamma}{\Delta}{\Omega_L}{B[t/x],\Omega_R}}
+\]
+\[
+\infer[{\doteq}_R]
+{\orfseq{\Gamma}{\Delta}{\Omega}{t \doteq s}}
+{}
+\]
+\[
+\infer[{\doteq}_L]
+{\olfseq{\Gamma}{\Delta}{\Omega_L}{t \doteq s}{\Omega_R}}
+{\forall(\Psi' \vdash \theta : \Psi). 
+ &
+ \theta t = \theta s 
+ &
+ \longrightarrow
+ &
+ \ofirstseq{\Psi'}{\theta\Gamma}{\theta\Delta}{\theta\Omega_L,\theta\Omega_R}{\theta U}}
+\]
+
+\caption{First order ordered linear lax logic.}
+\label{fig:ordered-fo}
+\end{figure}

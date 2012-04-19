@@ -84,6 +84,10 @@
 \medskip
 {\it Additive conjunction}
 \[
+\infer[{\top}_R]
+{\orseq{\Gamma}{\Delta}{\Omega}{\top}}
+{}
+\quad
 \infer[{\with}_{L1}]
 {\olseq{\Gamma}{\Delta}{\Omega_L}{A \with B}{\Omega_R}}
 {\opseq{\Gamma}{\Delta}{\Omega_L}{A, \Omega_R}}
@@ -130,45 +134,6 @@
 {\oseq{\Gamma}{\Delta}{\Omega_L, A, \Omega_R}{\islax{C}}}
 \]
 
-% {\it First-order}
-% \[
-% \infer[{\exists}_R]
-% {\orseq{\Gamma}{\Delta}{\Omega}{\exists x.B}}
-% {\Psi \vdash t 
-%  &
-%  \otseq{\Gamma}{\Delta}{\Omega}{B[t/x]}}
-% \quad
-% \infer[{\exists}_L]
-% {\olseq{\Gamma}{\Delta}{\Omega_L}{\exists x.B}{\Omega_R}}
-% {\ofirstseq{\Psi,x}{\Gamma}{\Delta}{\Omega_L,B,\Omega_R}{U}}
-% \]
-% \[
-% \infer[{\forall}_R]
-% {\orseq{\Gamma}{\Delta}{\Omega}{\forall x.B}}
-% {\ofirstseq{\Psi,x}{\Gamma}{\Delta}{\Omega}{\istrue{B}}}
-% \quad
-% \infer[{\forall}_L]
-% {\olseq{\Gamma}{\Delta}{\Omega_L}{\forall x.B}{\Omega_R}}
-% {\Psi \vdash t
-%  &
-%  \opseq{\Gamma}{\Delta}{\Omega_L}{B[t/x],\Omega_R}}
-% \]
-% \[
-% \infer[{\doteq}_R]
-% {\orseq{\Gamma}{\Delta}{\Omega}{t \doteq s}}
-% {}
-% \]
-% \[
-% \infer[{\doteq}_L]
-% {\olseq{\Gamma}{\Delta}{\Omega_L}{t \doteq s}{\Omega_R}}
-% {\forall(\Psi' \vdash \theta : \Psi). 
-%  &
-%  \theta t \doteq \theta s 
-%  &
-%  \longrightarrow
-%  &
-%  \ofirstseq{\Psi'}{\theta\Gamma}{\theta\Delta}{\theta\Omega_L,\theta\Omega_R}{\theta U}}
-% \]
-\caption{Propositional ordered linear logic.}
+\caption{Propositional ordered linear lax logic.}
 \label{fig:ordered-prop}
 \end{figure}

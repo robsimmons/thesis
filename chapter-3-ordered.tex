@@ -131,15 +131,169 @@ presentation as admissible.
 
 \subsection{First-order logic}
 
-The presentation in Figure~\ref{fig:ordered-prop} is 
+The presentation in Figure~\ref{fig:ordered-prop} is propositional; by 
+uniformly adding a first-order context $\Psi$ to all sequents, however,
+it can be treated as first-order, and we can define existential
+quantification and first-order equality in Figure~\ref{fig:ordered-fo}.
+
+\input{figs/fig-ordered-fo}
+
+The equality judgment $t \doteq s$ deserves some attention. It is a
+higher-order judgment, in the sense that it reflects over the
+definition of simultaneous term substitutions
+$\Psi' \vdash \theta : \Psi$ and equality of first-order terms $t =
+s$. This is a rule that, in general, wih have countably many premises; 
+in the case of a trivially satisfiable equality problem like 
+$x \doteq x$ it will have one premise for each well-formed substitution
+that substitutes a term of the appropriate type for $x$. This style
+of presentation mirrors \cite{}.
+
+There are two important special cases. First, an unsatisfiable 
+equation on the left implies a contradiction, and the left rule
+for equality is equivalent to one with no premises. For instance, this
+means that
+\[
+\infer
+{\olfseq{\Gamma}{\Delta}{\Omega_L}{0 \doteq 1}{\Omega_R}}
+{}
+\]
+is derivable. The other important special case is when
+$t$ and $s$ have a  {\it most general unifier} $\theta_{\it mgu}$, 
+which just means that for all $\Psi' \vdash \theta : \Psi$ such that 
+$\theta t = \theta s$,
+it is the case that $\theta = \theta' \circ \theta_{\it mgu}$ for some 
+$\theta'$.\footnote{Where $\circ$ is composition -- 
+$(\theta' \circ \theta_{\it mgu})t = \theta'(\theta t)$.} In this
+case, the left rule for equality is equivalent to the following
+rule:
+\[
+\infer
+{\olfseq{\Gamma}{\Delta}{\Omega_L}{t \doteq s}{\Omega_R}}
+{{\it mgu}(t, s) = \Psi \vdash \theta : \Psi'
+ &
+ \ofirstseq{\Psi'}{\theta\Gamma}{\theta\Delta}{\theta\Omega_L, \theta\Omega_R}{\theta U}}
+\]
+
+We have not yet thoroughly specified the type and term structure of
+first-order individuals; in the next section we clarify that these
+types and terms will actually be types and terms of Canonical LF.
 
 \section{Substructural contexts}
+
+First-ordered linear lax logic has a lot of contexts -- the persistent
+context $\Gamma$ the linear context $\Delta$, and the ordered context
+$\Omega$, not to mention the first-order context $\Psi$. In most rules
+these contexts just hang around, obscuring the logic's presentation
+and ensuring that the {\LaTeX} code of figures and displays remains
+permanently unreadable. And there are yet more contexts we might want to 
+add, such as the affine contexts present in the Celf implementation.
+
+In this section, we will consider a more compact way of dealing with
+the contexts which we think of as containing resources (persistent,
+affine, linear, or ordered), though we will maintain the distinction
+between resource contexts and first-order contexts.  The first step
+has already been take in Figure~\ref{fig:linear-alt} and
+Figure~\ref{fig:ordered-prop}, which make it quite obvious that the
+context-{\it matching} notation that we perform in the conclusion of
+an inference rule may not be the same as the context-{\it extending}
+notation we use in the premise of a rule. 
+
+We will treat unified contexts fundamentally as mappings from
+variables ($x$, $y$, $z$, etc.) to judgments $A\,{\it lvl}$. For the
+purposes of representing ordered linear lax logic, however, we could
+also think of unified contexts of the form
+\[
+\Xi ::= \cdot 
+  \mid \Xi, x{:}\ispers{A}
+  \mid \Xi, x{:}\iseph{A}
+  \mid \Xi, x{:}\istrue{A}
+\]
+where these three judgments are associated with propositions from the
+persistent, linear, and ordered contexts $\Gamma$, $\Delta$, and
+$\Omega$ (respectively). We will refer to substructural contexts as
+$\Xi$ when necessary to avoid confusion with linear contexts $\Delta$,
+though we will generally prefer the metavariable $\Delta$ to describe
+substructural contexts.
+
+we need three
+judgments in the context: $\ispers{A}$, the persistent judgment
+(otherwise associated with the context $\Gamma$); $\iseph{A}$, the
+ephemeral judgment (otherwise associated with the context $\Delta$);
+and the ordered judgment $\istrue{A}$ (otherwise associated with the
+context $\Omega$). For the focused system we will need one more, 
+$A\,{\it susp}$, associated with suspended positive propositions
+$\langle A^+ \rangle$. 
+
+\subsection{Fundamental operations on contexts}
+
+The fundamental constructor of a singleton context is the 
+$x{:}A\,{\it lvl}$ 
+
+The second fundamental operation on a context is splitting
+the context into an inside and an outside: we say
+$\Xi = \frameoff{\Theta}{\Xi'}$. 
+If we 
+$\Xi = \Gamma; \Delta, \Delta'; \Omega_L, \Omega, \Omega_R$,
+the one possible match is to let 
+$\Theta = \Gamma; \Delta; \Omega_L, \Box, \Omega_R$ and to 
+let $\Xi = \Gamma; \Delta'; \Omega$. 
+
+\[
+\infer[]
+{\frameoff{\Theta}{A \oplus B} \Rightarrow U}
+{\tackon{\Theta}{x{:}\istrue{A}} \Rightarrow U
+ &
+ \tackon{\Theta}{y{:}\istrue{B}} \Rightarrow U}
+\]
+
+We can also use this notation to describe the one of the
+cut principles for ordered linear lax logic. 
+\[
+\infer-[{\it cut}]
+{\frameoff{\Theta}{\Xi} \Rightarrow \istrue{C}}
+{\Xi \Rightarrow \istrue{A}
+ &
+ \tackon{\Theta}{x{:}A\,{\it true}} \Rightarrow \istrue{C}}
+\]
+The idea that the operators $\frameoff{\Theta}{\Xi}$
+and $\tackon{\Theta}{\Xi}$ are sufficient to describe the 
+cut principle is related to the display property, which fails
+for some reasonable logics, such as Reed's queue logic
+\cite{reed09queue}.
+
+\subsection{Multiplicative operatons}
+
+\subsection{Exponential operations}
+
+\[
+\infer-[{\it cut}]
+{\frameoff{\Theta}{\Xi} \Rightarrow \istrue{C}}
+{\Xi{\downharpoonright}_{\it lvl} \Rightarrow \istrue{A}
+ &
+ \tackon{\Theta}{x{:}A\,{\it lvl}} \Rightarrow \istrue{C}}
+\quad
+\infer-[\{{\it cut}\}]
+{\frameoff{\Theta}{\Xi} \Rightarrow \islax{C}}
+{\Xi \Rightarrow \islax{A}
+ &
+ \tackon{\Theta}{x{:}\istrue{A}} \Rightarrow \istrue{C}}
+\]
+
+
+We need one fundamental . A context $\Xi$
+
+The fundamental constructor of a context is 
+$x{:}A\,{\it lvl}$
+
+
+
+We now have a {\it lot} of 
 
 We will treat {\it substructural contexts} $\Delta$ are maps from {\it
   variables} to {\it judgments}. There are two kinds of variables: 
 those that map {\it extent}.
 
-${\mbox{\it [}}$
+
 
 
 Two of the fundamental propeties of $\Delta$ are 
