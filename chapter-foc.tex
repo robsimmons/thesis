@@ -2,11 +2,13 @@
 \chapter{Linear logic}
 
 In this chapter, we present linear logic
-(Section~\ref{sec:introlinlog}) as a logic with the ability to express
+as a logic with the ability to express
 aspects of state and state transition in a natural way. In
-Section~\ref{sec:linlogicalframeworks}, we discuss why the normal
-presentation of linear logic is insufficient as a {\it logical
-  framework} -- proofs in linear logic suffice to establish the
+Section~\ref{sec:introlinlog} we discuss a traditional account of 
+linear logic, and in
+Section~\ref{sec:linlogicalframeworks}, we discuss why this
+account is insufficient as a {\it logical
+  framework} -- derivations in linear logic suffice to establish the
 existence of a series of state transitions but do not adequately
 capture the structure of those transitions. 
 
@@ -30,7 +32,7 @@ Section~\ref{sec:linconcurrenteq}, we describe {\it concurrent
 by Watkins et.~al to solve this problem, and also consider the
 limitations of concurrent equality in a fully focused setting.
 
-In Chapter 3, we will define a much richer ordered lax logic and prove
+In Chapter 3, we will define a much richer ordered linear lax logic and prove
 a focusing result that incorporates the atom and bang optimizations
 from Section~\ref{sec:linhack}. In Chapter 4 we will carve out a
 fragment of this logic that forms the basis of the logical framework
@@ -170,7 +172,7 @@ proofs in a logic (like linear logic) to describe the structures we're
 really interested in (like the process of obtaining a robot).  There
 are two related reasons why linear logic as described in
 Figure~\ref{fig:linear} is not immediately useful as a logical
-framework. First, the structure of the proof in
+framework. First, the structure of the derivation in
 Figure~\ref{fig:unfocused-robot} doesn't really match the intuitive
 two-step transition that we sketched out above. Second, there are {\it
   lots} of derivations of our example proposition according to the
@@ -182,8 +184,8 @@ differences represent inessential nondeterminism in proof construction
 or in proof search -- they just get in the way of the structure that
 we are trying to capture. 
 
-This is a general problem in the construction of logical frameworks,
-and we'll discuss two solutions in the context of LF, a logical
+This is a general problem in the construction of logical frameworks.
+We'll discuss two solutions in the context of LF, a logical
 framework based on dependent type theory that has proved to be a
 suitable means of encoding a wide variety of deductive systems, such
 as logics and programming languages \cite{harper93framework}.  The
@@ -224,7 +226,7 @@ $y \not\in {\it FV}(N)$),
 ($(\lambda x.\,M)N \equiv M[N/x]$ if $x \not\in {\it FV}(N)$), and 
 \item $\eta$-equivalence ($N \equiv \lambda x.N\,x$).
 \end{itemize}
-The weak normalization property for LF establishes that given any
+The weak normalization property for LF establishes that, given any
 typed LF term, we can find an equivalent term that is $\beta$-normal
 (no $\beta$-redexes of the form $(\lambda x.M) N$ exist) and
 $\eta$-long (replacing $N$ with $\lambda x.N\,x$ anywhere would
@@ -279,7 +281,8 @@ that is reinforced by the discussion of {\it synthetic inference
 \label{sec:foclinlog}
 
 Andreoli's original motivation for introducing focusing was not to
-describe a logical framework, it was to describe a paradigm of logic
+describe a logical framework, it was to describe a 
+foundation for logic
 programming based on proof search in classical linear logic
 \cite{andreoli92logic}. The existence of multiple proofs that differ
 in inessential ways is particularly problematic for proof search, as
@@ -385,12 +388,7 @@ proof of $A$ if and only if there is a focused proof of
 $A^\oplus$.\footnote{The two exceptions are Zeilberger completeness
   proof in classical persistent logic \cite{zeilberger08unity} and my
   proof in intuitionistic persistent logic
-  \cite{simmons11structural}.}  The weaker formulation is sufficient
-for our current purposes, so we will discuss, in
-Section~\ref{sec:lincorrectness}, the weaker property of
-polarization-strategy-based correctness, not erasure-based
-correctness.\robnote{Revisit this decision; It really seems like it
-  might be easier to just describe erasure.}
+  \cite{simmons11structural}.}  
 
 \subsection{Focused sequent calculus}
 
@@ -445,17 +443,18 @@ In unfocused sequent calculi, such as the one for linear logic in
 Figure~\ref{fig:linear}, initial sequents are restricted to atomic
 propositions. All sequent calculi, focused or unfocused, have the
 subformula property: every rule breaks down a proposition, either on
-the left or the right. Since the logical interpretation of atomic
+the left or the right, when read from bottom to top. 
+Since the logical interpretation of atomic
 propositions is that they are stand-ins for unknown propositions, we
 are unable to break them down any further. We are therefore only able
 to derive an atomic conclusion or use an atomic premise with the {\it
   init} rule that concludes $\seq{\Gamma}{p}{p}$ and has no premises.
 While the {\it init} rule must be explicitly included as a proof rule,
 it is an instance of an admissible identity theorem:
-$\seq{\Gamma}{A}{A}$ for all $A$. If we substitute in a concrete
+$\seq{\Gamma}{A}{A}$ for all $A$. If we substitute a concrete
 proposition for some atomic proposition, the structure of the proof
 stays exactly the same, except that instances of initial sequents
-become admissible instances of the general identity theorem.
+become admissible instances of the identity theorem.
 
 To my knowledge, all published proof systems for focused logic have
 attempted to replicate this initial rule {\it init}. I believe this to
@@ -690,13 +689,13 @@ do not contain any non-atomic suspended propositions:
       and $\mildseq{\Gamma}{\Delta', [A^-]}{U}$
       (where $\Delta'$ and $U$ are stable),
       then $\mildseq{\Gamma}{\Delta',\Delta}{U}$. 
-\item If $\mildseq{\Gamma}{\Delta}{A^-}$
-      and $\mildseq{\Gamma}{\Delta', A^-}{U}$
-      (where $\Delta$ is stable), 
-      then $\mildseq{\Gamma}{\Delta',\Delta}{U}$. 
 \item If $\mildseq{\Gamma}{\Delta}{A^+}$
       and $\mildseq{\Gamma}{\Delta', A^+}{U}$
       (where $\Delta'$ and $U$ are stable),
+      then $\mildseq{\Gamma}{\Delta',\Delta}{U}$. 
+\item If $\mildseq{\Gamma}{\Delta}{A^-}$
+      and $\mildseq{\Gamma}{\Delta', A^-}{U}$
+      (where $\Delta$ is stable), 
       then $\mildseq{\Gamma}{\Delta',\Delta}{U}$. 
 \item If $\mildseq{\Gamma}{\cdot}{A^-}$
       and $\mildseq{\Gamma, A^-}{\Delta}{U}$,
@@ -710,9 +709,10 @@ hypothesis, either the principal cut formula $A^+$ or $A^-$ gets
 smaller, or else it stays the same and the number of the part
 gets smaller (as when we invoke part 2 when proving part 5). 
 
-Within parts 3 and 5, the first two metrics stay the same while the
-second given derivation gets smaller, and within part 4, the first two
-metrics stay the same while the first given derivation gets smaller.
+Within part 3, the first two
+metrics stay the same while the first given derivation gets smaller,
+and within parts 4 and 5, the first two metrics stay the same while the
+second given derivation gets smaller.
 \end{proof}
 
 \subsection{Correctness of focusing}
@@ -722,18 +722,22 @@ metrics stay the same while the first given derivation gets smaller.
 
 Now we will make precise the correctness for a focused, polarized
 logic that was discussed in Section~\ref{sec:linpolar}: that there is
-a unfocused proof of $A$ if and only if there is a focused proof of
-$A^\oplus$. The proof require lifting of our erasure function and our
-natural polarization strategy to contexts and succeedants, which is
-done in Figure~\ref{fig:lin-shift-ctx}. Soundness is established on
-the basis of erasure as in \cite{simmons11structural}, but as
-discussed Section~\ref{sec:linpolar}, we will give the slightly
-simpler polarization-strategy-based proof of completeness.
+a unfocused proof of $(A^+)^\circ$ if and only if there is a focused proof of
+$A^+$. The proof require lifting of our erasure function 
+to contexts and succeedants, which is
+done in Figure~\ref{fig:lin-shift-ctx}. Note that erasure is only
+defined on focused sequents $\mildseq{\Gamma}{\Delta}{U}$ when
+$\Delta$ and $U$ contain only atomic suspended propositions; therefore
+Theorems~\ref{thm:linfocsound}~and~\ref{thm:linfoccomplete}, like
+the cut admissibility theorem, 
+have an extra condition that $\Delta$ and $U$ contain 
+only atomic suspended propositions. Soundness and completeness
+are established on the basis of erasure as in \cite{simmons11structural}.
 
 \bigskip
 \begin{theorem}[Soundness of focusing]\label{thm:linfocsound}
-If $\mildseq{\Gamma}{\Delta}{U}$, where $\Delta$ and $U$ contain only
-atomic suspensions, then $\seq{\Gamma^\circ}{\Delta^\circ}{U^\circ}$.
+If $\mildseq{\Gamma}{\Delta}{U}$, 
+then $\seq{\Gamma^\circ}{\Delta^\circ}{U^\circ}$.
 \end{theorem}
 
 \begin{proof}
@@ -744,220 +748,262 @@ atomic suspensions, then $\seq{\Gamma^\circ}{\Delta^\circ}{U^\circ}$.
 \end{proof}
 
 \begin{theorem}[Completeness of focusing]\label{thm:linfoccomplete}
-If $\seq{\Gamma}{\Delta}{C}$,
-then $\mildseq{\Gamma^\ominus}{\Delta^\ominus}{C^\oplus}$. 
+If $\seq{\Gamma^\circ}{\Delta^\circ}{C^\circ}$, where $\Delta$ and $U$ are
+stable,\footnote{Frank Pfenning's 
+  variant of this proof does not require that inversion sequents be stable,
+  but the tradeoff is that he must use a more general statement of 
+  cut admissibility (Theorem~\ref{thm:lincut}) that also makes fewer
+  stability demands.} 
+then $\mildseq{\Gamma}{\Delta}{C}$. 
 \end{theorem}
 
 \begin{proof}
   By induction on the first given derivation. Each rule in 
   Figure~\ref{fig:linear} corresponds to one {\it unfocused admissibility 
-  lemma} that we must prove in the focused system; we give three examples
-  of these unfocused admissibility lemmas here.
+  lemma} that we must prove in the focused system, some extra steps 
+  to take care of leftover shifts. These leftover steps 
+  can be characterized as derivable rules of inference:
+  \[
+  \infer[{\downarrow}{\uparrow}_R]
+  {\mildseq{\Gamma}{\Delta}{{\downarrow}{\uparrow}A^+}}
+  {\mildseq{\Gamma}{\Delta}{A^+}}
+  \quad
+  \deduce{\mathstrut}{=}
+  \quad
+  \infer[{\it focus}_R]
+  {\mildseq{\Gamma}{\Delta}{{\downarrow}{\uparrow}A^+}}
+  {\infer[{\downarrow}_R]
+   {\mildseq{\Gamma}{\Delta}{[{\downarrow}{\uparrow}A^+}]}
+   {\infer[{\uparrow}_R]
+    {\mildseq{\Gamma}{\Delta}{{\uparrow}A^+}}
+    {\mildseq{\Gamma}{\Delta}{A^+}}}}
+  \]\[
+  \infer[{\uparrow}{\downarrow}_L]
+  {\mildseq{\Gamma}{\Delta, {\uparrow}{\downarrow}A^-}{U}}
+  {\mildseq{\Gamma}{\Delta, A^-}{U}}
+  \quad
+  \deduce{\mathstrut}{=}
+  \quad
+  \infer[{\it focus}_L]
+  {\mildseq{\Gamma}{\Delta, {\uparrow}{\downarrow}A^-}{U}}
+  {\infer[{\uparrow}_L]
+   {\mildseq{\Gamma}{\Delta, [{\uparrow}{\downarrow}A^-]}{U}}
+   {\infer[{\downarrow}_R]
+    {\mildseq{\Gamma}{\Delta, {\downarrow}A^-}{U}}
+    {\mildseq{\Gamma}{\Delta, A^-}{U}}}}
+  \]
+%   The other two are admissible:
+%   \[
+%   \infer-[\dedownup_R]
+%   {\mildseq{\Gamma}{\Delta}{A^+}}
+%   {\mildseq{\Gamma}{\Delta}{{\downarrow}{\uparrow}A^+}}
+%   \quad
+%   \deduce{\mathstrut}{=}
+%   \quad
+%   \infer-[{\it cut}(3)]
+%   {\mildseq{\Gamma}{\Delta}{A^+}}
+%   {\mildseq{\Gamma}{\Delta}{{\downarrow}{\uparrow}A^+}
+%    &
+%    \infer[{\downarrow}_L]
+%    {\mildseq{\Gamma}{{\downarrow}{\uparrow}A^+}{A^+}}
+%    {\infer[{\it focus}_L]
+%     {\mildseq{\Gamma}{{\uparrow}A^+}{A^+}}
+%     {\infer[{\uparrow}_L]
+%      {\mildseq{\Gamma}{[{\uparrow}A^+]}{A^+}}
+%      {\infer-[\eta^+]
+%       {\mildseq{\Gamma}{A^+}{A^+}}
+%       {\infer[{\it focus}_R]
+%        {\mildseq{\Gamma}{\langle A^+ \rangle}{A^+}}
+%        {\infer[{\it id}^+]
+%         {\mildseq{\Gamma}{\langle A^+ \rangle}{[A^+]}}
+%         {}}}}}}}
+%   \]\[
+%   \infer-[\deupdown_L]
+%   {\mildseq{\Gamma}{\Delta, A^-}{U}}
+%   {\mildseq{\Gamma}{\Delta, {\uparrow}{\downarrow}A^-}{U}}
+%   \quad
+%   \deduce{\mathstrut}{=}
+%   \quad
+%   \infer-[{\it cut}(4)] 
+%   {\mildseq{\Gamma}{\Delta, A^-}{U}}
+%   {\infer[{\uparrow}_R]
+%    {\mildseq{\Gamma}{\Delta, A^-}{{\uparrow}{\downarrow}A^-}}
+%    {\infer[{\it focus}_R]
+%     {\mildseq{\Gamma}{\Delta, A^-}{{\downarrow}A^-}}
+%     {\infer[{\downarrow}_R]
+%      {\mildseq{\Gamma}{\Delta, A^-}{[{\downarrow}A^-]}}
+%      {\infer-[\eta^-]
+%       {\mildseq{\Gamma}{\Delta, A^-}{A^-}}
+%       {\infer[{\it focus}_R]
+%        {\mildseq{\Gamma}{\Delta, A^-}{\langle A^- \rangle}}
+%        {\infer[{\it id}^-]
+%         {\mildseq{\Gamma}{\Delta, [ A^- ]}{\langle A^- \rangle}}
+%         {}}}}}}
+%    &
+%    \mildseq{\Gamma}{\Delta, {\uparrow}{\downarrow}A^-}{U}}
+%   \]
+We will describe a few cases to illustrate how unfocused admissibility
+lemmas work.
 
-  Rule {\it copy}: Given
-  $\mildseq{\Gamma^\ominus, A^\ominus}{\Delta^\ominus, A^\ominus}{C^\oplus}$, we
-  have to prove 
-  $\mildseq{\Gamma^\ominus, A^\ominus}{\Delta^\ominus}{C^\oplus}$:
-  {\small \[
-  \infer-[{\it cut}(3)]
-  {\mildseq{\Gamma^\ominus, A^\ominus}{\Delta^\ominus}{C^\oplus
-}}
+  Rule {\it copy}: We are given 
+  $\seq{\Gamma^\circ, A}{\Delta^\circ, A}{U^\circ}$, which is
+  used to derive $\seq{\Gamma^\circ, A}{\Delta^\circ, A}{U^\circ}$.
+  We know $A = (A^-)^\circ$. By the induction hypothesis, we have
+  $\mildseq{\Gamma, A^-}{\Delta, A^-}{C}$, and we conclude
+  with the unfocused admissibility lemma ${\it copy}_u$:
+  \[
+  \infer-[{\it cut}(4)]
+  {\mildseq{\Gamma, A^-}{\Delta}{U}}
   {\infer-[\eta^-]
-   {\mildseq{\Gamma^\ominus, A^\ominus}{\cdot}{A^\ominus}}
+   {\mildseq{\Gamma, A^-}{\cdot}{A^-}}
    {\infer[{\it id}^-]
-    {\mildseq{\Gamma^\ominus, A^\ominus}{\cdot}{\langle A^\ominus \rangle}}
+    {\mildseq{\Gamma, A^-}{\cdot}{\langle A \rangle}}
     {}}
    &
-   \mildseq{\Gamma^\bullet, A^\ominus}{\Delta^\bullet, A^\ominus}{C^\oplus}}
-  \]}
+   \mildseq{\Gamma, A}{\Delta, A}{C}}
+  \]
 
-  Rule $\lolli_L$: Given
-  $\mildseq{\Gamma^\ominus}{\Delta^\ominus}{A^\oplus}$ and
-  $\mildseq{\Gamma^\ominus}{\Delta_A^\ominus, B^\ominus}{C^\oplus}$, we must prove
-  $\mildseq{\Gamma^\ominus}{\Delta^\ominus, \Delta_A^\ominus, (A \lolli B)^\ominus}
-    {C^\oplus}$ which is 
-  the same as
-  $\mildseq{\Gamma^\ominus}
-    {\Delta^\ominus, \Delta_A^\ominus, A^\oplus \lolli B^\ominus}
-    {C^\oplus}$.
-  {\small \[
-  \infer-[{\it cut}(4)] 
-  {\mildseq{\Gamma^\ominus}
-    {\Delta^\ominus, \Delta_A^\ominus, A^\oplus \lolli B^\ominus}
-    {C^\oplus}}
-  {\infer-[{\it cut}(4)]
-   {\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\oplus \lolli B^\ominus}
-     {{\downarrow}B^\ominus}}
-   {{\mildseq{\Gamma^\ominus}{\Delta^\ominus}{A^\oplus}}
+  Rule $\lolli_L$: We are given 
+  $\seq{\Gamma^\circ}{\Delta_A^\circ}{A}$ and
+  $\seq{\Gamma^\circ}{\Delta^\circ, B}{U^\circ}$, which are used 
+  to derive $\seq{\Gamma^\circ}{\Delta_A^\circ, \Delta^\circ, A \lolli B}{U}$.
+  We know $A \lolli B = (C^-)^\circ$; by induction on the structure of
+  $C^-$ there exist $A^+$ and
+  $B^-$ such that $A = (A^+)^\circ$, $B = (B^-)^\circ$, and 
+  $C^- = 
+   ({\uparrow}{\downarrow}\ldots{\uparrow}{\downarrow}(A^+ \lolli B^-))^\circ$.
+  By the induction hypothesis, we have
+  $\mildseq{\Gamma}{\Delta_A}{A}$ and
+  $\mildseq{\Gamma}{\Delta, B}{U}$, and we conclude
+  by the unfocused admissibility lemma ${\lolli}_{uL}$:
+  \[
+  \infer=[{\uparrow}{\downarrow}_L]
+  {\mildseq{\Gamma}
+   {\Delta_A, \Delta, 
+    {\uparrow}{\downarrow}\ldots{\uparrow}{\downarrow}(A^+ \lolli B^-)}{U}}
+  {\infer-[{\it cut}(3)]
+   {\mildseq{\Gamma}{\Delta_A, \Delta, A^+ \lolli B^-}{U}}
+   {\infer-[{\it cut}(3)]
+    {\mildseq{\Gamma}{\Delta_A, A^+ \lolli B^-}{{\downarrow}B^-}}  
+    {\mildseq{\Gamma}{\Delta_A}{A^+}
+     &
+     \infer-[\eta^+]
+     {\mildseq{\Gamma}{A^+, A^+ \lolli B^-}{{\downarrow}B^-}}
+     {\infer[{\it focus}_R]
+      {\mildseq{\Gamma}{\langle A^+ \rangle, A^+ \lolli B^-}{{\downarrow}B^-}}
+      {\infer[{\downarrow}_R]
+       {\mildseq{\Gamma}{\langle A^+ \rangle, A^+ \lolli B^-}
+        {[{\downarrow}B^-}]}
+       {\infer-[\eta^-]
+        {\mildseq{\Gamma}{\langle A^+ \rangle, A^+ \lolli B^-}
+         {B^-}}
+        {\infer[{\it focus}_L]
+         {\mildseq{\Gamma}{\langle A^+ \rangle, A^+ \lolli B^-}
+          {\langle B^- \rangle}}
+         {\infer[{\lolli}_L]
+          {\mildseq{\Gamma}{\langle A^+ \rangle, [ A^+ \lolli B^- ]}
+           {\langle B^- \rangle}}
+          {\infer[{\it id}^+]
+           {\mildseq{\Gamma}{\langle A^+ \rangle}
+            {[A^+]}}
+           {}
+           &
+           \infer[{\it id}^-]
+           {\mildseq{\Gamma}{[B^-]}{\langle B^- \rangle}}
+           {}}}}}}}}
     &
-    \infer-[{\eta}^+]
-    {\mildseq{\Gamma^\ominus}{A^\oplus \lolli B^\ominus, A^\oplus}
-     {{\downarrow}B^\ominus}}
-    {\infer[{\it focus}_R]
-     {\mildseq{\Gamma^\ominus}{A^\oplus \lolli B^\ominus, \langle A^\oplus \rangle}
-       {{\downarrow}B^\ominus}}
-     {\infer[{\downarrow}_R]
-      {\mildseq{\Gamma^\ominus}
-        {A^\oplus \lolli B^\ominus, \langle A^\oplus \rangle}
-        {[{\downarrow}B^\ominus}]}
-      {\infer-[\eta^-]
-       {\mildseq{\Gamma^\ominus}
-         {A^\oplus \lolli B^\ominus, \langle A^\oplus \rangle}
-         {B^\ominus}}
-       {\infer[{\it focus}_L]
-        {\mildseq{\Gamma^\ominus}
-         {A^\oplus \lolli B^\ominus, \langle A^\oplus \rangle}
-         {\langle B^\ominus \rangle}}
-        {\infer[{\lolli}_L]
-         {\mildseq{\Gamma^\ominus}
-         {[A^\oplus \lolli B^\ominus], \langle A^\oplus \rangle}
-         {\langle B^\ominus \rangle}}
-         {\infer[{\it id}^+]
-          {\mildseq{\Gamma^\ominus}{\langle A^\oplus \rangle}{[A^\oplus]}}
-          {}
-          &
-          \infer[{\it id}^-]
-          {\mildseq{\Gamma^\ominus}{[B^\ominus]}{\langle B^\ominus \rangle}}
-          {}}}}}}}}
-   &
-   {\infer[{\downarrow}_L]
-    {\mildseq{\Gamma^\ominus}{\Delta_A^\ominus, {\downarrow}B^\ominus}
-      {C^\oplus}}
-    {\mildseq{\Gamma^\ominus}{\Delta_A^\ominus, B^\ominus}
-      {C^\oplus}}}}
-  \]}
-
-  Rule $\lolli_R$: Given 
-  $\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\ominus}{B^\oplus}$, we must
-  prove 
-  $\mildseq{\Gamma^\ominus}{\Delta^\ominus}{(A \lolli B)^\oplus}$ which is the
-  same as 
-   $\mildseq{\Gamma^\ominus}{\Delta^\ominus}
-    {{\downarrow}(A^\oplus \lolli B^\ominus)}$. The core of the 
-  proof is this derivation:
-  {\small \[
-  \infer-[{\it cut}(3)]
-  {\mildseq{\Gamma^\ominus}{\Delta^\ominus}
-    {{\downarrow}(A^\oplus \lolli B^\ominus)}}
-  {\infer[{\lolli}_R]
-   {\mildseq{\Gamma^\ominus}{\Delta^\ominus}
-     {{\downarrow}{\uparrow}A^\oplus \lolli {\uparrow}{\downarrow}B^\ominus}}  
-   {\infer[{\downarrow}_L]
-    {\mildseq{\Gamma^\ominus}{\Delta^\ominus, {\downarrow}{\uparrow}A^\oplus}
-      {{\uparrow}{\downarrow}B^\ominus}}
-    {\infer[{\uparrow}_R]
-     {\mildseq{\Gamma^\ominus}{\Delta^\ominus, {\uparrow}A^\oplus}
-      {{\uparrow}{\downarrow}B^\ominus}}
-     {\mildseq{\Gamma^\ominus}{\Delta^\ominus, {\uparrow}A^\oplus}
-      {{\downarrow}B^\ominus}}}}
-   &
-   \infer[{\it focus}_R]
-   {\mildseq{\Gamma}{{\downarrow}{\uparrow}A^\oplus \multimap B^\ominus}
-      {{\downarrow}(A^\oplus \lolli B^\ominus)}}
-   {\infer[{\downarrow}_R]
-    {\mildseq{\Gamma^\ominus}
-      {{\downarrow}{\uparrow}A^\oplus \multimap {\uparrow}{\downarrow}B^\ominus}
-      {[ {\downarrow}(A^\oplus \lolli B^\ominus)} ]}
-    {\infer[{\lolli}_R]
-     {\mildseq{\Gamma^\ominus}
-       {{\downarrow}{\uparrow}A^\oplus \multimap {\uparrow}{\downarrow}B^\ominus}
-       {A^\oplus \lolli B^\ominus}}
-     {\infer-[\eta^+]
-      {\mildseq{\Gamma^\ominus}
-        {{\downarrow}{\uparrow}A^\oplus 
-           \multimap {\uparrow}{\downarrow}B^\ominus, 
-         A^\oplus}
-        {B^\ominus}}
-      {\infer-[\eta^-]
-       {\mildseq{\Gamma^\ominus}
-         {{\downarrow}{\uparrow}A^\oplus
-            \multimap {\uparrow}{\downarrow}B^\ominus, 
-          \langle A^\oplus \rangle}
-         {B^\ominus}}
-       {\infer[{\it focus}_L]
-        {\mildseq{\Gamma^\ominus}
-          {{\downarrow}{\uparrow}A^\oplus 
-             \multimap {\uparrow}{\downarrow}B^\ominus, 
-           \langle A^\oplus \rangle}
-          {\langle B^\ominus \rangle}}
-        {\infer[{\lolli}_L]
-         {\mildseq{\Gamma^\ominus}
-           {[ {\downarrow}{\uparrow}A^\oplus 
-              \multimap {\uparrow}{\downarrow}B^\ominus ], 
-            \langle A^\oplus \rangle}
-           {\langle B^\ominus \rangle}}
-         {\infer[{\downarrow}_R]
-          {\mildseq{\Gamma^\ominus}{\langle A^\oplus \rangle}
-           {[{\downarrow}{\uparrow}A^\oplus]}}
-          {\infer[{\uparrow}_R]
-           {\mildseq{\Gamma^\ominus}{\langle A^\oplus \rangle}
-              {{\uparrow}A^\oplus}}
-           {\infer[{\it focus}_R]
-            {\mildseq{\Gamma^\ominus}{\langle A^\oplus \rangle}{A^\oplus}} 
-            {\infer[{\it id}^+]
-             {\mildseq{\Gamma^\ominus}{\langle A^\oplus \rangle}{[A^\oplus]}}
-             {}}}}
-          &
-          \infer[{\uparrow}_L]
-          {\mildseq{\Gamma^\ominus}{[{\uparrow}{\downarrow}B^\ominus]}
-             {\langle B^\ominus \rangle}}
-          {\infer[{\downarrow}_L]
-           {\mildseq{\Gamma^\ominus}{{\downarrow}B^\ominus}
-             {\langle B^\ominus \rangle}}
-           {\infer[{\it focus}_L]
-            {\mildseq{\Gamma^\ominus}{B^\ominus}{\langle B^\ominus \rangle}}
-            {\infer[{\it id}^-]
-             {\mildseq{\Gamma^\ominus}{[B^\ominus]}{\langle B^\ominus \rangle}}
-             {}}}}}}}}}}}}
-  \]}
-
-  \noindent
-  To conclude, we show that $\mildseq{\Gamma^\ominus}{\Delta^\ominus,
-    {\uparrow}A^\oplus} {{\downarrow}B^\ominus}$ is derivable from
-  $\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\ominus}{B^\oplus}$ in
-  two steps.  First, by case analysis on $A$, we show that
-  $\mildseq{\Gamma^\ominus}{\Delta^\ominus, {\uparrow}A^\oplus}
-  {{\downarrow}B^\ominus}$ is derivable from
-  $\mildseq{\Gamma^\ominus}{\Delta^\ominus,
-    A^\ominus}{{\downarrow}B^\ominus}$.  Either $A$ is a
-  right-synchronous connective, in which case $A^\ominus =
-  {\uparrow}A^\oplus$ and the result is immediate, or else it is a
-  right-asynchronous connective, in which case $A^\oplus =
-  {\downarrow}A^\ominus$ and we can proceed as follows:
-  \[
-  \infer[{\it focus}_L]
-  {\mildseq{\Gamma^\ominus}{\Delta^\ominus, {\uparrow}{\downarrow}A^\ominus}
-     {{\downarrow}B^\ominus}} 
-  {\infer[{\uparrow}_L]
-   {\mildseq{\Gamma^\ominus}{\Delta^\ominus, [{\uparrow}{\downarrow}A^\ominus]}
-     {{\downarrow}B^\ominus}}
-   {\infer[{\downarrow_L}]
-    {\mildseq{\Gamma^\ominus}{\Delta^\ominus, {\downarrow}A^\ominus}
-     {{\downarrow}B^\ominus}}
-    {\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\ominus}
-     {{\downarrow}B^\ominus}}}}
-  \]
-  Second, by case analysis on $B$, we show that
-  $\mildseq{\Gamma^\ominus}{\Delta^\ominus,
-    A^\ominus}{{\downarrow}B^\ominus}$ is derivable from
-  $\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\ominus}{B^\oplus}$.
-  Either $B$ is a right-asynchronous connective, in which case
-  $B^\oplus = {\downarrow}B^\ominus$ and the result is immediate, or
-  else $B$ is a right-synchronous connective, in which case 
-  $B^\ominus = {\uparrow}B^\oplus$ and we can proceed as follows:
-  \[
-  \infer[{\it focus}_R]
-  {\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\ominus}{{\downarrow}{\uparrow}B^\oplus}} 
-  {\infer[{\downarrow}_R]
-   {\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\ominus}
-      {[{\downarrow}{\uparrow}B^\oplus]}}
-   {\infer[{\uparrow}_R]
-    {\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\ominus}{{\uparrow}B^\oplus}}
-    {\mildseq{\Gamma^\ominus}{\Delta^\ominus, A^\ominus}{B^\oplus}}}}
+    \infer[B^-]
+    {\mildseq{\Gamma}{\Delta, {\downarrow}B^-}{U}}
+    {\mildseq{\Gamma}{\Delta, B^-}{U}}}} 
   \]
 
-  \noindent
-  This completes the case for rule ${\lolli}_R$.
+  Rule $\lolli_R$: We are given 
+  $\seq{\Gamma^\circ}{\Delta^\circ, A}{B}$, which is used 
+  to derive $\seq{\Gamma^\circ}{\Delta^\circ}{A \lolli B}$.
+  We know $A \lolli B = (C^+)^\circ$; by induction on the structure of
+  $C^+$ there exist $A^+$ and
+  $B^-$ such that $A = (A^+)^\circ$, $B = (B^-)^\circ$, and 
+  $C^+ = 
+   ({\downarrow}{\uparrow}{\downarrow}\ldots{\uparrow}{\downarrow}
+    (A^+ \lolli B^-))^\circ$.
+  By the induction hypothesis, we have
+  $\mildseq{\Gamma}{\Delta, {\downarrow}A^+}{{\uparrow}B^+}$, 
+  and we conclude by the 
+  unfocused admissibility lemma ${\lolli}_{uR}$:
+  \[
+  \infer=[]
+  {\mildseq{\Gamma}{\Delta}{{\downarrow}{\uparrow}{\downarrow}\ldots{\uparrow}{\downarrow}
+    (A^+ \lolli B^-)}}
+  {\infer-[{\it cut}(4)]
+   {\mildseq{\Gamma}{\Delta}{{\downarrow}(A^+ \lolli B^-)}}
+   {\infer[{\lolli}_R]
+    {\mildseq{\Gamma}{\Delta}
+     {{\downarrow}{\uparrow}A^+ \lolli {\uparrow}{\downarrow}B^-}}
+    {\infer[{\downarrow}_L]
+     {\mildseq{\Gamma}{\Delta, {\downarrow}{\uparrow}A^+}
+      {{\uparrow}{\downarrow}B^-}}
+     {\infer[{\uparrow}_R]
+      {\mildseq{\Gamma}{\Delta, {\uparrow}A^+}
+       {{\uparrow}{\downarrow}B^-}}
+      {\mildseq{\Gamma}{\Delta, {\uparrow}A^+}
+       {{\downarrow}B^-}}}}
+    & 
+    \infer[{\it focus}_R]
+    {\mildseq{\Gamma}
+     {{\downarrow}{\uparrow}A^+ \lolli {\uparrow}{\downarrow}B^-}
+     {{\downarrow}(A^+ \lolli B^-)}}
+    {\infer[{\downarrow}_R]
+     {\mildseq{\Gamma}
+      {{\downarrow}{\uparrow}A^+ \lolli {\uparrow}{\downarrow}B^-}
+      {[{\downarrow}(A^+ \lolli B^-)]}}
+     {\infer[{\lolli}_R]
+      {\mildseq{\Gamma}
+       {{\downarrow}{\uparrow}A^+ \lolli {\uparrow}{\downarrow}B^-}
+       {A^+ \lolli B^-}}
+      {\infer-[\eta^+]
+       {\mildseq{\Gamma}
+        {{\downarrow}{\uparrow}A^+ \lolli {\uparrow}{\downarrow}B^-, A^+}
+        {B^-}}
+       {\infer-[\eta^-]
+        {\mildseq{\Gamma}
+         {{\downarrow}{\uparrow}A^+ \lolli {\uparrow}{\downarrow}B^-, 
+          \langle A^+ \rangle}
+         {B^-}}
+        {\infer[{\it focus}_L]
+         {\mildseq{\Gamma}
+          {{\downarrow}{\uparrow}A^+ \lolli {\uparrow}{\downarrow}B^-, 
+           \langle A^+ \rangle}
+          {\langle B^- \rangle}}
+         {\infer[{\lolli}_L]
+          {\mildseq{\Gamma}
+           {[{\downarrow}{\uparrow}A^+ \lolli {\uparrow}{\downarrow}B^-], 
+            \langle A^+ \rangle}
+           {\langle B^- \rangle}}
+          {\infer[{\downarrow}_R]
+           {\mildseq{\Gamma}{\langle A^+ \rangle}
+            {[ {\downarrow}{\uparrow}A^+ ]}}
+           {\infer[{\uparrow}_R]
+            {\mildseq{\Gamma}{\langle A^+ \rangle}{{\uparrow}A^+}}
+            {\infer[{\it focus}_R]
+             {\mildseq{\Gamma}{\langle A^+ \rangle}{A^+}}
+             {\infer[{\it id}^+]
+              {\mildseq{\Gamma}{\langle A^+ \rangle}{[ A^+ ]}}
+              {}}}}
+           &
+           \infer[{\uparrow}_L]
+           {\mildseq{\Gamma}{[ {\uparrow}{\downarrow}B^- ]}
+            {\langle B^- \rangle}}
+           {\infer[{\downarrow}_L]
+            {\mildseq{\Gamma}{{\downarrow}B^-}{\langle B^- \rangle}}
+            {\infer[{\it focus}_L]
+             {\mildseq{\Gamma}{B^-}{\langle B^- \rangle}}
+             {\infer[{\it id}^-]
+              {\mildseq{\Gamma}{[B^-]}{\langle B^- \rangle}}
+              {}}}}}}}}}}}}}
+  \]
+
+\noindent
+All the other cases follow the same pattern.
 \end{proof}
 
 \subsection{Confluent versus fixed inversion}
