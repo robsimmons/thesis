@@ -849,7 +849,7 @@ lemmas work.
   $\seq{\Gamma^\circ, A}{\Delta^\circ, A}{U^\circ}$, which is
   used to derive $\seq{\Gamma^\circ, A}{\Delta^\circ, A}{U^\circ}$.
   We know $A = (A^-)^\circ$. By the induction hypothesis, we have
-  $\mildseq{\Gamma, A^-}{\Delta, A^-}{C}$, and we conclude
+  $\mildseq{\Gamma, A^-}{\Delta, A^-}{U}$, and we conclude
   with the unfocused admissibility lemma ${\it copy}_u$:
   \[
   \infer-[{\it cut}(4)]
@@ -857,10 +857,76 @@ lemmas work.
   {\infer-[\eta^-]
    {\mildseq{\Gamma, A^-}{\cdot}{A^-}}
    {\infer[{\it id}^-]
-    {\mildseq{\Gamma, A^-}{\cdot}{\langle A \rangle}}
+    {\mildseq{\Gamma, A^-}{\cdot}{\langle A^- \rangle}}
     {}}
    &
-   \mildseq{\Gamma, A}{\Delta, A}{C}}
+   \mildseq{\Gamma, A^-}{\Delta, A^-}{U}}
+  \]
+
+  Rule ${!}_L$: We are given 
+  $\seq{\Gamma^\circ, A}{\Delta^\circ}{U^\circ}$,
+  which is used to derive
+  $\seq{\Gamma^\circ}{\Delta^\circ, {!}A}{U^\circ}$.
+  We know ${!}A = (C^-)^\circ$; by induction on the structure of 
+  $C^-$ there exists $A^-$ such that 
+  $C^- = {\uparrow}{\downarrow}\ldots{\downarrow}{\uparrow}{!}A^-$.
+  By the induction hypothesis, we have 
+  $\mildseq{\Gamma, A^-}{\Delta}{U}$, and we conclude by the 
+  unfocused admissibility lemma ${!}_{uL}$, which is derivable: 
+  \[
+  \infer=[{\uparrow}{\downarrow}_L]
+  {\mildseq{\Gamma}
+   {\Delta, {\uparrow}{\downarrow}\ldots{\downarrow}{\uparrow}{!}A}{U}}
+  {\infer[{\it focus}_L]
+   {\mildseq{\Gamma}{\Delta, {\uparrow}{!}A^-}{U}}
+   {\infer[{\uparrow}_L]
+    {\mildseq{\Gamma}{\Delta, [{\uparrow}{!}A^-]}{U}}
+    {\infer[{!}_L]
+     {\mildseq{\Gamma}{\Delta, {!}A^-}{U}}
+     {\mildseq{\Gamma, A^-}{\Delta}{U}}}}}
+  \]
+
+  Rule ${!}_R$: We are given
+  $\seq{\Gamma^\circ}{\cdot}{A}$,
+  which is used to derive
+  $\seq{\Gamma^\circ}{\cdot}{{!}A}$. 
+  We know ${!}A = (C^+)^\circ$; by induction on the structure of
+  $C^+$ there exists $A^-$ such that 
+  $C^+ = {\downarrow}{\uparrow}\ldots{\downarrow}{\uparrow}!A^-$.
+  By the induction hypothesis, we have
+  $\mildseq{\Gamma}{\cdot}{{\downarrow}A^-}$, and we conclude by the unfocused
+  admissibility lemma ${!}_{uR}$, which is derivable:
+  \[
+  \infer=[{\downarrow}{\uparrow}_R]
+  {\mildseq{\Gamma}{\cdot}
+   {{\downarrow}{\uparrow}\ldots{\downarrow}{\uparrow}!A^-}}
+  {\infer-[{\it cut}(5)]
+   {\mildseq{\Gamma}{\cdot}{!A^-}}
+   {\infer[{\uparrow}_R]
+    {\mildseq{\Gamma}{\cdot}{{\uparrow}{\downarrow}A^-}}
+    {\mildseq{\Gamma}{\cdot}{{\downarrow}A^-}}
+    &
+    \infer[{\it focus}_R]
+    {\mildseq{\Gamma, {\uparrow}{\downarrow}A^-}{\cdot}{!A^-}}
+    {\infer[{!}_R]
+     {\mildseq{\Gamma, {\uparrow}{\downarrow}A^-}{\cdot}{[!A^-]}}
+     {\infer-[\eta^-]
+      {\mildseq{\Gamma, {\uparrow}{\downarrow}A^-}{\cdot}{A^-}}
+      {\infer[{\it copy}]
+       {\mildseq{\Gamma, {\uparrow}{\downarrow}A^-}{\cdot}{\langle A^-\rangle}}
+       {\infer[{\uparrow}_L]
+        {\mildseq{\Gamma, {\uparrow}{\downarrow}A^-}
+         {[{\uparrow}{\downarrow}A^-]}{\langle A^-\rangle}}
+        {\infer[{\downarrow}_L]
+         {\mildseq{\Gamma, {\uparrow}{\downarrow}A^-}
+          {{\downarrow}A^-}{\langle A^-\rangle}}
+         {\infer[{\it focus}_L]
+          {\mildseq{\Gamma, {\uparrow}{\downarrow}A^-}
+           {A^-}{\langle A^-\rangle}}
+          {\infer[{\it id}^-]
+           {\mildseq{\Gamma, {\uparrow}{\downarrow}A^-}
+           {[ A^- ]}{\langle A^-\rangle}}
+           {}}}}}}}}}}
   \]
 
   Rule $\lolli_L$: We are given 
@@ -871,7 +937,7 @@ lemmas work.
   $C^-$ there exist $A^+$ and
   $B^-$ such that $A = (A^+)^\circ$, $B = (B^-)^\circ$, and 
   $C^- = 
-   ({\uparrow}{\downarrow}\ldots{\uparrow}{\downarrow}(A^+ \lolli B^-))^\circ$.
+   {\uparrow}{\downarrow}\ldots{\uparrow}{\downarrow}(A^+ \lolli B^-)$.
   By the induction hypothesis, we have
   $\mildseq{\Gamma}{\Delta_A}{A}$ and
   $\mildseq{\Gamma}{\Delta, B}{U}$, and we conclude
@@ -924,15 +990,15 @@ lemmas work.
   $C^+$ there exist $A^+$ and
   $B^-$ such that $A = (A^+)^\circ$, $B = (B^-)^\circ$, and 
   $C^+ = 
-   ({\downarrow}{\uparrow}{\downarrow}\ldots{\uparrow}{\downarrow}
-    (A^+ \lolli B^-))^\circ$.
+   {\downarrow}{\uparrow}\ldots{\uparrow}{\downarrow}
+    (A^+ \lolli B^-)$.
   By the induction hypothesis, we have
   $\mildseq{\Gamma}{\Delta, {\downarrow}A^+}{{\uparrow}B^+}$, 
   and we conclude by the 
   unfocused admissibility lemma ${\lolli}_{uR}$:
   \[
-  \infer=[]
-  {\mildseq{\Gamma}{\Delta}{{\downarrow}{\uparrow}{\downarrow}\ldots{\uparrow}{\downarrow}
+  \infer=[{\downarrow}{\uparrow}_R]
+  {\mildseq{\Gamma}{\Delta}{{\downarrow}{\uparrow}\ldots{\uparrow}{\downarrow}
     (A^+ \lolli B^-)}}
   {\infer-[{\it cut}(4)]
    {\mildseq{\Gamma}{\Delta}{{\downarrow}(A^+ \lolli B^-)}}
@@ -1029,11 +1095,10 @@ fundamentally change the structure of the rest of the proof, and it
 should furthermore be possible to show that this equivalence relation
 on derivations is decidable. This is fundamentally a confluence
 property, and so we can call this style of focusing a {\it confluent}
-presentation; it is exemplified by Liang and Miller's LJF
+presentation. The style is exemplified by Liang and Miller's LJF
 \cite{liang09focusing}, and the confluent presentation in this chapter
 is closely faithful to Pfenning's course notes on linear logic
-\cite{pfenning12chaining}.  There are several ways to state this
-confluence property.
+\cite{pfenning12chaining}.  
 
 %; one of them
 %is Proposition~\ref{prop:confluence-lin}:
@@ -1051,7 +1116,8 @@ confluence property.
 %\bigskip
 
 Given this decidable equivalence on proofs, we can pick some member of
-each to serve as a canonical representative; this will suffice
+each equivalence class
+to serve as a canonical representative; this will suffice
 to solve the problems with proof search, as we can search for 
 the canonical representatives of focused proofs rather than the 
 much larger set of all focused proofs. The most common canonical
@@ -1068,14 +1134,14 @@ context. This is the way most focused logics are defined, including
 those by Andreoli, Chaudhuri, and myself (both in the Structural
 Focalization development and in the next chapter). This style of 
 presenting a focusing logic can be called a {\it fixed} presentation,
-as the shape of the inversion phase is fixed in a particular, though
+as the inversion phase is fixed in a particular, though
 fundamentally arbitrary, shape. 
 
 The completeness of focusing for a fixed presentation of focusing is
 implied by the completeness of focusing for a confluent presentation
 of the same logic along with the appropriate confluence property for
 that logic, whereas the reverse is not true. Therefore, the confluent
-presentation, in a certain sense, proving a stronger theorem than the
+presentation, in a certain sense, provides a stronger theorem than the
 fixed presentation, though the fixed presentation will be sufficient
 for our purposes.
 
@@ -1137,7 +1203,7 @@ idea behind synthetic inference rules is that the stable
 sequents are the ones that are most clearly endowed with meaning in a
 focused sequent calculus; this was reflected by the polarization
 strategy used in the completeness theorem for linear logic
-(Theorem~\ref{thm:linfoccomplete}), which only produced
+(Theorem~\ref{thm:linfoccomplete}), which only dealt with
 stable sequents. The second idea is that, once we know 
 whether the last rule in the proof of a stable sequent is
 \begin{itemize}
@@ -1252,7 +1318,7 @@ there is essentially the same as the presentation in Chaudhuri's
 thesis \cite{chaudhuri06focused}, in the sense that the logic gives
 rise to the same synthetic inference rules. It is {\it not} a faithful
 intuitionistic analogue to Andreoli's original presentation of focusing
-\cite{andreoli92logic}, as Pfenning's course notes is
+\cite{andreoli92logic}, though the presentation in Pfenning's course notes is
 \cite{pfenning12chaining}.\footnote{We will blur the lines, in this
   section, between Andreoli's original presentation of focused
   classical linear logic and Pfenning's adaptation to intuitionistic
@@ -1264,21 +1330,20 @@ language of ordered logical specifications presented by Pfenning and I
 \cite{pfenning09substructural}.
 
 The difference, in each case, lies in the treatment of positive atomic
-propositions, which can be a surprisingly rich source of fungible
-behavior in focused systems. My justification for presenting
+propositions. My justification for presenting
 Chaudhuri's system as the canonical focusing system for linear logic
 in Section~\ref{sec:foclinlog} is because the treatment of suspended
 positive propositions fits beautifully with the idea that atomic
 propositions are just placeholders for unspecified
-propositions. However, our current objective is not simply the study
-of focused logic; we want to use the structure of proofs in focused
+propositions. However, our current objective is not simply to study
+focused logic; we want to use the structure of proofs in focused
 logics as a logical framework for encoding systems we are interested
 in.
 
 In this section, we will discuss two modifications to the treatment 
 of positive propositions, Andreoli's atom
 optimization and the bang optimization. These changes give the focused
-system more expressiveness at the cost of the elegant
+system more expressiveness at the cost of losing the elegant
 interpretation of positive atoms as stand-ins for positive atomic
 propositions; the implications of this are discussed in
 Section~\ref{sec:moreprim}.
@@ -1293,7 +1358,7 @@ have to write ${!}{\uparrow}{(p^+ \otimes q^+)}$ and
 ${!}{\uparrow}p^+$). It's therefore possible, in an unpolarized
 presentation, to use the ${\it copy}$ rule to copy a positive
 proposition out of the context and into left focus, but the focus
-immediately blurs, as in the this proof fragment:\footnote{We will use
+immediately blurs, as in this proof fragment:\footnote{We will use
   the sequent form $\andseq{\Gamma}{\Delta}{C}$ in this section for
   focused but unpolarized systems.}
 \[
@@ -1308,7 +1373,7 @@ immediately blurs, as in the this proof fragment:\footnote{We will use
    {\vdots}}}}
 \]
 Note that, in the polarized setting, the
-effect of the ${\it blur}_L$ rule has been accomplished by the
+effect of the ${\it blur}_L$ rule is accomplished by the
 ${\downarrow}_L$ rule.
 
 Andreoli's system makes a single restriction to the ${\it copy}$ rule:
@@ -1343,7 +1408,7 @@ logic again.
    {\andseq{p^+}{\cdot}{[p^+]}}
    {}}}}
 \]
-This modified treatment of positive atoms can be called the 
+This modified treatment of positive atoms will be called the 
 {\it atom optimization}, as it reduces the number of focusing steps that 
 need to be applied: it takes only one right focus to prove
 ${!}p^+ \lolli p^+$ in Andreoli's system, but it would take two focusing
@@ -1410,50 +1475,7 @@ All three of these options are essentially similar; we will go with the
 last, as it allows us to preserve the original meaning of ${!}{\uparrow}p^+$
 if that is our actual intent. 
 
-This addition to the language creates one new case of identity
-expansion:
-\[
-\infer-[\eta^+]
-{\mildseq{\Gamma}{\Delta, {\pbang}p^+}{U}}
-{\deduce
- {\mildseq{\Gamma}{\Delta, \langle {\pbang}p^+ \rangle}{U}}
- {\mathcal D}}
-\quad
-\Longrightarrow
-\infer[{\pbang}_L]
-{\mildseq{\Gamma}{\Delta, {\pbang}p^+}{U}}
-{\infer-[{\it subst}^+]
- {\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
- {\infer[{\pbang}_R]
-  {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{[{\pbang}p^+}]}
-  {\infer[{\it focus}_R]
-   {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{p^+}}
-   {\infer[{\it id}^+_p]
-    {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{[ p^+ ]}}
-    {}}}
-  &
-  \infer-[{\it weaken}]
-  {\mildseq{\Gamma, \langle p^+ \rangle}{\Delta, \langle {\pbang}p^+ \rangle}
-     {U}}
-  {\deduce
-   {\mildseq{\Gamma}{\Delta, \langle {\pbang}p^+ \rangle}{U}}
-   {\mathcal D}}}}
-\]
 
-While we could also prove another focal substitution principle, namely
-that $\mildseq{\Gamma}{\cdot}{[A^+]}$ and $\mildseq{\Gamma, \langle
-  A^+ \rangle}{\Delta}{U}$ imply $\mildseq{\Gamma}{\Delta}{U}$, it's
-notable that such a principle isn't necessary in order to establish
-the identity expansion property in this system.
-
-Our change does force us to add a new part to the cut admissibility
-theorem that is closely related to the new focal substitution
-principle, proving that $\mildseq{\Gamma}{\cdot}{p^+}$ and
-$\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}$ imply
-$\mildseq{\Gamma}{\Delta}{U}$ by induction on the second given
-derivation. This is used to satisfy the principal cut for
-${\pbang}p^+$. All other necessary modifications to the cut
-admissibility theorem are straightforward.
 
 \subsection{Bang optimization}
 \label{sec:bangopt}
@@ -1484,21 +1506,100 @@ will be called the {\it bang optimization}, as it, like the atom
 optimization, potentially reduces the number of focusing phases
 in a proof.
 
-This additional change actually simplifies both the identity
-expansion theorem, which no longer needs the ${\it focus}_R$ rule
-in the left branch of the derivation. The cut admissibility
-theorem is simplified as well: the extra case establishing that
-$\mildseq{\Gamma}{\cdot}{p^+}$ and 
-$\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}$ imply
-$\mildseq{\Gamma}{\Delta}{U}$ is unnecessary, as the principal cut on
-${\pbang}p^+$ no longer needs to invoke the induction hypothesis.
-
 If we think of ${\pbang}p^+$ as being naturally defined as 
 ${!}{\uparrow}p^+$, then the atom optimization modifies the left rule
 and the bang optimization modifies the right rule. It is not, however,
 possible to think about the bang optimization independently from the
 atom optimization: identity expansion would fail in a system that 
 only provided a modified right rule for ${\pbang}p^+$. 
+
+\subsection{Fixing the metatheory}
+
+It is quite straightforward to fix up the 
+identity expansion, cut admissibility, soundness, and completeness
+theorems by adding new cases to each theorem
+
+There is one new case of identity
+expansion:
+\[
+\infer-[\eta^+]
+{\mildseq{\Gamma}{\Delta, {\pbang}p^+}{U}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta, \langle {\pbang}p^+ \rangle}{U}}
+ {\mathcal D}}
+\quad
+\Longrightarrow
+\infer[{\pbang}_L]
+{\mildseq{\Gamma}{\Delta, {\pbang}p^+}{U}}
+{\infer-[{\it subst}^+]
+ {\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
+ {\infer[{\pbang}_R]
+  {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{[{\pbang}p^+}]}
+  {{\infer[{\it id}^+_p]
+    {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{[ p^+ ]}}
+    {}}}
+  &
+  \infer-[{\it weaken}]
+  {\mildseq{\Gamma, \langle p^+ \rangle}{\Delta, \langle {\pbang}p^+ \rangle}
+     {U}}
+  {\deduce
+   {\mildseq{\Gamma}{\Delta, \langle {\pbang}p^+ \rangle}{U}}
+   {\mathcal D}}}}
+\]
+While we could also prove another focal substitution principle, namely
+that $\mildseq{\Gamma}{\cdot}{[A^+]}$ and $\mildseq{\Gamma, \langle
+  A^+ \rangle}{\Delta}{U}$ imply $\mildseq{\Gamma}{\Delta}{U}$, it's
+notable that such a principle isn't necessary in order to establish
+the identity expansion property in this system.
+
+We must add one principal cut to part (1) of the cut admissibility theorem,
+one commutative case to part (3), and two commutative cases to 
+parts (4) and (5).
+
+Modifying the soundness and completeness theorems requires that we
+extend the erasure function: $({\pbang}p^+)^\circ = {!}p^+$,
+and $(\Gamma, \langle p^+ \rangle)^\circ = \Gamma^\circ, p^+$. Modifying
+the soudness theorem is straightforward. For completeness, we must 
+first consider the case of ${\it copy}$ when 
+$\Gamma^\circ, A = (\Gamma, \langle p^+ \rangle)^\circ$ and so 
+$A = p^+$. We can get 
+$\mildseq{\Gamma, \langle p^+ \rangle}{\Delta, \langle p^+ \rangle}{U}$
+from the induction hypothesis and then use the focal substitution principle:
+\[
+\infer-[{\it subst}^+]
+{\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
+{\infer[{\it id}^+_p]
+ {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{[p^+]}}
+ {}
+ &
+ \mildseq{\Gamma, \langle p^+ \rangle}{\Delta, \langle p^+ \rangle}{U}}
+\]
+We also need two more unfocused admissibility lemmas:
+\[
+\infer-[{\pbang}_{uL}]
+{\mildseq{\Gamma}{\Delta, {\uparrow}{\pbang}p^+}{U}}
+{\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
+\quad
+\infer-[{\pbang}_{uR}]
+{\mildseq{\Gamma}{\cdot}{{\pbang}p^+}}
+{\mildseq{\Gamma}{\cdot}{p^+}}
+\]
+The first is straightforwardly derivable, but the second is quite
+problemantic: it requires us to prove a new cut principle,
+that $\mildseq{\Gamma}{\cdot}{p^+}$ and 
+$\mildseq{\Gamma}{\Delta}{}$
+
+
+
+Our change does force us to add a new part to the cut admissibility
+theorem that is closely related to the new focal substitution
+principle, proving that $\mildseq{\Gamma}{\cdot}{p^+}$ and
+$\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}$ imply
+$\mildseq{\Gamma}{\Delta}{U}$ by induction on the second given
+derivation. This is used to satisfy the principal cut for
+${\pbang}p^+$. All other necessary modifications to the cut
+admissibility theorem are straightforward.
+
 
 \subsection{Breaking the substitution interpretation of atomic propositions}
 
