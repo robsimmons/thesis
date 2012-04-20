@@ -372,10 +372,8 @@ Figure~\ref{fig:lin-shift}. While shifts turn out to have a profound
 impact on the structure of focused proofs, they are intended to have
 no impact on provability. Therefore, the strongest statement of the
 correctness of focusing is based on erasure: there is an unfocused
-derivation of $(A^+)^\circ$ if and only if there is a focused
-derivation of $A^+$.\footnote{I chose $A^+$ mostly to be brief; the
-  condition that $(A^-)^\circ$ is derivable iff $A^-$ is could, of
-  course, be added.}  However, most proofs of the correctness of
+derivation of $(A^+)^\circ$ or $(A^-)^\circ$ if and only if there is a focused
+derivation of $A^+$ or $A^-$.  However, most proofs of the correctness of
 focusing prove a weaker property. Every proposition in linear logic
 has an obvious polarized analogue with a minimal number of shifts;
 this analogue is formalized as the two functions $A^\oplus$ and
@@ -416,7 +414,16 @@ By adding a side condition to the three rules ${\it focus}_R$, ${\it
 the succeedant $U$ can contain an in-focus proposition $[A^+]$ or
 $[A^-]$, derivations can maintain the invariant that there is always
 at most one proposition in focus, effectively restoring the situation
-in which there are three distinct judgments.  This restriction alone
+in which there are three distinct judgments. From this point on, we
+will only consider sequents with at most one focus; we will write
+$\underline{\Delta}$ or $\underline{U}$ to indicate when $\Delta$
+may contain a focus $[A^-]$ and when $U$ may be a focus $[A^+]$. 
+Pfenning, who developed this construction
+in \cite{pfenning12chaining}, calls this the 
+{\it focusing constraint}, and writes $\delta$ and $\gamma$ instead 
+of $\Delta$ and $U$.
+
+This restriction alone
 gives us what Pfenning calls a {\it chaining} logic
 \cite{pfenning12chaining} and which Laurent calls a {\it weakly
   focused} logic \cite{laurent04proof}.\footnote{This is not what I
@@ -431,7 +438,11 @@ rules so that they only apply when the sequent below the line is {\it
 context $\Delta$ contains only negative propositions $A^-$ and
 suspended positive propositions $\langle A^+ \rangle$ and the
 succeedant $U$ is either a positive proposition $A^+$ or a suspended
-negative propositions $\langle A^- \rangle$. 
+negative propositions $\langle A^- \rangle$. In light of this restriction,
+whenever we consider a focused sequent
+$\mildseq{\Gamma}{\Delta, [A^-]}{U}$ or 
+$\mildseq{\Gamma}{\Delta}{[A^+]}$, we can assume that $\Delta$ and $U$ 
+are stable.
 
 We will now turn our attention to the meaning of these suspended
 propositions and the four rules that interact with them: ${\it id}^+$,
@@ -479,10 +490,10 @@ A^+ \rangle$ in a context.
 
 \bigskip
 \begin{theorem}[Focal substitution (positive)]\label{thm:fsubst-pos}~\\
-For stable $\Delta$,
-if $\mildseq{\Gamma}{\Delta}{[A^+]}$ 
-and $\mildseq{\Gamma}{\Delta', \langle A^+ \rangle}{U}$, 
-then $\mildseq{\Gamma}{\Delta', \Delta}{U}$.
+If $\mildseq{\Gamma}{\Delta}{[A^+]}$ 
+and $\mildseq{\Gamma}{\underline{\Delta'}, \langle A^+ \rangle}
+      {\underline{U}}$, 
+then $\mildseq{\Gamma}{\underline{\Delta'}, \Delta}{\underline{U}}$.
 \end{theorem}
 
 \begin{proof}
@@ -493,27 +504,29 @@ then $\mildseq{\Gamma}{\Delta', \Delta}{U}$.
 \end{proof}
 
 \noindent
-Note that, in the statement of Theorem~\ref{thm:fsubst-pos}, the
-second premise $\mildseq{\Gamma}{\Delta', \langle A^+ \rangle}{U}$ may
+Recall that, in the statement of Theorem~\ref{thm:fsubst-pos}, we assume
+that $\Delta$ is stable by virtue of it appearing in the 
+focused sequent $\mildseq{\Gamma}{\Delta}{[A^+]}$, and the
+second premise 
+$\mildseq{\Gamma}{\underline{\Delta'}, \langle A^+ \rangle}{\underline{U}}$ may
 be a right-focused sequent $\mildseq{\Gamma}{\Delta', \langle A^+
   \rangle}{[B^+]}$, a left-focused sequent $\mildseq{\Gamma}{\Delta'',
   [B^-], \langle A^+ \rangle}{U}$, or an inverting sequent. 
 
 Suspended negative propositions are a bit weirder. While a derivation
-of $\mildseq{\Gamma}{\Delta', \langle A^+ \rangle}{U}$ is missing a
-premise that can be satisfied by a derivation of
+of $\mildseq{\Gamma}{\underline{\Delta'}, \langle A^+ \rangle}{\underline{U}}$
+is missing a premise that can be satisfied by a derivation of
 $\mildseq{\Gamma}{\Delta}{[A^+]}$, a derivation of 
-$\mildseq{\Gamma}{\Delta}{\langle A^- \rangle}$ is missing a 
+$\mildseq{\Gamma}{\underline{\Delta}}{\langle A^- \rangle}$ is missing a 
 {\it continuation} that can be satisfied by a derivation of
 $\mildseq{\Gamma}{\Delta', [A^-]}{U}$. The focal substitution principle,
 however, still takes the basic form of a substitution principle.
 
 \bigskip
 \begin{theorem}[Focal substitution (negative)]\label{thm:fsubst-neg}~\\
-For stable $\Delta'$ and $U$, 
-if $\mildseq{\Gamma}{\Delta}{\langle A^- \rangle}$
+If $\mildseq{\Gamma}{\underline{\Delta}}{\langle A^- \rangle}$
 and $\mildseq{\Gamma}{\Delta', [A^-]}{U}$, 
-then $\mildseq{\Gamma}{\Delta', \Delta}{U}$. 
+then $\mildseq{\Gamma}{\Delta', \underline{\Delta}}{U}$. 
 \end{theorem}
 
 \begin{proof}
@@ -547,14 +560,14 @@ principles can be phrased as admissible rules for building derivations,
 which we indicate using a dashed line:
 \[
 \infer-[{\it subst}^+]
-{\mildseq{\Gamma}{\Delta', \Delta}{U}}
+{\mildseq{\Gamma}{\underline{\Delta'}, \Delta}{\underline{U}}}
 {\mildseq{\Gamma}{\Delta}{[A^+]}
  &
- \mildseq{\Gamma}{\Delta', \langle A^+ \rangle}{U}}
+ \mildseq{\Gamma}{\underline{\Delta'}, \langle A^+ \rangle}{\underline{U}}}
 \qquad
 \infer-[{\it subst}^-]
-{\mildseq{\Gamma}{\Delta', \Delta}{U}}
-{\mildseq{\Gamma}{\Delta}{\langle A^- \rangle}
+{\mildseq{\Gamma}{\Delta', \underline{\Delta}}{U}}
+{\mildseq{\Gamma}{\underline{\Delta}}{\langle A^- \rangle}
  &
  \mildseq{\Gamma}{\Delta', [A^-]}{U}}
 \]
@@ -689,17 +702,15 @@ do not contain any non-atomic suspended propositions:
       and $\mildseq{\Gamma}{\Delta', [A^-]}{U}$
       (where $\Delta'$ and $U$ are stable),
       then $\mildseq{\Gamma}{\Delta',\Delta}{U}$. 
-\item If $\mildseq{\Gamma}{\Delta}{A^+}$
-      and $\mildseq{\Gamma}{\Delta', A^+}{U}$
-      (where $\Delta'$ and $U$ are stable),
-      then $\mildseq{\Gamma}{\Delta',\Delta}{U}$. 
+\item If $\mildseq{\Gamma}{\underline{\Delta}}{A^+}$
+      and $\mildseq{\Gamma}{\Delta', A^+}{U}$,
+      then $\mildseq{\Gamma}{\Delta',\underline{\Delta}}{U}$. 
 \item If $\mildseq{\Gamma}{\Delta}{A^-}$
-      and $\mildseq{\Gamma}{\Delta', A^-}{U}$
-      (where $\Delta$ is stable), 
-      then $\mildseq{\Gamma}{\Delta',\Delta}{U}$. 
+      and $\mildseq{\Gamma}{\underline{\Delta'}, A^-}{\underline{U}}$,
+      then $\mildseq{\Gamma}{\underline{\Delta'},\Delta}{\underline{U}}$. 
 \item If $\mildseq{\Gamma}{\cdot}{A^-}$
-      and $\mildseq{\Gamma, A^-}{\Delta}{U}$,
-      then $\mildseq{\Gamma}{\Delta}{U}$. 
+      and $\mildseq{\Gamma, A^-}{\underline{\Delta'}}{\underline{U}}$,
+      then $\mildseq{\Gamma}{\underline{\Delta'}}{\underline{U}}$. 
 \end{enumerate}
 \end{theorem}
 
@@ -708,6 +719,12 @@ By lexicographic induction. In each invocation of the induction
 hypothesis, either the principal cut formula $A^+$ or $A^-$ gets 
 smaller, or else it stays the same and the number of the part
 gets smaller (as when we invoke part 2 when proving part 5). 
+
+Within\ldots FIX THIS.
+
+ parts 3, 4, and 5, the first two metrics stay the same
+while either the derivation gets smaller and the second stays the same,
+or the 
 
 Within part 3, the first two
 metrics stay the same while the first given derivation gets smaller,
