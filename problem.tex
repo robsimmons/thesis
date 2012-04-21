@@ -1,0 +1,210 @@
+\documentclass[12pt]{article}
+\input{macros}
+
+\begin{document}
+I think I've sorted out the problems that I was having. However, in doing
+so it's been very important to make some stability assumptions in the 
+cut admissibility proof. In particular, in these two cases:
+\[
+\infer-
+{\mildseq{\Gamma}{\Delta', \delta}{U}}
+{\mildseq{\Gamma}{\delta}{A^+}
+ &
+ \mildseq{\Gamma}{\Delta', A^+}{U}}
+\quad
+\infer-
+{\mildseq{\Gamma}{\delta', \Delta}{\gamma}}
+{\mildseq{\Gamma}{\Delta}{A^-}
+ &
+ \mildseq{\Gamma}{\delta', A^-}{\gamma}}
+\]
+I believe that it is rather important, if a structural proof is our aim, to
+force $\Gamma'$, $\Gamma$, and $U$ to be stable (contexts contain no positive
+propositions and succeedents are not negative propositions).
+
+To see why, try running through what a structural focalization proof
+{\it ought} to do on these cases:
+\[
+\infer-
+{\mildseq{\Gamma}{A \otimes B, \langle p^+ \rangle, p^+ \lolli q^+}
+  {C \multimap D}}
+{\infer
+ {\mildseq{\Gamma}{\langle p^+ \rangle, p^+ \lolli q^+}{q^+}}
+ {\infer
+  {\mildseq{\Gamma}{\langle p^+ \rangle, [p^+ \lolli q^+]}{q^+}}
+  {\infer
+   {\mildseq{\Gamma}{\langle p^+ \rangle}{[p^+]}}
+   {}
+   &
+   \infer
+   {\mildseq{\Gamma}{[q^+]}{q^+}}
+   {\infer
+    {\mildseq{\Gamma}{q^+}{q^+}}
+    {\infer
+     {\mildseq{\Gamma}{\langle q^+ \rangle}{q^+}}
+     {\infer
+      {\mildseq{\Gamma}{\langle q^+ \rangle}{[q^+]}}
+      {}}}}}}
+ &
+ \infer
+ {\mildseq{\Gamma}{A \otimes B, q^+}{C \multimap D}}
+ {\infer
+  {\mildseq{\Gamma}{A \otimes B, \langle q^+ \rangle}{C \lolli D}}
+  {\infer
+   {\mildseq{\Gamma}{A, B, \langle q^+ \rangle}{C \lolli D}}
+   {\deduce
+    {\mildseq{\Gamma}{A, B, \langle q^+ \rangle, C}{D}}
+    {\vdots}}}}}
+\]
+\[
+\infer-
+{\mildseq{\Gamma}{A \otimes B, a^- \lolli b^-}{\langle b^- \rangle}}
+{\infer
+ {\mildseq{\Gamma}{A \otimes B}{a^-}}
+ {\infer
+  {\mildseq{\Gamma}{A \otimes B}{\langle a^- \rangle}}
+  {\deduce
+   {\mildseq{\Gamma}{A, B}{\langle a^- \rangle}}
+   {\vdots}}}
+ &
+ \infer
+ {\mildseq{\Gamma}{a^-, a^- \lolli b^-}{\langle b^- \rangle}}
+ {\infer
+  {\mildseq{\Gamma}{a^-, [a^- \lolli b^-]}{\langle b^- \rangle}}
+  {\infer
+   {\mildseq{\Gamma}{a^-}{[a^-]}}
+   {\infer
+    {\mildseq{\Gamma}{a^-}{a^-}}
+    {\infer
+     {\mildseq{\Gamma}{a^-}{\langle a^- \rangle}}
+     {\infer
+      {\mildseq{\Gamma}{[a^-]}{\langle a^- \rangle}}
+      {}}}}
+   &
+   \infer
+   {\mildseq{\Gamma}{[b^-]}{\langle b^- \rangle}}
+   {}}}}
+\]
+I claim that the answer is
+``permute the leftmost proof {\it around} the blocking invertible step
+until the principle formula is the only invertible formula, then
+begin a principal cut.'' I also claim that formalizing this has quadratic
+proof complexity. 
+
+\paragraph{Solution 1} Restrict cut as described above. This is my
+desired solution, assuming the rest of the proof goes through. However,
+your shiftless unfocused admissibility lemmas seem to
+depend on the non-stable cut principles, so we're back to a situation
+where you need to use shifts (or Miller-style delay operators)
+to prove unfocused admissibility with linear proof complexity.
+
+\paragraph{Solution 2} You could factor out all that complexity
+if you factored all your left rules into one forward-chaining monotonicity 
+rule
+\[
+\infer
+{\mildseq{\Gamma}{\Delta, A^+}{U}}
+{A^+ \leadsto \Theta
+ &
+ \forall (\Delta' \in \Theta)
+ &
+ \longrightarrow 
+ &
+ \mildseq{\Gamma}{\Delta, \Delta'}{U}}
+\]
+but I don't plan to take that route right now.
+
+\end{document}
+
+
+There is a still-deeper problem with the structural proof of cut admissibility
+in the confluent system. In this presentation, I use ``unstable'' to refer
+to an inversion sequent with multiple 
+
+\paragraph{Claim 1}
+In the positive focused cut, we {\it must} allow $\Delta'$ to be unstable.
+\[
+\infer-[]
+{\Gamma; \Delta', \Delta \vdash U}
+{\Gamma; \Delta \vdash [A^+]
+ &
+ \Gamma; \Delta', A^+ \vdash U}
+\]
+
+\paragraph{Justification 1}
+If we do not allow $\Delta'$ to be unstable, we can't invoke the
+induction hypothesis in a way that allows us to prove the principal
+cut for tensor.
+\[
+\infer-[]
+{\Gamma; \Delta', \Delta_1, \Delta_2 \vdash U}
+{\infer
+ {\Gamma; \Delta_1, \Delta_2 \vdash [A^+ \otimes B^+]}
+ {\Gamma; \Delta_1 \vdash [A^+] 
+  &
+  \Gamma; \Delta_2 \vdash [B^+]}
+ &
+ \infer
+ {\Gamma; \Delta', A^+ \otimes B^+ \vdash U}
+ {\Gamma; \Delta', A^+, B^+ \vdash U}}
+\]
+Reduces either as
+\[
+\infer-[]
+{\Gamma; \Delta', \Delta_1, \Delta_2 \vdash U}
+{\Gamma; \Delta_1 \vdash [A^+] 
+ &
+ \infer-[]
+ {\Gamma; \Delta', A^+, \Delta_2 \vdash U}
+ {\Gamma; \Delta_2 \vdash [B^+]
+  &
+  \Gamma; \Delta', A^+, B^+ \vdash U}}
+\]
+or as
+\[
+\infer-[]
+{\Gamma; \Delta', \Delta_1, \Delta_2 \vdash U}
+{\Gamma; \Delta_2 \vdash [B^+] 
+ &
+ \infer-[]
+ {\Gamma; \Delta', \Delta_1, B^+ \vdash U}
+ {\Gamma; \Delta_1 \vdash [A^+]
+  &
+  \Gamma; \Delta', A^+, B^+ \vdash U}}
+\]
+and the ``more upper'' cut has an independent positive in the context
+in both cases ($A^+$ in the first case, and $B^-$ in the second).
+
+\paragraph{Claim 2}
+In the negative unfocused cut, we {\it must} allow $\Delta'$ to be unstable.
+\[
+\infer-[]
+{\Gamma; \Delta', \Delta \vdash U}
+{\Gamma; \Delta \vdash A^-
+ &
+ \Gamma; \Delta', A^- \vdash U}
+\]
+
+\paragraph{Justification 2}
+This cut arises inevitably from the principal cut for ${\downarrow}A^-$
+(or blur focus, if you don't have shifts), which is an instance of positive
+focused cut, where we have already established that we must have
+an unstable $\Delta'$ (Claim 1).
+\[
+\infer-[]
+{\Gamma; \Delta', \Delta \vdash U}
+{\infer[]
+ {\Gamma; \Delta \vdash [{\downarrow}A^-]}
+ {\Gamma; \Delta \vdash A^-}
+ &
+ \infer[]
+ {\Gamma; \Delta', {\downarrow}A^- \vdash U}
+ {\Gamma; \Delta', A^- \vdash U}}
+\]
+
+\paragraph{Claim 1}
+In the positive un-focused cut, we
+{\it must} allow $\Delta'$ to be unstable. Otherwise, we are 
+
+
+

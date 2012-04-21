@@ -1,0 +1,104 @@
+%hlf.
+
+count: type.
+foc: count.
+z: count.
+s: count -> count.
+
+pol: type.
++: pol.
+-: pol.
+
+atm: pol -> type.
+prop: pol -> type.
+a: atm P -> prop P.
+u: prop - -> prop +.
+bang: prop - -> prop +.
+one: prop +.
+tensor: prop + -> prop + -> prop +.
+f: prop + -> prop -.
+lolli: prop + -> prop - -> prop -.
+
+
+succ: type.
+exp: count -> succ -> @type.
+iconc: prop - -> succ. % A-
+conc:  prop + -> succ. % A+
+rsusp: prop - -> succ. % <A->
+rfoc:  prop + -> succ. % [A+]
+
+ihyp:  prop + -> @type.
+hyp:   prop - -> @type.
+lsusp: prop + -> @type.
+lfoc:  prop - -> @type.
+
+focusR:
+  exp foc (rfoc A)
+  -o exp z (conc A).
+
+focusL:
+  (lfoc A -o exp foc U)
+  -o (hyp A -o exp foc U).  
+
+eta+:
+  (lsusp (a Q) -o exp N U)
+  -o (ihyp (a Q) -o exp (s N) U).
+
+id+: 
+  lsusp A -o exp foc (rfoc A).
+
+eta-:
+  exp N (rsusp (a Q))
+  -o exp (s N) (iconc (a Q)).
+
+id-: 
+  lfoc A -o exp foc (rsusp A).
+
+fR: 
+  exp N (conc A)
+  -o exp (s N) (iconc (f A)).
+ 
+fL:
+  (ihyp A -o exp (s z) U)
+  -o (lfoc (f A) -o exp foc U).
+
+uR:
+  exp (s z) (iconc A)
+  -o exp foc (rfoc (u A)).
+
+uL:
+  (hyp A -o exp N U)
+  -o (ihyp (u A) -o exp N U).
+
+bangR: 
+  exp (s N) (iconc A)
+  -o exp foc (rfoc (bang A)).
+
+bangL:
+  (hyp A -> exp N U)
+  -o (ihyp (bang A) -o exp (s N) U).
+
+oneR:
+  exp foc (rfoc one). % note: removing this dot raises match
+
+oneL:
+  exp N U
+  -o (ihyp one -o exp (s N) U).
+
+tensorR:
+  exp foc (rfoc A)
+  -o exp foc (rfoc B)
+  -o exp foc (rfoc (tensor A B)).
+
+tensorL:
+  (ihyp A -o ihyp B -o exp (s N) U)
+  -o (ihyp (tensor A B) -o exp N U).
+
+lolliR: 
+  (ihyp A -o exp (s N) (iconc B))
+  -o exp N (iconc (lolli A B)).
+
+lolliL:
+  exp foc (rfoc A)
+  -o (lfoc B -o exp foc U)
+  -o (lfoc (lolli A B) -o exp foc U).
