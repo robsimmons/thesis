@@ -1,7 +1,165 @@
 \documentclass[12pt]{article}
 \input{macros}
+\usepackage{ulem}
 
 \begin{document}
+\title{Cut admissibility for focused linear logic}
+\author{Robert J. Simmons}
+
+\maketitle
+
+\noindent
+The following is a proof of cut admissibility for the following logic.
+
+\begin{tabbing}
+\quad $\,A^+\,$ \= $::= p^+ 
+              \mid {\downarrow}A^- 
+              \mid {!}A^- 
+              \mid \one
+              \mid A \otimes B$\\
+\quad $\,A^-\,$ \> $::= p^-
+              \mid {\uparrow}A^+
+              \mid A \lolli B$\\
+\quad $\,\Gamma\,$ \> $::= \cdot \mid \,\Gamma\,, A^-$ \qquad\qquad\qquad\qquad\qquad\qquad\quad \= {\it (multiset)}\\
+\quad $\,\uline{\Delta}\,$ \> 
+   $::= \cdot \mid $ 
+   $ \,\uline{\Delta}\,, A^+ \mid $ \=
+   $ \,\uline{\Delta}\,, A^- \mid $ 
+   $ \,\uline{\Delta}\,, [A^-] \mid $ \=
+   $ \,\uline{\Delta}\,, \langle A^+ \rangle$ \\
+\quad $\uwave{\,\Delta\,}$ \> 
+   $::= \cdot \mid $
+   $ \,\uline{\Delta}\,, A^+ \mid $ \>
+   $ \uwave{\,\Delta\,}, A^- \mid $ 
+   \>
+   $ \uwave{\,\Delta\,}, \langle A^+ \rangle$ \\[-4pt]
+\quad $\,\Delta\,$ \> 
+   $::= \cdot \mid $ 
+   \>
+   $ \,\Delta\,, A^- \mid $
+   \>
+   $ \,\Delta\,, \langle A^+ \rangle$ \\
+\quad \,$\uline{U}$\, \> 
+   $::= $ 
+   $ A^- \mid $ \=
+   $ A^+ \mid $ 
+   $ [ A^+ ] \mid $ \=
+   $ \langle A^- \rangle$\\
+\quad $\uwave{\,U\,}$ \> 
+   $::= $ 
+   $ A^- \mid $ \>
+   $ A^+ \mid $ 
+   \>
+   $ \langle A^- \rangle$\\[-4pt]
+\quad \,$U$\, \> 
+   $::= $ 
+   \>
+   $ A^+ \mid $ 
+   \>
+   $ \langle A^- \rangle$\\
+\end{tabbing}
+%
+%
+\quad \fbox{$\mildseq{\Gamma}{\Delta}{U}$}
+\[
+\infer[{\it focus}^*_R]
+{\mildseq{\Gamma}{\Delta}{A^+}}
+{\mildseq{\Gamma}{\Delta}{[A^+]}}
+\quad
+\infer[{\it focus}^*_L]
+{\mildseq{\Gamma}{\Delta,A^-}{U}}
+{\mildseq{\Gamma}{\Delta,[A^-]}{U}}
+\quad
+\infer[{\it copy}^*]
+{\mildseq{\Gamma, A^-}{\Delta}{U}}
+{\mildseq{\Gamma, A^-}{\Delta, [A^-]}{U}}
+\]
+
+\[
+\infer[\eta^+]
+{\mildseq{\Gamma}{\Delta, p^+}{U}}
+{\mildseq{\Gamma}{\Delta, \langle p^+ \rangle}{U}}
+\quad
+\infer[{\it id}^+]
+{\mildseq{\Gamma}{\langle A^+ \rangle}{[A^+]}}
+{}
+\quad
+\infer[\eta^-]
+{\mildseq{\Gamma}{\Delta}{p^-}}
+{\mildseq{\Gamma}{\Delta}{\langle p^- \rangle}}
+\quad
+\infer[{\it id}^-]
+{\mildseq{\Gamma}{[A^-]}{\langle A^- \rangle}}
+{}
+\]
+
+\[
+\infer[{\uparrow}_R]
+{\mildseq{\Gamma}{\Delta}{{\uparrow}A^+}}
+{\mildseq{\Gamma}{\Delta}{A^+}}
+\quad
+\infer[{\uparrow}_L]
+{\mildseq{\Gamma}{\Delta, [{\uparrow}A^+]}{U}}
+{\mildseq{\Gamma}{\Delta, A^+}{U}}
+\quad
+\infer[{\downarrow}_R]
+{\mildseq{\Gamma}{\Delta}{[{\downarrow}A^-]}}
+{\mildseq{\Gamma}{\Delta}{A^-}}
+\quad
+\infer[{\downarrow}_L]
+{\mildseq{\Gamma}{\Delta, {\downarrow}A^-}{U}}
+{\mildseq{\Gamma}{\Delta, A^-}{U}}
+\]
+
+\[
+%
+\infer[{!}_R]
+{\mildseq{\Gamma}{\cdot}{[{!}A^-]}}
+{\mildseq{\Gamma}{\cdot}{A^-}}
+\quad
+\infer[{!}_L]
+{\mildseq{\Gamma}{\Delta, {!}A^-}{U}}
+{\mildseq{\Gamma, A^-}{\Delta}{U}}
+\quad
+\infer[\one_R]
+{\mildseq{\Gamma}{\cdot}{[\one]}}
+{}
+\quad
+\infer[\one_L]
+{\mildseq{\Gamma}{\Delta, \one}{U}}
+{\mildseq{\Gamma}{\Delta}{U}}
+\]
+
+\[
+%
+\infer[{\tensor}_R]
+{\mildseq{\Gamma}{\Delta_1,\Delta_2}{[A^+ \tensor B^+]}}
+{\mildseq{\Gamma}{\Delta_1}{[A^+]}
+ &
+ \mildseq{\Gamma}{\Delta_2}{[B^+]}}
+\quad
+\infer[{\tensor}_L]
+{\mildseq{\Gamma}{\Delta, A^+ \tensor B^+}{U}}
+{\mildseq{\Gamma}{\Delta, A^+, B^+}{U}}
+\]
+
+\[
+%
+\infer[{\lolli}_R]
+{\mildseq{\Gamma}{\Delta}{A^+ \lolli B^-}}
+{\mildseq{\Gamma}{\Delta, A^+}{B^-}}
+\quad
+\infer[{\lolli}_L]
+{\mildseq{\Gamma}{\Delta_1,\Delta_2, [A^+ \lolli B^-]}{U}}
+{\mildseq{\Gamma}{\Delta_1}{[A^+]}
+ &
+ \mildseq{\Gamma}{\Delta_2, [B^-]}{U}}
+%
+\]
+
+
+\input{figs/fig-kaustuv-focused}
+
 I think I've sorted out the problems that I was having. However, in doing
 so it's been very important to make some stability assumptions in the 
 cut admissibility proof. In particular, in these two cases:
