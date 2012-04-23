@@ -18,23 +18,16 @@ discuss focusing for a polarized presentation of linear logic in
 Section~\ref{sec:foclinlog}. With focusing, we can describe {\it
   synthetic inference rules} (Section~\ref{sec:linsynthetic}) that do
 a much better job of capturing the structure of focused
-transitions. There are still two deficiencies, however. The first
-deficiency is that the natural interpretation of positive atomic
-propositions does not allow us to express certain desirable state
-transitions. We propose a modification to the focused sequent calculus
-that addresses this first problem in Section~\ref{sec:linhack}; we
-also observe that the resulting system is less natural and discuss the
-implications of that observation. The second deficiency is that
-focusing gives us a highly sequential transition system, whereas our
-goal is to give an interpretation of concurrent transition systems. In
-Section~\ref{sec:linconcurrenteq}, we describe {\it concurrent
-  equality}, an equivalence relation on focused derivations introduced
-by Watkins et.~al to solve this problem, and also consider the
-limitations of concurrent equality in a fully focused setting.
+transitions. In Section~\ref{sec:linhack}, we justify the particular
+structure of our focusing system by discussing a few variations and
+their particular problems. In Section~\ref{sec:linconcurrenteq}, we
+describe {\it concurrent equality}, an equivalence relation on focused
+derivations introduced by Watkins et.~al that is motivated by the
+desire to capture independent concurrent transitions. We also discuss
+the limitations of concurrent equality in a fully focused setting.
 
 In Chapter 3, we will define a much richer ordered linear lax logic and prove
-a focusing result that incorporates the atom and bang optimizations
-from Section~\ref{sec:linhack}. In Chapter 4 we will carve out a
+a focusing result. In Chapter 4 we will carve out a
 fragment of this logic that forms the basis of the logical framework
 of substructural logical specifications; this framework will also
 incorporate the concurrent equality sketched out in
@@ -355,38 +348,40 @@ a subterm that is a positive proposition.
 The choice ultimately doesn't make an enormous difference for our
 purposes.  Polarized logics are interesting, and polarized linear
 logic is a bit more expressive than regular linear logic, as
-heavily-shifted propositions like
+heavily-shifted propositions like ${\downarrow}{\uparrow}A^+$ and
 ${\uparrow}{\downarrow}{\uparrow}{\downarrow}A^-$ can be
 expressed. This extra expressiveness won't help us in the design of
 logical frameworks, but the use of shifts is helpful when explaining
 identity expansion in Section~\ref{sec:linindentity} and completeness
-in Section~\ref{sec:lincorrectness}, so we will focus a polarized
-linear logic with shifts.
+in Section~\ref{sec:lincorrectness}, so we will describe focusing
+for a polarized linear logic with shifts.
 
 \input{figs/fig-lin-shift}
 
 The relationship between unpolarized and polarized linear logic is
 given by two erasure functions $(A^+)^\circ$ and $(A^-)^\circ$ that
 wipe away all the shifts; this function is defined in
-Figure~\ref{fig:lin-shift}. While shifts turn out to have a profound
-impact on the structure of focused proofs, they are intended to have
-no impact on provability. Therefore, the strongest statement of the
-correctness of focusing is based on erasure: there is an unfocused
-derivation of $(A^+)^\circ$ or $(A^-)^\circ$ if and only if there is a focused
-derivation of $A^+$ or $A^-$.  However, most proofs of the correctness of
-focusing prove a weaker property. Every proposition in linear logic
-has an obvious polarized analogue with a minimal number of shifts;
-this analogue is formalized as the two functions $A^\oplus$ and
-$A^\ominus$ in Figure~\ref{fig:lin-shift}. Note that both of these
-functions are partial inverses of erasure: $(A^\oplus)^\circ =
-(A^\ominus)^\circ = A$. Almost all proofs of the correctness of
-focusing work on the basis of these partial inverses, which we call
-{\it polarization strategies}, establishing that there is an unfocused
-proof of $A$ if and only if there is a focused proof of
-$A^\oplus$.\footnote{The two exceptions are Zeilberger completeness
-  proof in classical persistent logic \cite{zeilberger08unity} and my
-  proof in intuitionistic persistent logic
-  \cite{simmons11structural}.}  
+Figure~\ref{fig:lin-shift}. In the other direction, every 
+proposition in unpolarized linear logic has an obvious polarized
+analouge with a minimal number of shifts, which is given by by
+the functions $A^\oplus$ and $A^\ominus$ in Figure~\ref{fig:lin-shift}.
+Both of these functions are partial inverses of erasure, since
+$(A^\oplus)^\circ = (A^\ominus)^\circ = A$; we will generally refer
+to partial inverses of erasure as {\it polarization strategies}. 
+
+While shifts turn out to have a profound impact on the structure of
+focused proofs, they are intended to have no impact on
+provability. Therefore, the strongest statement of the correctness of
+focusing is based on erasure: there is an unfocused derivation of
+$(A^+)^\circ$ or $(A^-)^\circ$ if and only if there is a focused
+derivation of $A^+$ or $A^-$.  However, existing proofs of
+focalization are of a weaker property: that there is an unfocused
+derivation of $A$ if and only if there is a focused derivation of
+$A^\bullet$, where $A^\bullet$ is some polarization strategy.  The
+only two exceptions I am aware of are Zeilberger's completeness proof
+of classical persistent logic \cite{zeilberger08unity} and my proof in
+intuitionistic persistent logic \cite{simmons11structural}); I will
+follow the latter development in this section.
 
 \subsection{Focused sequent calculus}
 
@@ -416,14 +411,15 @@ $[A^-]$, derivations can maintain the invariant that there is always
 at most one proposition in focus, effectively restoring the situation
 in which there are three distinct judgments. From this point on, we
 will only consider sequents with at most one focus; we will write
-$\underline{\Delta}$ or $\underline{U}$ to indicate when $\Delta$
-may contain a focus $[A^-]$ and when $U$ may be a focus $[A^+]$. 
-Pfenning, who developed this construction
-in \cite{pfenning12chaining}, calls this the 
-{\it focusing constraint}, and writes $\delta$ and $\gamma$ instead 
-of $\Delta$ and $U$.
+$\underline{\Delta}$ or $\underline{U}$ to indicate when $\Delta$ may
+contain a focus $[A^-]$ and when $U$ may be a focus $[A^+]$, though
+the sequent form $\mildseq{\Gamma}{\underline{\Delta}}{\underline{U}}$
+is still restricted to contain at most one focus.  Pfenning, who
+developed this construction in \cite{pfenning12chaining}, calls this
+the {\it focusing constraint}, and writes $\delta$ and $\gamma$
+instead of $\underline{\Delta}$ and $\underline{U}$.
 
-This restriction alone
+The focusing constraint alone
 gives us what Pfenning calls a {\it chaining} logic
 \cite{pfenning12chaining} and which Laurent calls a {\it weakly
   focused} logic \cite{laurent04proof}.\footnote{This is not what I
@@ -454,7 +450,8 @@ In unfocused sequent calculi, such as the one for linear logic in
 Figure~\ref{fig:linear}, initial sequents are restricted to atomic
 propositions. All sequent calculi, focused or unfocused, have the
 subformula property: every rule breaks down a proposition, either on
-the left or the right, when read from bottom to top. 
+the left or the right of the turnstile ``$\vdash$'', 
+when read from bottom to top. 
 Since the logical interpretation of atomic
 propositions is that they are stand-ins for unknown propositions, we
 are unable to break them down any further. We are therefore only able
@@ -479,7 +476,7 @@ stable (we never break down a suspended proposition) and are only used
 to immediately prove a proposition in focus with one of the identity
 rules ${\it id}^+$ or ${\it id}^-$.
 
-Suspended positive propositions act much like regular variables in a
+\paragraph{Suspended positive propositions} act much like regular variables in a
 natural deduction system. The positive identity rule ${\it id}^+$
 allows us to prove any positive proposition given that the positive
 proposition appears suspended in the context.  There is a
@@ -513,7 +510,7 @@ be a right-focused sequent $\mildseq{\Gamma}{\Delta', \langle A^+
   \rangle}{[B^+]}$, a left-focused sequent $\mildseq{\Gamma}{\Delta'',
   [B^-], \langle A^+ \rangle}{U}$, or an inverting sequent. 
 
-Suspended negative propositions are a bit weirder. While a derivation
+\paragraph{Suspended negative propositions} are a bit weirder. While a derivation
 of $\mildseq{\Gamma}{\underline{\Delta'}, \langle A^+ \rangle}{\underline{U}}$
 is missing a premise that can be satisfied by a derivation of
 $\mildseq{\Gamma}{\Delta}{[A^+]}$, a derivation of 
@@ -576,8 +573,8 @@ which we indicate using a dashed line:
 \label{sec:linindentity}
 
 Suspended propositions appear in Figure~\ref{fig:kaustuv-focused} in
-two places: first in the identity rules that we have just discussed
-and connected with the focal substitution principles, and second in
+two places: in the identity rules, which we have just discussed
+and connected with the focal substitution principles, and in
 the rules marked $\eta^+$ and $\eta^-$, which are also the only
 mention of atomic propositions in the presentation. It is here that we
 need to make an absolutely critical shift of perspective from
@@ -587,7 +584,7 @@ nondeterministically break down propositions, and the initial rule
 reached. In a focused logic, the focus and inversion phases must break
 down a proposition {\it all the way} until a shift is reached. The two
 $\eta$ rules are what put an end to this when an atomic proposition is
-reached, and they correspond to the two ${\it id}$ rules that allow
+reached, and they work with to the two ${\it id}$ rules that allow
 these necessarily suspended propositions to successfully conclude a
 right or left focus.
 
@@ -640,7 +637,9 @@ propositions and of negative atomic propositions as stand-ins for
 negative atomic propositions: if we substitute a proposition in for
 some atomic proposition, all the instances of atomic suspension
 corresponding to that rule become admissible instances of identity
-expansion. The usual identity principles are simple
+expansion. 
+
+The usual identity principles are 
 corollaries of identity expansion:
 \[
 \infer-[\eta^+]
@@ -666,17 +665,16 @@ corollaries of identity expansion:
 Theorem~\ref{thm:lincut} mostly follows the well-worn contours of a
 structural cut admissibility argument \cite{pfenning00structural}, so
 we defer a full discussion of cut admissibility until the next
-chapter, where the use of structural focalization will allow us to
-give a tidier proof of the theorem.\footnote{The main ``untidy''
+chapter, where we will give a tidier proof by incorporating more of
+the machinery of structural focalization.\footnote{The main ``untidy''
   aspect of Theorem~\ref{thm:lincut} is that the lack of a forced
   inversion order means that the right commutative cases dealing with
-  invertible rules must be repeated in parts 1 and 3, and likewise for
-  the left commutative cases dealing with invertible rules and parts 2
-  and 4. The repetition of almost all cases between parts 3 and 5 will
+  invertible rules must be repeated in parts 1 and 4. The repetition
+  of almost all right commutative cases between parts 4 and 5 will
   also be addressed in the next chapter.}
 %
-The only important caveat to emphasize about Theorem~\ref{thm:lincut}
-is that cut admissibility is only applicable in the absence of any
+The only important caveat about 
+cut admissibility is that it is only applicable in the absence of any
 non-atomic suspended propositions. If we did not make this
 restriction, then in Theorem~\ref{thm:lincut}, part 1, we might encounter
 a derivation of $\mildseq{\Gamma}{\langle A \tensor B \rangle}{[ A \tensor B ]}$
@@ -700,13 +698,15 @@ do not contain any non-atomic suspended propositions:
       then $\mildseq{\Gamma}{\Delta',\Delta}{U}$.
 \item If $\mildseq{\Gamma}{\Delta}{A^-}$
       and $\mildseq{\Gamma}{\Delta', [A^-]}{U}$
-      (where $\Delta'$ and $U$ are stable),
+      (where $\Delta$, $\Delta'$, and $U$ are stable),
       then $\mildseq{\Gamma}{\Delta',\Delta}{U}$. 
 \item If $\mildseq{\Gamma}{\underline{\Delta}}{A^+}$
       and $\mildseq{\Gamma}{\Delta', A^+}{U}$,
+      (where $\Delta'$ and $U$ are stable),
       then $\mildseq{\Gamma}{\Delta',\underline{\Delta}}{U}$. 
 \item If $\mildseq{\Gamma}{\Delta}{A^-}$
       and $\mildseq{\Gamma}{\underline{\Delta'}, A^-}{\underline{U}}$,
+      (where $\Delta$ is stable),
       then $\mildseq{\Gamma}{\underline{\Delta'},\Delta}{\underline{U}}$. 
 \item If $\mildseq{\Gamma}{\cdot}{A^-}$
       and $\mildseq{\Gamma, A^-}{\underline{\Delta'}}{\underline{U}}$,
@@ -715,21 +715,27 @@ do not contain any non-atomic suspended propositions:
 \end{theorem}
 
 \begin{proof}
-By lexicographic induction. In each invocation of the induction
-hypothesis, either the principal cut formula $A^+$ or $A^-$ gets 
-smaller, or else it stays the same and the number of the part
-gets smaller (as when we invoke part 2 when proving part 5). 
+  The structure of the proof in is detailed in
+  \cite{simmons12cut}.  In each invocation of the induction
+  hypothesis, either the principal cut formula $A^+$ or $A^-$ gets
+  smaller or else it stays the same and the ``part size'' (1-5) gets
+  smaller. When the principal cut formula and the part size remain the
+  same, either the first given derivation gets smaller (part 3)
+  or the second given derivation gets smaller (parts 1, 4 and 5).
 
-Within\ldots FIX THIS.
-
- parts 3, 4, and 5, the first two metrics stay the same
-while either the derivation gets smaller and the second stays the same,
-or the 
-
-Within part 3, the first two
-metrics stay the same while the first given derivation gets smaller,
-and within parts 4 and 5, the first two metrics stay the same while the
-second given derivation gets smaller.
+  Standard structural cut admissibility proofs do not isolate the
+  left commutative cuts (where the first given derivaiton gets
+  smaller) from the right commutative cuts (where the second given
+  derivation gets smaller); therefore, the termination metric must
+  stipulate that the derivation that does not get smaller must stay
+  the same size \cite{pfenning00structural}. As noted in
+  \cite{simmons11structural}, our more specific termination argument
+  has a potential advantage -- it is not necessary to show that 
+  the uses of weakening (if $\mildseq{\Gamma}{\Delta}{U}$ 
+  then $\mildseq{\Gamma, A^-}{\Delta}{U}$), which is 
+  a lemma needed to deal with all 
+  commutative cuts involving ${!}_L$, preserve the
+  structure or size of proofs.
 \end{proof}
 
 \subsection{Correctness of focusing}
@@ -738,9 +744,11 @@ second given derivation gets smaller.
 \input{figs/fig-lin-shift-ctx}
 
 Now we will make precise the correctness for a focused, polarized
-logic that was discussed in Section~\ref{sec:linpolar}: that there is
-a unfocused proof of $(A^+)^\circ$ if and only if there is a focused proof of
-$A^+$. The proof require lifting of our erasure function 
+logic that was discussed in Section~\ref{sec:linpolar}: that 
+there is an unfocused derivation of
+$(A^+)^\circ$ or $(A^-)^\circ$ if and only if there is a focused
+derivation of $A^+$ or $A^-$.
+The proof require lifting of our erasure function 
 to contexts and succeedants, which is
 done in Figure~\ref{fig:lin-shift-ctx}. Note that erasure is only
 defined on focused sequents $\mildseq{\Gamma}{\Delta}{U}$ when
