@@ -751,25 +751,27 @@ derivation of $A^+$ or $A^-$.
 The proof require lifting of our erasure function 
 to contexts and succeedants, which is
 done in Figure~\ref{fig:lin-shift-ctx}. Note that erasure is only
-defined on focused sequents $\mildseq{\Gamma}{\Delta}{U}$ when
-$\Delta$ and $U$ contain only atomic suspended propositions; therefore
+defined on focused sequents 
+$\mildseq{\Gamma}{\underline{\Delta}}{\underline{U}}$ when
+$\underline{\Delta}$ and $\underline{U}$ 
+contain only atomic suspended propositions. Thereforem
 Theorems~\ref{thm:linfocsound}~and~\ref{thm:linfoccomplete}, like
-the cut admissibility theorem, 
-have an extra condition that $\Delta$ and $U$ contain 
-only atomic suspended propositions. Soundness and completeness
-are established on the basis of erasure as in \cite{simmons11structural}.
+the cut admissibility theorem, implicitly have 
+as an extra condition that $\underline{\Delta}$ and $\underline{U}$
+must contain only atomic suspended propositions. 
 
 \bigskip
 \begin{theorem}[Soundness of focusing]\label{thm:linfocsound}
-If $\mildseq{\Gamma}{\Delta}{U}$, 
-then $\seq{\Gamma^\circ}{\Delta^\circ}{U^\circ}$.
+If $\mildseq{\Gamma}{\underline{\Delta}}{\underline{U}}$, 
+then $\seq{\Gamma^\circ}{\underline{\Delta}^\circ}{\underline{U}^\circ}$.
 \end{theorem}
 
 \begin{proof}
   By straightforward induction on the given derivation; in each case,
   the result either follows directly by invoking the induction
-  hypothesis or by invoking the induction hypothesis and applying one
-  rule from Figure~\ref{fig:linear}.
+  hypothesis (in the case of rules like ${\uparrow}_R$) or by invoking
+  the induction hypothesis and applying one rule from
+  Figure~\ref{fig:linear} (in the case of rules like ${\otimes}_R$).
 \end{proof}
 
 \begin{theorem}[Completeness of focusing]\label{thm:linfoccomplete}
@@ -777,7 +779,7 @@ If $\seq{\Gamma^\circ}{\Delta^\circ}{C^\circ}$, where $\Delta$ and $U$ are
 stable,\footnote{Frank Pfenning's 
   variant of this proof does not require that inversion sequents be stable,
   but the tradeoff is that he must use a more general statement of 
-  cut admissibility (Theorem~\ref{thm:lincut}) that also makes fewer
+  cut admissibility that also makes fewer
   stability demands.} 
 then $\mildseq{\Gamma}{\Delta}{C}$. 
 \end{theorem}
@@ -786,15 +788,17 @@ then $\mildseq{\Gamma}{\Delta}{C}$.
   By induction on the first given derivation. Each rule in 
   Figure~\ref{fig:linear} corresponds to one {\it unfocused admissibility 
   lemma} that we must prove in the focused system, some extra steps 
-  to take care of leftover shifts. These leftover steps 
-  can be characterized as derivable rules of inference:
-  \[
+  to take care of leftover shifts. In addition to cut admissibility
+  and identity expansion, most of the unfocused admissibility 
+  lemams use two derived forms, ${\downarrow}{\uparrow}_R$ and
+  ${\uparrow}{\downarrow}_L$, to take care of extra shifts:
+  {\small \[
   \infer[{\downarrow}{\uparrow}_R]
   {\mildseq{\Gamma}{\Delta}{{\downarrow}{\uparrow}A^+}}
   {\mildseq{\Gamma}{\Delta}{A^+}}
-  \quad
+  ~
   \deduce{\mathstrut}{=}
-  \quad
+  ~
   \infer[{\it focus}_R]
   {\mildseq{\Gamma}{\Delta}{{\downarrow}{\uparrow}A^+}}
   {\infer[{\downarrow}_R]
@@ -802,13 +806,13 @@ then $\mildseq{\Gamma}{\Delta}{C}$.
    {\infer[{\uparrow}_R]
     {\mildseq{\Gamma}{\Delta}{{\uparrow}A^+}}
     {\mildseq{\Gamma}{\Delta}{A^+}}}}
-  \]\[
+  \qquad
   \infer[{\uparrow}{\downarrow}_L]
   {\mildseq{\Gamma}{\Delta, {\uparrow}{\downarrow}A^-}{U}}
   {\mildseq{\Gamma}{\Delta, A^-}{U}}
-  \quad
+  ~
   \deduce{\mathstrut}{=}
-  \quad
+  ~
   \infer[{\it focus}_L]
   {\mildseq{\Gamma}{\Delta, {\uparrow}{\downarrow}A^-}{U}}
   {\infer[{\uparrow}_L]
@@ -816,7 +820,7 @@ then $\mildseq{\Gamma}{\Delta}{C}$.
    {\infer[{\downarrow}_R]
     {\mildseq{\Gamma}{\Delta, {\downarrow}A^-}{U}}
     {\mildseq{\Gamma}{\Delta, A^-}{U}}}}
-  \]
+  \]}
 %   The other two are admissible:
 %   \[
 %   \infer-[\dedownup_R]
@@ -867,6 +871,11 @@ then $\mildseq{\Gamma}{\Delta}{C}$.
 %    &
 %    \mildseq{\Gamma}{\Delta, {\uparrow}{\downarrow}A^-}{U}}
 %   \]
+
+\noindent
+Multiple uses of this rule (zero or more) will be indicated with 
+a double-ruled inference rule.
+
 We will describe a few cases to illustrate how unfocused admissibility
 lemmas work.
 
@@ -877,13 +886,15 @@ lemmas work.
   $\mildseq{\Gamma, A^-}{\Delta, A^-}{U}$, and we conclude
   with the unfocused admissibility lemma ${\it copy}_u$:
   \[
-  \infer-[{\it cut}(4)]
+  \infer-[{\it cut}(5)]
   {\mildseq{\Gamma, A^-}{\Delta}{U}}
   {\infer-[\eta^-]
    {\mildseq{\Gamma, A^-}{\cdot}{A^-}}
-   {\infer[{\it id}^-]
+   {\infer[{\it copy}]
     {\mildseq{\Gamma, A^-}{\cdot}{\langle A^- \rangle}}
-    {}}
+    {\infer[{\it id}^-]
+     {\mildseq{\Gamma, A^-}{[A^-]}{\langle A^- \rangle}}
+     {}}}
    &
    \mildseq{\Gamma, A^-}{\Delta, A^-}{U}}
   \]
@@ -920,7 +931,7 @@ lemmas work.
   $C^+ = {\downarrow}{\uparrow}\ldots{\downarrow}{\uparrow}!A^-$.
   By the induction hypothesis, we have
   $\mildseq{\Gamma}{\cdot}{{\downarrow}A^-}$, and we conclude by the unfocused
-  admissibility lemma ${!}_{uR}$, which is derivable:
+  admissibility lemma ${!}_{uR}$:
   \[
   \infer=[{\downarrow}{\uparrow}_R]
   {\mildseq{\Gamma}{\cdot}
@@ -1104,26 +1115,51 @@ A salient feature of this presentation of focusing is that invertible,
 non-focused rules need not be applied in any particular order.
 Therefore, the last step in a proof of $\mildseq{\Gamma}{\Delta, A
   \tensor B, \one, {!}C}{D \lolli E}$ could be ${\otimes}_L$,
-${\one}_L$ ${!}_L$, or ${\lolli}_R$. Allowing for this inessential
+${\one}_L$ ${!}_L$, or ${\lolli}_R$. 
+The style is exemplified by Liang and
+Miller's LJF \cite{liang09focusing}, and the confluent presentation in
+this chapter is closely faithful to Pfenning's course notes on linear
+logic \cite{pfenning12chaining}.
+
+Allowing for this inessential
 nondeterminism simplifies the presentation a bit, but it also gets in
 the way of effective proof search and canonical derivations if we do
-not address it in some way.  Addressing this nondeterminism within an
-inversion phase echos the discussion of LF from the beginning of the
-chapter.
-
+not address it in some way. 
+The different possibilities for addressing this nondeterminism within an
+inversion phase echo the discussion of nondeteterminism in 
+LF from the beginning of the chapter.
 We can, as suggested in that introduction, declare that all
 proofs which differ only by the order of their invertible, non-focused
 rules be treated as equivalent. It is possible to establish that all
 possible inversion orderings will lead to the same set of stable
 sequents, which lets us know that all of these reorderings do not
-fundamentally change the structure of the rest of the proof, and it
-should furthermore be possible to show that this equivalence relation
-on derivations is decidable. This is fundamentally a confluence
-property, and so we can call this style of focusing a {\it confluent}
-presentation. The style is exemplified by Liang and Miller's LJF
-\cite{liang09focusing}, and the confluent presentation in this chapter
-is closely faithful to Pfenning's course notes on linear logic
-\cite{pfenning12chaining}.  
+fundamentally change the structure of the rest of the proof. This is 
+a property we would already need to prove {\it unfocused cut}, which
+is expressed by the following admissibile rule, where $A$ is $A^+$
+or $A^-$ and ${\Delta}$, ${\Delta'}$, and $U$ contain no focus
+but may not be stable:
+\[
+\infer-[{\it cut}]
+{\mildseq{\Gamma}{\Delta', \Delta}{U}}
+{\mildseq{\Gamma}{\Delta}{A}
+ &
+ \mildseq{\Gamma}{\Delta', A}{U}}
+\]
+If $A$ is $A^+$, proving the admissibility of this rule involves
+permuting invertible rules in the second given derivation,
+$\mildseq{\Gamma}{\Delta', A^+}{U}$, until $A^+$ is the only unstable
+part of the second sequent, at which point part 3 of
+Theorem~\ref{thm:lincut} applies.  Similarly, if $A$ is $A^-$, we must
+permute invertible rules in the first given derivation until $A^-$ is
+the only unstable part of the first sequent, at which point part 4 of
+Theorem~\ref{thm:lincut} applies. This unfocused cut rule is
+independently interesting, and in any case we should expect it to
+hold. Pfenning has noted\footnote{Personal communication.} that by
+proving this simpler cut property, we can prove a simpler class of
+unfocused admissibility lemmas on unstable inversion sequents. The
+unfocused admissibility of rules like ${!}_R$, ${\lolli}_R$, and
+${\otimes}_L$, which required the use of doubly-shifted side proofs in 
+our proof, is trivial in this alternate presentation.
 
 %; one of them
 %is Proposition~\ref{prop:confluence-lin}:
@@ -1140,7 +1176,9 @@ is closely faithful to Pfenning's course notes on linear logic
 %\end{proposition}
 %\bigskip
 
-Given this decidable equivalence on proofs, we can pick some member of
+Given the decidability of this 
+
+this decidable equivalence on proofs, we can pick some member of
 each equivalence class
 to serve as a canonical representative; this will suffice
 to solve the problems with proof search, as we can search for 
