@@ -363,7 +363,7 @@ given by two erasure functions $(A^+)^\circ$ and $(A^-)^\circ$ that
 wipe away all the shifts; this function is defined in
 Figure~\ref{fig:lin-shift}. In the other direction, every 
 proposition in unpolarized linear logic has an obvious polarized
-analouge with a minimal number of shifts, which is given by by
+analogue with a minimal number of shifts, which is given by by
 the functions $A^\oplus$ and $A^\ominus$ in Figure~\ref{fig:lin-shift}.
 Both of these functions are partial inverses of erasure, since
 $(A^\oplus)^\circ = (A^\ominus)^\circ = A$; we will generally refer
@@ -724,7 +724,7 @@ do not contain any non-atomic suspended propositions:
   or the second given derivation gets smaller (parts 1, 4 and 5).
 
   Standard structural cut admissibility proofs do not isolate the
-  left commutative cuts (where the first given derivaiton gets
+  left commutative cuts (where the first given derivation gets
   smaller) from the right commutative cuts (where the second given
   derivation gets smaller); therefore, the termination metric must
   stipulate that the derivation that does not get smaller must stay
@@ -754,7 +754,7 @@ done in Figure~\ref{fig:lin-shift-ctx}. Note that erasure is only
 defined on focused sequents 
 $\mildseq{\Gamma}{\underline{\Delta}}{\underline{U}}$ when
 $\underline{\Delta}$ and $\underline{U}$ 
-contain only atomic suspended propositions. Thereforem
+contain only atomic suspended propositions. Therefore
 Theorems~\ref{thm:linfocsound}~and~\ref{thm:linfoccomplete}, like
 the cut admissibility theorem, implicitly have 
 as an extra condition that $\underline{\Delta}$ and $\underline{U}$
@@ -778,7 +778,7 @@ then $\seq{\Gamma^\circ}{\underline{\Delta}^\circ}{\underline{U}^\circ}$.
 If $\seq{\Gamma^\circ}{\Delta^\circ}{C^\circ}$, where $\Delta$ and $U$ are
 stable,\footnote{Frank Pfenning's 
   variant of this proof does not require that inversion sequents be stable,
-  but the tradeoff is that he must use a more general statement of 
+  but the trade-off is that he must use a more general statement of 
   cut admissibility that also makes fewer
   stability demands.} 
 then $\mildseq{\Gamma}{\Delta}{C}$. 
@@ -790,7 +790,7 @@ then $\mildseq{\Gamma}{\Delta}{C}$.
   lemma} that we must prove in the focused system, some extra steps 
   to take care of leftover shifts. In addition to cut admissibility
   and identity expansion, most of the unfocused admissibility 
-  lemams use two derived forms, ${\downarrow}{\uparrow}_R$ and
+  lemmas use two derived forms, ${\downarrow}{\uparrow}_R$ and
   ${\uparrow}{\downarrow}_L$, to take care of extra shifts:
   {\small \[
   \infer[{\downarrow}{\uparrow}_R]
@@ -1126,7 +1126,7 @@ nondeterminism simplifies the presentation a bit, but it also gets in
 the way of effective proof search and canonical derivations if we do
 not address it in some way. 
 The different possibilities for addressing this nondeterminism within an
-inversion phase echo the discussion of nondeteterminism in 
+inversion phase echo the discussion of nondeterminism in 
 LF from the beginning of the chapter.
 We can, as suggested in that introduction, declare that all
 proofs which differ only by the order of their invertible, non-focused
@@ -1135,7 +1135,7 @@ possible inversion orderings will lead to the same set of stable
 sequents, which lets us know that all of these reorderings do not
 fundamentally change the structure of the rest of the proof. This 
 property is already required to prove {\it unfocused cut} as
-expressed this admissibile rule:
+expressed this admissible rule:
 \[
 \infer-[{\it cut}]
 {\mildseq{\Gamma}{\Delta', \Delta}{U}}
@@ -1169,7 +1169,7 @@ proofs of the admissibility of unfocused cut
 grows quadratically with the number of connectives and
 rules included in the logic. The proofs of identity expansion,
 cut admissibility, soundness of focusing, and completeness of focusing,
-on the other hand, all scale linearally with the number of connectives
+on the other hand, all scale linearly with the number of connectives
 and rules in the logic.
 
 %; one of them
@@ -1429,41 +1429,41 @@ specifications we will be dealing with, the ability to form these
 synthetic inference rules is absolutely critical. In some uses, the
 persistent resource acts as {\it permission} to consume $q$ and
 produce $r$. In other uses, $p$ represents knowledge that we must
-currently possess in order to enact a transition. The 2010 health care
-reform law's calorie labeling requireiments say that, in the future,
+currently possess in order to enact a transition. America's 2010 health care
+reform law introduced a requirement that restaurant menus include
+calorie information. This means that, in the near future,
 we can exchange six bucks for a soup and salad at Panera, but only if
-we know how many caolries are in the meal. The six bucks, soup, and
-salad remain ephemerial resources like $q$ and $r$, but the calorie
-count is persistent. It is mathematical knowledge, which obviously is
-not consumed by the transation.
+we know how many calories are in the meal. The six bucks, soup, and
+salad remain ephemeral resources like $q$ and $r$, but the calorie
+count is persistent. It is mathematical knowledge, which is
+not consumed by the transition.
 
 My justification for presenting
 Chaudhuri's system as the canonical focusing system for linear logic
-in Section~\ref{sec:foclinlog} is because it truly treates the focused
+in Section~\ref{sec:foclinlog} is because it most easily facilitates 
+reasoning about the focused 
 sequent calculus {\it as a logic}. Internal soundness and 
-completeness properties can are established by the cut admissibility
+completeness properties are established by the cut admissibility
 and identity expansion theorems, and these theorems are conceptually
 prior to the soundness and completeness of the focused system relative
 to the unfocused system. The two modifications we discuss in this section
 complicate the treatment of focused logics as independently justifiable
-sequent calculi for linear logic. Andreoli's atom optimization makes
-cut admissibility for the focused system complicated and non-structural, 
-and, for systems based on adjoint logic, it is difficult or impossible to
-define a well-behaved erasure function in such a way that 
-polarization strategies -- partial inverses of erasure -- exist. Furthermore,
-both modifications weaken our ability to read atomic proposition as stand-ins
-for regular propositions in linear logic. 
+sequent calculi for linear logic. Andreoli's atom optimization 
+complicates cut admissibility for the focused, 
+and adjoint logic makes it is difficult or impossible to
+define a well-behaved erasure function so that that 
+polarization strategies -- partial inverses of erasure -- exist.
 
 \subsection{Atom optimization}
 
 Andreoli's original focused system isn't polarized, so propositions
 that are syntactically invalid in a polarized presentation, like
-${!}(p^+ \otimes q^+)$ or ${!}p^+$ are valid in his system (we would
+${!}(p^+ \otimes q^+)$ or ${!}p^+$, are valid in his system (we would
 have to write ${!}{\uparrow}{(p^+ \otimes q^+)}$ and
 ${!}{\uparrow}p^+$). It's therefore possible, in an unpolarized
 presentation, to use the ${\it copy}$ rule to copy a positive
 proposition out of the context and into left focus, but the focus
-immediately blurs, as in this (intuitionstic) 
+immediately blurs, as in this (intuitionistic) 
 proof fragment:\footnote{We will use
   the sequent form $\andseq{\Gamma}{\Delta}{C}$ in this section for
   focused but unpolarized systems.}
@@ -1659,8 +1659,10 @@ one new case of identity expansion, which is unproblematic:
 {\infer-[{\it subst}^+]
  {\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
  {\infer[{\pbang}_R]
-  {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{[{\pbang}p^+}]}
-  {{\infer[{\it id}^+_p]
+  {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{[{\pbang}p^+]}}
+  {\infer[{\it focus}_R]
+   {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{p^+}}
+   {\infer[{\it id}^+_2]
     {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{[ p^+ ]}}
     {}}}
   &
@@ -1672,14 +1674,17 @@ one new case of identity expansion, which is unproblematic:
    {\mathcal D}}}}
 \]
 
-Identity expansion let us see the first cloud on the horizion for the 
-suitability of the atom optimization. Previously, when we substituted
+Even though the identity expansion theorem is unproblematic, the
+suspended persistent propositions let us consider the first
+objection to the atom optimization. 
+Previously, when we substituted
 a positive proposition for an atomic proposition, the proof's structure
-remained fundamentally unchanged -- instances of the $\eta^+_{p^+}$ rule
-on the replaced atomic proposition turned
-into admissibile instances of the general identity expansion rule 
-$\eta^+_{A^+}$. We first have to explain what ${\pbang}p^+$ even becomes
-when we substitute $A^+$ for $p^+$; the most obvious candidate is
+remained fundamentally unchanged -- instances of the $\eta^+$ rule
+on $p^+$ turned
+into admissible instances of the general identity expansion rule 
+$\eta^+$ on $A^+$. We first have to explain what ${\pbang}p^+$ even becomes
+when we substitute $A^+$ for $p^+$, since ${\pbang}A^+$ is not a 
+proposition; the most obvious candidate is
 ${!}{\uparrow}A^+$. That substitution requires us to change the
 structure of proofs in a significant way, however, as shown in 
 Figure~\ref{fig:replacement-breaks}. Immediately before entering into
@@ -1693,7 +1698,8 @@ an instance of ${\it id}^+_1$.
 \paragraph{Cut admissibility}
 While we might be willing to sacrifice the natural treatment of atomic
 propositions as stand-ins for arbitrary propositions, another instance
-of this pattern arises when we try to establish cut admissibility for the
+of this pattern arises when we try to establish the
+critical cut admissibility theorem for the
 logic with ${\pbang}p^+$. 
 The new commutative cuts (one each in parts 1, 2, 3, and 4) are unproblematic,
 but trouble arises when we try to reduce the principal cut for ${\pbang}p^+$.
@@ -1721,7 +1727,7 @@ but the proof is not so straightforward.
 
 To see why this cut is more complicated to prove than part 5 of 
 Theorem~\ref{thm:lincut}, consider what it will take to reduce
-the cut in Figure~\ref{fig:bad-cut}. We cannot immediately 
+the cut in the top half of Figure~\ref{fig:bad-cut}. We cannot immediately 
 call induction on the sub-derivation in the right branch, as 
 there is no way to prove $p^+ \otimes p^+$ in focus when 
 $\langle p^+ \rangle$ does not appear in the linear context. 
@@ -1729,7 +1735,9 @@ We need to get enough $\langle p^+ \rangle$ propositions
 in the linear context replace all the instances of
 ${\it id}_2^+$ that deal with the suspended $p^+$ in the persistent
 context with instances of ${\it id}_1^+$ that use freshly-introduced
-$\langle p^+ \rangle$ propositions.
+$\langle p^+ \rangle$ propositions. This can be achieved with 
+repeated application of part 3 of Theorem~\ref{thm:lincut}, as shown
+in the bottom half of Figure~\ref{fig:bad-cut}.
 
 The minimal extension to Theorem~\ref{thm:lincut} that justifies 
 the atom optimization appears to be the following, where 
@@ -1847,10 +1855,6 @@ the ${\pbang}p^+$ connective.}
 \label{fig:bad-cut}
 \end{figure}
 
-This extra step, in the context of a more complex setting like the 
-ordered linear lax logic considered in Chapter 3, is a significant
-additional undertaking. 
-
 \subsection{Bang optimization}
 \label{sec:bangopt}
 
@@ -1909,7 +1913,7 @@ parts (4) and (5).
 Modifying the soundness and completeness theorems requires that we
 extend the erasure function: $({\pbang}p^+)^\circ = {!}p^+$,
 and $(\Gamma, \langle p^+ \rangle)^\circ = \Gamma^\circ, p^+$. Modifying
-the soudness theorem is straightforward. For completeness, we must 
+the soundness theorem is straightforward. For completeness, we must 
 first consider the case of ${\it copy}$ when 
 $\Gamma^\circ, A = (\Gamma, \langle p^+ \rangle)^\circ$ and so 
 $A = p^+$. We can get 
@@ -1935,7 +1939,7 @@ We also need two more unfocused admissibility lemmas:
 {\mildseq{\Gamma}{\cdot}{p^+}}
 \]
 The first is straightforwardly derivable, but the second is quite
-problemantic: it requires us to prove a new cut principle,
+problematic: it requires us to prove a new cut principle,
 that $\mildseq{\Gamma}{\cdot}{p^+}$ and 
 $\mildseq{\Gamma}{\Delta}{}$
 
