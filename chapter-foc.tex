@@ -1133,11 +1133,9 @@ proofs which differ only by the order of their invertible, non-focused
 rules be treated as equivalent. It is possible to establish that all
 possible inversion orderings will lead to the same set of stable
 sequents, which lets us know that all of these reorderings do not
-fundamentally change the structure of the rest of the proof. This is 
-a property we would already need to prove {\it unfocused cut}, which
-is expressed by the following admissibile rule, where $A$ is $A^+$
-or $A^-$ and ${\Delta}$, ${\Delta'}$, and $U$ contain no focus
-but may not be stable:
+fundamentally change the structure of the rest of the proof. This 
+property is already required to prove {\it unfocused cut} as
+expressed this admissibile rule:
 \[
 \infer-[{\it cut}]
 {\mildseq{\Gamma}{\Delta', \Delta}{U}}
@@ -1145,6 +1143,9 @@ but may not be stable:
  &
  \mildseq{\Gamma}{\Delta', A}{U}}
 \]
+(where $A$ is $A^+$
+or $A^-$ and ${\Delta}$, ${\Delta'}$, and $U$ contain no focus
+but may not be stable).
 If $A$ is $A^+$, proving the admissibility of this rule involves
 permuting invertible rules in the second given derivation,
 $\mildseq{\Gamma}{\Delta', A^+}{U}$, until $A^+$ is the only unstable
@@ -1152,7 +1153,9 @@ part of the second sequent, at which point part 3 of
 Theorem~\ref{thm:lincut} applies.  Similarly, if $A$ is $A^-$, we must
 permute invertible rules in the first given derivation until $A^-$ is
 the only unstable part of the first sequent, at which point part 4 of
-Theorem~\ref{thm:lincut} applies. This unfocused cut rule is
+Theorem~\ref{thm:lincut} applies. 
+
+This unfocused cut rule is
 independently interesting, and in any case we should expect it to
 hold. Pfenning has noted\footnote{Personal communication.} that by
 proving this simpler cut property, we can prove a simpler class of
@@ -1160,6 +1163,14 @@ unfocused admissibility lemmas on unstable inversion sequents. The
 unfocused admissibility of rules like ${!}_R$, ${\lolli}_R$, and
 ${\otimes}_L$, which required the use of doubly-shifted side proofs in 
 our proof, is trivial in this alternate presentation.
+Unfortunately, the proof of unfocused cut is 
+tedious and long. The size of all known
+proofs of the admissibility of unfocused cut 
+grows quadratically with the number of connectives and
+rules included in the logic. The proofs of identity expansion,
+cut admissibility, soundness of focusing, and completeness of focusing,
+on the other hand, all scale linearally with the number of connectives
+and rules in the logic.
 
 %; one of them
 %is Proposition~\ref{prop:confluence-lin}:
@@ -1176,9 +1187,9 @@ our proof, is trivial in this alternate presentation.
 %\end{proposition}
 %\bigskip
 
-Given the decidability of this 
-
-this decidable equivalence on proofs, we can pick some member of
+Once we equate all proofs that differ only on the order
+in which inference rules are applied within an inversion phase, 
+we can pick some member of
 each equivalence class
 to serve as a canonical representative; this will suffice
 to solve the problems with proof search, as we can search for 
@@ -1206,7 +1217,7 @@ of the same logic along with the appropriate confluence property for
 that logic, whereas the reverse is not true. Therefore, the confluent
 presentation, in a certain sense, provides a stronger theorem than the
 fixed presentation, though the fixed presentation will be sufficient
-for our purposes.
+for our purposes in later chapters.
 
 \subsection{Running example}
 
@@ -1391,26 +1402,57 @@ intuitionistic analogue to Andreoli's original presentation of focusing
 synthetic inference rules as the focused presentation used in the
 language of ordered logical specifications presented by Pfenning and I
 \cite{pfenning09substructural}.
-
+% However, our current objective is not simply to study
+% focused logic; we want to use the structure of proofs in focused
+% logics as a logical framework for encoding systems we are interested
+% in.
 The difference, in each case, lies in the treatment of positive atomic
-propositions. My justification for presenting
+propositions. In this section, I will discuss the difference between
+the system presented in Section~\ref{sec:foclinlog}, Andreoli's 
+modification (which I call the {\it atom optimization}), and another
+system, based on adjoint logic, that I have used in previous work
+with Pfenning.
+
+The goal of both of these systems (Andreoli's atom optimization and
+focused adjoint logic) is essentially the same: to allow
+for synthetic inference rules of the form
+\[
+\infer
+{\mildseq{\Gamma, p}{\Delta, q}{C}}
+{\mildseq{\Gamma, p}{\Delta, r}{C}}
+\]
+where $p$ is an atomic proposition in the persistent context that is
+observed (but not consumed), $q$ is an atomic proposition that is
+consumed in the transition, and $r$ is an atomic proposition that is
+generated as the result of the transition. In the kinds of
+specifications we will be dealing with, the ability to form these
+synthetic inference rules is absolutely critical. In some uses, the
+persistent resource acts as {\it permission} to consume $q$ and
+produce $r$. In other uses, $p$ represents knowledge that we must
+currently possess in order to enact a transition. The 2010 health care
+reform law's calorie labeling requireiments say that, in the future,
+we can exchange six bucks for a soup and salad at Panera, but only if
+we know how many caolries are in the meal. The six bucks, soup, and
+salad remain ephemerial resources like $q$ and $r$, but the calorie
+count is persistent. It is mathematical knowledge, which obviously is
+not consumed by the transation.
+
+My justification for presenting
 Chaudhuri's system as the canonical focusing system for linear logic
-in Section~\ref{sec:foclinlog} is because the treatment of suspended
-positive propositions fits beautifully with the idea that atomic
-propositions are just placeholders for unspecified
-propositions. However, our current objective is not simply to study
-focused logic; we want to use the structure of proofs in focused
-logics as a logical framework for encoding systems we are interested
-in.
-
-In this section, we will discuss two modifications to the treatment 
-of positive propositions, Andreoli's atom
-optimization and the bang optimization. These changes give the focused
-system more expressiveness at the cost of losing the elegant
-interpretation of positive atoms as stand-ins for positive atomic
-propositions; the implications of this are discussed in
-Section~\ref{sec:moreprim}.
-
+in Section~\ref{sec:foclinlog} is because it truly treates the focused
+sequent calculus {\it as a logic}. Internal soundness and 
+completeness properties can are established by the cut admissibility
+and identity expansion theorems, and these theorems are conceptually
+prior to the soundness and completeness of the focused system relative
+to the unfocused system. The two modifications we discuss in this section
+complicate the treatment of focused logics as independently justifiable
+sequent calculi for linear logic. Andreoli's atom optimization makes
+cut admissibility for the focused system complicated and non-structural, 
+and, for systems based on adjoint logic, it is difficult or impossible to
+define a well-behaved erasure function in such a way that 
+polarization strategies -- partial inverses of erasure -- exist. Furthermore,
+both modifications weaken our ability to read atomic proposition as stand-ins
+for regular propositions in linear logic. 
 
 \subsection{Atom optimization}
 
@@ -1421,7 +1463,8 @@ have to write ${!}{\uparrow}{(p^+ \otimes q^+)}$ and
 ${!}{\uparrow}p^+$). It's therefore possible, in an unpolarized
 presentation, to use the ${\it copy}$ rule to copy a positive
 proposition out of the context and into left focus, but the focus
-immediately blurs, as in this proof fragment:\footnote{We will use
+immediately blurs, as in this (intuitionstic) 
+proof fragment:\footnote{We will use
   the sequent form $\andseq{\Gamma}{\Delta}{C}$ in this section for
   focused but unpolarized systems.}
 \[
@@ -1449,11 +1492,11 @@ atomic propositions that allows a positive right focus on an atomic
 proposition to succeed if the atomic proposition appears in the
 persistent context:
 \[
-\infer[{\it init}^+]
+\infer[{\it init}_1^+]
 {\andseq{\Gamma}{p^+}{[p^+]}}
 {}
 \qquad
-\infer[{\it init}^+_p]
+\infer[{\it init}_2^+]
 {\andseq{\Gamma, p^+}{\cdot}{[p^+]}}
 {}
 \]
@@ -1537,8 +1580,276 @@ according to the second approach above:
 All three of these options are essentially similar; we will go with the
 last, as it allows us to preserve the original meaning of ${!}{\uparrow}p^+$
 if that is our actual intent. 
+Introducing the atom optimization into our polarized system through a
+new connective also allows us to isolate the effects that this new
+connective has on cut admissibility and identity expansion; we will consider
+each in turn.
 
+\begin{figure}
+\[
+\infer[{\pbang}_L]
+{\mildseq{\cdot}{{\pbang}p^+}{p^+ \otimes p^+}}
+{\infer[{\it focus}_R]
+ {\mildseq{\langle p^+ \rangle}{\cdot}{p^+ \otimes p^+}}
+ {\infer[{\otimes}_R]
+  {\mildseq{\langle p^+ \rangle}{\cdot}{[ p^+ \otimes p^+ ]}}
+  {\infer[{\it id}_2^+]
+   {\mildseq{\langle p^+ \rangle}{\cdot}{[p^+]}}
+   {}
+   &
+   \infer[{\it id}_2^+]
+   {\mildseq{\langle p^+ \rangle}{\cdot}{[p^+]}}
+   {}}}}
+~~
+\mbox{vs.}
+\!\!\!
+\infer[{!}_L]
+{\mildseq{\cdot}{{!}{\uparrow}{A^+}}{A^+ \otimes A^+}}
+{\infer[\it copy]
+ {\mildseq{{\uparrow}{A^+}}{\cdot}{A^+ \otimes A^+}}
+ {\infer[{\uparrow}_L]
+  {\mildseq{{\uparrow}{A^+}}{[{\uparrow}A^+]}{A^+ \otimes A^+}}
+  {\infer-[\eta^+]
+   {\mildseq{{\uparrow}{A^+}}{A^+}{A^+ \otimes A^+}}
+   {\infer[{\it copy}]
+    {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle}{A^+ \otimes A^+}}
+    {\infer[{\uparrow}_L]
+     {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle, [{\uparrow}A^+]}
+        {A^+ \otimes A^+}}
+     {\infer-[\eta^+]
+      {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle, A^+}
+         {A^+ \otimes A^+}}
+      {\infer[{\it focus}_R]
+       {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle, \langle A^+ \rangle}
+          {A^+ \otimes A^+}}
+       {\infer[{\otimes}_R]
+        {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle, \langle A^+ \rangle}
+           {[A^+ \otimes A^+]}}
+        {\infer[{\it id}_1^+]
+         {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle}
+            {[A^+]}}
+         {}
+         &
+         \infer[{\it id}_1^+]
+         {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle}
+            {[A^+]}}
+         {}}}}}}}}}}
+\]
+\caption{In systems with the atom optimization, substituting a 
+positive proposition $A^+$ for a position atomic proposition $p^+$ 
+is more complicated than just replacing atomic instances of $\eta^+$
+with admissible non-atomic instances of $\eta^+$.}
+\label{fig:replacement-breaks}
+\end{figure}
 
+\paragraph{Identity expansion}
+
+There is
+one new case of identity expansion, which is unproblematic:
+\[
+\infer-[\eta^+]
+{\mildseq{\Gamma}{\Delta, {\pbang}p^+}{U}}
+{\deduce
+ {\mildseq{\Gamma}{\Delta, \langle {\pbang}p^+ \rangle}{U}}
+ {\mathcal D}}
+\quad
+\Longrightarrow
+\infer[{\pbang}_L]
+{\mildseq{\Gamma}{\Delta, {\pbang}p^+}{U}}
+{\infer-[{\it subst}^+]
+ {\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
+ {\infer[{\pbang}_R]
+  {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{[{\pbang}p^+}]}
+  {{\infer[{\it id}^+_p]
+    {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{[ p^+ ]}}
+    {}}}
+  &
+  \infer-[{\it weaken}]
+  {\mildseq{\Gamma, \langle p^+ \rangle}{\Delta, \langle {\pbang}p^+ \rangle}
+     {U}}
+  {\deduce
+   {\mildseq{\Gamma}{\Delta, \langle {\pbang}p^+ \rangle}{U}}
+   {\mathcal D}}}}
+\]
+
+Identity expansion let us see the first cloud on the horizion for the 
+suitability of the atom optimization. Previously, when we substituted
+a positive proposition for an atomic proposition, the proof's structure
+remained fundamentally unchanged -- instances of the $\eta^+_{p^+}$ rule
+on the replaced atomic proposition turned
+into admissibile instances of the general identity expansion rule 
+$\eta^+_{A^+}$. We first have to explain what ${\pbang}p^+$ even becomes
+when we substitute $A^+$ for $p^+$; the most obvious candidate is
+${!}{\uparrow}A^+$. That substitution requires us to change the
+structure of proofs in a significant way, however, as shown in 
+Figure~\ref{fig:replacement-breaks}. Immediately before entering into
+any focusing phase where the ${\it id}_2^+$ rule is used $n$ times
+on the hypothesis $\langle p^+ \rangle$, we need to left-focus on 
+${\uparrow}A^+$ $n$ times with the ${\it copy}$ rule to get 
+$n$ copies of $\langle A^+ \rangle$ into the linear context, each of 
+which can be used to replace one of the ${\it id}^+_2$ instances with 
+an instance of ${\it id}^+_1$. 
+
+\paragraph{Cut admissibility}
+While we might be willing to sacrifice the natural treatment of atomic
+propositions as stand-ins for arbitrary propositions, another instance
+of this pattern arises when we try to establish cut admissibility for the
+logic with ${\pbang}p^+$. 
+The new commutative cuts (one each in parts 1, 2, 3, and 4) are unproblematic,
+but trouble arises when we try to reduce the principal cut for ${\pbang}p^+$.
+\[
+\infer-[{\it cut}(1)]
+{\mildseq{\Gamma}{\Delta}{U}}
+{\infer[{\pbang}_R]
+ {\mildseq{\Gamma}{\cdot}{[{\pbang}p^+]}}
+ {\mildseq{\Gamma}{\cdot}{p^+}}
+ &
+ \infer[{}_L]
+ {\mildseq{\Gamma}{\Delta, {\pbang}p^+}{U}}
+ {\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}}
+\]
+We are left needing to prove that 
+$\mildseq{\Gamma}{\cdot}{p^+}$ and 
+$\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}$
+proves $\mildseq{\Gamma}{\Delta}{U}$, which does not fit the structure
+of any of our existing cut principles. It is similar to 
+the statement of part 5 of Theorem~\ref{thm:lincut} 
+(if $\mildseq{\Gamma}{\cdot}{A^-}$
+and $\mildseq{\Gamma, A^-}{\underline{\Delta}}{\underline{U}}$, 
+then $\mildseq{\Gamma}{\underline{\Delta}}{\underline{U}}$),
+but the proof is not so straightforward.
+
+To see why this cut is more complicated to prove than part 5 of 
+Theorem~\ref{thm:lincut}, consider what it will take to reduce
+the cut in Figure~\ref{fig:bad-cut}. We cannot immediately 
+call induction on the sub-derivation in the right branch, as 
+there is no way to prove $p^+ \otimes p^+$ in focus when 
+$\langle p^+ \rangle$ does not appear in the linear context. 
+We need to get enough $\langle p^+ \rangle$ propositions
+in the linear context replace all the instances of
+${\it id}_2^+$ that deal with the suspended $p^+$ in the persistent
+context with instances of ${\it id}_1^+$ that use freshly-introduced
+$\langle p^+ \rangle$ propositions.
+
+The minimal extension to Theorem~\ref{thm:lincut} that justifies 
+the atom optimization appears to be the following, where 
+$\langle p^+ \rangle^n$ denotes $n$ copies of the suspended positive
+proposition $\langle p^+ \rangle$.
+
+\bigskip
+\begin{theorem}[Extra cases of cut admissibility (Theorem~\ref{thm:lincut})]
+~
+\begin{enumerate}
+\item[6a.] 
+  If $\mildseq{\Gamma}{\cdot}{p^+}$ 
+  and $\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{[ B^+ ]}$, 
+  then there exists $n$ such that
+      $\mildseq{\Gamma}
+          {\Delta, \langle p^+ \rangle^n}
+          {[ B^+ ]}$.
+\item[6b.] 
+  If $\mildseq{\Gamma}{\cdot}{p^+}$
+  and $\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}$,
+  then $\mildseq{\Gamma}{\Delta}{U}$. 
+\item[6c.]
+  If $\mildseq{\Gamma}{\cdot}{p^+}$
+  and $\mildseq{\Gamma, \langle p^+ \rangle}{\Delta, [B^-]}{U}$,
+  then there exists $n$ such that
+      $\mildseq{\Gamma}
+          {\Delta, \langle p^+ \rangle^n, [B^-]}
+          {U}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Induction on the second given derivation; whenever ${\it focus}_R$,
+${\it focus}_L$ or ${\it copy}$ are the last rule in part 6b, we need
+to make $n$ calls to part 3, of cut admissibility
+followed by $n$ uses of $\eta^+$, where
+$n$ is determined by the inductive call to part {\it 6a} or {\it 6b}. 
+
+The calls to part 3 are justified by the induction metric: the principal
+cut formula $p^+$ stays the same and the part number gets smaller.
+\end{proof}
+
+\begin{figure}
+\[
+\infer-[{\it cut}(6b)]
+{\mildseq{\Gamma}{\cdot}{p^+ \otimes p^+}}
+{\infer[{\it copy}]
+ {\mildseq{\Gamma}{\cdot}{p^+}}
+ {\infer[{\lolli}_L]
+  {\mildseq{\Gamma}{q^+ \lolli {\uparrow}p^+}{p^+}}
+  {\infer[{\it id}_2^+]
+   {\mildseq{\Gamma}{\cdot}{[q^+]}}
+   {}
+   &
+   \infer[{\uparrow}_L]
+   {\mildseq{\Gamma}{[{\uparrow}p^+]}{^+}}
+   {\infer[\eta^+]
+    {\mildseq{\Gamma}{p^+}{p^+}}
+    {\infer[{\it focus}_R]
+     {\mildseq{\Gamma}{\langle p^+ \rangle}{p^+}}
+     {\infer[{\it id}^+]
+      {\mildseq{\Gamma}{\langle p^+ \rangle}{[ p^+ ]}}
+      {}}}}}}
+ &
+ \infer[{\it focus}_R]
+ {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}
+   {p^+ \otimes p^+}}
+ {\infer[{\otimes}_R]
+  {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}
+    {[ p^+ \otimes p^+ ]}}
+  {\infer[{\it id}_2^+]
+   {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}
+     {[ p^+ ]}}
+   {}
+   &
+   \infer[{\it id}_2^+]
+   {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}
+     {[ p^+ ]}}
+   {}}}}
+\]\[\Longrightarrow\]\[
+\infer-[{\it cut}(3)]
+{\mildseq{\Gamma}{\cdot}{p^+ \otimes p^+}}
+{\deduce
+ {\mildseq{\Gamma}{\cdot}{p^+}}
+ {\vdots}
+ &
+ \infer[\eta^+]
+ {\mildseq{\Gamma}{p^+}{p^+ \otimes p^+}}
+ {\infer-[{\it cut}(3)]
+  {\mildseq{\Gamma}{\langle p^+ \rangle}{p^+ \otimes p^+}}
+  {\deduce
+   {\mildseq{\Gamma}{\cdot}{p^+}}
+   {\vdots}
+   &
+   \infer[\eta^+]
+   {\mildseq{\Gamma}{\langle p^+ \rangle, p^+}{p^+ \otimes p^+}}
+   {\infer[{\it focus}_R]
+    {\mildseq{\Gamma}{\langle p^+ \rangle, \langle p^+ \rangle}
+      {p^+ \otimes p^+}}
+    {\infer[{\otimes}_R]
+     {\mildseq{\Gamma}{\langle p^+ \rangle, \langle p^+ \rangle}
+       {[ p^+ \otimes p^+ ]}}
+     {\infer[{\it id}_1^+]
+      {\mildseq{\Gamma}{\langle p^+ \rangle}{[p^+]}}
+      {}
+      &
+      \infer[{\it id}_1^+]
+      {\mildseq{\Gamma}{\langle p^+ \rangle}{[p^+]}}
+      {}}}}}}}
+\]\[
+(\mbox{where}~\Gamma = q^+ \lolli {\uparrow}p^+, \langle q^+ \rangle)
+\]
+\caption{An problematic cut that arises from the introduction of 
+the ${\pbang}p^+$ connective.}
+\label{fig:bad-cut}
+\end{figure}
+
+This extra step, in the context of a more complex setting like the 
+ordered linear lax logic considered in Chapter 3, is a significant
+additional undertaking. 
 
 \subsection{Bang optimization}
 \label{sec:bangopt}
@@ -1584,31 +1895,7 @@ theorems by adding new cases to each theorem
 
 There is one new case of identity
 expansion:
-\[
-\infer-[\eta^+]
-{\mildseq{\Gamma}{\Delta, {\pbang}p^+}{U}}
-{\deduce
- {\mildseq{\Gamma}{\Delta, \langle {\pbang}p^+ \rangle}{U}}
- {\mathcal D}}
-\quad
-\Longrightarrow
-\infer[{\pbang}_L]
-{\mildseq{\Gamma}{\Delta, {\pbang}p^+}{U}}
-{\infer-[{\it subst}^+]
- {\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
- {\infer[{\pbang}_R]
-  {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{[{\pbang}p^+}]}
-  {{\infer[{\it id}^+_p]
-    {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{[ p^+ ]}}
-    {}}}
-  &
-  \infer-[{\it weaken}]
-  {\mildseq{\Gamma, \langle p^+ \rangle}{\Delta, \langle {\pbang}p^+ \rangle}
-     {U}}
-  {\deduce
-   {\mildseq{\Gamma}{\Delta, \langle {\pbang}p^+ \rangle}{U}}
-   {\mathcal D}}}}
-\]
+
 While we could also prove another focal substitution principle, namely
 that $\mildseq{\Gamma}{\cdot}{[A^+]}$ and $\mildseq{\Gamma, \langle
   A^+ \rangle}{\Delta}{U}$ imply $\mildseq{\Gamma}{\Delta}{U}$, it's
@@ -1693,62 +1980,6 @@ ${\it id}^+_p$ for a substituted proposition in the focusing phase.
 One instance of this phenomena 
 is illustrated in Figure~\ref{fig:replacement-breaks}.
 
-\begin{figure}
-\[
-\infer[{\pbang}_L]
-{\mildseq{\cdot}{{\pbang}p^+}{p^+ \otimes p^+}}
-{\infer[{\it focus}_R]
- {\mildseq{\langle p^+ \rangle}{\cdot}{p^+ \otimes p^+}}
- {\infer[{\otimes}_R]
-  {\mildseq{\langle p^+ \rangle}{\cdot}{[ p^+ \otimes p^+ ]}}
-  {\infer[{\it id}^+_p]
-   {\mildseq{\langle p^+ \rangle}{\cdot}{[p^+]}}
-   {}
-   &
-   \infer[{\it id}^+_p]
-   {\mildseq{\langle p^+ \rangle}{\cdot}{[p^+]}}
-   {}}}}
-~~
-\mbox{vs.}
-\!\!\!
-\infer[{!}_L]
-{\mildseq{\cdot}{{!}{\uparrow}{A^+}}{A^+ \otimes A^+}}
-{\infer[\it copy]
- {\mildseq{{\uparrow}{A^+}}{\cdot}{A^+ \otimes A^+}}
- {\infer[{\uparrow}_L]
-  {\mildseq{{\uparrow}{A^+}}{[{\uparrow}A^+]}{A^+ \otimes A^+}}
-  {\infer-[\eta^+]
-   {\mildseq{{\uparrow}{A^+}}{A^+}{A^+ \otimes A^+}}
-   {\infer[{\it copy}]
-    {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle}{A^+ \otimes A^+}}
-    {\infer[{\uparrow}_L]
-     {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle, [{\uparrow}A^+]}
-        {A^+ \otimes A^+}}
-     {\infer-[\eta^+]
-      {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle, A^+}
-         {A^+ \otimes A^+}}
-      {\infer[{\it focus}_R]
-       {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle, \langle A^+ \rangle}
-          {A^+ \otimes A^+}}
-       {\infer[{\otimes}_R]
-        {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle, \langle A^+ \rangle}
-           {[A^+ \otimes A^+]}}
-        {\infer[{\it id}^+]
-         {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle}
-            {[A^+]}}
-         {}
-         &
-         \infer[{\it id}^+]
-         {\mildseq{{\uparrow}{A^+}}{\langle A^+ \rangle}
-            {[A^+]}}
-         {}}}}}}}}}}
-\]
-\caption{In systems with the atom optimization, substituting a 
-positive proposition $A^+$ for a position atomic proposition $p^+$ 
-is more complicated than just replacing atomic instances of $\eta^+$
-with admissible non-atomic instances of $\eta^+$.}
-\label{fig:replacement-breaks}
-\end{figure}
 
 To emphasize, the polarized formulation is not at fault here:
 Andreoli's focusing system exhibits the same issues, and this is
