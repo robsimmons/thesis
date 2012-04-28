@@ -1772,12 +1772,13 @@ proposition $\langle p^+ \rangle$.
 \begin{proof}
 Induction on the second given derivation; whenever ${\it focus}_R$,
 ${\it focus}_L$ or ${\it copy}$ are the last rule in part 6b, we need
-to make $n$ calls to part 3, of cut admissibility
-followed by $n$ uses of $\eta^+$, where
-$n$ is determined by the inductive call to part {\it 6a} or {\it 6b}. 
+to make $n$ calls to part 3 of the cut admissibility lemma, each one
+followed by a use of the $\eta^+$ rule, where
+$n$ is determined by the inductive call to part {\it 6a} (for ${\it focus}_R$) 
+or {\it 6c} (for ${\it focus}_L$ and ${\it copy}$). 
 
-The calls to part 3 are justified by the induction metric: the principal
-cut formula $p^+$ stays the same and the part number gets smaller.
+The calls to part 3 are justified by the existing induction metric: the 
+principal cut formula $p^+$ stays the same and the part number gets smaller.
 \end{proof}
 
 \begin{figure}
@@ -1855,16 +1856,77 @@ the ${\pbang}p^+$ connective.}
 \label{fig:bad-cut}
 \end{figure}
 
+\paragraph{Soundness and completenss of focusing}
+
+The obvious way of extending erasure for our extended logic is
+to let $({\pbang}p^+)^\circ = {!}p^+$ and  
+to let $(\Gamma, \langle p^+ \rangle)^\circ = (\Gamma)^\circ, p^+$. 
+Under this interpretation, the soundness of ${\pbang}_L$ and ${\pbang}_R$
+has the same structure as the soundness of ${!}_L$ and ${!}_R$, and the
+soundness of ${\it id}_2^+$ in the focused system is
+establised with ${\it copy}$ and ${\it init}$ in the unfocused system:
+\[
+\infer[{\it copy}]
+{\seq{\Gamma^\circ, p^+}{\cdot}{p^+}}
+{\infer[{\it init}]
+ {\seq{\Gamma^\circ, p^+}{p^+}{p^+}}
+ {}}
+\]
+
+Completeness reqires that we prove two new unfocused admissibility rules
+dealing with ${\pbang}$,
+both of which are derivable\ldots
+\[
+\infer-[{\pbang}_{uR}]
+{\mildseq{\Gamma}{\cdot}
+  {{\downarrow}{\uparrow}\ldots{\downarrow}{\uparrow}{\pbang}p^+}}
+{\mildseq{\Gamma}{\cdot}{p^+}}
+\qquad
+\infer-[{\pbang}_{uL}]
+{\mildseq{\Gamma}
+  {\Delta, {\uparrow}{\downarrow}\ldots{\downarrow}{\uparrow}{\pbang}p^+}
+  {U}}
+{\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
+\]
+\ldots as well as an unfocused admissibility rule dealing with the
+additional case where we apply ${\it copy}$ to the erasure
+of a persistent suspended proposition. This case reduces to
+a case of ordinary focal substitution:
+\[
+\infer-[\langle {\it copy} \rangle_{u}]
+{\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
+{\mildseq{\Gamma, \langle p^+ \rangle}{\Delta, \langle p^+ \rangle}{U}}
+\quad
+\deduce
+{\mathstrut}
+{=\mathstrut}
+\quad
+\infer-[{\it subst}^+]
+{\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
+{\infer[{\it id}^+_2]
+ {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{[p^+]}}
+ {}
+ &
+ {\mildseq{\Gamma, \langle p^+ \rangle}{\Delta, \langle p^+ \rangle}{U}}
+ }
+\]
+
 \subsection{Bang optimization}
 \label{sec:bangopt}
 
+For such a seemingly simple change, the atom optimization adds a surprising
+amount of complexity to the cut admissibility theorem for focused linear
+logic. What's more, the three extra cases of cut that we had to 
+introduce were all for the purpose of handling a single case: the principal
+cut on ${\pbang}p^+$. 
+
 The choice of adding ${\pbang}p^+$ as a special new connective instead
 of defining it as ${!}{\uparrow}p^+$ paves the way for us to modify
-its meaning further. For instance, there turns out to be no particular
-need for the ${\pbang}_R$ rule to lose focus in its premise, even
-though it is critical that ${!}_R$ lose focus in its
-premise,\footnote{If we fail to do so propositions like ${!}(A \otimes
-  B) \lolli {!}(B \otimes A)$ will have no proof.} and we can revise
+its meaning further. For instance, there turns out to be no internal
+reason for the ${\pbang}_R$ rule to lose focus in its premise, even
+though it is critical that ${!}_R$ lose focus on its
+premise.\footnote{If we fail to do so propositions like ${!}(A \otimes
+  B) \lolli {!}(B \otimes A)$ will have no proof.} We can revise
 ${\pbang}_R$ accordingly.
 \[
 \infer[{\pbang}_R]
@@ -1880,16 +1942,86 @@ ${\pbang}_R$ accordingly.
 {}
 \]
 This further optimization
-will be called the {\it bang optimization}, as it, like the atom 
+can be called the {\it bang optimization}, as it, like the atom 
 optimization, potentially reduces the number of focusing phases
-in a proof.
-
-If we think of ${\pbang}p^+$ as being naturally defined as 
-${!}{\uparrow}p^+$, then the atom optimization modifies the left rule
-and the bang optimization modifies the right rule. It is not, however,
+in a proof. Identity expansion is trivial to modify, and cut 
+admissibility is significantly simpler. In the principal cut for
+${\pbang}p^+$, we can conclude by case analysis\footnote{Or rule inversion,
+in the sence.}
+that the first given derivation 
+must prove $p^+$ in focus using the ${\it id}^+$ rule. This, in turn,
+means that $\langle p^+ \rangle$ must already appear in $\Gamma$,
+so the cut reduces to an admissible instance of contraction.
+\[
+\infer-[{\it cut}(1)]
+{\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
+{\infer[{\pbang}_R]
+ {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{[{\pbang}p^+]}}
+ {\infer[{\it id}_2^+]
+  {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{[p^+]}}
+  {}}
+ & 
+ \infer[{\pbang}_L]
+ {\mildseq{\Gamma, \langle p^+ \rangle}{\Delta, {\pbang}p^+}{U}}
+ {\mildseq{\Gamma, \langle p^+ \rangle, \langle p^+ \rangle}{\Delta}{U}}}
+\quad
+\deduce
+{\mathstrut}
+{\Longrightarrow}
+\quad
+\infer-[{\it contract}]
+{\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
+{\mildseq{\Gamma, \langle p^+ \rangle, \langle p^+ \rangle}{\Delta}{U}}
+\]
+Therefore, we no longer need the extra parts {\it 6a - 6c} of cut 
+admissibility in order to prove cut admissibility for a focused system
+with the bang optimization. It is not, however,
 possible to think about the bang optimization independently from the
 atom optimization: identity expansion would fail in a system that 
 only provided a modified right rule for ${\pbang}p^+$. 
+
+Because cut and identity hold, we can think of a 
+focused logic with the bang optimization as being 
+internally sensible. The problem is that this logic is no longer
+{\it extenally} sensible relative to normal linear logic, because
+we cannot erase ${\pbang}p^+$ into regular
+linear logic in a sensible way. 
+Specifically, if we continue to define $({\pbang}p^+)^\circ$ as
+${!}p^+$, then ${\pbang}q^+ \lolli {!}(q^+
+\lolli {\uparrow}p^+) \lolli {\uparrow}{\pbang}p^+$ has no proof in
+focused linear logic, whereas its erasure, ${!}q^+ \lolli {!}(q^+
+\lolli p^+) \lolli {!}p^+$, does have an unfocused proof. In other
+words, the completeness of focusing (Theorem~\ref{thm:linfoccomplete})
+no longer holds under the bang optimization!
+
+Our focused logic with the bang optimization has some resemblance to
+tensor logic \cite{mellies10resource}, as well as to the logic of
+Girard that introduced the ${\uparrow}A^+$ and ${\downarrow}A^-$
+notation to the discussion of polarity \cite{girard91sex}. Both of
+these presentations incorporate a general focus-preserving
+${\pbang}A^+$ connective -- a positive formula with a positive
+subformula -- {\it in lieu} of the focus-interrupting ${!}A^-$
+connective.  Both presentations also have the prominent caveat that
+${!}$ in the unfocused logic necessarily corresponds to
+${\pbang}{\downarrow}$ in the focused logic: it is {\it not} possible
+to derive ${\pbang}(A \otimes B) \vdash {\pbang}(B \otimes A)$ in
+these systems, and no apology is made for this fact, because
+${\pbang}{\downarrow}{\uparrow}(A \otimes B) \vdash
+{\pbang}{\downarrow}{\uparrow}(B \otimes A)$ holds as expected.  We
+want avoid this route because it gives the shifts too much power: they
+influence the {\it existance} of proofs, not just the structure of
+proofs.\footnote{Both the note of Girard and the paper of Melli{\`e}s
+  and Tabareau see the shifts as a form of negation; therefore, they
+  are unconcerned that $A^+$ has a different meaning of
+  ${\downarrow}{\uparrow}A^+$ in their constructive logic. For any
+  proposition $A$ that is classically but not intuitionstically true,
+  we know that the double negation $\neg\neg A$ will be true in
+  intuitionstic logic! This view of shifts as negations seems rather
+  foreign to the erasure-based understanding of shifts we have been
+  discussing, though Zeilberger has attempted to reconcile these
+  viewpoints \cite{zeilberger08unity}.} In doing so, this view of
+logic threatens the valuable intuition that the resource
+interpretation of linear logic provides.
 
 \subsection{Fixing the metatheory}
 
