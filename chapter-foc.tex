@@ -1407,7 +1407,24 @@ language of ordered logical specifications presented by Pfenning and I
 % logics as a logical framework for encoding systems we are interested
 % in.
 The difference, in each case, lies in the treatment of positive atomic
-propositions. In this section, I will discuss the difference between
+propositions. In this section, I will discuss four changes:
+\begin{itemize}
+\item Andreoli's original system, which I name the {\it atom optimization},
+that complicates the interpretation of atomic propositions as stand-ins
+for arbitrary propositions;
+\item A further change to the atom optimization, the {\it bang optimization},
+which complicates the relationship between the ;
+\item The {\it adjoint logic} of Benton and Wadler
+\cite{benton96linear}, which introduces
+a new syntactic class of persistent propositions; and
+\item The {\it atom refinement}, a notion (which dates
+at least back to Girard's LU \cite{girard93unity}),
+that some propositions can be treated as {\it permeable} between
+the persistent and linear contexts and that permable atoms can be introduced
+to stand for 
+\end{itemize}
+
+ difference between
 the system presented in Section~\ref{sec:foclinlog}, Andreoli's 
 modification (which I call the {\it atom optimization}), and another
 system, based on adjoint logic, that I have used in previous work
@@ -1781,7 +1798,7 @@ The calls to part 3 are justified by the existing induction metric: the
 principal cut formula $p^+$ stays the same and the part number gets smaller.
 \end{proof}
 
-\begin{figure}
+\begin{figure}[t]
 \[
 \infer-[{\it cut}(6b)]
 {\mildseq{\Gamma}{\cdot}{p^+ \otimes p^+}}
@@ -1925,8 +1942,8 @@ of defining it as ${!}{\uparrow}p^+$ paves the way for us to modify
 its meaning further. For instance, there turns out to be no internal
 reason for the ${\pbang}_R$ rule to lose focus in its premise, even
 though it is critical that ${!}_R$ lose focus on its
-premise.\footnote{If we fail to do so propositions like ${!}(A \otimes
-  B) \lolli {!}(B \otimes A)$ will have no proof.} We can revise
+premise; if we fail to do so propositions like ${!}(A \otimes
+  B) \lolli {!}(B \otimes A)$ will have no proof. We can revise
 ${\pbang}_R$ accordingly.
 \[
 \infer[{\pbang}_R]
@@ -1946,34 +1963,34 @@ can be called the {\it bang optimization}, as it, like the atom
 optimization, potentially reduces the number of focusing phases
 in a proof. Identity expansion is trivial to modify, and cut 
 admissibility is significantly simpler. In the principal cut for
-${\pbang}p^+$, we can conclude by case analysis\footnote{Or rule inversion,
-in the sence.}
+${\pbang}p^+$, we can conclude by case analysis
 that the first given derivation 
-must prove $p^+$ in focus using the ${\it id}^+$ rule. This, in turn,
+must prove $p^+$ in focus using the ${\it id}_2^+$ rule. This, in turn,
 means that $\langle p^+ \rangle$ must already appear in $\Gamma$,
-so the cut reduces to an admissible instance of contraction.
+so $\Gamma = \Gamma', \langle p^+ \rangle$, and 
+the cut reduces to an admissible instance of contraction.
 \[
 \infer-[{\it cut}(1)]
-{\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
+{\mildseq{\Gamma', \langle p^+ \rangle}{\Delta}{U}}
 {\infer[{\pbang}_R]
- {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{[{\pbang}p^+]}}
+ {\mildseq{\Gamma', \langle p^+ \rangle}{\cdot}{[{\pbang}p^+]}}
  {\infer[{\it id}_2^+]
-  {\mildseq{\Gamma, \langle p^+ \rangle}{\cdot}{[p^+]}}
+  {\mildseq{\Gamma', \langle p^+ \rangle}{\cdot}{[p^+]}}
   {}}
  & 
  \infer[{\pbang}_L]
- {\mildseq{\Gamma, \langle p^+ \rangle}{\Delta, {\pbang}p^+}{U}}
- {\mildseq{\Gamma, \langle p^+ \rangle, \langle p^+ \rangle}{\Delta}{U}}}
+ {\mildseq{\Gamma', \langle p^+ \rangle}{\Delta, {\pbang}p^+}{U}}
+ {\mildseq{\Gamma', \langle p^+ \rangle, \langle p^+ \rangle}{\Delta}{U}}}
 \quad
 \deduce
 {\mathstrut}
 {\Longrightarrow}
 \quad
 \infer-[{\it contract}]
-{\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
-{\mildseq{\Gamma, \langle p^+ \rangle, \langle p^+ \rangle}{\Delta}{U}}
+{\mildseq{\Gamma', \langle p^+ \rangle}{\Delta}{U}}
+{\mildseq{\Gamma', \langle p^+ \rangle, \langle p^+ \rangle}{\Delta}{U}}
 \]
-Therefore, we no longer need the extra parts {\it 6a - 6c} of cut 
+Thus, we no longer need the complicated extra parts {\it 6a - 6c} of cut 
 admissibility in order to prove cut admissibility for a focused system
 with the bang optimization. It is not, however,
 possible to think about the bang optimization independently from the
@@ -1995,13 +2012,15 @@ words, the completeness of focusing (Theorem~\ref{thm:linfoccomplete})
 no longer holds under the bang optimization!
 
 Our focused logic with the bang optimization has some resemblance to
-tensor logic \cite{mellies10resource}, as well as to the logic of
-Girard that introduced the ${\uparrow}A^+$ and ${\downarrow}A^-$
+tensor logic \cite{mellies10resource}, as well the polarized
+logic that Girard presented in a note, ``On the sex of angels,''
+which first introduced the ${\uparrow}A^+$ and ${\downarrow}A^-$
 notation to the discussion of polarity \cite{girard91sex}. Both of
 these presentations incorporate a general focus-preserving
 ${\pbang}A^+$ connective -- a positive formula with a positive
-subformula -- {\it in lieu} of the focus-interrupting ${!}A^-$
-connective.  Both presentations also have the prominent caveat that
+subformula -- in lieu of the focus-interrupting ${!}A^-$
+connective.
+Both presentations also have the prominent caveat that
 ${!}$ in the unfocused logic necessarily corresponds to
 ${\pbang}{\downarrow}$ in the focused logic: it is {\it not} possible
 to derive ${\pbang}(A \otimes B) \vdash {\pbang}(B \otimes A)$ in
@@ -2019,9 +2038,9 @@ proofs.\footnote{Both the note of Girard and the paper of Melli{\`e}s
   intuitionstic logic! This view of shifts as negations seems rather
   foreign to the erasure-based understanding of shifts we have been
   discussing, though Zeilberger has attempted to reconcile these
-  viewpoints \cite{zeilberger08unity}.} In doing so, this view of
-logic threatens the valuable intuition that the resource
-interpretation of linear logic provides.
+  viewpoints \cite{zeilberger08unity}.} This interpretation of 
+shifts therefore threatens our ability to understand linear logic 
+connectives as resources.
 
 \subsection{Fixing the metatheory}
 
