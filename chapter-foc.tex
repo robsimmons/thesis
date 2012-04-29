@@ -1475,7 +1475,7 @@ complicate the treatment of focused logics as independently
 justifiable sequent calculi for linear logic. However, I suggest in
 Section~\ref{sec:permeable} that the last option, the incorporation of
 permeable atomic propositions, provides the most natural mechanism for
-incoroprating the structure that we are interested in into a focused
+incorporating the structure that we are interested in into a focused
 presentation of linear logic.
 
 \subsection{Atom optimization}
@@ -1492,7 +1492,7 @@ fragment:\footnote{We will use the sequent form
   $\andseq{\Gamma}{\Delta}{C}$ in this section for focused but
   unpolarized systems, and will frequently reference Pfenning's
   presentation of focused linear logic \cite{pfenning12chaining} as a
-  faithful intuitionstic analouge of Andreoli's system. This is, of
+  faithful intuitionistic analogue of Andreoli's system. This is, of
   course, a somewhat subjective claim.}
 \[
 \infer[{\it copy}]
@@ -1720,7 +1720,7 @@ on $p^+$ turned
 into admissible instances of the general identity expansion rule 
 $\eta^+$ on $A^+$. We first have to explain what ${\pbang}p^+$ even becomes
 when we substitute $A^+$ for $p^+$, since ${\pbang}A^+$ is not a 
-syntatically valid proposition; the only obvious candidate seems to be
+syntactically valid proposition; the only obvious candidate seems to be
 ${!}{\uparrow}A^+$. That substitution may require us to change the
 structure of proofs in a significant way, as shown in 
 Figure~\ref{fig:replacement-breaks}. Immediately before entering into
@@ -2228,7 +2228,7 @@ This effectively captures the structure of the separation requirement
 in a logical way, but it makes the structure of persistent atomic
 propositions rather barren and degenerate, and it places an extra
 logic, adjoint logic, between the focused system and our original 
-presentation of intuitionstic linear logic.
+presentation of intuitionistic linear logic.
 
 % Adjoint logic, because it requires a syntactic differentiation of
 % persistent and linear atomic propositions, still does not allow us to
@@ -2260,26 +2260,26 @@ presentation of intuitionstic linear logic.
 \label{sec:permeable}
 
 Our final attempt to logically motivate a notion of a persistent
-postivie proposition will be based on an analysis of {\it
+positive proposition will be based on an analysis of {\it
   permeability}.  Permeability in classical presentations of linear
 logic dates back to Girard's LU \cite{girard93unity}.\robnote{Check
   with Dale: earlier citations?} In this section, we will motivate
-permeable atomic propositions in intuitionstic linear logic by first
+permeable atomic propositions in intuitionistic linear logic by first
 considering a new identity expansion principle that only applies to
-permeable propositions, which are a syntatic refinement of the
+permeable propositions, which are a syntactic refinement of the
 positive propositions.\footnote{Permeable {\it negative} propositions
   are relevant to classical linear logic, but the asymmetry of
-  intuitionstic linear logic means that it is reasonable to consider
-  permeability exculsively as a property of positive propositions.}
+  intuitionistic linear logic means that it is reasonable to consider
+  permeability exclusively as a property of positive propositions.}
 
 The admissible identity expansion rule can be very helpful as a way
 of writing down proofs that avoid doing unnecessary work which
 focusing would otherwise require. For instance, if we are trying to
 prove the sequent $\mildseq{\Gamma}{\Delta}{{\downarrow}\top}$, where
-$\Delta$ has lots of complicated inversion to do, we can suspend
+$\Delta$ has lots of inversion to do, we can suspend
 that work with the admissible identity expansion rule and then 
 focus on the right to finish with ${\top}$. The following derivation 
-is an instance of this pattern, for example:
+is an instance of this pattern:
 \[
 \infer-[\eta^+]
 {\mildseq{\Gamma}
@@ -2314,19 +2314,58 @@ is an instance of this pattern, for example:
 The use of identity expansion lets us omit irrelevant decomposition
 steps that would otherwise be required by focusing. 
 
-Another pattern
-that we might want to capture with something like identity expansion
-is the situation where we are trying to prove the sequent
-$\mildseq{\Gamma}{\Delta}{1}$ and we know, by the syntactic structure
-of $\Delta$, that inversion will empty the context; one instance of
-this pattern is the sequent $\mildseq{\Gamma} {{!}A \otimes {!}B
-  \otimes {!}C \otimes {!}D} {\one}$. Positive propositions 
-like ${!}A \otimes {!}B \otimes {!}C \otimes {!}D$ that,
-upon decomposition, remove themselves from the linear context altogether
-are called {\it permeable}, as in a certain sense 
-they might as well be in the persistent context. It is possible to
-precisely characterize the syntactic refinement of the 
-positive MELL propositions with this property:
+\subsubsection{Permeability as a property of identity expansion}
+
+The pattern we want to capture with our new version of identity
+expansion is the situation where we are trying to prove the sequent
+$\mildseq{\Gamma}{\Delta}{\one}$ and we know, by the syntactic
+structure of $\Delta$, that inversion will empty the linear context;
+one instance of this pattern is the sequent $\mildseq{\Gamma} {{!}A
+  \otimes {!}B \otimes {!}C \otimes {!}D} {\one}$. We will do this by
+suspending propositions directly in the persistent context. To use
+these suspended propositions, we introduce a hypothesis rule for
+positive propositions suspended in the persistent context. 
+\[
+\infer[{\it id}^+_p]
+{\mildseq{\Gamma, \langle A^+ \rangle}{\cdot}{[A^+]}}
+{}
+\]
+This rule is, of course,
+exactly the ${\it id}^+_2$ rule from our discussion of Andreoli's
+system.
+There is also a focal substitution principle, Theorem~\ref{thm:fsubst-posper}. 
+This theorem was
+true in Andreoli's system, but we did not need or discuss it.
+
+\bigskip
+\begin{theorem}[Focal substitution (positive, persistent)]
+\label{thm:fsubst-posper}~\\
+If $\mildseq{\Gamma}{\cdot}{[A^+]}$ 
+and $\mildseq{\Gamma, \langle A^+ \rangle}{\underline{\Delta'}}
+      {\underline{U}}$, 
+then $\mildseq{\Gamma}{\underline{\Delta'}}{\underline{U}}$.
+\end{theorem}
+
+\begin{proof}
+  Once again, this is a straightforward induction over the second
+  given derivation, as in a proof of regular substitution in a natural
+  deduction system. If the second derivation is the axiom ${\it
+    id}_p^+$ that the distinguished suspended proposition $\langle A^+
+  \rangle$, then the result follows immediately using the first given
+  derivation.
+\end{proof}
+
+Given this focal substitution principle, we can consider the class of
+{\it permeable} positive atomic propositions. A permeable atomic
+proposition is one where, when we use the admissible $\eta^+$ rule to
+suspend it in the linear context, we might just as well suspend it in
+the persistent context, as it decomposes entirely into persistent
+pieces. In other words, we want a class of propositions $A^+_p$ such
+that $\mildseq{\Gamma, \langle A^+_p \rangle}{\Delta}{U}$ implies
+$\mildseq{\Gamma}{\Delta, A^+_p}{U}$, which is the permeable identity
+expansion property. It is possible to precisely characterize the MELL
+propositions that are permeable as a syntactic refinement of positive
+propositions:
 \[
 A^+_p ::= {!}A^- \mid \one \mid A^+_p \otimes B^+_p
 \]
@@ -2344,19 +2383,23 @@ and ${\downarrow}A^-$ are excluded from this fragment.
 % succeed in a non-empty linear context if $\Gamma$ contains the
 % proposition $p^+ \lolli A^-$.
 
-We can then augment our original focused linear logic from
-Figure~\ref{fig:kaustuv-focused} with one extra rule, ${\it id}^+_p$
-which exactly matches our earlier rule ${\it id}_2^+$. This rule gives
-us a new focal substitution principle ${\it subst}_p^+$. (This was
-true but unnecessary in the previous systems with ${\it id}_2^+$ rule.)
-Using this focal substitution principle, we can prove a {\it
-  persistent} identity expansion theorem on this syntactic refinement
-of positive propositions:
+\bigskip
+\begin{theorem}[Permeable identity expansion]\label{thm:permident}
+If $\mildseq{\Gamma, \langle A^+_p \rangle}{\Delta}{U}$, 
+then $\mildseq{\Gamma}{\Delta, A^+_p}{U}$.
+\end{theorem}
+
+\begin{proof}
+Induction over the structure of the proposition $A_p^+$ or $A^-$.
+The cases of
+this proof are represented in Figure~\ref{fig:lineta-3}.
+\end{proof}
+
+\input{figs/fig-lineta-3}
+
+As admissible rules, Theorems \ref{thm:fsubst-posper} and \ref{thm:permident}
+are written ${\it subst}^+_p$ and ${\eta}^+_p$:
 \[
-\infer[{\it id}^+_p]
-{\mildseq{\Gamma, \langle A^+ \rangle}{\cdot}{[A^+]}}
-{}
-\qquad
 \infer-[{\it subst}^+_p]
 {\mildseq{\Gamma}{\underline{\Delta}}{\underline{U}}}
 {\mildseq{\Gamma}{\cdot}{[A^+]}
@@ -2367,22 +2410,8 @@ of positive propositions:
 {\mildseq{\Gamma}{\Delta, A^+_p}{U}}
 {\mildseq{\Gamma, \langle A^+_p \rangle}{\Delta}{U}}
 \]
-The proof of the persistent focal substitution theorem is once again
-a straightforward induction over the derivation over the structure
-of $\mildseq{\Gamma, \langle A^+ \rangle}{\underline{\Delta}}{\underline{U}}$,
-and the proof of the persistent identity expansion, the cases of
-which are given in Figure~\ref{fig:lineta-3}, is by induction on the
-structure of $A^+_p$.
-
-\input{figs/fig-lineta-3}
-
-So far, we have only added one rule to our logic, ${\it id}^+_p$, 
-and it is not a rule
-that influences the existing cut admissibility or identity expansion
-principles in any way, even though it does allow the introduction of a
-new identity expansion principle. We
-can now use this persistent identity expansion property to
-give a compressed proof of our example sequent:
+We can use this persistent identity expansion property to
+give a compressed proof of our motivating example:
 \[
 \infer-[\eta^+_p]
 {\mildseq{\Gamma}
@@ -2412,26 +2441,41 @@ give a compressed proof of our example sequent:
   {}}}
 \]
 
-Our real motivation for introducing this identity expansion principle
-was to introduce a corresponding class of atomic propositions $p^+_p$ that
-\begin{align*}
-A^+ & ::= p^+ \mid p^+_p \mid {\downarrow}A^- \mid {!}A^- \mid \one \mid A^+ \otimes B^+\\
-A^+_p & ::= p^+_p \mid {!}A^- \mid \one \mid A^+_p \otimes B^+_p\\ 
-A^- & ::= p^- \mid {\uparrow}A^+ \mid A^+ \lolli B^-
-\end{align*}
-can be interpreted as arbitrary members of our syntactic refinement in the
-same way that regular positive atomic propositions can be interpreted
-as arbitrary positive propositions. Persistent atomic propositions $p^+_p$
-belong in the refinement $A^+_p$, which means that they belong in the
-grammar of general positive atomic propositions $A^+$ as well; the rule
+\subsubsection{Permeable atomic propositions}
+
+It would have been possible, in the discussion of focused
+linear logic in Section~\ref{sec:foclinlog}, to present
+identity expansion as conceptually prior to atomic propositions, only
+introducing atomic propositions. In this retelling, 
+the $\eta^+$ and $\eta^-$ rules can be motivated as the
+necessary base cases of identity expansion when we have a propositional
+variable. Conversely, we can now present a new class of 
+{\it permeable} atomic propositions $p^+_p$ that stand in for arbitrary 
+permeable propositions $A^+_p$. These add a new base case to 
+permeable identity expansion (Theorem~\ref{thm:permident}) 
+that can only be satisfied with
+an explicit $\eta^+_p$ rule:
 \[
 \infer[\eta^+_p]
 {\mildseq{\Gamma}{\Delta, p^+_p}{U}}
 {\mildseq{\Gamma, \langle p^+_p \rangle}{\Delta}{U}}
 \]
+Because the permeable propositions are a syntactic refinement of the
+positive propositions, $p^+_p$ must be valid positive atomic propositions
+as well. This is the revised grammar for 
+intuitionistic MELL with permeable atomic propositions:
+\begin{align*}
+A^+ & ::= p^+ \mid p^+_p \mid {\downarrow}A^- \mid {!}A^- \mid \one \mid A^+ \otimes B^+\\
+A^+_p & ::= p^+_p \mid {!}A^- \mid \one \mid A^+_p \otimes B^+_p\\ 
+A^- & ::= p^- \mid {\uparrow}A^+ \mid A^+ \lolli B^-
+\end{align*}
+
+This addition to the logic requires some additions to 
+positive identity expansion, cut admissibility, and completeness, but
+none of the changes are too severe; we consider each in turn.
 
 \paragraph{Identity expansion}
-The new addition to the language of positive propositions does require us to 
+The new addition to the language of positive propositions requires us to 
 extend eta expansion with one additional case:
 \[
 \infer-[\eta^+_p]
@@ -2451,27 +2495,36 @@ extend eta expansion with one additional case:
   {\mildseq{\Gamma, \langle p^+_p \rangle}{\Delta, \langle p^+_p \rangle}{U}}
   {\mildseq{\Gamma}{\Delta, \langle p^+_p \rangle}{U}}}}
 \]
-Other than this, identity expansion remains unchanged; the additional
-case of persistent identity expansion that is introduced is exactly
-handled by the new $\eta^+_p$ rule.
 
 \paragraph{Cut admissibility}
-The necessary modifications to the 
-cut admissibility theorem are essentially the same as the ones needed
-to prove cut admissibility for the bang optimization; the commutative
-cuts are unproblematic, and the principal cut reduces to an
-instance of contraction. 
+We must clarify the restriction on cut admissibility for our extended
+logic. In Theorem~\ref{thm:lincut}, we required that sequents contain
+only suspensions of atomic propositions, and in our generalization of
+cut admissibility, we need to further require that all suspensions in
+the persistent context $\Gamma$ be permeable and atomic and that all
+suspensions in the linear context $\Delta$ be non-permeable and
+atomic.  Under this restriction, the proof proceeds much as it did for
+the system with the bang optimization: the principal cut reduces to an
+instance of contraction, and the additional commutative cases 
+are straightforward.
 
-\paragraph{Soundness and completeness of focusing} There are two ways
-we can understand the soundness and completeness of focusing for linear
-logic extended with permeable atomic propositions: first, we
-can add a notion of permeable atomic propositions to our core 
-linear logic from Figure~\ref{fig:linear}, in which case soundness and
-completeness are straightforward. Alternatively, we can use our intuition
-that a permeable proposition $A^+_p$ should be interprovable with 
-${!}{\downarrow}A^+_p$ and let $(p^+_p)^\circ = {!}p^+_p$; 
-we must also let $\langle p^+_p \rangle$ in the persistent context
-erase to $p^+_p$.
+\paragraph{Correctness of focusing} There are two ways we can
+understand the soundness and completeness of focusing for linear logic
+extended with permeable atomic propositions. One option is to add a
+notion of permeable atomic propositions to our core linear logic from
+Figure~\ref{fig:linear}, in which case soundness and completeness are
+straightforward. Alternatively, we can use our intuition that a
+permeable proposition $A$ is interprovable with ${!}A$ and let
+$(p^+_p)^\circ = {!}p^+_p$. 
+
+The erasure of permeable propositions $p^+_p$ in the focused
+logic as ${!}p^+_p$ in the unfocused logic reveals that
+permeable propositions, which we motivated entirely from a discussion
+of identity expansion, are effectively a logical treatment of
+separation. Rather than ${\pbang}$, a separate proposition that we
+apply only to positive propositions, permeability is naturally a
+property intrinsic to a given atomic proposition, much like the
+proposition's positivity or negativity.
 
 \section{Revisiting our notation}
 \label{sec:linnote}
