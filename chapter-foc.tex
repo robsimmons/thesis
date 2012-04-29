@@ -2558,47 +2558,63 @@ Andreoli suggests coping with this problem by restricting the form of
 propositions so that positive atoms never appear in the persistent
 context. From our perspective, this is a rather unusual
 recommendation, since it just returns us to linear logic without the
-atom optimization!
+atom optimization! The focused system in Section~\ref{sec:foclinlog},
+which we have argued is a more natural presentation, 
+effectively avoid this problem.
 
-The proliferation of inference rules under the atom optimization is a
-problem if, for instance, we need to represent synthetic inference
-rules on a computer. Correctly viewed, however, the problem is merely
-one of notation. It's already the case that, in writing sequent
-calculus rules, we generally tacit use of a fairly large number of
-notational conventions, at least relative to Gentzen's original
-formulation where all contexts were treated as sequences of
-propositions \cite{gentzen35untersuchungen}.  For instance, the
-bottom-up reading of the ${\one}_R$ rule's conclusion,
+However, it's not necessary to view Andreoli's proliferation of rules
+as a problem. While the proliferation of inference rules under the
+atom optimization seems like it would be a problem if, for instance,
+we need to represent synthetic inference rules on a computer, the
+problem if correctly viewed is merely one of notation. It is already
+the case that, in writing sequent calculus rules, we tacitly use of a
+fairly large number of notational conventions, at least relative to
+Gentzen's original formulation where all contexts were treated as
+sequences of propositions \cite{gentzen35untersuchungen}.  For
+instance, the bottom-up reading of the ${\one}_R$ rule's conclusion,
 $\mildseq{\Gamma}{\cdot}{[\one]}$, indicates the presence of an
 additional premise checking that the linear context is empty, and the
 conclusion $\mildseq{\Gamma}{\Delta_1, \Delta_2}{[A \otimes B]}$ of
 the ${\tensor}_R$ rule indicates the condition that the context can be
-split into two parts.
+split into two parts. In other words, both the conclusion of the
+${\one}_R$ rule and ${\otimes}_R$ rule, as we normally write them, can
+be seen as a special {\it matching construct} that constrains the
+shape of the context $\Delta$.\footnote{More than anything else I have
+  discussed so far, this is a view of inference rules that emphasizes
+  {\it bottom-up} proof search and proof construction. A view of
+  linear logic that is informed by the inverse method, or top-down
+  proof construction, is bound to look very different
+  (see, for example, \cite{chaudhuri06focused}).}
 
-We deal with the apparent proliferation of rules by adding a new
-matching construct for the conclusion of rules: we can say that
-$\Gamma; \Delta$ matches $\Gamma; \Delta' / \langle p^+ \rangle$
-either when $\langle p^+ \rangle \in \Gamma$ and $\Delta = \Delta'$ or
-when $\Delta = \Delta', \langle p^+ \rangle$. We can also iterate
-this construction, so that $\Gamma; \Delta$ matches
-$\Gamma; \Delta_n / \langle p^+_1 \rangle, \ldots, \langle p^+_n \rangle$
-if $\Gamma; \Delta$ matches $\Gamma; \Delta_1 / \langle p^+_1 \rangle$,
-$\Gamma; \Delta_1$ matches $\Gamma; \Delta_2 / \langle p^+_2 \rangle$,
-\ldots and $\Gamma; \Delta_{n-1}$ matches 
-$\Gamma; \Delta_n / \langle p^+_n \rangle$.  Armed with this notation,
-we can create a concise synthetic connective:
+I propose to deal with the apparent proliferation of synthetic rules
+in a system with the atom optimization by adding a new matching
+construct for the conclusion of rules. We can say that $\Gamma;
+\Delta$ matches $\Gamma; \Delta' / \langle p^+ \rangle$ either when
+$\langle p^+ \rangle \in \Gamma$ and $\Delta = \Delta'$ or when
+$\Delta = \Delta', \langle p^+ \rangle$. We can also iterate this
+construction, so that $\Gamma; \Delta$ matches $\Gamma; \Delta_n /
+\langle p^+_1 \rangle, \ldots, \langle p^+_n \rangle$ if $\Gamma;
+\Delta$ matches $\Gamma; \Delta_1 / \langle p^+_1 \rangle$, $\Gamma;
+\Delta_1$ matches $\Gamma; \Delta_2 / \langle p^+_2 \rangle$, \ldots
+and $\Gamma; \Delta_{n-1}$ matches $\Gamma; \Delta_n / \langle p^+_n
+\rangle$.  Armed with this notation, we can create a concise synthetic
+connective that is equivalent to the four of the rules discussed
+previously:
 \[
 \infer
 {\mildseq{\Gamma}{\Delta/\langle a^+ \rangle, \langle b^+ \rangle}{U}}
 {\mildseq{\Gamma}{\Delta, \langle c^+ \rangle}{U}}
 \]
 
-This modified notation need not only be used in synthetic connectives: we 
-can also use it to combine the two positive identity rules. Furthermore, 
-by giving $\Gamma; \Delta / A^-$ the obviously analogous me meaning, we can
-fuse the ${\it focus}_L$ rule and the ${\it copy}_L$ rule into a single
-rule that is unconcerned with whether the proposition in question came
-from the persistent or linear contexts: 
+This modified notation need not only be used in synthetic connectives;
+we can also use it to combine the two positive identity rules ${\it
+  id}^+_1$ and ${\it id}^+_2$ (in the bang-optimized system) or,
+equivalently, ${\it id}^+$ and ${\it id}^+_p$ (in the system
+incorporating permeability).  Furthermore, by giving $\Gamma; \Delta /
+A^-$ the obviously analogous meaning, we can fuse the ${\it
+  focus}_L$ rule and the ${\it copy}_L$ rule into a single rule that
+is unconcerned with whether the proposition in question came from the
+persistent or linear contexts:
 \[
 \infer[{\it id}^+]
 {\mildseq{\Gamma}{\cdot/\langle A^+ \rangle}{[A^+]}}
@@ -2634,7 +2650,7 @@ The forward direction requires a lemma that the {\it copy} rule is
 admissible according to the rules of Figure~\ref{fig:linear-alt}; this
 lemma can be established by straightforward induction. Having
 established the lemma, the forward direction is a straightforward
-induction on derivations, applying the admissibility lemma whenever the 
+induction on derivations, applying the admissible rule whenever the 
 {\it copy} rule is encountered.
 \end{proof}
 
@@ -2644,11 +2660,10 @@ induction on derivations, applying the admissibility lemma whenever the
 \section{Concurrent equality}
 \label{sec:linconcurrenteq}
 
-Concurrent equality, is a
-notion of equivalence that operates on synthetic derivations.
-It represents an intermediate point between focusing and
-multifocusing \cite{chaudhuri08canonical}. 
-Consider the sequent in focused linear logic:
+Concurrent equality is a notion of equivalence that operates on
+synthetic derivations.  It represents an intermediate point between
+focusing and multifocusing \cite{chaudhuri08canonical}.  Consider the
+sequent in focused linear logic:
 \[
 \mildseq{a^+ \lolli {\uparrow}(b^+ \otimes c^+), ~
   b^+ \lolli {\uparrow}d^+, ~
@@ -2664,7 +2679,7 @@ Let $\Gamma = \left(a^+ \lolli {\uparrow}(b^+ \otimes c^+), ~
   c^+ \lolli {\uparrow}e^+, ~
   d^+ \otimes e^+ \lolli {\uparrow}f^+ \right)$.
 There are two different focused derivations of this
-sequent, the one that transitions $\langle b^+ \rangle$ to $\langle
+sequent: the one that transitions $\langle b^+ \rangle$ to $\langle
 d^+ \rangle$ first, and the one that transitions 
 $\langle c^+ \rangle$ to $\langle e^+ \rangle$ first:
 \[
@@ -2710,16 +2725,18 @@ completes the trace. The independence here is key: if two focusing
 phases consume different resources and both end focus with
 ${\uparrow}_L$ (as opposed to ${\it id}^-$), then we can treat them as
 independent and concurrent steps in the process of proving the same
-right hand side; {\it concurrent equality} is the equivalence relation
+right-hand side. {\it Concurrent equality} is the equivalence relation
 on focused proofs that treats all proofs that differ only in the
 interleaving of independent and concurrent steps as equal.  This
 equivalence relation was used in the definition of CLF
 \cite{watkins02concurrent}, but only in conjunction with the lax
 modality, an approach we will follow in Chapter 4.
 
-The equivalence relation on focused derivations that concurrent
-equality gives rise to is related to the equivalence relation induced
-by {\it multifocusing} \cite{chaudhuri08canonical}.  Multifocusing
+Concurrent
+equality gives rise to an
+equivalence relation on focused derivations. This equivalence
+relation is related to the equivalence relation induced
+by {\it multifocusing} \cite{chaudhuri08canonical}, though multifocusing
 appears to provide an even coarser notion of equivalence on focused
 proofs than concurrent equality does. In particular, these two
 distinct focusing proofs are not concurrently equal: the proof
@@ -2780,7 +2797,9 @@ a subgoal in which $b^+$ is proved directly.
 \]
 While there is no full account of multifocusing in intuitionistic
 logic, the analogue of this sequent in classical linear logic has only
-one multifocused proof. In classical linear logic, multifocusing
+one multifocused proof, and it is reasonable to conjecture that 
+an account of multifocusing for intuitionistic logic would also
+relate these proofs. In classical linear logic, multifocusing
 offers a very fundamental normal form: any two proofs that can be made
 equal by locally permuting inference rules have the same multifocused
 proof. 
@@ -2823,21 +2842,21 @@ for LF, as Martens and Crary have shown in unpublished work
 about the constructive content of the normalization theorem. 
 
 In our setting, we should be concerned that we might take a focused
-proof, turn it into an unfocused proof by way of the obvious
-translation (the constructive content of
+proof, turn it into an unfocused proof by the obvious de-focalization
+procedure (the constructive content of
 Theorem~\ref{thm:linfocsound}), and then turn it back into a focused
 proof by focalization (the constructive content of
 Theorem~\ref{thm:linfoccomplete}) only to obtain a proof that was not
 identical or even related. This is not at all a merely hypothetical
 concern. We can run the mechanized structural focalization result from
-\cite{simmons11structural} on an persistent proposition,
+\cite{simmons11structural} on a persistent proposition,
 %
    $a^+ \supset 
    {\downarrow}(a^+ \supset {\uparrow}b^+) \supset
-   {\downarrow}({\downarrow}{\uparrow}b^+ \lolli c^-) \supset
+   {\downarrow}({\downarrow}{\uparrow}b^+ \supset c^-) \supset
    c^-$, 
 %
-that is similar to the example from
+which is similar to the example from
 Section~\ref{sec:linconcurrenteq}.  In persistent logic (as in
 linear logic) that proposition has two focused propositions that
 are probably multifocusing equivalent (given a reasonable intuitionistic
@@ -2847,24 +2866,24 @@ However, if we take the focused proof that focuses
 first on $a^+ \supset {\uparrow}b^+$, transform it into an unfocused 
 proof, and then re-focus it, we will get the proof that focuses 
 first on ${\downarrow}{\uparrow}b^+ \supset c^-$. Focalization,
-in other words, is not a partial inverse of erasure in the structural
+in other words, is not a partial inverse of de-focalization in the structural
 focalization development, except maybe modulo the (as yet undefined)
 equivalence relation established by multifocusing. 
 
-This illustrates why we must be careful, but it is not a fatal flaw
-for two reasons. The first is the aforementioned conjecture
-that, for the restricted logical fragment defined in
-Chapter 4 as the basis of our logical framework, the focalizations of 
-two proofs are concurrently
-equal if and only if the original proofs are convertible by local
-permutations of rules, the same condition that
-multifocusing satisfies; it ought to be the case that
-focalization is a partial inverse of erasure modulo this courser
-equivalence. Second, what is really at stake here is our
-ability to write down non-normal proofs in a logical framework that
-then normalizes them -- which is what the Twelf implementation of LF
-and the Celf implementation of CLF do -- with the confidence that we
-can look at a non-normal proof and know its corresponding
-canonical form. In this thesis, we will be content to work throughout
-with focused proofs and their analogues, so we can afford to leave
-questions about convertability and weak normalization to future work.
+This example illustrates why we must be careful, but it is not a fatal
+flaw for two reasons. The first reason is the aforementioned
+conjecture that, for the restricted logical fragment defined in
+Chapter 4 as the basis of our logical framework, the focalizations of
+two proofs are concurrently equal if and only if the original proofs
+are convertible by local permutations of rules, the same condition
+that multifocusing satisfies. If this conjecture holds, it ought to be
+the case that, modulo this coarser equivalence, focalization {\it is}
+a partial inverse of de-focalization. Second, what is really at stake
+here is our ability to write down non-normal proofs in a logical
+framework that then normalizes them -- which is what the Twelf
+implementation of LF and the Celf implementation of CLF do -- with the
+confidence that we can look at a non-normal proof and know its
+corresponding canonical form. In this thesis, we will be content to
+work throughout with focused proofs and their analogues, so we can
+afford to leave questions about convertability and weak normalization
+to future work.
