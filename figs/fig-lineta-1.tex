@@ -67,6 +67,8 @@
 \infer[{\otimes}_L]
 {\mildseq{\Gamma}{\Delta, A \otimes B}{U}}
 {\infer-[\eta^+]
+ {\mildseq{\Gamma}{\Delta, A, B}{U}}
+ {\infer-[\eta^+]
  {\mildseq{\Gamma}{\Delta, \langle A \rangle, B}{U}}
  {\infer-[{\it subst}^+]
   {\mildseq{\Gamma}{\Delta, \langle A \rangle, \langle B \rangle}{U}}
@@ -82,7 +84,7 @@
    & 
    \deduce
    {\mildseq{\Gamma}{\Delta, \langle A \otimes B \rangle}{U}}
-   {\mathcal D}}}}
+   {\mathcal D}}}}}
 \]
 
 \[
