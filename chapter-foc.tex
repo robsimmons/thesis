@@ -2259,6 +2259,18 @@ presentation of intuitionstic linear logic.
 \subsection{Permeability}
 \label{sec:permeable}
 
+Our final attempt to logically motivate a notion of a persistent
+postivie proposition will be based on an analysis of {\it
+  permeability}.  Permeability in classical presentations of linear
+logic dates back to Girard's LU \cite{girard93unity}.\robnote{Check
+  with Dale: earlier citations?} In this section, we will motivate
+permeable atomic propositions in intuitionstic linear logic by first
+considering a new identity expansion principle that only applies to
+permeable propositions, which are a syntatic refinement of the
+positive propositions.\footnote{Permeable {\it negative} propositions
+  are relevant to classical linear logic, but the asymmetry of
+  intuitionstic linear logic means that it is reasonable to consider
+  permeability exculsively as a property of positive propositions.}
 
 The admissible identity expansion rule can be very helpful as a way
 of writing down proofs that avoid doing unnecessary work which
@@ -2299,21 +2311,21 @@ is an instance of this pattern, for example:
     {\top}}
    {}}}}
 \]
-The use of identity expansion lets us delay the decomposition that
-would otherwise be required by focusing in order to do more useful
-work. Another pattern that we might want to capture with something
-like identity expansion is the situation where we are trying to prove
-the sequent $\mildseq{\Gamma}{\Delta}{1}$ and we know, by the syntactic
-structure of $\Delta$, that inversion will empty the context; one 
-instance of this pattern is the sequent 
-$\mildseq{\Gamma}
-  {{!}A 
-   \otimes {!}B 
-   \otimes {!}C 
-   \otimes {!}D}
-  {\one}$. 
+The use of identity expansion lets us omit irrelevant decomposition
+steps that would otherwise be required by focusing. 
 
-In general, it is possible to describe the syntactic refinement of the 
+Another pattern
+that we might want to capture with something like identity expansion
+is the situation where we are trying to prove the sequent
+$\mildseq{\Gamma}{\Delta}{1}$ and we know, by the syntactic structure
+of $\Delta$, that inversion will empty the context; one instance of
+this pattern is the sequent $\mildseq{\Gamma} {{!}A \otimes {!}B
+  \otimes {!}C \otimes {!}D} {\one}$. Positive propositions 
+like ${!}A \otimes {!}B \otimes {!}C \otimes {!}D$ that,
+upon decomposition, remove themselves from the linear context altogether
+are called {\it permeable}, as in a certain sense 
+they might as well be in the persistent context. It is possible to
+precisely characterize the syntactic refinement of the 
 positive MELL propositions with this property:
 \[
 A^+_p ::= {!}A^- \mid \one \mid A^+_p \otimes B^+_p
@@ -2335,8 +2347,8 @@ and ${\downarrow}A^-$ are excluded from this fragment.
 We can then augment our original focused linear logic from
 Figure~\ref{fig:kaustuv-focused} with one extra rule, ${\it id}^+_p$
 which exactly matches our earlier rule ${\it id}_2^+$. This rule gives
-us a new focal substitution principle ${\it subst}_p^+$, which was
-true but unnecessary in the previous systems with ${\it id}_2^+$ rule.
+us a new focal substitution principle ${\it subst}_p^+$. (This was
+true but unnecessary in the previous systems with ${\it id}_2^+$ rule.)
 Using this focal substitution principle, we can prove a {\it
   persistent} identity expansion theorem on this syntactic refinement
 of positive propositions:
@@ -2360,7 +2372,7 @@ a straightforward induction over the derivation over the structure
 of $\mildseq{\Gamma, \langle A^+ \rangle}{\underline{\Delta}}{\underline{U}}$,
 and the proof of the persistent identity expansion, the cases of
 which are given in Figure~\ref{fig:lineta-3}, is by induction on the
-structure of our refined fragment of positive propositions.
+structure of $A^+_p$.
 
 \input{figs/fig-lineta-3}
 
@@ -2402,6 +2414,11 @@ give a compressed proof of our example sequent:
 
 Our real motivation for introducing this identity expansion principle
 was to introduce a corresponding class of atomic propositions $p^+_p$ that
+\begin{align*}
+A^+ & ::= p^+ \mid p^+_p \mid {\downarrow}A^- \mid {!}A^- \mid \one \mid A^+ \otimes B^+\\
+A^+_p & ::= p^+_p \mid {!}A^- \mid \one \mid A^+_p \otimes B^+_p\\ 
+A^- & ::= p^- \mid {\uparrow}A^+ \mid A^+ \lolli B^-
+\end{align*}
 can be interpreted as arbitrary members of our syntactic refinement in the
 same way that regular positive atomic propositions can be interpreted
 as arbitrary positive propositions. Persistent atomic propositions $p^+_p$
