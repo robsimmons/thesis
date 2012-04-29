@@ -28,9 +28,9 @@ capturing the structure of focused transitions. In
 Section~\ref{sec:linhack}, we discuss a number of ways of modifying
 the design of our focused logic to increase the expressiveness of
 synthetic inference rules; one of the alternatives we present, the
-introduction of {\it permeable atoms}, will be generalized and
-incorporated into the focused presentation of ordered linear lax logic
-that we discuss in Chapter 3.
+introduction of {\it permeable atomic propositions}, will be
+generalized and incorporated into the focused presentation of ordered
+linear lax logic that we discuss in Chapter 3.
 
 In Section~\ref{sec:linconcurrenteq}, we describe {\it concurrent
   equality}, an equivalence relation on focused derivations introduced
@@ -1414,33 +1414,33 @@ language of ordered logical specifications presented by Pfenning and I
 % focused logic; we want to use the structure of proofs in focused
 % logics as a logical framework for encoding systems we are interested
 % in.
-The difference, in each case, lies in the treatment of positive atomic
-propositions. In this section, I will discuss four changes:
+
+In this section, I will discuss four different presentations of 
+focused sequent calculi that are closely connected to the logic we
+have just presented. Each system differs most dramatically in its
+treatment of positive atomic propositions, the exponential 
+modality ${!}A$, and the interaction between them.
 \begin{itemize}
-\item Andreoli's original system, which I name the {\it atom optimization},
-that complicates the interpretation of atomic propositions as stand-ins
-for arbitrary propositions;
-\item A further change to the atom optimization, the {\it bang optimization},
-which complicates the relationship between the ;
+\item Andreoli's original system, which I name the {\it atom
+    optimization}, complicates the interpretation of atomic
+  propositions as stand-ins for arbitrary propositions.
+\item A further change to the atom optimization, the {\it bang
+    optimization}, complicates the relationship between the focused
+  logic and the unfocused logic.
 \item The {\it adjoint logic} of Benton and Wadler
-\cite{benton96linear}, which introduces
-a new syntactic class of persistent propositions; and
-\item The {\it atom refinement}, a notion (which dates
-at least back to Girard's LU \cite{girard93unity}),
-that some propositions can be treated as {\it permeable} between
-the persistent and linear contexts and that permeable atoms can be introduced
-to stand for 
+  \cite{benton96linear} introduces a new syntactic class of persistent
+  propositions that .
+\item The introduction of {\it permeable atomic propositions}, a
+  notion (which dates at least back to Girard's LU
+  \cite{girard93unity}), that some propositions can be treated as {\it
+    permeable} between the persistent and linear contexts and that
+  permeable atoms can be introduced to stand for this class of 
+  permeable propositions.
 \end{itemize}
 
- difference between
-the system presented in Section~\ref{sec:foclinlog}, Andreoli's 
-modification (which I call the {\it atom optimization}), and another
-system, based on adjoint logic, that I have used in previous work
-with Pfenning.
-
-The goal of both of these systems (Andreoli's atom optimization and
-focused adjoint logic) is essentially the same: to allow
-for synthetic inference rules of the form
+The reason why we survey these different systems is that they all
+provide a solution to a pervasive problem in focused sequent calculi:
+the need to allow for synthetic inference rules of the form
 \[
 \infer
 {\mildseq{\Gamma, p}{\Delta, q}{C}}
@@ -1463,21 +1463,20 @@ salad remain ephemeral resources like $q$ and $r$, but the calorie
 count is persistent. It is mathematical knowledge, which is
 not consumed by the transition.
 
-My justification for presenting
-Chaudhuri's system as the canonical focusing system for linear logic
-in Section~\ref{sec:foclinlog} is because it most easily facilitates 
-reasoning about the focused 
-sequent calculus {\it as a logic}. Internal soundness and 
-completeness properties are established by the cut admissibility
-and identity expansion theorems, and these theorems are conceptually
-prior to the soundness and completeness of the focused system relative
-to the unfocused system. The two modifications we discuss in this section
-complicate the treatment of focused logics as independently justifiable
-sequent calculi for linear logic. Andreoli's atom optimization 
-complicates cut admissibility for the focused, 
-and adjoint logic makes it is difficult or impossible to
-define a well-behaved erasure function so that that 
-polarization strategies -- partial inverses of erasure -- exist.
+My justification for presenting Chaudhuri's system as the canonical
+focusing system for linear logic in Section~\ref{sec:foclinlog} is
+because it most easily facilitates reasoning about the focused sequent
+calculus {\it as a logic}. Internal soundness and completeness
+properties are established by the cut admissibility and identity
+expansion theorems, and these theorems are conceptually prior to the
+soundness and completeness of the focused system relative to the
+unfocused system. The various modifications we discuss in this section
+complicate the treatment of focused logics as independently
+justifiable sequent calculi for linear logic. However, I suggest in
+Section~\ref{sec:permeable} that the last option, the incorporation of
+permeable atomic propositions, provides the most natural mechanism for
+incoroprating the structure that we are interested in into a focused
+presentation of linear logic.
 
 \subsection{Atom optimization}
 
@@ -1488,10 +1487,13 @@ have to write ${!}{\uparrow}{(p^+ \otimes q^+)}$ and
 ${!}{\uparrow}p^+$). It's therefore possible, in an unpolarized
 presentation, to use the ${\it copy}$ rule to copy a positive
 proposition out of the context and into left focus, but the focus
-immediately blurs, as in this (intuitionistic) 
-proof fragment:\footnote{We will use
-  the sequent form $\andseq{\Gamma}{\Delta}{C}$ in this section for
-  focused but unpolarized systems.}
+immediately blurs, as in this (intuitionistic) proof
+fragment:\footnote{We will use the sequent form
+  $\andseq{\Gamma}{\Delta}{C}$ in this section for focused but
+  unpolarized systems, and will frequently reference Pfenning's
+  presentation of focused linear logic \cite{pfenning12chaining} as a
+  faithful intuitionstic analouge of Andreoli's system. This is, of
+  course, a somewhat subjective claim.}
 \[
 \infer[{\it copy}]
 {\andseq{p^+ \otimes q^+}{\cdot}{q^+ \otimes p^+}}
@@ -1577,8 +1579,12 @@ the presence of a positive atomic proposition:
 \infer[{!}_{L2}]
 {\mildseq{\Gamma}{\Delta, {!}{\uparrow}p^+}{U}}
 {\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
+\]\[
+\infer[{\it id}^+_1]
+{\mildseq{\Gamma}{\langle A^+ \rangle}{[A^+]}}
+{}
 \quad
-\infer[{\it id}^+_p]
+\infer[{\it id}^+_2]
 {\mildseq{\Gamma, \langle A^+ \rangle}{\cdot}{[A^+]}}
 {}
 \]
@@ -1597,7 +1603,11 @@ according to the second approach above:
 {\mildseq{\Gamma}{\Delta, {\pbang}p^+}{U}}
 {\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
 \quad
-\infer[{\it id}^+_p]
+\infer[{\it id}^+_1]
+{\mildseq{\Gamma}{\langle A^+ \rangle}{[A^+]}}
+{}
+\quad
+\infer[{\it id}^+_2]
 {\mildseq{\Gamma, \langle A^+ \rangle}{\cdot}{[A^+]}}
 {}
 \]
@@ -1605,9 +1615,10 @@ according to the second approach above:
 All three of these options are essentially similar; we will go with the
 last, as it allows us to preserve the original meaning of ${!}{\uparrow}p^+$
 if that is our actual intent. 
-Introducing the atom optimization into our polarized system through a
+Introducing the atom optimization as a
 new connective also allows us to isolate the effects that this new
-connective has on cut admissibility and identity expansion; we will consider
+connective has on cut admissibility, identity expansion,
+and the correctness of focusing; we will consider
 each in turn.
 
 \begin{figure}
@@ -1700,8 +1711,8 @@ one new case of identity expansion, which is unproblematic:
 \]
 
 Even though the identity expansion theorem is unproblematic, the
-suspended persistent propositions let us consider the first
-objection to the atom optimization. 
+suspended persistent propositions begin to illuminate one problem
+with the atom optimization. 
 Previously, when we substituted
 a positive proposition for an atomic proposition, the proof's structure
 remained fundamentally unchanged -- instances of the $\eta^+$ rule
@@ -1709,9 +1720,9 @@ on $p^+$ turned
 into admissible instances of the general identity expansion rule 
 $\eta^+$ on $A^+$. We first have to explain what ${\pbang}p^+$ even becomes
 when we substitute $A^+$ for $p^+$, since ${\pbang}A^+$ is not a 
-proposition; the most obvious candidate is
-${!}{\uparrow}A^+$. That substitution requires us to change the
-structure of proofs in a significant way, however, as shown in 
+syntatically valid proposition; the only obvious candidate seems to be
+${!}{\uparrow}A^+$. That substitution may require us to change the
+structure of proofs in a significant way, as shown in 
 Figure~\ref{fig:replacement-breaks}. Immediately before entering into
 any focusing phase where the ${\it id}_2^+$ rule is used $n$ times
 on the hypothesis $\langle p^+ \rangle$, we need to left-focus on 
@@ -1723,7 +1734,7 @@ an instance of ${\it id}^+_1$.
 \paragraph{Cut admissibility}
 While we might be willing to sacrifice the natural treatment of atomic
 propositions as stand-ins for arbitrary propositions, another instance
-of this pattern arises when we try to establish the
+of the same problematic pattern arises when we try to establish the
 critical cut admissibility theorem for the
 logic with ${\pbang}p^+$. 
 The new commutative cuts (one each in parts 1, 2, 3, and 4) are unproblematic,
@@ -1755,19 +1766,18 @@ Theorem~\ref{thm:lincut}, consider what it will take to reduce
 the cut in the top half of Figure~\ref{fig:bad-cut}. We cannot immediately 
 call induction on the sub-derivation in the right branch, as 
 there is no way to prove $p^+ \otimes p^+$ in focus when 
-$\langle p^+ \rangle$ does not appear in the linear context. 
-We need to get enough $\langle p^+ \rangle$ propositions
-in the linear context replace all the instances of
-${\it id}_2^+$ that deal with the suspended $p^+$ in the persistent
-context with instances of ${\it id}_1^+$ that use freshly-introduced
-$\langle p^+ \rangle$ propositions. This can be achieved with 
+$\langle p^+ \rangle$ does not appear (twice) in the linear context. 
+We need to get two suspended $\langle p^+ \rangle$ antecedents
+in the linear context; then we can replace all the instances of
+${\it id}_2^+$ with instances of ${\it id}_1^+$ that use freshly-minted
+$\langle p^+ \rangle$ antecedents. This can be achieved with 
 repeated application of part 3 of Theorem~\ref{thm:lincut}, as shown
 in the bottom half of Figure~\ref{fig:bad-cut}.
 
-The minimal extension to Theorem~\ref{thm:lincut} that justifies 
-the atom optimization appears to be the following, where 
-$\langle p^+ \rangle^n$ denotes $n$ copies of the suspended positive
-proposition $\langle p^+ \rangle$.
+The minimal extension to cut admissibility (Theorem~\ref{thm:lincut})
+that justifies the atom optimization appears to be the following,
+where $\langle p^+ \rangle^n$ denotes $n$ copies of the suspended
+positive proposition $\langle p^+ \rangle$.
 
 \bigskip
 \begin{theorem}[Extra cases of cut admissibility (Theorem~\ref{thm:lincut})]
@@ -1881,7 +1891,7 @@ the ${\pbang}p^+$ connective.}
 \label{fig:bad-cut}
 \end{figure}
 
-\paragraph{Soundness and completeness of focusing}
+\paragraph{Correctness of focusing}
 
 The obvious way of extending erasure for our extended logic is
 to let $({\pbang}p^+)^\circ = {!}p^+$ and  
@@ -1970,7 +1980,9 @@ This further optimization
 can be called the {\it bang optimization}, as it, like the atom 
 optimization, potentially reduces the number of focusing phases
 in a proof. Identity expansion is trivial to modify, and cut 
-admissibility is significantly simpler. In the principal cut for
+admissibility is significantly simpler. 
+
+In the principal cut for
 ${\pbang}p^+$, we can conclude by case analysis
 that the first given derivation 
 must prove $p^+$ in focus using the ${\it id}_2^+$ rule. This, in turn,
@@ -2000,10 +2012,7 @@ the cut reduces to an admissible instance of contraction.
 \]
 Thus, we no longer need the complicated extra parts {\it 6a - 6c} of cut 
 admissibility in order to prove cut admissibility for a focused system
-with the bang optimization. It is not, however,
-possible to think about the bang optimization independently from the
-atom optimization: identity expansion would fail in a system that 
-only provided a modified right rule for ${\pbang}p^+$. 
+with the bang optimization. 
 
 Because cut and identity hold, we can think of a 
 focused logic with the bang optimization as being 
@@ -2020,20 +2029,18 @@ words, the completeness of focusing (Theorem~\ref{thm:linfoccomplete})
 no longer holds under the bang optimization!
 
 Our focused logic with the bang optimization has some resemblance to
-tensor logic \cite{mellies10resource}, as well the polarized
-logic that Girard presented in a note, ``On the sex of angels,''
-which first introduced the ${\uparrow}A^+$ and ${\downarrow}A^-$
-notation to the discussion of polarity \cite{girard91sex}. Both of
-these presentations incorporate a general focus-preserving
-${\pbang}A^+$ connective -- a positive formula with a positive
-subformula -- in lieu of the focus-interrupting ${!}A^-$
-connective.
-Both presentations also have the prominent caveat that
-${!}$ in the unfocused logic necessarily corresponds to
-${\pbang}{\downarrow}$ in the focused logic: it is {\it not} possible
-to derive ${\pbang}(A \otimes B) \vdash {\pbang}(B \otimes A)$ in
-these systems, and no apology is made for this fact, because
-${\pbang}{\downarrow}{\uparrow}(A \otimes B) \vdash
+tensor logic \cite{mellies10resource}, as well the polarized logic
+that Girard presented in a note, ``On the sex of angels,'' which first
+introduced the ${\uparrow}A^+$ and ${\downarrow}A^-$ notation to the
+discussion of polarity \cite{girard91sex}. Both of these presentations
+incorporate a general focus-preserving ${\pbang}A^+$ connective -- a
+positive formula with a positive subformula -- in lieu of the
+focus-interrupting ${!}A^-$ connective.  Both presentations also have
+the prominent caveat that ${!}$ in the unfocused logic necessarily
+corresponds to ${\pbang}{\downarrow}$ in the focused logic: it is {\it
+  not} possible to derive ${\pbang}(A \otimes B) \vdash {\pbang}(B
+\otimes A)$ in these systems, and no apology is made for this fact,
+because ${\pbang}{\downarrow}{\uparrow}(A \otimes B) \vdash
 {\pbang}{\downarrow}{\uparrow}(B \otimes A)$ holds as expected.  We
 want avoid this route because it gives the shifts too much power: they
 influence the {\it existence} of proofs, not just the structure of
@@ -2041,14 +2048,14 @@ proofs.\footnote{Both the note of Girard and the paper of Melli{\`e}s
   and Tabareau see the shifts as a form of negation; therefore, they
   are unconcerned that $A^+$ has a different meaning of
   ${\downarrow}{\uparrow}A^+$ in their constructive logic. For any
-  proposition $A$ that is classically but not intuitionistic true,
-  we know that the double negation $\neg\neg A$ will be true in
+  proposition $A$ that is classically but not intuitionistic true, we
+  know that the double negation $\neg\neg A$ will be true in
   intuitionistic logic! This view of shifts as negations seems rather
   foreign to the erasure-based understanding of shifts we have been
   discussing, though Zeilberger has attempted to reconcile these
-  viewpoints \cite{zeilberger08unity}.} This interpretation of 
-shifts therefore threatens our ability to understand linear logic 
-connectives as resources.
+  viewpoints \cite{zeilberger08unity}.} This interpretation of shifts
+therefore threatens our critical ability to intuitively understand and
+explain linear logic connectives as resources.
 
 There is an easily identifiable class of sequents that obey {\it
   separation}, which is the property that positive atomic propositions
@@ -2056,21 +2063,21 @@ can be separated into two classes $p^+_l$ and $p^+_p$. The {\it
   linear} positive propositions $p^+_l$ are never suspended in the
 persistent context and never appear as ${\pbang}p^+_l$, whereas the
 {\it persistent} positive propositions $p^+_p$ are never suspended in
-the linear context and always appear as ${\pbang}p^+_p$. For {\it
-  these} sequents, we can use the obvious erasure operation and obtain
-a focalization result; this notion of separation was the basis of our
-completeness result in \cite{pfenning09substructural}.  However,
-separation is a meta-logical property, something that we observe about
-a fragment of the logic and not than an inherent property of the logic
-itself. There are many propositions $A^+$ that we cannot prove in
-focused linear logic with the bang optimization even though
-$(A^+)^\circ$ is provable in linear logic, and that makes the
-bang optimization unsatisfactory. 
+the linear context and always appear as ${\pbang}p^+_p$. For sequents
+and formulas obeying separation, we can use the obvious erasure
+operation and obtain a focalization result; this notion of separation
+was the basis of our completeness result in
+\cite{pfenning09substructural}.  However, separation is a meta-logical
+property, something that we observe about a fragment of the logic and
+not than an inherent property of the logic itself. There are many
+propositions $A^+$ and $A^-$ that we cannot prove in focused linear
+logic with the bang optimization even though $(A^+)^\circ$ and
+$(A^-)^\circ$ are provable in linear logic, and that makes the bang
+optimization unsatisfactory.
 
-The remaining two approaches, adjoint logic and the atom refinement
-approach, can potentially be seen as two ways of trying to turn the
-separation criteria into a logical property instead of a meta-logical
-property.
+The remaining two approaches, adjoint logic and the introduction of
+permeable atomic propositions, can both be seen as attempts to turn
+separation into a logical property instead of a meta-logical property.
 
 \subsection{Adjoint logic}
 \label{sec:moreprim}
@@ -2078,10 +2085,10 @@ property.
 We introduced ${\pbang}p^+$ as a connective defined as
 ${!}{\downarrow}p^+$ -- that is, the regular ${!}A^-$ connective plus
 a little something extra, the shift. After our experience
-of modifying the rules of 
-${\pbang}$ significantly, we will now take a crack at viewing
-${\pbang}$ as a more primitive connective -- that is, we will view
-${!}$ as ${\pbang}$ plus a little something extra.
+with modifying the rules of 
+${\pbang}$, we can motivate adjoint logic by taking a crack at viewing
+${\pbang}$ as a more primitive connective -- that is, we will try 
+to view ${!}$ as ${\pbang}$ plus a little something extra.
 
 It is frequently observed that the exponential ${!}A$ of linear logic
 appears to have two or more parts; the general idea is that ${\pbang}$
@@ -2144,14 +2151,13 @@ answer necessarily requires a more general account of the $\pbang$
 connective -- a {\it unfocused} logic where it is generally applicable
 rather than restricted to positive atomic propositions. In other
 words, to account for the behavior of $\pbang$, we must give a more
-primitive logic into which focused linear logic, with or without the
-atom and bang optimizations, may be faithfully encoded.
+primitive logic into which linear logic can be faithfully encoded.
 
 \input{figs/fig-fragment-adjoint}
 
 A candidate for a more primitive logic, and one that has tacitly
-formed the basis of much of my previous work on logic programming in
-substructural logic
+formed the basis of much of my previous work on logic programming 
+and logical specification in substructural logic
 \cite{simmons09weak,simmons11logical}, is {\it
   adjoint logic}.  Adjoint logic was first characterized by Benton and
 Wadler as a natural deduction system \cite{benton96linear} and was
@@ -2182,34 +2188,9 @@ $FGA$. Lax logic, on the other hand, is recovered by removing all of
 the linear propositions except for $FX$; the usual lax modality
 $\ocircle X$ is then definable as $GFX$.
 
-The separation criteria discussed above can then be understood by
-reintroducing atomic propositions $x$ into the linear logic
-fragment of adjoint logic. 
-Then, positive atomic propositions that are always associated with
-${\pbang}$ can be encoded as persistent positive atomic
-propositions $x^+$, whereas positive atomic propositions that are never
-associated with ${\pbang}$ can be encoded as linear positive atomic
-propositions $a^+$. The proposition ${\pbang}p^+$ can then be
-translated as $F x^+$, where $x^+$ is the translation of $p^+$ as a
-persistent positive atomic proposition.
-
-In this way, adjoint logic gives one answer to why, in linear logic,
-we can't naturally substitute positive propositions for positive
-atomic propositions when those positive atomic propositions appear
-suspended in the persistent linear context: because these propositions
-are actually stand-ins for {\it persistent} propositions, not for
-linear propositions, and we are working in a fragment of the logic
-that has no interesting persistent propositions other than atomic
-propositions $x$ and the negative inclusion $G A$ back into linear
-propositions. 
-
-This effectively captures the structure of the separation requirement
-in a logical way, but it makes the structure of persistent atomic
-propositions rather barren and degenerate, and it places an extra
-logic, adjoint logic, between the focused system and the structure of
-linear logic that we actually hope to express.  Another drawback of
-this approach is that, in order to give a fully focused presentation
-of adjoint logic, we end up with a proliferation of propositions,
+One drawback of this approach is simply the logistics of giving 
+a fully focused presentation
+of adjoint logic. We end up with a proliferation of propositions,
 because the syntactic distinction between $X$ and $A$ is orthogonal to
 the syntactic distinction between positive and negative
 propositions. A polarized presentation of adjoint logic would have
@@ -2222,6 +2203,32 @@ shifts mediating between $A^+$ and $A^-$.\footnote{To make matters
   $U$, respectively), so a fully polarized adjoint logic has {\it
     three} distinct pairs of unary connectives that can be
   characterized as adjoints!}
+Given a focused presentation of adjoint logic, however, 
+the separation criteria discussed above can be
+in terms of the two forms of positive atomic proposition $a$ and $x$. 
+Positive atomic propositions that are always associated with
+${\pbang}$ can be encoded as persistent positive atomic
+propositions $x^+$, whereas positive atomic propositions that are never
+associated with ${\pbang}$ can be encoded as linear positive atomic
+propositions $a^+$. The proposition ${\pbang}p^+$ can then be
+translated as $F x^+$, where $x^+$ is the translation of $p^+$ as a
+persistent positive atomic proposition.
+
+In this way, adjoint logic gives one answer to why, in Andreoli-style
+presentations of linear logic,
+we can't naturally substitute positive propositions for positive
+atomic propositions when those positive atomic propositions appear
+suspended in the persistent linear context: because these propositions
+are actually stand-ins for {\it persistent} propositions, not for
+linear propositions, and we are working in a fragment of the logic
+that has no interesting persistent propositions other than atomic
+propositions $x$ and the negative inclusion $G A$ back into linear
+propositions. 
+This effectively captures the structure of the separation requirement
+in a logical way, but it makes the structure of persistent atomic
+propositions rather barren and degenerate, and it places an extra
+logic, adjoint logic, between the focused system and our original 
+presentation of intuitionstic linear logic.
 
 % Adjoint logic, because it requires a syntactic differentiation of
 % persistent and linear atomic propositions, still does not allow us to
@@ -2250,7 +2257,7 @@ shifts mediating between $A^+$ and $A^-$.\footnote{To make matters
 % this is outside the scope of this thesis.
 
 \subsection{Permeability}
-
+\label{sec:permeable}
 
 
 The admissible identity expansion rule can be very helpful as a way

@@ -1,0 +1,87 @@
+\begin{figure}[t]
+{\small 
+\[
+\infer-[\eta^+_p]
+{\mildseq{\Gamma}{\Delta,{!}A}{U}}
+{\deduce
+ {\mildseq{\Gamma, \langle {!}A \rangle}{\Delta}{U}}
+ {\mathcal D}}
+\quad
+\deduce{\mathstrut}{\Longrightarrow}
+\infer[{!}_L]
+{\mildseq{\Gamma}{\Delta,{!}A}{U}}
+{\infer-[{\it subst}^+_p]
+ {\mildseq{\Gamma,A}{\Delta}{U}}
+ {\infer[{!}_R]
+  {\mildseq{\Gamma, A}{\cdot}{[{!}A]}}
+  {\infer-[\eta^-]
+   {\mildseq{\Gamma, A}{\cdot}{A}}
+   {\infer[\it copy]
+    {\mildseq{\Gamma, A}{\cdot}{\langle A \rangle}}
+    {\infer[{\it id}^-]
+     {\mildseq{\Gamma, A}{[ A ]}{\langle A \rangle}}
+     {}}}}
+  &
+  \infer-[{\it weaken}]
+  {\mildseq{\Gamma,A, \langle {!}A \rangle}{\Delta}{U}}
+  {\deduce
+   {\mildseq{\Gamma, \langle {!}A \rangle}{\Delta}{U}}
+   {\mathcal D}}}}
+\]
+
+\[
+\infer-[\eta^+_p]
+{\mildseq{\Gamma}{\Delta, \one}{U}}
+{\deduce
+ {\mildseq{\Gamma, \langle \one \rangle}{\Delta}{U}}
+ {\mathcal D}}
+\quad
+\Longrightarrow
+\infer[{\one}_L]
+{\mildseq{\Gamma}{\Delta, \one}{U}}
+{\infer-[{\it subst}^+_p]
+ {\mildseq{\Gamma}{\Delta}{U}}
+ {\infer[{\one}_R]
+  {\mildseq{\Gamma}{\cdot}{[ \one ]}}
+  {}
+  &
+  \deduce
+  {\mildseq{\Gamma}{\Delta, \langle \one \rangle}{U}}
+  {\mathcal D}}}
+\]
+
+\[
+\infer-[\eta^+_p]
+{\mildseq{\Gamma}{\Delta, A \otimes B}{U}}
+{\deduce{\mildseq{\Gamma, \langle A \otimes B \rangle}{\Delta}{U}}{\mathcal D}}
+\quad
+\deduce{\mathstrut}{\Longrightarrow}
+\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!\!
+\infer[{\otimes}_L]
+{\mildseq{\Gamma}{\Delta, A \otimes B}{U}}
+{\infer-[\eta^+_p]
+ {\mildseq{\Gamma}{\Delta, A, B}{U}}
+ {\infer-[\eta^+_p]
+ {\mildseq{\Gamma, \langle A \rangle}{\Delta, B}{U}}
+ {\infer-[{\it subst}^+_p]
+  {\mildseq{\Gamma, \langle A \rangle, \langle B \rangle}{\Delta}{U}}
+  {\infer
+   {\mildseq{\Gamma, \langle A \rangle, \langle B \rangle}{\cdot}{[A \otimes B]}}
+   {\infer[{\it id}^+_p]
+    {\mildseq{\Gamma, \langle A \rangle, \langle B \rangle}{\cdot}{[A]}}
+    {}
+    & 
+    \infer[{\it id}^+]
+    {\mildseq{\Gamma, \langle A \rangle, \langle B \rangle}{\cdot}{[B]}}
+    {}}
+   &
+   \infer-[{\it weaken}] 
+   {\mildseq{\Gamma, \langle A \otimes B \rangle}{\Delta}{U}}
+   {\deduce
+    {\mildseq{\Gamma, \langle A \rangle, \langle B \rangle, \langle A \otimes B \rangle}{\Delta}{U}}
+    {\mathcal D}}}}}}
+\]}
+
+\caption{Persistent identity expansions.}
+\label{fig:lineta-3}
+\end{figure}
