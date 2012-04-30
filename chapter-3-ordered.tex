@@ -20,20 +20,20 @@ substructural logics -- for instance, it was applied by Polakow and
 Pfenning to Lambek's ordered logic
 \cite{polakow99natural}.\robnote{Check citation.} 
 
-This section defines a first-order ordered logic that includes a lax
-modality; a fragment of this system will form the basis of our logical
-framework in Chapter 4. The full focusing system for ordered
-lax logic is presented in this chapter in keeping with Andreoli's
-insistance that we avoid the confusion that results from conflating
-``defining a foundational paradigm or a [logic] programming language
-(two objectives that should clearly be kept separate)''
+This section defines a first-order ordered linear logic that includes
+a lax modality; a fragment of this system will form the basis of our
+logical framework in Chapter 4. The full focusing system for ordered
+linear lax logic is presented in this chapter in keeping with
+Andreoli's insistance that we avoid the confusion that results from
+conflating ``defining a foundational paradigm or a [logic] programming
+language (two objectives that should clearly be kept separate)''
 \cite{andreoli01focussing}, a concern that is applicable for logical
-frameworks as well as for logic programming langauges.\footnote{Indeed,
-as Lolli, Twelf, Lollimon, Forum, and Celf show, logical
-frameworks can frequently be given straightforward life as logic
-programming languages
-\cite{pfenning99system,lopez05monadic,schacknielsen08celf}.} In this
-case, I believe that a full exposition of this logic is useful because
+frameworks as well as for logic programming
+langauges.\footnote{As Twelf, Lollimon, and Celf
+  show, logical frameworks can frequently be given straightforward
+  life as logic programming languages
+  \cite{pfenning99system,lopez05monadic,schacknielsen08celf}.} I 
+also believe that a full exposition of this logic is useful because
 of the possibility that many other interesting and tractable logic
 programming languages can be defined as fragments of this logic.
 
@@ -50,14 +50,16 @@ relevant to the propositional presentation of ordered linear lax logic.
 The persistent context $\Gamma$ and the linear context $\Delta$
 are multisets as before (so we think of $\Delta_1, \Delta_2$ as being
 equal to $\Delta_2, \Delta_1$, for instance). The ordered context
-$\Omega$ is a sequence of propositions (as in Gentzen's original
-presentation of sequent calculi) and not a multiset, so the two ordered
+$\Omega$ is a sequence of propositions, as in Gentzen's original
+presentation of sequent calculi, and {\it not} a multiset.
+This means that the two ordered
 contexts $\Omega_1, \Omega_2$ and $\Omega_2, \Omega_1$ are, in general,
 not the same.
 
 \input{figs/fig-ordered-prop}
 
-There are two judgments in ordered linear lax logic. The primary
+There are two judgments in ordered linear lax logic (henceforth \ollll). 
+The primary
 judgment is $\oseq{\Gamma}{\Delta}{\Omega}{\istrue{A}}$, which says
 that $A$ is an (ephemeral, ordered) resource derivable from the
 persistent resources in $\Gamma$, the ephemeral resources in $\Delta$,
@@ -75,7 +77,7 @@ $\ispers{A}$ in $\Gamma$) can
 always satisfy the need for an ephemeral resource (associated with
 judgments of the form $\iseph{A}$ in $\Delta$). In the previous
 chapter, we first encoded this relationship as an explicit rule
-${\it copy}$ rule:
+${\it copy}$:
 \[
 \infer[{\it copy}]
 {\seq{\Gamma, \ispers{A}}{\Delta}{\iseph{C}}}
@@ -83,10 +85,15 @@ ${\it copy}$ rule:
 \]
 In Section~\ref{sec:linnote}, based on a discussion of synthetic
 connectives under the atom optimization, we considered a revision
-to this notaiton 
+in which the ${\it copy}$ rule was admissibile and 
+left rules had conclusions that used the
+construct $\altseq{\Gamma}{\Delta/A}{C}$,
+which matches a sequent of the form $\altseq{\Gamma}{\Delta'}{C}$ 
+if either $A \in \Gamma$ and $\Delta' = \Delta$ or if
+$\Delta' = \Delta, A$. The $\oplus_L$ rule in this logic is as follows:
 \[
 \infer[{\oplus}_L]
-{\altseq{\Gamma}{\Delta/A \otimes B}{\iseph{C}}}
+{\altseq{\Gamma}{\Delta/A \oplus B}{\iseph{C}}}
 {\altseq{\Gamma}{\Delta, \iseph{A}}{\iseph{C}}
  &
  \altseq{\Gamma}{\Delta, \iseph{B}}{\iseph{C}}}
@@ -103,10 +110,12 @@ from regular truth.
 {\Gamma; \Delta; \Omega \longrightarrow \islax{A}}
 {\Gamma; \Delta; \Omega \longrightarrow \istrue{A}}
 \]
-The alternative is to rewrite all the right rules with a notation
+The alternative is to rewrite all the right rules with a construct
 $\orseq{\Gamma}{\Delta}{\Omega}{A}$ that matches both 
-judgments of the form $\otseq{\Gamma}{\Delta}{\Omega}{A}$
-and judgments of the form $\oseq{\Gamma}{\Delta}{\Omega}{\islax{A}}$.
+sequents of the form $\otseq{\Gamma}{\Delta}{\Omega}{A}$
+and sequents of the form $\oseq{\Gamma}{\Delta}{\Omega}{\islax{A}}$.
+The use of this construct gives us right rules for 
+$A \oplus B$ that look like this:
 \[
 \infer[{\oplus}_{R1}]
 {\orseq{\Gamma}{\Delta}{\Omega}{A \oplus B}}
@@ -116,37 +125,39 @@ and judgments of the form $\oseq{\Gamma}{\Delta}{\Omega}{\islax{A}}$.
 {\orseq{\Gamma}{\Delta}{\Omega}{A \oplus B}}
 {\otseq{\Gamma}{\Delta}{\Omega}{B}}
 \]
-
-The related notation on the left-hand side is 
+The related notation on the left-hand side is the construct 
 $\olseq{\Gamma}{\Delta}{\Omega_L}{A}{\Omega_R}$, which matches
-the $\oseq{\Gamma}{\Delta'}{\Omega'}{U}$ if
+the sequent $\oseq{\Gamma}{\Delta'}{\Omega'}{U}$ if
 \begin{itemize}
 \item $\Omega' = \Omega_L, A, \Omega_R$ and $\Delta' = \Delta$;
 \item $\Omega' = \Omega_L, \Omega_R$ and $\Delta' = \Delta, A$;
 \item $\Omega' = \Omega_L, \Omega_R$, $\Delta' = \Delta$, and $A \in \Gamma$.
 \end{itemize}
-This style of presentation, expressed in Figure~\ref{fig:ordered-prop},
-leaves both the ${\it copy}$ and ${\it place}$ rules of Polakow's 
-presentation as admissible.
+This style of presentation, use in Figure~\ref{fig:ordered-prop},
+excludes the ${\it copy}$ and ${\it place}$ rules from Polakow's 
+presentation; both rules are, however, admissible.
 
 \subsection{First-order logic}
 
 The presentation in Figure~\ref{fig:ordered-prop} is propositional; by 
 uniformly adding a first-order context $\Psi$ to all sequents, however,
-it can be treated as first-order, and we can define existential
-quantification and first-order equality in Figure~\ref{fig:ordered-fo}.
+it can be treated as first-order. We define 
+quantification (existential and universal), as well as 
+first-order equality, in Figure~\ref{fig:ordered-fo}.
 
 \input{figs/fig-ordered-fo}
 
 The equality judgment $t \doteq s$ deserves some attention. It is a
 higher-order judgment, in the sense that it reflects over the
-definition of simultaneous term substitutions
-$\Psi' \vdash \theta : \Psi$ and equality of first-order terms $t =
-s$. This is a rule that, in general, wih have countably many premises; 
-in the case of a trivially satisfiable equality problem like 
-$x \doteq x$ it will have one premise for each well-formed substitution
-that substitutes a term of the appropriate type for $x$. This style
-of presentation mirrors \cite{}.
+definition of simultaneous term substitutions $\Psi' \vdash \theta :
+\Psi$ and over the equality judgment for first-order terms $t =
+s$. This is a rule that, in general, will have countably many
+premises; in the case of a trivially satisfiable equality problem like
+$x \doteq x$ it will have one premise for each well-formed
+substitution that substitutes a term of the appropriate type for
+$x$. This exact style of presentation was used previously in 
+\cite{simmons09weak}, but the approach is based on Schroeder-Heister's
+treatment of definitional reflection \cite{schroeder93rules}.
 
 There are two important special cases. First, an unsatisfiable 
 equation on the left implies a contradiction, and the left rule
@@ -175,7 +186,7 @@ rule:
 \]
 
 We have not yet thoroughly specified the type and term structure of
-first-order individuals; in the next section we clarify that these
+first-order individuals; in the next chapter we clarify that these
 types and terms will actually be types and terms of Canonical LF.
 
 \section{Substructural contexts}
@@ -191,22 +202,26 @@ add, such as the affine contexts present in the Celf implementation.
 In this section, we will consider a more compact way of dealing with
 the contexts which we think of as containing resources (persistent,
 affine, linear, or ordered), though we will maintain the distinction
-between resource contexts and first-order contexts.  The first step
+between resource contexts and first-order variable 
+contexts $\Psi$.  The first step
 has already been take in Figure~\ref{fig:linear-alt} and
 Figure~\ref{fig:ordered-prop}, which make it quite obvious that the
 context-{\it matching} notation that we perform in the conclusion of
 an inference rule may not be the same as the context-{\it extending}
-notation we use in the premise of a rule. 
+notation we use in the premise of that rule. 
 
 We will treat unified contexts fundamentally as mappings from
 variables ($x$, $y$, $z$, etc.) to judgments $A\,{\it lvl}$. For the
-purposes of representing ordered linear lax logic, however, we could
+purposes of representing the contexts of \ollll, we can
 also think of unified contexts of the form
 \[
 \Xi ::= \cdot 
-  \mid \Xi, x{:}\ispers{A}
-  \mid \Xi, x{:}\iseph{A}
-  \mid \Xi, x{:}\istrue{A}
+  \mid \Xi, x{:}\ispers{A^-}
+  \mid \Xi, x{:}\ispers{A^-}
+  \mid \Xi, x{:}\iseph{A^-}
+  \mid \Xi, x{:}\iseph{A^-}
+  \mid \Xi, x{:}\istrue{A^-}
+  \mid \Xi, x{:}\istrue{A^-}
 \]
 where these three judgments are associated with propositions from the
 persistent, linear, and ordered contexts $\Gamma$, $\Delta$, and
