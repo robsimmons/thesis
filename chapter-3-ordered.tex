@@ -254,7 +254,7 @@ $\Xi_L, x_1{:}\istrue{T_1}, \Xi_M, x_2{:}\istrue{T_2}, \Xi_R$, it must
 be the case that $p(x_1) < p(x_2)$. 
 By sorting out three subsequences of persistent, linear, and ordered
 contexts, we can recover the usual presentations of contexts for
-\ollll. We will use this to aid informally motivate our notation,
+\ollll. We will use this to informally motivate our notation,
 writing $\Xi = \Gamma; \Delta; \Omega$. 
 
 \subsection{Fundamental operations on contexts}
@@ -286,51 +286,107 @@ $\Xi = \Gamma, T; \cdot; \cdot$).
 \end{definition}
 \bigskip
 
-Sole membership alone is related to the initial sequents and the 
-matching construct $\Gamma; \cdot;/A/$ for contexts 
-in ordered linear logic.
-Specifically, we could have instead written the {\it init} rule in 
-Figure~\ref{fig:ordered-prop} as
+Sole membership is related to the initial sequents and the 
+matching construct $\Gamma; \cdot;/A/$ for contexts that was used
+in Figure~\ref{fig:ordered-prop}.
+We could have instead written the {\it init} rule
+from that figure as follows:
 \[
 \infer[{\it init}]
 {\Xi \Rightarrow /{p}/}
 {x{:}p \subseteq \Xi}
 \]
 
-The second basic matching construct on a construct requires us to be
-able to talk about context {\it frames}, which we write $\Theta$. 
-Informally, if 
+The second basic operation on contexts requires a new concept, {\it
+  frames} $\Theta$. Intuitively, we can look frames as substructural
+contexts for \ollll~as a series of persistent, linear, and ordered
+contexts where the ordered context is missing a particular piece. We
+can write this missing piece as a box: $\Gamma; \Delta; \Omega_L,
+\Box, \Omega_R$. Alternatively we can think of a frame as a one-hole
+context or Huet-style zipper \cite{huet97zipper} over the structure
+of substructural contexts. Formally, we will represent frames in
+\ollll~as a pair: a finite map from variables to judgments (just
+like a regular context) and an open interval $I$ such that, for all
+$x{:}\istrue{T}$ in the finite map, $p(x) \not\in I$. 
 
-The second basic matching construct on a context is splitting
-the context into an inside and an outside.
+We can use frames to build contexts: the operation
+$\tackon{\Theta}{\Xi}$, builds a context from $\Theta$ by inserting
+$\Xi$. The insertion operation only works if the two variable domains
+are disjoint and if, for every $x{:}\istrue{T}$ in $\Xi$, $p(x)$ is in
+the open interval $I$ associated with $\Theta$.  If we think of
+$\Theta$ informally as 
+$\Gamma; \Delta; \Omega_L, \Box, \Omega_R$, then this is
+{\it almost} like the operation of filling in the hole, as
+$\tackon{\Theta}{x{:}\istrue{A}} = \Gamma; \Delta; \Omega_L, A,
+\Omega_R$. The main difference is that we can also use the operation to 
+insert linear
+propositions ($\tackon{\Theta}{x{:}\iseph{A}} = \Gamma;
+\Delta, A; \Omega_L, \Omega_R$) and persistent propositions
+($\tackon{\Theta}{x{:}\ispers{A}} = \Gamma, A; \Delta;
+\Omega_L, \Omega_R$).
+
+The matching construct associated with the insertion construction 
+operation is {\it framing off}, written 
+$\Xi = \frameoff{\Theta}{\Xi'}$. Informally, if
+$\Xi = \Gamma; \Delta, \Delta'; \Omega_L, \Omega', \Omega_R$ then we can say
+$\Xi = \frameoff{\Theta}{\Xi'}$ in the case that
+$\Theta = \Gamma; \Delta; \Omega_L, \Box, \Omega_R$ and
+$\Xi' = \Gamma; \Delta'; \Omega'$. The sub-context $\Xi'$, then, has
+been framed off from $\Xi$, its frame is $\Theta$. Note that the
+framing-off operation $\frameoff{\Theta}{\Xi'}$ would
+be essentially the same as the construction $\tackon{\Theta}{\Xi'}$
+in the absense of persistant propositions. The difference is that the 
+framing off operation requires that all the persistent judgments be
+shared between the frame and the sub-context that has been framed off,
+whereas the construction operation forbids any sharing of variables
+between the frame and the sub-context being introduced into the frame.
 
 \bigskip
-\begin{definition}
-We say that $\Xi$ is equal to $\frameoff{\Theta}{\Xi'}$, where
-$\Xi'$ is the {\em framed off} context and $\Theta$ is the {\em frame},
-if 
+\begin{definition}[Frames]
+A {\em frame} $\Theta$ over the domain $T$ 
+is the pair of a finite map from variables $x$ 
+to judgments $\islvl{T}$ along with an interval $I$, where for all 
+$x{:}\istrue{T}$ in the finite map, $p(x) \not\in I$. 
+
+The constructor $\tackon{\Theta}{\Xi}$ is defined as the union of the two
+finite maps $\Theta$ and $\Xi$ when the domains of $\Theta$
+and $\Xi$ are disjoint and, for every $x{:}\istrue{T} \in \Xi$,
+$p(x)$ is in $\Theta$'s interval $I$.
+
+The matching construct $\frameoff{\Theta}{\Xi'}$, where $\Theta$ is associated
+with the interval $I$, matches $\Xi$ in the event that
+\begin{itemize}
+\item  the combined variable domains of $\Theta$ and $\Xi'$ are the same as
+the variable domain of $\Xi$;
+\item if $x{:}\ispers{T} \in \Xi$, then $x{:}\ispers{T} \in \Xi'$ and
+  $x{:}\ispers{T} \in \Theta$;
+\item if $x{:}\iseph{T} \in \Xi$, then $x{:}\iseph{T} \in \Xi'$ or 
+  $x{:}\iseph{T} \in \Theta$ (but not both); and
+\item if $x{:}\istrue{T} \in \Xi$, then $x{:}\istrue{T} \in \Xi'$ (if
+$p(x) \in I$) or $x{:}\istrue{T} \in \Theta$ (if $p(x) \not\in I$).
+\end{itemize}
 \end{definition}
 \bigskip
 
- we say
-$\Xi = \frameoff{\Theta}{\Xi'}$. 
-If we 
-$\Xi = \Gamma; \Delta, \Delta'; \Omega_L, \Omega, \Omega_R$,
-the one possible match is to let 
-$\Theta = \Gamma; \Delta; \Omega_L, \Box, \Omega_R$ and to 
-let $\Xi = \Gamma; \Delta'; \Omega$. In other words, saying that
-$\Xi = \frameoff{\Theta}{\Xi'}$ means that $\Xi'$ is a piece of the inside
-of $\Xi$ and $\Theta$ is the remaining outside; $\Xi'$ has been 
-{\it framed out
-
-
-
+A critical derived matching construct is $\frameoff{\Theta}{x{:}T}$,
+which matches $\Xi$ if $\Xi = \frameoff{\Theta}{\Xi'}$ and $x{:}T$ is
+the sole member of $\Xi'$.  This pattern, or a close variation, can be
+used to describe essentally every left rule from
+Figure~\ref{fig:ordered-prop}, for instance:
 \[
 \infer[]
-{\frameoff{\Theta}{A \oplus B} \Rightarrow U}
-{\tackon{\Theta}{x{:}\istrue{A}} \Rightarrow U
+{\frameoff{\Theta}{x{:}A \oplus B} \Rightarrow U}
+{\tackon{\Theta}{y{:}\istrue{A}} \Rightarrow U
  &
- \tackon{\Theta}{y{:}\istrue{B}} \Rightarrow U}
+ \tackon{\Theta}{z{:}\istrue{B}} \Rightarrow U}
+\quad
+\infer[]
+{\frameoff{\Theta}{x{:}A \with B} \Rightarrow U}
+{\tackon{\Theta}{y{:}\istrue{A}} \Rightarrow U}
+\quad
+\infer[]
+{\frameoff{\Theta}{x{:}A \with B} \Rightarrow U}
+{\tackon{\Theta}{y{:}\istrue{B}} \Rightarrow U}
 \]
 
 We can also use this notation to describe the one of the
@@ -342,11 +398,16 @@ cut principles for ordered linear lax logic.
  &
  \tackon{\Theta}{x{:}A\,{\it true}} \Rightarrow \istrue{C}}
 \]
+
+\futurework{
+As an aside: it need not always be the case that the same operation
+used to describe 
+
 The idea that the operators $\frameoff{\Theta}{\Xi}$
 and $\tackon{\Theta}{\Xi}$ are sufficient to describe the 
 cut principle is related to the display property, which fails
 for some reasonable logics, such as Reed's queue logic
-\cite{reed09queue}.
+\cite{reed09queue}.}
 
 \subsection{Multiplicative operatons}
 
