@@ -32,6 +32,7 @@
 % Theorems
 \newtheorem{theorem}{Theorem}
 \newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}
 
 % symbols of linear logic
 \newcommand{\lolli}{\multimap}
@@ -53,10 +54,18 @@
 \newcommand{\righti}{\twoheadrightarrow}
 \newcommand{\lefti}{\rightarrowtail}
 \newcommand{\gnab}{\mbox{\textexclamdown}}
-\newcommand{\islax}[1]{{#1}~{\it lax}}
-\newcommand{\istrue}[1]{{#1}~{\it true}}
-\newcommand{\iseph}[1]{{#1}~{\it ephemeral}}
-\newcommand{\ispers}[1]{{#1}~{\it persistent}}
+
+\newcommand{\mlax}{{\it lax}}
+\newcommand{\mtrue}{{\it true}}
+\newcommand{\meph}{{\it ephemeral}}
+\newcommand{\mpers}{~{\it persistent}}
+\newcommand{\mlvl}{{\it lvl}}
+
+\newcommand{\islax}[1]{{#1}~{\mlax}}
+\newcommand{\istrue}[1]{{#1}~{\mtrue}}
+\newcommand{\iseph}[1]{{#1}~{\meph}}
+\newcommand{\ispers}[1]{{#1}~{\mpers}}
+\newcommand{\islvl}[1]{{#1}~{\mlvl}}
 
 % judgments of linear logic
 \newcommand{\seq}[3]{{#1};{#2} \longrightarrow {#3} \mathstrut}

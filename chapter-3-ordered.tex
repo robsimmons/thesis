@@ -210,48 +210,120 @@ context-{\it matching} notation that we perform in the conclusion of
 an inference rule may not be the same as the context-{\it extending}
 notation we use in the premise of that rule. 
 
-We will treat unified contexts fundamentally as mappings from
-variables ($x$, $y$, $z$, etc.) to judgments $A\,{\it lvl}$. For the
-purposes of representing the contexts of \ollll, we can
-also think of unified contexts of the form
+We write unified contexts as either $\Delta$ or $\Xi$, preferring the
+latter when there is a chance of confusing them with linear contexts
+$\Delta$. 
+
+\bigskip
+\begin{definition}[Unified context]
+A {\em unified context} (written $\Xi$ or $\Delta$) 
+over the domain $T$ is a finite map from a countably infinite
+set of {\em variables} ($x$, $y$, $z$, etc.) to judgments
+$\islvl{T}$, where $\mlvl$ is either $\mpers$, $\meph$, or $\mtrue$. 
+If $\Xi$ maps $x$ to $\islvl{T}$, we say $\Xi$ {\em contains}
+$x{:}\islvl{T}$. 
+\end{definition}
+\bigskip
+
+\noindent
+The metavariable $T$ represents an arbitrary domain; when
+discussing the unfocused logic given in Figure~\ref{fig:ordered-prop},
+$T$ varies over unpolarized propositions $A$, but when discussing a
+focused logic it varies over negative propositions $A^-$ and suspended
+positive propositions $\langle A^+ \rangle$. 
+
+The {\it order} in ordered logic will comes from an injective function
+$p(x)$ from variables onto some dense set (real numbers $\mathbb{R}$
+will do just fine).  The function need not be 1-to-1 (if the
+cardinality of the dense set is greater than the cardinality, this
+would be impossible) but it's necessary that function respect density
+in the sense that if $p(x) < p(y)$, we can find a variable $z$ where
+$p(x) < p(z) < p(y)$. 
+
+This formal account is compatible with the more traditional
+representation of ordered
+contexts as sequences
 \[
 \Xi ::= \cdot 
-  \mid \Xi, x{:}\ispers{A^-}
-  \mid \Xi, x{:}\ispers{A^-}
-  \mid \Xi, x{:}\iseph{A^-}
-  \mid \Xi, x{:}\iseph{A^-}
-  \mid \Xi, x{:}\istrue{A^-}
-  \mid \Xi, x{:}\istrue{A^-}
+  \mid \Xi, x{:}\ispers{T}
+  \mid \Xi, x{:}\iseph{T}
+  \mid \Xi, x{:}\istrue{T}
 \]
-where these three judgments are associated with propositions from the
-persistent, linear, and ordered contexts $\Gamma$, $\Delta$, and
-$\Omega$ (respectively). We will refer to substructural contexts as
-$\Xi$ when necessary to avoid confusion with linear contexts $\Delta$,
-though we will generally prefer the metavariable $\Delta$ to describe
-substructural contexts.
-
-we need three
-judgments in the context: $\ispers{A}$, the persistent judgment
-(otherwise associated with the context $\Gamma$); $\iseph{A}$, the
-ephemeral judgment (otherwise associated with the context $\Delta$);
-and the ordered judgment $\istrue{A}$ (otherwise associated with the
-context $\Omega$). For the focused system we will need one more, 
-$A\,{\it susp}$, associated with suspended positive propositions
-$\langle A^+ \rangle$. 
+if we just stipulate that in a context of the form
+$\Xi_L, x_1{:}\istrue{T_1}, \Xi_M, x_2{:}\istrue{T_2}, \Xi_R$, it must
+be the case that $p(x_1) < p(x_2)$. 
+By sorting out three subsequences of persistent, linear, and ordered
+contexts, we can recover the usual presentations of contexts for
+\ollll. We will use this to aid informally motivate our notation,
+writing $\Xi = \Gamma; \Delta; \Omega$. 
 
 \subsection{Fundamental operations on contexts}
 
-The fundamental constructor of a singleton context is the 
-$x{:}A\,{\it lvl}$ 
+The first fundamental constructor of contexts is $x{:}\islvl{T}$,
+which is the map that contains $x{:}\islvl{T}$ and nothing else.
+(Recall that $T$ is just $A$ in the unfocused setting and either $A^-$
+or $\langle A^+ \rangle$ in the polarized, focused setting.)  The
+corresponding matching construct on contexts is {\it sole membership},
+$x{:}T \subseteq \Xi$.
 
-The second fundamental operation on a context is splitting
-the context into an inside and an outside: we say
+\bigskip
+\begin{definition}[Sole membership]
+We say that $x{:}T$ 
+is the sole member of ${\Xi}$, which we write as $x{:}T \subseteq \Xi$,
+when
+\begin{itemize}
+\item $\Xi$ contains no linear judgments and contains exactly
+one
+ordered judgment $x{:}\istrue{T}$ (corresponding to the situation where
+$\Xi = \Gamma; \cdot; T$), 
+\item $\Xi$ contains no ordered judgments and contains exactly
+one linear judgement $x{:}\iseph{T}$ (corresponding to the situation where
+$\Xi = \Gamma; T; \cdot$), and 
+\item $\Xi$ contains only persistent judgments, including
+$x{:}\ispers{T}$ (corresponding to the situation where
+$\Xi = \Gamma, T; \cdot; \cdot$). 
+\end{itemize}
+\end{definition}
+\bigskip
+
+Sole membership alone is related to the initial sequents and the 
+matching construct $\Gamma; \cdot;/A/$ for contexts 
+in ordered linear logic.
+Specifically, we could have instead written the {\it init} rule in 
+Figure~\ref{fig:ordered-prop} as
+\[
+\infer[{\it init}]
+{\Xi \Rightarrow /{p}/}
+{x{:}p \subseteq \Xi}
+\]
+
+The second basic matching construct on a construct requires us to be
+able to talk about context {\it frames}, which we write $\Theta$. 
+Informally, if 
+
+The second basic matching construct on a context is splitting
+the context into an inside and an outside.
+
+\bigskip
+\begin{definition}
+We say that $\Xi$ is equal to $\frameoff{\Theta}{\Xi'}$, where
+$\Xi'$ is the {\em framed off} context and $\Theta$ is the {\em frame},
+if 
+\end{definition}
+\bigskip
+
+ we say
 $\Xi = \frameoff{\Theta}{\Xi'}$. 
 If we 
 $\Xi = \Gamma; \Delta, \Delta'; \Omega_L, \Omega, \Omega_R$,
 the one possible match is to let 
 $\Theta = \Gamma; \Delta; \Omega_L, \Box, \Omega_R$ and to 
-let $\Xi = \Gamma; \Delta'; \Omega$. 
+let $\Xi = \Gamma; \Delta'; \Omega$. In other words, saying that
+$\Xi = \frameoff{\Theta}{\Xi'}$ means that $\Xi'$ is a piece of the inside
+of $\Xi$ and $\Theta$ is the remaining outside; $\Xi'$ has been 
+{\it framed out
+
+
 
 \[
 \infer[]
