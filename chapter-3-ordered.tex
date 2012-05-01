@@ -2,7 +2,7 @@
 
 Linear logic is the most famous of the {\it substructural logics}.
 Persistent logic admits the three so-called {\it structural rules} of
-weakening (premises need not be used), contraction (premeses may be
+weakening (premises need not be used), contraction (premises may be
 used multiple times) and exchange (the ordering of premises are 
 irrelevant). Substructural logics, then, are logics that do not admit
 these structural rules -- linear logic has only exchange, 
@@ -24,12 +24,12 @@ This section defines a first-order ordered linear logic that includes
 a lax modality; a fragment of this system will form the basis of our
 logical framework in Chapter 4. The full focusing system for ordered
 linear lax logic is presented in this chapter in keeping with
-Andreoli's insistance that we avoid the confusion that results from
+Andreoli's insistence that we avoid the confusion that results from
 conflating ``defining a foundational paradigm or a [logic] programming
 language (two objectives that should clearly be kept separate)''
 \cite{andreoli01focussing}, a concern that is applicable for logical
 frameworks as well as for logic programming
-langauges.\footnote{As Twelf, Lollimon, and Celf
+languages.\footnote{As Twelf, Lollimon, and Celf
   show, logical frameworks can frequently be given straightforward
   life as logic programming languages
   \cite{pfenning99system,lopez05monadic,schacknielsen08celf}.} I 
@@ -85,7 +85,7 @@ ${\it copy}$:
 \]
 In Section~\ref{sec:linnote}, based on a discussion of synthetic
 connectives under the atom optimization, we considered a revision
-in which the ${\it copy}$ rule was admissibile and 
+in which the ${\it copy}$ rule was admissible and 
 left rules had conclusions that used the
 construct $\altseq{\Gamma}{\Delta/A}{C}$,
 which matches a sequent of the form $\altseq{\Gamma}{\Delta'}{C}$ 
@@ -99,9 +99,9 @@ $\Delta' = \Delta, A$. The $\oplus_L$ rule in this logic is as follows:
  \altseq{\Gamma}{\Delta, \iseph{B}}{\iseph{C}}}
 \]
 
-Lax truth can be considered along the same lines, accoutning for the
+Lax truth can be considered along the same lines, accounting for the
 fact that we're now using the much briefer $\istrue{A}$ instead of
-$\iseph{A}$ to capture the judgment assocated with ordered, ephemeral
+$\iseph{A}$ to capture the judgment associated with ordered, ephemeral
 resources.  To follow existing judgmental presentations of lax logic,
 we would include a distinct rule ${\it lax}$ that derives lax truth
 from regular truth.
@@ -205,7 +205,7 @@ affine, linear, or ordered), though we will maintain the distinction
 between resource contexts and first-order variable 
 contexts $\Psi$.  The particular way we define substructural contexts
 can be generalized substantially: it would be trivial to extend
-this presentation to the affine modaility or to the subexponentials
+this presentation to the affine modality or to the subexponentials
 discussed by Nigam and Miller \cite{nigam09algorithmic}. Furthermore,
 the notation is designed so that it might scale to more interesting
 substructural logics, such as non-commutative linear logic (``rigid
@@ -253,7 +253,7 @@ our notation, writing $\Xi = \Gamma; \Delta; \Omega$.
 In this presentation, most operations on contexts have two forms: a
 {\it matching construct} that is used in the conclusion of derivation
 rules, and a {\it construction construct} that is used in the
-premises.  We introduced this distinction when we empahsized the
+premises.  We introduced this distinction when we emphasized the
 matching construct $\Gamma; \Delta/A$ in Figure~\ref{fig:linear-alt}
 and the related matching construct $\Gamma; \Delta;
 \Omega_L/A/\Omega_R$ notation in Figure~\ref{fig:ordered-prop}, but we
@@ -396,7 +396,7 @@ cut principle is related to the display property, which fails
 for some reasonable logics, such as Reed's queue logic
 \cite{reed09queue}.}
 
-\subsection{Multiplicative operatons}
+\subsection{Multiplicative operations}
 
 To describe the multiplicative connective of \ollll, including the critical
 connective of implication, we need to have multiplicative operations on 
@@ -431,7 +431,7 @@ and
 
 The constructs for multiplicative conjunction are put to obvious use
 in the description of multiplicative conjunction, which is essentially
-just the propositional interalization of context conjunction:
+just the propositional internalization of context conjunction:
 \[
 \infer
 {\matchconj{\Xi_L}{\Xi_R} \Rightarrow /A \fuse B/}
@@ -449,7 +449,7 @@ just the propositional interalization of context conjunction:
 {\frameoff{\Theta}{x{:}\one} \Rightarrow U}
 {\tackon{\Theta}{\cdot} \Rightarrow U}
 \]
-Implication makes more sophsticated use of context conjunction:
+Implication makes more sophisticated use of context conjunction:
 $\Xi$ matches $\frameoff{\Theta}{\Xi_A, x{:}A \lefti B}$ if
 $\Xi$ matches $\frameoff{\Theta}{\Xi'}$, $\Xi'$ matches
 $\matchconj{\Xi_A}{\Xi''}$, and $x{:}A \subseteq \Xi''$. 
@@ -499,7 +499,7 @@ those that map {\it extent}.
 
 
 
-Two of the fundamental propeties of $\Delta$ are 
+Two of the fundamental properties of $\Delta$ are 
 $x{:}\langle A^+ \rangle_l \sqsubseteq \Delta$. In linear logic, this
 is the statement that $x{:}A \in \Gamma$, whereas in 
 
@@ -507,7 +507,7 @@ is the statement that $x{:}A \in \Gamma$, whereas in
 \begin{array}{|c|c|c|c|}
 %
 \begin{array}{c}
-\makebox[1.8in]{\it Dual intuitionstic linear logic}\medskip
+\makebox[1.8in]{\it Dual intuitionistic linear logic}\medskip
 \\
 \infer
 {\Gamma; p^+ \vdash p^+ \mathstrut}
@@ -541,7 +541,7 @@ is the statement that $x{:}A \in \Gamma$, whereas in
 \begin{array}{|c|c|c|c|}
 %
 \begin{array}{c}
-\makebox[1.8in]{\it Dual intuitionstic linear logic}\medskip
+\makebox[1.8in]{\it Dual intuitionistic linear logic}\medskip
 \\
 \infer
 {\Gamma; \Delta, A \with B \vdash C \mathstrut}
@@ -576,7 +576,7 @@ is the statement that $x{:}A \in \Gamma$, whereas in
 \begin{array}{|c|c|c|c|}
 %
 \begin{array}{c}
-\makebox[1.8in]{\it Dual intuitionstic linear logic}\medskip
+\makebox[1.8in]{\it Dual intuitionistic linear logic}\medskip
 \\
 \infer
 {\Gamma; \Delta_1, \Delta_2 \vdash A \otimes B \mathstrut}
