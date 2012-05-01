@@ -559,6 +559,39 @@ is the statement that $x{:}A \in \Gamma$, whereas in
 
 \section{Cut admissibility}
 
+\begin{itemize}
+\item $\Delta{\downarrow}_{\mpers}$ -- identity function whenever $\Delta$ contains only $x{:}\ispers{T}$
+\item $\Delta{\downarrow}_{\meph}$ -- identity function whenever $\Delta$ contains only $x{:}\ispers{T}$ and $x{:}\iseph{T}$
+\item $\Delta{\downarrow}_{\mtrue}$ -- identity function
+\end{itemize}
+
+\begin{itemize}
+\item $U{\downarrow}_{\mtrue}$ -- identity function whenever $U$ is $\istrue{A}$
+\item $U{\downarrow}_{\mlax}$ -- identity function
+\end{itemize}
+
+
+
+\begin{theorem}[Cut admissibility]~
+\begin{enumerate}
+\item If $\foc{\Psi}{\Delta}{[ A^+ ]}$
+      and $\ifoc{\Psi}{\Theta}{A^+,\Omega}{U}$, 
+      then $\ifoc{\Psi}{\frameoff{\Theta}{{\Delta},\Box}}{\Omega}{U}$.
+\item If $\foc{\Psi}{\Delta}{A^-}$ 
+      and $\lfoc{\Psi}{\Theta}{A^-}{U}$, 
+      then $\Psi; \frameoff{\Theta}{\Delta} \Rightarrow U$.
+\item[3a.] If $\foc{\Psi}{\invoff{\Theta}{\Omega}}{\islvl{A^+}}$
+      and $\Psi; \Theta; A^+ \Rightarrow U$,
+      then $\Psi; \frameoff{\Theta}{\underline{\Delta}} \Rightarrow U{\downarrow}_{\mlvl}$.
+\item[3a.] If $\Psi; \Delta \Rightarrow \islvl{A^+}$
+      and $\Psi; \Theta; A^+ \Rightarrow U$,
+      then $\Psi; \frameoff{\Theta}{\underline{\Delta}} \Rightarrow U{\downarrow}_{\mlvl}$.
+\item If $\Psi; \restrictto{\Delta}{\mlvl} \Rightarrow {A^-}$
+      and $\Psi; \tackon{\underline{\Theta}}{x{:}\islvl{A^-}} \Rightarrow U$, 
+      then $\Psi; \frameoff{\underline{\Theta}}{\restrictto{\Delta}{\mlvl}} \Rightarrow U$.
+\end{enumerate}
+\end{theorem}
+
 \section{Identity expansion}
 
 \section{Unfocused admissibility}
