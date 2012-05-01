@@ -341,17 +341,16 @@ framed-off context.
 $\Xi = \frameoff{\Theta}{\Xi'}$ if the union of the variables in 
 $\Theta$ and $\Xi'$ is exactly the variables in $\Xi$ and
 \begin{itemize}
-\item if $x{:}\ispers{T} \in \Xi$, then $x{:}\ispers{T} \in \Xi'$ and
-  $x{:}\ispers{T} \in \Theta$;
-\item if $x{:}\iseph{T} \in \Xi$, then $x{:}\iseph{T} \in \Xi'$ or 
-  $x{:}\iseph{T} \in \Theta$ (but not both); and
-\item if $x{:}\istrue{T} \in \Xi$, then either $x{:}\istrue{T} \in \Xi'$,
-  or else both $x{:}\iseph{T} \in \Theta$ and either
+\item if $x{:}\ispers{T} \in \Xi$, then the same mapping appears in 
+  $\Theta$ and $\Xi'$;
+\item if $x{:}\iseph{T} \in \Xi$ or $x{:}\istrue{T} \in \Xi$, 
+  then the same mapping appears in $\Theta$ or $\Xi'$ (but not both); and
+\item if $x{:}\iseph{T} \in \Theta$, then either
   \begin{itemize}
-  \item for all $y{:}\istrue{T'} \in \Xi'$, the mapping for $x$ appeared to the 
-    left of the mapping for $y$ in $\Xi$, or else
-  \item for all $y{:}\istrue{T'} \in \Xi'$, the mapping for $x$ appeared to the
-    right of the mapping for $y$ in $\Xi$. 
+  \item for all $y{:}\istrue{T'} \in \Xi'$, the mapping for $x$ appeared before
+    the mapping for $y$ in $\Xi$, or
+  \item for all $y{:}\istrue{T'} \in \Xi'$, the mapping for $x$ appeared after
+    the mapping for $y$ in $\Xi$. 
   \end{itemize}
 \end{itemize}
 \end{definition}
@@ -399,7 +398,72 @@ for some reasonable logics, such as Reed's queue logic
 
 \subsection{Multiplicative operatons}
 
-To describe the multiplicative . As a construction form, 
+To describe the multiplicative connective of \ollll, including the critical
+connective of implication, we need to have multiplicative operations on 
+contexts. As a construction form, $\mkconj{\Xi_L}{\Xi_R}$ is just the
+syntactic concatenation of two contexts with distinct variable domains, and
+the unit $\mkunit$ is just the empty sequence. The matching constructs
+are more complicated to define as usual, but the intuition is, again, 
+uncomplicated: if 
+$\Xi = \Gamma; \Delta, \Delta'; \Omega_L, \Omega_R$, where linear contexts
+are multisets and ordered contexts are sequences, then 
+$\Xi = \mkconj{\Xi_L}{\Xi_R}$ if $\Xi_L = \Gamma; \Delta; \Omega_L$ and
+$\Xi_R = \Gamma; \Delta'; \Omega_R$.
+
+\bigskip
+\begin{definition}[Conjunction]
+As a matching construct, $\Xi = \matchunit$ if $\Xi$ contains only
+persistent variables.
+
+As a matching construct, $\Xi = \matchconj{\Xi_L}{\Xi_R}$ if the union 
+of the variables in $\Xi_L$ and $\Xi_R$ is exactly the variables in $\Xi$
+and 
+\begin{itemize}
+\item if $x{:}\ispers{T} \in \Xi$, then the same mapping appears in $\Xi_L$
+  and $\Xi_R$;
+\item if $x{:}\iseph{T} \in \Xi$ or $x{:}\istrue{T} \in \Xi$, then the
+  same mapping appears in $\Xi_L$ or $\Xi_R$ (but not both); and
+\item if $x{:}\istrue{T} \in \Xi_L$ and $y{:}\istrue{T'} \in \Xi_R$, then
+  the mapping for $x$ appeared before the mapping for $y$ in $\Xi$. 
+\end{itemize}
+\end{definition}
+\bigskip
+
+The constructs for multiplicative conjunction are put to obvious use
+in the description of multiplicative conjunction, which is essentially
+just the propositional interalization of context conjunction:
+\[
+\infer
+{\matchconj{\Xi_L}{\Xi_R} \Rightarrow /A \fuse B/}
+{\Xi_L \Rightarrow \istrue{A} & \Xi_R \Rightarrow \istrue{B}}
+\quad
+\infer
+{\frameoff{\Theta}{x{:}A \fuse B} \Rightarrow U}
+{\tackon{\Theta}{\mkconj{y{:}A}{z{:}B}} \Rightarrow U}
+\quad
+\infer
+{\cdot \Rightarrow \one}
+{}
+\quad
+\infer
+{\frameoff{\Theta}{x{:}\one} \Rightarrow U}
+{\tackon{\Theta}{\cdot} \Rightarrow U}
+\]
+Implication makes more sophsticated use of context conjunction:
+$\Xi$ matches $\frameoff{\Theta}{\Xi_A, x{:}A \lefti B}$ if
+$\Xi$ matches $\frameoff{\Theta}{\Xi'}$, $\Xi'$ matches
+$\matchconj{\Xi_A}{\Xi''}$, and $x{:}A \subseteq \Xi''$. 
+
+
+As a matching construct, $\Xi = \matchconj{\Xi_L}{\Xi_R}$ if every 
+$x{:}\ispers{T}$ in $\Xi$ appears in both $\Xi_L$ and $\Xi_R$, every 
+$x{:}\iseph{T}$ or $x{:}\istrue{T}$ 
+in $\Xi$ appears in exactly one of $\Xi_L$ or $\Xi_R$, and
+if furthermore every 
+$x{:}\iseph{T}$ $\Xi_L$
+
+
+As a construction form, 
 
 
 \subsection{Exponential operations}
