@@ -203,66 +203,64 @@ In this section, we will consider a more compact way of dealing with
 the contexts which we think of as containing resources (persistent,
 affine, linear, or ordered), though we will maintain the distinction
 between resource contexts and first-order variable 
-contexts $\Psi$.  The first step
-has already been take in Figure~\ref{fig:linear-alt} and
-Figure~\ref{fig:ordered-prop}, which make it quite obvious that the
-context-{\it matching} notation that we perform in the conclusion of
-an inference rule may not be the same as the context-{\it extending}
-notation we use in the premise of that rule. 
+contexts $\Psi$.  The particular way we define substructural contexts
+can be generalized substantially: it would be trivial to extend
+this presentation to the affine modaility or to the subexponentials
+discussed by Nigam and Miller \cite{nigam09algorithmic}. Furthermore,
+the notation is designed so that it might scale to more interesting
+substructural logics, such as non-commutative linear logic (``rigid
+logic'' \cite{simmons09linear}) or the logic of bunched implications
+\cite{pym02semantics}, even though our specific implementation
+of that notation may not.
 
-We write unified contexts as either $\Delta$ or $\Xi$, preferring the
-latter when there is a chance of confusing them with linear contexts
-$\Delta$. 
-
-\bigskip
-\begin{definition}[Unified context]
-A {\em unified context} (written $\Xi$ or $\Delta$) 
-over the domain $T$ is a finite map from a countably infinite
-set of {\em variables} ($x$, $y$, $z$, etc.) to judgments
-$\islvl{T}$, where $\mlvl$ is either $\mpers$, $\meph$, or $\mtrue$. 
-If $\Xi$ maps $x$ to $\islvl{T}$, we say $\Xi$ {\em contains}
-$x{:}\islvl{T}$. 
-\end{definition}
-\bigskip
-
-\noindent
-The metavariable $T$ represents an arbitrary domain; when
-discussing the unfocused logic given in Figure~\ref{fig:ordered-prop},
-$T$ varies over unpolarized propositions $A$, but when discussing a
-focused logic it varies over negative propositions $A^-$ and suspended
-positive propositions $\langle A^+ \rangle$. 
-
-The {\it order} in ordered logic will comes from an injective function
-$p(x)$ from variables onto some dense set (real numbers $\mathbb{R}$
-will do just fine).  The function need not be 1-to-1 (if the
-cardinality of the dense set is greater than the cardinality, this
-would be impossible) but it's necessary that function respect density
-in the sense that if $p(x) < p(y)$, we can find a variable $z$ where
-$p(x) < p(z) < p(y)$. 
-
-This formal account is compatible with the more traditional
-representation of ordered
-contexts as sequences
+We write unified substructural contexts as either $\Delta$ or $\Xi$,
+preferring the latter when there is a chance of confusing them with
+linear contexts $\Delta$. For the purposes of encoding \ollll, we can
+see these contexts as sequences, defined by the grammar
 \[
 \Xi ::= \cdot 
   \mid \Xi, x{:}\ispers{T}
   \mid \Xi, x{:}\iseph{T}
   \mid \Xi, x{:}\istrue{T}
 \]
-if we just stipulate that in a context of the form
-$\Xi_L, x_1{:}\istrue{T_1}, \Xi_M, x_2{:}\istrue{T_2}, \Xi_R$, it must
-be the case that $p(x_1) < p(x_2)$. 
-By sorting out three subsequences of persistent, linear, and ordered
-contexts, we can recover the usual presentations of contexts for
-\ollll. We will use this to informally motivate our notation,
-writing $\Xi = \Gamma; \Delta; \Omega$. 
+where each of the {\em variables} $x$ are distinct, so that the context
+also represents a finite map $\to$ $\rightarrow$ from variables $x$ to 
+{\it judgments}
+$\islvl{T}$, where $\mlvl$ is either $\mpers$, $\meph$, or $\mtrue$. 
+The domain $T$ is arbitrary: when
+discussing the unfocused logic given in Figure~\ref{fig:ordered-prop},
+$T$ varies over unpolarized propositions $A$, but when discussing a
+focused logic it varies over negative propositions $A^-$ and suspended
+positive propositions $\langle A^+ \rangle$. 
+
+By sorting out a substructural context into three subsequences of
+persistent, linear, and ordered contexts, we can recover the
+presentations of contexts for \ollll~given in
+Figure~\ref{fig:ordered-prop}. We will use this to informally motivate
+our notation, writing $\Xi = \Gamma; \Delta; \Omega$.
+
+
+% The first step towards this understanding 
+% has already been take in Figure~\ref{fig:linear-alt} and
+% Figure~\ref{fig:ordered-prop}, which make it quite obvious that the
+% context-{\it matching} notation that we perform in the conclusion of
+% an inference rule may not be the same as the context-{\it extending}
+% notation we use in the premise of that rule.
+
 
 \subsection{Fundamental operations on contexts}
 
-The first fundamental constructor of contexts is $x{:}\islvl{T}$,
-which is the map that contains $x{:}\islvl{T}$ and nothing else.
-(Recall that $T$ is just $A$ in the unfocused setting and either $A^-$
-or $\langle A^+ \rangle$ in the polarized, focused setting.)  The
+In this presentation, most operations on contexts have two forms: a
+{\it matching construct} that is used in the conclusion of derivation
+rules, and a {\it construction construct} that is used in the
+premises.  We introduced this distinction when we empahsized the
+matching construct $\Gamma; \Delta/A$ in Figure~\ref{fig:linear-alt}
+and the related matching construct $\Gamma; \Delta;
+\Omega_L/A/\Omega_R$ notation in Figure~\ref{fig:ordered-prop}, but we
+will be much more explicit about it in the following discussion.
+
+The first fundamental idea we consider is {\it singleton} contexts.
+We construct a single-element context by writing $x{:}\islvl{T}$, The
 corresponding matching construct on contexts is {\it sole membership},
 $x{:}T \subseteq \Xi$.
 
@@ -304,7 +302,23 @@ contexts where the ordered context is missing a particular piece. We
 can write this missing piece as a box: $\Gamma; \Delta; \Omega_L,
 \Box, \Omega_R$. Alternatively we can think of a frame as a one-hole
 context or Huet-style zipper \cite{huet97zipper} over the structure
-of substructural contexts. Formally, we will represent frames in
+of substructural contexts. We will actually think of them
+as closest to linear substitution functions, like a Linear ML function
+$(\mathsf{fn}~\Xi\Rightarrow \Xi_L, \Xi, \Xi_R)$, though we'll 
+treat $\Box$ as a distinguished variable standing for the bound variable 
+$\Xi$ (that is, representing the missing part of the context)
+\cite{simmons09linear}.
+
+The construction form associated with frames, 
+$\tackon{\Theta}{\Xi}$, is just a straightforward
+operation of filling in the hole; it requires that the variables in 
+$\Theta$ and $\Xi$ be distinct. 
+
+``the missing part
+of the context'' and write $\Xi_L, \Box, \Xi_R$
+
+
+Formally, we will represent frames in
 \ollll~as a pair: a finite map from variables to judgments (just
 like a regular context) and an open interval $I$ such that, for all
 $x{:}\istrue{T}$ in the finite map, $p(x) \not\in I$. 
