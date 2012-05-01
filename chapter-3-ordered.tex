@@ -309,84 +309,58 @@ treat $\Box$ as a distinguished variable standing for the bound variable
 $\Xi$ (that is, representing the missing part of the context)
 \cite{simmons09linear}.
 
-The construction form associated with frames, 
-$\tackon{\Theta}{\Xi}$, is just a straightforward
-operation of filling in the hole; it requires that the variables in 
-$\Theta$ and $\Xi$ be distinct. 
+The construction form associated with frames, $\tackon{\Theta}{\Xi}$,
+is just a straightforward operation of filling in the hole; it
+requires that the variables in $\Theta$ and $\Xi$ be distinct. If we
+think of $\Theta$ informally as $\Gamma; \Delta; \Omega_L, \Box,
+\Omega_R$, then this is {\it almost} like the operation of filling in
+the hole, as $\tackon{\Theta}{x{:}\istrue{A}} = \Gamma; \Delta;
+\Omega_L, A, \Omega_R$. The main difference is that we can also use
+the operation to insert linear propositions
+($\tackon{\Theta}{x{:}\iseph{A}} = \Gamma; \Delta, A; \Omega_L,
+\Omega_R$) and persistent propositions
+($\tackon{\Theta}{x{:}\ispers{A}} = \Gamma, A; \Delta; \Omega_L,
+\Omega_R$).
 
-``the missing part
-of the context'' and write $\Xi_L, \Box, \Xi_R$
-
-
-Formally, we will represent frames in
-\ollll~as a pair: a finite map from variables to judgments (just
-like a regular context) and an open interval $I$ such that, for all
-$x{:}\istrue{T}$ in the finite map, $p(x) \not\in I$. 
-
-We can use frames to build contexts: the operation
-$\tackon{\Theta}{\Xi}$, builds a context from $\Theta$ by inserting
-$\Xi$. The insertion operation only works if the two variable domains
-are disjoint and if, for every $x{:}\istrue{T}$ in $\Xi$, $p(x)$ is in
-the open interval $I$ associated with $\Theta$.  If we think of
-$\Theta$ informally as 
-$\Gamma; \Delta; \Omega_L, \Box, \Omega_R$, then this is
-{\it almost} like the operation of filling in the hole, as
-$\tackon{\Theta}{x{:}\istrue{A}} = \Gamma; \Delta; \Omega_L, A,
-\Omega_R$. The main difference is that we can also use the operation to 
-insert linear
-propositions ($\tackon{\Theta}{x{:}\iseph{A}} = \Gamma;
-\Delta, A; \Omega_L, \Omega_R$) and persistent propositions
-($\tackon{\Theta}{x{:}\ispers{A}} = \Gamma, A; \Delta;
-\Omega_L, \Omega_R$).
-
-The matching construct associated with the insertion construction 
-operation is {\it framing off}, written 
-$\Xi = \frameoff{\Theta}{\Xi'}$. Informally, if
-$\Xi = \Gamma; \Delta, \Delta'; \Omega_L, \Omega', \Omega_R$ then we can say
-$\Xi = \frameoff{\Theta}{\Xi'}$ in the case that
-$\Theta = \Gamma; \Delta; \Omega_L, \Box, \Omega_R$ and
-$\Xi' = \Gamma; \Delta'; \Omega'$. The sub-context $\Xi'$, then, has
-been framed off from $\Xi$, its frame is $\Theta$. Note that the
-framing-off operation $\frameoff{\Theta}{\Xi'}$ would
-be essentially the same as the construction $\tackon{\Theta}{\Xi'}$
-in the absense of persistant propositions. The difference is that the 
-framing off operation requires that all the persistent judgments be
-shared between the frame and the sub-context that has been framed off,
-whereas the construction operation forbids any sharing of variables
-between the frame and the sub-context being introduced into the frame.
+The matching construction for frames is a bit more complicated,
+Informally, if we treat linear contexts as multisets and say that $\Xi
+= \Gamma; \Delta, \Delta'; \Omega_L, \Omega', \Omega_R$, then we can
+say $\Xi = \frameoff{\Theta}{\Xi'}$ in the case that $\Theta = \Gamma;
+\Delta; \Omega_L, \Box, \Omega_R$ and $\Xi' = \Gamma; \Delta';
+\Omega'$. The sub-context $\Xi'$, then, has been framed off from
+$\Xi$, its frame is $\Theta$. If we only had ordered judgments
+$\istrue{T}$, then the framing-off matching construct
+$\frameoff{\Theta}{\Xi'}$ would be essentially the same as the
+construction form $\tackon{\Theta}{\Xi'}$. However, persistent and
+linear judgments can be reordered in the process of matching, and
+persistent judgments always end up in both the frame and the 
+framed-off context. 
 
 \bigskip
-\begin{definition}[Frames]
-A {\em frame} $\Theta$ over the domain $T$ 
-is the pair of a finite map from variables $x$ 
-to judgments $\islvl{T}$ along with an interval $I$, where for all 
-$x{:}\istrue{T}$ in the finite map, $p(x) \not\in I$. 
-
-The constructor $\tackon{\Theta}{\Xi}$ is defined as the union of the two
-finite maps $\Theta$ and $\Xi$ when the domains of $\Theta$
-and $\Xi$ are disjoint and, for every $x{:}\istrue{T} \in \Xi$,
-$p(x)$ is in $\Theta$'s interval $I$.
-
-The matching construct $\frameoff{\Theta}{\Xi'}$, where $\Theta$ is associated
-with the interval $I$, matches $\Xi$ in the event that
+\begin{definition}[Framing off]
+$\Xi = \frameoff{\Theta}{\Xi'}$ if the union of the variables in 
+$\Theta$ and $\Xi'$ is exactly the variables in $\Xi$ and
 \begin{itemize}
-\item  the combined variable domains of $\Theta$ and $\Xi'$ are the same as
-the variable domain of $\Xi$;
 \item if $x{:}\ispers{T} \in \Xi$, then $x{:}\ispers{T} \in \Xi'$ and
   $x{:}\ispers{T} \in \Theta$;
 \item if $x{:}\iseph{T} \in \Xi$, then $x{:}\iseph{T} \in \Xi'$ or 
   $x{:}\iseph{T} \in \Theta$ (but not both); and
-\item if $x{:}\istrue{T} \in \Xi$, then $x{:}\istrue{T} \in \Xi'$ (if
-$p(x) \in I$) or $x{:}\istrue{T} \in \Theta$ (if $p(x) \not\in I$).
+\item if $x{:}\istrue{T} \in \Xi$, then either $x{:}\istrue{T} \in \Xi'$,
+  or else both $x{:}\iseph{T} \in \Theta$ and either
+  \begin{itemize}
+  \item for all $y{:}\istrue{T'} \in \Xi'$, the mapping for $x$ appeared to the 
+    left of the mapping for $y$ in $\Xi$, or else
+  \item for all $y{:}\istrue{T'} \in \Xi'$, the mapping for $x$ appeared to the
+    right of the mapping for $y$ in $\Xi$. 
+  \end{itemize}
 \end{itemize}
 \end{definition}
 \bigskip
 
-A critical derived matching construct is $\frameoff{\Theta}{x{:}T}$,
-which matches $\Xi$ if $\Xi = \frameoff{\Theta}{\Xi'}$ and $x{:}T$ is
-the sole member of $\Xi'$.  This pattern, or a close variation, can be
-used to describe essentally every left rule from
-Figure~\ref{fig:ordered-prop}, for instance:
+An important derived matching construct is $\frameoff{\Theta}{x{:}T}$,
+which matches $\Xi$ if $\Xi = \frameoff{\Theta}{\Xi'}$ and 
+$x{:}T \subseteq \Xi'$.  This pattern is used in almost every
+left rule from Figure~\ref{fig:ordered-prop}, for instance:
 \[
 \infer[]
 {\frameoff{\Theta}{x{:}A \oplus B} \Rightarrow U}
@@ -424,6 +398,9 @@ for some reasonable logics, such as Reed's queue logic
 \cite{reed09queue}.}
 
 \subsection{Multiplicative operatons}
+
+To describe the multiplicative . As a construction form, 
+
 
 \subsection{Exponential operations}
 
