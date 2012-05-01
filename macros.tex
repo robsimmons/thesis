@@ -83,10 +83,16 @@
 
 \newcommand{\foc}[3]{{#1};{#2} \vdash {#3}}
 \newcommand{\rfoc}[3]{{#1};{#2} \vdash [{#3}]}
-\newcommand{\ifoc}[4]{{#1};{#2};{#3} \vdash {#4}}
+\newcommand{\ifoc}[4]{{#1};{#2} {\mid} {#3} \vdash {#4}}
 \newcommand{\lfoc}[4]{{#1};{#2}[{#3}] \vdash {#4}}
 
 \newcommand{\foct}[4]{{#1};{#2} \vdash {#3} : {#4}}
+\newcommand{\rfoct}[4]{{#1};{#2} \vdash {#3} : [{#4}]}
+\newcommand{\lfoct}[4]{{#1};{#2}[{#3}] \vdash {#3} : [{#4}]}
+
+\newcommand{\tfocusr}[1]{{#1}}
+\newcommand{\tfocusl}[2]{{#1} \circ {#2}}
+\newcommand{\Sp}{{\it Sp}}
 
 \newcommand{\ofirstseq}[5]{{#1};{#2};{#3};{#4} \Longrightarrow {#5} \mathstrut}
 \newcommand{\oseq}[4]{{#1};{#2};{#3} \Longrightarrow {#4} \mathstrut}

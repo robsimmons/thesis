@@ -448,11 +448,41 @@ just the propositional internalization of context conjunction:
 \infer
 {\frameoff{\Theta}{x{:}\one} \Rightarrow U}
 {\tackon{\Theta}{\cdot} \Rightarrow U}
+\]\[
+\infer
+{\Xi \Rightarrow / A \lefti B /}
+{x{:}\istrue{A}, \Xi \Rightarrow \istrue{B}}
+\quad
+\infer
+{\frameoff{\Theta}{\Xi_A, x{:}A \lefti B} \Rightarrow U}
+{\Xi_A \Rightarrow \istrue{A} & \tackon{\Theta}{y{:}\istrue{B}} \Rightarrow U}
 \]
-Implication makes more sophisticated use of context conjunction:
-$\Xi$ matches $\frameoff{\Theta}{\Xi_A, x{:}A \lefti B}$ if
-$\Xi$ matches $\frameoff{\Theta}{\Xi'}$, $\Xi'$ matches
-$\matchconj{\Xi_A}{\Xi''}$, and $x{:}A \subseteq \Xi''$. 
+Implication makes deeper use of context conjunction:
+we can look at the compound matching construct
+$\frameoff{\Theta}{\matchconj{\Xi_A}{x{:}A \lefti B}}$ in two ways.
+One way of reading this notation 
+is that $\Xi$ matches $\frameoff{\Theta}{\Xi'}$, $\Xi'$ matches
+$\matchconj{\Xi_A}{\Xi''}$, and $x{:}A \subseteq \Xi''$. The other
+way of reading the notation 
+is that $\Xi$ matches $\frameoff{\Theta'}{x{:}A \lefti B}$, and
+$\Theta'$ matches $\frameoff{\Theta}{\matchconj{\Xi_A}{\Box}}$, 
+It is critical that these two ways of 
+
+\bigskip
+\begin{definition}[Matching into frames]
+$\Theta$ matches $\frameoff{\Theta'}{\matchconj{\Xi_A}{\Box}}$ if, 
+for all $\Xi'$ and $\Xi_A$, $\Xi'$ matches $\matchconj{\Xi_A}{\Xi_B}$
+if and only if 
+
+For all $\Xi$, $\Xi_A$, $\Xi_B$ and $\Theta$, 
+\begin{itemize}
+\item there exists $\Xi'$ such that $\Xi$ matches $\frameoff{\Theta}{\Xi}$
+  and $\Xi$ matches $\matchconj{\Xi_A}{\Xi_B}$
+  if and only if there exists $\Delta'$ such that $\Xi$ matches 
+  $\frameoff{\Theta}{\Xi_A}$ and $\Theta$ matches 
+  $\frameoff{\Theta'}{}$
+\end{itemize}
+\end{definition}
 
 
 As a matching construct, $\Xi = \matchconj{\Xi_L}{\Xi_R}$ if every 
@@ -625,25 +655,68 @@ is the statement that $x{:}A \in \Gamma$, whereas in
 \item $U{\downarrow}_{\mlax}$ -- identity function
 \end{itemize}
 
+\begin{figure}
+\[
+\infer[{\it focus}_R^*]
+{\foct{\Psi}{\Delta}{\tfocusr{V}}{\islvl{A^+}}}
+{\rfoct{\Psi}{\Delta}{V}{A^+}}
+\qquad
+\infer[{\it focus}_L^*]
+{\foct{\Psi}{\frameoff{\Theta}{x{:}\islvl{A^-}}}
+  {\tfocusl{x}{\Sp}}{U}}
+{\foct{\Psi}{\tackon{\Theta}{[A^-]}}{\Sp}{U}}
+\]
 
+\[
+\infer[\eta^+_\mlvl]
+{\foct{\Psi}{\frameoff{\Theta}{p^+_\mlvl}}{x.N}{U}}
+{\foct{\Psi}{\tackon{\Theta}{x{:}\islvl{\langle p^+_\mlvl \rangle}}}{N}{U}}
+\qquad
+\infer[{\it id}^+]
+{\foct{\Psi}{\Delta}{x}{[A^+]}}
+{x{:}\langle A^+ \rangle \subseteq \Delta}
+\]
+
+\[
+\infer[\eta^-]
+{\foct{\Psi}{\Delta}{N}{p^-}}
+{\foct{}{}{N}{\istrue{\langle p^- \rangle}}}
+\]
+\end{figure}
+
+\begin{align}
+V & ::= \\
+N & ::= \tfocusr{V} \mid \tfocusl{x}{\Sp} \mid x.N \\
+S & ::= 
+\end{align}
 
 \begin{theorem}[Cut admissibility]~
 \begin{enumerate}
 \item If $\foc{\Psi}{\Delta}{[ A^+ ]}$
-      and $\ifoc{\Psi}{\Theta}{A^+,\Omega}{U}$, 
-      then $\ifoc{\Psi}{\frameoff{\Theta}{{\Delta},\Box}}{\Omega}{U}$.
+      and $\foc{\Psi}{\tackon{\Theta'}{A^+}}{U}$, 
+      then $\foc{\Psi}{\frameoff{\Theta'}{{\Delta}}}{U}$.
 \item If $\foc{\Psi}{\Delta}{A^-}$ 
-      and $\lfoc{\Psi}{\Theta}{A^-}{U}$, 
-      then $\Psi; \frameoff{\Theta}{\Delta} \Rightarrow U$.
-\item[3a.] If $\foc{\Psi}{\invoff{\Theta}{\Omega}}{\islvl{A^+}}$
-      and $\Psi; \Theta; A^+ \Rightarrow U$,
-      then $\Psi; \frameoff{\Theta}{\underline{\Delta}} \Rightarrow U{\downarrow}_{\mlvl}$.
-\item[3a.] If $\Psi; \Delta \Rightarrow \islvl{A^+}$
-      and $\Psi; \Theta; A^+ \Rightarrow U$,
-      then $\Psi; \frameoff{\Theta}{\underline{\Delta}} \Rightarrow U{\downarrow}_{\mlvl}$.
-\item If $\Psi; \restrictto{\Delta}{\mlvl} \Rightarrow {A^-}$
-      and $\Psi; \tackon{\underline{\Theta}}{x{:}\islvl{A^-}} \Rightarrow U$, 
-      then $\Psi; \frameoff{\underline{\Theta}}{\restrictto{\Delta}{\mlvl}} \Rightarrow U$.
+      and $\lfoc{\Psi}{\Theta'}{A^-}{U}$, 
+      then $\foc{\Psi}{\frameoff{\Theta'}{\Delta}}{U}$.
+\item[3a.] 
+      If $\foc{\Psi}{\Delta}{\islvl{A^+}}$
+      and $\foc{\Psi}{\tackon{\Theta'}{A^+}}{\restrictto{U}{\mlvl}}$
+      then $\foc{\Psi}{\frameoff{\Theta'}{\Delta}}{\restrictto{U}{\mlvl}}$.
+\item[3b.] 
+      If $\foc{\Psi}{\tackon{\Theta}{[A^-]}}{\islvl{A^+}}$
+      and $\foc{\Psi}{\tackon{\Theta'}{A^+}}{\restrictto{U}{\mlvl}}$
+      then $\foc{\Psi}{\frameoff{\Theta'}{\frameoff{\Theta}{[A^-]}}}{\restrictto{U}{\mlvl}}$.
+\item[4a.]
+      If $\foc{\Psi}{\restrictto{\Delta}{\mlvl}}{\istrue{A^-}}$
+      and $\rfoc{\Psi}{\tackon{\Theta'}{x{:}\islvl{A^-}}}{C^+}$,
+      then $\rfoc{\Psi}{\frameoff{\Theta'}{\restrictto{\Delta}{\mlvl}}}{C^+}$
+\item[4b.]
+      If $\foc{\Psi}{\restrictto{\Delta}{\mlvl}}{\istrue{A^-}}$
+      and $\foc{\Psi}{\tackon{\Theta'}{x{:}\islvl{A^-}}}{U}$
+\item[4c.]
+      If $\foc{\Psi}{\restrictto{\Delta}{\mlvl}}{\istrue{A^-}}$
+      and $\foc{\Psi}{\tackon{\tackon{\Theta'}{x{:}\islvl{A^-}}}{[B^-]}}{U}$,
+      then $\foc{\Psi}{\frameoff{\frameoff{\Theta'}{\restrictto{\Delta}{\mlvl}}}{[B^-]}}{U}$.
 \end{enumerate}
 \end{theorem}
 
