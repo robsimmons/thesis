@@ -59,9 +59,9 @@
 \newcommand{\gnab}{\mbox{\textexclamdown}}
 
 \newcommand{\mlax}{{\it lax}}
-\newcommand{\mtrue}{{\it true}}
-\newcommand{\meph}{{\it ephemeral}}
-\newcommand{\mpers}{{\it persistent}}
+\newcommand{\mtrue}{{\it ord}}
+\newcommand{\meph}{{\it eph}}
+\newcommand{\mpers}{{\it pers}}
 \newcommand{\mlvl}{{\it lvl}}
 
 \newcommand{\islax}[1]{{#1}\,{\mlax}}
@@ -86,12 +86,37 @@
 \newcommand{\ifoc}[4]{{#1};{#2} {\mid} {#3} \vdash {#4}}
 \newcommand{\lfoc}[4]{{#1};{#2}[{#3}] \vdash {#4}}
 
-\newcommand{\foct}[4]{{#1};{#2} \vdash {#3} : {#4}}
+\newcommand{\foct}[4]{{#1}; {#2} \vdash {#3} : {#4}}
 \newcommand{\rfoct}[4]{{#1};{#2} \vdash {#3} : [{#4}]}
 \newcommand{\lfoct}[4]{{#1};{#2}[{#3}] \vdash {#3} : [{#4}]}
 
 \newcommand{\tfocusr}[1]{{#1}}
 \newcommand{\tfocusl}[2]{{#1} \circ {#2}}
+\newcommand{\tetan}[1]{\langle {#1} \rangle}
+\newcommand{\tetapp}[2]{\langle {#1} \rangle_p . {#2} }
+\newcommand{\tetapl}[2]{\langle {#1} \rangle_l . {#2} }
+\newcommand{\tetap}[2]{\langle {#1} \rangle . {#2}}
+\newcommand{\tupr}[1]{{\uparrow}{#1}}
+\newcommand{\tupl}[1]{{\uparrow}{#1}}
+\newcommand{\tdownr}[1]{{\downarrow}{#1}}
+\newcommand{\tdownl}[2]{{\downarrow}{#1}.{#2}}
+\newcommand{\tbangr}[1]{{!}{#1}}
+\newcommand{\tbangl}[2]{{!}{#1}.{#2}}
+\newcommand{\tgnabr}[1]{{\gnab}{#1}}
+\newcommand{\tgnabl}[2]{{\gnab}{#1}.{#2}}
+\newcommand{\tnil}{\textsc{nil}}
+\newcommand{\tabort}{\textsc{abort}}
+\newcommand{\tinl}[1]{\textsc{inl}({#1})}
+\newcommand{\tinr}[1]{\textsc{inr}({#1})}
+\newcommand{\toplusl}[2]{[{#1},{#2}]}
+\newcommand{\toner}{()}
+\newcommand{\ttensorr}[2]{({#1},{#2})}
+\newcommand{\ttensorl}[1]{\otimes{#1}}
+\newcommand{\tlamr}[1]{{\lambda}^{>}{#1}}
+\newcommand{\tappr}[2]{{#1}^{>}{#2}}
+\newcommand{\tlaml}[1]{{\lambda}^{<}{#1}}
+\newcommand{\tappl}[2]{{#1}^{<}{#2}}
+\newcommand{\tonel}[1]{().{#1}}
 \newcommand{\Sp}{{\it Sp}}
 
 \newcommand{\ofirstseq}[5]{{#1};{#2};{#3};{#4} \Longrightarrow {#5} \mathstrut}
