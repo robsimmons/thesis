@@ -38,13 +38,13 @@
 \medskip
 {\it Shifts and modalities}
 \[
-\infer[{!}_R]
-{\foct{\Psi}{\restrictto{\Delta}{\mpers}}{\tbangr{N}}{[{!}A^-}]}
+\infer[{\downarrow}_R]
+{\foct{\Psi}{\Delta}{\tdownr{N}}{[{\downarrow}A^-}]}
 {\foct{\Psi}{\Delta}{N}{A^-}}
 \quad
-\infer[{!}_L]
-{\foct{\Psi}{\frameoff{\Theta}{[{\downarrow}A^-]}}{\tbangl{x}{N}}{U}}
-{\foct{\Psi}{\tackon{\Theta}{x{:}\ispers{A^-}}}{N}{U}}
+\infer[{\downarrow}_L]
+{\foct{\Psi}{\frameoff{\Theta}{[{\downarrow}A^-]}}{\tdownl{x}{N}}{U}}
+{\foct{\Psi}{\tackon{\Theta}{x{:}\istrue{A^-}}}{N}{U}}
 \]
 \vspace{-5pt}
 \[
@@ -58,13 +58,13 @@
 \]
 \vspace{-5pt}
 \[
-\infer[{\downarrow}_R]
-{\foct{\Psi}{\Delta}{\tdownr{N}}{[{\downarrow}A^-}]}
+\infer[{!}_R]
+{\foct{\Psi}{\restrictto{\Delta}{\mpers}}{\tbangr{N}}{[{!}A^-}]}
 {\foct{\Psi}{\Delta}{N}{A^-}}
 \quad
-\infer[{\downarrow}_L]
-{\foct{\Psi}{\frameoff{\Theta}{[{\downarrow}A^-]}}{\tdownl{x}{N}}{U}}
-{\foct{\Psi}{\tackon{\Theta}{x{:}\istrue{A^-}}}{N}{U}}
+\infer[{!}_L]
+{\foct{\Psi}{\frameoff{\Theta}{[{\downarrow}A^-]}}{\tbangl{x}{N}}{U}}
+{\foct{\Psi}{\tackon{\Theta}{x{:}\ispers{A^-}}}{N}{U}}
 \]
 \vspace{-5pt}
 \[
@@ -115,11 +115,11 @@
 \]
 \vspace{-5pt}
 \[
-\infer[]
+\infer[{\righti}_R]
 {\foct{\Psi}{\Delta}{\tlamr{N}}{A^+ \righti B^-}}
 {\foct{\Psi}{\mkconj{\Delta}{A^+}}{N}{B^-}}
 \quad
-\infer[]
+\infer[{\righti}_L]
 {\foct{\Psi}{\frameoff{\Theta}{\matchconj{[A \righti B]}{\Delta_A}}}
    {\tappr{V}{\Sp}}{U}}
 {\foct{\Psi}{\Delta_A}{V}{[A^+]}
@@ -128,11 +128,11 @@
 \]
 \vspace{-5pt}
 \[
-\infer[]
+\infer[{\lefti}_R]
 {\foct{\Psi}{\Delta}{\tlaml{N}}{A^+ \lefti B^-}}
 {\foct{\Psi}{\mkconj{A^+}{\Delta}}{N}{B^-}}
 \quad
-\infer[]
+\infer[{\lefti}_L]
 {\foct{\Psi}{\frameoff{\Theta}{\matchconj{\Delta_A}{[A \lefti B]}}}
    {\tappl{V}{\Sp}}{U}}
 {\foct{\Psi}{\tackon{\Theta}{[B]}}{\Sp}{U}}
