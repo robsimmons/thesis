@@ -1,5 +1,6 @@
 \begin{figure}
 \small
+{\it Atomic propositions}
 \[
 \infer[{\it init}^+]
 {\oiseq{\Gamma}{p}}
@@ -7,30 +8,39 @@
 \]
 
 \medskip
-{\it Disjunction}
+{\it Modalities}
 \[
-\infer[{\zero}_L]
-{\olseq{\Gamma}{\Delta}{\Omega_L}{\zero}{\Omega_R}}
-{}
+\infer[{!}_R]
+{\orseq{\Gamma}{\cdot}{\cdot}{{!}A}}
+{\otseq{\Gamma}{\cdot}{\cdot}{A}}
 \quad
-\infer[{\oplus}_{R1}]
-{\orseq{\Gamma}{\Delta}{\Omega}{A \oplus B}}
-{\otseq{\Gamma}{\Delta}{\Omega}{A}}
-\quad
-\infer[{\oplus}_{R2}]
-{\orseq{\Gamma}{\Delta}{\Omega}{A \oplus B}}
-{\otseq{\Gamma}{\Delta}{\Omega}{B}}
+\infer[{!}_L]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{{!}A}{\Omega_R}}
+{\opseq{\Gamma,A}{\Delta}{\Omega_L}{\Omega_R}}
 \]
+\vspace{-5pt}
 \[
-\infer[{\oplus}_{L}]
-{\olseq{\Gamma}{\Delta}{\Omega_L}{A \oplus B}{\Omega_R}}
-{\opseq{\Gamma}{\Delta}{\Omega_L}{A,\Omega_R}
- &
- \opseq{\Gamma}{\Delta}{\Omega_L}{B,\Omega_R}}
+\infer[{\gnab}_R]
+{\orseq{\Gamma}{\Delta}{\cdot}{{\gnab}A}}
+{\otseq{\Gamma}{\Delta}{\cdot}{A}}
+\quad
+\infer[{\gnab}_L]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{{\gnab}A}{\Omega_R}}
+{\opseq{\Gamma}{\Delta, A}{\Omega_L}{\Omega_R}}
+\]
+\vspace{-5pt}
+\[
+\infer[{\ocircle}_R]
+{\orseq{\Gamma}{\Delta}{\Omega}{{\ocircle}A}}
+{\oseq{\Gamma}{\Delta}{\Omega}{\islax{A}}}
+\quad
+\infer[{\ocircle}_L]
+{\oseq{\Gamma}{\Delta}{\Omega_L /{\ocircle}A/ \Omega_R}{\islax{C}}}
+{\oseq{\Gamma}{\Delta}{\Omega_L, A, \Omega_R}{\islax{C}}}
 \]
 
 \medskip
-{\it Multiplicative conjunction}
+{\it Multiplicative connectives}
 \[
 \infer[{\one}_R]
 {\orseq{\Gamma}{\cdot}{\cdot}{\one}}
@@ -51,9 +61,7 @@
 {\olseq{\Gamma}{\Delta}{\Omega_L}{A \fuse B}{\Omega_R}}
 {\opseq{\Gamma}{\Delta}{\Omega_L}{A,B,\Omega_R}}
 \]
-
-\medskip
-{\it Implication}
+\vspace{-5pt}
 \[
 \infer[{\righti}_R]
 {\orseq{\Gamma}{\Delta}{\Omega}{A \righti B}}
@@ -65,6 +73,7 @@
  &
  \opseq{\Gamma}{\Delta}{\Omega_L}{B, \Omega_R}}
 \]
+\vspace{-5pt}
 \[
 \infer[{\lefti}_R]
 {\orseq{\Gamma}{\Delta}{\Omega}{A \lefti B}}
@@ -78,7 +87,29 @@
 \]
 
 \medskip
-{\it Additive conjunction}
+{\it Additive connectives}
+\[
+\infer[{\zero}_L]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{\zero}{\Omega_R}}
+{}
+\quad
+\infer[{\oplus}_{R1}]
+{\orseq{\Gamma}{\Delta}{\Omega}{A \oplus B}}
+{\otseq{\Gamma}{\Delta}{\Omega}{A}}
+\quad
+\infer[{\oplus}_{R2}]
+{\orseq{\Gamma}{\Delta}{\Omega}{A \oplus B}}
+{\otseq{\Gamma}{\Delta}{\Omega}{B}}
+\]
+\vspace{-5pt}
+\[
+\infer[{\oplus}_{L}]
+{\olseq{\Gamma}{\Delta}{\Omega_L}{A \oplus B}{\Omega_R}}
+{\opseq{\Gamma}{\Delta}{\Omega_L}{A,\Omega_R}
+ &
+ \opseq{\Gamma}{\Delta}{\Omega_L}{B,\Omega_R}}
+\]
+\vspace{-5pt}
 \[
 \infer[{\top}_R]
 {\orseq{\Gamma}{\Delta}{\Omega}{\top}}
@@ -92,6 +123,7 @@
 {\olseq{\Gamma}{\Delta}{\Omega_L}{A \with B}{\Omega_R}}
 {\opseq{\Gamma}{\Delta}{\Omega_L}{B, \Omega_R}}
 \]
+\vspace{-5pt}
 \[
 \infer[{\with}_R]
 {\orseq{\Gamma}{\Delta}{\Omega}{A \with B}}
@@ -100,35 +132,6 @@
  \otseq{\Gamma}{\Delta}{\Omega}{B}}
 \]
 
-\medskip
-{\it Modalities}
-\[
-\infer[{!}_R]
-{\orseq{\Gamma}{\cdot}{\cdot}{{!}A}}
-{\otseq{\Gamma}{\cdot}{\cdot}{A}}
-\quad
-\infer[{!}_L]
-{\olseq{\Gamma}{\Delta}{\Omega_L}{{!}A}{\Omega_R}}
-{\opseq{\Gamma,A}{\Delta}{\Omega_L}{\Omega_R}}
-\]
-\[
-\infer[{\gnab}_R]
-{\orseq{\Gamma}{\Delta}{\cdot}{{\gnab}A}}
-{\otseq{\Gamma}{\Delta}{\cdot}{A}}
-\quad
-\infer[{\gnab}_L]
-{\olseq{\Gamma}{\Delta}{\Omega_L}{{\gnab}A}{\Omega_R}}
-{\opseq{\Gamma}{\Delta, A}{\Omega_L}{\Omega_R}}
-\]
-\[
-\infer[{\ocircle}_R]
-{\orseq{\Gamma}{\Delta}{\Omega}{{\ocircle}A}}
-{\oseq{\Gamma}{\Delta}{\Omega}{\islax{A}}}
-\quad
-\infer[{\ocircle}_L]
-{\oseq{\Gamma}{\Delta}{\Omega_L /{\ocircle}A/ \Omega_R}{\islax{C}}}
-{\oseq{\Gamma}{\Delta}{\Omega_L, A, \Omega_R}{\islax{C}}}
-\]
 
 \caption{Propositional ordered linear lax logic.}
 \label{fig:ordered-prop}

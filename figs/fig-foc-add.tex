@@ -1,0 +1,56 @@
+\renewcommand{\foct}[4]{{#2} \vdash {#3} : {#4}}
+
+\begin{figure}
+\small
+
+\[
+\infer[{\zero}_L]
+{\foct{\Psi}{\frameoff{\Theta}{\zero}}{\tabort}{U}}
+{}
+\quad
+\infer[{\oplus}_{R1}]
+{\foct{\Psi}{\Delta}{\tinl{V}}{[A^+ \oplus B^+]}}
+{\foct{\Psi}{\Delta}{V}{[A^+]}}
+\quad
+\infer[{\oplus}_{R2}]
+{\foct{\Psi}{\Delta}{\tinr{V}}{[A^+ \oplus B^+]}}
+{\foct{\Psi}{\Delta}{V}{[B^+]}}
+\]
+\vspace{-5pt}
+\[
+\infer[{\oplus}_L]
+{\foct{\Psi}{\frameoff{\Theta}{A^+ \oplus B^+}}{\toplusl{N_1}{N_2}}{\islvl{U}}}
+{\foct{\Psi}{\tackon{\Theta}{A^+}}{N_1}{\islvl{U}}
+ &
+ \foct{\Psi}{\tackon{\Theta}{B^+}}{N_2}{\islvl{U}}}
+\]
+\vspace{-5pt}
+\[
+\infer[\top_R]
+{\foct{\Psi}{\Delta}{\ttopr}{\top}}
+{}
+\quad
+\infer[{\with}_R]
+{\foct{\Psi}{\Delta}{\twithr{N_1}{N_2}}{A^- \with B^-}}
+{\foct{\Psi}{\Delta}{N_1}{A^-}
+ &
+ \foct{\Psi}{\Delta}{N_2}{B^-}}
+\]
+\vspace{-5pt}
+\[
+\infer[{\with}_{L1}]
+{\foct{\Psi}{\frameoff{\Theta}{[A^- \with B^-]}}{\tpione{\Sp}}{\islvl{U}}}
+{\foct{\Psi}{\tackon{\Theta}{[A^-]}}{\Sp}{\islvl{U}}}
+\quad
+\infer[{\with}_{L2}]
+{\foct{\Psi}{\frameoff{\Theta}{[A^- \with B^-]}}{\tpitwo{\Sp}}{\islvl{U}}}
+{\foct{\Psi}{\tackon{\Theta}{[B^-]}}{\Sp}{\islvl{U}}}
+\]
+
+
+\caption{Additive connectives of focused \ollll.
+(Contexts $\Psi$ suppressed.)}
+\label{fig:foc-add}
+\end{figure}
+
+\renewcommand{\foct}[4]{{#1}; {#2} \vdash {#3} : {#4}}

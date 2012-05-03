@@ -1,0 +1,144 @@
+\renewcommand{\foct}[4]{{#2} \vdash {#3} : {#4}}
+
+\begin{figure}
+\small
+{\it Focus, identity, and atomic propositions}
+
+\[
+\infer[{\it focus}_R^*]
+{\foct{\Psi}{\Delta}{\tfocusr{V}}{\islvl{A^+}}}
+{\foct{\Psi}{\Delta}{V}{[A^+]}}
+\quad
+\infer[{\it focus}_L^*]
+{\foct{\Psi}{\frameoff{\Theta}{x{:}\islvl{A^-}}}
+  {\tfocusl{x}{\Sp}}{U}}
+{\foct{\Psi}{\tackon{\Theta}{[A^-]}}{\Sp}{U}}
+\]
+\vspace{-5pt}
+\[
+\infer[\eta^+]
+{\foct{\Psi}{\frameoff{\Theta}{p^+_\mlvl}}{\tetap{z}{N}}{U}}
+{\foct{\Psi}{\tackon{\Theta}{z{:}\islvl{\langle p^+_\mlvl \rangle}}}{N}{U}}
+\quad
+\infer[{\it id}^+]
+{\foct{\Psi}{\Delta}{z}{[A^+]}}
+{z{:}\langle A^+ \rangle \subseteq \Delta}
+\]
+\vspace{-5pt}
+\[
+\infer[\eta^-]
+{\foct{\Psi}{\Delta}{\langle N \rangle}{p^-_\mlvl}}
+{\foct{\Psi}{\Delta}{N}{\islvl{\langle p^-_\mlvl \rangle}}}
+\quad
+\infer[{\it id}^-]
+{\foct{\Psi}{\Delta}{\tnil}{\istrue{\langle A^- \rangle}}}
+{[A^-] \subseteq \Delta}
+\]
+
+\medskip
+{\it Shifts and modalities}
+\[
+\infer[{!}_R]
+{\foct{\Psi}{\restrictto{\Delta}{\mpers}}{\tbangr{N}}{[{!}A^-}]}
+{\foct{\Psi}{\Delta}{N}{A^-}}
+\quad
+\infer[{!}_L]
+{\foct{\Psi}{\frameoff{\Theta}{[{\downarrow}A^-]}}{\tbangl{x}{N}}{U}}
+{\foct{\Psi}{\tackon{\Theta}{x{:}\ispers{A^-}}}{N}{U}}
+\]
+\vspace{-5pt}
+\[
+\infer[{\gnab}_R]
+{\foct{\Psi}{\restrictto{\Delta}{\meph}}{\tgnabr{N}}{[{\gnab}A^-}]}
+{\foct{\Psi}{\Delta}{N}{A^-}}
+\quad
+\infer[{\gnab}_L]
+{\foct{\Psi}{\frameoff{\Theta}{[{\downarrow}A^-]}}{\tgnabl{x}{N}}{U}}
+{\foct{\Psi}{\tackon{\Theta}{x{:}\iseph{A^-}}}{N}{U}}
+\]
+\vspace{-5pt}
+\[
+\infer[{\downarrow}_R]
+{\foct{\Psi}{\Delta}{\tdownr{N}}{[{\downarrow}A^-}]}
+{\foct{\Psi}{\Delta}{N}{A^-}}
+\quad
+\infer[{\downarrow}_L]
+{\foct{\Psi}{\frameoff{\Theta}{[{\downarrow}A^-]}}{\tdownl{x}{N}}{U}}
+{\foct{\Psi}{\tackon{\Theta}{x{:}\istrue{A^-}}}{N}{U}}
+\]
+\vspace{-5pt}
+\[
+\infer[{\uparrow}_R]
+{\foct{\Psi}{\Delta}{\tupr{N}}{{\uparrow}A^+}}
+{\foct{\Psi}{\Delta}{N}{\istrue{A^+}}}
+\quad
+\infer[{\uparrow}_L]
+{\foct{\Psi}{\frameoff{\Theta}{[{\uparrow}A^+]}}{\tupl{N}}{U}}
+{\foct{\Psi}{\tackon{\Theta}{A^+}}{N}{U}}
+\]
+\vspace{-5pt}
+\[
+\infer[{\ocircle}_R]
+{\foct{\Psi}{\Delta}{\tcircr{N}}{[{\ocircle}A^+]}}
+{\foct{\Psi}{\Delta}{N}{\islax{A^+}}}
+\quad
+\infer[{\ocircle}_L]
+{\foct{\Psi}{\frameoff{\Theta}{[{\ocircle}A^+]}}{\tcircl{N}}{\restrictfrom{U}{\mlax}}}
+{\foct{\Psi}{\tackon{\Theta}{A^+}}{N}{U}}
+\]
+
+
+\medskip
+{\it Multiplicative connectives}
+\[
+\infer[{\one}_R]
+{\foct{\Psi}{\matchunit}{\toner}{[\one]}}
+{}
+\quad
+\infer[{\one}_L]
+{\foct{\Psi}{\frameoff{\Theta}{\one}}{\tonel{N}}{U}}
+{\foct{\Psi}{\tackon{\Theta}{\mkunit}}{N}{U}}
+\]
+\vspace{-5pt}
+\[
+\infer[{\fuse}_R]
+{\foct{\Psi}{\matchconj{\Delta_1}{\Delta_2}}
+   {\tfuser{V_1}{V_2}}{[A^+ \fuse B^+]}}
+{\foct{\Psi}{\Delta_1}{V_1}{[A^+]}
+ &
+ \foct{\Psi}{\Delta_2}{V_2}{[B^+]}}
+\quad
+\infer[{\fuse}_L]
+{\foct{\Psi}{\frameoff{\Theta}{A^+ \fuse B^+}}{\tfusel{N}}{U}}
+{\foct{\Psi}{\tackon{\Theta}{\mkconj{A^+}{B^+}}}{N}{U}}
+\]
+\vspace{-5pt}
+\[
+\infer[]
+{\foct{\Psi}{\Delta}{\tlamr{N}}{A^+ \righti B^-}}
+{\foct{\Psi}{\mkconj{\Delta}{A^+}}{N}{B^-}}
+\quad
+\infer[]
+{\foct{\Psi}{\frameoff{\Theta}{\matchconj{[A \righti B]}{\Delta_A}}}
+   {\tappr{V}{\Sp}}{U}}
+{\foct{\Psi}{\Delta_A}{V}{[A^+]}
+ &
+ \foct{\Psi}{\tackon{\Theta}{[B]}}{\Sp}{U}}
+\]
+\vspace{-5pt}
+\[
+\infer[]
+{\foct{\Psi}{\Delta}{\tlaml{N}}{A^+ \lefti B^-}}
+{\foct{\Psi}{\mkconj{A^+}{\Delta}}{N}{B^-}}
+\quad
+\infer[]
+{\foct{\Psi}{\frameoff{\Theta}{\matchconj{\Delta_A}{[A \lefti B]}}}
+   {\tappl{V}{\Sp}}{U}}
+{\foct{\Psi}{\tackon{\Theta}{[B]}}{\Sp}{U}}
+\]
+\caption{Multiplicative, exponential fragment of focused \ollll.
+(Contexts $\Psi$ suppressed.)}
+\label{fig:foc-mall}
+\end{figure}
+
+\renewcommand{\foct}[4]{{#1}; {#2} \vdash {#3} : {#4}}

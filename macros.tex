@@ -50,7 +50,8 @@
 \newcommand{\deupdown}{\mbox{${\uparrow}{\downarrow}\hspace{-11.4pt}\diagup$}}
 \newcommand{\dedownup}{\mbox{${\downarrow}{\uparrow}\hspace{-11.4pt}\diagdown$}}
 
-\newcommand{\restrictto}[2]{\ensuremath{{#1}{\downharpoonright}^{#2}}}
+\newcommand{\restrictto}[2]{\ensuremath{{#1}{\upharpoonright}_{#2}}}
+\newcommand{\restrictfrom}[2]{\ensuremath{{#1}{\downharpoonright}^{#2}}}
 
 % symbols of ordered logic
 \newcommand{\fuse}{\mathbin{\bullet}}
@@ -98,6 +99,8 @@
 \newcommand{\tetap}[2]{\langle {#1} \rangle . {#2}}
 \newcommand{\tupr}[1]{{\uparrow}{#1}}
 \newcommand{\tupl}[1]{{\uparrow}{#1}}
+\newcommand{\tcircr}[1]{\{{#1}\}}
+\newcommand{\tcircl}[1]{\{{#1}\}}
 \newcommand{\tdownr}[1]{{\downarrow}{#1}}
 \newcommand{\tdownl}[2]{{\downarrow}{#1}.{#2}}
 \newcommand{\tbangr}[1]{{!}{#1}}
@@ -110,8 +113,12 @@
 \newcommand{\tinr}[1]{\textsc{inr}({#1})}
 \newcommand{\toplusl}[2]{[{#1},{#2}]}
 \newcommand{\toner}{()}
-\newcommand{\ttensorr}[2]{({#1},{#2})}
-\newcommand{\ttensorl}[1]{\otimes{#1}}
+\newcommand{\ttopr}{\top}
+\newcommand{\tfuser}[2]{{#1} \tensor {#2}}
+\newcommand{\twithr}[2]{{#1} \with {#2}}
+\newcommand{\tpione}[1]{\pi_1;{#1}}
+\newcommand{\tpitwo}[1]{\pi_2;{#1}}
+\newcommand{\tfusel}[1]{{\fuse}{#1}}
 \newcommand{\tlamr}[1]{{\lambda}^{>}{#1}}
 \newcommand{\tappr}[2]{{#1}^{>}{#2}}
 \newcommand{\tlaml}[1]{{\lambda}^{<}{#1}}

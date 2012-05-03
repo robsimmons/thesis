@@ -638,7 +638,10 @@ is the statement that $x{:}A \in \Gamma$, whereas in
 
 
 
-\section{Explicit shifts in focusing}
+\section{Focused sequent calculus}
+
+\input{figs/fig-foc-mall}
+\input{figs/fig-foc-add}
 
 \section{Polarization and erasure}
 
@@ -655,157 +658,35 @@ is the statement that $x{:}A \in \Gamma$, whereas in
 \item $U{\downarrow}_{\mlax}$ -- identity function
 \end{itemize}
 
-\renewcommand{\foct}[4]{{#2} \vdash {#3} : {#4}}
 
-\begin{figure}[t]
-{\small
-\[
-\infer[{\it focus}_R^*]
-{\foct{\Psi}{\Delta}{\tfocusr{V}}{\islvl{A^+}}}
-{\rfoct{\Psi}{\Delta}{V}{A^+}}
-\quad
-\infer[{\it focus}_L^*]
-{\foct{\Psi}{\frameoff{\Theta}{x{:}\islvl{A^-}}}
-  {\tfocusl{x}{\Sp}}{U}}
-{\foct{\Psi}{\tackon{\Theta}{[A^-]}}{\Sp}{U}}
-\]
-\vspace{-5pt}
-\[
-\infer[\eta^+_p]
-{\foct{\Psi}{\frameoff{\Theta}{p^+_p}}{\tetapp{z}{N}}{U}}
-{\foct{\Psi}{\tackon{\Theta}{z{:}\ispers{\langle p^+_p \rangle}}}{N}{U}}
-\quad
-\infer[\eta^+_l]
-{\foct{\Psi}{\frameoff{\Theta}{p^+_l}}{\tetapl{z}{N}}{U}}
-{\foct{\Psi}{\tackon{\Theta}{z{:}\iseph{\langle p^+_l \rangle}}}{N}{U}}
-\quad
-\infer[\eta^+]
-{\foct{\Psi}{\frameoff{\Theta}{p^+}}{\tetap{z}{N}}{U}}
-{\foct{\Psi}{\tackon{\Theta}{z{:}\istrue{\langle p^+ \rangle}}}{N}{U}}
-\]
-\vspace{-5pt}
-\[
-\infer[{\it id}^+]
-{\foct{\Psi}{\Delta}{x}{[A^+]}}
-{x{:}\langle A^+ \rangle \subseteq \Delta}
-\quad
-\infer[\eta^-]
-{\foct{\Psi}{\Delta}{\langle N \rangle}{p^-}}
-{\foct{\Psi}{\Delta}{N}{\istrue{\langle p^- \rangle}}}
-\quad
-\infer[{\it id}^-]
-{\foct{\Psi}{\Delta}{\tnil}{\istrue{\langle A^- \rangle}}}
-{[A^-] \subseteq \Delta}
-\]
-\vspace{-5pt}
-\[
-\infer[{\uparrow}_R]
-{\foct{\Psi}{\Delta}{\tupr{N}}{{\uparrow}A^+}}
-{\foct{\Psi}{\Delta}{N}{\istrue{A^+}}}
-\quad
-\infer[]
-{\foct{\Psi}{\frameoff{\Theta}{[{\uparrow}A^+]}}{\tupl{N}}{U}}
-{\foct{\Psi}{\tackon{\Theta}{A^+}}{N}{U}}
-\quad
-\infer[{\downarrow}_R]
-{\foct{\Psi}{\Delta}{\tdownr{N}}{{\downarrow}A^-}}
-{\foct{\Psi}{\Delta}{N}{\istrue{A^-}}}
-\]
-\vspace{-5pt}
-\[
-\infer[{\zero}_L]
-{\foct{\Psi}{\frameoff{\Theta}{\zero}}{\tabort}{U}}
-{}
-\quad
-\infer[{\oplus}_{R1}]
-{\foct{\Psi}{\Delta}{\tinl{V}}{[A^+ \otimes B^+]}}
-{\foct{\Psi}{\Delta}{V}{[A^+]}}
-\quad
-\infer[{\oplus}_{R2}]
-{\foct{\Psi}{\Delta}{\tinr{V}}{[A^+ \otimes B^+]}}
-{\foct{\Psi}{\Delta}{V}{[B^+]}}
-\]
-\vspace{-5pt}
-\[
-\infer[{\oplus}_L]
-{\foct{\Psi}{\frameoff{\Theta}{A^+ \oplus B^+}}{\toplusl{N_1}{N_2}}{U}}
-{\foct{\Psi}{\tackon{\Theta}{A^+}}{N_1}{U}
- &
- \foct{\Psi}{\tackon{\Theta}{B^+}}{N_2}{U}}
-\quad
-\infer[{\one}_R]
-{\foct{\Psi}{\cdot}{\toner}{[\one]}}
-{}
-\quad
-\infer[{\one}_L]
-{\foct{\Psi}{\frameoff{\Theta}{\one}}{\tonel{N}}{U}}
-{\foct{\Psi}{\tackon{\Theta}{\one}}{N}{U}}
-\]
-\vspace{-5pt}
-\[
-\infer[{\otimes}_R]
-{\foct{\Psi}{\Delta_1, \Delta_2}{\ttensorr{V_1}{V_2}}{[A^+ \otimes B^+]}}
-{\foct{\Psi}{\Delta_1}{V_1}{[A^+]}
- &
- \foct{\Psi}{\Delta_2}{V_2}{[B^+]}}
-\quad
-\infer[{\otimes}_L]
-{\foct{\Psi}{\frameoff{\Theta}{A^+ \otimes B^+}}{\ttensorl{N}}{U}}
-{\foct{\Psi}{\tackon{\Theta}{A^+, B^+}}{N}{U}}
-\]
-\vspace{-5pt}
-\[
-\infer[]
-{\foct{\Psi}{\Delta}{\tlamr{N}}{A^+ \righti B^-}}
-{\foct{\Psi}{\Delta, A^+}{N}{B^-}}
-\quad
-\infer[]
-{\foct{\Psi}{\frameoff{\Theta}{[A \righti B], \Delta_A}}{\tappr{V}{\Sp}}{U}}
-{\foct{\Psi}{\Delta_A}{V}{[A^+]}
- &
- \foct{\Psi}{\tackon{\Theta}{[B]}}{\Sp}{U}}
-\]
-\vspace{-5pt}
-\[
-\infer[]
-{\foct{\Psi}{\Delta}{\tlaml{N}}{A^+ \lefti B^-}}
-{\foct{\Psi}{A^+,\Delta}{N}{B^-}}
-\]
-\vspace{-5pt}
-\[
-\]}
-\caption{a a a a a a a a a a a a a a a 
-a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a 
-a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a
-a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a }
-\end{figure}
 
-\renewcommand{\foct}[4]{{#1}; {#2} \vdash {#3} : {#4}}
 
 
 \begin{align*}
-V & ::= z 
-   \mid
+V & ::= z                     %% z
+   \mid \tbangr{N}            %% !N
+   \mid \tgnabr{N}            %% $N
+   \mid \tdownr{N}            %% N
 %
    \mid \tdownr{N}
 %  
    \mid \tbangr{N}
    \mid \tgnabr{N} \\
-N & ::= \tfocusr{V} 
-   \mid \tfocusl{x}{\Sp}
-   \mid \tetapp{z}{N}
-   \mid \tetapl{z}{N}
+N & ::= \tfocusr{V}           %% V
+   \mid \tfocusl{x}{\Sp}      %% x @ Sp
+   \mid \tetap{z}{N}          %% <z>.N
+   \mid \tbangl{x}{N}         %% !x.N
+   \mid \tgnabl{x}{N}         %% $x.N
+   \mid \tdownl{x}{N}\\&~~~~  %% x.N
+   \mid \tetapl{z}{N}     
    \mid \tetap{z}{N}
    \mid \tetan{N} 
-   \mid \tupr{N}
-   \mid \tdownl{x}{N}\\
+   \mid \tupr{N}\\
 & ~~~~
 %
 % 
-   \mid \tbangl{x}{N}
-   \mid \tgnabl{x}{N}
 \\
-S & ::= \tnil
+S & ::= \tnil             %% nil
    \mid \tupl{N}
 \end{align*}
 
