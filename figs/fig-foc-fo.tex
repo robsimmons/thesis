@@ -1,0 +1,48 @@
+\begin{figure}[t]
+\small
+
+\[
+\infer[{\exists}_{R}]
+{\foct{\Psi}{\Delta}{\texistsr{t}{V}}{[\exists a{:}\tau.A^+]}}
+{\Psi \vdash t : \tau
+ &
+ \foct{\Psi}{\Delta}{V}{[A^+[t/a]]}}
+\quad
+\infer[{\exists}_L]
+{\foct{\Psi}{\frameoff{\Theta}{\exists a{:}\tau.A^+}}{\texistsl{a}{N}}{U}}
+{\foct{\Psi, a{:}\tau}{\tackon{\Theta}{A^+}}{N}{U}}
+\]
+\vspace{-5pt}
+\[
+\infer[{\doteq}_R]
+{\foct{\Psi}{\cdot}{\phi}{t \doteq t}}
+{}
+\quad
+\infer[{\doteq}_L]
+{\foct{\Psi}{\frameoff{\Theta}{t \doteq s}}{\phi}{U}}
+{\forall(\Psi' \vdash \sigma : \Psi).
+ &
+ \sigma t = \sigma s
+ &
+ \longrightarrow
+ &
+ \foct{\Psi'}{\tackon{\sigma\Theta}{\cdot}}{\phi(\sigma)}{\sigma U}
+ }
+\]
+\vspace{-5pt}
+\[
+\infer[\forall_R]
+{\foct{\Psi}{\Delta}{\tforallr{a}{N}}{\forall a{:}\tau.A^-}}
+{\foct{\Psi, a{:}\tau}{\Delta}{N}{A^-}}
+\quad
+\infer[{\forall}_L]
+{\foct{\Psi}{\frameoff{\Theta}{[\forall a{:}\tau.A^-]}}{\tforalll{t}{\Sp}}{U}}
+{\Psi \vdash t : \tau
+ &
+ \foct{\Psi}{\tackon{\Theta}{[A^-[t/a]]}}{\Sp}{U}}
+\]
+
+
+\caption{First-order connectives of focused \ollll.}
+\label{fig:foc-fo}
+\end{figure}

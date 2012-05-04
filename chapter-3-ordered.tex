@@ -3,41 +3,65 @@
 Linear logic is the most famous of the {\it substructural logics}.
 Persistent logic admits the three so-called {\it structural rules} of
 weakening (premises need not be used), contraction (premises may be
-used multiple times) and exchange (the ordering of premises are 
+used multiple times) and exchange (the ordering of premises are
 irrelevant). Substructural logics, then, are logics that do not admit
-these structural rules -- linear logic has only exchange, 
-{\it affine} logic (which is frequently conflated with linear logic
-by programming language designers) has exchange and weakening, and
-{\it ordered} logic, first investigated as a proof theory by Lambek
-\cite{lambek58mathematics}, lacks all three. 
+these structural rules -- linear logic has only exchange, {\it affine}
+logic (which is frequently conflated with linear logic by programming
+language designers) has exchange and weakening, and {\it ordered}
+logic, first investigated as a proof theory by Lambek
+\cite{lambek58mathematics}, lacks all three.  Calling logics like
+linear, affine, and ordered logic \underline{sub}structural relative
+to persistent logic (which is structural) is greatly unfair to the
+substructural logics. Girard's linear logic can express persistent
+provability using the exponential connective ${!}A$, and this idea is
+generally applicable in substructural logics -- for instance, it was
+applied by Polakow and Pfenning to Lambek's ordered logic
+\cite{polakow99natural}.\robnote{Check citation.} It is certainly too
+late to advocate for these logics to be understood as
+\underline{super}structural logics, but that is undoubtedly what they
+are: generalizations of persistent logic that introduce more 
+expressive power.
 
-Calling logics like linear, affine, and ordered logic
-\underline{sub}structural relative to persistent logic (which is
-structural) is arguably unfair to the substructural logics. Girard's
-linear logic can express persistent provability using the exponential
-connective ${!}A$, and this idea is generally applicable in
-substructural logics -- for instance, it was applied by Polakow and
-Pfenning to Lambek's ordered logic
-\cite{polakow99natural}.\robnote{Check citation.} 
+In this chapter, I define a first-order ordered linear logic with a
+lax modality (henceforth \ollll, for ordered linear lax logic), in
+both unfocused (Section~\ref{sec:ord-unfocused}) and focused
+(Section~\ref{sec:ord-focused}) flavors. Then, following the
+structural focalization methodology \cite{simmons11structural}, I
+establish cut admissibility (Section~\ref{sec:ord-cut}), identity
+expansion (Section~\ref{sec:ord-identity}) for focused~\ollll; with
+these results, it is possible to prove the soundness and completeness
+of focusing (Section~\ref{sec:ord-correctness}) for \ollll.  A
+fragment of this system will form the basis of our logical framework
+in Chapter 4, and this framework will, in turn, underpin the rest of
+this thesis.
 
-This section defines a first-order ordered linear logic that includes
-a lax modality; a fragment of this system will form the basis of our
-logical framework in Chapter 4. The full focusing system for ordered
-linear lax logic is presented in this chapter in keeping with
-Andreoli's insistence that we avoid the confusion that results from
-conflating ``defining a foundational paradigm or a [logic] programming
-language (two objectives that should clearly be kept separate)''
-\cite{andreoli01focussing}, a concern that is applicable for logical
-frameworks as well as for logic programming
-languages.\footnote{As Twelf, Lollimon, and Celf
-  show, logical frameworks can frequently be given straightforward
-  life as logic programming languages
-  \cite{pfenning99system,lopez05monadic,schacknielsen08celf}.} I 
-also believe that a full exposition of this logic is useful because
-of the possibility that many other interesting and tractable logic
-programming languages can be defined as fragments of this logic.
+It is worth clarifying why I am presenting the much richer \ollll~here
+if only the fragment in Chapter~4 is needed. There are two
+mainreasons.  First, while we will use only a fragment of this logic
+in Chapter 4, other fragments of the logic may well be interesting and
+useful for other purposes. Second, the presentation in this chapter,
+and in particular the discussion of substructural contexts in
+Section~\ref{sec:contexts}, introduces a presentation style and
+infrastructure that I believe will generalize well to richer logics,
+such as the logic of bunched implications~\cite{pym02semantics},
+non-commutative linear logic (or ``rigid logic'')
+\cite{simmons09linear}, subexponential logics
+\cite{nigam09algorithmic}, and so on. This is not a claim I will
+substantiate in this thesis, however.  
+
+In summary, the choice to present a full account of focusing in
+\ollll~is in keeping with as Andreoli's instance that we should seek,
+where possible, to avoid the confusion that results from conflating
+``defining a foundational paradigm or a [logic] programming language
+(two objectives that should clearly be kept separate)''
+\cite{andreoli01focussing}. Both the full logic \ollll~and the general
+metadology followed in this chapter are general, foundational
+paradigms from which it is possible to instantiate families of logic
+programming languages and logical frameworks, even though we will
+focus on the a particular logical framework starting in Chapter 4.
 
 \section{Ordered linear lax logic}
+\label{sec:ord-unfocused}
 
 Ordered linear logic was the subject of Polakow's thesis
 \cite{polakow01ordered}, and the adaptation of Fairtlough and
@@ -209,10 +233,9 @@ can be generalized substantially: it would be trivial to extend
 this presentation to the affine modality or to the subexponentials
 discussed by Nigam and Miller \cite{nigam09algorithmic}. Furthermore,
 the notation is designed so that it might scale to more interesting
-substructural logics, such as non-commutative linear logic (``rigid
-logic'' \cite{simmons09linear}) or the logic of bunched implications
-\cite{pym02semantics}, even though our specific implementation
-of that notation may not.
+substructural logics, such as 
+
+
 
 We write unified substructural contexts as either $\Delta$ or $\Xi$,
 preferring the latter when there is a chance of confusing them with
@@ -640,6 +663,7 @@ is the statement that $x{:}A \in \Gamma$, whereas in
 
 
 \section{Focused sequent calculus}
+\label{sec:ord-focused}
 
 A sequent in the focusing calculus has the form
 $\foc{\Psi}{\Delta}{U}$, where $\Psi$ is the first-order variable
@@ -939,6 +963,7 @@ much of this notation in our formulation of a logical framework in the
 next chapter. 
 
 \section{Cut admissibility}
+\label{sec:ord-cut}
 
 \begin{itemize}
 \item $\Delta{\downarrow}_{\mpers}$ -- identity function whenever $\Delta$ contains only $x{:}\ispers{T}$
@@ -1015,12 +1040,17 @@ next chapter.
 \end{theorem}
 
 \section{Identity expansion}
+\label{sec:ord-identity}
 
-\section{Polarization and erasure}
+\section{Correctness of focusing}
+\label{sec:ord-correctness}
 
+\subsection{Erasure}
 
-\section{Unfocused admissibility}
+\subsection{De-focalization}
 
-\section{Soundness and completeness}
+\subsection{Unfocused admissibility}
+
+\subsection{Focalization}
 
 
