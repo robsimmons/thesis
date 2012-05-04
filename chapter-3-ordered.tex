@@ -294,25 +294,16 @@ unambiguously equal to only one context $\Gamma'; \Delta'; \Omega'$.
 
 \subsection{Fundamental operations on contexts}
 
-In this presentation, most operations on contexts have two forms: a
-{\it matching construct} that is used in the conclusion of derivation
-rules, and a {\it construction construct} that is used in the
-premises.  We introduced this distinction when we emphasized the
-matching construct $\Gamma; \Delta/A$ in Figure~\ref{fig:linear-alt}
-and the related matching construct $\Gamma; \Delta;
-\Omega_L/A/\Omega_R$ notation in Figure~\ref{fig:ordered-prop}, but we
-will be much more explicit about it in the following discussion.
-
 The first fundamental idea we consider is {\it singleton} contexts.
-We construct a single-element context by writing $x{:}\islvl{T}$, The
-corresponding matching construct on contexts is {\it sole membership},
-$x{:}T \subseteq \Xi$.
+We construct a single-element context by writing $x{:}\islvl{T}$.
+The corresponding matching construct on contexts is 
+$x{:}{T}$. In unfocused linear logic, we say that $\Xi$ matches 
+$x{:}{A}$ if its decomposition into persistent, linear, and 
+ordered contexts matches $\Gamma; \cdot; /A/$. Specifically,
 
 \bigskip
 \begin{definition}[Sole membership]
-We say that $x{:}T$ 
-is the sole member of ${\Xi}$, which we write as $x{:}T \subseteq \Xi$,
-when
+  $\Xi$ matches $x{:}T$ if
 \begin{itemize}
 \item $\Xi$ contains no linear judgments and contains exactly
 one
@@ -320,7 +311,7 @@ ordered judgment $x{:}\istrue{T}$ (corresponding to the situation where
 $\Xi = \Gamma; \cdot; T$), 
 \item $\Xi$ contains no ordered judgments and contains exactly
 one linear judgement $x{:}\iseph{T}$ (corresponding to the situation where
-$\Xi = \Gamma; T; \cdot$), and 
+$\Xi = \Gamma; T; \cdot$), or 
 \item $\Xi$ contains only persistent judgments, including
 $x{:}\ispers{T}$ (corresponding to the situation where
 $\Xi = \Gamma, T; \cdot; \cdot$). 
@@ -331,12 +322,21 @@ $\Xi = \Gamma, T; \cdot; \cdot$).
 Sole membership is related to the initial sequents and the 
 matching construct $\Gamma; \cdot;/A/$ for contexts that was used
 in Figure~\ref{fig:ordered-prop}.
-We could have instead written the {\it init} rule
+We could rewrite the {\it init} rule
 from that figure as follows:
 \[
 \infer[{\it init}]
+{x{:}p \Rightarrow /{p}/}
+{}
+\]
+As in all rules involving matching constructs in the conclusion,
+it is fair to view the matching construct as an extra premise; thus,
+the ${\it init}$ rule above is the same as the ${\it init}$ rule 
+below:
+\[
+\infer[{\it init}]
 {\Xi \Rightarrow /{p}/}
-{x{:}p \subseteq \Xi}
+{\Xi \textit{~matches~} x{:}p}
 \]
 
 The second basic operation on contexts requires a new concept, {\it
@@ -345,17 +345,16 @@ contexts for \ollll~as a series of persistent, linear, and ordered
 contexts where the ordered context is missing a particular piece. We
 can write this missing piece as a box: $\Gamma; \Delta; \Omega_L,
 \Box, \Omega_R$. Alternatively we can think of a frame as a one-hole
-context or Huet-style zipper \cite{huet97zipper} over the structure
-of substructural contexts. We will actually think of them
-as closest to linear substitution functions, like a Linear ML function
-$(\mathsf{fn}~\Xi\Rightarrow \Xi_L, \Xi, \Xi_R)$, though we'll 
-treat $\Box$ as a distinguished variable standing for the bound variable 
-$\Xi$ (that is, representing the missing part of the context)
-\cite{simmons09linear}.
+context or Huet-style zipper \cite{huet97zipper} over the structure of
+substructural contexts. We will actually think of them essentially
+linear LF functions $(\lambda\Xi.\, \Xi_L, \Xi, \Xi_R)$
+\cite{simmons09linear}, or, more generally, as linear representational
+functions defined by substitution.
 
-The construction form associated with frames, $\tackon{\Theta}{\Xi}$,
-is just a straightforward operation of filling in the hole; it
-requires that the variables in $\Theta$ and $\Xi$ be distinct. If we
+The construction associated with frames, $\tackon{\Theta}{\Xi}$,
+is just a straightforward operation of filling in the hole or 
+beta-reducing the linear function; doing this requires that the 
+variables in $\Theta$ and $\Xi$ be distinct. If we
 think of $\Theta$ informally as $\Gamma; \Delta; \Omega_L, \Box,
 \Omega_R$, then this is {\it almost} like the operation of filling in
 the hole, as $\tackon{\Theta}{x{:}\istrue{A}} = \Gamma; \Delta;
@@ -366,12 +365,12 @@ the operation to insert linear propositions
 ($\tackon{\Theta}{x{:}\ispers{A}} = \Gamma, A; \Delta; \Omega_L,
 \Omega_R$).
 
-The matching construction for frames is a bit more complicated,
+The matching construct for frames is a bit more complicated,
 Informally, if we treat linear contexts as multisets and say that $\Xi
 = \Gamma; \Delta, \Delta'; \Omega_L, \Omega', \Omega_R$, then we can
 say $\Xi = \frameoff{\Theta}{\Xi'}$ in the case that $\Theta = \Gamma;
 \Delta; \Omega_L, \Box, \Omega_R$ and $\Xi' = \Gamma; \Delta';
-\Omega'$. The sub-context $\Xi'$, then, has been framed off from
+\Omega'$. The sub-context $\Xi'$, then, has been {\it framed off} from
 $\Xi$, its frame is $\Theta$. If we only had ordered judgments
 $\istrue{T}$, then the framing-off matching construct
 $\frameoff{\Theta}{\Xi'}$ would be essentially the same as the
@@ -382,14 +381,14 @@ framed-off context.
 
 \bigskip
 \begin{definition}[Framing off]
-$\Xi = \frameoff{\Theta}{\Xi'}$ if the union of the variables in 
+$\Xi$ matches $\frameoff{\Theta}{\Xi'}$ if the union of the variables in 
 $\Theta$ and $\Xi'$ is exactly the variables in $\Xi$ and
 \begin{itemize}
 \item if $x{:}\ispers{T} \in \Xi$, then the same mapping appears in 
   $\Theta$ and $\Xi'$;
 \item if $x{:}\iseph{T} \in \Xi$ or $x{:}\istrue{T} \in \Xi$, 
   then the same mapping appears in $\Theta$ or $\Xi'$ (but not both); and
-\item if $x{:}\iseph{T} \in \Theta$, then either
+\item if $x{:}\istrue{T} \in \Theta$, then either
   \begin{itemize}
   \item for all $y{:}\istrue{T'} \in \Xi'$, the mapping for $x$ appeared before
     the mapping for $y$ in $\Xi$, or
@@ -401,9 +400,10 @@ $\Theta$ and $\Xi'$ is exactly the variables in $\Xi$ and
 \bigskip
 
 An important derived matching construct is $\frameoff{\Theta}{x{:}T}$,
-which matches $\Xi$ if $\Xi = \frameoff{\Theta}{\Xi'}$ and 
-$x{:}T \subseteq \Xi'$.  This pattern is used in almost every
-left rule from Figure~\ref{fig:ordered-prop}, for instance:
+which matches $\Xi$ if $\Xi$ matches $\frameoff{\Theta}{\Xi'}$ for
+some $\Xi'$ such that $\Xi'$ matches $x{:}T$.  This pattern is needed
+to describe almost every left rule from Figure~\ref{fig:ordered-prop},
+for instance:
 \[
 \infer[]
 {\frameoff{\Theta}{x{:}A \oplus B} \Rightarrow U}
@@ -429,6 +429,18 @@ cut principles for ordered linear lax logic.
  &
  \tackon{\Theta}{x{:}A\,{\it true}} \Rightarrow \istrue{C}}
 \]
+Especially for the eventual proof of this cut principle, it is important
+to consider that this cut principle is equivalent to the one that describes
+the matching as an explicit extra premise:
+\[
+\infer-[{\it cut}]
+{\Xi' \Rightarrow \istrue{C}}
+{\Xi' \textit{~matches~} \frameoff{\Theta}{\Xi} 
+ &
+ \Xi \Rightarrow \istrue{A}
+ &
+ \tackon{\Theta}{x{:}A\,{\it true}} \Rightarrow \istrue{C}}
+\]
 
 \futurework{
 As an aside: it need not always be the case that the same operation
@@ -444,7 +456,7 @@ for some reasonable logics, such as Reed's queue logic
 
 To describe the multiplicative connective of \ollll, including the critical
 connective of implication, we need to have multiplicative operations on 
-contexts. As a construction form, $\mkconj{\Xi_L}{\Xi_R}$ is just the
+contexts. As a construction, $\mkconj{\Xi_L}{\Xi_R}$ is just the
 syntactic concatenation of two contexts with distinct variable domains, and
 the unit $\mkunit$ is just the empty sequence. The matching constructs
 are more complicated to define as usual, but the intuition is, again, 
@@ -452,14 +464,20 @@ uncomplicated: if
 $\Xi = \Gamma; \Delta, \Delta'; \Omega_L, \Omega_R$, where linear contexts
 are multisets and ordered contexts are sequences, then 
 $\Xi = \mkconj{\Xi_L}{\Xi_R}$ if $\Xi_L = \Gamma; \Delta; \Omega_L$ and
-$\Xi_R = \Gamma; \Delta'; \Omega_R$.
+$\Xi_R = \Gamma; \Delta'; \Omega_R$. Note that we are giving up on
+having different notation for constructions and matching constructs: 
+$\matchconj{\Xi_L}{\Xi_R}$ is a matching construct when it appears
+in the conclusion of a rule, $\mkconj{\Xi_L}{\Xi_R}$ is a construction
+when it appears in the premise of a rule.
 
 \bigskip
 \begin{definition}[Conjunction]
-As a matching construct, $\Xi = \matchunit$ if $\Xi$ contains only
+$\Xi$ matches $\matchunit$ if $\Xi$ contains only
 persistent variables.
 
-As a matching construct, $\Xi = \matchconj{\Xi_L}{\Xi_R}$ if the union 
+\smallskip
+\noindent
+$\Xi$ matches $\matchconj{\Xi_L}{\Xi_R}$ if the union 
 of the variables in $\Xi_L$ and $\Xi_R$ is exactly the variables in $\Xi$
 and 
 \begin{itemize}
@@ -502,185 +520,56 @@ just the propositional internalization of context conjunction:
 {\Xi_A \Rightarrow \istrue{A} & \tackon{\Theta}{y{:}\istrue{B}} \Rightarrow U}
 \]
 Implication makes deeper use of context conjunction:
-we can look at the compound matching construct
-$\frameoff{\Theta}{\matchconj{\Xi_A}{x{:}A \lefti B}}$ in two ways.
-One way of reading this notation 
-is that $\Xi$ matches $\frameoff{\Theta}{\Xi'}$, $\Xi'$ matches
-$\matchconj{\Xi_A}{\Xi''}$, and $x{:}A \subseteq \Xi''$. The other
-way of reading the notation 
-is that $\Xi$ matches $\frameoff{\Theta'}{x{:}A \lefti B}$, and
-$\Theta'$ matches $\frameoff{\Theta}{\matchconj{\Xi_A}{\Box}}$, 
-It is critical that these two ways of 
+% we can look at 
+$\Xi$ matches
+$\frameoff{\Theta}{\matchconj{\Xi_A}{x{:}A \lefti B}}$ 
+%in two ways.
+%One way of reading this notation 
+exactly when there exist $\Xi'$ and $\Xi''$ such that 
+% is 
+$\Xi$ matches $\frameoff{\Theta}{\Xi'}$, 
+$\Xi'$ matches $\matchconj{\Xi_A}{\Xi''}$,
+and $x{:}A$ matches $\Xi''$. 
 
-\bigskip
-\begin{definition}[Matching into frames]
-$\Theta$ matches $\frameoff{\Theta'}{\matchconj{\Xi_A}{\Box}}$ if, 
-for all $\Xi'$ and $\Xi_A$, $\Xi'$ matches $\matchconj{\Xi_A}{\Xi_B}$
-if and only if 
+% The other
+% way of reading the notation 
+% is that $\Xi$ matches $\frameoff{\Theta'}{x{:}A \lefti B}$, and
+% $\Theta'$ matches $\frameoff{\Theta}{\matchconj{\Xi_A}{\Box}}$, 
+% It is critical that these two ways of 
 
-For all $\Xi$, $\Xi_A$, $\Xi_B$ and $\Theta$, 
-\begin{itemize}
-\item there exists $\Xi'$ such that $\Xi$ matches $\frameoff{\Theta}{\Xi}$
-  and $\Xi$ matches $\matchconj{\Xi_A}{\Xi_B}$
-  if and only if there exists $\Delta'$ such that $\Xi$ matches 
-  $\frameoff{\Theta}{\Xi_A}$ and $\Theta$ matches 
-  $\frameoff{\Theta'}{}$
-\end{itemize}
-\end{definition}
+% \bigskip
+% \begin{definition}[Matching into frames]
+% $\Theta$ matches $\frameoff{\Theta'}{\matchconj{\Xi_A}{\Box}}$ if, 
+% for all $\Xi'$ and $\Xi_A$, $\Xi'$ matches $\matchconj{\Xi_A}{\Xi_B}$
+% if and only if 
 
-
-As a matching construct, $\Xi = \matchconj{\Xi_L}{\Xi_R}$ if every 
-$x{:}\ispers{T}$ in $\Xi$ appears in both $\Xi_L$ and $\Xi_R$, every 
-$x{:}\iseph{T}$ or $x{:}\istrue{T}$ 
-in $\Xi$ appears in exactly one of $\Xi_L$ or $\Xi_R$, and
-if furthermore every 
-$x{:}\iseph{T}$ $\Xi_L$
+% For all $\Xi$, $\Xi_A$, $\Xi_B$ and $\Theta$, 
+% \begin{itemize}
+% \item there exists $\Xi'$ such that $\Xi$ matches $\frameoff{\Theta}{\Xi}$
+%   and $\Xi$ matches $\matchconj{\Xi_A}{\Xi_B}$
+%   if and only if there exists $\Delta'$ such that $\Xi$ matches 
+%   $\frameoff{\Theta}{\Xi_A}$ and $\Theta$ matches 
+%   $\frameoff{\Theta'}{}$
+% \end{itemize}
+% \end{definition}
 
 
-As a construction form, 
+% As a matching construct, $\Xi = \matchconj{\Xi_L}{\Xi_R}$ if every 
+% $x{:}\ispers{T}$ in $\Xi$ appears in both $\Xi_L$ and $\Xi_R$, every 
+% $x{:}\iseph{T}$ or $x{:}\istrue{T}$ 
+% in $\Xi$ appears in exactly one of $\Xi_L$ or $\Xi_R$, and
+% if furthermore every 
+% $x{:}\iseph{T}$ $\Xi_L$
+
+
+% As a construction form, 
 
 
 \subsection{Exponential operations}
 
-\[
-\infer-[{\it cut}]
-{\frameoff{\Theta}{\Xi} \Rightarrow \istrue{C}}
-{\Xi{\downharpoonright}_{\it lvl} \Rightarrow \istrue{A}
- &
- \tackon{\Theta}{x{:}A\,{\it lvl}} \Rightarrow \istrue{C}}
-\quad
-\infer-[\{{\it cut}\}]
-{\frameoff{\Theta}{\Xi} \Rightarrow \islax{C}}
-{\Xi \Rightarrow \islax{A}
- &
- \tackon{\Theta}{x{:}\istrue{A}} \Rightarrow \istrue{C}}
-\]
+Exponential operators $\restrictto{\Xi}{\mlvl}$
 
-
-We need one fundamental . A context $\Xi$
-
-The fundamental constructor of a context is 
-$x{:}A\,{\it lvl}$
-
-
-
-We now have a {\it lot} of 
-
-We will treat {\it substructural contexts} $\Delta$ are maps from {\it
-  variables} to {\it judgments}. There are two kinds of variables: 
-those that map {\it extent}.
-
-
-
-
-Two of the fundamental properties of $\Delta$ are 
-$x{:}\langle A^+ \rangle_l \sqsubseteq \Delta$. In linear logic, this
-is the statement that $x{:}A \in \Gamma$, whereas in 
-
-\[\small
-\begin{array}{|c|c|c|c|}
-%
-\begin{array}{c}
-\makebox[1.8in]{\it Dual intuitionistic linear logic}\medskip
-\\
-\infer
-{\Gamma; p^+ \vdash p^+ \mathstrut}
-{\mathstrut}
-\end{array}
-%
-&
-%
-\begin{array}{c}
-\makebox[1.8in]{\it Pfenning-Davies S4}\medskip
-\\
-\infer
-{\Delta; \Gamma, p^+ \mathstrut \vdash p^+}
-{\mathstrut}
-\end{array}
-%
-&
-%
-\begin{array}{c}
-\makebox[1.8in]{\it Unified}\medskip
-\\
-\infer
-{\Delta \vdash [ p^+ ]_l \mathstrut}
-{x{:}\langle p^+ \rangle_l \subseteq \Delta \mathstrut}
-\end{array}
-%
-\end{array}
-\]
-
-\[\small
-\begin{array}{|c|c|c|c|}
-%
-\begin{array}{c}
-\makebox[1.8in]{\it Dual intuitionistic linear logic}\medskip
-\\
-\infer
-{\Gamma; \Delta, A \with B \vdash C \mathstrut}
-{\Gamma; \Delta, A \vdash C \mathstrut}
-\end{array}
-%
-&
-%
-\begin{array}{c}
-\makebox[1.8in]{\it Pfenning-Davies S4}\medskip
-\\
-\infer
-{\Delta; \Gamma, A \wedge^- B \mathstrut \vdash C}
-{\Delta; \Gamma, A \wedge^- B, A \vdash C \mathstrut}
-\end{array}
-%
-&
-%
-\begin{array}{c}
-\makebox[1.8in]{\it Unified}\medskip
-\\
-\infer
-{\Theta\{ x{:} A \with B \} \vdash U \mathstrut}
-{\Theta\{ x_1{:} A \} \vdash U \mathstrut}
-\end{array}
-%
-\end{array}
-\]
-
-
-\[\small
-\begin{array}{|c|c|c|c|}
-%
-\begin{array}{c}
-\makebox[1.8in]{\it Dual intuitionistic linear logic}\medskip
-\\
-\infer
-{\Gamma; \Delta_1, \Delta_2 \vdash A \otimes B \mathstrut}
-{\Gamma; \Delta_1 \vdash A & \Gamma; \Delta_2 \vdash B \mathstrut}
-\end{array}
-%
-&
-%
-\begin{array}{c}
-\makebox[1.8in]{\it Pfenning-Davies S4}\medskip
-\\
-\infer
-{\Delta; \Gamma \vdash A \wedge^+ B \mathstrut}
-{\Delta; \Gamma \vdash A & \Delta; \Gamma \vdash B \mathstrut}
-\end{array}
-%
-&
-%
-\begin{array}{c}
-\makebox[1.8in]{\it Unified}\medskip
-\\
-\infer
-{\Delta_1 \bowtie \Delta_2 \vdash A \otimes B \mathstrut}
-{\Delta \vdash A & \Delta_2 \vdash B \mathstrut}
-\end{array}
-%
-\end{array}
-\]
-
-
+For the sake of symmetry, we only 
 
 \section{Focused sequent calculus}
 \label{sec:ord-focused}
