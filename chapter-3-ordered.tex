@@ -190,6 +190,7 @@ first-order individuals; in the next chapter we clarify that these
 types and terms will actually be types and terms of Canonical LF.
 
 \section{Substructural contexts}
+\label{sec:contexts}
 
 First-ordered linear lax logic has a lot of contexts -- the persistent
 context $\Gamma$ the linear context $\Delta$, and the ordered context
@@ -641,16 +642,16 @@ is the statement that $x{:}A \in \Gamma$, whereas in
 \section{Focused sequent calculus}
 
 A sequent in the focusing calculus has the form
-$\foc{\Psi}{\Delta}{U}$, where $\Psi$ is the first-order context,
-$\Delta$ is a substructural context as just described, and $U$ is a
-succeedent. The domain $T$ of the substructural context consists of
-stable negative propositions $A^-$, positive suspended propositions
-$\susp{A^+}$, focused negative proposition $[A^-]$, and inverting
-positive propositions $A^+$.
+$\foc{\Psi}{\Delta}{U}$, where $\Psi$ is the first-order variable
+context, $\Delta$ is a substructural context described in the previous
+section, and $U$ is a succeedent. The domain $T$ of the substructural
+context consists of stable negative propositions $A^-$, positive
+suspended propositions $\susp{A^+}$, focused negative proposition
+$[A^-]$, and inverting positive propositions $A^+$.
 
 The form of the succedent $U$ is $\islvl{T}$, where $\mlvl$ is either
 $\mtrue$ or $\mlax$; in this way, $U$ is just a like a special
-substructural pseudo-context with exactly one element -- we don't need
+substructural context with exactly one element -- we don't need
 to care about the name of the variable, because there's only one.  The
 domain of $T$ for succedents is complementarly to the domain of $T$
 for contexts: stable positive propositions $A^+$, negative suspended
@@ -676,26 +677,28 @@ proof of a stable sequent.
 Because there is always a distinct focused proposition in a sequent,
 we do not need a variable name to reference the focused proposition in
 a context $\Delta$ any more than we need a variable name to reference
-the unique member of the pseudo-context $U$. Therefore, we write
-$\istrue{[B^-]}$ instead of $x{:}\istrue{[B^-]}$. Furthermore, we
-restrict focused propositions and inverting propositions so that they
-are always associated with the judgment $\mtrue$. With this
+the unique member of the context-like succeedent $U$. Therefore, we
+write $\istrue{[B^-]}$ instead of $x{:}\istrue{[B^-]}$. Furthermore,
+we restrict focused propositions and inverting propositions so that
+they are always associated with the judgment $\mtrue$. With this
 restriction, we can write $[A^-]$ and $x{:}A^+$ instead of
 $\istrue{[A^-]}$ and $x{:}\istrue{A^+}$ in $\Delta$, and we can write
 $[A^+]$ and $A^-$ instead of $\istrue{[A^+]}$ and $\istrue{A^-}$ for
-$U$. 
+$U$.
 
-In a confluent presentation of focused logic like the one given
-for linear logic in Chapter 2, that would be as far as we could take
-our simplifications. However, this presentation will match the fixed
+In a confluent presentation of focused logic like the one given for
+linear logic in Chapter 2, that would be as far as we could take our
+simplifications. However, this presentation will match the fixed
 presentation of logic from the structural focalization development
 \cite{simmons11structural}. Specifically, if there is more than one
 invertible proposition in a sequent, {\it only} the leftmost one will
-be treated as eligible to have a rule applied to it, where all the
+be treated as eligible to have a rule applied to it. All the
 propositions in $\Delta$ are treated as being to the left of the
-succeedent $U$. With this additional restriction, it is always
-unambiguous which proposition we are referring to in an invertible
-rule, and we write $A^+$ instead of $x{:}A^+$ or $x{:}\istrue{A^+}$. 
+succeedent $U$, so we always prioritize inversion on positive
+propositions in $\Delta$. With this additional restriction, it is
+always unambiguous which proposition we are referring to in an
+invertible rule, and we write $A^+$ instead of $x{:}A^+$ or
+$x{:}\istrue{A^+}$.
 
 \subsection{Polarized propositions}
 
@@ -747,36 +750,54 @@ A^-_\mlax & ::= p^-_\mlax
 \label{fig:ordered}
 \end{figure}
 
-\input{figs/fig-foc-mall}
-\input{figs/fig-foc-add}
+Negative propositions also have a refinement, $A^-_\mlax$, for
+negative propositions that always bottom out as a modal
+${\ocircle}A^+$.  This is interesting as a formal artifact and there
+is very little overhead involved in putting it into our development,
+but I don't claim to understand what the refinement means or what the
+inclusion of right-permeable atomic propositions $p^-_\mlax$ mean for
+the structure of proofs.
 
 The presentation of the modalities emphasises the degree to which
 the shifts ${\uparrow}$ and ${\downarrow}$ have much of the character
 of modalities in a focused substructural logic; this point was
 explored in depth by Laurent \cite{laurent02etude}.
 
-\subsection{Proof terms}
+\subsection{Derivations and proof terms}
 \label{sec:ord-proof-terms}
 
-We present the focused sequent calculus for \ollll~in 
-tandem with a proof term assignment, following the structural 
-focalization methodlogy \cite{simmons11structural}. This will allow
-for a greatly compressed discussion of cut admissibility and identity
-expansion, and we will reuse much of the notation in our formulation
-of a logical framework in the next chapter.
+\input{figs/fig-foc-mall}
+\input{figs/fig-foc-add}
+\input{figs/fig-foc-fo}
 
-The goal of the proof term assignment here is to act as a true stand-in
-for 
+The multiplicative and exponential fragment of focused \ollll~is given
+in Figure~\ref{fig:foc-mall}, the additive fragment is given in
+Figure~\ref{fig:foc-add}, and the first-order connectives are treated
+in Figure~\ref{fig:foc-fo}. These rules can be understood as a regular
+logic by ignoring the {\it proof terms} that appear to immedately to
+the right of an arrow.
+
+The sequent form that includes proof terms is written as
+$\foct{\Psi}{\Delta}{E}{U}$, where $E$ is an {\it expression}.  Just
+as sequent forms are divided into the right-focused, inverting, and
+left-focused sequents, we divide expressions into {\it values} $V$,
+which are associated with right-focused sequents; {\it terms} $N$,
+which are associated with inverting sequents; and {\it spines} $\Sp$,
+which are associated with left-focused sequents. The structure of
+values, terms, and spines is as follows:
 \begin{align*}
 V & ::= z                     %% z
    \mid \tbangr{N}            %% !N
    \mid \tgnabr{N}            %% $N
    \mid \tdownr{N}            %% N
 %
+   \mid \toner
    \mid \tfuser{V_1}{V_2}     %% V1 * V2
 %  
    \mid \tinl{V}
    \mid \tinr{V}
+   \mid \texistsr{t}{V}
+   \mid \tunifr
  \\
 N & ::= \tfocusr{V}           %% V
    \mid \tfocusl{x}{\Sp}      %% x @ Sp
@@ -796,6 +817,9 @@ N & ::= \tfocusr{V}           %% V
    \mid \toplusl{N_1}{N_2}    %% [N1,N2]
    \mid \ttopr 
    \mid \twithr{N_1}{N_2}     %% N1 & N2
+   \mid \texistsl{a}{N}
+   \mid \tforallr{a}{N}
+   \mid \phi
 \\
 S & ::= \tnil                 %% nil
    \mid \tupl{N}              %% N
@@ -804,8 +828,115 @@ S & ::= \tnil                 %% nil
    \mid \tappl{V}{\Sp}        %% V < Sp
    \mid \tpione{\Sp}          %% fst Sp
    \mid \tpitwo{\Sp}          %% snd Sp
+   \mid \tforalll{t}{\Sp}
 \end{align*}
 
+Expressions are treated as in the structural 
+focalization methodlogy \cite{simmons11structural}. It is possible
+to take a view of expressions as {\it extrinsically} typed, which
+means we consider both well-typed and ill-typed expressions, and 
+the well-typed expressions are those for which the sequent 
+$\foct{\Psi}{\Delta}{E}{U}$ is derivable. However, we will take
+the view that expressions are intrinsically typed representatives 
+of derivations: that is, instead of talking about derivations 
+$\mathcal D$ of the sequent $\foc{\Psi}{\Delta}{[A^+]}$, we will just talk
+about values $V$ focused on $A^+$ using $\Delta$. The judgment
+$\foct{\Phi}{\Delta}{V}{[A^+]}$ is a convienent way of writing this 
+down, but values, terms, and spines are themselves representatives
+of derivations. 
+
+There are two caveats to the idea that expressions are representatives
+of derivations. One caveat is that, in order for there to be an actual
+correspondance between expressions and terms, we need to annotate all
+variables with the judgment they are associated with, and we need to
+annotate $\tinr{V}$, $\tinl{V}$, $\tpione{\Sp}$, and $\tpitwo{\Sp}$
+terms with the type of the branch not taken. Pfenning writes these as
+superscripts \cite{pfenning08church}, but which we will follow Girard
+in leaving them implicit \cite{girard89proofs}. The second caveat is
+that if $\foct{\Psi}{\Delta}{V}{U}$, then $\foct{\Psi}{\Delta,
+  x{:}\ispers{A^+}}{V}{U}$ as well. In other words, expressions are
+only representaives of derivations modulo weakening.
+
+As before, ${\doteq}_L$ requires some more explanation. 
+The proof term for this rule is just a function $\phi$ from unifying
+substitutions $\sigma$ to terms $N$ that correspond to proofs of 
+
+\bigskip
+\begin{theorem}
+If $\Psi' \vdash \sigma : \Psi$ and $\foc{\Psi}{\Delta}{U}$, then 
+$\foc{\Psi'}{\sigma\Delta}{\sigma{U}}$.
+\end{theorem}
+
+\begin{proof}
+On the level of proof terms, 
+we are given $E$, a expression corresponding to a derivation of
+$\foc{\Psi}{\Delta}{U}$; we are defining the operation $\sigma{E}$,
+an expression corresponding to a derivation of 
+$\foc{\Psi'}{\sigma\Delta}{\sigma{U}}$.
+
+For the exponential, multiplicative, and additive fragments, this
+operation is simple to define at the level of proof terms:
+$\sigma(\tfuser{V_1}{V_2}) = \tfuser{\sigma{V_1}}{\sigma{V_2}}$,
+$\sigma(\tdownl{x}{N}) = \tdownl{x}{\sigma N}$, and so on. However,
+this compact notation does capture a great deal of complexity. In
+particular, while it is basically self-evident that it is important to emphasize that we need lemmas saying
+that variable substitution is compatible with all the non-trivial
+context matching operations from Section~\ref{sec:contexts}.  In full
+detail, these two simple cases would be:
+
+$\sigma(\tfuser{V_1}{V_2}) = \tfuser{\sigma{V_1}}{\sigma{V_2}}$ --
+We are given a proof of $\foc{\Psi}{\Delta}{[A^+ \fuse B^+]}$ that
+ends with the ${\fuse}_R$ rule; the subderivations are
+$V_1$, a derivation of $\foc{\Psi}{\Delta_1}{[A^+]}$, and
+$V_2$, a derivation of $\foc{\Psi}{\Delta}{[B^+]}$. Furthermore, we know that
+$\Delta$ matches $\Delta_1, \Delta_2$. We need a lemma that
+tells us that $\sigma\Delta$ matches $\sigma\Delta_1, \sigma\Delta_2$;
+then, by rule ${\fuse}_R$, it suffices to show that
+$\foc{\Psi'}{\sigma\Delta_1}{\sigma{A^+}}$ (which we have by the 
+induction hypothesis on $\sigma$ and $V_1$) and that
+$\foc{\Psi'}{\sigma\Delta_2}{B^+}$ (which we have by the induction hypothesis
+on $\sigma$ and $V_2$). 
+
+$\sigma(\tdownl{x}{N}) = \tdownl{x}{\sigma N}$ -- We are given a proof
+of $\foc{\Psi}{\Delta}{U}$ that ends with ${\downarrow}_L$; 
+the subderivation is $N$, a derivation of
+$\foc{\Psi}{\tackon{\Theta}{x{:}\istrue{A^-}}}{U}$. Furthermore, we know that
+$\Delta$ matches $\frameoff{\Theta}{{\downarrow}A^-}$. We need a lemma
+that tells us that $\sigma\Delta$ matches
+$\frameoff{\sigma\Theta}{{\downarrow}\sigma A^-}$; then, by 
+rule ${\downarrow}_L$, it suffices to show 
+$\foc{\Psi'}{\tackon{\sigma\Theta}{x{:}\istrue{\sigma{A^-}}}}{U}$ (which
+we have by the induction hypothesis on $\sigma$ and $N$).
+
+ By the induction hypothesis on
+$V_1$, we have a derivation of $\foc{\Psi'}{\sigma\Delta_1}{A^+}$, and
+by the induction hypothesis on $V_2$ we have a derivation of
+$\foc{\Psi'}{\sigma\Delta_2}{B^+}$; therefore, because by lemma
+$\sigma\Delta$ matches 
+
+
+
+
+ a derivation
+of $\foc{\Psi}{\Delta}{U}$
+\[
+\infer-[{\it varsubst}]
+{\foct{\Phi'}{\sigma\Delta}{\sigma{E}}{\sigma{U}}}
+{\foct{\Phi}{\Delta}{E}{U}}
+\]
+All the propositional cases are totally straightforward:
+\[
+\infer-[{\it varsubst}]
+{\foct{\Phi}{\Delta_1, \Delta_2}{\sigma(\tfuser{V_1}{V_2})}{[A^+ \fuse B^+]}}
+{}
+\]
+\end{proof}
+
+
+The use of proof terms allows for a greatly compressed discussion of
+cut admissibility and identity expansion. Furthermore, we will reuse
+much of this notation in our formulation of a logical framework in the
+next chapter. 
 
 \section{Cut admissibility}
 
