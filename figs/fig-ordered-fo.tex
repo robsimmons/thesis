@@ -4,7 +4,7 @@
 {\orfseq{\Gamma}{\Delta}{\Omega}{\exists x{:}\tau.B}}
 {\Psi \vdash t : \tau 
  &
- \otseq{\Gamma}{\Delta}{\Omega}{B[t/x]}}
+ \otseq{\Gamma}{\Delta}{\Omega}{[t/x]B}}
 \quad
 \infer[{\exists}_L]
 {\olfseq{\Gamma}{\Delta}{\Omega_L}{\exists x{:}\tau.B}{\Omega_R}}
@@ -19,7 +19,7 @@
 {\olfseq{\Gamma}{\Delta}{\Omega_L}{\forall x{:}\tau.B}{\Omega_R}}
 {\Psi \vdash t : \tau
  &
- \opfseq{\Gamma}{\Delta}{\Omega_L}{B[t/x],\Omega_R}}
+ \opfseq{\Gamma}{\Delta}{\Omega_L}{[t/x]B,\Omega_R}}
 \]
 \[
 \infer[{\doteq}_R]

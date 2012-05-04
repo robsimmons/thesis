@@ -37,7 +37,7 @@ this thesis.
 
 It is worth clarifying why I am presenting the much richer \ollll~here
 if only the fragment in Chapter~4 is needed. There are two
-mainreasons.  First, while we will use only a fragment of this logic
+main reasons.  First, while we will use only a fragment of this logic
 in Chapter 4, other fragments of the logic may well be interesting and
 useful for other purposes. Second, the presentation in this chapter,
 and in particular the discussion of substructural contexts in
@@ -46,8 +46,8 @@ infrastructure that I believe will generalize well to richer logics,
 such as the logic of bunched implications~\cite{pym02semantics},
 non-commutative linear logic (or ``rigid logic'')
 \cite{simmons09linear}, subexponential logics
-\cite{nigam09algorithmic}, and so on. This is not a claim I will
-substantiate in this thesis, however.  
+\cite{nigam09algorithmic}, and so on. (This is not a claim I will
+substantiate in this thesis, however.)
 
 In summary, the choice to present a full account of focusing in
 \ollll~is in keeping with as Andreoli's instance that we should seek,
@@ -68,40 +68,37 @@ Ordered linear logic was the subject of Polakow's thesis
 Mendler's lax logic \cite{fairtlough95propositional} (as reconstructed
 by Pfenning and Davies \cite{pfenning01judgmental}) to linear logic is
 the basis of the CLF logical framework
-\cite{watkins02concurrent}. Putting the pieces together 
-is a straightforward proof-theoretic exercise. There are three contexts
-relevant to the propositional presentation of ordered linear lax logic.
-The persistent context $\Gamma$ and the linear context $\Delta$
-are multisets as before (so we think of $\Delta_1, \Delta_2$ as being
-equal to $\Delta_2, \Delta_1$, for instance). The ordered context
-$\Omega$ is a sequence of propositions, as in Gentzen's original
-presentation of sequent calculi, and {\it not} a multiset.
-This means that the two ordered
-contexts $\Omega_1, \Omega_2$ and $\Omega_2, \Omega_1$ are, in general,
-not the same.
+\cite{watkins02concurrent}. Putting the pieces together is a
+relatively straightforward proof-theoretic exercise. There are three
+contexts relevant to the propositional presentation of ordered linear
+lax logic.  The persistent context $\Gamma$ and the linear context
+$\Delta$ are multisets as before (so we think of $\Delta_1, \Delta_2$
+as being equal to $\Delta_2, \Delta_1$, for instance). The ordered
+context $\Omega$ is a sequence of propositions, as in Gentzen's
+original presentation of sequent calculi, and {\it not} a multiset.
+This means that the two ordered contexts $\Omega_1, \Omega_2$ and
+$\Omega_2, \Omega_1$ are, in general, not the same.
 
 \input{figs/fig-ordered-prop}
 
-There are two judgments in ordered linear lax logic (henceforth \ollll). 
-The primary
-judgment is $\oseq{\Gamma}{\Delta}{\Omega}{\istrue{A}}$, which says
-that $A$ is an (ephemeral, ordered) resource derivable from the
-persistent resources in $\Gamma$, the ephemeral resources in $\Delta$,
-and the ephemeral, ordered resources in $\Omega$. There is also a
-second judgment, $\oseq{\Gamma}{\Delta}{\Omega}{\islax{A}}$. The
-judgment $\islax{A}$ is usually interpreted as truth under an
-unspecified constraint; one defining characteristic of the lax
-modality is that it if $\istrue{A}$ is derivable with 
-some resources then $\islax{A}$ is derivable with the same resources.
+There are two sequents in \ollll.  The primary sequent is
+$\oseq{\Gamma}{\Delta}{\Omega}{\istrue{A}}$, which says that $A$ is an
+(ephemeral, ordered) resource derivable from the persistent resources
+in $\Gamma$, the ephemeral resources in $\Delta$, and the ephemeral,
+ordered resources in $\Omega$. There is also a second judgment,
+$\oseq{\Gamma}{\Delta}{\Omega}{\islax{A}}$. The judgment $\islax{A}$
+is usually interpreted as truth under an unspecified constraint; one
+defining characteristic of the lax modality is that it if $\istrue{A}$
+is derivable with some resources then $\islax{A}$ is derivable with
+the same resources.
 
-Compare this to the relationship between persistent and lax truth in
-linear logic, where the defining characteristic is that a persistent
-resource (associated with judgments of the form 
-$\ispers{A}$ in $\Gamma$) can
-always satisfy the need for an ephemeral resource (associated with
-judgments of the form $\iseph{A}$ in $\Delta$). In the previous
-chapter, we first encoded this relationship as an explicit rule
-${\it copy}$:
+Compare this to the relationship between persistent and linear truth
+in linear logic, where the defining characteristic is that a
+persistent resource (associated with judgments of the form
+$\ispers{A}$ in $\Gamma$) can always satisfy the need for an ephemeral
+resource (associated with judgments of the form $\iseph{A}$ in
+$\Delta$). In the previous chapter, we first encoded this relationship
+as an explicit rule ${\it copy}$:
 \[
 \infer[{\it copy}]
 {\seq{\Gamma, \ispers{A}}{\Delta}{\iseph{C}}}
@@ -124,9 +121,9 @@ $\Delta' = \Delta, A$. The $\oplus_L$ rule in this logic is as follows:
 \]
 
 Lax truth can be considered along the same lines, accounting for the
-fact that we're now using the much briefer $\istrue{A}$ instead of
-$\iseph{A}$ to capture the judgment associated with ordered, ephemeral
-resources.  To follow existing judgmental presentations of lax logic,
+fact that our primary judgment is $\istrue{A}$ ($A$ is an ordered
+ephemeral resource) instead of $\iseph{A}$ ($A$ is an ephemeral
+resource).  To follow existing judgmental presentations of lax logic,
 we would include a distinct rule ${\it lax}$ that derives lax truth
 from regular truth.
 \[
@@ -134,7 +131,8 @@ from regular truth.
 {\Gamma; \Delta; \Omega \longrightarrow \islax{A}}
 {\Gamma; \Delta; \Omega \longrightarrow \istrue{A}}
 \]
-The alternative is to rewrite all the right rules with a construct
+The alternative is to make ${\it lax}$ admissible just as we made
+${\it copy}$ admissible: we modify all the right rules with a construct
 $\orseq{\Gamma}{\Delta}{\Omega}{A}$ that matches both 
 sequents of the form $\otseq{\Gamma}{\Delta}{\Omega}{A}$
 and sequents of the form $\oseq{\Gamma}{\Delta}{\Omega}{\islax{A}}$.
@@ -157,9 +155,19 @@ the sequent $\oseq{\Gamma}{\Delta'}{\Omega'}{U}$ if
 \item $\Omega' = \Omega_L, \Omega_R$ and $\Delta' = \Delta, A$;
 \item $\Omega' = \Omega_L, \Omega_R$, $\Delta' = \Delta$, and $A \in \Gamma$.
 \end{itemize}
-This style of presentation, use in Figure~\ref{fig:ordered-prop},
-excludes the ${\it copy}$ and ${\it place}$ rules from Polakow's 
-presentation; both rules are, however, admissible.
+As in the alternate presentation of linear logic (which made ${\it copy}$
+admissible), both the ${\it copy}$ rule and a rule Polakow
+called ${\it place}$ are admissible in the logic described
+in Figure~\ref{fig:ordered-prop}.
+\[
+\infer-[{\it place}]
+{\oseq{\Gamma}{\Delta, {A}}{\Omega_L, \Omega_R}{U}}
+{\oseq{\Gamma}{\Delta}{\Omega_L, {A}, \Omega_R}{U}}
+\qquad
+\infer-[{\it copy}]
+{\oseq{\Gamma, {A}}{\Delta}{\Omega_L, \Omega_R}{U}}
+{\oseq{\Gamma, {A}}{\Delta}{\Omega_L, {A}, \Omega_R}{U}}
+\]
 
 \subsection{First-order logic}
 
@@ -192,15 +200,15 @@ means that
 {\olfseq{\Gamma}{\Delta}{\Omega_L}{0 \doteq 1}{\Omega_R}}
 {}
 \]
-is derivable. The other important special case is when
-$t$ and $s$ have a  {\it most general unifier} $\theta_{\it mgu}$, 
-which just means that for all $\Psi' \vdash \theta : \Psi$ such that 
-$\theta t = \theta s$,
-it is the case that $\theta = \theta' \circ \theta_{\it mgu}$ for some 
-$\theta'$.\footnote{Where $\circ$ is composition -- 
-$(\theta' \circ \theta_{\it mgu})t = \theta'(\theta t)$.} In this
-case, the left rule for equality is equivalent to the following
-rule:
+is derivable (where $0$ and $1$ are distinct constants, {\it not} the
+propositions $\zero$ and $\one$). The other important special case is
+when $t$ and $s$ have a {\it most general unifier} $\theta_{\it mgu}$,
+which just means that for all $\Psi' \vdash \theta : \Psi$ such that
+$\theta t = \theta s$, it is the case that $\theta = \theta' \circ
+\theta_{\it mgu}$ for some $\theta'$.\footnote{Where $\circ$ is
+  composition -- $(\theta' \circ \theta_{\it mgu})t = \theta'(\theta
+  t)$.} In this case, the left rule for equality is equivalent to the
+following rule:
 \[
 \infer
 {\olfseq{\Gamma}{\Delta}{\Omega_L}{t \doteq s}{\Omega_R}}
@@ -222,7 +230,8 @@ $\Omega$, not to mention the first-order context $\Psi$. In most rules
 these contexts just hang around, obscuring the logic's presentation
 and ensuring that the {\LaTeX} code of figures and displays remains
 permanently unreadable. And there are yet more contexts we might want to 
-add, such as the affine contexts present in the Celf implementation.
+add, such as the affine contexts present in the Celf implementation
+\cite{schacknielsen08celf}.
 
 In this section, we will consider a more compact way of dealing with
 the contexts which we think of as containing resources (persistent,
@@ -231,11 +240,8 @@ between resource contexts and first-order variable
 contexts $\Psi$.  The particular way we define substructural contexts
 can be generalized substantially: it would be trivial to extend
 this presentation to the affine modality or to the subexponentials
-discussed by Nigam and Miller \cite{nigam09algorithmic}. Furthermore,
-the notation is designed so that it might scale to more interesting
-substructural logics, such as 
-
-
+discussed by Nigam and Miller \cite{nigam09algorithmic}, and it should
+be able to richer logics, such as the logic of bunched implication.
 
 We write unified substructural contexts as either $\Delta$ or $\Xi$,
 preferring the latter when there is a chance of confusing them with
@@ -247,21 +253,23 @@ see these contexts as sequences, defined by the grammar
   \mid \Xi, x{:}\iseph{T}
   \mid \Xi, x{:}\istrue{T}
 \]
-where each of the {\em variables} $x$ are distinct, so that the context
-also represents a finite map $\to$ $\rightarrow$ from variables $x$ to 
-{\it judgments}
-$\islvl{T}$, where $\mlvl$ is either $\mpers$, $\meph$, or $\mtrue$. 
-The domain $T$ is arbitrary: when
+where each of the {\em variables} $x$ are distinct, so that the
+context also represents a finite map from variables $x$ to {\it
+  judgments} $\islvl{T}$, where $\mlvl$ is either $\mpers$, $\meph$,
+or $\mtrue$.  By separating out a substructural context into three
+subsequences of persistent, linear, and ordered judgments, we can
+recover the presentations of contexts for \ollll~given in
+Figure~\ref{fig:ordered-prop}. We will use this idea to informally
+motivate our notation, writing $\Xi = \Gamma; \Delta; \Omega$.
+
+The domain represented by the metavariable $T$ is arbitrary: when
 discussing the unfocused logic given in Figure~\ref{fig:ordered-prop},
 $T$ varies over unpolarized propositions $A$, but when discussing a
-focused logic it varies over negative propositions $A^-$ and suspended
-positive propositions $\langle A^+ \rangle$. 
+focused logic in Section~\ref{sec:ord-focused} it will vary over
+stable negative propositions $A^-$, positive suspended propositions
+$\susp{A^+}$, focused negative propositions $[A^-]$, and inverting
+positive propositions $A^+$.
 
-By sorting out a substructural context into three subsequences of
-persistent, linear, and ordered contexts, we can recover the
-presentations of contexts for \ollll~given in
-Figure~\ref{fig:ordered-prop}. We will use this to informally motivate
-our notation, writing $\Xi = \Gamma; \Delta; \Omega$.
 
 
 % The first step towards this understanding 
@@ -271,6 +279,18 @@ our notation, writing $\Xi = \Gamma; \Delta; \Omega$.
 % an inference rule may not be the same as the context-{\it extending}
 % notation we use in the premise of that rule.
 
+The key observation of this presentation was already present in the
+unfocused logic presented in Figure~\ref{sec:ord-unfocused}: we need
+to differentiate {\it constructions}, which appear in the premises of
+rules, and {\it matching constructs}, which appear in the conclusions
+of rules.  The notation $\Gamma; \Delta; \Omega_L/A\fuse B/\Omega_R$
+that appears in the conclusion of ${\fuse}_L$ is a matching construct;
+as discussed in Section~\ref{sec:ord-unfocused}, there are multiple
+ways in which a context $\Gamma'; \Delta'; \Omega'$ could match this
+context, because $A \fuse B$ could come from any of the three
+contexts. However, $\Gamma; \Delta; \Omega_L,{A},{B},
+\Omega_R$ in the premise of ${\fuse}_L$ is a construction, and is
+unambiguously equal to only one context $\Gamma'; \Delta'; \Omega'$.
 
 \subsection{Fundamental operations on contexts}
 
@@ -670,7 +690,7 @@ $\foc{\Psi}{\Delta}{U}$, where $\Psi$ is the first-order variable
 context, $\Delta$ is a substructural context described in the previous
 section, and $U$ is a succeedent. The domain $T$ of the substructural
 context consists of stable negative propositions $A^-$, positive
-suspended propositions $\susp{A^+}$, focused negative proposition
+suspended propositions $\susp{A^+}$, focused negative propositions
 $[A^-]$, and inverting positive propositions $A^+$.
 
 The form of the succedent $U$ is $\islvl{T}$, where $\mlvl$ is either
