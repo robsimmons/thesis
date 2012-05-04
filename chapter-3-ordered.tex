@@ -567,9 +567,30 @@ and $x{:}A$ matches $\Xi''$.
 
 \subsection{Exponential operations}
 
-Exponential operators $\restrictto{\Xi}{\mlvl}$
+The exponentials ${!}$ and ${\gnab}$ do not have a construction form
+associated with you -- or, alternatively, we can view the singleton
+construction forms $x{:}\ispers{T}$ and $x{:}\iseph{T}$ as
+construction forms associated with these exponentials. The matching
+operation is quite simple: $\Xi$ matches $\restrictto{\Xi}{\mpers}$ if
+$\Xi$ contains no ephemeral or ordered judgments -- in other words,
+it says that $\Xi = \Gamma; \cdot; \cdot$. This form can then be used
+to describe the right rule for ${!}A$ in unfocsed ordered logic:
+\[
+\infer
+{\restrictto{\Xi}{\mpers} \Rightarrow /{!}A/}
+{\Delta \Rightarrow \istrue{A}}
+\]
+Similarly, $\Xi$ matches $\restrictto{\Xi}{\meph}$ if $\Xi$ contains
+no ordered judgments (that is, if $\Xi = \Gamma; \Delta; \cdot$).
+$\Xi$ always matches $\restrictto{\Xi}{\mtrue}$; we don't ever
+explicitly use this construct, but it allows us to generally refer to
+$\restrictto{\Xi}{\mlvl}$ in the statement of cut admissibility.
 
-For the sake of symmetry, we only 
+We can describe a mirror-image operation on succeedents $U$.  $U$
+matches $\restrictfrom{U}{\mlax}$ only if it has the form $\islax{T}$,
+and $U$ always matches $\restrictfrom{U}{\mtrue}$ always, a degenerate
+form that similarly allows us to refer to $\restrictfrom{U}{\mlvl}$ in
+the statement of cut admissibility.
 
 \section{Focused sequent calculus}
 \label{sec:ord-focused}
@@ -646,7 +667,10 @@ propositions that bottom out with one of the two modalities ${!}$ and
 ${\gnab}$. We introduce atomic propositions $p^+$ that stand for
 arbitrary positive propositions, $p^+_\meph$ that stand for arbitrary
 mobile propositions, and $p^+_\mpers$ that stand for arbitrary
-permeable propositions.
+permeable propositions. We treat $A^+_\mtrue$ and $p^+_\mtrue$ as synonomous
+with $A^+$ and $p^+$, respectively, which allows us to generically
+refer to $A^+_\mlvl$ and $p^+_\mlvl$ in rules like $\eta^+$ and in the
+statement of the identity expansion theorem.
 
 \begin{figure}
 \begin{align*}
@@ -691,10 +715,11 @@ but I don't claim to understand what the refinement means or what the
 inclusion of right-permeable atomic propositions $p^-_\mlax$ mean for
 the structure of proofs.
 
-The presentation of the modalities emphasises the degree to which
-the shifts ${\uparrow}$ and ${\downarrow}$ have much of the character
-of modalities in a focused substructural logic; this point was
-explored in depth by Laurent \cite{laurent02etude}.
+The presentation of the modalities, and the logic that we now present,
+emphasises the degree to which the shifts ${\uparrow}$ and
+${\downarrow}$ have much of the character of modalities in a focused
+substructural logic; this point was explored in depth by Laurent
+in his thesis \cite{laurent02etude}.
 
 \subsection{Derivations and proof terms}
 \label{sec:ord-proof-terms}
@@ -706,9 +731,10 @@ explored in depth by Laurent \cite{laurent02etude}.
 The multiplicative and exponential fragment of focused \ollll~is given
 in Figure~\ref{fig:foc-mall}, the additive fragment is given in
 Figure~\ref{fig:foc-add}, and the first-order connectives are treated
-in Figure~\ref{fig:foc-fo}. These rules can be understood as a regular
-logic by ignoring the {\it proof terms} that appear to immedately to
-the right of an arrow.
+in Figure~\ref{fig:foc-fo}. These rules are all written with sequents
+of the form $\foct{\Psi}{\Delta}{E}{U}$, where $E$ is a {\it proof term}
+that corresponds to the sequent. We get the logic in terms of 
+sequents $\foc{\Psi}{\Delta}{U}$ by ignoring these proof terms.
 
 The sequent form that includes proof terms is written as
 $\foct{\Psi}{\Delta}{E}{U}$, where $E$ is an {\it expression}.  Just
