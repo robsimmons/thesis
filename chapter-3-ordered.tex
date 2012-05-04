@@ -654,6 +654,12 @@ always unambiguous which proposition we are referring to in an
 invertible rule, and we write $A^+$ instead of $x{:}A^+$ or
 $x{:}\istrue{A^+}$.
 
+We will maintain the notational convention in this chapter that
+first-order variables are written as $a$, variables associated
+with stable negative propositions are written as $x$, and variables
+associated with suspended positive propositions are written as 
+$z$, but this convention will be abandoned in future chapters.
+
 \subsection{Polarized propositions}
 
 The propositions of ordered logic are fundamentally sorted into
@@ -732,12 +738,9 @@ The multiplicative and exponential fragment of focused \ollll~is given
 in Figure~\ref{fig:foc-mall}, the additive fragment is given in
 Figure~\ref{fig:foc-add}, and the first-order connectives are treated
 in Figure~\ref{fig:foc-fo}. These rules are all written with sequents
-of the form $\foct{\Psi}{\Delta}{E}{U}$, where $E$ is a {\it proof term}
-that corresponds to the sequent. We get the logic in terms of 
-sequents $\foc{\Psi}{\Delta}{U}$ by ignoring these proof terms.
-
-The sequent form that includes proof terms is written as
-$\foct{\Psi}{\Delta}{E}{U}$, where $E$ is an {\it expression}.  Just
+of the form $\foct{\Psi}{\Delta}{E}{U}$, where $E$ is a {\it proof
+  term} that corresponds to the sequent. We get the logic in terms of
+sequents $\foc{\Psi}{\Delta}{U}$ by ignoring these proof terms. Just
 as sequent forms are divided into the right-focused, inverting, and
 left-focused sequents, we divide expressions into {\it values} $V$,
 which are associated with right-focused sequents; {\it terms} $N$,
@@ -790,19 +793,20 @@ S & ::= \tnil                 %% nil
    \mid \tforalll{t}{\Sp}
 \end{align*}
 
-Expressions are treated as in the structural 
-focalization methodlogy \cite{simmons11structural}. It is possible
-to take a view of expressions as {\it extrinsically} typed, which
-means we consider both well-typed and ill-typed expressions, and 
-the well-typed expressions are those for which the sequent 
-$\foct{\Psi}{\Delta}{E}{U}$ is derivable. However, we will take
-the view that expressions are intrinsically typed representatives 
-of derivations: that is, instead of talking about derivations 
-$\mathcal D$ of the sequent $\foc{\Psi}{\Delta}{[A^+]}$, we will just talk
-about values $V$ focused on $A^+$ using $\Delta$. The judgment
-$\foct{\Phi}{\Delta}{V}{[A^+]}$ is a convienent way of writing this 
-down, but values, terms, and spines are themselves representatives
-of derivations. 
+Expressions are treated as in the structural focalization methodlogy
+\cite{simmons11structural}. It is possible to take a view of
+expressions as {\it extrinsically} typed, which means we consider both
+well-typed and ill-typed expressions, and the well-typed expressions
+are those for which the sequent $\foct{\Psi}{\Delta}{E}{U}$ is
+derivable. However, we will take the view that expressions are
+intrinsically typed representatives of derivations: that is,
+$\foct{\Phi}{\Delta}{V}{[A^+]}$ is expresses that $V$ is a derivation
+of the sequent $\foc{\Psi}{\Delta}{[A^+]}$. Justifying this close
+correspondence requires us to take care that the structure of
+expressions is faithful to the structure of proofs. This is the
+primary reason that we don't introduce the patterns that are common in
+other proof term assignments for focused logic
+\cite{krishnaswami09focusing}.
 
 There are two caveats to the idea that expressions are representatives
 of derivations. One caveat is that, in order for there to be an actual
@@ -812,16 +816,20 @@ annotate $\tinr{V}$, $\tinl{V}$, $\tpione{\Sp}$, and $\tpitwo{\Sp}$
 terms with the type of the branch not taken. Pfenning writes these as
 superscripts \cite{pfenning08church}, but which we will follow Girard
 in leaving them implicit \cite{girard89proofs}. The second caveat is
-that if $\foct{\Psi}{\Delta}{V}{U}$, then $\foct{\Psi}{\Delta,
-  x{:}\ispers{A^+}}{V}{U}$ as well. In other words, expressions are
-only representaives of derivations modulo weakening.
+that if $\foct{\Psi}{\Delta}{E}{U}$, then $\foct{\Psi,
+  a{:}\tau}{\Delta, x{:}\ispers{A^+}}{E}{U}$ as well. Therefore, even
+given appropriate annotations, when we say that some expression $E$ is
+a derivation of $\foc{\Psi}{\Delta}{U}$, that does not mean that it is
+{\it uniquely} a derivation of that sequent. Fundamentally, this is
+just a statement of the fact that weakening holds for persistent facts
+and first-order variables in our logic.
 
-As before, ${\doteq}_L$ requires some more explanation. 
-The proof term for this rule is just a function $\phi$ from unifying
-substitutions $\sigma$ to terms $N$ that correspond to proofs of 
+Our treatment of first-order unification means that we need to prove a
+variable substitution theorem, Theorem~\ref{thm:varsubst}. 
 
 \bigskip
-\begin{theorem}
+\begin{theorem}[Variable substitution]
+\label{thm:varsubst}
 If $\Psi' \vdash \sigma : \Psi$ and $\foc{\Psi}{\Delta}{U}$, then 
 $\foc{\Psi'}{\sigma\Delta}{\sigma{U}}$.
 \end{theorem}
@@ -833,15 +841,17 @@ $\foc{\Psi}{\Delta}{U}$; we are defining the operation $\sigma{E}$,
 an expression corresponding to a derivation of 
 $\foc{\Psi'}{\sigma\Delta}{\sigma{U}}$.
 
+\paragraph{Propositional fragment}
 For the exponential, multiplicative, and additive fragments, this
-operation is simple to define at the level of proof terms:
-$\sigma(\tfuser{V_1}{V_2}) = \tfuser{\sigma{V_1}}{\sigma{V_2}}$,
-$\sigma(\tdownl{x}{N}) = \tdownl{x}{\sigma N}$, and so on. However,
-this compact notation does capture a great deal of complexity. In
-particular, while it is basically self-evident that it is important to emphasize that we need lemmas saying
-that variable substitution is compatible with all the non-trivial
-context matching operations from Section~\ref{sec:contexts}.  In full
-detail, these two simple cases would be:
+operation is simple to define at the level of proof terms, and we will
+omit most of the cases: $\sigma(\tfuser{V_1}{V_2}) =
+\tfuser{\sigma{V_1}}{\sigma{V_2}}$, $\sigma(\tdownl{x}{N}) =
+\tdownl{x}{\sigma N}$, and so on. However, this compact notation does
+capture a great deal of complexity. In particular, it is important to
+emphasize that we need lemmas saying that variable substitution is
+compatible with all the context matching operations from
+Section~\ref{sec:contexts}.  In full detail, these two simple cases
+would be:
 
 $\sigma(\tfuser{V_1}{V_2}) = \tfuser{\sigma{V_1}}{\sigma{V_2}}$ --
 We are given a proof of $\foc{\Psi}{\Delta}{[A^+ \fuse B^+]}$ that
@@ -867,6 +877,8 @@ rule ${\downarrow}_L$, it suffices to show
 $\foc{\Psi'}{\tackon{\sigma\Theta}{x{:}\istrue{\sigma{A^-}}}}{U}$ (which
 we have by the induction hypothesis on $\sigma$ and $N$).
 
+
+\paragraph{First-order fragment}
  By the induction hypothesis on
 $V_1$, we have a derivation of $\foc{\Psi'}{\sigma\Delta_1}{A^+}$, and
 by the induction hypothesis on $V_2$ we have a derivation of
