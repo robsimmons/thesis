@@ -18,5 +18,8 @@ sed "s/NOW/`date +\"$FORMAT\"`/g" < pages.gnuplot | gnuplot > /dev/null
 scp pages.png typesafety.net:/home/www/www/thesis > /dev/null
 
 # Publish completely drafted chapters
-cat to-publish | xargs ./one-publish.sh
+for i in `cat to-publish`; 
+do ./one-publish.sh $i; 
+done
+
 

@@ -1,5 +1,6 @@
 #!/bin/bash
 
+echo "Publishing $1"
 pdflatex $1 > /dev/null
 bibtex $1 > /dev/null
 pdflatex $1 > /dev/null
