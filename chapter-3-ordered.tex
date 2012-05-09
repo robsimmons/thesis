@@ -32,11 +32,11 @@ expansion (Section~\ref{sec:ord-identity}) for focused~\ollll; with
 these results, it is possible to prove the soundness and completeness
 of focusing (Section~\ref{sec:ord-correctness}) for \ollll.  A
 fragment of this system will form the basis of our logical framework
-in Chapter 4, and this framework will, in turn, underpin the rest of
+in Chapter 4, and that framework will, in turn, underpin the rest of
 this thesis.
 
 It is worth clarifying why I am presenting the much richer \ollll~here
-if only the fragment in Chapter~4 is needed. There are two
+if only the fragment detailed in Chapter~4 is needed. There are two
 main reasons.  First, while we will use only a fragment of this logic
 in Chapter 4, other fragments of the logic may well be interesting and
 useful for other purposes. Second, the presentation in this chapter,
@@ -387,7 +387,9 @@ $\Theta$ and $\Xi'$ is exactly the variables in $\Xi$ and
 \item if $x{:}\ispers{T} \in \Xi$, then the same mapping appears in 
   $\Theta$ and $\Xi'$;
 \item if $x{:}\iseph{T} \in \Xi$ or $x{:}\istrue{T} \in \Xi$, 
-  then the same mapping appears in $\Theta$ or $\Xi'$ (but not both); and
+  then the same mapping appears in $\Theta$ or $\Xi'$ (but not both); 
+\item if the sequence of ordered propositions in $\Theta$ and $\Xi'$
+  is consistent with the order in  $\Xi$; and 
 \item if $x{:}\istrue{T} \in \Theta$, then either
   \begin{itemize}
   \item for all $y{:}\istrue{T'} \in \Xi'$, the mapping for $x$ appeared before
@@ -435,11 +437,11 @@ the matching as an explicit extra premise:
 \[
 \infer-[{\it cut}]
 {\Xi' \Rightarrow \istrue{C}}
-{\Xi' \textit{~matches~} \frameoff{\Theta}{\Xi} 
+{\Xi \Rightarrow \istrue{A}
  &
- \Xi \Rightarrow \istrue{A}
+ \tackon{\Theta}{x{:}A\,{\it true}} \Rightarrow \istrue{C}
  &
- \tackon{\Theta}{x{:}A\,{\it true}} \Rightarrow \istrue{C}}
+ \Xi' \textit{~matches~} \frameoff{\Theta}{\Xi}}
 \]
 
 \futurework{
@@ -484,7 +486,9 @@ and
 \item if $x{:}\ispers{T} \in \Xi$, then the same mapping appears in $\Xi_L$
   and $\Xi_R$;
 \item if $x{:}\iseph{T} \in \Xi$ or $x{:}\istrue{T} \in \Xi$, then the
-  same mapping appears in $\Xi_L$ or $\Xi_R$ (but not both); and
+  same mapping appears in $\Xi_L$ or $\Xi_R$ (but not both); 
+\item if the sequence of ordered propositions in $\Xi_L$ and $\Xi_R$
+  is consistent with the order in  $\Xi$; and 
 \item if $x{:}\istrue{T} \in \Xi_L$ and $y{:}\istrue{T'} \in \Xi_R$, then
   the mapping for $x$ appeared before the mapping for $y$ in $\Xi$. 
 \end{itemize}
@@ -586,6 +590,15 @@ $\Xi$ always matches $\restrictto{\Xi}{\mtrue}$; we don't ever
 explicitly use this construct, but it allows us to generally refer to
 $\restrictto{\Xi}{\mlvl}$ in the statement of cut admissibility.
 
+The exponential matching constructs 
+don't actually modify contexts in the way
+other matching constructs do, but this is a consequence of the 
+particular choice of logic we're considering. Given affine resources,
+for instance, the matching construct associated with ${!}A$ would
+clear the context of affine facts: 
+$\Xi$ would match $\restrictto{\Xi'}{\mpers}$ if 
+$\Xi'$ was $\Xi$ with all affine resources removed. 
+
 We can describe a mirror-image operation on succeedents $U$.  $U$
 matches $\restrictfrom{U}{\mlax}$ only if it has the form $\islax{T}$,
 and $U$ always matches $\restrictfrom{U}{\mtrue}$ always, a degenerate
@@ -663,7 +676,8 @@ $z$, but this convention will be abandoned in future chapters.
 \subsection{Polarized propositions}
 
 The propositions of ordered logic are fundamentally sorted into
-positive propositions $A^+$ and negative propositions $A^-$
+positive propositions $A^+$ and negative propositions $A^-$; both
+classes, and the inclusions between them, 
 as shown in Figure~\ref{fig:ordered}. The
 positive propositions have a refinement, {\it permeable} propositions
 $A^+_\mpers$, that is analgaous to the refinement discussed for linear
@@ -717,15 +731,23 @@ Negative propositions also have a refinement, $A^-_\mlax$, for
 negative propositions that always bottom out as a modal
 ${\ocircle}A^+$.  This is interesting as a formal artifact and there
 is very little overhead involved in putting it into our development,
-but I don't claim to understand what the refinement means or what the
+but I don't claim to fully understand what the refinement means or what the
 inclusion of right-permeable atomic propositions $p^-_\mlax$ mean for
-the structure of proofs.
+the structure of proofs. Certainly we do {\it not} want to include
+such propositions in the logical framework, as to do so would break the
+distinction between concurrent and deductive proofs that will
+be discussed in Section~\ref{sec:framework-logicprog}.
 
 The presentation of the modalities, and the logic that we now present,
 emphasises the degree to which the shifts ${\uparrow}$ and
 ${\downarrow}$ have much of the character of modalities in a focused
-substructural logic; this point was explored in depth by Laurent
-in his thesis \cite{laurent02etude}.
+substructural logic; this point was explored in depth by Laurent in
+his thesis \cite{laurent02etude}. The upshift ${\uparrow}A^+$ is like
+an ordered variant of the lax modality ${\ocircle}A^+$ that puts no
+constraints on the form of the succeedant, and the downshift
+${\downarrow}A^-$ is like an ordered variant of the persistent and
+linear modalities ${!}A^-$ and ${\gnab}A^-$ that puts no constraints
+on the form of the context.
 
 \subsection{Derivations and proof terms}
 \label{sec:ord-proof-terms}
@@ -824,8 +846,20 @@ a derivation of $\foc{\Psi}{\Delta}{U}$, that does not mean that it is
 just a statement of the fact that weakening holds for persistent facts
 and first-order variables in our logic.
 
-Our treatment of first-order unification means that we need to prove a
-variable substitution theorem, Theorem~\ref{thm:varsubst}. 
+\subsection{Variable substitution}
+
+Proving cut admissibility under our treatment of first-order unification
+will require us to prove that we can apply a first-order substitution to
+a derivation and still have a valid derivation. At the level of proof terms,
+the constructive content of the variable substitution theorem, 
+Theorem~\ref{thm:varsubst}, is $\sigma{E}$ 
+
+\[
+\infer-[{\it varsubst}]
+{\foct{\Psi'}{\sigma{\Delta}}{\sigma(E)}{\sigma{U}}}
+{\foct{\Psi}{\Delta}{E}{U}}
+\]
+
 
 \bigskip
 \begin{theorem}[Variable substitution]
@@ -878,7 +912,55 @@ $\foc{\Psi'}{\tackon{\sigma\Theta}{x{:}\istrue{\sigma{A^-}}}}{U}$ (which
 we have by the induction hypothesis on $\sigma$ and $N$).
 
 
-\paragraph{First-order fragment}
+\paragraph{First-order fragment} For the first-order fragment, we need
+to be more careful, especially for considering unification, which notably
+does {\it not} require an invocation of the induction hypothesis. The cases
+for the $\exists$ quantifier mimic the ones we give for the $\forall$
+quantifier.
+
+$\sigma(\phi) = \left( \mathsf{fn}~\sigma' \Rightarrow \phi (\sigma'
+  \circ \sigma) \right)$ -- We are given a proof of
+$\foc{\Psi}{\Delta}{U}$ that ends with ${\doteq}_L$; we know that
+$\Delta$ matches $\frameoff{\Theta}{t \doteq s}$, and the
+subderivation is $\phi$, a function from substitutions 
+$\Psi'' \vdash \sigma'' : \Psi$ that unify $t$ and $s$ to derivations
+of $\foc{\Psi''}{\tackon{\sigma''\Theta}{\cdot}}{\sigma''{U}}$. We need a lemma
+that tells us that $\sigma\Delta$ matches 
+$\frameoff{\sigma\Theta}{\sigma t \doteq \sigma s}$; then, by rule
+${\doteq}_L$, it suffices to show that for all 
+$\Psi'' \vdash \sigma' : \Psi'$ that unify $\sigma t$ and $\sigma s$, 
+there exists a derivation of 
+$\foc{\Psi''}{\tackon{\sigma'(\sigma \Theta)}{\cdot}}{\sigma'(\sigma U)}$,
+which is the same thing as a derivation of 
+$\foc{\Psi''}{\tackon{(\sigma' \circ \sigma) \Theta}{\cdot}}
+    {(\sigma' \circ \sigma) U}$. We have that 
+$\Psi'' \vdash \sigma' \circ \sigma : \Psi$, and certainly 
+$\sigma' \circ \sigma$ unifies $t$ andn $s$, so we can finish by
+applying $\sigma' \circ \sigma$ to $\psi$.
+
+$\sigma(\tforallr{x}{N}) = \tforallr{x}{(\sigma, x/x)N}$
+
+$\sigma(\tforalll{t}{\Sp}) = \tforalll{\sigma{t}}{\sigma\Sp}$ -- 
+We are given a proof of $\foc{\Psi}{\Delta}{U}$ that ends with 
+$\forall_L$; the subderivation is $\Sp$, a derivation of 
+$\foc{\Psi}{\tackon{\Theta}{[t/x]\Sp}}{U}$. Furthermore,
+we know that $\Delta$ matches $\frameoff{\Theta}{[\forall x{:}\tau.A]}$.
+We need a lemma that tells us that $\sigma\Delta$ matches
+$\frameoff{\sigma\Theta}{[\forall x{:}\tau.(\sigma, x/x)A^-]}$; then,
+by rule $\forall_L$, it suffices to show 
+$\foc{\Psi'}{\tackon{\sigma\Theta}{[[t/x](\sigma, x/x)A^-]}}
+  {\sigma{U}}$, which is the same thing as
+$\foc{\Psi'}{\tackon{\sigma\Theta}{[\sigma([t/x]A^-)]}}
+  {\sigma{U}}$. This follows by the induction hypothesis on $\sigma$ and
+$\Sp$.
+
+
+Assume an aribtrary such $\Psi'''$ and $\sigma$, and note that
+$\foc{\Psi'''}{\tackon{\sigma'(\sigma \Theta)}{\cdot}}{\sigma'(\sigma U)}$
+is the same thing as
+
+and so because 
+
  By the induction hypothesis on
 $V_1$, we have a derivation of $\foc{\Psi'}{\sigma\Delta_1}{A^+}$, and
 by the induction hypothesis on $V_2$ we have a derivation of
