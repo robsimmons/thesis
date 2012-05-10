@@ -627,7 +627,7 @@ inverting negative propositions $A^-$.
 
 \subsection{Restrictions on the form of sequents}
 
-A sequent $\foc{\Psi}{\Gamma}{U}$ is {\it stable} when the context
+A sequent $\foc{\Psi}{\Delta}{U}$ is {\it stable} when the context
 $\Delta$ and succeedent $U$ contain only stable propositions ($A^-$ in
 the context, $A^+$ in the succedent) and suspended propositions
 ($\susp{A^+}$ in the context, $\susp{A^-}$ in the succeedent). We
@@ -846,20 +846,21 @@ a derivation of $\foc{\Psi}{\Delta}{U}$, that does not mean that it is
 just a statement of the fact that weakening holds for persistent facts
 and first-order variables in our logic.
 
+The use of proof terms allows for a greatly compressed discussion of
+cut admissibility and identity expansion. Furthermore, we will reuse
+much of this notation in our formulation of a logical framework in the
+next chapter. 
+
 \subsection{Variable substitution}
 
-Proving cut admissibility under our treatment of first-order unification
-will require us to prove that we can apply a first-order substitution to
-a derivation and still have a valid derivation. At the level of proof terms,
-the constructive content of the variable substitution theorem, 
-Theorem~\ref{thm:varsubst}, is $\sigma{E}$ 
-
-\[
-\infer-[{\it varsubst}]
-{\foct{\Psi'}{\sigma{\Delta}}{\sigma(E)}{\sigma{U}}}
-{\foct{\Psi}{\Delta}{E}{U}}
-\]
-
+The introduction of first-order unification forces us to very explicitly
+handle a point that, in other contexts, may be left somewhat ambiguous:
+that the variables introduced by universal quantifers (on the right)
+and existential quantifiers (on the left) are {\it variables} and, as
+such, are defined by substitution: a sequent with free variables is a 
+{\it generic} representative of all the sequents that can be obtained
+by substituting terms in for those free variables. This intuition
+is formalized by the variable substitution theorem, Theorem~\ref{thm:varsubst}.
 
 \bigskip
 \begin{theorem}[Variable substitution]
@@ -936,9 +937,19 @@ $\foc{\Psi''}{\tackon{(\sigma' \circ \sigma) \Theta}{\cdot}}
     {(\sigma' \circ \sigma) U}$. We have that 
 $\Psi'' \vdash \sigma' \circ \sigma : \Psi$, and certainly 
 $\sigma' \circ \sigma$ unifies $t$ andn $s$, so we can finish by
-applying $\sigma' \circ \sigma$ to $\psi$.
+applying $\sigma' \circ \sigma$ to $\phi$.
 
-$\sigma(\tforallr{x}{N}) = \tforallr{x}{(\sigma, x/x)N}$
+$\sigma(\tforallr{x}{N}) = \tforallr{x}{(\sigma, x/x)N}$ -- We are
+given a proof of $\foc{}{}{}$ that ends with $\forall_R$; the subderivation
+is $N$, a derivation of $\foc{\Psi,x{:}\tau}{\Delta}{A^-}$. Because
+$\sigma(\forall{x}{:}{\tau}.A^-) 
+ = \forall{x}{:}{\sigma\tau}.(\sigma, x/x){A^-}$,
+by rule $\forall_R$ it suffices to show 
+$\foc{\Psi', x{:}\sigma\tau}{\sigma\Delta}{(\sigma, x/x)A^-}$, 
+which is the same thing
+as $\foc{\Psi', x{:}\sigma\tau}{(\sigma, x/x)\Delta}{(\sigma, x/x)A^-}$.
+The result
+follows by the induction hypothesis on $(\sigma, x/x)$ and $N$. 
 
 $\sigma(\tforalll{t}{\Sp}) = \tforalll{\sigma{t}}{\sigma\Sp}$ -- 
 We are given a proof of $\foc{\Psi}{\Delta}{U}$ that ends with 
@@ -953,63 +964,125 @@ $\foc{\Psi'}{\tackon{\sigma\Theta}{[[t/x](\sigma, x/x)A^-]}}
 $\foc{\Psi'}{\tackon{\sigma\Theta}{[\sigma([t/x]A^-)]}}
   {\sigma{U}}$. This follows by the induction hypothesis on $\sigma$ and
 $\Sp$.
-
-
-Assume an aribtrary such $\Psi'''$ and $\sigma$, and note that
-$\foc{\Psi'''}{\tackon{\sigma'(\sigma \Theta)}{\cdot}}{\sigma'(\sigma U)}$
-is the same thing as
-
-and so because 
-
- By the induction hypothesis on
-$V_1$, we have a derivation of $\foc{\Psi'}{\sigma\Delta_1}{A^+}$, and
-by the induction hypothesis on $V_2$ we have a derivation of
-$\foc{\Psi'}{\sigma\Delta_2}{B^+}$; therefore, because by lemma
-$\sigma\Delta$ matches 
-
-
-
-
- a derivation
-of $\foc{\Psi}{\Delta}{U}$
-\[
-\infer-[{\it varsubst}]
-{\foct{\Phi'}{\sigma\Delta}{\sigma{E}}{\sigma{U}}}
-{\foct{\Phi}{\Delta}{E}{U}}
-\]
-All the propositional cases are totally straightforward:
-\[
-\infer-[{\it varsubst}]
-{\foct{\Phi}{\Delta_1, \Delta_2}{\sigma(\tfuser{V_1}{V_2})}{[A^+ \fuse B^+]}}
-{}
-\]
 \end{proof}
 
+Note that, in the case for $\forall_R$, the substitution $\sigma$ was 
+applied to the first-order type $\tau$ as well as to the context
+and succeedent $\Delta$ and $U$, hinting at the fact that our first-order
+terms are dependently typed.
 
-The use of proof terms allows for a greatly compressed discussion of
-cut admissibility and identity expansion. Furthermore, we will reuse
-much of this notation in our formulation of a logical framework in the
-next chapter. 
+Given we write the constructive content of the variable substitution
+theorem as $\sigma{E}$, were $E$,
+we can also write Theorem~\ref{thm:varsubst} as an admissible
+rule in one of two ways, both with and without proof terms:
+\[
+\infer-[{\it varsubst}]
+{\foct{\Psi'}{\sigma{\Delta}}{\sigma{E}}{\sigma{U}}}
+{\foct{\Psi}{\Delta}{E}{U}}
+\qquad
+\infer-[{\it varsubst}]
+{\foc{\Psi'}{\sigma{\Delta}}{\sigma{U}}}
+{\foc{\Psi}{\Delta}{U}}
+\]
+We will tend towards the expression-annotated presentations, such as
+the one on the left, in this chapter.
+
+\subsection{Focal substition}
+
+Both cut admissibility and identity expansion depend on the same
+focal substition theorem that was considered for linear logic in 
+Section~\ref{sec:lin-suspended}. Both of these theorems use the
+compound matching construct $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$,
+a pattern that will also be used in the proof of cut admissibility: 
+$\Delta'$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$
+if $\Delta'$ matches $\frameoff{\Theta}{\Delta''}$
+and $\Delta''$ matches $\restrictto{\Delta}{\mlvl}$.
+
+Pay attention to the way this compound matching construct is being
+used. In unfocused linear logic, using the compound notation
+effectively means that, for unfocused linear logic, three cut
+principles: \smallskip
+\begin{itemize}
+\item If $\oseq{\Gamma}{\cdot}{\cdot}{A}$ 
+      and $\oseq{\Gamma, A}{\Delta'}{\Omega'}{C}$,
+      then $\oseq{\Gamma}{\Delta'}{\Omega'}{C}$.
+\item If $\oseq{\Gamma}{\Delta}{\cdot}{A}$ 
+      and $\oseq{\Gamma}{\Delta', A}{\Omega'}{C}$,
+      then $\oseq{\Gamma}{\Delta', \Delta}{\Omega'}{C}$.
+\item If $\oseq{\Gamma}{\Delta}{\Omega}{A}$ 
+      and $\oseq{\Gamma}{\Delta'}{\Omega_L, A, \Omega_R}{C}$,
+      then $\oseq{\Gamma}{\Delta',\Delta}{\Omega_L, \Omega, \Omega_R}{C}$.
+\end{itemize}
+\smallskip
+can be captured by the single theorem statement that,
+if $\Delta \Rightarrow \istrue{A}$, 
+$\tackon{\Theta}{x{:}\islvl{A}} \Rightarrow \istrue{C}$,
+and $\Delta'$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$,
+then $\Delta' \Rightarrow C$. As an admissible rule, we would write this
+as follows:
+\[
+\infer-[{\it unfocused\mbox{-}cut}]
+{\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}} \Rightarrow \istrue{C}}
+{\Delta \Rightarrow \istrue{A}
+ &
+ \tackon{\Theta}{x{:}\islvl{A}} \Rightarrow \istrue{C}}
+\]
+
+In the negative focal substition (as the leftist substitutions of
+cut admissibility), there will be a corresponding use of
+$\restrictfrom{U}{\mlvl}$ to capture that we can use a proof of
+$\istrue{A}$ to discharge a hypothesis of $\istrue{A}$ in a proof of
+$\istrue{C}$ or a proof of $\islax{C}$, but that a proof of
+$\islax{A}$ can only discharge a hypothesis of $\istrue{A}$ in a proof
+of $\islax{C}$. 
+
+\bigskip
+\begin{theorem}[Focal substitution]~
+\begin{itemize}
+\item If $\foc{\Psi}{\Delta}{[A^+]}$,
+      $\foc{\Psi}{\tackon{\Theta'}{z{:}\islvl{\susp{A^+}}}}{U}$,
+      and $\Delta'$ matches $\frameoff{\Theta'}{\restrictto{\Delta}{\mlvl}}$, 
+      then $\foc{\Psi}{\Delta'}{U}$
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+Both proofs proceed by induction over the derivation $E$ containing
+the suspended proposition; this is the second derivation in positive 
+focal substitution and the first derivation in negative focal substitution. 
+\end{proof}
+
+The computational content of positive focal substitution is the
+substitution of a value $V$ for a variable $z$ in an expression $E$, 
+written $[V/z]E$. The computational
+content of negative focal substitution is the substitution of a spine $\Sp$,
+which represents
+representing a continuation, into an expression $E$ waiting on that 
+continuation, written $[E]\Sp$. As admissible rules, focal substitution is
+represented as follows:
+\[
+\infer-[{\it subst}^+]
+{\foct{\Psi}{\frameoff{\Theta'}{\restrictto{\Delta}{\mlvl}}}{[V/z]E}{U}}
+{\foct{\Psi}{\Delta}{V}{[A^+]}
+ &
+ \foct{\Psi}{\tackon{\Theta'}{z{:}\islvl{\susp{A^+}}}}{E}{U}}
+\]
+\[
+\infer-[{\it subst}^-]
+{\foct{\Psi}{\frameoff{\Theta'}{\Delta}}{[ E ] \Sp}{\restrictfrom{U}{\mlvl}}}
+{\foct{\Psi}{\Delta}{E}{\islvl{\langle A^- \rangle}}
+ &
+ \foct{\Psi}{\tackon{\Theta'}{[A^-]}}{\Sp}{U}}
+\]
 
 \section{Cut admissibility}
 \label{sec:ord-cut}
 
-\begin{itemize}
-\item $\Delta{\downarrow}_{\mpers}$ -- identity function whenever $\Delta$ contains only $x{:}\ispers{T}$
-\item $\Delta{\downarrow}_{\meph}$ -- identity function whenever $\Delta$ contains only $x{:}\ispers{T}$ and $x{:}\iseph{T}$
-\item $\Delta{\downarrow}_{\mtrue}$ -- identity function
-\end{itemize}
+Our compact statement of cut admissibility has four parts. Between
+them, they capture the cases of Pfenning's structural cut admissiblity
+proof without repretition. 
 
-\begin{itemize}
-\item $U{\downarrow}_{\mtrue}$ -- identity function whenever $U$ is $\istrue{A}$
-\item $U{\downarrow}_{\mlax}$ -- identity function
-\end{itemize}
-
-
-
-
-
-
+\bigskip
 \begin{theorem}[Cut admissibility]~
 \begin{enumerate}
 \item If $\foc{\Psi}{\Delta}{[ A^+ ]}$, ~
@@ -1033,6 +1106,146 @@ next chapter.
       then $\rfoc{\Psi}{\Xi}{C^+}$
 \end{enumerate}
 \end{theorem}
+
+\begin{proof}~
+
+\subsection{Positive principal substitution}
+Positive principal substitution encompasses all the {\it principal cuts}
+from Pfenning's structural cut admissibility proof for which the principal
+formula is positive. The constructive content of this part is a function
+$(\subst{V}{N})^{A^+})$ that normalizes a value against a term. Induction
+is on the structure of the positive type. The admissible rule associated with
+principal positive substitution is ${\it cut}^+$. 
+\[
+\infer-[{\it cut}^+]
+{\foct{\Psi}{\frameoff{\Theta'}{\Delta}}{(\subst{V}{N})^{A^+}}{U}}
+{\foct{\Psi}{\Delta}{V}{[A^+]}
+ &
+ \foct{\Psi}{\tackon{\Theta'}{A^+}}{N}{U}
+ &
+ \stableL{\Theta'}
+ &
+ \stableR{U}}
+\]
+We have to be careful, in the positive principal substitution
+associated with the type $A^+ \fuse B^+$, to maintain violate the
+invariant that, in an unstable context, we only ever tack on the {\it
+  leftmost} positive proposition.
+
+\bigskip
+
+$(\subst{z}{\tetap{z'}{N}})^{p^+_{\mlvl}} = [z/z']N$ ---
+We have a derivation $\foc{\Psi}{\Delta}{[p^+_\mlvl]}$ using
+the rule ${\it id}^+$
+
+$(\subst{z}{\tetap{z'}{N}})^{p^+_\meph}$
+
+$(\subst{z}{\tetap{z'}{N}})^{p^+_\mpers}$
+
+$(\subst{}{})^{{\downarrow}A^-}$
+
+$(\subst{}{})^{{\gnab}A^-}$
+
+$(\subst{}{})^{{!}A^-}$
+
+$(\subst{}{})^{\one}$
+
+$(\subst{}{})^{A^+ \fuse B^+}$
+
+$(\subst{}{})^{\zero}$
+
+$(\subst{}{})^{A^+ \oplus B^+}$
+
+$(\subst{}{})^{\exists x.A^+}$
+
+$(\subst{}{})^{t \doteq s}$
+
+\subsection{Negative principal substitution}
+Negative principal substitution encompass all the {\it principal cuts}
+from Pfenning's structural cut admissibility proof for which the
+principal formula is negative. The constructive content of this part
+is a function $(\subst{N}{\Sp})^{A^-}$ that normalizes a term against
+a spine; a similar function appears in presentations of hereditary
+substution for LF \cite{watkins02concurrent}. Induction is on the
+structure of the negative type. The admissible rule associated with
+negative principal substitution is ${\it cut}^-$:
+\[
+\infer-[{\it cut}^-]
+{\foct{\Psi}{\frameoff{\Theta'}{\Delta}}{(\subst{N}{\Sp})^{A^-}}{U}}
+{\foct{\Psi}{\Delta}{N}{A^-}
+ &
+ \foct{\Psi}{\tackon{\Theta'}{[A^-]}}{\Sp}{U}
+ &
+ \stableL{\Delta}}
+\]
+
+$(\subst{}{})^{p^-}$
+
+$(\subst{}{})^{p^-_\mlax}$
+
+$(\subst{}{})^{{\uparrow}A^+}$
+
+$(\subst{}{})^{{\ocircle}A^+}$
+
+$(\subst{}{})^{A^+ \righti B^-}$
+
+$(\subst{}{})^{A^+ \lefti B^-}$
+
+$(\subst{}{})^{\top}$
+
+$(\subst{}{})^{A^- \with B^-}$
+
+$(\subst{}{})^{\forall x.A^-}$
+
+\subsection{Leftist substitution}
+In focal substition, the positive case
+corresponds to our usual intuitions about cut admissibility and the
+negative case is strange.  In cut admissibility, the situation is
+reversed: rightist substitutions (considered in
+Section~\ref{sec:rsubst} below), associated with negative principal
+cut formals, look like normal substitutions, and the leftist 
+substitutions, considered here, are strange, as they break
+apart the expression that proves $A^+$ rather than the term
+we are substiting into.
+
+Leftist substitutions encompass all the {\it left commutative cuts}
+from Pfenning's structural cut admissibility proof.
+The constructive content of leftist substitution is a function
+$\lsubst{E}{N}$. Induction is on the first subterm, as we crawl 
+through $E$ looking for places where focus takes place on the 
+right. The admissible rule associated with leftist substition is
+${\it lcut}$:
+\[
+\infer-[{\it lcut}]
+{\foct{\Psi}{\frameoff{\Theta'}{\Delta}}{\lsubsta{E}{N}{A^+}}{\restrictfrom{U}{\mlvl}}}
+{\foct{\Psi}{\Delta}{E}{\islvl{A^+}}
+ &
+ \foct{\Psi}{\tackon{\Theta'}{A^+}}{N}{U}
+ &
+ \stableL{\Theta'}
+ &
+ \stableR{U}}
+\]
+
+\subsection{Right commutative cuts}\label{sec:rsubst}
+Rightist substitutions encompass all the {\it right commutative cuts}
+from Pfenning's structural cut admissibility proof.  The constructive
+content of this part is a function $\rsubsta{N}{x}{E}{A^-}$. Induction
+is on the second subterm, as we crawl through $E$ looking for places
+where $x$ is mentioned while focusing on the left.
+The admissible rule associated with rightist substition is
+${\it rcut}$:
+\[
+\infer-[{\it rcut}]
+{\foct{\Psi}{\frameoff{\Theta'}{\restrictto{\Delta}{\mlvl}}}{\rsubsta{N}{x}{E}{A^-}}{U}}
+{\foct{\Psi}{\Delta}{N}{A^-}
+ &
+ \foct{\Psi}{\tackon{\Theta'}{x{:}\islvl{A^-}}}{E}{U}
+ & 
+ \stableL{\Delta}}
+\]
+
+\end{proof}
 
 \bigskip
 \bigskip
