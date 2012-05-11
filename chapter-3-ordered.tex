@@ -1129,9 +1129,9 @@ instead of four and about a 2x blowup in the total number of cases
 that needed to be written down and checked.
 
 A final improvement in our theorem statement is very subtle: the {\it
-  particular} fixed inversion strategy we chose. The use of a fixed
-inversion strategy is critical to avoid two problems with
-Theorem~\ref{thm:lincut}. The serious problem, dicussed in
+  particular} fixed inversion strategy we chose matters somewhat.  The
+use of a fixed inversion strategy is critical to avoid two problems
+with Theorem~\ref{thm:lincut}. The serious problem, dicussed in
 Section~\ref{sec:confluent-v-fixed}, is the need to prove a tedious,
 quadratically large confluence theorem in order to define a strong
 notion of canonical forms. This problem is fixed by the choice of {\it
@@ -1147,78 +1147,8 @@ problem would still exist. In fact, we would have an even larger
 notational problem. We get a lot of mileage out of the fact that if
 $\Xi = \tackon{\Theta'}{A^+}$ then $A^+$ unambiguously refers to the
 left-most proposition in $\Xi$, and this invariant would no longer be
-possible to maintain in the statement of cut admissibility if we 
+possible to maintain in the statement of cut admissibility if we
 prioritized inversion of negative propositions on the right.
-
-
- as it would no longer be
-possible to preserve the 
-
- we would need to generalize the induction hypothesis
-in part 2 to remove the premise that $\Delta$ is stable.
-
-If we use Chaudhiri's fixed
-inversion strategy, which prioritizes 
-
-
-. The less serious
-problem w
-
-is the duplication of some right commutative cases in the
-proof of part 1 and the proof of part 4.
-
-In the grand scheme of things, this duplication is not so bad, but
-using a confluent system gives us an extra theorem to prove on the
-road to defining a logical framework (as discussed in
-Section~\ref{sec:confluent-v-fixed}), and that is somewhat worse.
-Additionally, the {\it choice} of fixed inversion strategy makes a
-surprising, if small, difference. Our system prioritizes the inversion
-of positive formulas on the left over the inversion of negative
-formulas on the right. If we made the opposite choice, as Chaudhri's
-system does, then we would need to generalize the induction hypothesis
-in part 2 to remove the premise that $\Delta$ is stable. We would
-then, in turn, lose the invariant that the principal cut formula $A^+$
-is the left-most invertible proposition in $\tackon{\Theta'}{A^+}$.
-This would mostly be a problem notationally, since we get some mileage
-out of the fact that if $\Xi = \tackon{\Theta'}{A^+}$ then $A^+$
-unambiguously refers to the left-most proposition in $\Xi$. In the
-proof, it would require that we duplicate the same right commutative
-cases that we duplicated in the proof of Theorem~\ref{thm:lincut} for
-linear logic.
-
-
-to
-unambiguously refer to the left-most 
-
- it would furthermore mean that
-we would need to prove the same extra right-commutative cases
-i
-
- in Part 1 of the cut admissibility 
-
-we would not be able to maintain the invariant 
-
- need to consider all of the
-
-If we prioritized
-inversion on negative formulas on the right instead of 
-start on the right instead of the left, as Chauthen it would be necessary
-to 
-
- rather than a confluent 
-strategy
-
- this did
-not result in any code duplication,
-
-defining values (derivations of right-focused sequents), terms
-(derivations of inverting and stable sequents), and spines
-(derivations of left-focused sequents) as refinements of 
-general expressions $E$, derivations of $\foc{\Psi}{\Delta}{U}$
-
-Between
-them, they capture the cases of Pfenning's structural cut admissibility
-proof \cite{pfenning00structural} without repeating any cases. 
 
 
 \subsection{Proof of cut admissibility, Theorem~\ref{thm:ord-cut}}
