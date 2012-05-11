@@ -1,25 +1,25 @@
 \begin{figure}
 \[
 \infer[{\exists}_R]
-{\orfseq{\Gamma}{\Delta}{\Omega}{\exists x{:}\tau.B}}
+{\orfseq{\Gamma}{\Delta}{\Omega}{\exists a{:}\tau.B}}
 {\Psi \vdash t : \tau 
  &
- \otseq{\Gamma}{\Delta}{\Omega}{[t/x]B}}
+ \otseq{\Gamma}{\Delta}{\Omega}{[t/a]B}}
 \quad
 \infer[{\exists}_L]
-{\olfseq{\Gamma}{\Delta}{\Omega_L}{\exists x{:}\tau.B}{\Omega_R}}
-{\ofirstseq{\Psi,x{:}\tau}{\Gamma}{\Delta}{\Omega_L,B,\Omega_R}{U}}
+{\olfseq{\Gamma}{\Delta}{\Omega_L}{\exists a{:}\tau.B}{\Omega_R}}
+{\ofirstseq{\Psi,a{:}\tau}{\Gamma}{\Delta}{\Omega_L,B,\Omega_R}{U}}
 \]
 \[
 \infer[{\forall}_R]
-{\orfseq{\Gamma}{\Delta}{\Omega}{\forall x{:}\tau.B}}
-{\ofirstseq{\Psi,x{:}\tau}{\Gamma}{\Delta}{\Omega}{\istrue{B}}}
+{\orfseq{\Gamma}{\Delta}{\Omega}{\forall a{:}\tau.B}}
+{\ofirstseq{\Psi,a{:}\tau}{\Gamma}{\Delta}{\Omega}{\istrue{B}}}
 \quad
 \infer[{\forall}_L]
-{\olfseq{\Gamma}{\Delta}{\Omega_L}{\forall x{:}\tau.B}{\Omega_R}}
+{\olfseq{\Gamma}{\Delta}{\Omega_L}{\forall a{:}\tau.B}{\Omega_R}}
 {\Psi \vdash t : \tau
  &
- \opfseq{\Gamma}{\Delta}{\Omega_L}{[t/x]B,\Omega_R}}
+ \opfseq{\Gamma}{\Delta}{\Omega_L}{[t/a]B,\Omega_R}}
 \]
 \[
 \infer[{\doteq}_R]
