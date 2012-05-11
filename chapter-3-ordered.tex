@@ -1230,50 +1230,77 @@ invariant that, in an unstable context, we only ever consider the {\it
   leftmost} inverting positive proposition.
 
 \begin{itemize}
-\item[--] $(\subst{z}{\tetap{z'}{N}})^{p^+_{\mlvl}} = [z/z']N$ --- We
-  have a derivation $\foc{\Psi}{\Delta}{[p^+_\mlvl]}$ using the rule
-  ${\it id}^+$; we know that $\Delta$ matches $x{:}\susp{p^+_\mlvl}$.
-
-  Because $\Delta$ is suspension-normal, there exists a $\Delta'$ such
-  that $\Delta$ matches $\restrictto{\Delta'}{\mlvl}$ where $\Delta'$
-  matches $x{:}\susp{p^+_\mlvl}$ that we have a derivation of
-  $\foc{\Psi}{\Delta'}{[p^+_\mlvl]}$ using the rule ${\it id}^+$ as
-  well.\footnote{Strictly speaking, we have that $\Delta$ matches
+\item[--] $(\subst{z}{\tetap{z'}{N}})^{p^+_{\mlvl}} = [z/z']N$\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where 
+  \begin{itemize}
+   \item $\Delta$ matches $z{:}\susp{p^+_\mlvl}$,
+   \item $\tackon{\Theta}{p^+}$ matches $\frameoff{\Theta'}{p^+}$,
+      $N$ is a derivation of 
+      $\foc{\Psi}{\tackon{\Theta'}{z'{:}\islvl{\susp{p^+_\mlvl}}}}{U}$, and
+   \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
+  \end{itemize}
+  Because $\Delta$ is suspension-normal, there exists $\Delta'$ where
+  $\Delta$ such that $\restrictto{\Delta'}{\mlvl}$ and
+  $z{:}\susp{\Delta'}$ matches $\Delta'$.\footnote{Strictly
+    speaking, we have that $\Delta$ matches
     $\restrictto{\Delta}{\mlvl}$; we introduce a new $\Delta'$ with
-    affine logic in mind.}
-  
-  $N$ is a derivation of 
-  $\foc{\Psi}{\tackon{\Theta}{z'{:}\islvl{\susp{p^+_\mlvl}}}}{U}$, 
-  and $\Xi$ matches $\frameoff{\Theta}{\Delta}$; this means 
-  $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$
-  as well, so the result $\foc{\Psi}{\Xi}{U}$ follows
-  by focal substitution.
+    affine logic in mind.} Therefore, we can derive
+  $\foc{\Psi}{\Delta'}{[p^+_\mlvl]}$ by ${\it id}^+$.
 
+  $\Xi$ matches
+  $\frameoff{\Theta'}{\restrictto{\Delta'}{\mlvl}}$,
+  so the result follows by focal substitution on $z$ and $N$. 
+
+\futurework{I'm relying on a property I haven't explicitly proven:
+ which feels familiar from the Agda developments:
+ if $\Xi$   matches $\frameoff{\Theta}{\Delta}$
+ and $\tackon{\Theta}{x:\islvl{T}}$ 
+            matches $\frameoff{\Theta'}{x{:}\islvl{T}}$
+ then $\Xi$ matches $\frameoff{\Theta}{\Delta}$.  }
+ 
 \item[--] $(\subst{\tdownr{M}}{\tdownl{x}{N}})^{{\downarrow}A^-} 
-           = \rsubsta{M}{x}{N}{A^-}$ ---
-  $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$,
-  $N$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{x{:}\istrue{A^-}}}{U}$,
-  and $\Xi$ matches $\frameoff{\Theta}{\Delta}$. 
+           = \rsubsta{M}{x}{N}{A^-}$ %\\
+%   We must show $\foc{\Psi}{\Xi}{U}$, where
+%   \begin{itemize}
+%   \item $M$ is derivation of $\foc{\Psi}{\Delta}{A^-}$, $\Delta$ is stable,
+%   \item $\tackon{\Theta}{{\downarrow}A^-}$ matches 
+%         $\frameoff{\Theta'}{{\downarrow}A^-}$,
+%         $N$ is a derivation of 
+%         $\foc{\Psi}{\tackon{\Theta'}{x{:}\istrue{A^-}}}{U}$, and
+%   \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
+%   \end{itemize}
 
-  XXX
+%   $\Xi$ matches $\frameoff{\Theta'}{\Delta}$, so the result follows by
+%   part 4 of cut admissibility on $N$ and $M$. 
 
-\futurework{I'm relying on a property I haven't stated yet: that 
-if $\Xi$ matches $\frameoff{\Theta}{[A^-]}$ or
- $\frameoff{\Theta}{A^+}$, then $\tackon{\Theta}{[B^-]}$
- or $\tackon{\Theta}{B^+}$ will match $\frameoff{\Theta}{[B^-]}$
- and $\frameoff{\Theta}{B^+}$, respectively. Is it even stronger
- than that? We need to preserve the frame structure over two steps. }
 
 \item[--] $(\subst{\tgnabr{M}}{\tgnabl{x}{N}})^{{\scriptgnab}A^-}
            = \rsubsta{M}{x}{N}{A^-}$
 
 \item[--] $(\subst{\tbangr{M}}{\tbangl{x}{N}})^{{!}A^-}
-           = \rsubsta{M}{x}{N}{A^-}$ --- XXX
+           = \rsubsta{M}{x}{N}{A^-}$ \\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $M$ is derivation of $\foc{\Psi}{\Delta'}{A^-}$, 
+        $\Delta$ matches $\restrictto{\Delta'}{\mpers}$, $\Delta'$ is stable,
+  \item $\tackon{\Theta}{{\downarrow}A^-}$ matches 
+        $\frameoff{\Theta'}{{\downarrow}A^-}$,
+        $N$ is a derivation of 
+        $\foc{\Psi}{\tackon{\Theta'}{x{:}\istrue{A^-}}}{U}$, and
+  \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
+  \end{itemize}
+
+  $\Xi$ matches $\frameoff{\Theta'}{\restrictto{\Delta'}{\mpers}}$,
+  so the result follows by
+  part 4 of cut admissibility on $N$ and $M$. 
+
+\futurework{Oh, stability has to be preserved my mapping. So many theorems!
+ I'm glad I'm not proving this in Agda (this time).}
 
 \item[--] $(\subst{\toner}{\tonel{N}})^{\one} = N$
 
 \item[--] $(\subst{(\tfuser{V_1}{V_2})}{(\tfusel{N}}))^{A^+ \fuse B^+}
-           = (\subst{V_2}{(\subst{V_1}{N})^{A^+}})^{B^+}$ --- XXX
+           = (\subst{V_2}{(\subst{V_1}{N})^{A^+}})^{B^+}$ 
 
 \item[--] $(\subst{\tinl{V}}{\toplusl{N_1}{N_2}})^{A^+ \oplus B^+} 
            = (\subst{V}{N_1})^{A^+}$
