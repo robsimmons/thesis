@@ -939,7 +939,6 @@ $\foc{\Psi'}{\tackon{\sigma\Theta}{[[t/a](\sigma, a/a)A^-]}}
 $\foc{\Psi'}{\tackon{\sigma\Theta}{[\sigma([t/a]A^-)]}}
   {\sigma{U}}$. This follows by the induction hypothesis on $\sigma$ and
 $\Sp$.
-\end{proof}
 
 Note that, in the case for $\forall_R$, the substitution $\sigma$ was
 applied to the first-order type $\tau$ as well as to as at the fact
@@ -1065,12 +1064,7 @@ represented as follows:
 \section{Cut admissibility}
 \label{sec:ord-cut}
 
-Our compact statement of cut admissibility has four parts. Between
-them, they capture the cases of Pfenning's structural cut admissibility
-proof \cite{pfenning00structural} without repeating any cases. 
-
-\bigskip
-\begin{theorem}[Cut admissibility]~
+\begin{theorem}[Cut admissibility]~\label{thm:ord-cut}
 \begin{enumerate}
 \item If $\foc{\Psi}{\Delta}{[ A^+ ]}$, ~
          $\foc{\Psi}{\tackon{\Theta'}{A^+}}{U}$, ~ and
@@ -1088,23 +1082,157 @@ proof \cite{pfenning00structural} without repeating any cases.
          $\Xi$ matches $\frameoff{\Theta'}{\Delta}$,\\
       then $\foc{\Psi}{\Xi}{U}$.
 \item If $\foc{\Psi}{\restrictto{\Delta}{\mlvl}}{\istrue{A^-}}$, ~
-         $\rfoc{\Psi}{\tackon{\Theta'}{x{:}\islvl{A^-}}}{C^+}$, ~
+         $\foc{\Psi}{\tackon{\Theta'}{x{:}\islvl{A^-}}}{U}$, ~
          $\Delta$ is stable, ~ and
          $\Xi$ matches $\frameoff{\Theta'}{\restrictto{\Delta}{\mlvl}}$,
-      then $\rfoc{\Psi}{\Xi}{C^+}$
+      then $\foc{\Psi}{\Xi}{U}$
 \end{enumerate}
 \end{theorem}
+\medskip
 
-\begin{proof} By lexicographic induction.  In parts 1 and 2, the type
-  gets smaller in every call to the induction hypothesis. In part 3,
-  the induction hypothesis is only ever invoked on the same type
-  $A^+$, and every invocation of the induction hypothesis is either to
-  part 1 (smaller part number) or to part 3 (same part number, first
-  derivation is smaller). Similarly, in part 4, the induction
-  hypothesis is only invoked at the same type $A^-$, and every
-  invocation of the induction hypothesis is either to part 2 (smaller
-  part number) or to part 4 (same part number, second derivation
-  is smaller).
+\noindent
+This statement of cut admissibility has four parts.  Before
+discussing the proof, it is worth noting that this theorem statement
+is already a sort of victory. 
+
+\subsection{Optimizing the statement of cut admissibility}
+
+We will pick the cut admissibility proof
+from Chaudhiri's thesis \cite{chaudhuri06focused} as a represenative
+example of existing work on cut admissibility in focused logics.  His
+statement of cut admissibility linear logic in 10 parts sorted into
+five groups, and in order to extend his
+proof structure to handle the extra lax and mobile modalities in
+\ollll, we would need a dramatically larger number of
+cases. Furthermore, at a computational level, Chaudhuri's proof
+requires a lot of code duplication -- that is, the proof of two
+different parts may both require a case that looks essentially the
+same.
+
+A great deal of simplification is due to the use of
+$\restrictto{\Delta}{\mlax}$. Without that notation, part 3 would
+split into two parts for $\mtrue$ and $\mlax$ and part 4 would split
+into three parts for $\mtrue$, $\meph$, and $\mpers$. Recall that, in
+Chapter 2, the lack this simplification required us to write a fifth
+case of cut admissibility and to duplicate every right-commutative
+cut. Further simplification is due to defining right-focused,
+inverting, and left-focused sequents as refinements of general
+sequents $\foc{\Psi}{\Delta}{U}$.\footnote{That is, defining values,
+  terms, and spines as refinements of expressions.} This strategy was
+not used in the structural focalization development, and while no code
+duplication resulted, the statement of part 3 was split into two parts
+(for substituing into terms and spines) and the statement of part 4
+was split in three (for substituting into values, terms, spines).
+Thus, without either of these simplfications, we would have 15 parts
+in the statement of Theorem~\ref{thm:ord-cut}
+instead of four and about a 2x blowup in the total number of cases
+that needed to be written down and checked.
+
+A final improvement in our theorem statement is very subtle: the {\it
+  particular} fixed inversion strategy we chose. The use of a fixed
+inversion strategy is critical to avoid two problems with
+Theorem~\ref{thm:lincut}. The serious problem, dicussed in
+Section~\ref{sec:confluent-v-fixed}, is the need to prove a tedious,
+quadratically large confluence theorem in order to define a strong
+notion of canonical forms. This problem is fixed by the choice of {\it
+  any} fixed inversion strategy. The less serious problem is that the
+proof of Theorem~\ref{thm:lincut} duplicates many right commutative
+cases in both part 1 and part 4 (which map directly onto parts 1 and 4
+of Theorem~\ref{thm:ord-cut} above). Our system prioritizes the
+inversion of positive formulas on the left over the inversion of
+negative formulas on the right. If we made the opposite choice, as
+Chaudhri's system does, then the structure of principal cuts forces us
+to generalize the induction hypothesis in such a way that this smaller
+problem would still exist. In fact, we would have an even larger
+notational problem. We get a lot of mileage out of the fact that if
+$\Xi = \tackon{\Theta'}{A^+}$ then $A^+$ unambiguously refers to the
+left-most proposition in $\Xi$, and this invariant would no longer be
+possible to maintain in the statement of cut admissibility if we 
+prioritized inversion of negative propositions on the right.
+
+
+ as it would no longer be
+possible to preserve the 
+
+ we would need to generalize the induction hypothesis
+in part 2 to remove the premise that $\Delta$ is stable.
+
+If we use Chaudhiri's fixed
+inversion strategy, which prioritizes 
+
+
+. The less serious
+problem w
+
+is the duplication of some right commutative cases in the
+proof of part 1 and the proof of part 4.
+
+In the grand scheme of things, this duplication is not so bad, but
+using a confluent system gives us an extra theorem to prove on the
+road to defining a logical framework (as discussed in
+Section~\ref{sec:confluent-v-fixed}), and that is somewhat worse.
+Additionally, the {\it choice} of fixed inversion strategy makes a
+surprising, if small, difference. Our system prioritizes the inversion
+of positive formulas on the left over the inversion of negative
+formulas on the right. If we made the opposite choice, as Chaudhri's
+system does, then we would need to generalize the induction hypothesis
+in part 2 to remove the premise that $\Delta$ is stable. We would
+then, in turn, lose the invariant that the principal cut formula $A^+$
+is the left-most invertible proposition in $\tackon{\Theta'}{A^+}$.
+This would mostly be a problem notationally, since we get some mileage
+out of the fact that if $\Xi = \tackon{\Theta'}{A^+}$ then $A^+$
+unambiguously refers to the left-most proposition in $\Xi$. In the
+proof, it would require that we duplicate the same right commutative
+cases that we duplicated in the proof of Theorem~\ref{thm:lincut} for
+linear logic.
+
+
+to
+unambiguously refer to the left-most 
+
+ it would furthermore mean that
+we would need to prove the same extra right-commutative cases
+i
+
+ in Part 1 of the cut admissibility 
+
+we would not be able to maintain the invariant 
+
+ need to consider all of the
+
+If we prioritized
+inversion on negative formulas on the right instead of 
+start on the right instead of the left, as Chauthen it would be necessary
+to 
+
+ rather than a confluent 
+strategy
+
+ this did
+not result in any code duplication,
+
+defining values (derivations of right-focused sequents), terms
+(derivations of inverting and stable sequents), and spines
+(derivations of left-focused sequents) as refinements of 
+general expressions $E$, derivations of $\foc{\Psi}{\Delta}{U}$
+
+Between
+them, they capture the cases of Pfenning's structural cut admissibility
+proof \cite{pfenning00structural} without repeating any cases. 
+
+
+\subsection{Proof of cut admissibility, Theorem~\ref{thm:ord-cut}}
+
+[Proof of cut admissibility, Theorem~\ref{thm:ord-cut}]
+  By lexicographic induction.  In parts 1 and 2, the type gets smaller
+  in every call to the induction hypothesis. In part 3, the induction
+  hypothesis is only ever invoked on the same type $A^+$, and every
+  invocation of the induction hypothesis is either to part 1 (smaller
+  part number) or to part 3 (same part number, first derivation is
+  smaller). Similarly, in part 4, the induction hypothesis is only
+  invoked at the same type $A^-$, and every invocation of the
+  induction hypothesis is either to part 2 (smaller part number) or to
+  part 4 (same part number, second derivation is smaller).
 
   As discussed in Section~\ref{sec:lincut}, this is the more specific
   termination argument associated with structural focalization
@@ -1121,7 +1249,7 @@ proof \cite{pfenning00structural} without repeating any cases.
   the manipulation of proof terms means in terms of sequents and 
   matching constructs.
 
-\subsection{Positive principal substitution}
+\subsubsection{Positive principal substitution}
 Positive principal substitution encompasses half the {\it principal
   cuts} from Pfenning's structural cut admissibility proof -- the
 principal cuts where the principal cut formula is positive. The
@@ -1180,7 +1308,7 @@ $(\subst{}{})^{\exists x.A^+}$
 
 $(\subst{}{})^{t \doteq s}$
 
-\subsection{Negative principal substitution}
+\subsubsection{Negative principal substitution}
 Negative principal substitution encompass all the {\it principal cuts}
 from Pfenning's structural cut admissibility proof for which the
 principal formula is negative. The constructive content of this part
@@ -1217,7 +1345,7 @@ $(\subst{}{})^{A^- \with B^-}$
 
 $(\subst{}{})^{\forall x.A^-}$
 
-\subsection{Leftist substitution}
+\subsubsection{Leftist substitution}
 In focal substitution, the positive case
 corresponds to our usual intuitions about cut admissibility and the
 negative case is strange.  In cut admissibility, the situation is
@@ -1247,7 +1375,7 @@ ${\it lcut}$:
  \stableR{U}}
 \]
 
-\subsection{Right commutative cuts}\label{sec:rsubst}
+\subsubsection{Right commutative cuts}\label{sec:rsubst}
 Rightist substitutions encompass all the {\it right commutative cuts}
 from Pfenning's structural cut admissibility proof.  The constructive
 content of this part is a function $\rsubsta{N}{x}{E}{A^-}$. Induction
