@@ -1091,7 +1091,26 @@ represented as follows:
 \medskip
 
 \noindent
-This statement of cut admissibility has four parts.  Before
+The four cases of cut admissibility neatly codify an observation about
+the structure of cut admissibility proofs first made by Pfenning in
+his work on structural cut elimination \cite{pfenning00structural}.
+The first two parts of Theorem~\ref{thm:ord-cut} are the home of the
+{\it principal cases} that decompose both derivations simultaneously,
+the third part contains all the {\it left commutative cases} that
+break apart only the first given derivation, and the fourth part
+contains all the {\it right commutative cases} that break apart only
+the second given derivation.
+
+Standard structural cut admissibility proofs do not isolate the left
+  commutative cuts (where the first given derivation gets smaller)
+  from the right commutative cuts (where the second given derivation
+  gets smaller); therefore, the termination metric must stipulate that
+  the derivation that does not get smaller must stay the same size
+  \cite{pfenning00structural}. 
+
+This statement of cut admissibility has four parts. 
+
+ Before
 discussing the proof, it is worth noting that this theorem statement
 is already a sort of victory. 
 
@@ -1131,7 +1150,7 @@ that needed to be written down and checked.
 A final improvement in our theorem statement is very subtle: the {\it
   particular} fixed inversion strategy we chose matters somewhat.  The
 use of a fixed inversion strategy is critical to avoid two problems
-with Theorem~\ref{thm:lincut}. The serious problem, dicussed in
+with Theorem~\ref{thm:lincut}. The more serious problem, dicussed in
 Section~\ref{sec:confluent-v-fixed}, is the need to prove a tedious,
 quadratically large confluence theorem in order to define a strong
 notion of canonical forms. This problem is fixed by the choice of {\it

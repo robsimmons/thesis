@@ -681,10 +681,16 @@ admissibility until the next chapter, where we will give a tidier
 proof by incorporating more of the machinery of structural
 focalization.\footnote{The main ``untidy'' aspect of
   Theorem~\ref{thm:lincut} is that the lack of a forced inversion
-  order means that the right commutative cases dealing with invertible
-  rules must be repeated in parts 1 and 4. The repetition of almost
-  all right commutative cases between parts 4 and 5 will also be
-  addressed in the next chapter.}
+  order means that the right commutative cases -- cases in which the
+  last rule in the second given derivation is an invertible rule that
+  is not decomposing the principal cut formula $A^+$ -- must
+  be repeated in parts 1 and 4. (Pfenning's classification of the
+  cases of cut admissibility into principal, left commutative,
+  and right commutative cuts is discussed in Section~\ref{sec:ord-cut}.)
+
+  In addition to this duplication, the proof of part 4 is almost
+  identitical in form to the proof of part 5, a defect that will also
+  be addressed in the next chapter.}
 %
 The only important caveat about 
 cut admissibility is that it is only applicable in the absence of any
@@ -736,18 +742,10 @@ do not contain any non-atomic suspended propositions:
   same, either the first given derivation gets smaller (part 3)
   or the second given derivation gets smaller (parts 1, 4 and 5).
 
-  Standard structural cut admissibility proofs do not isolate the left
-  commutative cuts (where the first given derivation gets smaller)
-  from the right commutative cuts (where the second given derivation
-  gets smaller); therefore, the termination metric must stipulate that
-  the derivation that does not get smaller must stay the same size
-  \cite{pfenning00structural}. As noted in \cite{simmons11structural},
-  our more specific termination argument has a potential advantage --
-  it is not necessary to show that the uses of weakening preserves the
-  structure or size of proofs. The weakening lemma (if
-  $\mildseq{\Gamma}{\Delta}{U}$ then $\mildseq{\Gamma,
-    A^-}{\Delta}{U}$) is needed to deal with all commutative cuts
-  involving ${!}_L$,
+  As noted in \cite{simmons11structural},
+  our termination argument is a refinement of 
+  the standard structural termination argument for cut admissibility
+  in unfocused logics \cite{pfenning00structural}.
 \end{proof}
 
 \subsection{Correctness of focusing}
@@ -1738,8 +1736,10 @@ propositions as stand-ins for arbitrary propositions, another instance
 of the same problematic pattern arises when we try to establish the
 critical cut admissibility theorem for the
 logic with ${\pbang}p^+$. 
-The new commutative cuts (one each in parts 1, 2, 3, and 4) are unproblematic,
-but trouble arises when we try to reduce the principal cut for ${\pbang}p^+$.
+The most of the new cases are unproblematic,
+but trouble arises in part 1
+when we cut a right-focused proof of ${\pbang}p^+$  
+against a proof that is decomposing ${\pbang}p^+$ on the left:
 \[
 \infer-[{\it cut}(1)]
 {\mildseq{\Gamma}{\Delta}{U}}
@@ -1747,7 +1747,7 @@ but trouble arises when we try to reduce the principal cut for ${\pbang}p^+$.
  {\mildseq{\Gamma}{\cdot}{[{\pbang}p^+]}}
  {\mildseq{\Gamma}{\cdot}{p^+}}
  &
- \infer[{}_L]
+ \infer[{\pbang}_L]
  {\mildseq{\Gamma}{\Delta, {\pbang}p^+}{U}}
  {\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}}
 \]
@@ -1950,11 +1950,13 @@ a case of ordinary focal substitution:
 \subsection{Bang optimization}
 \label{sec:bangopt}
 
-For such a seemingly simple change, the atom optimization adds a surprising
-amount of complexity to the cut admissibility theorem for focused linear
-logic. What's more, the three extra cases of cut that we had to 
-introduce were all for the purpose of handling a single case: the principal
-cut on ${\pbang}p^+$. 
+For such a seemingly simple change, the atom optimization adds a
+surprising amount of complexity to the cut admissibility theorem for
+focused linear logic. What's more, the three extra cases of cut that
+we had to introduce were all for the purpose of handling a single 
+problemantic case
+in the proof of part 1 where both derivations were decomposing the
+principal cut formula ${\pbang}p^+$.
 
 The choice of adding ${\pbang}p^+$ as a special new connective instead
 of defining it as ${!}{\uparrow}p^+$ paves the way for us to modify
@@ -1983,8 +1985,9 @@ optimization, potentially reduces the number of focusing phases
 in a proof. Identity expansion is trivial to modify, and cut 
 admissibility is significantly simpler. 
 
-In the principal cut for
-${\pbang}p^+$, we can conclude by case analysis
+The problematic case of cut is easy to handle 
+in this modified system: 
+we can conclude by case analysis
 that the first given derivation 
 must prove $p^+$ in focus using the ${\it id}_2^+$ rule. This, in turn,
 means that $\langle p^+ \rangle$ must already appear in $\Gamma$,
@@ -2505,9 +2508,7 @@ cut admissibility, we need to further require that all suspensions in
 the persistent context $\Gamma$ be permeable and atomic and that all
 suspensions in the linear context $\Delta$ be non-permeable and
 atomic.  Under this restriction, the proof proceeds much as it did for
-the system with the bang optimization: the principal cut reduces to an
-instance of contraction, and the additional commutative cases 
-are straightforward.
+the system with the bang optimization.
 
 \paragraph{Correctness of focusing} There are two ways we can
 understand the soundness and completeness of focusing for linear logic
