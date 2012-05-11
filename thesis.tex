@@ -1,6 +1,6 @@
 %for a more compact document, add the option openany to avoid
 %starting all chapters on odd numbered pages
-\documentclass[12pt]{cmuthesis}
+\documentclass[12pt,openany]{cmuthesis}
 
 % This is a template for a CMU thesis.  It is 18 pages without any content :-)
 % The source for this is pulled from a variety of sources and people.
@@ -62,28 +62,31 @@ Dale Miller, INRIA-Saclay \& LIX/Ecole Polytechnique
 
 \maketitle
 
-\begin{dedication}
-For my dog
-\end{dedication}
+% XXX MAKE DEDICATION
+% \begin{dedication}
+% For my dog
+% \end{dedication}
 
 \pagestyle{plain} % for toc, was empty
 
 %% Obviously, it's probably a good idea to break the various sections of your thesis
 %% into different files and input them into this file...
 
-\begin{abstract}
-A short summary.
-\end{abstract}
+% XXX MAKE ABSTRACT
+% \begin{abstract}
+% A short summary.
+% \end{abstract}
 
-\begin{acknowledgments}
-My advisor is cool.
-\end{acknowledgments}
+% XXX MAKE ACKNOLWEDGEMENTS
+% \begin{acknowledgments}
+% My advisor is cool.
+% \end{acknowledgments}
 
 
 
 \tableofcontents
-\listoffigures
-\listoftables
+\listoffigures % XXX Do I want this?
+% \listoftables XXX Probably don't need this at all.
 
 \mainmatter
 
