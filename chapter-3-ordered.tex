@@ -979,13 +979,13 @@ and $\Delta''$ matches $\restrictto{\Delta}{\mlvl}$.
 \begin{theorem}[Focal substitution]~
 \begin{itemize}
 \item If $\foc{\Psi}{\Delta}{[A^+]}$, ~
-      $\foc{\Psi}{\tackon{\Theta'}{z{:}\islvl{\susp{A^+}}}}{U}$, ~
-      and $\Xi$ matches $\frameoff{\Theta'}{\restrictto{\Delta}{\mlvl}}$,\\
+      $\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{A^+}}}}{U}$,\\
+      and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$, ~
       then $\foc{\Psi}{\Xi}{U}$
 \item If $\foc{\Psi}{\Delta}{\islvl{\susp{A^-}}}$, ~
-      $\foc{\Psi}{\tackon{\Theta}{[A^-]}}{U}$, ~
-      $\Xi$ matches $\frameoff{\Theta'}{\Delta}$, ~
-      and $U'$ matches $\restrictfrom{U}{\mlvl}$,\\
+      $\foc{\Psi}{\tackon{\Theta}{[A^-]}}{U}$, \\
+      $\Xi$ matches $\frameoff{\Theta}{\Delta}$, ~
+      and $U'$ matches $\restrictfrom{U}{\mlvl}$, ~
       then $\foc{\Psi}{\Xi}{U'}$
 \end{itemize}
 \end{theorem}
@@ -1048,79 +1048,95 @@ continuation, written $[E]\Sp$. As admissible rules, focal substitution is
 represented as follows:
 \[
 \infer-[{\it subst}^+]
-{\foct{\Psi}{\frameoff{\Theta'}{\restrictto{\Delta}{\mlvl}}}{[V/z]E}{U}}
+{\foct{\Psi}{\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}}{[V/z]E}{U}}
 {\foct{\Psi}{\Delta}{V}{[A^+]}
  &
- \foct{\Psi}{\tackon{\Theta'}{z{:}\islvl{\susp{A^+}}}}{E}{U}}
+ \foct{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{A^+}}}}{E}{U}}
 \]
 \[
 \infer-[{\it subst}^-]
-{\foct{\Psi}{\frameoff{\Theta'}{\Delta}}{[ E ] \Sp}{\restrictfrom{U}{\mlvl}}}
+{\foct{\Psi}{\frameoff{\Theta}{\Delta}}{[ E ] \Sp}{\restrictfrom{U}{\mlvl}}}
 {\foct{\Psi}{\Delta}{E}{\islvl{\langle A^- \rangle}}
  &
- \foct{\Psi}{\tackon{\Theta'}{[A^-]}}{\Sp}{U}}
+ \foct{\Psi}{\tackon{\Theta}{[A^-]}}{\Sp}{U}}
 \]
 
 \section{Cut admissibility}
 \label{sec:ord-cut}
 
-\begin{theorem}[Cut admissibility]~\label{thm:ord-cut}
+It is a little wordy to say that, in a context or succeedent, the only
+judgments involving suspensions are $(\ispers{\susp{p^+_\mpers}})$,
+$(\iseph{\susp{p^+_\meph}})$, $(\istrue{\susp{p^+}})$,
+$(\istrue{\susp{p^-}})$, and $(\islax{\susp{p^-_\mlax}})$, but this is a
+critical precondition of cut admissibility property for focused
+\ollll. We'll call contexts and succeedants with this property {\it
+  suspension-normal}.
+
+\begin{theorem}[Cut admissibility]\label{thm:ord-cut}
+For suspension-normal $\Psi$, $A^+$, $A^-$, $\Delta$, $\Theta$, $\Xi$, $U$, and $U'$,
 \begin{enumerate}
 \item If $\foc{\Psi}{\Delta}{[ A^+ ]}$, ~
-         $\foc{\Psi}{\tackon{\Theta'}{A^+}}{U}$, ~ and
-         $\Xi$ matches $\frameoff{\Theta'}{{\Delta}}$,\\
+         $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$,\\
+      and $\Xi$ matches $\frameoff{\Theta}{{\Delta}}$, ~
       then $\foc{\Psi}{\Xi}{U}$.
 \item If $\foc{\Psi}{\Delta}{A^-}$, ~
-         $\foc{\Psi}{\tackon{\Theta'}{[A^-]}}{U}$, ~
-         $\Delta$ is stable, ~ and
-         $\Xi$ matches $\frameoff{\Theta'}{\Delta}$,\\
+         $\foc{\Psi}{\tackon{\Theta}{[A^-]}}{U}$, ~
+         $\Delta$ is stable, \\
+      and $\Xi$ matches $\frameoff{\Theta}{\Delta}$, ~
       then $\foc{\Psi}{\Xi}{U}$.
 \item If $\foc{\Psi}{\Delta}{\islvl{A^+}}$, ~
-         $\foc{\Psi}{\tackon{\Theta'}{A^+}}{U}$, ~
-         $\Theta'$ and $U$ are stable, ~ 
-         $U'$ matches $\restrictfrom{U}{\mlvl}$, ~ and
-         $\Xi$ matches $\frameoff{\Theta'}{\Delta}$,\\
-      then $\foc{\Psi}{\Xi}{U}$.
-\item If $\foc{\Psi}{\restrictto{\Delta}{\mlvl}}{\istrue{A^-}}$, ~
-         $\foc{\Psi}{\tackon{\Theta'}{x{:}\islvl{A^-}}}{U}$, ~
-         $\Delta$ is stable, ~ and
-         $\Xi$ matches $\frameoff{\Theta'}{\restrictto{\Delta}{\mlvl}}$,
+         $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$, ~
+         $\Theta$ and $U$ are stable, \\ 
+      $\Xi$ matches $\frameoff{\Theta}{\Delta}$, ~
+      and $U'$ matches $\restrictfrom{U}{\mlvl}$, ~
+      then $\foc{\Psi}{\Xi}{U'}$.
+\item If $\foc{\Psi}{\Delta}{\istrue{A^-}}$, ~
+         $\foc{\Psi}{\tackon{\Theta}{x{:}\islvl{A^-}}}{U}$, ~
+         $\Delta$ is stable, \\ 
+      and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$,
       then $\foc{\Psi}{\Xi}{U}$
 \end{enumerate}
 \end{theorem}
 \medskip
 
 \noindent
-The four cases of cut admissibility neatly codify an observation about
-the structure of cut admissibility proofs first made by Pfenning in
-his work on structural cut elimination \cite{pfenning00structural}.
-The first two parts of Theorem~\ref{thm:ord-cut} are the home of the
-{\it principal cases} that decompose both derivations simultaneously,
-the third part contains all the {\it left commutative cases} that
-break apart only the first given derivation, and the fourth part
-contains all the {\it right commutative cases} that break apart only
-the second given derivation.
+The four cases of cut admissibility (and their proof below) neatly
+codify an observation about the structure of cut admissibility proofs
+made by Pfenning in his work on structural cut elimination
+\cite{pfenning00structural}.  The first two parts of
+Theorem~\ref{thm:ord-cut} are the home of the {\it principal cases}
+that decompose both derivations simultaneously, the third part
+contains all the {\it left commutative cases} that perform case
+analysis and induction only on the first given derivation, and the
+fourth part contains all the {\it right commutative cases} that
+perform case analysis and induction only on the second given
+derivation.
 
-Standard structural cut admissibility proofs do not isolate the left
-  commutative cuts (where the first given derivation gets smaller)
-  from the right commutative cuts (where the second given derivation
-  gets smaller); therefore, the termination metric must stipulate that
-  the derivation that does not get smaller must stay the same size
-  \cite{pfenning00structural}. 
+In Pfenning's work on structural cut eliminiation, this classification
+of cases was informal, but the structure of our cut admissibility
+proofs actually isolates the principal, left commutative, and right
+commutative cases into different parts of the theorem
+\cite{pfenning00structural}. This separation of cases is the reason
+why cut admissibility in a focused sequent calculus can use a more
+refined induction metric than cut admissibility in an unfocused
+sequent calculus. As noted previously \cite{simmons11structural}, the
+refined induction metric can make the theorem easier to prove.  For
+instance, the refined induction metric means that we do not need to
+rely on the fact that weakening and variable substitution preserve
+the size of proofs.
 
-This statement of cut admissibility has four parts. 
-
- Before
-discussing the proof, it is worth noting that this theorem statement
-is already a sort of victory. 
+Before discussing the proof, it is worth noting that this theorem
+statement is already a sort of victory. It is an extremely simple
+statement of cut admissibility for a rather complex logic.
 
 \subsection{Optimizing the statement of cut admissibility}
 
 We will pick the cut admissibility proof
 from Chaudhiri's thesis \cite{chaudhuri06focused} as a represenative
 example of existing work on cut admissibility in focused logics.  His
-statement of cut admissibility linear logic in 10 parts sorted into
-five groups, and in order to extend his
+statement of cut admissibility linear logic has 10 parts, 
+which are sorted into
+five groups. In order to extend his
 proof structure to handle the extra lax and mobile modalities in
 \ollll, we would need a dramatically larger number of
 cases. Furthermore, at a computational level, Chaudhuri's proof
@@ -1131,72 +1147,62 @@ same.
 A great deal of simplification is due to the use of
 $\restrictto{\Delta}{\mlax}$. Without that notation, part 3 would
 split into two parts for $\mtrue$ and $\mlax$ and part 4 would split
-into three parts for $\mtrue$, $\meph$, and $\mpers$. Recall that, in
-Chapter 2, the lack this simplification required us to write a fifth
-case of cut admissibility and to duplicate every right-commutative
-cut. Further simplification is due to defining right-focused,
-inverting, and left-focused sequents as refinements of general
-sequents $\foc{\Psi}{\Delta}{U}$.\footnote{That is, defining values,
-  terms, and spines as refinements of expressions.} This strategy was
-not used in the structural focalization development, and while no code
-duplication resulted, the statement of part 3 was split into two parts
-(for substituing into terms and spines) and the statement of part 4
-was split in three (for substituting into values, terms, spines).
-Thus, without either of these simplfications, we would have 15 parts
-in the statement of Theorem~\ref{thm:ord-cut}
-instead of four and about a 2x blowup in the total number of cases
-that needed to be written down and checked.
+into three parts for $\mtrue$, $\meph$, and $\mpers$. The fifth part
+of Theorem~\ref{thm:lincut} in Chapter 2, which is computationally a
+near-duplicate of the fourth part of the same theorem, is due to the
+lack of this simplification.
+
+Further simplification is due to defining right-focused, inverting,
+and left-focused sequents as refinements of general sequents
+$\foc{\Psi}{\Delta}{U}$. This strategy was not used in the structural
+focalization development, and while no code duplication resulted, the
+statement of part 3 was split into two parts (for substituing into
+terms and spines) and the statement of part 4 was split in three (for
+substituting into values, terms, spines) \cite{simmons11structural}.
+Without either of the aforementioned simplfications, we would have 15
+parts in the statement of Theorem~\ref{thm:ord-cut} instead of four
+and about a 2x blowup in the total number of cases that needed to be
+written down and checked.
 
 A final improvement in our theorem statement is very subtle: the {\it
-  particular} fixed inversion strategy we chose matters somewhat.  The
-use of a fixed inversion strategy is critical to avoid two problems
-with Theorem~\ref{thm:lincut}. The more serious problem, dicussed in
+  particular} fixed inversion strategy we chose matters.  The use of a
+fixed inversion strategy is critical to avoid two problems with the
+development in Chapter~2. The more serious problem, dicussed in
 Section~\ref{sec:confluent-v-fixed}, is the need to prove a tedious,
 quadratically large confluence theorem in order to define a strong
-notion of canonical forms. This problem is fixed by the choice of {\it
-  any} fixed inversion strategy. The less serious problem is that the
-proof of Theorem~\ref{thm:lincut} duplicates many right commutative
-cases in both part 1 and part 4 (which map directly onto parts 1 and 4
-of Theorem~\ref{thm:ord-cut} above). Our system prioritizes the
-inversion of positive formulas on the left over the inversion of
-negative formulas on the right. If we made the opposite choice, as
-Chaudhri's system does, then the structure of principal cuts forces us
-to generalize the induction hypothesis in such a way that this smaller
-problem would still exist. In fact, we would have an even larger
-notational problem. We get a lot of mileage out of the fact that if
-$\Xi = \tackon{\Theta'}{A^+}$ then $A^+$ unambiguously refers to the
-left-most proposition in $\Xi$, and this invariant would no longer be
-possible to maintain in the statement of cut admissibility if we
-prioritized inversion of negative propositions on the right.
+notion of canonical forms. This first problem is solved by the choice
+of {\it any} fixed inversion strategy. The less serious problem is
+that the proof of Theorem~\ref{thm:lincut} duplicates many right
+commutative cases in both part 1 and part 4 (which map directly onto
+parts 1 and 4 of Theorem~\ref{thm:ord-cut} above). Our system
+prioritizes the inversion of positive formulas on the left over the
+inversion of negative formulas on the right. If we made the opposite
+choice, as Chaudhri's system does, then this (smaller) problem 
+would remain. We get a lot of mileage out of the
+fact that if $\Xi = \tackon{\Theta}{A^+}$ then $A^+$ unambiguously
+refers to the left-most proposition in $\Xi$, and this invariant would
+no longer be possible to maintain in the statement of cut
+admissibility if we prioritized inversion of negative propositions on
+the right.
 
 
 \subsection{Proof of cut admissibility, Theorem~\ref{thm:ord-cut}}
 
-[Proof of cut admissibility, Theorem~\ref{thm:ord-cut}]
-  By lexicographic induction.  In parts 1 and 2, the type gets smaller
-  in every call to the induction hypothesis. In part 3, the induction
-  hypothesis is only ever invoked on the same type $A^+$, and every
-  invocation of the induction hypothesis is either to part 1 (smaller
-  part number) or to part 3 (same part number, first derivation is
-  smaller). Similarly, in part 4, the induction hypothesis is only
-  invoked at the same type $A^-$, and every invocation of the
-  induction hypothesis is either to part 2 (smaller part number) or to
-  part 4 (same part number, second derivation is smaller).
+The proof proceeds by lexicographic induction.  In parts 1 and 2, the
+type gets smaller in every call to the induction hypothesis. In part
+3, the induction hypothesis is only ever invoked on the same type
+$A^+$, and every invocation of the induction hypothesis is either to
+part 1 (smaller part number) or to part 3 (same part number, first
+derivation is smaller). Similarly, in part 4, the induction hypothesis
+is only invoked at the same type $A^-$, and every invocation of the
+induction hypothesis is either to part 2 (smaller part number) or to
+part 4 (same part number, second derivation is smaller).
 
-  As discussed in Section~\ref{sec:lincut}, this is the more specific
-  termination argument associated with structural focalization
-  \cite{simmons11structural}, rather than the more general induction
-  metric usually associated not the one associated with structural cut
-  admissibility \cite{pfenning00structural}. The more specific metric
-  saves us from having to prove things -- like fact that variable
-  substitution does not change the structure of proofs -- that are
-  true but not obvious.
-
-  The remainder of this section will cover the four parts of the cut
-  admissibility proof. Most of the theorem will be presented at the 
-  level of proof terms, but in several cases we will discuss what 
-  the manipulation of proof terms means in terms of sequents and 
-  matching constructs.
+The remainder of this section will cover each of the four parts of
+this proof in turn. Most of the theorem will be presented at the level
+of proof terms, but for representative cases we will discuss what the
+manipulation of proof terms means in terms of sequents and matching
+constructs.
 
 \subsubsection{Positive principal substitution}
 Positive principal substitution encompasses half the {\it principal
@@ -1209,12 +1215,12 @@ admissible rule associated with principal positive substitution is
 ${\it cut}^+$.
 \[
 \infer-[{\it cut}^+]
-{\foct{\Psi}{\frameoff{\Theta'}{\Delta}}{(\subst{V}{N})^{A^+}}{U}}
+{\foct{\Psi}{\frameoff{\Theta}{\Delta}}{(\subst{V}{N})^{A^+}}{U}}
 {\foct{\Psi}{\Delta}{V}{[A^+]}
  &
- \foct{\Psi}{\tackon{\Theta'}{A^+}}{N}{U}
+ \foct{\Psi}{\tackon{\Theta}{A^+}}{N}{U}
  &
- \stableL{\Theta'}
+ \stableL{\Theta}
  &
  \stableR{U}}
 \]
@@ -1223,39 +1229,63 @@ associated with the type $A^+ \fuse B^+$, to maintain the
 invariant that, in an unstable context, we only ever consider the {\it
   leftmost} inverting positive proposition.
 
-\bigskip
+\begin{itemize}
+\item[--] $(\subst{z}{\tetap{z'}{N}})^{p^+_{\mlvl}} = [z/z']N$ --- We
+  have a derivation $\foc{\Psi}{\Delta}{[p^+_\mlvl]}$ using the rule
+  ${\it id}^+$; we know that $\Delta$ matches $x{:}\susp{p^+_\mlvl}$.
 
-$(\subst{z}{\tetap{z'}{N}})^{p^+_{\mlvl}} = [z/z']N$ ---
-We have a derivation $\foc{\Psi}{\Delta}{[p^+_\mlvl]}$ using
-the rule ${\it id}^+$; we know that $\Delta$ matches $x{:}\susp{p^+_\mlvl}$.
-By the restriction that $\Delta$ is suspension-normal, this means
-there exists a $\Delta'$ such 
-that $\Delta$ matches $\restrictto{\Delta'}{\mlvl}$ and 
-$\Delta'$ matches $x{:}\susp{p^+_\mlvl}$, so that we have a derivation of
-$\foc{\Psi}{\Delta'}{[p^+_\mlvl]}$ using the rule ${\it id}^+$ as well.
+  Because $\Delta$ is suspension-normal, there exists a $\Delta'$ such
+  that $\Delta$ matches $\restrictto{\Delta'}{\mlvl}$ where $\Delta'$
+  matches $x{:}\susp{p^+_\mlvl}$ that we have a derivation of
+  $\foc{\Psi}{\Delta'}{[p^+_\mlvl]}$ using the rule ${\it id}^+$ as
+  well.\footnote{Strictly speaking, we have that $\Delta$ matches
+    $\restrictto{\Delta}{\mlvl}$; we introduce a new $\Delta'$ with
+    affine logic in mind.}
+  
+  $N$ is a derivation of 
+  $\foc{\Psi}{\tackon{\Theta}{z'{:}\islvl{\susp{p^+_\mlvl}}}}{U}$, 
+  and $\Xi$ matches $\frameoff{\Theta}{\Delta}$; this means 
+  $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$
+  as well, so the result $\foc{\Psi}{\Xi}{U}$ follows
+  by focal substitution.
 
+\item[--] $(\subst{\tdownr{M}}{\tdownl{x}{N}})^{{\downarrow}A^-} 
+           = \rsubsta{M}{x}{N}{A^-}$ ---
+  $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$,
+  $N$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{x{:}\istrue{A^-}}}{U}$,
+  and $\Xi$ matches $\frameoff{\Theta}{\Delta}$. 
 
-$(\subst{z}{\tetap{z'}{N}})^{p^+_\meph}$
+  XXX
 
-$(\subst{z}{\tetap{z'}{N}})^{p^+_\mpers}$
+\futurework{I'm relying on a property I haven't stated yet: that 
+if $\Xi$ matches $\frameoff{\Theta}{[A^-]}$ or
+ $\frameoff{\Theta}{A^+}$, then $\tackon{\Theta}{[B^-]}$
+ or $\tackon{\Theta}{B^+}$ will match $\frameoff{\Theta}{[B^-]}$
+ and $\frameoff{\Theta}{B^+}$, respectively. Is it even stronger
+ than that? We need to preserve the frame structure over two steps. }
 
-$(\subst{}{})^{{\downarrow}A^-}$
+\item[--] $(\subst{\tgnabr{M}}{\tgnabl{x}{N}})^{{\scriptgnab}A^-}
+           = \rsubsta{M}{x}{N}{A^-}$
 
-$(\subst{}{})^{{\gnab}A^-}$
+\item[--] $(\subst{\tbangr{M}}{\tbangl{x}{N}})^{{!}A^-}
+           = \rsubsta{M}{x}{N}{A^-}$ --- XXX
 
-$(\subst{}{})^{{!}A^-}$
+\item[--] $(\subst{\toner}{\tonel{N}})^{\one} = N$
 
-$(\subst{}{})^{\one}$
+\item[--] $(\subst{(\tfuser{V_1}{V_2})}{(\tfusel{N}}))^{A^+ \fuse B^+}
+           = (\subst{V_2}{(\subst{V_1}{N})^{A^+}})^{B^+}$ --- XXX
 
-$(\subst{}{})^{A^+ \fuse B^+}$
+\item[--] $(\subst{\tinl{V}}{\toplusl{N_1}{N_2}})^{A^+ \oplus B^+} 
+           = (\subst{V}{N_1})^{A^+}$
 
-$(\subst{}{})^{\zero}$
+\item[--] $(\subst{\tinr{V}}{\toplusl{N_1}{N_2}})^{A^+ \oplus B^+} 
+           = (\subst{V}{N_2})^{B^+}$
 
-$(\subst{}{})^{A^+ \oplus B^+}$
+\item[--] $(\subst{\texistsr{t}{V}}{\texistsl{a}{N}})^{\exists a{:}\tau.A^+}
+           = (\subst{V}{[t/a]N})^{[t/a]A^+}$ --- XXX
 
-$(\subst{}{})^{\exists x.A^+}$
-
-$(\subst{}{})^{t \doteq s}$
+\item[--] $(\subst{\tunifr}{\phi})^{t \doteq t} = \phi({\sf id})$ --- XXX 
+\end{itemize}
 
 \subsubsection{Negative principal substitution}
 Negative principal substitution encompass all the {\it principal cuts}
@@ -1268,31 +1298,33 @@ structure of the negative type. The admissible rule associated with
 negative principal substitution is ${\it cut}^-$:
 \[
 \infer-[{\it cut}^-]
-{\foct{\Psi}{\frameoff{\Theta'}{\Delta}}{(\subst{N}{\Sp})^{A^-}}{U}}
+{\foct{\Psi}{\frameoff{\Theta}{\Delta}}{(\subst{N}{\Sp})^{A^-}}{U}}
 {\foct{\Psi}{\Delta}{N}{A^-}
  &
- \foct{\Psi}{\tackon{\Theta'}{[A^-]}}{\Sp}{U}
+ \foct{\Psi}{\tackon{\Theta}{[A^-]}}{\Sp}{U}
  &
  \stableL{\Delta}}
 \]
 
-$(\subst{}{})^{p^-}$
+\begin{itemize}
+\item[--] $(\subst{}{})^{p^-}$
 
-$(\subst{}{})^{p^-_\mlax}$
+\item[--] $(\subst{}{})^{p^-_\mlax}$
 
-$(\subst{}{})^{{\uparrow}A^+}$
+\item[--] $(\subst{}{})^{{\uparrow}A^+}$
 
-$(\subst{}{})^{{\ocircle}A^+}$
+\item[--] $(\subst{}{})^{{\ocircle}A^+}$
 
-$(\subst{}{})^{A^+ \righti B^-}$
+\item[--] $(\subst{}{})^{A^+ \righti B^-}$
 
-$(\subst{}{})^{A^+ \lefti B^-}$
+\item[--] $(\subst{}{})^{A^+ \lefti B^-}$
 
-$(\subst{}{})^{\top}$
+\item[--] $(\subst{}{})^{\top}$
 
-$(\subst{}{})^{A^- \with B^-}$
+\item[--] $(\subst{}{})^{A^- \with B^-}$
 
-$(\subst{}{})^{\forall x.A^-}$
+\item[--] $(\subst{}{})^{\forall x.A^-}$
+\end{itemize}
 
 \subsubsection{Leftist substitution}
 In focal substitution, the positive case
@@ -1314,12 +1346,12 @@ right. The admissible rule associated with leftist substitution is
 ${\it lcut}$:
 \[
 \infer-[{\it lcut}]
-{\foct{\Psi}{\frameoff{\Theta'}{\Delta}}{\lsubsta{E}{N}{A^+}}{\restrictfrom{U}{\mlvl}}}
+{\foct{\Psi}{\frameoff{\Theta}{\Delta}}{\lsubsta{E}{N}{A^+}}{\restrictfrom{U}{\mlvl}}}
 {\foct{\Psi}{\Delta}{E}{\islvl{A^+}}
  &
- \foct{\Psi}{\tackon{\Theta'}{A^+}}{N}{U}
+ \foct{\Psi}{\tackon{\Theta}{A^+}}{N}{U}
  &
- \stableL{\Theta'}
+ \stableL{\Theta}
  &
  \stableR{U}}
 \]
@@ -1334,49 +1366,16 @@ The admissible rule associated with rightist substitution is
 ${\it rcut}$:
 \[
 \infer-[{\it rcut}]
-{\foct{\Psi}{\frameoff{\Theta'}{\restrictto{\Delta}{\mlvl}}}{\rsubsta{N}{x}{E}{A^-}}{U}}
+{\foct{\Psi}{\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}}{\rsubsta{N}{x}{E}{A^-}}{U}}
 {\foct{\Psi}{\Delta}{N}{A^-}
  &
- \foct{\Psi}{\tackon{\Theta'}{x{:}\islvl{A^-}}}{E}{U}
+ \foct{\Psi}{\tackon{\Theta}{x{:}\islvl{A^-}}}{E}{U}
  & 
  \stableL{\Delta}}
 \]
 
 \end{proof}
 
-\bigskip
-\bigskip
-\bigskip
-
-\begin{theorem}[Cut admissibility]~
-\begin{enumerate}
-\item If $\foc{\Psi}{\Delta}{[ A^+ ]}$
-      and $\foc{\Psi}{\tackon{\Theta'}{A^+}}{U}$, 
-      then $\foc{\Psi}{\frameoff{\Theta'}{{\Delta}}}{U}$.
-\item If $\foc{\Psi}{\Delta}{A^-}$ 
-      and $\lfoc{\Psi}{\Theta'}{A^-}{U}$, 
-      then $\foc{\Psi}{\frameoff{\Theta'}{\Delta}}{U}$.
-\item[3a.] 
-      If $\foc{\Psi}{\Delta}{\islvl{A^+}}$
-      and $\foc{\Psi}{\tackon{\Theta'}{A^+}}{\restrictto{U}{\mlvl}}$
-      then $\foc{\Psi}{\frameoff{\Theta'}{\Delta}}{\restrictto{U}{\mlvl}}$.
-\item[3b.] 
-      If $\foc{\Psi}{\tackon{\Theta}{[A^-]}}{\islvl{A^+}}$
-      and $\foc{\Psi}{\tackon{\Theta'}{A^+}}{\restrictto{U}{\mlvl}}$
-      then $\foc{\Psi}{\frameoff{\Theta'}{\frameoff{\Theta}{[A^-]}}}{\restrictto{U}{\mlvl}}$.
-\item[4a.]
-      If $\foc{\Psi}{\restrictto{\Delta}{\mlvl}}{\istrue{A^-}}$
-      and $\rfoc{\Psi}{\tackon{\Theta'}{x{:}\islvl{A^-}}}{C^+}$,
-      then $\rfoc{\Psi}{\frameoff{\Theta'}{\restrictto{\Delta}{\mlvl}}}{C^+}$
-\item[4b.]
-      If $\foc{\Psi}{\restrictto{\Delta}{\mlvl}}{\istrue{A^-}}$
-      and $\foc{\Psi}{\tackon{\Theta'}{x{:}\islvl{A^-}}}{U}$
-\item[4c.]
-      If $\foc{\Psi}{\restrictto{\Delta}{\mlvl}}{\istrue{A^-}}$
-      and $\foc{\Psi}{\tackon{\tackon{\Theta'}{x{:}\islvl{A^-}}}{[B^-]}}{U}$,
-      then $\foc{\Psi}{\frameoff{\frameoff{\Theta'}{\restrictto{\Delta}{\mlvl}}}{[B^-]}}{U}$.
-\end{enumerate}
-\end{theorem}
 
 \section{Identity expansion}
 \label{sec:ord-identity}
