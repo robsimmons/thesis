@@ -1236,8 +1236,8 @@ invariant that, in an unstable context, we only ever consider the {\it
    \item $\Delta$ matches $z{:}\susp{p^+_\mlvl}$,
    \item $\tackon{\Theta}{p^+}$ matches $\frameoff{\Theta'}{p^+}$,
       $N$ is a derivation of 
-      $\foc{\Psi}{\tackon{\Theta'}{z'{:}\islvl{\susp{p^+_\mlvl}}}}{U}$, and
-   \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
+      $\foc{\Psi}{\tackon{\Theta'}{z'{:}\islvl{\susp{p^+_\mlvl}}}}{U}$,
+   \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
   \end{itemize}
   Because $\Delta$ is suspension-normal, there exists $\Delta'$ where
   $\Delta$ such that $\restrictto{\Delta'}{\mlvl}$ and
@@ -1266,8 +1266,8 @@ invariant that, in an unstable context, we only ever consider the {\it
 %   \item $\tackon{\Theta}{{\downarrow}A^-}$ matches 
 %         $\frameoff{\Theta'}{{\downarrow}A^-}$,
 %         $N$ is a derivation of 
-%         $\foc{\Psi}{\tackon{\Theta'}{x{:}\istrue{A^-}}}{U}$, and
-%   \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
+%         $\foc{\Psi}{\tackon{\Theta'}{x{:}\istrue{A^-}}}{U}$, 
+%   \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
 %   \end{itemize}
 
 %   $\Xi$ matches $\frameoff{\Theta'}{\Delta}$, so the result follows by
@@ -1281,13 +1281,14 @@ invariant that, in an unstable context, we only ever consider the {\it
            = \rsubsta{M}{x}{N}{A^-}$ \\
   We must show $\foc{\Psi}{\Xi}{U}$, where
   \begin{itemize}
-  \item $M$ is derivation of $\foc{\Psi}{\Delta'}{A^-}$, 
-        $\Delta$ matches $\restrictto{\Delta'}{\mpers}$, $\Delta'$ is stable,
+  \item $\Delta$ matches $\restrictto{\Delta'}{\mpers}$,
+        $M$ is derivation of $\foc{\Psi}{\Delta'}{A^-}$, 
+        $\Delta'$ is stable,
   \item $\tackon{\Theta}{{\downarrow}A^-}$ matches 
         $\frameoff{\Theta'}{{\downarrow}A^-}$,
         $N$ is a derivation of 
-        $\foc{\Psi}{\tackon{\Theta'}{x{:}\istrue{A^-}}}{U}$, and
-  \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
+        $\foc{\Psi}{\tackon{\Theta'}{x{:}\istrue{A^-}}}{U}$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
   \end{itemize}
 
   $\Xi$ matches $\frameoff{\Theta'}{\restrictto{\Delta'}{\mpers}}$,
@@ -1300,7 +1301,38 @@ invariant that, in an unstable context, we only ever consider the {\it
 \item[--] $(\subst{\toner}{\tonel{N}})^{\one} = N$
 
 \item[--] $(\subst{(\tfuser{V_1}{V_2})}{(\tfusel{N}}))^{A^+ \fuse B^+}
-           = (\subst{V_2}{(\subst{V_1}{N})^{A^+}})^{B^+}$ 
+           = (\subst{V_2}{(\subst{V_1}{N})^{A^+}})^{B^+}$ \\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $\Delta$ matches $\Delta_1, \Delta_2$,\\
+        $V_1$ is a derivation of $\foc{\Psi}{\Delta_1}{[A^+]}$,
+        $V_2$ is a derivation of $\foc{\Psi}{\Delta_2}{[B^+]}$,
+  \item $\tackon{\Theta}{A^+ \fuse B^+}$ matches
+        $\frameoff{\Theta'}{A^+ \fuse B^+}$, 
+        $N$ is a derivation of 
+        $\foc{\Psi}{\tackon{\Theta'}{A^+, B^+}}{U}$, 
+  \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
+  \end{itemize}
+
+  It is clear we can to consturct a frame $\Theta_B$ such that
+  $\tackon{\Theta'}{A^+, B^+} = \tackon{\Theta_B}{A^+}$; we're just exchanging
+  the part in the frame with the part not in the frame. We also 
+  must be able to construct a second frame, $\Theta_A$, such that
+  1) $\Xi$ matches $\frameoff{\Theta_A}{\Delta_B}$ and 
+  2) $\tackon{\Theta_A}{B^+}$ matches $\frameoff{\Theta_B}{\Delta_A}$.
+
+\futurework{It's probably (I might say hopefully) not clear to the reader
+ what a doozy that is, but I've done it in Agda once in that proof I lost, 
+ I guess.}
+
+  Because $\tackon{\Theta_A}{B^+}$ matches $\frameoff{\Theta_B}{\Delta_A}$,
+  by the induction hypothesis on $V_1$ and $N$ we have
+  $(\subst{V_1}{N})^{A^+}$, a derivation of 
+  $\foc{\Psi}{\tackon{\Theta_A}{B^+}}{U}$.
+
+  Because $\Xi$ matches $\frameoff{\Theta_A}{\Delta_B}$, by the induction
+  hypothesis on $V_2$ and $(\subst{V_1}{N})^{A^+}$, we have a derivation
+  of $\foc{\Psi}{\Xi}{U}$ as required.
 
 \item[--] $(\subst{\tinl{V}}{\toplusl{N_1}{N_2}})^{A^+ \oplus B^+} 
            = (\subst{V}{N_1})^{A^+}$
@@ -1309,7 +1341,13 @@ invariant that, in an unstable context, we only ever consider the {\it
            = (\subst{V}{N_2})^{B^+}$
 
 \item[--] $(\subst{\texistsr{t}{V}}{\texistsl{a}{N}})^{\exists a{:}\tau.A^+}
-           = (\subst{V}{[t/a]N})^{[t/a]A^+}$ --- XXX
+           = (\subst{V}{[t/a]N})^{[t/a]A^+}$ \\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item
+  \item
+  \item
+  \end{itemize}
 
 \item[--] $(\subst{\tunifr}{\phi})^{t \doteq t} = \phi({\sf id})$ --- XXX 
 \end{itemize}
