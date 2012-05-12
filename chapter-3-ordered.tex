@@ -1484,6 +1484,14 @@ are stated but not proven.
 \paragraph{Substitution into terms}
 
 \begin{itemize}
+\item[--] $\lsubsta{\tfocusr{V}}{M}{A^+} = (\subst{V}{M})^{A^+}$\\
+  We must show $\foc{\Psi}{\Xi}{U'}$, where
+  \begin{itemize}
+  \item
+  \item $V$ is a derivation of $\foc{\Psi}{\Delta}{[A^+]}$
+  \item
+  \end{itemize}
+
 \item[--] $\lsubsta{\tfocusl{x}{\Sp}}{M}{A^+}
            = \tfocusl{x}{(\lsubsta{\Sp}{M}{A^+})}$\\
   We must show $\foc{\Psi}{\Xi}{U'}$, where
@@ -1510,7 +1518,7 @@ are stated but not proven.
            = \tgnabl{x}{(\lsubsta{N}{M}{A^+})}$
 \item[--] $\lsubsta{\tbangl{x}{N}}{M}{A^+} 
            = \tbangl{x}{(\lsubsta{N}{M}{A^+})}$\\
-  We must show $\foc{}{}{U'}$
+  We must show $\foc{\Psi}{\Xi}{U'}$, where
   \begin{itemize}
   \item $\Delta$ matches $\frameoff{\Theta_B}{{!}B^-}$, 
     $N$ is a derivation of
@@ -1519,39 +1527,60 @@ are stated but not proven.
   \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$, and $U'$ matches 
     $\restrictfrom{U}{\mlvl}$.
   \end{itemize}
+  We can construct a $\Theta'$ such that 
+  $\tackon{\Theta'}{A^+} = (\tackon{\Theta}{A^+},x{:}\ispers{B^-})$. By
+  variable weakening, $M$ is a derivation of 
+  $\foc{\Psi}{\tackon{\Theta'}{A^+}}{U}$, too.
+
   $\Xi$ matches $\frameoff{(\Theta {\circ} \Theta_B)}{{!}B^-}$ and
   $\tackon{(\Theta {\circ} \Theta_B)}{x{:}\ispers{B^-}}$ matches
-  $\frameoff{\Theta}{\tackon{\Theta_B}{x{:}\ispers{B^-}}}$.\robnote{This,
-    according to the definitions, is not technically true: $x$ is not
-    a binding in $\Theta$ (weakening). I think the matching
-    constructs need to be changed so that they {\it always} allow for
-    weakening.}  By the induction hypothesis on $N$ and $M$ we have
+  $\frameoff{\Theta'}{\tackon{\Theta_B}{x{:}\ispers{B^-}}}$.
+  By the induction hypothesis on $N$ and $M$ we have 
   $\foc{\Psi}{\tackon{(\Theta {\circ}
       \Theta_B)}{x{:}\ispers{B^-}}}{U'}$, and the required
   result then follows from rule ${!}_L$. 
-\item[--] $\lsubsta{\tupr{N}}{M}{A^+} = $
-\item[--] $\lsubsta{\tlaxr{N}}{M}{A^+} = $
-\item[--] $\lsubsta{\tfusel{N}}{M}{A^+} = $
-\item[--] $\lsubsta{\tlaml{N}}{M}{A^+} = $
-\item[--] $\lsubsta{\tlamr{N}}{M}{A^+} = $
+\item[--] $\lsubsta{\tfusel{N}}{M}{A^+} = \tfusel{(\lsubsta{N}{M}{A^+})}$
 \item[--] $\lsubsta{\tabort}{M}{A^+} = \tabort$
-\item[--] $\lsubsta{\toplusl{N_1}{N_2}}{M}{A^+} = $
-\item[--] $\lsubsta{\ttopr}{M}{A^+} = \ttopr$
-\item[--] $\lsubsta{\twithr{N_1}{N_2}}{M}{A^+} = $
-\item[--] $\lsubsta{\texistsl{a}{N}}{M}{A^+} = $
-\item[--] $\lsubsta{\tforallr{a}{N}}{M}{A^+} = $
-\item[--] $\lsubsta{\phi}{M}{A^+} = $
+\item[--] $\lsubsta{\toplusl{N_1}{N_2}}{M}{A^+} = \toplusl{(\lsubsta{N_1}{M}{A^+})}{(\lsubsta{N_2}{M}{A^+})}$
+\item[--] $\lsubsta{\texistsl{a}{N}}{M}{A^+} = \texistsl{a}{(\lsubsta{N}{M}{A^+})}$\\
+  We must show $\foc{\Psi}{\Xi}{U'}$, where
+  \begin{itemize}
+  \item
+  \item
+  \item
+  \end{itemize}
+
+\item[--] $\lsubsta{\phi}{M}{A^+} 
+           = (\mathsf{fn}~\sigma \Rightarrow \lsubsta{\phi(\sigma)}{(\sigma{M})}{A^+})$\\
+  We must show $\foc{\Psi}{\Xi}{U'}$, where
+  \begin{itemize}
+  \item
+  \item
+  \item
+  \end{itemize}
 \end{itemize}
 
 \paragraph{Substitution into spines}
 
 \begin{itemize}
 \item[--] $\lsubsta{\tupl{N}}{M}{A^+} = \tupl{(\lsubsta{N}{M}{A^+})}$
-\item[--] $\lsubsta{\tlaxl{N}}{M}{A^+} = \tlaxl{\lsubsta{N}{M}{A^+}}$
+\item[--] $\lsubsta{\tlaxl{N}}{M}{A^+} = \tlaxl{\lsubsta{N}{M}{A^+}}$\\
+  We must show $\foc{\Psi}{\Xi}{U'}$, where
+  \begin{itemize}
+  \item
+  \item
+  \item
+  \end{itemize}
 \item[--] $\lsubsta{\tappl{V}{\Sp}}{M}{A^+} 
            = \tappl{V}{(\lsubsta{\Sp}{M}{A^+})}$
 \item[--] $\lsubsta{\tappr{V}{\Sp}}{M}{A^+} 
-           = \tappr{V}{(\lsubsta{\Sp}{M}{A^+})}$
+           = \tappr{V}{(\lsubsta{\Sp}{M}{A^+})}$\\
+  We must show $\foc{\Psi}{\Xi}{U'}$, where
+  \begin{itemize}
+  \item
+  \item
+  \item
+  \end{itemize}
 \item[--] $\lsubsta{\tpione{\Sp}}{M}{A^+} = \tpione{(\lsubsta{\Sp}{M}{A^+})}$
 \item[--] $\lsubsta{\tpitwo{\Sp}}{M}{A^+} = \tpitwo{(\lsubsta{\Sp}{M}{A^+})}$
 \item[--] $\lsubsta{\tforalll{t}{\Sp}}{M}{A^+} 
