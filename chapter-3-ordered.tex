@@ -1464,24 +1464,71 @@ right. The admissible rule associated with leftist substitution is
 ${\it lcut}$:
 \[
 \infer-[{\it lcut}]
-{\foct{\Psi}{\frameoff{\Theta}{\Delta}}{\lsubsta{E}{N}{A^+}}{\restrictfrom{U}{\mlvl}}}
+{\foct{\Psi}{\frameoff{\Theta}{\Delta}}{\lsubsta{E}{M}{A^+}}{\restrictfrom{U}{\mlvl}}}
 {\foct{\Psi}{\Delta}{E}{\islvl{A^+}}
  &
- \foct{\Psi}{\tackon{\Theta}{A^+}}{N}{U}
+ \foct{\Psi}{\tackon{\Theta}{A^+}}{M}{U}
  &
  \stableL{\Theta}
  &
  \stableR{U}}
 \]
 
+For all of the cases of this theorem involving left rules, $\Delta$
+matches $\frameoff{\Theta_B}{x{:}T}$ and it is 
+necessary to be able to construct a frame ${\Theta}{\circ}{\Theta_B}$
+that is effectively the composition of the two frames. In cases that
+we discuss in detail, necessary properties of this composition frame
+are stated but not proven.
+
 \begin{itemize}
-\item[--] $\lsubsta{\tfocusl{x}{\Sp}}{M}{A^+} = $
-\item[--] $\lsubsta{\tetap{z}{N}}{M}{A^+} = $
-\item[--] $\lsubsta{}{M}{A^+} = $
-\item[--] $\lsubsta{}{M}{A^+} = $
-\item[--] $\lsubsta{}{M}{A^+} = $
-\item[--] $\lsubsta{}{M}{A^+} = $
-\item[--] $\lsubsta{}{M}{A^+} = $
+\item[--] $\lsubsta{\tfocusl{x}{\Sp}}{M}{A^+}
+           = \tfocusl{x}{(\lsubsta{\Sp}{M}{A^+})}$\\
+  We must show $\foc{\Psi}{\Xi}{U'}$, where
+  \begin{itemize}
+  \item $\Delta$ matches $\frameoff{\Theta_B}{x{:}B^-}$, 
+    $\Sp$ is a derivation of
+    $\foc{\Psi}{\tackon{\Theta_B}{[B^-]}}{\islvl{A^+}}$,
+  \item $M$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$,
+  \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$, and $U'$ matches 
+    $\restrictfrom{U}{\mlvl}$.
+  \end{itemize}
+  $\Xi$ matches $\frameoff{(\Theta {\circ} \Theta_B)}{x{:}B^-}$
+  and $\tackon{(\Theta {\circ} \Theta_B)}{[B^-]}$ matches
+  $\frameoff{\Theta'}{\tackon{\Theta_B}{[B^-]}}$. By the induction
+  hypothesis on $\Sp$ and $M$ we have 
+  $\foc{\Psi}{\tackon{(\Theta {\circ} \Theta_B)}{[B^-]}}{U'}$, and
+  the required result then follows from rule ${\it focus}_L$.
+  
+\item[--] $\lsubsta{\tetap{z}{N}}{M}{A^+} 
+           = \tetap{z}{(\lsubsta{N}{M}{A^+})}$
+\item[--] $\lsubsta{\tdownl{x}{N}}{M}{A^+} 
+           = \tdownl{x}{(\lsubsta{N}{M}{A^+})}$
+\item[--] $\lsubsta{\tgnabl{x}{N}}{M}{A^+} 
+           = \tgnabl{x}{(\lsubsta{N}{M}{A^+})}$
+\item[--] $\lsubsta{\tbangl{x}{N}}{M}{A^+} 
+           = \tbangl{x}{(\lsubsta{N}{M}{A^+})}$\\
+  We must show $\foc{}{}{U'}$
+  \begin{itemize}
+  \item $\Delta$ matches $\frameoff{\Theta_B}{{!}B^-}$, 
+    $N$ is a derivation of
+    $\foc{\Psi}{\tackon{\Theta_B}{\ispers{x{:}B^-}}}{\islvl{A^+}}$,
+  \item $M$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$,
+  \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$, and $U'$ matches 
+    $\restrictfrom{U}{\mlvl}$.
+  \end{itemize}
+  $\Xi$ matches $\frameoff{(\Theta {\circ} \Theta_B)}{{!}B^-}$ and
+  $\tackon{(\Theta {\circ} \Theta_B)}{x{:}\ispers{B^-}}$ matches
+  $\frameoff{\Theta}{\tackon{\Theta_B}{x{:}\ispers{B^-}}}$.\robnote{This,
+    according to the definitions, is not technically true: $x$ is not
+    a binding in $\Theta$ (weakening). I think the matching
+    constructs need to be changed so that they {\it always} allow for
+    weakening.}  By the induction hypothesis on $N$ and $M$ we have
+  $\foc{\Psi}{\tackon{(\Theta {\circ}
+      \Theta_B)}{x{:}\ispers{B^-}}}{U'}$, and the required
+  result then follows from rule ${!}_L$. 
+\item[--] $\lsubsta{\tupr{N}}{M}{A^+} = $
+\item[--] $\lsubsta{\tlaxr{N}}{M}{A^+} = $
 \item[--] $\lsubsta{}{M}{A^+} = $
 \item[--] $\lsubsta{}{M}{A^+} = $
 \item[--] $\lsubsta{}{M}{A^+} = $
