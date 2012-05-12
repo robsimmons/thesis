@@ -26,6 +26,7 @@ N & ::= \tfocusr{V}           %% V
    \mid \tlaml{N}             %% <N
    \mid \tlamr{N}             %% >N
 %
+   \mid \tabort
    \mid \toplusl{N_1}{N_2}    %% [N1,N2]
    \mid \ttopr 
    \mid \twithr{N_1}{N_2}     %% N1 & N2
@@ -36,8 +37,8 @@ N & ::= \tfocusr{V}           %% V
 S & ::= \tnil                 %% nil
    \mid \tupl{N}              %% N
    \mid \tlaxl{N}             %% {N} 
-   \mid \tappr{V}{\Sp}        %% V > Sp
    \mid \tappl{V}{\Sp}        %% V < Sp
+   \mid \tappr{V}{\Sp}        %% V > Sp
    \mid \tpione{\Sp}          %% fst Sp
    \mid \tpitwo{\Sp}          %% snd Sp
    \mid \tforalll{t}{\Sp}

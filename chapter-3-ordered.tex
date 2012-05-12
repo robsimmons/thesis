@@ -1481,6 +1481,8 @@ that is effectively the composition of the two frames. In cases that
 we discuss in detail, necessary properties of this composition frame
 are stated but not proven.
 
+\paragraph{Substitution into terms}
+
 \begin{itemize}
 \item[--] $\lsubsta{\tfocusl{x}{\Sp}}{M}{A^+}
            = \tfocusl{x}{(\lsubsta{\Sp}{M}{A^+})}$\\
@@ -1529,15 +1531,31 @@ are stated but not proven.
   result then follows from rule ${!}_L$. 
 \item[--] $\lsubsta{\tupr{N}}{M}{A^+} = $
 \item[--] $\lsubsta{\tlaxr{N}}{M}{A^+} = $
-\item[--] $\lsubsta{}{M}{A^+} = $
-\item[--] $\lsubsta{}{M}{A^+} = $
-\item[--] $\lsubsta{}{M}{A^+} = $
-\item[--] $\lsubsta{}{M}{A^+} = $
-\item[--] $\lsubsta{}{M}{A^+} = $
-\item[--] $\lsubsta{}{M}{A^+} = $
-\item[--] $\lsubsta{}{M}{A^+} = $
-\item[--] $\lsubsta{}{M}{A^+} = $
-\item[--] $\lsubsta{}{M}{A^+} = $
+\item[--] $\lsubsta{\tfusel{N}}{M}{A^+} = $
+\item[--] $\lsubsta{\tlaml{N}}{M}{A^+} = $
+\item[--] $\lsubsta{\tlamr{N}}{M}{A^+} = $
+\item[--] $\lsubsta{\tabort}{M}{A^+} = \tabort$
+\item[--] $\lsubsta{\toplusl{N_1}{N_2}}{M}{A^+} = $
+\item[--] $\lsubsta{\ttopr}{M}{A^+} = \ttopr$
+\item[--] $\lsubsta{\twithr{N_1}{N_2}}{M}{A^+} = $
+\item[--] $\lsubsta{\texistsl{a}{N}}{M}{A^+} = $
+\item[--] $\lsubsta{\tforallr{a}{N}}{M}{A^+} = $
+\item[--] $\lsubsta{\phi}{M}{A^+} = $
+\end{itemize}
+
+\paragraph{Substitution into spines}
+
+\begin{itemize}
+\item[--] $\lsubsta{\tupl{N}}{M}{A^+} = \tupl{(\lsubsta{N}{M}{A^+})}$
+\item[--] $\lsubsta{\tlaxl{N}}{M}{A^+} = \tlaxl{\lsubsta{N}{M}{A^+}}$
+\item[--] $\lsubsta{\tappl{V}{\Sp}}{M}{A^+} 
+           = \tappl{V}{(\lsubsta{\Sp}{M}{A^+})}$
+\item[--] $\lsubsta{\tappr{V}{\Sp}}{M}{A^+} 
+           = \tappr{V}{(\lsubsta{\Sp}{M}{A^+})}$
+\item[--] $\lsubsta{\tpione{\Sp}}{M}{A^+} = \tpione{(\lsubsta{\Sp}{M}{A^+})}$
+\item[--] $\lsubsta{\tpitwo{\Sp}}{M}{A^+} = \tpitwo{(\lsubsta{\Sp}{M}{A^+})}$
+\item[--] $\lsubsta{\tforalll{t}{\Sp}}{M}{A^+} 
+           = \tforalll{t}{(\lsubsta{\Sp}{M}{A^+})}$
 \end{itemize}
 
 
