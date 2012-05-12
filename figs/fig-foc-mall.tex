@@ -115,6 +115,17 @@
 \]
 \vspace{-5pt}
 \[
+\infer[{\lefti}_R]
+{\foct{\Psi}{\Delta}{\tlaml{N}}{A^+ \lefti B^-}}
+{\foct{\Psi}{\mkconj{A^+}{\Delta}}{N}{B^-}}
+\quad
+\infer[{\lefti}_L]
+{\foct{\Psi}{\frameoff{\Theta}{\matchconj{\Delta_A}{[A \lefti B]}}}
+   {\tappl{V}{\Sp}}{U}}
+{\foct{\Psi}{\tackon{\Theta}{[B]}}{\Sp}{U}}
+\]
+\vspace{-5pt}
+\[
 \infer[{\righti}_R]
 {\foct{\Psi}{\Delta}{\tlamr{N}}{A^+ \righti B^-}}
 {\foct{\Psi}{\mkconj{\Delta}{A^+}}{N}{B^-}}
@@ -125,17 +136,6 @@
 {\foct{\Psi}{\Delta_A}{V}{[A^+]}
  &
  \foct{\Psi}{\tackon{\Theta}{[B]}}{\Sp}{U}}
-\]
-\vspace{-5pt}
-\[
-\infer[{\lefti}_R]
-{\foct{\Psi}{\Delta}{\tlaml{N}}{A^+ \lefti B^-}}
-{\foct{\Psi}{\mkconj{A^+}{\Delta}}{N}{B^-}}
-\quad
-\infer[{\lefti}_L]
-{\foct{\Psi}{\frameoff{\Theta}{\matchconj{\Delta_A}{[A \lefti B]}}}
-   {\tappl{V}{\Sp}}{U}}
-{\foct{\Psi}{\tackon{\Theta}{[B]}}{\Sp}{U}}
 \]
 \caption{Multiplicative, exponential fragment of focused \ollll.
 (Contexts $\Psi$ suppressed.)}

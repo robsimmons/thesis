@@ -728,13 +728,13 @@ A^+_\mpers & ::= p^+_\mpers
 \\
 A^- & ::= p^- \mid p^-_\mlax 
         \mid {\uparrow}A^+ \mid {\ocircle}A^+
-        \mid A^+ \righti B^- \mid A^+ \lefti B^-
+        \mid A^+ \lefti B^- \mid A^+ \righti B^-
         \mid \top \mid A^- \with B^-
         \mid \forall x.A^-
 \\
 A^-_\mlax & ::= p^-_\mlax 
         \mid {\ocircle}A^+
-        \mid A^+ \righti B^-_\mlax \mid A^+ \lefti B^-_\mlax
+        \mid A^+ \lefti B^-_\mlax \mid A^+ \righti B^-_\mlax
         \mid \top \mid A^-_\mlax \with B^-_\mlax
         \mid \forall x.A^-_\mlax
 \end{align*}
@@ -1218,11 +1218,7 @@ ${\it cut}^+$.
 {\foct{\Psi}{\frameoff{\Theta}{\Delta}}{(\subst{V}{N})^{A^+}}{U}}
 {\foct{\Psi}{\Delta}{V}{[A^+]}
  &
- \foct{\Psi}{\tackon{\Theta}{A^+}}{N}{U}
- &
- \stableL{\Theta}
- &
- \stableR{U}}
+ \foct{\Psi}{\tackon{\Theta}{A^+}}{N}{U}}
 \]
 We have to be careful, in the positive principal substitution
 associated with the type $A^+ \fuse B^+$, to maintain the
@@ -1344,12 +1340,39 @@ invariant that, in an unstable context, we only ever consider the {\it
            = (\subst{V}{[t/a]N})^{[t/a]A^+}$ \\
   We must show $\foc{\Psi}{\Xi}{U}$, where
   \begin{itemize}
-  \item
-  \item
-  \item
+  \item $\Psi \vdash t : \tau$, $V$ is a derivation of 
+     $\foc{\Psi}{\Delta}{[[t/a]A^+]}$,
+  \item $\tackon{\Theta}{\exists a{:}\tau. A^+}$ 
+     matches $\frameoff{\Theta'}{\exists a{:}\tau. A^+}$, 
+     $N$ is a derivation of 
+     $\foc{\Psi, a{:}\tau}{\tackon{\Theta}{A^+}}{U}$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
   \end{itemize}
+  $\Xi$ matches $\frameoff{\Theta'}{\Delta}$, and by the variable
+  substitution on $[t/a]$ and $V$, we have a derivation $[t/a]N$ of
+  $\foc{\Psi}{\tackon{\Theta}{[t/a]A^+}}{U}$.  We count $[t/a]A^+$ as
+  being a smaller formula than $\exists x{:}\tau.A^+$, so by the
+  induction hypothesis on $V$ and $[t/a]N$, we get a derivation of
+  $\foc{\Psi}{\Xi}{U}$ as required.
 
-\item[--] $(\subst{\tunifr}{\phi})^{t \doteq t} = \phi({\sf id})$ --- XXX 
+\item[--] $(\subst{\tunifr}{\phi})^{t \doteq t} = \phi({\sf id})$\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $\Delta$ matches $\cdot$,
+  \item $\tackon{\Theta}{t \doteq t}$ matches $\frameoff{\Theta'}{t \doteq t}$,
+     $\phi$ is a function from substitutions $\Psi' \vdash \sigma : \Psi$
+     that unify $t$ and $t$ to derivations of 
+     $\foc{\Psi}{\tackon{\Theta'}{\cdot}}{U}$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{t \doteq t}$.
+  \end{itemize}
+  We simply apply the identity substitution to $\phi$
+  to obtain a derivation of $\foc{\Psi}{\tackon{\Theta'}{\cdot}}{U}$.
+  Note that this is not the derivation of 
+  $\foc{\Psi}{\Xi}{U}$ that we need; we need a simple lemma that, 
+  given a derivation of $\foc{\Psi}{\tackon{\Theta'}{\cdot}}{U}$
+  and the fact that $\Xi$ matches $\frameoff{\Theta'}{\cdot}$,
+  we can get a proof of $\foc{\Psi}{\Xi}{U}$ as we require.
+
 \end{itemize}
 
 \subsubsection{Negative principal substitution}
@@ -1357,7 +1380,8 @@ Negative principal substitution encompass all the {\it principal cuts}
 from Pfenning's structural cut admissibility proof for which the
 principal formula is negative. The constructive content of this part
 is a function $(\subst{N}{\Sp})^{A^-}$ that normalizes a term against
-a spine; a similar function appears in presentations of hereditary
+a spine; a similar function appears as {\it hereditary reduction} 
+in presentations of hereditary
 substitution for LF \cite{watkins02concurrent}. Induction is on the
 structure of the negative type. The admissible rule associated with
 negative principal substitution is ${\it cut}^-$:
@@ -1372,23 +1396,52 @@ negative principal substitution is ${\it cut}^-$:
 \]
 
 \begin{itemize}
-\item[--] $(\subst{}{})^{p^-}$
+\item[--] $(\subst{\tetan{N}}{\tnil})^{p^-_\mlvl} = N$\\
+   We need to show $\foc{\Psi}{\Xi}{U}$, where
+   \begin{itemize}
+   \item $N$ is a derivation of $\foc{\Psi}{\Delta}{\islvl{\susp{p^-_\mlvl}}}$
+   \item $\tackon{\Theta}{[p^-_\mlvl]}$ matches $[p^-_\mlvl]$,
+      $U = \islvl{\susp{p^-_\mlvl}}'$,
+   \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
+   \end{itemize}
+   Because $U$ is suspension-normal, $\mlvl = \mlvl'$.
+   A derivation of $\foc{\Psi}{\Delta}{\islvl{\susp{p^-_\mlvl}}}$ is not
+   quite a proof of $\foc{\Psi}{\Xi}{U}$, so we need a lemma that 
+   we can get one from the other.
 
-\item[--] $(\subst{}{})^{p^-_\mlax}$
+\item[--] $(\subst{\tupr{N}}{\tupl{M}})^{{\uparrow}A^+} = \lsubsta{N}{M}{A^+}$
 
-\item[--] $(\subst{}{})^{{\uparrow}A^+}$
+\item[--] $(\subst{\tlaxr{N}}{\tlaxl{M}})^{{\ocircle}A^+}
+           = \lsubsta{N}{M}{A^+}$\\
+  We need to show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $N$ is a derivation of 
+     $\foc{\Psi}{A^+, \Delta}{B^-}$, $\Delta$ is stable, 
+  \item
+  \item
+  \end{itemize}
 
-\item[--] $(\subst{}{})^{{\ocircle}A^+}$
+\item[--] $(\subst{(\tlaml{N})}{(\tappl{V}{\Sp})})^{A^+ \lefti B^-}
+           = (\subst{(\subst{V}{N})^{A^+}}{\Sp})^{B^-}$
 
-\item[--] $(\subst{}{})^{A^+ \righti B^-}$
+\item[--] $(\subst{(\tlamr{N})}{(\tappr{V}{\Sp})})^{A^+ \righti B^-} 
+           = (\subst{(\subst{V}{N})^{A^+}}{\Sp})^{B^-}$\\
+  We need to show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $N$ is a derivation of 
+     $\foc{\Psi}{A^+, \Delta}{B^-}$, $\Delta$ is stable, 
+  \item
+  \item
+  \end{itemize}
 
-\item[--] $(\subst{}{})^{A^+ \lefti B^-}$
+\item[--] $(\subst{(\twithr{N_1}{N_2})}{(\tpione{\Sp})})^{A^- \with B^-}
+           = (\subst{N_1}{\Sp})^{A^-}$
 
-\item[--] $(\subst{}{})^{\top}$
+\item[--] $(\subst{(\twithr{N_1}{N_2})}{(\tpitwo{\Sp})})^{A^- \with B^-}
+           = (\subst{N_2}{\Sp})^{A^-}$
 
-\item[--] $(\subst{}{})^{A^- \with B^-}$
-
-\item[--] $(\subst{}{})^{\forall x.A^-}$
+\item[--] $(\subst{(\tforallr{a}{N})}{(\tforalll{t}{\Sp})})^{\forall x.A^-}
+           = (\subst{[t/a]N}{\Sp})^{[t/a]A^-}$
 \end{itemize}
 
 \subsubsection{Leftist substitution}
@@ -1420,6 +1473,26 @@ ${\it lcut}$:
  &
  \stableR{U}}
 \]
+
+\begin{itemize}
+\item[--] $\lsubsta{\tfocusl{x}{\Sp}}{M}{A^+} = $
+\item[--] $\lsubsta{\tetap{z}{N}}{M}{A^+} = $
+\item[--] $\lsubsta{}{M}{A^+} = $
+\item[--] $\lsubsta{}{M}{A^+} = $
+\item[--] $\lsubsta{}{M}{A^+} = $
+\item[--] $\lsubsta{}{M}{A^+} = $
+\item[--] $\lsubsta{}{M}{A^+} = $
+\item[--] $\lsubsta{}{M}{A^+} = $
+\item[--] $\lsubsta{}{M}{A^+} = $
+\item[--] $\lsubsta{}{M}{A^+} = $
+\item[--] $\lsubsta{}{M}{A^+} = $
+\item[--] $\lsubsta{}{M}{A^+} = $
+\item[--] $\lsubsta{}{M}{A^+} = $
+\item[--] $\lsubsta{}{M}{A^+} = $
+\item[--] $\lsubsta{}{M}{A^+} = $
+\item[--] $\lsubsta{}{M}{A^+} = $
+\end{itemize}
+
 
 \subsubsection{Right commutative cuts}\label{sec:rsubst}
 Rightist substitutions encompass all the {\it right commutative cuts}

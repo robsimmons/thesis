@@ -63,18 +63,6 @@
 \]
 \vspace{-5pt}
 \[
-\infer[{\righti}_R]
-{\orseq{\Gamma}{\Delta}{\Omega}{A \righti B}}
-{\otseq{\Gamma}{\Delta}{\Omega, A}{B}}
-\quad
-\infer[{\righti}_L]
-{\olseq{\Gamma}{\Delta_A, \Delta}{\Omega_L}{A \righti B}{\Omega_A, \Omega_R}}
-{\otseq{\Gamma}{\Delta_A}{\Omega_A}{A}
- &
- \opseq{\Gamma}{\Delta}{\Omega_L}{B, \Omega_R}}
-\]
-\vspace{-5pt}
-\[
 \infer[{\lefti}_R]
 {\orseq{\Gamma}{\Delta}{\Omega}{A \lefti B}}
 {\otseq{\Gamma}{\Delta}{A, \Omega}{B}}
@@ -84,6 +72,18 @@
 {\otseq{\Gamma}{\Delta_A}{\Omega_A}{A}
  &
  \opseq{\Gamma}{\Delta}{\Omega_L}{B,\Omega_R}}
+\]
+\vspace{-5pt}
+\[
+\infer[{\righti}_R]
+{\orseq{\Gamma}{\Delta}{\Omega}{A \righti B}}
+{\otseq{\Gamma}{\Delta}{\Omega, A}{B}}
+\quad
+\infer[{\righti}_L]
+{\olseq{\Gamma}{\Delta_A, \Delta}{\Omega_L}{A \righti B}{\Omega_A, \Omega_R}}
+{\otseq{\Gamma}{\Delta_A}{\Omega_A}{A}
+ &
+ \opseq{\Gamma}{\Delta}{\Omega_L}{B, \Omega_R}}
 \]
 
 \medskip
