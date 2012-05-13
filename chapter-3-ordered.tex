@@ -786,18 +786,19 @@ values, terms, and spines is as follows:
 \input{proofterms-3}
 
 Expressions are treated as in the structural focalization methodology
-\cite{simmons11structural}. It is possible to take a view of
-expressions as {\it extrinsically} typed, which means we consider both
-well-typed and ill-typed expressions; the well-typed expressions
-are those for which the sequent $\foct{\Psi}{\Delta}{E}{U}$ is
-derivable. However, we will take the view that expressions are
-intrinsically typed representatives of derivations: that is,
-$\foct{\Psi}{\Delta}{E}{U}$ expresses that $E$ is a derivation
-of the sequent $\foc{\Psi}{\Delta}{U}$. Justifying this close
-correspondence requires us to take care that the structure of
-expressions is faithful to the structure of proofs; this is the
-primary reason that we don't introduce the patterns that are common in
-other proof term assignments for focused logic
+\cite{simmons11structural}. It is possible to take a ``Curry-style''
+view of expressions as {\it extrinsically} typed, which means we
+consider both well-typed and ill-typed expressions; the well-typed
+expressions are those for which the sequent
+$\foct{\Psi}{\Delta}{E}{U}$ is derivable. However, we will take the
+``Church-style'' view that expressions are intrinsically typed
+representatives of derivations: that is, $\foct{\Psi}{\Delta}{E}{U}$
+expresses that $E$ is a derivation of the sequent
+$\foc{\Psi}{\Delta}{U}$. Justifying this close correspondence requires
+us to take care that the structure of expressions is faithful to the
+structure of proofs; this is the primary reason that we don't
+introduce the patterns that are common in other proof term assignments
+for focused logic
 \cite{watkins02concurrent,licata08focusing,krishnaswami09focusing}.
 
 There are two caveats to the idea that expressions are representatives
@@ -815,6 +816,20 @@ $\foct{\Psi}{\Delta}{E}{U}$, then $\foct{\Psi, a{:}\tau}{\Delta,
 type annotations, when we say that some expression $E$ is a derivation
 of $\foc{\Psi}{\Delta}{U}$, it is only {\it uniquely} a derivation of
 that sequent if we account for the implicit bookkeeping.
+
+Our ability to imagine proof terms as being fully independnetly typed
+is an advantage to presening a proof theory that is not fully
+dependent (which is to say, the domain of first-order quantification
+does {\it not} include expressions $E$). Presentations of hereditary
+substitution for LF (which is the computational conent of cut
+admissibility) need to present a simply typed term language
+\cite{watkins02concurrent,harper07mechanizing} or an untyped term
+language \cite{reed07properties,martens11mechanizing} and then impose
+a Curry-style dependent typing on top of them.
+
+The ability of being able to give derivations fully intrinsic types
+is one of the advantages to presenting a proof theory that is not
+fully dependent; the proof terms that we present are {\it not} 
 
 % Fundamentally, this is just a statement of the fact that
 % weakening holds for persistent facts and first-order variables in our
@@ -969,6 +984,7 @@ $\Sp$.
 Note that, in the case for $\forall_R$, the substitution $\sigma$ was
 applied to the first-order type $\tau$ as well as to as at the fact
 that our first-order terms are dependently typed.
+\end{proof}
 
 Given we write the constructive content of the variable substitution
 theorem as $\sigma{E}$, where $E$ is an expression,
@@ -1729,17 +1745,27 @@ The admissible rule associated with rightist substitution is
 ${\it rcut}$:
 \[
 \infer-[{\it rcut}]
-{\foct{\Psi}{\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}}{\rsubsta{N}{x}{E}{A^-}}{U}}
-{\foct{\Psi}{\Delta}{N}{A^-}
+{\foct{\Psi}{\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}}{\rsubsta{M}{x}{E}{A^-}}{U}}
+{\foct{\Psi}{\Delta}{M}{A^-}
  &
  \foct{\Psi}{\tackon{\Theta}{x{:}\islvl{A^-}}}{E}{U}
  & 
  \stableL{\Delta}}
 \]
 
-\end{proof}
+A unique aspect of the right commutative cuts is that the previously implicit 
+bookkeeping on contexts matters: when we have deal with
+multiplicative rules and with left focus, 
+we actually must consider that the variable $x$ that we're substituting
+for can end up in only one specific branch of the proof 
+(if $x$ is associated with a judgment $\istrue{A^-}$ or 
+ $\iseph{A^-}$) or in both
+branches of the proof (if
+$x$ is associated with a judgment $x{:}\ispers{A^-}$). The computational
+representation of these cases looks nondeterminstic, but it is actually
+determined by the annotations and bookkeeping that is 
 
-\paragraph{Substitution into values}
+\paragraph{\it Substitution into values}
 
 \begin{itemize}
 \item[--] $\rsubsta{M}{x}{z}{A^-} = z$
@@ -1749,9 +1775,41 @@ ${\it rcut}$:
            = \tgnabr{(\rsubsta{M}{x}{N}{A^-})}$
 \item[--] $\rsubsta{M}{x}{(\tbangr{N})}{A^-}
            = \tbangr{(\rsubsta{M}{x}{N}{A^-})}$\smallskip\\
-  We must show
-\item[--] $\rsubsta{M}{x}{\toner}{A^-} = \toner$
-\item[--] $\rsubsta{M}{x}{(\tfuser{V_1}{V_2})}{A^-} = $\\
+  We must show $\foc{\Psi}{\Xi}{[{!}B^-]}$, where 
+  \begin{itemize}
+  \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
+  \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches 
+     $\restrictto{\Delta'}{\mpers}$,
+     $N$ is a derivation of $\foc{\Psi}{\Delta'}{B^-}$, 
+  \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
+  \end{itemize}
+  Because $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches
+  $\restrictto{\Delta'}{\mpers}$ and $\Xi$ matches 
+  $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$, we can conclude that
+  there exists a $\Theta'$ such that
+  $\Delta' = \tackon{\Theta'}{x{:}\islvl{A^-}}$ and also that
+  $\Xi$ matches $\restrictto{\Xi}{\mpers}$.
+
+  By the induction hypothesis on $M$ and $N$, 
+  we have a derivation of $\foc{\Psi}{\Xi}{B^-}$, 
+  and the result follows by rule ${!}_R$. 
+
+\smallskip
+
+\item[--] $\rsubsta{M}{x}{\toner}{A^-} = \toner$ \smallskip\\
+  We must show $\foc{\Psi}{\Xi}{[\one]}$, where
+  \begin{itemize}
+  \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
+  \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches $\cdot$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
+  \end{itemize}
+  Because $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches $\cdot$, it is
+  effectively the case that we must have $\mlvl = \mpers$, and so 
+  $\Xi$ matches $\cdot$ as well. The result follows by rule ${\one}_R$. 
+
+\smallskip
+
+\item[--] $\rsubsta{M}{x}{(\tfuser{V_1}{V_2})}{A^-} = $ \smallskip\\
     $\begin{array}{ll}
     \qquad \tfuser{(\rsubsta{M}{x}{V_1}{A^-})}{V_2}
      & \mbox{\it (if $x$ is in $V_1$'s context but not $V_2$'s)}\\
@@ -1760,7 +1818,42 @@ ${\it rcut}$:
     \qquad \tfuser{(\rsubsta{M}{x}{V_1}{A^-})}{(\rsubsta{M}{x}{V_2}{A^-})}
      \qquad & \mbox{\it (if $x$ is in both $V_1$ and $V_2$'s contexts)}
     \end{array}$\smallskip\\
-  We must show
+  We must show $\foc{\Psi}{\Xi}{[B_1^+ \fuse B_2^+]}$, where 
+  \begin{itemize}
+  \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
+  \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches $\Delta_1, \Delta_2$,
+     $V_1$ is a derivation of $\foc{\Psi}{\Delta_1}{B_1^+}$, 
+     $V_2$ is a derivation of $\foc{\Psi}{\Delta_2}{B_2^+}$, 
+  \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
+  \end{itemize}
+  There are three possibilities: either $x$ is a mapping in $\Delta_1$
+  or $\Delta_2$ but not both (if $\mlvl$ is $\meph$ or $\mtrue$) 
+  or $x$ is a mapping in both $\Delta_1$ and $\Delta_2$ (if $\mlvl$ 
+  is $\mpers$). 
+
+  In the first case, assume without loss of generality that $x$ is a mapping
+  in $\Delta_1$ but not $\Delta_2$; we can construct a 
+  $\Theta_1$ and $\Delta_1'$ 
+  such that $\tackon{\Theta_1}{x{:}\islvl{A^-}} = \Delta_1$,
+  $\Delta_1'$ matches $\frameoff{\Theta_1}{\restrictto{\Delta_1}{\mlvl}}$,
+  and $\Xi$ matches $\matchconj{\Delta_1'}{\Delta_2}$
+  By the induction hypothesis on $M$ and $V_1$, we have 
+  $\rsubsta{M}{x}{V_1}{A^-}$, a derivation of 
+  $\foc{\Psi}{\Delta_1'}{[B_1^+]}$, and the result follows by
+  rule ${\fuse}_R$ on $\rsubsta{M}{x}{V_1}{A^-}$ and $V_2$.
+
+  The second case is similar; we construct a 
+  $\Theta_1$, $\Delta_1'$, $\Theta_2$, and $\Delta_2'$ such that 
+  $\tackon{\Theta_1}{x{:}\islvl{A^-}} = \Delta_1$,
+  $\tackon{\Theta_2}{x{:}\islvl{A^-}} = \Delta_2$,
+  $\Delta_1'$ matches $\frameoff{\Theta_1}{\restrictto{\Delta_1}{\mlvl}}$,
+  $\Delta_2'$ matches $\frameoff{\Theta_1}{\restrictto{\Delta_2}{\mlvl}}$,
+  and $\Xi$ matches $\matchconj{\Delta_1'}{\Delta_2'}$, which is only 
+  possible because $\mlvl = \mpers$; we then invoke the induction 
+  hypothesis twice. 
+
+\smallskip
+
 \item[--] $\rsubsta{M}{x}{(\tinl{V})}{A^-} 
            = \tinl{(\rsubsta{M}{x}{V}{A^-})}$
 \item[--] $\rsubsta{M}{x}{(\tinr{V})}{A^-} 
@@ -1770,14 +1863,14 @@ ${\it rcut}$:
 \item[--] $\rsubsta{M}{x}{\tunifr}{A^-} = \tunifr$
 \end{itemize}
 
-\paragraph{Substitution into terms}
+\paragraph{\it Substitution into terms}
 
 \begin{itemize}
 \item[--] $\rsubsta{M}{x}{\tfocusr{V}}{A^-} 
            = \tfocusr{\rsubsta{M}{x}{V}{A^-}}$
 \item[--] $\rsubsta{M}{x}{(\tfocusl{y}{\Sp})}{A^-} 
            = \tfocusl{y}{(\rsubsta{M}{x}{\Sp}{A^-})} \qquad$ {\it ($x \# y$)}
-\item[--] $\rsubsta{M}{x}{(\tfocusl{x}{\Sp})}{A^-} =$\\
+\item[--] $\rsubsta{M}{x}{(\tfocusl{x}{\Sp})}{A^-} =$ \smallskip\\
     $\begin{array}{ll}
     \qquad (\subst{M}{(\rsubsta{M}{x}{\Sp}{A^-})})^{A^-}
      & \mbox{\it (if $x$ is in $\Sp$'s context)}\\
@@ -1785,13 +1878,19 @@ ${\it rcut}$:
      & \mbox{\it (if $x$ is not in $\Sp$'s context)}
     \end{array}$\smallskip\\
   We must show
-\item[--] $\rsubsta{M}{x}{N}{A^-} 
-           = \rsubsta{M}{x}{N}{A^-}$
+
+\smallskip
+
 \item[--] $\rsubsta{M}{x}{N}{A^-} 
            = \rsubsta{M}{x}{N}{A^-}$
 \end{itemize}
 
-\paragraph{Substitution into spines}
+\paragraph{\it Substitution into spines}
+
+\begin{itemize}
+\item[--] $\rsubsta{M}{x}{N}{A^-} 
+           = \rsubsta{M}{x}{N}{A^-}$
+\end{itemize}
 
 \section{Identity expansion}
 \label{sec:ord-identity}
