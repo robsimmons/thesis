@@ -817,11 +817,11 @@ type annotations, when we say that some expression $E$ is a derivation
 of $\foc{\Psi}{\Delta}{U}$, it is only {\it uniquely} a derivation of
 that sequent if we account for the implicit bookkeeping.
 
-Our ability to imagine proof terms as being fully independnetly typed
-is an advantage to presening a proof theory that is not fully
+Our ability to imagine proof terms as being fully independently typed
+is an advantage to presenting a proof theory that is not fully
 dependent (which is to say, the domain of first-order quantification
 does {\it not} include expressions $E$). Presentations of hereditary
-substitution for LF (which is the computational conent of cut
+substitution for LF (which is the computational content of cut
 admissibility) need to present a simply typed term language
 \cite{watkins02concurrent,harper07mechanizing} or an untyped term
 language \cite{reed07properties,martens11mechanizing} and then impose
@@ -1106,7 +1106,7 @@ represented as follows:
 \section{Cut admissibility}
 \label{sec:ord-cut}
 
-It is a little wordy to say that, in a context or succeedent, the only
+It is a little wordy to say that, in a context or succeedant, the only
 judgments involving suspensions are $(\ispers{\susp{p^+_\mpers}})$,
 $(\iseph{\susp{p^+_\meph}})$, $(\istrue{\susp{p^+}})$,
 $(\istrue{\susp{p^-}})$, and $(\islax{\susp{p^-_\mlax}})$, but this is a
@@ -1154,7 +1154,7 @@ fourth part contains all the {\it right commutative cases} that
 perform case analysis and induction only on the second given
 derivation.
 
-In Pfenning's work on structural cut eliminiation, this classification
+In Pfenning's work on structural cut elimination, this classification
 of cases was informal, but the structure of our cut admissibility
 proofs actually isolates the principal, left commutative, and right
 commutative cases into different parts of the theorem
@@ -1174,7 +1174,7 @@ statement of cut admissibility for a rather complex logic.
 \subsection{Optimizing the statement of cut admissibility}
 
 We will pick the cut admissibility proof
-from Chaudhiri's thesis \cite{chaudhuri06focused} as a represenative
+from Chaudhuri's thesis \cite{chaudhuri06focused} as a representative
 example of existing work on cut admissibility in focused logics.  His
 statement of cut admissibility linear logic has 10 parts, 
 which are sorted into
@@ -1198,10 +1198,10 @@ Further simplification is due to defining right-focused, inverting,
 and left-focused sequents as refinements of general sequents
 $\foc{\Psi}{\Delta}{U}$. This strategy was not used in the structural
 focalization development, and while no code duplication resulted, the
-statement of part 3 was split into two parts (for substituing into
+statement of part 3 was split into two parts (for substituting into
 terms and spines) and the statement of part 4 was split in three (for
 substituting into values, terms, spines) \cite{simmons11structural}.
-Without either of the aforementioned simplfications, we would have 15
+Without either of the aforementioned simplifications, we would have 15
 parts in the statement of Theorem~\ref{thm:ord-cut} instead of four
 and about a 2x blowup in the total number of cases that needed to be
 written down and checked.
@@ -1209,7 +1209,7 @@ written down and checked.
 A final improvement in our theorem statement is very subtle: the {\it
   particular} fixed inversion strategy we chose matters.  The use of a
 fixed inversion strategy is critical to avoid two problems with the
-development in Chapter~2. The more serious problem, dicussed in
+development in Chapter~2. The more serious problem, discussed in
 Section~\ref{sec:confluent-v-fixed}, is the need to prove a tedious,
 quadratically large confluence theorem in order to define a strong
 notion of canonical forms. This first problem is solved by the choice
@@ -1219,7 +1219,7 @@ commutative cases in both part 1 and part 4 (which map directly onto
 parts 1 and 4 of Theorem~\ref{thm:ord-cut} above). Our system
 prioritizes the inversion of positive formulas on the left over the
 inversion of negative formulas on the right. If we made the opposite
-choice, as Chaudhri's system does, then this (smaller) problem 
+choice, as Chaudhuri's system does, then this (smaller) problem 
 would remain. We get a lot of mileage out of the
 fact that if $\Xi = \tackon{\Theta}{A^+}$ then $A^+$ unambiguously
 refers to the left-most proposition in $\Xi$, and this invariant would
@@ -1355,7 +1355,7 @@ invariant that, in an unstable context, we only ever consider the {\it
   \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
   \end{itemize}
 
-  It is clear we can to consturct a frame $\Theta_B$ such that
+  It is clear we can to construct a frame $\Theta_B$ such that
   $\tackon{\Theta'}{A^+, B^+} = \tackon{\Theta_B}{A^+}$; we're just exchanging
   the part in the frame with the part not in the frame. We also 
   must be able to construct a second frame, $\Theta_A$, such that
@@ -1496,9 +1496,9 @@ negative principal substitution is ${\it cut}^-$:
   fixed inversion invariant would not permitted us to frame off the
   right-most proposition $A^+$.
 
-  We next consturct a context $\Delta'_A$ that matches
+  We next construct a context $\Delta'_A$ that matches
   $\frameoff{\Theta'_A}{\Delta_A}$ (and also $\Delta, \Delta_A$ viewed
-  as a matching construct), while simutaneously
+  as a matching construct), while simultaneously
   $\Xi$ matches $\frameoff{\Theta'}{\Delta'_A}$. 
 
   By the part 1 of cut admissibility
@@ -1762,7 +1762,7 @@ for can end up in only one specific branch of the proof
  $\iseph{A^-}$) or in both
 branches of the proof (if
 $x$ is associated with a judgment $x{:}\ispers{A^-}$). The computational
-representation of these cases looks nondeterminstic, but it is actually
+representation of these cases looks nondeterministic, but it is actually
 determined by the annotations and bookkeeping that is 
 
 \paragraph{\it Substitution into values}
