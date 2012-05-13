@@ -1822,7 +1822,7 @@ determined by the annotations and bookkeeping that is
   \begin{itemize}
   \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
   \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches $\Delta_1, \Delta_2$,
-     $V_1$ is a derivation of $\foc{\Psi}{\Delta_1}{B_1^+}$, 
+     $V_1$ is a derivation of $\foc{\Psi}{\Delta_1}{B_1^+}$, \\
      $V_2$ is a derivation of $\foc{\Psi}{\Delta_2}{B_2^+}$, 
   \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
   \end{itemize}
@@ -1831,7 +1831,8 @@ determined by the annotations and bookkeeping that is
   or $x$ is a mapping in both $\Delta_1$ and $\Delta_2$ (if $\mlvl$ 
   is $\mpers$). 
 
-  In the first case, assume without loss of generality that $x$ is a mapping
+  The first two cases are symmetric; 
+  assume without loss of generality that $x$ is a mapping
   in $\Delta_1$ but not $\Delta_2$; we can construct a 
   $\Theta_1$ and $\Delta_1'$ 
   such that $\tackon{\Theta_1}{x{:}\islvl{A^-}} = \Delta_1$,
@@ -1842,7 +1843,7 @@ determined by the annotations and bookkeeping that is
   $\foc{\Psi}{\Delta_1'}{[B_1^+]}$, and the result follows by
   rule ${\fuse}_R$ on $\rsubsta{M}{x}{V_1}{A^-}$ and $V_2$.
 
-  The second case is similar; we construct a 
+  The third case is similar; we construct a 
   $\Theta_1$, $\Delta_1'$, $\Theta_2$, and $\Delta_2'$ such that 
   $\tackon{\Theta_1}{x{:}\islvl{A^-}} = \Delta_1$,
   $\tackon{\Theta_2}{x{:}\islvl{A^-}} = \Delta_2$,
@@ -1870,26 +1871,111 @@ determined by the annotations and bookkeeping that is
            = \tfocusr{\rsubsta{M}{x}{V}{A^-}}$
 \item[--] $\rsubsta{M}{x}{(\tfocusl{y}{\Sp})}{A^-} 
            = \tfocusl{y}{(\rsubsta{M}{x}{\Sp}{A^-})} \qquad$ {\it ($x \# y$)}
-\item[--] $\rsubsta{M}{x}{(\tfocusl{x}{\Sp})}{A^-} =$ \smallskip\\
+\item[--] $\rsubsta{M}{x}{(\tfocusl{x}{\Sp})}{A^-} =$\\
     $\begin{array}{ll}
     \qquad (\subst{M}{(\rsubsta{M}{x}{\Sp}{A^-})})^{A^-}
      & \mbox{\it (if $x$ is in $\Sp$'s context)}\\
     \qquad (\subst{M}{\Sp})^{A^-}
      & \mbox{\it (if $x$ is not in $\Sp$'s context)}
     \end{array}$\smallskip\\
-  We must show
+  We must show $\foc{\Psi}{\Xi}{}$
+  \begin{itemize}
+  \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
+  \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches
+     $\frameoff{\Theta'}{[A^-]}$, 
+     $\Sp$ is a derivaiton of 
+     $\foc{\Psi}{\tackon{\Theta'}{[A^-]}}{U}$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
+  \end{itemize}
+  If $\mlvl$ is $\meph$ or $\mtrue$, then 
+  $\Xi$ matches $\frameoff{\Theta'}{\Delta}$, and the result follows by
+  part 1 of cut admissibility on $M$ and $\Sp$. 
+
+  If $\mlvl$ is $\mpers$, then there is a $\Delta'$ XXXX
+ 
+\futurework{For affine logic: extra step of weakening to get from 
+ $M$ to $M$ weakened with more affine stuff.}
 
 \smallskip
 
-\item[--] $\rsubsta{M}{x}{N}{A^-} 
-           = \rsubsta{M}{x}{N}{A^-}$
+\item[--] $\rsubsta{M}{x}{(\tetap{z}{N})}{A^-} 
+           = \tetap{z}{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tetan{N}}{A^-} 
+           = \tetan{\rsubsta{M}{x}{N}{A^-}}$
+
+\item[--] $\rsubsta{M}{x}{(\tdownl{x}{N})}{A^-} 
+           = \tdownl{x}{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{(\tgnabl{x}{N})}{A^-} 
+           = \tgnabl{x}{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{(\tbangl{x}{N})}{A^-} 
+           = \tbangl{x}{(\rsubsta{M}{x}{N}{A^-})}$
+
+\item[--] $\rsubsta{M}{x}{(\tupr{N})}{A^-} 
+           = \tupr{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tlaxr{N}}{A^-} 
+           = \tlaxr{\rsubsta{M}{x}{N}{A^-}}$
+
+\item[--] $\rsubsta{M}{x}{\tfusel{N}}{A^-} 
+           = \tfusel{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tlaml{N}}{A^-} 
+           = \tlaml{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tlamr{N}}{A^-} 
+           = \tlamr{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tabort}{A^-} 
+           = \tabort$
+\item[--] $\rsubsta{M}{x}{\toplusl{N_1}{N_2}}{A^-} 
+           = \toplusl{\rsubsta{M}{x}{N_1}{A^-}}{\rsubsta{M}{x}{N_2}{A^-}}$
+\item[--] $\rsubsta{M}{x}{\ttopr}{A^-} 
+           = \ttopr$
+\item[--] $\rsubsta{M}{x}{(\twithr{N_1}{N_2})}{A^-} 
+           = \twithr{(\rsubsta{M}{x}{N_1}{A^-})}{(\rsubsta{M}{x}{N_2}{A^-})}$
+
+\item[--] $\rsubsta{M}{x}{\texistsl{a}{N}}{A^-} 
+           = \texistsl{a}{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tforallr{a}{N}}{A^-} 
+           = \tforallr{a}{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\phi}{A^-} 
+           = ({\sf fn}~\sigma \Rightarrow 
+              \rsubsta{\sigma{M}}{x}{\phi(\sigma)}{A^-})$
 \end{itemize}
 
 \paragraph{\it Substitution into spines}
 
 \begin{itemize}
-\item[--] $\rsubsta{M}{x}{N}{A^-} 
-           = \rsubsta{M}{x}{N}{A^-}$
+\item[--] $\rsubsta{M}{x}{\tnil}{A^-} 
+           = \tnil$
+\item[--] $\rsubsta{M}{x}{(\tupl{N})}{A^-} 
+           = \tupl{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tlaxl{N}}{A^-} 
+           = \tlaxl{\rsubsta{M}{x}{N}{A^-}}$
+\item[--] $\rsubsta{M}{x}{\tappl{V}{\Sp}}{A^-} =$\\
+    $\begin{array}{ll}
+    \qquad \tappl{(\rsubsta{M}{x}{V}{A^-})}{\Sp}
+     & \mbox{\it (if $x$ is in $V$'s context but not $\Sp$'s)}\\
+    \qquad \tappl{V}{(\rsubsta{M}{x}{\Sp}{A^-})}
+     & \mbox{\it (if $x$ is in $\Sp$'s context but not $V$'s)}\\
+    \qquad \tappl{(\rsubsta{M}{x}{V}{A^-})}{(\rsubsta{M}{x}{\Sp}{A^-})}
+     \qquad & \mbox{\it (if $x$ is in both $V$ and $\Sp$'s contexts)}
+    \end{array}$
+\item[--] $\rsubsta{M}{x}{\tappr{V}{\Sp}}{A^-} =$\\
+    $\begin{array}{ll}
+    \qquad \tappr{(\rsubsta{M}{x}{V}{A^-})}{\Sp}
+     & \mbox{\it (if $x$ is in $V$'s context but not $\Sp$'s)}\\
+    \qquad \tappr{V}{(\rsubsta{M}{x}{\Sp}{A^-})}
+     & \mbox{\it (if $x$ is in $\Sp$'s context but not $V$'s)}\\
+    \qquad \tappr{(\rsubsta{M}{x}{V}{A^-})}{(\rsubsta{M}{x}{\Sp}{A^-})}
+     \qquad & \mbox{\it (if $x$ is in both $V$ and $\Sp$'s contexts)}
+    \end{array}$ \smallskip\\
+  We must show
+
+\smallskip
+  
+\item[--] $\rsubsta{M}{x}{\tpione{\Sp}}{A^-} 
+           = \tpione{(\rsubsta{M}{x}{\Sp}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tpitwo{\Sp}}{A^-} 
+           = \tpitwo{(\rsubsta{M}{x}{\Sp}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tforalll{t}{\Sp}}{A^-} 
+           = \tforalll{t}{(\rsubsta{M}{x}{\Sp}{A^-})}$
 \end{itemize}
 
 \section{Identity expansion}
