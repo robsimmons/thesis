@@ -1280,6 +1280,7 @@ invariant that, in an unstable context, we only ever consider the {\it
  and $\tackon{\Theta}{x:\islvl{T}}$ 
             matches $\frameoff{\Theta'}{x{:}\islvl{T}}$
  then $\Xi$ matches $\frameoff{\Theta}{\Delta}$.  }
+\smallskip
  
 \item[--] $(\subst{\tdownr{M}}{\tdownl{x}{N}})^{{\downarrow}A^-} 
            = \rsubsta{M}{x}{N}{A^-}$ %\\
@@ -1320,6 +1321,7 @@ invariant that, in an unstable context, we only ever consider the {\it
 
 \futurework{Oh, stability has to be preserved my mapping. So many theorems!
  I'm glad I'm not proving this in Agda (this time).}
+\smallskip
 
 \item[--] $(\subst{\toner}{\tonel{N}})^{\one} = N$
 
@@ -1355,7 +1357,7 @@ invariant that, in an unstable context, we only ever consider the {\it
 
   Because $\Xi$ matches $\frameoff{\Theta_A}{\Delta_B}$, by the induction
   hypothesis on $V_2$ and $(\subst{V_1}{N})^{A^+}$, we have a derivation
-  of $\foc{\Psi}{\Xi}{U}$ as required.
+  of $\foc{\Psi}{\Xi}{U}$ as required. \smallskip
 
 \item[--] $(\subst{\tinl{V}}{\toplusl{N_1}{N_2}})^{A^+ \oplus B^+} 
            = (\subst{V}{N_1})^{A^+}$
@@ -1380,7 +1382,7 @@ invariant that, in an unstable context, we only ever consider the {\it
   $\foc{\Psi}{\tackon{\Theta}{[t/a]A^+}}{U}$.  We count $[t/a]A^+$ as
   being a smaller formula than $\exists x{:}\tau.A^+$, so by the
   induction hypothesis on $V$ and $[t/a]N$, we get a derivation of
-  $\foc{\Psi}{\Xi}{U}$ as required.
+  $\foc{\Psi}{\Xi}{U}$ as required. \smallskip
 
 \item[--] $(\subst{\tunifr}{\phi})^{t \doteq t} = \phi({\sf id})$\smallskip\\
   We must show $\foc{\Psi}{\Xi}{U}$, where
@@ -1434,7 +1436,7 @@ negative principal substitution is ${\it cut}^-$:
    Because $U$ is suspension-normal, $\mlvl = \mlvl'$.
    A derivation of $\foc{\Psi}{\Delta}{\islvl{\susp{p^-_\mlvl}}}$ is not
    quite a proof of $\foc{\Psi}{\Xi}{U}$, so we need a lemma that 
-   we can get one from the other.
+   we can get one from the other. \smallskip
 
 \item[--] $(\subst{\tupr{N}}{\tupl{M}})^{{\uparrow}A^+} = \lsubsta{N}{M}{A^+}$
 
@@ -1452,7 +1454,7 @@ negative principal substitution is ${\it cut}^-$:
   \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
   \end{itemize}
   $\Xi$ matches $\frameoff{\Theta'}{\Delta}$, so the result follows
-  by part 3 of cut admissibility on $N$ and $M$.
+  by part 3 of cut admissibility on $N$ and $M$. \smallskip
 
 \item[--] $(\subst{(\tlaml{N})}{(\tappl{V}{\Sp})})^{A^+ \lefti B^-}
            = (\subst{(\subst{V}{N})^{A^+}}{\Sp})^{B^-}$
@@ -1487,7 +1489,7 @@ negative principal substitution is ${\it cut}^-$:
   on $V$ and $N$, we have $(\subst{V}{N})^{A^+}$, a derivation of 
   $\foc{\Psi}{\Delta'_A}{B^-}$, and 
   the result then follows by the induction hypothesis on 
-  $(\subst{V}{N})^{A^+}$ and $\Sp$. 
+  $(\subst{V}{N})^{A^+}$ and $\Sp$.  \smallskip
 
 \item[--] $(\subst{(\twithr{N_1}{N_2})}{(\tpione{\Sp})})^{A^- \with B^-}
            = (\subst{N_1}{\Sp})^{A^-}$
@@ -1550,7 +1552,7 @@ composition frame are stated but not proven.
   \end{itemize}
   $M$ is also a derivation of $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$,
   so the result follows from part 1 of cut admissibility
-  on $V$ and $M$.
+  on $V$ and $M$. \smallskip
 
 \item[--] $\lsubsta{\tfocusl{x}{\Sp}}{M}{A^+}
            = \tfocusl{x}{(\lsubsta{\Sp}{M}{A^+})}$\smallskip\\
@@ -1568,7 +1570,7 @@ composition frame are stated but not proven.
   $\frameoff{\Theta'}{\tackon{\Theta_B}{[B^-]}}$. By the induction
   hypothesis on $\Sp$ and $M$ we have 
   $\foc{\Psi}{\tackon{(\Theta {\circ} \Theta_B)}{[B^-]}}{U'}$, and
-  the required result then follows from rule ${\it focus}_L$.
+  the required result then follows from rule ${\it focus}_L$. \smallskip
   
 \item[--] $\lsubsta{\tetap{z}{N}}{M}{A^+} 
            = \tetap{z}{(\lsubsta{N}{M}{A^+})}$
@@ -1598,7 +1600,8 @@ composition frame are stated but not proven.
   By the induction hypothesis on $N$ and $M$ we have 
   $\foc{\Psi}{\tackon{(\Theta {\circ}
       \Theta_B)}{x{:}\ispers{B^-}}}{U'}$, and the required
-  result then follows from rule ${!}_L$. 
+  result then follows from rule ${!}_L$. \smallskip
+
 \item[--] $\lsubsta{\tfusel{N}}{M}{A^+} = \tfusel{(\lsubsta{N}{M}{A^+})}$
 \item[--] $\lsubsta{\tabort}{M}{A^+} = \tabort$
 \item[--] $\lsubsta{\toplusl{N_1}{N_2}}{M}{A^+} = \toplusl{(\lsubsta{N_1}{M}{A^+})}{(\lsubsta{N_2}{M}{A^+})}$
@@ -1616,8 +1619,8 @@ composition frame are stated but not proven.
   $\frameoff{\Theta}{\tackon{\Theta_B}{B^+}}$. By variable weakening,
   $M$ is also a derivation of $\foc{\Psi, a{:}\tau}{\tackon{\Theta}{A^+}}{U}$,
   so by the induction hypothesis on $N$ and $M$ we have
-  $\foc{\Psi, a{:}\tau}{\tackon{(\Theta{\circ}\Theta_B)}{B^+}}{U}$, 
-  and the required result then follows from rule $\exists_L$.
+  $\foc{\Psi, a{:}\tau}{\tackon{(\Theta{\circ}\Theta_B)}{B^+}}{U'}$, 
+  and the required result then follows from rule $\exists_L$. \smallskip
 
 \item[--] $\lsubsta{\phi}{M}{A^+} 
            = (\mathsf{fn}~\sigma \Rightarrow \lsubsta{\phi(\sigma)}{(\sigma{M})}{A^+})$\smallskip\\
@@ -1664,20 +1667,51 @@ composition frame are stated but not proven.
 \item[--] $\lsubsta{\tlaxl{N}}{M}{A^+} = \tlaxl{\lsubsta{N}{M}{A^+}}$\smallskip\\
   We must show $\foc{\Psi}{\Xi}{U'}$, where
   \begin{itemize}
-  \item
-  \item
-  \item
+  \item $\Delta$ matches $\frameoff{\Theta_B}{{\ocircle}A^+}$, 
+     $\islvl{A^+}$ matches $\restrictfrom{U_A}{\mlax}$,\\
+     $N$ is a derivation of $\foc{\Psi}{\tackon{\Theta_B}{A^+}}{U_A}$
+  \item $M$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$,
+  \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$, and $U'$ matches 
+     $\restrictfrom{U}{\mlvl}$.
   \end{itemize}
+  Because $\islvl{A^+}$ matches $\restrictfrom{U_A}{\mlax}$
+  and $U'$ matches $\restrictfrom{U}{\mlvl}$, 
+  we can conclude that $U_A = \islvl{A^+}$ and also that $U'$ matches 
+  $\restrictfrom{U'}{\mlax}$. 
+
+  $\Xi$ matches $\frameoff{(\Theta{\circ}\Theta_B)}{{\ocircle}B^+}$
+  and $\tackon{(\Theta{\circ}\Theta_B)}{B^+}$ matches 
+  $\frameoff{\Theta}{\tackon{\Theta_B}{B^+}}$.
+  By the induction hypothesis on $N$ and $M$ we have
+  $\foc{\Psi, a{:}\tau}{\tackon{(\Theta{\circ}\Theta_B)}{B^+}}{U'}$,
+  and the result follows by rule ${\ocircle}_L$.  \smallskip
+
 \item[--] $\lsubsta{\tappl{V}{\Sp}}{M}{A^+} 
            = \tappl{V}{(\lsubsta{\Sp}{M}{A^+})}$
 \item[--] $\lsubsta{\tappr{V}{\Sp}}{M}{A^+} 
            = \tappr{V}{(\lsubsta{\Sp}{M}{A^+})}$\smallskip\\
   We must show $\foc{\Psi}{\Xi}{U'}$, where
   \begin{itemize}
-  \item
-  \item
-  \item
+  \item $\Delta$ matches 
+     $\frameoff{\Theta_B}{\matchconj{[B_1^+ \righti B_2^-]}{\Delta_B}}$,
+     $V$ is a derivation of $\foc{\Psi}{\Delta_B}{[B_1^+]}$, \\
+     $\Sp$ is a derivation of 
+     $\foc{\Psi}{\tackon{\Theta_B}{[B_2^-]}}{\islvl{A^+}}$,
+  \item $M$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$,
+  \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$, and $U'$ matches 
+     $\restrictfrom{U}{\mlvl}$.
   \end{itemize}
+  $\Xi$ matches 
+  $\frameoff{(\Theta{\circ}\Theta_B)}
+    {\matchconj{[B_1^+ \righti B_2^-]}{\Delta_B}}$
+  and $\tackon{(\Theta{\circ}\Theta_B)}{[B_2^-]}$ matches 
+  $\frameoff{\Theta}{\tackon{\Theta_B}{[B_2^-]}}$.
+  By the induction hypothesis on $\Sp$ and $M$ we have
+  $\lsubsta{\Sp}{M}{A^+}$, a derivation of
+  $\foc{\Psi}{\tackon{(\Theta{\circ}\Theta_B)}{[B_2^-]}}{U'}$.
+  The required result follows by rule ${\righti}_L$ on $V$ and 
+  $\lsubsta{\Sp}{M}{A^+}$.  \smallskip
+
 \item[--] $\lsubsta{\tpione{\Sp}}{M}{A^+} = \tpione{(\lsubsta{\Sp}{M}{A^+})}$
 \item[--] $\lsubsta{\tpitwo{\Sp}}{M}{A^+} = \tpitwo{(\lsubsta{\Sp}{M}{A^+})}$
 \item[--] $\lsubsta{\tforalll{t}{\Sp}}{M}{A^+} 
