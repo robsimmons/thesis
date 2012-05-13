@@ -1202,7 +1202,8 @@ The remainder of this section will cover each of the four parts of
 this proof in turn. Most of the theorem will be presented at the level
 of proof terms, but for representative cases we will discuss what the
 manipulation of proof terms means in terms of sequents and matching
-constructs.
+constructs. In many cases, we discuss the necessity of constructing
+certain contexts or frames; 
 
 \subsubsection{Positive principal substitution}
 Positive principal substitution encompasses half the {\it principal
@@ -1226,7 +1227,7 @@ invariant that, in an unstable context, we only ever consider the {\it
   leftmost} inverting positive proposition.
 
 \begin{itemize}
-\item[--] $(\subst{z}{\tetap{z'}{N}})^{p^+_{\mlvl}} = [z/z']N$\\
+\item[--] $(\subst{z}{\tetap{z'}{N}})^{p^+_{\mlvl}} = [z/z']N$\smallskip\\
   We must show $\foc{\Psi}{\Xi}{U}$, where 
   \begin{itemize}
    \item $\Delta$ matches $z{:}\susp{p^+_\mlvl}$,
@@ -1274,7 +1275,7 @@ invariant that, in an unstable context, we only ever consider the {\it
            = \rsubsta{M}{x}{N}{A^-}$
 
 \item[--] $(\subst{\tbangr{M}}{\tbangl{x}{N}})^{{!}A^-}
-           = \rsubsta{M}{x}{N}{A^-}$ \\
+           = \rsubsta{M}{x}{N}{A^-}$ \smallskip\\
   We must show $\foc{\Psi}{\Xi}{U}$, where
   \begin{itemize}
   \item $\Delta$ matches $\restrictto{\Delta'}{\mpers}$,
@@ -1297,7 +1298,7 @@ invariant that, in an unstable context, we only ever consider the {\it
 \item[--] $(\subst{\toner}{\tonel{N}})^{\one} = N$
 
 \item[--] $(\subst{(\tfuser{V_1}{V_2})}{(\tfusel{N}}))^{A^+ \fuse B^+}
-           = (\subst{V_2}{(\subst{V_1}{N})^{A^+}})^{B^+}$ \\
+           = (\subst{V_2}{(\subst{V_1}{N})^{A^+}})^{B^+}$ \smallskip\\
   We must show $\foc{\Psi}{\Xi}{U}$, where
   \begin{itemize}
   \item $\Delta$ matches $\Delta_1, \Delta_2$,\\
@@ -1337,7 +1338,7 @@ invariant that, in an unstable context, we only ever consider the {\it
            = (\subst{V}{N_2})^{B^+}$
 
 \item[--] $(\subst{\texistsr{t}{V}}{\texistsl{a}{N}})^{\exists a{:}\tau.A^+}
-           = (\subst{V}{[t/a]N})^{[t/a]A^+}$ \\
+           = (\subst{V}{[t/a]N})^{[t/a]A^+}$ \smallskip\\
   We must show $\foc{\Psi}{\Xi}{U}$, where
   \begin{itemize}
   \item $\Psi \vdash t : \tau$, $V$ is a derivation of 
@@ -1355,7 +1356,7 @@ invariant that, in an unstable context, we only ever consider the {\it
   induction hypothesis on $V$ and $[t/a]N$, we get a derivation of
   $\foc{\Psi}{\Xi}{U}$ as required.
 
-\item[--] $(\subst{\tunifr}{\phi})^{t \doteq t} = \phi({\sf id})$\\
+\item[--] $(\subst{\tunifr}{\phi})^{t \doteq t} = \phi({\sf id})$\smallskip\\
   We must show $\foc{\Psi}{\Xi}{U}$, where
   \begin{itemize}
   \item $\Delta$ matches $\cdot$,
@@ -1396,8 +1397,8 @@ negative principal substitution is ${\it cut}^-$:
 \]
 
 \begin{itemize}
-\item[--] $(\subst{\tetan{N}}{\tnil})^{p^-_\mlvl} = N$\\
-   We need to show $\foc{\Psi}{\Xi}{U}$, where
+\item[--] $(\subst{\tetan{N}}{\tnil})^{p^-_\mlvl} = N$\smallskip\\
+   We must show $\foc{\Psi}{\Xi}{U}$, where
    \begin{itemize}
    \item $N$ is a derivation of $\foc{\Psi}{\Delta}{\islvl{\susp{p^-_\mlvl}}}$
    \item $\tackon{\Theta}{[p^-_\mlvl]}$ matches $[p^-_\mlvl]$,
@@ -1412,27 +1413,55 @@ negative principal substitution is ${\it cut}^-$:
 \item[--] $(\subst{\tupr{N}}{\tupl{M}})^{{\uparrow}A^+} = \lsubsta{N}{M}{A^+}$
 
 \item[--] $(\subst{\tlaxr{N}}{\tlaxl{M}})^{{\ocircle}A^+}
-           = \lsubsta{N}{M}{A^+}$\\
-  We need to show $\foc{\Psi}{\Xi}{U}$, where
+           = \lsubsta{N}{M}{A^+}$\smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
   \begin{itemize}
   \item $N$ is a derivation of 
-     $\foc{\Psi}{A^+, \Delta}{B^-}$, $\Delta$ is stable, 
-  \item
-  \item
+     $\foc{\Psi}{\Delta}{\islax{A^+}}$, 
+  \item $\tackon{\Theta}{{\ocircle}A^+}$ matches 
+     $\frameoff{\Theta'}{{\ocircle}A^+}$, 
+     $U$ matches $\restrictfrom{U'}{\mlax}$, 
+     $\Theta'$ and $U'$ are stable, 
+     $M$ is a derivation of $\foc{\Psi}{\tackon{\Theta'}{A^+}}{U'}$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
   \end{itemize}
+  $\Xi$ matches $\frameoff{\Theta'}{\Delta}$, so the result follows
+  by part 3 of cut admissibility on $N$ and $M$.
 
 \item[--] $(\subst{(\tlaml{N})}{(\tappl{V}{\Sp})})^{A^+ \lefti B^-}
            = (\subst{(\subst{V}{N})^{A^+}}{\Sp})^{B^-}$
 
 \item[--] $(\subst{(\tlamr{N})}{(\tappr{V}{\Sp})})^{A^+ \righti B^-} 
-           = (\subst{(\subst{V}{N})^{A^+}}{\Sp})^{B^-}$\\
-  We need to show $\foc{\Psi}{\Xi}{U}$, where
+           = (\subst{(\subst{V}{N})^{A^+}}{\Sp})^{B^-}$\smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
   \begin{itemize}
   \item $N$ is a derivation of 
-     $\foc{\Psi}{A^+, \Delta}{B^-}$, $\Delta$ is stable, 
-  \item
-  \item
+     $\foc{\Psi}{\Delta, A^+}{B^-}$, $\Delta$ is stable (by the fixed
+     inversion invariant -- we only invert on the right when there is 
+     no further inversion to do on the left), 
+  \item $\tackon{\Theta}{[A^+ \righti B^-]}$ matches 
+     $\frameoff{\Theta'}{[A^+ \righti B^-], \Delta_A}$, 
+     $V$ is a derivation of $\foc{\Psi}{\Delta_A}{[A^+]}$,
+     $\Sp$ is a derivation of $\foc{\Psi}{\tackon{\Theta'}{[B^-]}}{U}$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
   \end{itemize}
+  We can simultaneously view the construction $\Delta,A^+$ as a frame
+  $\Theta_\Delta$ such that $\tackon{\Theta_\Delta}{A^+} =
+  \Delta,A^+$.  Note that this is only possible to do because $\Delta$
+  is stable; if there were a non-stable proposition in $\Delta$, the
+  fixed inversion invariant would not permitted us to frame off the
+  right-most proposition $A^+$.
+
+  We next consturct a context $\Delta'_A$ that matches
+  $\frameoff{\Theta'_A}{\Delta_A}$ (and also $\Delta, \Delta_A$ viewed
+  as a matching construct), while simutaneously
+  $\Xi$ matches $\frameoff{\Theta'}{\Delta'_A}$. 
+
+  By the part 1 of cut admissibility
+  on $V$ and $N$, we have $(\subst{V}{N})^{A^+}$, a derivation of 
+  $\foc{\Psi}{\Delta'_A}{B^-}$, and 
+  the result then follows by the induction hypothesis on 
+  $(\subst{V}{N})^{A^+}$ and $\Sp$. 
 
 \item[--] $(\subst{(\twithr{N_1}{N_2})}{(\tpione{\Sp})})^{A^- \with B^-}
            = (\subst{N_1}{\Sp})^{A^-}$
@@ -1474,26 +1503,31 @@ ${\it lcut}$:
  \stableR{U}}
 \]
 
-For all of the cases of this theorem involving left rules, $\Delta$
-matches $\frameoff{\Theta_B}{x{:}T}$ and it is 
+Except for the case where the first given derivation ends in the rule
+${\it focus}_R$, every case of this theorem involves a left rule in
+which $\Delta$ matches $\frameoff{\Theta_B}{x{:}T}$ and it is
 necessary to be able to construct a frame ${\Theta}{\circ}{\Theta_B}$
-that is effectively the composition of the two frames. In cases that
-we discuss in detail, necessary properties of this composition frame
-are stated but not proven.
+that is effectively the composition of $\Theta$ and $\Theta_B$. In
+cases that we discuss in detail, necessary properties of this
+composition frame are stated but not proven.
 
 \paragraph{Substitution into terms}
 
 \begin{itemize}
-\item[--] $\lsubsta{\tfocusr{V}}{M}{A^+} = (\subst{V}{M})^{A^+}$\\
+\item[--] $\lsubsta{\tfocusr{V}}{M}{A^+} = (\subst{V}{M})^{A^+}$\smallskip\\
   We must show $\foc{\Psi}{\Xi}{U'}$, where
   \begin{itemize}
-  \item
-  \item $V$ is a derivation of $\foc{\Psi}{\Delta}{[A^+]}$
-  \item
+  \item $V$ is a derivation of $\foc{\Psi}{\Delta}{[A^+]}$,
+  \item $M$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$,
+  \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$, and $U'$ matches 
+    $\restrictfrom{U}{\mlvl}$
   \end{itemize}
+  $M$ is also a derivation of $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$,
+  so the result follows from part 1 of cut admissibility
+  on $V$ and $M$.
 
 \item[--] $\lsubsta{\tfocusl{x}{\Sp}}{M}{A^+}
-           = \tfocusl{x}{(\lsubsta{\Sp}{M}{A^+})}$\\
+           = \tfocusl{x}{(\lsubsta{\Sp}{M}{A^+})}$\smallskip\\
   We must show $\foc{\Psi}{\Xi}{U'}$, where
   \begin{itemize}
   \item $\Delta$ matches $\frameoff{\Theta_B}{x{:}B^-}$, 
@@ -1517,7 +1551,7 @@ are stated but not proven.
 \item[--] $\lsubsta{\tgnabl{x}{N}}{M}{A^+} 
            = \tgnabl{x}{(\lsubsta{N}{M}{A^+})}$
 \item[--] $\lsubsta{\tbangl{x}{N}}{M}{A^+} 
-           = \tbangl{x}{(\lsubsta{N}{M}{A^+})}$\\
+           = \tbangl{x}{(\lsubsta{N}{M}{A^+})}$\smallskip\\
   We must show $\foc{\Psi}{\Xi}{U'}$, where
   \begin{itemize}
   \item $\Delta$ matches $\frameoff{\Theta_B}{{!}B^-}$, 
@@ -1542,16 +1576,16 @@ are stated but not proven.
 \item[--] $\lsubsta{\tfusel{N}}{M}{A^+} = \tfusel{(\lsubsta{N}{M}{A^+})}$
 \item[--] $\lsubsta{\tabort}{M}{A^+} = \tabort$
 \item[--] $\lsubsta{\toplusl{N_1}{N_2}}{M}{A^+} = \toplusl{(\lsubsta{N_1}{M}{A^+})}{(\lsubsta{N_2}{M}{A^+})}$
-\item[--] $\lsubsta{\texistsl{a}{N}}{M}{A^+} = \texistsl{a}{(\lsubsta{N}{M}{A^+})}$\\
+\item[--] $\lsubsta{\texistsl{a}{N}}{M}{A^+} = \texistsl{a}{(\lsubsta{N}{M}{A^+})}$\smallskip\\
   We must show $\foc{\Psi}{\Xi}{U'}$, where
   \begin{itemize}
-  \item
+  \item 
   \item
   \item
   \end{itemize}
 
 \item[--] $\lsubsta{\phi}{M}{A^+} 
-           = (\mathsf{fn}~\sigma \Rightarrow \lsubsta{\phi(\sigma)}{(\sigma{M})}{A^+})$\\
+           = (\mathsf{fn}~\sigma \Rightarrow \lsubsta{\phi(\sigma)}{(\sigma{M})}{A^+})$\smallskip\\
   We must show $\foc{\Psi}{\Xi}{U'}$, where
   \begin{itemize}
   \item
@@ -1564,7 +1598,7 @@ are stated but not proven.
 
 \begin{itemize}
 \item[--] $\lsubsta{\tupl{N}}{M}{A^+} = \tupl{(\lsubsta{N}{M}{A^+})}$
-\item[--] $\lsubsta{\tlaxl{N}}{M}{A^+} = \tlaxl{\lsubsta{N}{M}{A^+}}$\\
+\item[--] $\lsubsta{\tlaxl{N}}{M}{A^+} = \tlaxl{\lsubsta{N}{M}{A^+}}$\smallskip\\
   We must show $\foc{\Psi}{\Xi}{U'}$, where
   \begin{itemize}
   \item
@@ -1574,7 +1608,7 @@ are stated but not proven.
 \item[--] $\lsubsta{\tappl{V}{\Sp}}{M}{A^+} 
            = \tappl{V}{(\lsubsta{\Sp}{M}{A^+})}$
 \item[--] $\lsubsta{\tappr{V}{\Sp}}{M}{A^+} 
-           = \tappr{V}{(\lsubsta{\Sp}{M}{A^+})}$\\
+           = \tappr{V}{(\lsubsta{\Sp}{M}{A^+})}$\smallskip\\
   We must show $\foc{\Psi}{\Xi}{U'}$, where
   \begin{itemize}
   \item
@@ -1608,6 +1642,59 @@ ${\it rcut}$:
 
 \end{proof}
 
+\paragraph{Substitution into values}
+
+\begin{itemize}
+\item[--] $\rsubsta{M}{x}{z}{A^-} = z$
+\item[--] $\rsubsta{M}{x}{(\tdownr{N})}{A^-}
+           = \tdownr{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{(\tgnabr{N})}{A^-}
+           = \tgnabr{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{(\tbangr{N})}{A^-}
+           = \tbangr{(\rsubsta{M}{x}{N}{A^-})}$\smallskip\\
+  We must show
+\item[--] $\rsubsta{M}{x}{\toner}{A^-} = \toner$
+\item[--] $\rsubsta{M}{x}{(\tfuser{V_1}{V_2})}{A^-} = $\\
+    $\begin{array}{ll}
+    \qquad \tfuser{(\rsubsta{M}{x}{V_1}{A^-})}{V_2}
+     & \mbox{\it (if $x$ is in $V_1$'s context but not $V_2$'s)}\\
+    \qquad \tfuser{V_1}{(\rsubsta{M}{x}{V_2}{A^-})}
+     & \mbox{\it (if $x$ is in $V_2$'s context but not $V_1$'s)}\\
+    \qquad \tfuser{(\rsubsta{M}{x}{V_1}{A^-})}{(\rsubsta{M}{x}{V_2}{A^-})}
+     \qquad & \mbox{\it (if $x$ is in both $V_1$ and $V_2$'s contexts)}
+    \end{array}$\smallskip\\
+  We must show
+\item[--] $\rsubsta{M}{x}{(\tinl{V})}{A^-} 
+           = \tinl{(\rsubsta{M}{x}{V}{A^-})}$
+\item[--] $\rsubsta{M}{x}{(\tinr{V})}{A^-} 
+           = \tinr{(\rsubsta{M}{x}{V}{A^-})}$
+\item[--] $\rsubsta{M}{x}{(\texistsr{t}{V})}{A^-} 
+           = \texistsr{t}{(\rsubsta{M}{x}{V}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tunifr}{A^-} = \tunifr$
+\end{itemize}
+
+\paragraph{Substitution into terms}
+
+\begin{itemize}
+\item[--] $\rsubsta{M}{x}{\tfocusr{V}}{A^-} 
+           = \tfocusr{\rsubsta{M}{x}{V}{A^-}}$
+\item[--] $\rsubsta{M}{x}{(\tfocusl{y}{\Sp})}{A^-} 
+           = \tfocusl{y}{(\rsubsta{M}{x}{\Sp}{A^-})} \qquad$ {\it ($x \# y$)}
+\item[--] $\rsubsta{M}{x}{(\tfocusl{x}{\Sp})}{A^-} =$\\
+    $\begin{array}{ll}
+    \qquad (\subst{M}{(\rsubsta{M}{x}{\Sp}{A^-})})^{A^-}
+     & \mbox{\it (if $x$ is in $\Sp$'s context)}\\
+    \qquad (\subst{M}{\Sp})^{A^-}
+     & \mbox{\it (if $x$ is not in $\Sp$'s context)}
+    \end{array}$\smallskip\\
+  We must show
+\item[--] $\rsubsta{M}{x}{N}{A^-} 
+           = \rsubsta{M}{x}{N}{A^-}$
+\item[--] $\rsubsta{M}{x}{N}{A^-} 
+           = \rsubsta{M}{x}{N}{A^-}$
+\end{itemize}
+
+\paragraph{Substitution into spines}
 
 \section{Identity expansion}
 \label{sec:ord-identity}
