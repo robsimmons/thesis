@@ -817,7 +817,7 @@ type annotations, when we say that some expression $E$ is a derivation
 of $\foc{\Psi}{\Delta}{U}$, it is only {\it uniquely} a derivation of
 that sequent if we account for the implicit bookkeeping.
 
-Our ability to imagine proof terms as being fully independently typed
+Our ability to imagine proof terms as being fully intrinsically typed
 is an advantage to presenting a proof theory that is not fully
 dependent (which is to say, the domain of first-order quantification
 does {\it not} include expressions $E$). Presentations of hereditary
@@ -1548,10 +1548,15 @@ ${\it lcut}$:
 \]
 
 Except for the case where the first given derivation ends in the rule
-${\it focus}_R$, every case of this theorem involves a left rule in
-which $\Delta$ matches $\frameoff{\Theta_B}{x{:}T}$ and it is
-necessary to be able to construct a frame ${\Theta}{\circ}{\Theta_B}$
-that is effectively the composition of $\Theta$ and $\Theta_B$. In
+${\it focus}_R$, every case of this theorem involves a left rule.
+The general pattern for these cases is that
+$\Xi$ maches $\frameoff{\Theta}{\Delta}$ and
+$\Delta$ matches $\frameoff{\Theta_B}{x{:}\istrue{T}}$.
+$\Theta$ and $\Theta_B$ have the same persistent variables but
+distinct ephemeral and ordered variables, and we must construct
+a frame ${\Theta}{\circ}{\Theta_B}$
+that is effectively the composition of $\Theta$ and $\Theta_B$. 
+In
 cases that we discuss in detail, necessary properties of this
 composition frame are stated but not proven.
 
@@ -1765,6 +1770,30 @@ $x$ is associated with a judgment $x{:}\ispers{A^-}$). The computational
 representation of these cases looks nondeterministic, but it is actually
 determined by the annotations and bookkeeping that is 
 
+For cases involving left rules, the general pattern is that
+$\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$ and
+the action of the left rule, read bottom-up, is observe that  
+$\tackon{\Theta}{x{:}\islvl{A^-}}$ matches 
+$\frameoff{\Theta'}{y{:}\istrue{T}}$ in its conclusion and constructs 
+$\frameoff{\Theta'}{y{:}\islvl{T'}'}$ in its premise. 
+Effectively, we need to abstract
+a {\it two}-hole function (call it $\Gamma$) from $\Xi$. 
+One hole -- the place where $x$ is --
+is defined by the frame $\Theta$: morally, 
+$\Theta = \lambda \Delta_B. \Gamma(x{:}\islvl{A^-})(\Delta_B)$.
+The other hole -- the place where $y$ is -- 
+is defined by $\Theta'$: morally,
+$\Theta' = \lambda \Delta_A. \Gamma(\Delta_A)(y{:}\istrue{T})$. 
+However, we cannot directly represent these functions due to
+the need to operate around matching constructs. Instead, we use
+construct $\Theta_\Delta$ to represent the frame that is
+morally $\lambda \Delta_B. \Gamma(\Delta)(\Delta_B)$, and 
+$\Theta_{T'}$ to represent the frame that is morally
+$\lambda \Delta_A. \Gamma(\Delta_A)(y{:}\islvl{T'}')$. As before, in
+cases that we discuss in detail, necessary properties of these
+two frames are stated but not proven.
+
+
 \paragraph{\it Substitution into values}
 
 \begin{itemize}
@@ -1873,17 +1902,17 @@ determined by the annotations and bookkeeping that is
            = \tfocusl{y}{(\rsubsta{M}{x}{\Sp}{A^-})} \qquad$ {\it ($x \# y$)}
 \item[--] $\rsubsta{M}{x}{(\tfocusl{x}{\Sp})}{A^-} =$\\
     $\begin{array}{ll}
-    \qquad (\subst{M}{(\rsubsta{M}{x}{\Sp}{A^-})})^{A^-}
-     & \mbox{\it (if $x$ is in $\Sp$'s context)}\\
     \qquad (\subst{M}{\Sp})^{A^-}
-     & \mbox{\it (if $x$ is not in $\Sp$'s context)}
+     & \mbox{\it (if $x$ is not in $\Sp$'s context)}\\
+    \qquad (\subst{M}{(\rsubsta{M}{x}{\Sp}{A^-})})^{A^-}
+     & \mbox{\it (if $x$ is in $\Sp$'s context)}
     \end{array}$\smallskip\\
-  We must show $\foc{\Psi}{\Xi}{}$
+  We must show $\foc{\Psi}{\Xi}{U}$, where
   \begin{itemize}
   \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
   \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches
      $\frameoff{\Theta'}{[A^-]}$, 
-     $\Sp$ is a derivaiton of 
+     $\Sp$ is a derivation of 
      $\foc{\Psi}{\tackon{\Theta'}{[A^-]}}{U}$,
   \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
   \end{itemize}
@@ -1903,12 +1932,51 @@ determined by the annotations and bookkeeping that is
 \item[--] $\rsubsta{M}{x}{\tetan{N}}{A^-} 
            = \tetan{\rsubsta{M}{x}{N}{A^-}}$
 
-\item[--] $\rsubsta{M}{x}{(\tdownl{x}{N})}{A^-} 
-           = \tdownl{x}{(\rsubsta{M}{x}{N}{A^-})}$
-\item[--] $\rsubsta{M}{x}{(\tgnabl{x}{N})}{A^-} 
-           = \tgnabl{x}{(\rsubsta{M}{x}{N}{A^-})}$
-\item[--] $\rsubsta{M}{x}{(\tbangl{x}{N})}{A^-} 
-           = \tbangl{x}{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{(\tdownl{y}{N})}{A^-} 
+           = \tdownl{y}{(\rsubsta{M}{x}{N}{A^-})}$
+
+\item[--] $\rsubsta{M}{x}{(\tgnabl{y}{N})}{A^-} 
+           = \tgnabl{y}{(\rsubsta{M}{x}{N}{A^-})}$ %\smallskip\\
+%   We must show $\foc{\Psi}{\Xi}{U}$, where
+%   \begin{itemize}
+%   \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
+%   \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches 
+%      $\frameoff{\Theta'}{{\gnab}B^-}$, $N$ is a derivation of 
+%      $\foc{\Psi}{\tackon{\Theta'}{y{:}\iseph{B^-}}}{U}$,
+%   \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
+%   \end{itemize}
+%   $\Xi$ matches $\frameoff{\Theta_\Delta}{{!}B^-}$, 
+%   $\tackon{\Theta_\Delta}{y{:}\iseph{B^-}}$ matches
+%   $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$, and
+%   $\tackon{\Theta_B}{x{:}\islvl{A}} = \tackon{\Theta'}{y{:}\iseph{B^-}}$.
+%   By the induction hypothesis on $M$ and $N$ we have
+%   $\foc{\Psi}{\tackon{\Theta_\Delta}{y{:}\iseph{B^-}}}{U}$, and 
+%   the result follows by rule ${\gnab}_L$. 
+
+\item[--] $\rsubsta{M}{x}{(\tbangl{y}{N})}{A^-} 
+           = \tbangl{y}{(\rsubsta{M}{x}{N}{A^-})}$\smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
+  \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches 
+     $\frameoff{\Theta'}{{!}B^-}$, $N$ is a derivation of 
+     $\foc{\Psi}{\tackon{\Theta'}{y{:}\ispers{B^-}}}{U}$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
+  \end{itemize}
+ 
+  Let $\Delta' = \mkconj{\Delta}{y{:}\ispers{B^-}}$.
+  By admissible weakening, $M$ is derivation of $\foc{\Psi}{\Delta'}{A^-}$ too.
+
+  $\Xi$ matches $\frameoff{\Theta_{\Delta}}{{!}B^-}$,
+  $\tackon{\Theta_{\Delta}}{y{:}\ispers{B^-}}$ matches 
+  $\frameoff{\Theta_B}{\restrictto{\Delta'}{\mlvl}}$,
+  and 
+  $\tackon{\Theta_B}{x{:}\islvl{A^-}} = \tackon{\Theta'}{y{:}\ispers{B^-}}$.
+  By the induction hypothesis on $M$ and $N$ we have
+  $\foc{\Psi}{\tackon{\Theta_{\Delta}}{y{:}\ispers{B^-}}}{U}$, and the result
+  follows by rule ${!}_L$.
+
+  \smallskip
 
 \item[--] $\rsubsta{M}{x}{(\tupr{N})}{A^-} 
            = \tupr{(\rsubsta{M}{x}{N}{A^-})}$
