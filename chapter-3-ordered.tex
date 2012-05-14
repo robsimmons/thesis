@@ -827,18 +827,13 @@ admissibility) need to present a simply typed term language
 language \cite{reed07properties,martens11mechanizing} and then impose
 a Curry-style dependent typing on top of them.
 
-The ability of being able to give derivations fully intrinsic types
-is one of the advantages to presenting a proof theory that is not
-fully dependent; the proof terms that we present are {\it not} 
-
-% Fundamentally, this is just a statement of the fact that
-% weakening holds for persistent facts and first-order variables in our
-% logic.
-
-The use of proof terms allows for a greatly compressed presentation of
-cut admissibility and identity expansion. Furthermore, we will reuse
-much of this notation in our formulation of a logical framework in the
-next chapter. 
+The use of proof terms also allows for a greatly compressed
+presentation of cut admissibility and identity expansion, though much
+of this compression is due to neglecting the implicit bookkeeping
+associated with matching constructs, bookkeeping that must be made
+explicit in proofs like the cut admissibility theorem.  Furthermore,
+we will reuse much of this notation in our formulation of a logical
+framework in the next chapter.
 
 \subsection{Variable substitution}
 
@@ -2104,7 +2099,50 @@ two frames are stated but not proven.
     \qquad \tappr{(\rsubsta{M}{x}{V}{A^-})}{(\rsubsta{M}{x}{\Sp}{A^-})}
      \qquad & \mbox{\it (if $x$ is in both $V$ and $\Sp$'s contexts)}
     \end{array}$ \smallskip\\
-  We must show $\foc{\Psi}{\Xi}{\forall x{:}\tau. B^-}$
+  We must show $\foc{\Psi}{\Xi}{\forall x{:}\tau. B^-}$, where
+  \begin{itemize}
+  \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
+  \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches 
+     $\frameoff{\Theta'}{[B_1^+ \righti B_2^-], \Delta_A}$, 
+     $V$ is a derivation of 
+     $\foc{\Psi}{\Delta_A}{[B_1^+]}$,\\
+     $\Sp$ is a derivation of 
+     $\foc{\Psi}{\tackon{\Theta'}{[B_2^-]}}{U}$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
+  \end{itemize}
+  
+  There are three possibilities: either $x$ is a mapping in 
+  $\Delta_A$ or $\Theta'$  but not both (if $\mlvl$ is $\meph$
+  or $\mtrue$) or $x$ is a mapping in both $\Theta'$ and $\Delta_A$
+  (if $\mlvl$ is $\mpers$). 
+
+  In the first case ($x$ is a mapping in $\Delta_A$ only), 
+  $\Xi$ matches 
+  $\frameoff{\Theta'}{\matchconj{[B_1^+ \righti B_2^-]}{\Delta_A'}}$,
+  $\Delta_A'$ matches $\frameoff{\Theta_A}{\restrictto{\Delta}{\mlvl}}$, and 
+  $\Delta_A = \tackon{\Theta_A}{x{:}\islvl{A^-}}$. 
+  By the induction hypothesis on $M$ and $V$ we have
+  $\rsubsta{M}{x}{V}{A^-}$, a derivation of $\foc{\Psi}{\Delta'_A}{[B_1^+]}$,
+  and the result follows by rule ${\righti}_L$ on 
+  $\rsubsta{M}{x}{V}{A^-}$ and $\Sp$.
+
+  In the second case ($x$ is a mapping in $\Theta'$ only),
+  $\Xi$ matches 
+  $\frameoff{\Theta_\Delta}{\matchconj{[B_1^+ \righti B_2^-]}{\Delta_A}}$,
+  $\tackon{\Theta_\Delta}{[B_2^-]}$ matches
+  $\frameoff{\Theta_{[B_2^-]}}{\restrictto{\Delta}{\mlvl}}$,
+  and  
+  $\tackon{\Theta_{[B_2^-]}}{x{:}\mlvl} = \tackon{\Theta'}{[B_2^-]}$.
+  By the induction hypothesis on $M$ and $\Sp$, we have 
+  $\rsubsta{M}{x}{\Sp}{A^-}$, a derivation of 
+  $\foc{\Psi}{\tackon{\Theta_\Delta}{[B_2^-]}}{U}$, and the result follows
+  by rule ${\righti}_L$ on $V$ and $\rsubsta{M}{x}{\Sp}{A^-}$.
+
+  In the third case ($x$ is a mapping in $\Theta'$ and $\Delta_A$), 
+  $\Xi$ matches 
+  $\frameoff{\Theta_\Delta}{\matchconj{[B_1^+ \righti B_2^-]}{\Delta_A'}}$,
+  where $\Theta_\Delta$ and $\Delta_A'$ have the same properties as before,
+  and we proceed invoking the induction hypothesis twice.
 
 \smallskip
   
