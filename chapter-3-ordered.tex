@@ -1649,7 +1649,7 @@ composition frame are stated but not proven.
   \begin{itemize}
   \item $\Delta$ matches $\frameoff{\Theta_B}{t \doteq s}$,
     $\phi$ is a function from substitutions $\Psi' \vdash \sigma : \Psi$
-    to derivations of 
+    that unify $t$ and $s$ to derivations of 
     $\foc{\Psi'}{\tackon{\sigma{\Theta_B}}{\cdot}}{\sigma{A^+}}$,
   \item $M$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$,
   \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$, and $U'$ matches 
@@ -2017,6 +2017,21 @@ two frames are stated but not proven.
   \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
   \end{itemize}
 
+  $\Xi$ matches $\frameoff{\Theta_{\Delta}}{B_1^+ \oplus B_2^+}$,
+  and for $i \in \{1,2\}$,
+  $\tackon{\Theta_{\Delta}}{B_i^+}$ matches
+  $\frameoff{\Theta_{B_i^+}}{\restrictto{\Delta}{\mpers}}$ 
+  and
+  $\tackon{\Theta_{B_i^+}}{x{:}\islvl{A^-}} =
+   \tackon{\Theta'}{B_i^+}$.
+
+  By the induction hypothesis on $M$ and $N_1$, we have
+  $\foc{\Psi}{\tackon{\Theta_{\Delta}}{B_1^+}}{U}$, by the induction 
+  hypothesis on $M$ and $N_2$, we have 
+  $\foc{\Psi}{\tackon{\Theta_{\Delta}}{B_2^+}}{U}$, and the
+  result follows by rule $\oplus_L$. 
+
+
 \smallskip
 
 \item[--] $\rsubsta{M}{x}{\ttopr}{A^-} 
@@ -2031,6 +2046,37 @@ two frames are stated but not proven.
 \item[--] $\rsubsta{M}{x}{\phi}{A^-} 
            = ({\sf fn}~\sigma \Rightarrow 
               \rsubsta{\sigma{M}}{x}{\phi(\sigma)}{A^-})$
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
+  \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches 
+     $\frameoff{\Theta'}{t \doteq s}$, $\phi$ 
+     is a function from substitutions $\Psi' \vdash \sigma : \Psi$
+     that unify $t$ and $s$ to derivations of 
+     $\foc{\Psi'}{\tackon{\sigma\Theta'}{\cdot}}{\sigma{U}}$.
+  \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
+  \end{itemize}
+
+  $\Xi$ matches $\frameoff{\Theta_\Delta}{t \doteq s}$, and 
+  for any substitution $\sigma$, $\tackon{\sigma\Theta_\Delta}{\cdot}$
+  matches $\frameoff{\sigma\Theta}{\restrictto{\Delta}{\mlvl}}$.
+  By rule $\doteq_L$, it suffices to show that, given an arbitrary
+  substitution $\Psi' \vdash \sigma : \Psi$, there
+  is a derivation of 
+  $\foc{\Psi'}{\tackon{\sigma\Theta_\Delta}{\cdot}}{\sigma{U}}$.
+
+  By applying $\sigma$ to $\phi$, we get $\phi(\sigma)$, a derivation 
+  of $\foc{\Psi'}{\frameoff{\sigma\Theta_B}{\cdot}}{\sigma{A^+}}$;
+  the usual interpretation of higher-order derivations is that 
+  $\phi(\sigma)$ is a subderivation of $\phi$, so $\phi(\sigma)$ can be
+  used to invoke the induction hypothesis.
+  From variable substitution, we get $\sigma{M}$, a derivation
+  of 
+  $\foc{\Psi'}{\sigma\Delta}{\islvl{\sigma{A^-}}}$,
+  and the result follows
+  by the induction hypothesis on $\sigma{M}$ and 
+  $\phi(\sigma)$.
+
 \end{itemize}
 
 \paragraph{\it Substitution into spines}
@@ -2060,7 +2106,7 @@ two frames are stated but not proven.
     \qquad \tappr{(\rsubsta{M}{x}{V}{A^-})}{(\rsubsta{M}{x}{\Sp}{A^-})}
      \qquad & \mbox{\it (if $x$ is in both $V$ and $\Sp$'s contexts)}
     \end{array}$ \smallskip\\
-  We must show
+  We must show $\foc{\Psi}{\Xi}{\forall x{:}\tau. B^-}$
 
 \smallskip
   
