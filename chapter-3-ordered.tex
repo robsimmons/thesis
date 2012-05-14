@@ -1550,7 +1550,7 @@ ${\it lcut}$:
 Except for the case where the first given derivation ends in the rule
 ${\it focus}_R$, every case of this theorem involves a left rule.
 The general pattern for these cases is that
-$\Xi$ maches $\frameoff{\Theta}{\Delta}$ and
+$\Xi$ matches $\frameoff{\Theta}{\Delta}$ and
 $\Delta$ matches $\frameoff{\Theta_B}{x{:}\istrue{T}}$.
 $\Theta$ and $\Theta_B$ have the same persistent variables but
 distinct ephemeral and ordered variables, and we must construct
@@ -1656,8 +1656,10 @@ composition frame are stated but not proven.
      $\restrictfrom{U}{\mlvl}$.
   \end{itemize}
   $\Xi$ matches $\frameoff{(\Theta{\circ}\Theta_B)}{t \doteq s}$, and 
-  $\tackon{(\Theta{\circ}\Theta_B)}{\cdot}$ matches 
-  $\frameoff{\Theta}{\tackon{\Theta_B}{\cdot}}$.
+  for any substitution $\sigma$, $U'$ matches 
+  $\restrictfrom{\sigma{U}}{\mlvl}$ and
+  $\tackon{\sigma(\Theta{\circ}\Theta_B)}{\cdot}$ matches 
+  $\frameoff{\sigma\Theta}{\tackon{\sigma\Theta_B}{\cdot}}$.
   By rule $\doteq_L$, it suffices to show that, 
   given an arbitrary substitution $\Psi' \vdash \sigma : \Psi$, 
   there is a derivation of 
@@ -1665,17 +1667,13 @@ composition frame are stated but not proven.
   
 
   By applying $\sigma$ to $\phi$, we get $\phi(\sigma)$, a derivation 
-  of $\foc{\Psi'}{\frameoff{\sigma\Theta_B}{\cdot}}{\sigma{A^+}}$;
+  of $\foc{\Psi'}{\tackon{\sigma\Theta_B}{\cdot}}{\sigma{A^+}}$;
   the usual interpretation of higher-order derivations is that 
   $\phi(\sigma)$ is a subderivation of $\phi$, so $\phi(\sigma)$ can be
   used to invoke the induction hypothesis.
   From variable substitution, we get
   $\sigma{M}$, a derivation of 
-  $\foc{\Psi'}{\tackon{\sigma\Theta}{\sigma{A^+}}}{\sigma{U}}$.
-  We need to know that 
-  $\tackon{\sigma(\Theta{\circ}\Theta_B)}{\cdot}$ matches 
-  $\frameoff{\sigma\Theta}{\tackon{\sigma\Theta_B}{\cdot}}$ and that
-  $\sigma{U'}$ matches $\restrictfrom{\sigma{U}}{\mlvl}$, and then
+  $\foc{\Psi'}{\tackon{\sigma\Theta}{\sigma{A^+}}}{\sigma{U}}$, and then
   the result follows by the induction hypothesis on 
   $\phi(\sigma)$ and $\sigma{M}$. 
 
@@ -2066,7 +2064,7 @@ two frames are stated but not proven.
   $\foc{\Psi'}{\tackon{\sigma\Theta_\Delta}{\cdot}}{\sigma{U}}$.
 
   By applying $\sigma$ to $\phi$, we get $\phi(\sigma)$, a derivation 
-  of $\foc{\Psi'}{\frameoff{\sigma\Theta_B}{\cdot}}{\sigma{A^+}}$;
+  of $\foc{\Psi'}{\tackon{\sigma\Theta_B}{\cdot}}{\sigma{A^+}}$;
   the usual interpretation of higher-order derivations is that 
   $\phi(\sigma)$ is a subderivation of $\phi$, so $\phi(\sigma)$ can be
   used to invoke the induction hypothesis.
