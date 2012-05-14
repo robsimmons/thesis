@@ -1920,7 +1920,20 @@ two frames are stated but not proven.
   $\Xi$ matches $\frameoff{\Theta'}{\Delta}$, and the result follows by
   part 1 of cut admissibility on $M$ and $\Sp$. 
 
-  If $\mlvl$ is $\mpers$, then there is a $\Delta'$ XXXX
+  If $\mlvl$ is $\mpers$, $\Xi$ doesn't match $\frameoff{\Theta'}{\Delta}$,
+  since $\Theta'$ has an extra mapping $x{:}\ispers{A^-}$. Instead,
+  we have that 
+    $\tackon{\Theta}{[A^-]}$ matches 
+   $\frameoff{\Theta_{[A^-]}}{\restrictto{\Delta}{\mpers}}$
+  and $\tackon{\Theta_{[A^-]}}{x{:}\ispers{A^-}} = \tackon{\Theta'}{[A^-]}$,
+  so $\Sp$ is also a derivation of 
+  $\foc{\Psi}{\tackon{\Theta_{[A^-]}}{x{:}\ispers{A^-}}}{U}$. 
+  By the induction hypothesis on $M$ and $\Sp$, we have 
+  $\rsubsta{M}{x}{\Sp}{A^-}$, a derivation of 
+  $\foc{\Psi}{\tackon{\Theta}{[A^-]}}{U}$. Then, because
+  $\Xi$ matches $\frameoff{\Theta}{\Delta}$, the result follows
+  from part 1 of cut admissibility on $M$ and $\rsubsta{M}{x}{\Sp}{A^-}$.
+  
  
 \futurework{For affine logic: extra step of weakening to get from 
  $M$ to $M$ weakened with more affine stuff.}
@@ -1993,6 +2006,19 @@ two frames are stated but not proven.
            = \tabort$
 \item[--] $\rsubsta{M}{x}{\toplusl{N_1}{N_2}}{A^-} 
            = \toplusl{\rsubsta{M}{x}{N_1}{A^-}}{\rsubsta{M}{x}{N_2}{A^-}}$
+  \smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where 
+  \begin{itemize}
+  \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
+  \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches 
+     $\frameoff{\Theta'}{B_1^+ \oplus B_2^+}$, $N_1$ is a derivation of 
+     $\foc{\Psi}{\tackon{\Theta'}{B_1^+}}{U}$,\\
+     $N_2$ is a derivation of $\foc{\Psi}{\tackon{\Theta'}{B_2^+}}{U}$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
+  \end{itemize}
+
+\smallskip
+
 \item[--] $\rsubsta{M}{x}{\ttopr}{A^-} 
            = \ttopr$
 \item[--] $\rsubsta{M}{x}{(\twithr{N_1}{N_2})}{A^-} 
