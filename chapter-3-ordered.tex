@@ -817,16 +817,6 @@ type annotations, when we say that some expression $E$ is a derivation
 of $\foc{\Psi}{\Delta}{U}$, it is only {\it uniquely} a derivation of
 that sequent if we account for the implicit bookkeeping.
 
-Our ability to imagine proof terms as being fully intrinsically typed
-is an advantage to presenting a proof theory that is not fully
-dependent (which is to say, the domain of first-order quantification
-does {\it not} include expressions $E$). Presentations of hereditary
-substitution for LF (which is the computational content of cut
-admissibility) need to present a simply typed term language
-\cite{watkins02concurrent,harper07mechanizing} or an untyped term
-language \cite{reed07properties,martens11mechanizing} and then impose
-a Curry-style dependent typing on top of them.
-
 The use of proof terms also allows for a greatly compressed
 presentation of cut admissibility and identity expansion, though much
 of this compression is due to neglecting the implicit bookkeeping
@@ -2169,3 +2159,51 @@ two frames are stated but not proven.
 \subsection{Focalization}
 
 
+\section{The design space of proof terms}
+
+Our ability to imagine proof terms as being fully intrinsically typed
+is an advantage to presenting a proof theory that is not fully
+dependent (which is to say, the domain of first-order quantification
+does {\it not} include expressions $E$). Hereditary substitution, 
+the computational content of the cut admissibility theorem, 
+
+Presentations of hereditary
+substitution for LF (which is the computational content of cut
+admissibility) for the most part require that . For the LF
+fragment, it has been determined that computational content of cut
+admissibility
+
+ simply typed term language
+\cite{watkins02concurrent,harper07mechanizing} or an untyped term
+language \cite{reed07properties,martens11mechanizing} and then impose
+a Curry-style dependent typing on top of them.
+
+Based on the proofs in this section, we are not in a position to 
+say that we can define substitution on untyped terms and say that
+substitution on well-typed terms will remain well typed, because
+the functions we define on terms (especially
+hereditary substitution, the computational
+content of Theorem~\ref{thm:ord-cut}) are computationally dependent
+on the implicit bookkeeping associated with the matching constructs.
+The problem, if we wish to see it as a problem, is that we cannot
+substitute a derivation $M$ of $\foc{\Psi}{\Delta}{A^-}$
+into a derivation $E$ of $\foc{\Psi}{\tackon{\Theta}{x{:}\istrue{A^-}}}{U}$
+unless $x$ is {\it actually free} in $E$. Therefore, when we try to
+substitute the same $M$ into $\tfuser{V_1}{V_2}$, we are forced to determine
+whether 
+
+\[
+\infer-[{\it rcut}]
+{\foc{\Psi}{[\Delta/x{:}\islvl{A^-}]\Xi}{U}}
+{\restrictto{\Delta}{\mlvl}
+ &
+ \foc{\Psi}{\Delta}{A^-}
+ &
+ \foc{\Psi}{\Xi}{U}
+ &
+ \stableL{\Delta}}
+\]
+
+Conjecture: the suitibilty of the framing-off operation 
+$\frameoff{\Theta}{\Delta}$ for cut admissibility, 
+proof search is a \cite{reed09queue}

@@ -75,7 +75,7 @@ represented as the linear resource $({\sf battery} \lolli {\sf
 lunch -- but only once!\footnote{Conjunction will always bind more
   tightly than implication, so this is equivalent to the proposition
   ${\sf 6bucks} \lolli ({\sf soup} \tensor {\sf sandwich})$.} Linear
-logic also has a modal connective ${!}A$ representing a persistent
+logic also has a connective ${!}A$ representing a persistent
 resource that can be
 used to generate any number of $A$ resources, including zero. The
 Panera ``You Pick Two'' menu might be represented as
@@ -89,12 +89,23 @@ distinct members of the set $\{ {\sf soup}, {\sf salad}, {\sf
 \input{figs/fig-linear.tex}
 
 Figure~\ref{fig:linear} presents a standard sequent calculus for
-linear logic, in particular the so-called {\it multiplicative,
-  exponential} fragment of intuitionistic linear logic (or {\it
-  MELL}). It corresponds most closely to Barber's dual intuitionistic
-linear logic \cite{barber96dual}, but also to Andreoli's dyadic system
-\cite{andreoli92logic} and Chang et al.'s judgmental analysis of
-intuitionistic linear logic \cite{chang03judgmental}.
+linear logic, in particular the {\it multiplicative, exponential}
+fragment of intuitionistic linear logic (or {\it MELL}), so called
+because the connectives $\one$, $A \tensor B$, and $A \lolli B$ are
+considered to be the {\it mulitplicative} connectives, and the
+connective ${!}A$ is the {\it exponential} connective of intuitionstic
+linear logic.\footnote{In this chapter we will mostly ignore the {\it
+    additive} connectives of intuitionstic linear logic $\zero$, $A
+  \oplus B$, $\top$, and $A \with B$ and will entirely ignore the {\it
+    first-order} connectives $\exists x.A$ and $\forall x.A$. The
+  ``why not'' modality $\mbox{?}A$ from classical linear logic is
+  sometimes treated as a second exponential connective in
+  intuitionstic linear logic \cite{chang03judgmental}, but I will not
+  consider it at all in this thesis.} It corresponds most closely to
+Barber's dual intuitionistic linear logic \cite{barber96dual}, but
+also to Andreoli's dyadic system \cite{andreoli92logic} and Chang et
+al.'s judgmental analysis of intuitionistic linear logic
+\cite{chang03judgmental}.
 
 \subsection{Transitions in linear logic}
 
@@ -544,11 +555,11 @@ then $\mildseq{\Gamma}{\Delta', \underline{\Delta}}{U}$.
   immediately using the second given derivation.
 \end{proof}
 
-\noindent
-As a regular substitution principle that is inductive over the structure
-of the first given proposition, focal substitution is reminiscent of 
-the {\it leftist substitutions} introduced by Pfenning and Davies in the 
-context of the possibility modality \cite{pfenning01judgmental}.
+% \noindent
+% As a regular substitution principle that is inductive over the structure
+% of the first given proposition, focal substitution is reminiscent of 
+% the {\it leftist substitutions} introduced by Pfenning and Davies in the 
+% context of the possibility modality \cite{pfenning01judgmental}.
 
 Unlike cut admissibility, which we discuss in
 Section~\ref{sec:lincut}, both of the focal substitution principles
@@ -1418,7 +1429,7 @@ In this section, I will discuss four different presentations of
 focused sequent calculi that are closely connected to the logic we
 have just presented. Each system differs most dramatically in its
 treatment of positive atomic propositions, the exponential 
-modality ${!}A$, and the interaction between them.
+${!}A$, and the interaction between them.
 \begin{itemize}
 \item Andreoli's original system, which I name the {\it atom
     optimization}, complicates the interpretation of atomic
@@ -2160,14 +2171,15 @@ primitive logic into which linear logic can be faithfully encoded.
 \input{figs/fig-fragment-adjoint}
 
 A candidate for a more primitive logic, and one that has tacitly
-formed the basis of much of my previous work on logic programming 
-and logical specification in substructural logic
-\cite{simmons09weak,simmons11logical}, is {\it
-  adjoint logic}.  Adjoint logic was first characterized by Benton and
-Wadler as a natural deduction system \cite{benton96linear} and was
-substantially generalized by Reed in a sequent calculus setting
+formed the basis of much of my previous work on logic programming and
+logical specification in substructural logic
+\cite{simmons09weak,simmons11logical}, is {\it adjoint logic}.
+Adjoint logic was first characterized by Benton and Wadler as a
+natural deduction system \cite{benton96linear} and was substantially
+generalized by Reed in a sequent calculus setting
 \cite{reed09judgmental}. The logic generalizes both linear logic and
-lax logic as sub-languages of a common logic, whose propositions come
+Fairtlough and Mendler's lax logic \cite{fairtlough95propositional}
+item as sub-languages of a common logic, whose propositions come
 in two syntactically distinct categories that are connected by the
 adjoint operators $F$ and $G$:
 \begin{align*}
@@ -2188,9 +2200,9 @@ Figure~\ref{fig:fragment-adjoint} and the rules ${!}_R$ and ${\it
   pers}$ in the previous discussion.  Linear logic is recovered as a
 fragment of adjoint logic by removing all of the persistent
 propositions except for $GA$; the usual ${!}A$ is then definable as
-$FGA$. Lax logic, on the other hand, is recovered by removing all of
-the linear propositions except for $FX$; the usual lax modality
-$\ocircle X$ is then definable as $GFX$.
+$FGA$.\footnote{Lax logic, on the other hand, is recovered by removing
+  all of the linear propositions except for $FX$; the distinguishing
+  connective of lax logic, $\ocircle X$, is then definable as $GFX$.}
 
 One drawback of this approach is simply the logistics of giving 
 a fully focused presentation
@@ -2731,8 +2743,8 @@ right-hand side. {\it Concurrent equality} is the equivalence relation
 on focused proofs that treats all proofs that differ only in the
 interleaving of independent and concurrent steps as equal.  This
 equivalence relation was used in the definition of CLF
-\cite{watkins02concurrent}, but only in conjunction with the lax
-modality, an approach we will follow in Chapter 4.
+\cite{watkins02concurrent}, but in a greatly restricted way that will
+be reflected in Chapter 4.
 
 Concurrent
 equality gives rise to an
@@ -2806,15 +2818,15 @@ offers a very fundamental normal form: any two proofs that can be made
 equal by locally permuting inference rules have the same multifocused
 proof. 
 
-CLF's concurrent equality, restricted to an association with the lax
-modality, will be sufficient for the logical framework in Chapter
-4. In fact, for the fragment of the the logic in Chapter 3 that
-comprises our logical framework in Chapter 4, I conjecture that
-concurrent equality and the equality given by multifocusing
-coincide.\footnote{This obviously means that the example above will be
-  outside the logical that comprises the logical framework.}  This
-conjecture is obviously difficult to make precise, much less prove,
-without a general theory of multifocusing in intuitionistic logic.
+CLF's restricted form of concurrent equality will be sufficient for
+the logical framework in Chapter 4. In fact, for the fragment of the
+the logic in Chapter 3 that comprises our logical framework in Chapter
+4, I conjecture that concurrent equality and the equality given by
+multifocusing coincide.\footnote{This obviously means that the example
+  above will be outside the logical fragment that comprises the logical
+  framework.}  This conjecture is obviously difficult to make precise,
+much less prove, without a general theory of multifocusing in
+intuitionistic logic.
 
 
 \subsection{A warning about normalization}
