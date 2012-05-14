@@ -22,12 +22,13 @@ applied by Polakow and Pfenning to Lambek's ordered logic
 late to advocate for these logics to be understood as
 \underline{super}structural logics, but that is undoubtedly what they
 are: generalizations of persistent logic that introduce more 
-expressive power.
+expressive power. 
 
 In this chapter, I define a first-order ordered linear logic with a
-lax modality (henceforth \ollll, for ordered linear lax logic), in
-both unfocused (Section~\ref{sec:ord-unfocused}) and focused
-(Section~\ref{sec:ord-focused}) flavors. Then, following the
+lax connective ${\ocircle}A$ in both unfocused
+(Section~\ref{sec:ord-unfocused}) and focused
+(Section~\ref{sec:ord-focused}) flavors (this logic will henceforth be
+called \ollll, for ordered linear lax logic). Then, following the
 structural focalization methodology \cite{simmons11structural}, I
 establish cut admissibility (Section~\ref{sec:ord-cut}), and identity
 expansion (Section~\ref{sec:ord-identity}) for focused~\ollll; with
@@ -44,23 +45,22 @@ in Chapter 4, other fragments of the logic may well be interesting and
 useful for other purposes. Second, the presentation in this chapter,
 and in particular the discussion of substructural contexts in
 Section~\ref{sec:contexts}, introduces a presentation style and
-infrastructure that I believe will generalize to richer logics,
-such as the logic of bunched implications~\cite{pym02semantics},
-non-commutative linear logic (or ``rigid logic'')
-\cite{simmons09linear}, subexponential logics
-\cite{nigam09algorithmic}, and so on. 
+infrastructure that I believe will generalize to focused presentations
+of richer logics, such as the logic of bunched
+implications~\cite{pym02semantics}, non-commutative linear logic (or
+``rigid logic'') \cite{simmons09linear}, subexponential logics
+\cite{nigam09algorithmic}, and so on.
 
 Furthermore, the choice to present a full account of focusing in
-\ollll~is in keeping with as Andreoli's instance that we should seek,
-where possible, to avoid the confusion that results from ambiguity as
-to whether we are ``defining a foundational paradigm or a [logic]
-programming language (two objectives that should clearly be kept
-separate)'' \cite{andreoli01focussing}. Both the full logic \ollll~and
-the general methodology followed in this chapter are general,
-foundational paradigms within which it is possible to instantiate
-families of logic programming languages and logical frameworks, even
-though we will focus on the a particular logical framework starting in
-Chapter 4.
+\ollll~is in keeping with as Andreoli's insistance that we should
+avoid ambiguity as to whether we are ``defining a foundational
+paradigm or a [logic] programming language (two objectives that should
+clearly be kept separate)'' \cite{andreoli01focussing}. Both the full
+logic \ollll~and the general methodology followed in this chapter are
+general, foundational paradigms within which it is possible to
+instantiate families of logic programming languages and logical
+frameworks, even though we will focus on the a particular logical
+framework starting in Chapter~4.
 
 \section{Ordered linear lax logic}
 \label{sec:ord-unfocused}
@@ -70,16 +70,17 @@ Ordered linear logic was the subject of Polakow's thesis
 Mendler's lax logic \cite{fairtlough95propositional} (as reconstructed
 by Pfenning and Davies \cite{pfenning01judgmental}) to linear logic is
 the basis of the CLF logical framework
-\cite{watkins02concurrent}. Putting the pieces together is a
-relatively straightforward proof-theoretic exercise. There are three
-contexts relevant to the propositional presentation of ordered linear
-lax logic.  The persistent context $\Gamma$ and the linear context
-$\Delta$ are multisets as before (so we think of $\Delta_1, \Delta_2$
-as being equal to $\Delta_2, \Delta_1$, for instance). The ordered
-context $\Omega$ is a sequence of propositions, as in Gentzen's
-original presentation of sequent calculi, and {\it not} a multiset.
-This means that the two ordered contexts $\Omega_1, \Omega_2$ and
-$\Omega_2, \Omega_1$ are, in general, not the same.
+\cite{watkins02concurrent}. Putting the pieces together into one
+sequent calculus is a relatively straightforward proof-theoretic
+exercise. There are three contexts relevant to the propositional
+presentation of ordered linear lax logic.  The persistent context
+$\Gamma$ and the linear context $\Delta$ are multisets as before (so
+we think of $\Delta_1, \Delta_2$ as being equal to $\Delta_2,
+\Delta_1$, for instance). The ordered context $\Omega$ is a sequence
+of propositions, as in Gentzen's original presentation of sequent
+calculi, and {\it not} a multiset.  This means that the two ordered
+contexts $\Omega_1, \Omega_2$ and $\Omega_2, \Omega_1$ are, in
+general, not the same.
 
 \input{figs/fig-ordered-prop}
 
@@ -89,10 +90,11 @@ $\oseq{\Gamma}{\Delta}{\Omega}{\istrue{A}}$, which says that $A$ is an
 in $\Gamma$, the ephemeral resources in $\Delta$, and the ephemeral,
 ordered resources in $\Omega$. There is also a second judgment,
 $\oseq{\Gamma}{\Delta}{\Omega}{\islax{A}}$. The judgment $\islax{A}$
-is usually interpreted as truth under an unspecified constraint; one
-defining characteristic of the lax modality is that it if $\istrue{A}$
-is derivable with some resources then $\islax{A}$ is derivable with
-the same resources.
+is usually interpreted as truth under some unspecified constraint; one
+defining characteristic of the lax judgment is that it if $\istrue{A}$
+is derivable with some resources, then it is derivable with {\it no}
+constraint. No constraint at all is the simplest sort of constraint,
+so $\islax{A}$ is derivable with the same resources.
 
 Compare the relationship between $\mtrue$ and $\mlax$ 
 to the relationship between persistent and linear truth
@@ -154,9 +156,9 @@ The related notation on the left-hand side is the construct
 $\olseq{\Gamma}{\Delta}{\Omega_L}{A}{\Omega_R}$, which matches
 the sequent $\oseq{\Gamma}{\Delta'}{\Omega'}{U}$ if
 \begin{itemize}
-\item $\Omega' = \Omega_L, A, \Omega_R$ and $\Delta' = \Delta$;
-\item $\Omega' = \Omega_L, \Omega_R$ and $\Delta' = \Delta, A$;
-\item $\Omega' = \Omega_L, \Omega_R$, $\Delta' = \Delta$, and $A \in \Gamma$.
+\item $\Omega' = (\Omega_L, A, \Omega_R)$ and $\Delta' = \Delta$;
+\item $\Omega' = (\Omega_L, \Omega_R)$ and $\Delta' = (\Delta, A)$;
+\item $\Omega' = (\Omega_L, \Omega_R)$, $\Delta' = \Delta$, and $A \in \Gamma$.
 \end{itemize}
 As in the alternate presentation of linear logic where ${\it copy}$ was
 admissible, both the ${\it copy}$ rule and a rule Polakow called ${\it
@@ -179,9 +181,7 @@ uniformly adding a first-order context $\Psi$ to all sequents,
 however, it can be treated as first-order. We define quantification
 (existential and universal), as well as first-order
 equality,\footnote{That is, equality of terms from the domain of
-  first-order quantification. The domain of first-order equality is
-  LF, so an implementation of this equality would involve higher-order
-  unification.} in Figure~\ref{fig:ordered-fo}.
+  first-order quantification.} in Figure~\ref{fig:ordered-fo}.
 
 \input{figs/fig-ordered-fo}
 
@@ -193,7 +193,7 @@ $t = s$. This is a rule that, in general, will have countably many
 premises; in the case of a trivially satisfiable equality problem like
 $x \doteq x$ it will have one premise for each well-formed
 substitution that substitutes a term of the appropriate type for
-$x$. This exact style of presentation was used previously in
+$x$. I used this exact style of presentation previously in
 \cite{simmons09weak}, but the approach is based on Schroeder-Heister's
 treatment of definitional reflection \cite{schroeder93rules}.
 
@@ -229,7 +229,8 @@ $\doteq_L$.
 
 We have not yet thoroughly specified the type and term structure of
 first-order individuals; in the next chapter we clarify that these
-types and terms will actually be types and terms of Canonical LF.
+types and terms will actually be types and terms of Canonical LF
+\cite{harper07mechanizing}.
 
 \section{Substructural contexts}
 \label{sec:contexts}
@@ -244,14 +245,15 @@ add, such as the affine contexts present in the Celf implementation
 \cite{schacknielsen08celf}.
 
 In this section, we will consider a more compact way of dealing with
-the contexts which we think of as containing resources (persistent,
-affine, linear, or ordered), though we will maintain the distinction
-between resource contexts and first-order variable 
+the contexts that we interpret as containing resources (persistent,
+affine, linear, or ordered resources), though we choose to maintain
+the distinction between resource contexts and first-order variable
 contexts $\Psi$.  The particular way we define substructural contexts
-can be generalized substantially: it would be trivial to extend
-this presentation to the affine modality or to the subexponentials
+can be generalized substantially: it would be trivial to extend this
+presentation to the affine modality or to the subexponentials
 discussed by Nigam and Miller \cite{nigam09algorithmic}, and it should
-be able to richer logics, such as the logic of bunched implication.
+be reasonably straightfoward to extend our presentation to richer
+logics, such as the logic of bunched implication.
 
 We write unified substructural contexts as either $\Delta$ or $\Xi$,
 preferring the latter when there is a chance of confusing them with
@@ -269,8 +271,9 @@ context also represents a finite map from variables $x$ to {\it
 or $\mtrue$.  By separating out a substructural context into three
 subsequences of persistent, linear, and ordered judgments, we can
 recover the presentations of contexts for \ollll~given in
-Figure~\ref{fig:ordered-prop}. We will use this observation informally
-throughout the chapter, writing $\Xi = \Gamma; \Delta; \Omega$.
+Figure~\ref{fig:ordered-prop}. We will use this observation, mostly
+informally, throughout the chapter, writing $\Xi = \Gamma; \Delta;
+\Omega$.
 
 The domain represented by the metavariable $T$ is arbitrary: when
 discussing the unfocused logic given in Figure~\ref{fig:ordered-prop},
@@ -289,18 +292,20 @@ positive propositions $A^+$.
 % an inference rule may not be the same as the context-{\it extending}
 % notation we use in the premise of that rule.
 
-The key observation of this presentation was already present in the
-unfocused logic presented in Figure~\ref{sec:ord-unfocused}: we need
-to differentiate {\it constructions}, which appear in the premises of
+The key innovation in this presentation was already present in the
+unfocused logic shown in Figure~\ref{sec:ord-unfocused}: we need to
+differentiate {\it constructions}, which appear in the premises of
 rules, and {\it matching constructs}, which appear in the conclusions
 of rules.  The notation $\Gamma; \Delta; \Omega_L/A\fuse B/\Omega_R$
 that appears in the conclusion of ${\fuse}_L$ is a matching construct;
 as discussed in Section~\ref{sec:ord-unfocused}, there are multiple
 ways in which a context $\Gamma'; \Delta'; \Omega'$ could match this
 context, because $A \fuse B$ could come from any of the three
-contexts. However, $\Gamma; \Delta; \Omega_L,{A},{B},
-\Omega_R$ in the premise of ${\fuse}_L$ is a construction, and is
-unambiguously equal to only one context $\Gamma'; \Delta'; \Omega'$.
+contexts. However, $\Gamma; \Delta; \Omega_L,{A},{B}, \Omega_R$ in the
+premise of ${\fuse}_L$ is a construction, and is unambiguously equal
+to only one context $\Gamma'; \Delta'; \Omega'$ -- the one where
+$\Gamma' = \Gamma$, $\Delta' = \Delta$, and 
+$\Omega' = \Omega_L, {A}, {B}, \Omega_R$.
 
 \subsection{Fundamental operations on contexts}
 
@@ -357,9 +362,9 @@ Informally, we
 can write this missing piece as a box: $\Gamma; \Delta; \Omega_L,
 \Box, \Omega_R$. Alternatively we can think of a frame as a one-hole
 context or Huet-style zipper \cite{huet97zipper} over the structure of
-substructural contexts. We will actually think of them essentially
+substructural contexts. We will also think of them morally
 as linear LF functions $(\lambda\Xi.\, \Xi_L, \Xi, \Xi_R)$
-\cite{simmons09linear}, or, more generally, as linear representational
+\cite{simmons09linear}; that is, as linear representational
 functions defined by substitution.
 
 The construction associated with frames, $\tackon{\Theta}{\Xi}$,
