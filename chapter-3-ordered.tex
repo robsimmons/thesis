@@ -1772,10 +1772,10 @@ determined by the annotations and bookkeeping that is
 
 For cases involving left rules, the general pattern is that
 $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$ and
-the action of the left rule, read bottom-up, is observe that  
+the action of the left rule, when we read it bottom-up, is observe that  
 $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches 
 $\frameoff{\Theta'}{y{:}\istrue{T}}$ in its conclusion and constructs 
-$\frameoff{\Theta'}{y{:}\islvl{T'}'}$ in its premise. 
+$\frameoff{\Theta'}{y{:}\islvl{T'}'}$ in its premise(s). 
 Effectively, we need to abstract
 a {\it two}-hole function (call it $\Gamma$) from $\Xi$. 
 One hole -- the place where $x$ is --
@@ -1969,9 +1969,9 @@ two frames are stated but not proven.
 
   $\Xi$ matches $\frameoff{\Theta_{\Delta}}{{!}B^-}$,
   $\tackon{\Theta_{\Delta}}{y{:}\ispers{B^-}}$ matches 
-  $\frameoff{\Theta_B}{\restrictto{\Delta'}{\mlvl}}$,
+  $\frameoff{\Theta_{B^-}}{\restrictto{\Delta'}{\mlvl}}$,
   and 
-  $\tackon{\Theta_B}{x{:}\islvl{A^-}} = \tackon{\Theta'}{y{:}\ispers{B^-}}$.
+  $\tackon{\Theta_{B^-}}{x{:}\islvl{A^-}} = \tackon{\Theta'}{y{:}\ispers{B^-}}$.
   By the induction hypothesis on $M$ and $N$ we have
   $\foc{\Psi}{\tackon{\Theta_{\Delta}}{y{:}\ispers{B^-}}}{U}$, and the result
   follows by rule ${!}_L$.
