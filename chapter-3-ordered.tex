@@ -2162,6 +2162,24 @@ two frames are stated but not proven.
 \section{Identity expansion}
 \label{sec:ord-identity}
 
+The form of the identity expansion theorems is already available to
+us: the admissible rules $\eta^{A^+}$ and $\eta^{A^-}$ are
+straightforward generalizations of the explicit rules $\eta^+$ and
+$\eta^-$ in Figure~\ref{fig:foc-mall} from ordered atomic propositions
+to arbitrary propositions (and from permeable atomic propositions to
+arbitrary permeable propositions and so on).
+\[
+\infer-[\eta^{A^+_\mlvl}]
+{\foct{\Psi}{\frameoff{\Theta}{A^+_\mlvl}}{\etapa{z}{N}{A^+_\mlvl}}{U}}
+{\foct{\Psi}{\tackon{\Theta}{z{:}\islvl{\langle A^+_\mlvl \rangle}}}{N}{U}}
+\quad
+\infer-[\eta^{A^-_\mlvl}]
+{\foct{\Psi}{\Delta}{\etana{N}{A^-_\mlvl}}{A^-_\mlvl}}
+{\foct{\Psi}{\Delta}{N}{\islvl{\langle A^-_\mlvl \rangle}}}
+\]
+\begin{theorem}[Identity expansion]
+\end{theorem}
+
 \section{Correctness of focusing}
 \label{sec:ord-correctness}
 
@@ -2173,6 +2191,7 @@ two frames are stated but not proven.
 
 \subsection{Focalization}
 
+\section{Syntactic fragments}
 
 \section{The design space of proof terms}
 
