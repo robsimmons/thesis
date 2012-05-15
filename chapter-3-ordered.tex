@@ -52,7 +52,7 @@ implications~\cite{pym02semantics}, non-commutative linear logic (or
 \cite{nigam09algorithmic}, and so on.
 
 Furthermore, the choice to present a full account of focusing in
-\ollll~is in keeping with as Andreoli's insistance that we should
+\ollll~is in keeping with as Andreoli's insistence that we should
 avoid ambiguity as to whether we are ``defining a foundational
 paradigm or a [logic] programming language (two objectives that should
 clearly be kept separate)'' \cite{andreoli01focussing}. Both the full
@@ -252,7 +252,7 @@ contexts $\Psi$.  The particular way we define substructural contexts
 can be generalized substantially: it would be trivial to extend this
 presentation to the affine exponential ${@}A$ or to the subexponentials
 discussed by Nigam and Miller \cite{nigam09algorithmic}, and it should
-be reasonably straightfoward to extend our presentation to richer
+be reasonably straightforward to extend our presentation to richer
 logics, such as the logic of bunched implication.
 
 We write unified substructural contexts as either $\Delta$ or $\Xi$,
@@ -615,9 +615,9 @@ particular choice of logic we're considering. Given affine resources,
 for instance, the matching construct associated with the 
 affine connective ${@}A$ would
 clear the context of affine facts: 
-$\Xi$ would match $\restrictto{\Xi'}{\mpers}$ if 
+$\Xi$ matches $\restrictto{\Xi'}{\mpers}$ if 
 $\Xi$ has only persistent and affine resources and $\Xi'$ 
-contains the same persistent resources but none of the affine ones.
+contains the same persistent resources as $\Xi$ but none of the affine ones.
 
 We can describe a mirror-image operation on succeedants $U$.  $U$
 matches $\restrictfrom{U}{\mlax}$ only if it has the form $\islax{T}$,
@@ -804,7 +804,7 @@ $\foc{\Psi}{\Delta}{U}$. Justifying this close correspondence requires
 us to take care that the structure of expressions is faithful to the
 structure of proofs; this is the primary reason that we don't
 introduce the patterns that are common in other proof term assignments
-for focused logic
+for focused logic until the next chapter
 \cite{watkins02concurrent,licata08focusing,krishnaswami09focusing}.
 
 There are two caveats to the idea that expressions are representatives
@@ -821,15 +821,20 @@ $\foct{\Psi}{\Delta}{E}{U}$, then $\foct{\Psi, a{:}\tau}{\Delta,
   x{:}\ispers{A^+}}{E}{U}$ as well. Therefore, even given appropriate
 type annotations, when we say that some expression $E$ is a derivation
 of $\foc{\Psi}{\Delta}{U}$, it is only {\it uniquely} a derivation of
-that sequent if we account for the implicit bookkeeping.
+that sequent if we account for the implicit bookkeeping on contexts.
 
-The use of proof terms also allows for a greatly compressed
-presentation of cut admissibility and identity expansion, though much
+The proof terms presented here will be reused in our formulation of a
+logical framework in the next chapter.  Additionally, working on the
+level of proof terms allows for a greatly compressed presentation of
+cut admissibility and identity expansion that emphasizes the
+computational nature of these proofs: cut admissibility has the clear
+form of the {\it hereditary substitution} operation in so-called {\it
+  spine form} presentations of LF \cite{cervesato02linear}, and
+identity expansion is, computationally, a novel $\eta$-expansion
+property on proof terms \cite{simmons11structural}.  To be fair, much
 of this compression is due to neglecting the implicit bookkeeping
 associated with matching constructs, bookkeeping that must be made
-explicit in proofs like the cut admissibility theorem.  Furthermore,
-we will reuse much of this notation in our formulation of a logical
-framework in the next chapter.
+explicit in proofs like the cut admissibility theorem.
 
 \subsection{Variable substitution}
 
@@ -879,7 +884,7 @@ We are given a proof of $\foc{\Psi}{\Delta}{[A^+ \fuse B^+]}$ that
 ends with the ${\fuse}_R$ rule; the subderivations are
 $V_1$, a derivation of $\foc{\Psi}{\Delta_1}{[A^+]}$, and
 $V_2$, a derivation of $\foc{\Psi}{\Delta}{[B^+]}$. Furthermore, we know that
-$\Delta$ matches $\Delta_1, \Delta_2$. We need a lemma that
+$\Delta$ matches $\matchconj{\Delta_1}{\Delta_2}$. We need a lemma that
 tells us that $\sigma\Delta$ matches $\sigma\Delta_1, \sigma\Delta_2$;
 then, by rule ${\fuse}_R$, it suffices to show that
 $\foc{\Psi'}{\sigma\Delta_1}{\sigma{A^+}}$ (which we have by the 
@@ -939,7 +944,7 @@ $\foc{\Psi''}{\tackon{(\sigma' \circ \sigma) \Theta}{\cdot}}
     {(\sigma' \circ \sigma) U}$. We have that 
 $\Psi'' \vdash \sigma' \circ \sigma : \Psi$, and certainly 
 $\sigma' \circ \sigma$ unifies $t$ and $s$, so we can finish by
-applying $\sigma' \circ \sigma$ to $\phi$.\smallskip
+applying $\phi$ to $\sigma' \circ \sigma$.\smallskip
 
 \item[--]
 $\sigma(\tforallr{a}{N}) = \tforallr{a}{(\sigma, a/a)N}$ \smallskip\\ We are
@@ -1064,7 +1069,7 @@ as follows:
 \]
 
 In the negative focal substation (as the leftist substitutions of
-cut admissibility), there will be a corresponding use of
+cut admissibility), there is a corresponding use of
 $\restrictfrom{U}{\mlvl}$ to capture that we can use a proof of
 $\istrue{A}$ to discharge a hypothesis of $\istrue{A}$ in a proof of
 $\istrue{C}$ or a proof of $\islax{C}$, but that a proof of
@@ -1177,11 +1182,12 @@ requires a lot of code duplication -- that is, the proof of two
 different parts may both require a case that looks essentially the
 same.
 
-A great deal of simplification is due to the use of
-$\restrictto{\Delta}{\mlax}$. Without that notation, part 3 would
-split into two parts for $\mtrue$ and $\mlax$ and part 4 would split
-into three parts for $\mtrue$, $\meph$, and $\mpers$. The fifth part
-of Theorem~\ref{thm:lincut} in Chapter 2, which is computationally a
+A great deal of simplification is due to the use of the matching
+constructs $\restrictto{\Delta}{\mlvl}$ and
+$\restrictfrom{U}{\mlvl}$. Without that notation, part 3 would split
+into two parts for $\mtrue$ and $\mlax$ and part 4 would split into
+three parts for $\mtrue$, $\meph$, and $\mpers$. The fifth part of
+Theorem~\ref{thm:lincut} in Chapter 2, which is computationally a
 near-duplicate of the fourth part of the same theorem, is due to the
 lack of this simplification.
 
@@ -1236,7 +1242,9 @@ this proof in turn. Most of the theorem will be presented at the level
 of proof terms, but for representative cases we will discuss what the
 manipulation of proof terms means in terms of sequents and matching
 constructs. In many cases, we discuss the necessity of constructing
-certain contexts or frames; 
+certain contexts or frames; in general, we will state the necessary
+properties of these constructions without detailing the relatively
+straightforward process of constructing them.
 
 \subsubsection{Positive principal substitution}
 Positive principal substitution encompasses half the {\it principal
@@ -1271,11 +1279,12 @@ invariant that, in an unstable context, we only ever consider the {\it
   \end{itemize}
   Because $\Delta$ is suspension-normal, there exists $\Delta'$ where
   $\Delta$ such that $\restrictto{\Delta'}{\mlvl}$ and
-  $z{:}\susp{\Delta'}$ matches $\Delta'$.\footnote{Strictly
-    speaking, we have that $\Delta$ matches
-    $\restrictto{\Delta}{\mlvl}$; we introduce a new $\Delta'$ with
-    affine logic in mind.} Therefore, we can derive
-  $\foc{\Psi}{\Delta'}{[p^+_\mlvl]}$ by ${\it id}^+$.
+  $z{:}\susp{\Delta'}$ matches $\Delta'$. % \footnote{Strictly
+  %  speaking, we have that $\Delta$ matches
+  %  $\restrictto{\Delta}{\mlvl}$; we introduce a new $\Delta'$ with
+  %  affine logic in mind.}
+  Therefore, we can derive $\foc{\Psi}{\Delta'}{[p^+_\mlvl]}$ by ${\it
+    id}^+$.
 
   $\Xi$ matches
   $\frameoff{\Theta'}{\restrictto{\Delta'}{\mlvl}}$,
@@ -2210,6 +2219,6 @@ whether
  \stableL{\Delta}}
 \]
 
-Conjecture: the suitibilty of the framing-off operation 
+Conjecture: the suitability of the framing-off operation 
 $\frameoff{\Theta}{\Delta}$ for cut admissibility, 
 proof search is a \cite{reed09queue}
