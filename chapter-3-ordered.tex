@@ -250,7 +250,7 @@ affine, linear, or ordered resources), though we choose to maintain
 the distinction between resource contexts and first-order variable
 contexts $\Psi$.  The particular way we define substructural contexts
 can be generalized substantially: it would be trivial to extend this
-presentation to the affine modality or to the subexponentials
+presentation to the affine exponential ${@}A$ or to the subexponentials
 discussed by Nigam and Miller \cite{nigam09algorithmic}, and it should
 be reasonably straightfoward to extend our presentation to richer
 logics, such as the logic of bunched implication.
@@ -613,7 +613,7 @@ don't actually modify contexts in the way
 other matching constructs do, but this is a consequence of the 
 particular choice of logic we're considering. Given affine resources,
 for instance, the matching construct associated with the 
-affine modality would
+affine connective ${@}A$ would
 clear the context of affine facts: 
 $\Xi$ would match $\restrictto{\Xi'}{\mpers}$ if 
 $\Xi$ has only persistent and affine resources and $\Xi'$ 
@@ -703,7 +703,7 @@ positive propositions have a refinement, {\it permeable} propositions
 $A^+_\mpers$, that is analogous to the refinement discussed for linear
 logic in Section~\ref{sec:permeable}. There is also a more generous
 refinement, the {\it mobile} propositions, $A^+_\meph$, for positive
-propositions that bottom out with one of the two modalities ${!}$ and
+propositions that bottom out with one of the two exponentials ${!}$ and
 ${\gnab}$. We introduce atomic propositions $p^+$ that stand for
 arbitrary positive propositions, $p^+_\meph$ that stand for arbitrary
 mobile propositions, and $p^+_\mpers$ that stand for arbitrary
@@ -748,7 +748,8 @@ A^-_\mlax & ::= p^-_\mlax
 \end{figure}
 
 Negative propositions also have a refinement, $A^-_\mlax$, for
-negative propositions that always bottom out as a modal
+negative propositions that always bottom out as connective 
+of the form
 ${\ocircle}A^+$.  This is interesting as a formal artifact and there
 is very little overhead involved in putting it into our development,
 but I don't claim to fully understand what the refinement means or
@@ -758,15 +759,15 @@ want to include such propositions in the logical framework, as to do
 so would break the distinction between concurrent and deductive proofs
 that will be discussed in Section~\ref{sec:framework-logicprog}.
 
-The presentation of the modalities, and the logic that we now present,
+The presentation of the exponentials, and the logic that we now present,
 emphasises the degree to which the shifts ${\uparrow}$ and
-${\downarrow}$ have much of the character of modalities in a focused
+${\downarrow}$ have much of the character of exponentials in a focused
 substructural logic; this point was explored in depth by Laurent in
 his thesis \cite{laurent02etude}. The upshift ${\uparrow}A^+$ is like
-an ordered variant of the lax modality ${\ocircle}A^+$ that puts no
+an ordered variant of the lax truth ${\ocircle}A^+$ that puts no
 constraints on the form of the succeedant, and the downshift
 ${\downarrow}A^-$ is like an ordered variant of the persistent and
-linear modalities ${!}A^-$ and ${\gnab}A^-$ that puts no constraints
+linear exponentials ${!}A^-$ and ${\gnab}A^-$ that puts no constraints
 on the form of the context.
 
 \subsection{Derivations and proof terms}
@@ -1169,7 +1170,7 @@ example of existing work on cut admissibility in focused logics.  His
 statement of cut admissibility linear logic has 10 parts, 
 which are sorted into
 five groups. In order to extend his
-proof structure to handle the extra lax and mobile modalities in
+proof structure to handle the extra lax and mobile connectives in
 \ollll, we would need a dramatically larger number of
 cases. Furthermore, at a computational level, Chaudhuri's proof
 requires a lot of code duplication -- that is, the proof of two
