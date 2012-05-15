@@ -2177,8 +2177,170 @@ arbitrary permeable propositions and so on).
 {\foct{\Psi}{\Delta}{\etana{N}{A^-_\mlvl}}{A^-_\mlvl}}
 {\foct{\Psi}{\Delta}{N}{\islvl{\langle A^-_\mlvl \rangle}}}
 \]
-\begin{theorem}[Identity expansion]
+\begin{theorem}[Identity expansion]~
+\begin{itemize}
+\item If 
+  $\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{\langle A^+_\mlvl \rangle}}}{U}$
+  and $\Delta$ matches $\frameoff{\Theta}{A^+_\mlvl}$, 
+  then $\foc{\Psi}{\Delta}{U}$.
+\item If
+  $\foc{\Psi}{\Delta}{\islvl{\langle A^-_\mlvl \rangle}}$
+  then $\foc{\Psi}{\Delta}{A^-_\mlvl}$.
+\end{itemize}
 \end{theorem}
+
+\begin{proof} By mutual induction over the structure of types.
+
+\subsubsection{Positive cases}
+
+\begin{itemize}
+\item[--] $\etapa{z}{N}{p^+_\mlvl} = \tetap{z}{N}$
+\item[--] $\etapa{z}{N}{{\downarrow}A^-} 
+           = \tdownl{x}{([(\tdownr{(\etana{\tfocusl{x}{\tnil}}{A^-})})/z]N)}$
+  \smallskip
+
+  $N$ is a derivation of 
+  $\foc{\Psi}{\tackon{\Theta}{z{:}\istrue{\susp{{!}A^-}}}}{U}$.
+  By ${\downarrow_L}$, it suffices to show 
+  $\foc{\Psi}{\tackon{\Theta}{x{:}\istrue{A^-}}}{U}$.
+  We construct a context $\Xi$ that matches $x{:}A^-$ such that
+  $\tackon{\Theta}{x{:}\istrue{A^-}}$ matches $\frameoff{\Theta}{\Xi}$.
+  \smallskip
+
+  $\tfocusl{x}{\tnil}$ (that is, ${\it focus}_L$ followed by ${\it id}^-$) 
+  is a derivaiton of 
+  $\foc{\Psi}{\Xi}{\istrue{\susp{A^-}}}$.
+  By the induction hypothesis, we have 
+  $\foc{\Psi}{\Xi}{A^-}$, and by ${\downarrow}_R$
+  we then have 
+  $\foc{\Psi}{\Xi}{[ {\downarrow}{A^-} ]}$. 
+  The result follows by the focal substitution on this derivation and $N$.
+  \smallskip
+
+\item[--] $\etapa{z}{N}{{\gnab}A^-}
+           = \tgnabl{x}{([(\tgnabr{(\etana{\tfocusl{x}{\tnil}}{A^-})})/z]N)}$ 
+  \smallskip
+
+  $N$ is a derivation of 
+  $\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{{\gnab}A^-}}}}{U}$, where
+  $\mlvl$ is $\mtrue$ or $\meph$.
+  By ${\gnab}_L$, it suffices to show 
+  $\foc{\Psi}{\tackon{\Theta}{x{:}\iseph{A^-}}}{U}$.
+  We construct a context $\Xi$ that matches $x{:}A^-$ such that
+  $\tackon{\Theta}{x{:}\iseph{A^-}}$ matches $\frameoff{\Theta}{\Xi}$
+  and $\Xi$ matches $\restrictto{\Xi}{\meph}$.
+  \smallskip
+
+  $\tfocusl{x}{\tnil}$ (that is, ${\it focus}_L$ followed by
+  ${\it id}^-$) is a derivation of $\foc{\Psi}{\Xi}{\istrue{\susp{A^-}}}$. 
+  By the induction hypothesis, we have $\foc{\Psi}{\Xi}{A^-}$, 
+  and by ${\gnab}_R$ and the fact that $\Xi$ matches $\restrictto{\Xi}{\meph}$
+  we have $\foc{\Psi}{\Xi}{[{\gnab}A^-]}$. The result follows
+  by focal substitution on this derivation and $N$.
+  \smallskip
+
+\item[--] $\etapa{z}{N}{{!}A^-}
+           = \tbangl{x}{([(\tbangr{(\etana{\tfocusl{x}{\tnil}}{A^-})})/z]N)}$ 
+  \smallskip
+
+  $N$ is a derivation of 
+  $\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{{!}A^-}}}}{U}$, where
+  $\mlvl$ can be anything ($\mtrue$, $\meph$, or $\mpers$).
+  By ${!}_L$, it suffices to show 
+  $\foc{\Psi}{\tackon{\Theta}{x{:}\ispers{A^-}}}{U}$.
+  We construct a context $\Xi$ that matches $x{:}A^-$ such that
+  $\tackon{\Theta}{x{:}\ispers{A^-}}$ matches $\frameoff{\Theta'}{\Xi}$
+  and $\Xi$ matches $\restrictto{\Xi}{\mpers}$. The frame
+  $\Theta'$ is $\Theta$ plus the mapping 
+  $x{:}\ispers{A^-}$, and $N$ is a derivation of 
+  $\foc{\Psi}{\tackon{\Theta'}{z{:}\islvl{\susp{{!}A^-}}}}{U}$
+  by admissible weakeing.
+  \smallskip
+
+  $\tfocusl{x}{\tnil}$ (that is, ${\it focus}_L$ followed by
+  ${\it id}^-$) is a derivation of $\foc{\Psi}{\Xi}{\istrue{\susp{A^-}}}$. 
+  By the induction hypothesis, we have $\foc{\Psi}{\Xi}{A^-}$, 
+  and by ${!}_R$ and the fact that $\Xi$ matches $\restrictto{\Xi}{\mpers}$
+  we have $\foc{\Psi}{\Xi}{[{!}A^-]}$. The result follows
+  by focal substitution on this derivation and $N$.
+  \smallskip
+
+\item[--] $\etapa{z}{N}{\one} = \tonel{([\toner/z]N)}$ 
+\item[--] $\etapa{z}{N}{A^+_\mlvl \fuse B^+_\mlvl} =
+            \etapa{z_1}
+             {~\etapa{z_2}
+              {~[(\tfuser{z_1}{z_2})/z]N}
+              {B^+_\mlvl}}
+             {A^+_\mlvl}$
+  \smallskip
+
+  $N$ is a derivation of 
+  $\foc{\Psi}{\tackon{\Theta}
+   {z{:}\islvl{\susp{A^+_\mlvl \fuse B^+_\mlvl}}}}{U}$. 
+  By ${\fuse}_L$, it suffices to
+  show $\foc{\Psi}{\tackon{\Theta}{A^+_\mlvl, B^+_\mlvl}}{U}$.
+  We construct a context $\Xi$ that matches 
+  $\matchconj{z_1{:}\susp{A^+_\mlvl}}{z_2{:}\susp{B^+_\mlvl}}$
+  such that $\tackon{\Theta}
+              {\mkconj{z_1{:}\islvl{\susp{A^+_\mlvl}}}
+                      {z_2{:}\islvl{\susp{B^+_\mlvl}}}}$
+  matches $\frameoff{\Theta'}{\Xi}$. The frame 
+  $\Theta'$ is either $\Theta$ (if $\mlvl$ is $\mtrue$ or $\meph$) 
+  or it is $\Theta$ plus additional mappings
+  $z_1{:}\islvl{\susp{A^+_\mlvl}}$ and 
+  $z_2{:}\islvl{\susp{B^+_\mlvl}}$ (if $\mlvl$ is $\mpers$); in the
+  latter clase, $N$ is a derivation of 
+  $\foc{\Psi}{\tackon{\Theta'}
+   {z{:}\islvl{\susp{A^+_\mlvl \fuse B^+_\mlvl}}}}{U}$ by admissible weakening.
+  \smallskip
+
+
+  $\tfuser{z_1}{z_2}$ (that is, ${\fuse}_R$ followed by two instances of 
+  ${\it id}^+$) is a derivation of 
+  $\foc{\Psi}{\Xi}{[A^+_\mlvl \fuse B^+_\mlvl]}$.
+  By focal substitution, we have
+  a derivation of 
+  $\foc{\Psi}{\tackon{\Theta}
+              {\mkconj{z_1{:}\islvl{\susp{A^+_\mlvl}}}
+                      {z_2{:}\islvl{\susp{B^+_\mlvl}}}}}{U}$,
+  by the induction hypothesis on $B^+_\mlvl$ we have
+  $\foc{\Psi}{\tackon{\Theta}
+              {\mkconj{z_1{:}\islvl{\susp{A^+_\mlvl}}}
+                      {\susp{B^+_\mlvl}}}}{U}$, and by
+  the induction hypothesis on $A^+_\mlvl$ we have
+   $\foc{\Psi}{\tackon{\Theta}
+              {\mkconj{A^+_\mlvl}
+                      {B^+_\mlvl}}}{U}$ as required.
+  \smallskip
+ 
+\item[--] $\etapa{z}{N}{\zero} = \tabort$ 
+
+\item[--] $\etapa{z}{N}{A^+_\mlvl \oplus B^+_\mlvl} = 
+           \toplusl
+            {\etapa{z_1}{~}{A^+_\mlvl}}
+            {\etapa{z_1}{~}{B^+_\mlvl}}$
+
+\item[--] $\exists x. A^+$ 
+
+\item[--] $t \doteq s$
+
+\end{itemize}
+
+\subsubsection{Negative cases}
+
+\begin{itemize}
+\item[--] $p^-_\mlvl$
+ ${\uparrow}A^+$
+ ${\ocircle}A^+$
+ $A^+ \lefti B^-$
+ $A^+ \righti B^-$
+ $\top$ 
+ $A^- \with B^-$
+ $\forall x.A^-$
+
+\end{itemize}
+
+\end{proof}
 
 \section{Correctness of focusing}
 \label{sec:ord-correctness}
