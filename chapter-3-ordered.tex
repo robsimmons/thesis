@@ -2201,7 +2201,8 @@ apply admissible weakening to the subderivation $N$.
 
 \begin{proof} By mutual induction over the structure of types. We 
 provide the full definition at the level of proof terms, but omit
-the full discussion of some of the simpler cases, like units.
+the full discussion of some of the simpler cases (like units) and
+cases that are very similar to others.
 
 \subsubsection{Positive cases}
 
@@ -2481,9 +2482,14 @@ The result follows by focal substitution out of $N$.
 $N$ is a derivation of 
 $\foc{\Psi}{\Delta}{\islvl{\susp{A^+ \righti B^-_\mlvl}}}$. By 
 ${\righti}_R$, it suffices to show $\foc{\Psi}{\Delta, A^+}{B^-_\mlvl}$.
-We construct the empty (except for persistent resources)
-frame $\Theta$ such that $\tackon{}{}$
-\smallskip
+We construct a frame with $\Delta$'s persistent resources and 
+a hole to the left of the mapping $z{:}\istrue{\susp{A^+}}$; therefore,
+$\mkconj{\Delta}{z{:}\istrue{\susp{A^+}}}$ matches 
+$\frameoff{\Theta}{\Delta}$.
+
+% empty (except for persistent resources)
+%frame $\Theta$ such that $\tackon{}{}$
+% \smallskip
 
 % $\tappr{z}{\tnil}$ (that is, ${\righti}_R$ followed by ${\it id}^+$ and
 % ${\it id}^-$) is a derivation of 
@@ -2492,6 +2498,9 @@ frame $\Theta$ such that $\tackon{}{}$
 % $\foc{\Psi}{\tackon{\Theta}{x{:}\istrue{\susp{A^+}}}}
 % {\islvl{\susp{B^-_\mlvl}}}$
 
+$\tappr{z}{\tnil}$ (that is, ${\righti}_R$ followed by ${\it id}^+$ and
+${\it id}^-$) is a derivation of 
+$\foc{\Psi}{\tackon{\Theta}{[A^+ \righti B^-_\mlvl]}}{\islvl{\susp{B^-_\mlvl}}}$.
 By focal substitution out of $N$, we have a derivation of 
 $\foc{\Psi}{\Delta, z{:}\istrue{\susp{A^+}}}{\islvl{\susp{B^-_\mlvl}}}$,
 by the induction hypothesis on $B^-_\mlvl$ we have
