@@ -2472,13 +2472,33 @@ $\foc{\Psi}{\tackon{\Theta}{[{\ocircle}A^+]}}{\islax{A^+}}$.
 The result follows by focal substitution out of $N$.
 \smallskip
 
-
-\smallskip
-
 \item[--] $\etana{N}{A^+ \lefti B^-_\mlvl}
            = \tlaml{(\etapa{z}{~\etana{[N](\tappl{z}{\tnil})}{B^-_\mlvl}}{A^+})}$
 \item[--] $\etana{N}{A^+ \righti B^-_\mlvl}
            = \tlamr{(\etapa{z}{~\etana{[N](\tappr{z}{\tnil})}{B^-_\mlvl}}{A^+})}$
+\smallskip
+
+$N$ is a derivation of 
+$\foc{\Psi}{\Delta}{\islvl{\susp{A^+ \righti B^-_\mlvl}}}$. By 
+${\righti}_R$, it suffices to show $\foc{\Psi}{\Delta, A^+}{B^-_\mlvl}$.
+We construct the empty (except for persistent resources)
+frame $\Theta$ such that $\tackon{}{}$
+\smallskip
+
+% $\tappr{z}{\tnil}$ (that is, ${\righti}_R$ followed by ${\it id}^+$ and
+% ${\it id}^-$) is a derivation of 
+% $\foc{\Psi}{[A^+ \righti B^-_\mlvl],\Xi}{\islvl{\susp{B^-_\mlvl}}}$.
+% By focal substitution out of $N$, we have
+% $\foc{\Psi}{\tackon{\Theta}{x{:}\istrue{\susp{A^+}}}}
+% {\islvl{\susp{B^-_\mlvl}}}$
+
+By focal substitution out of $N$, we have a derivation of 
+$\foc{\Psi}{\Delta, z{:}\istrue{\susp{A^+}}}{\islvl{\susp{B^-_\mlvl}}}$,
+by the induction hypothesis on $B^-_\mlvl$ we have
+$\foc{\Psi}{\Delta, z{:}\istrue{\susp{A^+}}}{B^-_\mlvl}$, and
+by the induction hypothesis on $A^+$ we have
+$\foc{\Psi}{\Delta, A^+}{B^-_\mlvl}$ as required.
+
 \smallskip
 
 \item[--] $\etana{N}{\top} = \top$ 
@@ -2486,6 +2506,28 @@ The result follows by focal substitution out of $N$.
            = \twithr
               {(\etana{[N](\tpione{\tnil})}{A^-_\mlvl})}
               {(\etana{[N](\tpitwo{\tnil})}{B^-_\mlvl})}$
+\smallskip
+
+$N$ is a derivation of 
+$\foc{\Psi}{\Delta}{\islvl{\susp{A^-_\mlvl \with B^-_\mlvl}}}$. By 
+$\with_R$, it suffices to show $\foc{\Psi}{\Delta}{A^-_\mlvl}$
+and $\foc{\Psi}{\Delta}{B^-_\mlvl}$; we will show the first, as the two
+cases are symmetric.
+\smallskip
+
+We construct the empty (except for persistent resources) frame
+$\Theta$ such that $\Delta$ matches $\frameoff{\Theta}{\Delta}$. 
+$\tpione{\tnil}$ (that is, ${\with}_{R1}$ followed by ${\it id}^-$) is
+a derivation of 
+$\foc{\Psi}{\tackon{\Theta}{[A^-_\mlvl \with B^-_\mlvl]}}
+  {\islvl{\susp{A^-_\mlvl}}}$.
+By focal substitution out of $N$, we have 
+a derivation of $\foc{\Psi}{\Delta}{\islvl{\susp{A^-_\mlvl}}}$, and
+by the induction 
+hypothesis on $A^-_\mlvl$ we have 
+ $\foc{\Psi}{\Delta}{A^-_\mlvl}$ as required.
+\smallskip
+
 \item[--] $\etana{N}{\forall x.A^-_\mlvl}
            = \tforallr{a}{(\etana{[N](\tforalll{a}{\tnil})}{A^-_\mlvl})}$
 
