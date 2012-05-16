@@ -1110,6 +1110,7 @@ critical precondition of cut admissibility property for focused
 \ollll. We'll call contexts and succeedants with this property {\it
   suspension-normal}.
 
+\bigskip
 \begin{theorem}[Cut admissibility]\label{thm:ord-cut}
 For suspension-normal $\Psi$, $A^+$, $A^-$, $\Delta$, $\Theta$, $\Xi$, $U$, and $U'$,
 \begin{enumerate}
@@ -1135,7 +1136,7 @@ For suspension-normal $\Psi$, $A^+$, $A^-$, $\Delta$, $\Theta$, $\Xi$, $U$, and 
       then $\foc{\Psi}{\Xi}{U}$
 \end{enumerate}
 \end{theorem}
-\medskip
+\bigskip
 
 \noindent
 The four cases of cut admissibility (and their proof below) neatly
@@ -2177,6 +2178,12 @@ arbitrary permeable propositions and so on).
 {\foct{\Psi}{\Delta}{\etana{N}{A^-_\mlvl}}{A^-_\mlvl}}
 {\foct{\Psi}{\Delta}{N}{\islvl{\langle A^-_\mlvl \rangle}}}
 \]
+In the proof of identity expansion, we do pay some price in return for
+including including permeable propositions, as we perform slightly
+different bookkeeping depending on whether or not it is necessary to
+apply admissible weakening to the subderivation $N$.
+
+\bigskip
 \begin{theorem}[Identity expansion]~
 \begin{itemize}
 \item If 
@@ -2189,7 +2196,9 @@ arbitrary permeable propositions and so on).
 \end{itemize}
 \end{theorem}
 
-\begin{proof} By mutual induction over the structure of types.
+\begin{proof} By mutual induction over the structure of types. We 
+provide the full definition at the level of proof terms, but omit
+the full discussion of some of the simpler cases, like units.
 
 \subsubsection{Positive cases}
 
@@ -2208,13 +2217,13 @@ arbitrary permeable propositions and so on).
   \smallskip
 
   $\tfocusl{x}{\tnil}$ (that is, ${\it focus}_L$ followed by ${\it id}^-$) 
-  is a derivaiton of 
+  is a derivation of 
   $\foc{\Psi}{\Xi}{\istrue{\susp{A^-}}}$.
   By the induction hypothesis, we have 
   $\foc{\Psi}{\Xi}{A^-}$, and by ${\downarrow}_R$
   we then have 
   $\foc{\Psi}{\Xi}{[ {\downarrow}{A^-} ]}$. 
-  The result follows by the focal substitution on this derivation and $N$.
+  The result follows by the focal substitution on this derivation into $N$.
   \smallskip
 
 \item[--] $\etapa{z}{N}{{\gnab}A^-}
@@ -2236,7 +2245,7 @@ arbitrary permeable propositions and so on).
   By the induction hypothesis, we have $\foc{\Psi}{\Xi}{A^-}$, 
   and by ${\gnab}_R$ and the fact that $\Xi$ matches $\restrictto{\Xi}{\meph}$
   we have $\foc{\Psi}{\Xi}{[{\gnab}A^-]}$. The result follows
-  by focal substitution on this derivation and $N$.
+  by focal substitution on this derivation into $N$.
   \smallskip
 
 \item[--] $\etapa{z}{N}{{!}A^-}
@@ -2251,10 +2260,10 @@ arbitrary permeable propositions and so on).
   We construct a context $\Xi$ that matches $x{:}A^-$ such that
   $\tackon{\Theta}{x{:}\ispers{A^-}}$ matches $\frameoff{\Theta'}{\Xi}$
   and $\Xi$ matches $\restrictto{\Xi}{\mpers}$. The frame
-  $\Theta'$ is $\Theta$ plus the mapping 
-  $x{:}\ispers{A^-}$, and $N$ is a derivation of 
+  $\Theta'$ is $\Theta$ plus an additional mapping 
+  $x{:}\ispers{A^-}$, and $N$ is also a derivation of 
   $\foc{\Psi}{\tackon{\Theta'}{z{:}\islvl{\susp{{!}A^-}}}}{U}$
-  by admissible weakeing.
+  by admissible weakening.
   \smallskip
 
   $\tfocusl{x}{\tnil}$ (that is, ${\it focus}_L$ followed by
@@ -2262,7 +2271,7 @@ arbitrary permeable propositions and so on).
   By the induction hypothesis, we have $\foc{\Psi}{\Xi}{A^-}$, 
   and by ${!}_R$ and the fact that $\Xi$ matches $\restrictto{\Xi}{\mpers}$
   we have $\foc{\Psi}{\Xi}{[{!}A^-]}$. The result follows
-  by focal substitution on this derivation and $N$.
+  by focal substitution on this derivation into $N$.
   \smallskip
 
 \item[--] $\etapa{z}{N}{\one} = \tonel{([\toner/z]N)}$ 
@@ -2288,17 +2297,18 @@ arbitrary permeable propositions and so on).
   $\Theta'$ is either $\Theta$ (if $\mlvl$ is $\mtrue$ or $\meph$) 
   or it is $\Theta$ plus additional mappings
   $z_1{:}\islvl{\susp{A^+_\mlvl}}$ and 
-  $z_2{:}\islvl{\susp{B^+_\mlvl}}$ (if $\mlvl$ is $\mpers$); in the
-  latter clase, $N$ is a derivation of 
+  $z_2{:}\islvl{\susp{B^+_\mlvl}}$ (if $\mlvl$ is $\mpers$). In either
+  case , $N$ is also a derivation of 
   $\foc{\Psi}{\tackon{\Theta'}
-   {z{:}\islvl{\susp{A^+_\mlvl \fuse B^+_\mlvl}}}}{U}$ by admissible weakening.
+   {z{:}\islvl{\susp{A^+_\mlvl \fuse B^+_\mlvl}}}}{U}$, either
+  immediately or by admissible weakening.
   \smallskip
 
 
   $\tfuser{z_1}{z_2}$ (that is, ${\fuse}_R$ followed by two instances of 
   ${\it id}^+$) is a derivation of 
   $\foc{\Psi}{\Xi}{[A^+_\mlvl \fuse B^+_\mlvl]}$.
-  By focal substitution, we have
+  By focal substitution into $N$, we have
   a derivation of 
   $\foc{\Psi}{\tackon{\Theta}
               {\mkconj{z_1{:}\islvl{\susp{A^+_\mlvl}}}
@@ -2313,16 +2323,99 @@ arbitrary permeable propositions and so on).
                       {B^+_\mlvl}}}{U}$ as required.
   \smallskip
  
+
 \item[--] $\etapa{z}{N}{\zero} = \tabort$ 
 
 \item[--] $\etapa{z}{N}{A^+_\mlvl \oplus B^+_\mlvl} = 
            \toplusl
-            {\etapa{z_1}{~}{A^+_\mlvl}}
-            {\etapa{z_1}{~}{B^+_\mlvl}}$
+            {\etapa{z_1}{~[\tinl{z_1}/z]N}{A^+_\mlvl}}
+            {\etapa{z_2}{~[\tinr{z_2}/z]N}{B^+_\mlvl}}$
+\smallskip
 
-\item[--] $\exists x. A^+$ 
+$N$ is a derivation 
+$\foc{\Psi}{\tackon{\Theta}{z{:}\susp{A^+_\mlvl \oplus B^+_\mlvl}}}{U}$.
+By $\oplus_L$, it suffices to show 
+$\foc{\Psi}{\tackon{\Theta}{A^+_\mlvl}}{U}$
+and
+$\foc{\Psi}{\tackon{\Theta}{B^+_\mlvl}}{U}$; we will show the first, as the
+two cases are symmetric. 
+\smallskip
 
-\item[--] $t \doteq s$
+We construct a context $\Xi_1$ that matches $z_1{:}\susp{A^+_\mlvl}$
+such that $\tackon{\Theta}{z_1{:}\islvl{\susp{A^+_\mlvl}}}$ matches
+$\frameoff{\Theta_1}{\Xi}$. The frame $\Theta_1$ is either 
+$\Theta$ (if $\mlvl$ is $\mtrue$ or $\meph$) or it is $\Theta$
+plus an additional mapping $z_1{:}\islvl{\susp{A^+_\mlvl}}$ (if
+$\mlvl$ is $\mpers$). In either case, $N$ is also a derivation
+of $\foc{\Psi}{\tackon{\Theta_1}{z{:}\susp{A^+_\mlvl \oplus B^+_\mlvl}}}{U}$,
+either immediately or by by admissible weakening.
+\smallskip
+
+$\tinr{z_1}$ (that is, $\oplus_{R1}$ followed by ${\it id}^+$) is a
+derivation of $\foc{\Psi}{\Xi_1}{[A^+_\mlvl \oplus B^+_\mlvl]}$.  By
+focal substitution into $N$, we have 
+$\foc{\Psi}{\tackon{\Theta}{z_1{:}\susp{A^+_\mlvl}}}{U}$, and by the
+induction hypothesis on $A^+_\mlvl$ we have 
+$\foc{\Psi}{\tackon{\Theta}{A^+_\mlvl}}{U}$ as required.
+\smallskip
+
+\item[--] $\etapa{z}{N}{\exists a{:}\tau. A^+_\mlvl} 
+           = \texistsl{a}
+              {\etapa{z'}
+                {~[(\texistsr{a}{z'})/z]N}
+                {A^+}}$ 
+\smallskip
+
+$N$ is a derivation of 
+$\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{\exists a{:}\tau. A^+_\mlvl}}}}
+  {U}$.
+By $\exists_L$, it suffices to show 
+$\foc{\Psi, a{:}\tau}{\tackon{\Theta}{A^+}}{U}$.
+We construct a context $\Xi$ that matches
+$z'{:}\susp{A^+_\mlvl}$ such that
+$\tackon{\Theta}{z'{:}\islvl{\susp{A^+_\mlvl}}}$ matches
+$\frameoff{\Theta'}{\Xi}$. The frame $\Theta'$ is either $\Theta$
+if $\mlvl$ is $\mtrue$ or $\meph$) or it is $\Theta$ plus 
+an additional mapping $z'{:}\islvl{\susp{A^+_\mlvl}}$. In either case,
+$N$ is a derivation of 
+$\foc{\Psi, a{:}\tau}
+  {\tackon{\Theta'}{z{:}\islvl{\susp{\exists a{:}\tau. A^+_\mlvl}}}}
+  {U}$ by variable weakening and (possibly) admissible weakening.
+
+\smallskip
+$\texistsr{a}{z'}$ (that is, $\exists_R$ followed by 
+an instance of ${\it id}^+$) is a derivation of 
+$\foc{\Psi, a{:}\tau}{\Xi}{[A^+_\mlvl]}$. By focal 
+substitution into $N$, we have a derivation of 
+$\foc{\Psi, a{:}\tau}{\tackon{\Theta}{z'{:}\islvl{\susp{A^+_\mlvl}}}}{U}$,
+and by the induction hypothesis on $A^+_\mlvl$ we have
+$\foc{\Psi, a{:}\tau}{\tackon{\Theta}{A^+}}{U}$ as required.
+
+\smallskip
+
+\item[--] $\etapa{z}{N}{t \doteq s} 
+           = {\sf fn}~ \sigma \Rightarrow [\tunifr/z](\sigma{N})$
+\smallskip
+
+$N$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{t
+        \doteq s}}}}{U}$, and by $\doteq_L$, it suffices to show, for
+an arbitrary $\Psi' \vdash \sigma : \Psi$ such that $\sigma{t} =
+\sigma{s}$, that
+$\foc{\Psi'}{\tackon{\sigma\Theta}{\cdot}}{\sigma{U}}$.  We construct
+a context $\Xi$ containing just the persistent mappings in
+$\tackon{\sigma\Theta}{\cdot}$ ($\Xi$ therefore matches $\cdot$), and
+have that $\tackon{\sigma\Theta}{\cdot}$ matches
+$\frameoff{\sigma\Theta}{\Xi}$.
+
+Because $\sigma{t} = \sigma{s}$, 
+$\tunifr$ (that is, the derivation consisting of ${\doteq}_R$) is 
+a derivation of $\foc{\Psi'}{\Xi}{[\sigma{t} \doteq \sigma{s}]}$.
+The result then follows by focal substitution of
+the derivation 
+$\sigma{N}$, the derivation of 
+$\foc{\Psi}{\tackon{\sigma\Theta}{z{:}\islvl{\susp{\sigma{t}
+        \doteq \sigma{s}}}}}{U}$ obtained from $N$ by variable
+substitution.
 
 \end{itemize}
 
