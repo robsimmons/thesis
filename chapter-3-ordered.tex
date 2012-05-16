@@ -2176,7 +2176,9 @@ arbitrary permeable propositions and so on).
 \quad
 \infer-[\eta^{A^-_\mlvl}]
 {\foct{\Psi}{\Delta}{\etana{N}{A^-_\mlvl}}{A^-_\mlvl}}
-{\foct{\Psi}{\Delta}{N}{\islvl{\langle A^-_\mlvl \rangle}}}
+{\foct{\Psi}{\Delta}{N}{\islvl{\langle A^-_\mlvl \rangle}}
+ &
+ \stableL{\Delta}}
 \]
 In the proof of identity expansion, we do pay some price in return for
 including including permeable propositions, as we perform slightly
@@ -2192,6 +2194,7 @@ apply admissible weakening to the subderivation $N$.
   then $\foc{\Psi}{\Delta}{U}$.
 \item If
   $\foc{\Psi}{\Delta}{\islvl{\langle A^-_\mlvl \rangle}}$
+  and $\Delta$ is stable,
   then $\foc{\Psi}{\Delta}{A^-_\mlvl}$.
 \end{itemize}
 \end{theorem}
@@ -2422,14 +2425,69 @@ substitution.
 \subsubsection{Negative cases}
 
 \begin{itemize}
-\item[--] $p^-_\mlvl$
- ${\uparrow}A^+$
- ${\ocircle}A^+$
- $A^+ \lefti B^-$
- $A^+ \righti B^-$
- $\top$ 
- $A^- \with B^-$
- $\forall x.A^-$
+\item[--] $\etana{N}{p^-_\mlvl} = \tetan{N}$
+\item[--] $\etana{N}{{\uparrow}A^+} 
+           = \tupr{([N](\tupl{(\etapa{z}{\tfocusr{z}}{A^+})}))}$
+% \smallskip
+
+% $N$ is a derivation of $\foc{\Psi}{\Delta}{\istrue{\susp{{\uparrow}A^+}}}$.
+% By ${\uparrow}_R$, it suffices to show $\foc{\Psi}{\Delta}{\istrue{A^+}}$.
+% We construct the empty (except for persistent resources) 
+% frame $\Theta$ such that 
+% $\tackon{\Theta}{z{:}\istrue{\susp{A^+}}}$ matches $z{:}\susp{A^+}$
+% and $\Delta$ matches $\frameoff{\Theta}{\Delta}$. 
+% \smallskip
+
+% $\tfocusr{z}$ (that is, ${\it focus}_R$ followed by ${\it id}^+$) is
+% a derivation of 
+% $\foc{\Psi}{\tackon{\Theta}{z{:}\istrue{\susp{A^+}}}}{\istrue{A^+}}$. 
+% By the induction hypothesis on $A^+$, we have
+% $\foc{\Psi}{\tackon{\Theta}{A^+}}{\istrue{A^+}}$, and 
+% by rule ${\uparrow}_L$ we then have
+% $\foc{\Psi}{\tackon{\Theta}{[{\uparrow}A^+]}}{\istrue{A^+}}$, 
+% and the result follows by focal substitution out of $N$.
+% \smallskip
+
+\item[--] $\etana{N}{{\ocircle}A^+} 
+           = \tlaxr{[N](\tlaxl{\etapa{z}{\tfocusr{z}}{A^+}})}$
+\smallskip
+
+$N$ is a derivation of 
+$\foc{\Psi}{\Delta}{\islvl{\susp{{\ocircle}A^+}}}$, where
+$\mlvl$ is $\mtrue$ or $\mlax$.
+By ${\ocircle}_R$, it suffices to show $\foc{\Psi}{\Delta}{\islax{A^+}}$.
+We construct the empty (except for persistent resources) 
+frame $\Theta$ such that 
+$\tackon{\Theta}{z{:}\istrue{\susp{A^+}}}$ matches $z{:}\susp{A^+}$
+and $\Delta$ matches $\frameoff{\Theta}{\Delta}$. 
+\smallskip
+
+$\tfocusr{z}$ (that is, ${\it focus}_R$ followed by ${\it id}^+$) is
+a derivation of 
+$\foc{\Psi}{\tackon{\Theta}{z{:}\istrue{\susp{A^+}}}}{\islax{A^+}}$. 
+By the induction hypothesis on $A^+$, we have
+$\foc{\Psi}{\tackon{\Theta}{A^+}}{\islax{A^+}}$, and 
+by rule ${\ocircle}_L$ we then have
+$\foc{\Psi}{\tackon{\Theta}{[{\ocircle}A^+]}}{\islax{A^+}}$.
+The result follows by focal substitution out of $N$.
+\smallskip
+
+
+\smallskip
+
+\item[--] $\etana{N}{A^+ \lefti B^-_\mlvl}
+           = \tlaml{(\etapa{z}{~\etana{[N](\tappl{z}{\tnil})}{B^-_\mlvl}}{A^+})}$
+\item[--] $\etana{N}{A^+ \righti B^-_\mlvl}
+           = \tlamr{(\etapa{z}{~\etana{[N](\tappr{z}{\tnil})}{B^-_\mlvl}}{A^+})}$
+\smallskip
+
+\item[--] $\etana{N}{\top} = \top$ 
+\item[--] $\etana{N}{A^-_\mlvl \with B^-_\mlvl}
+           = \twithr
+              {(\etana{[N](\tpione{\tnil})}{A^-_\mlvl})}
+              {(\etana{[N](\tpitwo{\tnil})}{B^-_\mlvl})}$
+\item[--] $\etana{N}{\forall x.A^-_\mlvl}
+           = \tforallr{a}{(\etana{[N](\tforalll{a}{\tnil})}{A^-_\mlvl})}$
 
 \end{itemize}
 
