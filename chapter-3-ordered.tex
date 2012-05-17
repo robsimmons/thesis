@@ -717,31 +717,31 @@ statement of the identity expansion theorem.
 A^+ & ::= p^+ \mid p^+_\meph \mid p^+_\mpers
         \mid {\downarrow}A^- \mid {\gnab}A^- \mid {!}A^- 
         \mid \one \mid A^+ \fuse B^+ \mid \zero \mid A^+ \oplus B^+ 
-        \mid \exists x. A^+ \mid t \doteq s
+        \mid \exists a{:}\tau. A^+ \mid t \doteq s
 \\
 A^+_\meph & ::= p^+_\meph \mid p^+_\mpers
         \mid {\gnab}A^- \mid {!}A^- 
         \mid \one \mid A^+_\meph \fuse B^+_\meph
         \mid \zero \mid A^+_\meph \oplus B^+_\meph
-        \mid \exists x. A^+_\meph \mid t \doteq s
+        \mid \exists a{:}\tau. A^+_\meph \mid t \doteq s
 \\
 A^+_\mpers & ::= p^+_\mpers 
         \mid {!}A^- 
         \mid \one \mid A^+_\mpers \fuse B^+_\mpers 
         \mid \zero \mid A^+_\mpers \oplus B^+_\mpers
-        \mid \exists x. A^+_\mpers \mid t \doteq s
+        \mid \exists a{:}\tau. A^+_\mpers \mid t \doteq s
 \\
 A^- & ::= p^- \mid p^-_\mlax 
         \mid {\uparrow}A^+ \mid {\ocircle}A^+
         \mid A^+ \lefti B^- \mid A^+ \righti B^-
         \mid \top \mid A^- \with B^-
-        \mid \forall x.A^-
+        \mid \forall a{:}\tau.A^-
 \\
 A^-_\mlax & ::= p^-_\mlax 
         \mid {\ocircle}A^+
         \mid A^+ \lefti B^-_\mlax \mid A^+ \righti B^-_\mlax
         \mid \top \mid A^-_\mlax \with B^-_\mlax
-        \mid \forall x.A^-_\mlax
+        \mid \forall a{:}\tau.A^-_\mlax
 \end{align*}
 \caption{Propositions of focused \ollll.}
 \label{fig:ordered}
@@ -791,7 +791,7 @@ derivations of left-focused sequents. The structure of
 values, terms, and spines is as follows:
 \input{proofterms-3}
 
-Expressions are treated as in the structural focalization methodology
+Expressions are treated as in the structural focalization development
 \cite{simmons11structural}. It is possible to take a ``Curry-style''
 view of expressions as {\it extrinsically} typed, which means we
 consider both well-typed and ill-typed expressions; the well-typed
@@ -2230,7 +2230,7 @@ cases that are very similar to others.
   The result follows by the focal substitution on this derivation into $N$.
   \smallskip
 
-\item[--] $\etapa{z}{N}{{\gnab}A^-}
+\item[--] $\etapa{z}{N}{{\scriptgnab}A^-}
            = \tgnabl{x}{([(\tgnabr{(\etana{\tfocusl{x}{\tnil}}{A^-})})/z]N)}$ 
   \smallskip
 
@@ -2548,10 +2548,102 @@ hypothesis on $A^-_\mlvl$ we have
 \label{sec:ord-correctness}
 
 
+
 \subsection{Erasure}
 
-As in Chapter 2, we define erasure only on stable sequents without
-suspended propositions.
+As in Chapter 2, we define erasure only on stable, suspension-normal
+sequents. Erasure for propositions is defined as in
+Figure~\ref{fig:ord-erasure}. As discussed in
+Section~\ref{sec:permable-atomic}, even though we have not
+incorporated a notion of permeable and mobile atomic propositions into
+the unfocused presentation of \ollll, it is possible to erase a
+permeable atomic proposition $p^+_\mpers$ as
+${!}p^+_\mpers$.\footnote{The polarity and level annotations are
+  meaningless in the unfocused logic. We keep them only to empahsize
+  that $p^+_\mpers$ and $p^-_\mlax$ do $\it not$ erase to the same
+  unpolarized atomic proposition $p$ but two distinct unpolarized
+  atomic propositions.}  In this way, we can see the separation
+critera from our previous work
+\cite{simmons08linear,pfenning09substructural} arising as an emergent
+phenomena of erasure.
+
+Succeedents $\istrue{A^+}$ and $\islax{A^+}$ erase simply to 
+$\istrue{(A^+)^\circ}$ and $\islax{(A^+)^\circ}$, respectively, and
+suspended atomic succeedents $\islvl{\susp{p^-_\mlvl}}$ likewise erase
+to $\islvl{p^-_\mlvl}$. If we refashion the presentation of 
+unfocused \ollll~to
+use unified substructural contexts as outlined in Section~\ref{sec:contexts},
+then we can similarly $(\Xi)^\circ$ to erase mappings
+$x{:}\islvl{A^-}$ and $z{:}\islvl{\susp{p^-_\mlvl}}$ to 
+$x{:}\islvl{(A^-)^\circ}$ and $z{:}\islvl{p^-_\mlvl}$, respectively;
+then the succinct statement of the correctness of focusing is that
+$\foc{\Psi}{\Delta}{U}$ if and only if 
+$\Psi; \Delta^\circ \Rightarrow U^\circ$. We will proceed in this manner,
+tacity assuming the eqivalence of these two presentations of
+unfocused \ollll.
+
+
+\begin{figure}
+{\small \[
+\begin{array}{rcl|rcl}
+\fbox{$(A^+)^\circ$} & & &
+\fbox{$(A^-)^\circ$} & & 
+\\
+(p^+)^\circ & \!\!\!=\!\!\! & p^+ &
+(p^-)^\circ & \!\!\!=\!\!\! & p^- \\
+(p^+_\meph)^\circ & \!\!\!=\!\!\! & {\gnab}p^+_\meph &
+(p^-_\mlax)^\circ & \!\!\!=\!\!\! & {\ocircle}p^-_\mlax 
+\\
+(p^+_\mpers)^\circ & \!\!\!=\!\!\! & {!}p^+_\mpers &
+& & 
+\\
+({\downarrow}A^-)^\circ & \!\!\!=\!\!\! & (A^-)^\circ &
+({\uparrow}A^+)^\circ & \!\!\!=\!\!\! & (A^+)^\circ 
+\\
+({\gnab}A^-)^\circ & \!\!\!=\!\!\! & {\gnab}(A^-)^\circ &
+({\ocircle}A^+)^\circ & \!\!\!=\!\!\! & {\ocircle}(A^+)^\circ 
+\\
+({!}A^-)^\circ & \!\!\!=\!\!\! & {!}(A^-)^\circ &
+& & 
+\\
+(\one)^\circ & \!\!\!=\!\!\! & \one &
+(A^+ \lefti B^-)^\circ & \!\!\!=\!\!\! & (A^+)^\circ \lefti (B^+)^\circ 
+\\
+(A^+ \fuse B^+)^\circ & \!\!\!=\!\!\! & (A^+)^\circ \fuse (B^+)^\circ &
+(A^+ \righti B^-)^\circ & \!\!\!=\!\!\! & (A^+)^\circ \righti (B^-)^\circ 
+\\
+(\zero)^\circ & \!\!\!=\!\!\! & \zero &
+(\top)^\circ & \!\!\!=\!\!\! & \top 
+\\
+(A^+ \oplus B^+)^\circ & \!\!\!=\!\!\! & (A^+)^\circ \oplus (B^+)^\circ &
+(A^- \with B^-)^\circ & \!\!\!=\!\!\! & (A^-)^\circ \with (B^-)^\circ 
+\\
+(\exists a{:}\tau.A^+)^\circ & \!\!\!=\!\!\! & \exists a{:}\tau. (A^+)^\circ &
+(\forall a{:}\tau.A^-)^\circ & \!\!\!=\!\!\! & \forall a{:}\tau. (A^-)^\circ 
+\\
+(t \doteq s)^\circ & \!\!\!=\!\!\! & t \doteq s &
+& &
+\end{array}
+\]}
+
+\caption{Erasure in \ollll.}
+\label{fig:ord-erasure}
+\end{figure}
+
+
+\subsection{De-focalization}
+
+The act of taking a focused proof of a sequent and getting
+a focused proof of the corresponding erased sequent is {\it de-focalization},
+and the proof of the soundness of focusing (the \ollll~analouge of 
+Theorem~\ref{thm:linfocsound} from Section~\ref{sec:lincorrectness})
+
+\subsection{Unfocused admissibility}
+
+Unfocused admissibility has a structure that is essentially unchanged
+from the discussion in the proof of focalization for 
+linear logic (Theorem~\ref{thm:linfoccomplete} in 
+Section~\ref{sec:lincorrectness}) 
 
 \begin{figure}[t]
 \small
@@ -2722,14 +2814,30 @@ suspended propositions.
   {\istrue{{\downarrow}(A^+ \lefti B^-)}}}
 {\foct{\Psi}{x{:}\istrue{{\uparrow}A^+},\Delta}{N}{\istrue{{\downarrow}B^-}}}
 \]
+\[
+\infer-
+{\foct{\Psi}{\frameoff{}{\matchconj{\Delta_A}{x{:}\istrue{A^+ \lefti B^-}}}}
+  {\lsubst
+    {\lsubst
+      {N}
+      {\etapa{z}
+        {~\tfocusr
+          {\tdownr
+            {\etana
+              {\tfocusl{x}
+                {\tappl{z}{\tnil}}}
+              {B^-}}}}
+        {A^+}}}
+    {\tdownl{x'}{N_2}}}
+  {U}}
+{\foct{\Psi}{\Delta_A}{N_1}{\istrue{{A^+}}}
+ &
+ \foct{\Psi}{\tackon{\Theta}{x'{:}\istrue{B^-}}}{N_2}{U}}
+\]
 
 \caption{Unfocused admissibility for the 
 multiplicative, exponential fragment of \ollll}
 \end{figure}
-
-\subsection{De-focalization}
-
-\subsection{Unfocused admissibility}
 
 \subsection{Focalization}
 

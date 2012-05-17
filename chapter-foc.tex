@@ -393,8 +393,9 @@ focused proofs, they are intended to have no impact on
 provability. Therefore, the strongest statement of the correctness of
 focusing is based on erasure: there is an unfocused derivation of
 $(A^+)^\circ$ or $(A^-)^\circ$ if and only if there is a focused
-derivation of $A^+$ or $A^-$.  However, existing proofs of
-focalization are of a weaker property: that there is an unfocused
+derivation of $A^+$ or $A^-$.  However, existing proofs of the
+completeness of focusing verify 
+a weaker property: that there is an unfocused
 derivation of $A$ if and only if there is a focused derivation of
 $A^\bullet$, where $A^\bullet$ is some polarization strategy.  The
 only two exceptions I am aware of are Zeilberger's proof for classical
@@ -564,9 +565,9 @@ then $\mildseq{\Gamma}{\Delta', \underline{\Delta}}{U}$.
 Unlike cut admissibility, which we discuss in
 Section~\ref{sec:lincut}, both of the focal substitution principles
 are straightforward inductions over the structure of the derivation
-containing the suspended proposition. In the development of structural
-focalization, I discuss how, in a focused presentation of persistent
-intuitionistic logic that is encoded in LF, a suspended positive
+containing the suspended proposition. In the Structural
+Focalization development, I discuss how, if we encode the focused
+sequent calculus for persistent logic in LF, a suspended positive
 premise can be encoded as a hypothetical right focus. This encoding
 makes the ${\it id}^+$ rule an instance of the hypothesis rule
 provided by LF and establishes Theorem~\ref{thm:fsubst-pos} ``for
@@ -689,8 +690,8 @@ Cut admissibility, Theorem~\ref{thm:lincut} below, mostly follows the
 well-worn contours of a structural cut admissibility argument
 \cite{pfenning00structural}, so we defer a full discussion of cut
 admissibility until the next chapter, where we will give a tidier
-proof by incorporating more of the machinery of structural
-focalization.\footnote{The main ``untidy'' aspect of
+proof by incorporating more of the machinery of the Structural
+Focalization development.\footnote{The main ``untidy'' aspect of
   Theorem~\ref{thm:lincut} is that the lack of a forced inversion
   order means that the right commutative cases -- cases in which the
   last rule in the second given derivation is an invertible rule that
@@ -1241,8 +1242,8 @@ sufficient for our purposes here and in later chapters.
 
 Figure~\ref{fig:focused-robot} gives the result of taking our 
 robot example, Figure~\ref{fig:unfocused-robot}, through the 
-polarization and focalization process described by 
-Theorem~\ref{thm:linfoccomplete}. There is indeed only one 
+polarization process and then running the result through
+Theorem~\ref{thm:linfocomplete}. There is indeed only one 
 proof of this focused proposition up to the reordering of 
 invertible rules, and only one proof period if we always
 decompose invertible propositions in a left-most, depth-first
@@ -2080,8 +2081,8 @@ persistent context and never appear as ${\pbang}p^+_l$, whereas the
 {\it persistent} positive propositions $p^+_p$ are never suspended in
 the linear context and always appear as ${\pbang}p^+_p$. For sequents
 and formulas obeying separation, we can use the obvious erasure
-operation and obtain a focalization result; this notion of separation
-was the basis of our completeness result in
+operation and obtain a proof of the completeness of focusing; this
+notion of separation was the basis of our completeness result in
 \cite{pfenning09substructural}.  However, separation is a meta-logical
 property, something that we observe about a fragment of the logic and
 not than an inherent property of the logic itself. There are many
@@ -2458,6 +2459,7 @@ give a compressed proof of our motivating example:
 \]
 
 \subsubsection{Permeable atomic propositions}
+\label{sec:permable-atomic}
 
 It would have been possible, in the discussion of focused
 linear logic in Section~\ref{sec:foclinlog}, to present
