@@ -341,7 +341,7 @@ We could rewrite the {\it init} rule
 from that figure as follows:
 \[
 \infer[{\it init}]
-{x{:}p \Rightarrow /{p}/}
+{x{:}p \altv /{p}/}
 {}
 \]
 As in all rules involving matching constructs in the conclusion,
@@ -350,7 +350,7 @@ the ${\it init}$ rule above is the same as the ${\it init}$ rule
 below:
 \[
 \infer[{\it init}]
-{\Xi \Rightarrow /{p}/}
+{\Xi \altv /{p}/}
 {\Xi \textit{~matches~} x{:}p}
 \]
 
@@ -425,38 +425,38 @@ to describe almost every left rule from Figure~\ref{fig:ordered-prop},
 for instance:
 \[
 \infer[]
-{\frameoff{\Theta}{x{:}A \oplus B} \Rightarrow U}
-{\tackon{\Theta}{y{:}\istrue{A}} \Rightarrow U
+{\frameoff{\Theta}{x{:}A \oplus B} \altv U}
+{\tackon{\Theta}{y{:}\istrue{A}} \altv U
  &
- \tackon{\Theta}{z{:}\istrue{B}} \Rightarrow U}
+ \tackon{\Theta}{z{:}\istrue{B}} \altv U}
 \quad
 \infer[]
-{\frameoff{\Theta}{x{:}A \with B} \Rightarrow U}
-{\tackon{\Theta}{y{:}\istrue{A}} \Rightarrow U}
+{\frameoff{\Theta}{x{:}A \with B} \altv U}
+{\tackon{\Theta}{y{:}\istrue{A}} \altv U}
 \quad
 \infer[]
-{\frameoff{\Theta}{x{:}A \with B} \Rightarrow U}
-{\tackon{\Theta}{y{:}\istrue{B}} \Rightarrow U}
+{\frameoff{\Theta}{x{:}A \with B} \altv U}
+{\tackon{\Theta}{y{:}\istrue{B}} \altv U}
 \]
 
 We can also use this notation to describe the one of the
 cut principles for ordered linear lax logic. 
 \[
 \infer-[{\it cut}]
-{\frameoff{\Theta}{\Xi} \Rightarrow \istrue{C}}
-{\Xi \Rightarrow \istrue{A}
+{\frameoff{\Theta}{\Xi} \altv \istrue{C}}
+{\Xi \altv \istrue{A}
  &
- \tackon{\Theta}{x{:}A\,{\it true}} \Rightarrow \istrue{C}}
+ \tackon{\Theta}{x{:}A\,{\it true}} \altv \istrue{C}}
 \]
 Especially for the eventual proof of this cut principle, it is important
 to consider that this cut principle is equivalent to the one that describes
 the matching as an explicit extra premise:
 \[
 \infer-[{\it cut}]
-{\Xi' \Rightarrow \istrue{C}}
-{\Xi \Rightarrow \istrue{A}
+{\Xi' \altv \istrue{C}}
+{\Xi \altv \istrue{A}
  &
- \tackon{\Theta}{x{:}A\,{\it true}} \Rightarrow \istrue{C}
+ \tackon{\Theta}{x{:}A\,{\it true}} \altv \istrue{C}
  &
  \Xi' \textit{~matches~} \frameoff{\Theta}{\Xi}}
 \]
@@ -518,28 +518,28 @@ in the description of multiplicative conjunction, which is essentially
 just the propositional internalization of context conjunction:
 \[
 \infer
-{\matchconj{\Xi_L}{\Xi_R} \Rightarrow /A \fuse B/}
-{\Xi_L \Rightarrow \istrue{A} & \Xi_R \Rightarrow \istrue{B}}
+{\matchconj{\Xi_L}{\Xi_R} \altv /A \fuse B/}
+{\Xi_L \altv \istrue{A} & \Xi_R \altv \istrue{B}}
 \quad
 \infer
-{\frameoff{\Theta}{x{:}A \fuse B} \Rightarrow U}
-{\tackon{\Theta}{\mkconj{y{:}A}{z{:}B}} \Rightarrow U}
+{\frameoff{\Theta}{x{:}A \fuse B} \altv U}
+{\tackon{\Theta}{\mkconj{y{:}A}{z{:}B}} \altv U}
 \quad
 \infer
-{\cdot \Rightarrow \one}
+{\cdot \altv \one}
 {}
 \quad
 \infer
-{\frameoff{\Theta}{x{:}\one} \Rightarrow U}
-{\tackon{\Theta}{\cdot} \Rightarrow U}
+{\frameoff{\Theta}{x{:}\one} \altv U}
+{\tackon{\Theta}{\cdot} \altv U}
 \]\[
 \infer
-{\Xi \Rightarrow / A \lefti B /}
-{x{:}\istrue{A}, \Xi \Rightarrow \istrue{B}}
+{\Xi \altv / A \lefti B /}
+{x{:}\istrue{A}, \Xi \altv \istrue{B}}
 \quad
 \infer
-{\frameoff{\Theta}{\Xi_A, x{:}A \lefti B} \Rightarrow U}
-{\Xi_A \Rightarrow \istrue{A} & \tackon{\Theta}{y{:}\istrue{B}} \Rightarrow U}
+{\frameoff{\Theta}{\Xi_A, x{:}A \lefti B} \altv U}
+{\Xi_A \altv \istrue{A} & \tackon{\Theta}{y{:}\istrue{B}} \altv U}
 \]
 Implication makes deeper use of context conjunction:
 % we can look at 
@@ -599,8 +599,8 @@ it says that $\Xi = \Gamma; \cdot; \cdot$. This form can then be used
 to describe the right rule for ${!}A$ in unfocused \ollll:
 \[
 \infer
-{\restrictto{\Xi}{\mpers} \Rightarrow /{!}A/}
-{\Xi \Rightarrow \istrue{A}}
+{\restrictto{\Xi}{\mpers} \altv /{!}A/}
+{\Xi \altv \istrue{A}}
 \]
 Similarly, $\Xi$ matches $\restrictto{\Xi}{\meph}$ if $\Xi$ contains
 no ordered judgments (that is, if $\Xi = \Gamma; \Delta; \cdot$).
@@ -1038,10 +1038,10 @@ Pay attention to the way this compound matching construct is being
 used. In unfocused linear logic, using the compound notation
 effectively means that a single statement:
 \begin{center}
-If $\Delta \Rightarrow \istrue{A}$, ~
-$\tackon{\Theta}{x{:}\islvl{A}} \Rightarrow \istrue{C}$, ~
+If $\Delta \altv \istrue{A}$, ~
+$\tackon{\Theta}{x{:}\islvl{A}} \altv \istrue{C}$, ~
 and $\Delta'$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$, ~
-then $\Delta' \Rightarrow C$.
+then $\Delta' \altv C$.
 \end{center}
 can simultaneously express 
 three cut
@@ -1062,10 +1062,10 @@ As an admissible rule, we would write this
 as follows:
 \[
 \infer-[{\it unfocused\mbox{-}cut}]
-{\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}} \Rightarrow \istrue{C}}
-{\Delta \Rightarrow \istrue{A}
+{\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}} \altv \istrue{C}}
+{\Delta \altv \istrue{A}
  &
- \tackon{\Theta}{x{:}\islvl{A}} \Rightarrow \istrue{C}}
+ \tackon{\Theta}{x{:}\islvl{A}} \altv \istrue{C}}
 \]
 
 In the negative focal substation (as the leftist substitutions of
@@ -2547,6 +2547,22 @@ hypothesis on $A^-_\mlvl$ we have
 \section{Correctness of focusing}
 \label{sec:ord-correctness}
 
+Our proof of the correctness of focusing is based on erasure as
+described in Chapter 2. The argument follows the one from the
+structural focalization development, and the key component is {\it
+  unfocused admissibility lemmas}, lemmas that establish that each of
+the reasoning steps that can be made in unfocused \ollll~are
+admissible inferences made on stable sequents in focused \ollll.
+
+% In fact, once we have established the unfocused admissibility lemmas,
+% the proof of the completeness of focusing is arguably a bit simpler
+% than the mechanized structural focalization result for persistent
+% logic in \cite{simmons11structural}. In the soundness proof of that
+% paper, we had to work around a separate inversion context that
+% enforced our fixed inversion strategy, but for us that structure is
+% already present in the stucutre of the ordered context. In the
+% completeness proof of that paper, on the other hand, we had to account
+% for the fact that our 
 
 
 \subsection{Erasure}
@@ -2559,17 +2575,17 @@ incorporated a notion of permeable and mobile atomic propositions into
 the unfocused presentation of \ollll, it is possible to erase a
 permeable atomic proposition $p^+_\mpers$ as
 ${!}p^+_\mpers$.\footnote{The polarity and level annotations are
-  meaningless in the unfocused logic. We keep them only to empahsize
+  meaningless in the unfocused logic. We keep them only to emphasize
   that $p^+_\mpers$ and $p^-_\mlax$ do $\it not$ erase to the same
   unpolarized atomic proposition $p$ but two distinct unpolarized
   atomic propositions.}  In this way, we can see the separation
-critera from our previous work
+criteria from our previous work
 \cite{simmons08linear,pfenning09substructural} arising as an emergent
 phenomena of erasure.
 
-Succeedents $\istrue{A^+}$ and $\islax{A^+}$ erase simply to 
+Succeedants $\istrue{A^+}$ and $\islax{A^+}$ erase simply to 
 $\istrue{(A^+)^\circ}$ and $\islax{(A^+)^\circ}$, respectively, and
-suspended atomic succeedents $\islvl{\susp{p^-_\mlvl}}$ likewise erase
+suspended atomic succeedants $\islvl{\susp{p^-_\mlvl}}$ likewise erase
 to $\islvl{p^-_\mlvl}$. If we refashion the presentation of 
 unfocused \ollll~to
 use unified substructural contexts as outlined in Section~\ref{sec:contexts},
@@ -2578,8 +2594,8 @@ $x{:}\islvl{A^-}$ and $z{:}\islvl{\susp{p^-_\mlvl}}$ to
 $x{:}\islvl{(A^-)^\circ}$ and $z{:}\islvl{p^-_\mlvl}$, respectively;
 then the succinct statement of the correctness of focusing is that
 $\foc{\Psi}{\Delta}{U}$ if and only if 
-$\Psi; \Delta^\circ \Rightarrow U^\circ$. We will proceed in this manner,
-tacity assuming the eqivalence of these two presentations of
+$\Psi; \Delta^\circ \altv U^\circ$. We will proceed in this manner,
+tacitly assuming the equivalence of these two presentations of
 unfocused \ollll.
 
 
@@ -2633,19 +2649,31 @@ unfocused \ollll.
 
 \subsection{De-focalization}
 
-The act of taking a focused proof of a sequent and getting
-a focused proof of the corresponding erased sequent is {\it de-focalization},
-and the proof of the soundness of focusing (the \ollll~analouge of 
-Theorem~\ref{thm:linfocsound} from Section~\ref{sec:lincorrectness})
+The act of taking a focused proof of a sequent and getting an unfocused
+proof of the corresponding erased sequent is {\it de-focalization}.
+If we run the constructive content of 
+the proof of the soundness of focusing (the \ollll~analogue of
+Theorem~\ref{thm:linfocsound} from Section~\ref{sec:lincorrectness}),
+the proof performs de-focalization.
 
-\subsection{Unfocused admissibility}
+\bigskip
+\begin{theorem}[Soundness of focusing/de-focalization]
+If $\foc{\Psi}{\Delta}{U}$, then $\Psi; \Delta^\circ \altv U^\circ$.
+\end{theorem}
 
-Unfocused admissibility has a structure that is essentially unchanged
-from the discussion in the proof of focalization for 
-linear logic (Theorem~\ref{thm:linfoccomplete} in 
-Section~\ref{sec:lincorrectness}) 
+\begin{proof}
+  By induction over the structure of focused proofs; each step of the
+  proof either . Most rules (${\fuse}_L$, $\righti_R$, etc.) in the
+  focused derivations have an obviously analogous rule in the unfocused
+  logic, and for others (in particular, the four rules dealing with shifts)
+  the necessary result follows directly from the induction hypothesis. 
+  The ${\it focus}_L$ rule potentially requires an instance of the
+  admissible ${\it copy}$ or ${\it place}$ rules in unfocused \ollll, and
+  the ${\it focus}_R$ rule potentially requires an instance of the
+  admissible ${\it lax}$ rule in unfocused \ollll.
+\end{proof}
 
-\begin{figure}[t]
+\begin{figure}[tp]
 \small
 
 {\it Atomic propositions}
@@ -2657,10 +2685,10 @@ Section~\ref{sec:lincorrectness})
 {}
 \quad
 \infer-
-{\foct{\Psi}{\frameoff{\Theta}{x{:}{\uparrow}p^+_\mlvl}}
-  {\tfocusl{x}{\tupl{\tetap{z}{N}}}}
-  {U}}
-{\foct{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{p^+_\mlvl}}}}{N}{U}}
+{\foct{\Psi}{x{:}{\uparrow}p^+_\mlvl}
+  {\tfocusl{x}{\tupl{\tetap{z}{~\tfocusr{z}}}}}
+  {\islvl{p^+_\mlvl}'}}
+{}
 \]
 \[
 \infer-
@@ -2670,10 +2698,10 @@ Section~\ref{sec:lincorrectness})
 {}
 \quad
 \infer-
-{\foct{\Psi}{\Delta}
-  {\tfocusr{\tdownr{N^-}}}
+{\foct{\Psi}{x{:}p^-_\mlvl}
+  {\tfocusr{\tdownr{\tetan{\tfocusl{x}{\tnil}}}}}
   {\islvl{{\downarrow}p^-_\mlvl}}}
-{\foct{\Psi}{\Delta}{N}{\islvl{p^-_\mlvl}}}
+{}
 \]
 
 \medskip
@@ -2837,9 +2865,81 @@ Section~\ref{sec:lincorrectness})
 
 \caption{Unfocused admissibility for the 
 multiplicative, exponential fragment of \ollll}
+\label{fig:admit-mell}
 \end{figure}
 
+\begin{figure}[tp]
+\caption{Unfocused admissibility for the additive connectives of \ollll.}
+\label{fig:admit-additive}
+\end{figure}
+
+\begin{figure}[tp]
+\caption{Unfocused admissibility for the first-order connectives of \ollll.}
+\label{fig:admit-fo}
+\end{figure}
+
+\subsection{Unfocused admissibility}
+\label{sec:ord-unfocused-admissibility}
+
+Unfocused admissibility has a structure that is essentially unchanged
+from the previous discussion in the proof of the completeness of
+focusing for linear logic (Theorem~\ref{thm:linfoccomplete} in
+Section~\ref{sec:lincorrectness}). In this presentation, as in the
+structural focalization development, we present unfocused
+admissibility primarily on the level of proof terms; the resulting
+presentation is quite dense and would greatly benefit from 
+mechanization, though we leave that for future work. 
+
+For the most part, there is exactly one unfocused admissibility rule
+for each rule of unfocused \ollll. 
+The justifications for the 
+unfocused admissibility lemmas for the multiplicative, exponential
+fragment of \ollll~are given in Figure~\ref{fig:admit-mell}; the
+additive fragment is given in Figure~\ref{fig:admit-additive}, and
+the first-order connectives are treated in Figure~\ref{fig:admit-fo}.
+There are two additional
+rules that account for the fact that different polarized, focused sequents
+sometimes erase to the same focused sequents -- 
+one example is the pair
+of sequents 
+$\foc{\Psi}{\tackon{\Theta}{x{:}\istrue{{\uparrow}{\downarrow}p^-}}}{U}$ 
+and $\foc{\Psi}{\tackon{\Theta}{z{:}\istrue{{A^-}}}}{U}$, and
+another example is the pair of sequents
+$\foc{\Psi}{\Delta}{\istrue{A^+}}$ and 
+$\foc{\Psi}{\Delta}{\istrue{{\downarrow}{\uparrow}A^+}}$.
+For the same reason, Figure~\ref{fig:admit-mell} contains four
+${\it init}$-like rules, since atomic propositions can come in positive
+and negative varieties and can appear in the context either suspended or not.
+
+We can view unfocused admissibility as creating an abstraction layer
+of admissible rules that can be used to build focused proofs of stable
+sequents.  The proof of the completeness of focusing below constructs
+focused proofs entirely by working through the interface layer of
+unfocused admissibility.
+
+
 \subsection{Focalization}
+
+The act of taking an unfocused proof of an erased sequent and getting
+a focused proof of the un-erased sequent is {\it focalization}. If 
+we run the constructive content of the proof of the completeness of
+focusing (the \ollll~analogue of Theorem~\ref{thm:linfoccomplete} from
+Section~\ref{sec:lincorrectness}), which takes any stable, 
+suspension-normal sequent as input, the proof performs focalization.
+
+\bigskip
+\begin{theorem}[Complteness of focusing/focalization]~\\
+If $\Psi; \Delta^\circ \altv U^\circ$, where $\Delta$ and $U$ are 
+stable and suspension-normal, then $\foc{\Psi}{\Delta}{U}$. 
+\end{theorem}
+
+\begin{proof}
+By an outer induction on the structure of unfocused proofs and
+an inner induction over the structure of polarized formulas $A^+$ and
+$A^-$ in order to remove series of shifts 
+${\uparrow}{\downarrow}\ldots{\uparrow}{\downarrow}A^-$ from formulas until
+an unfocused admissibility lemma can be applied.
+\end{proof}
 
 \section{Syntactic fragments}
 

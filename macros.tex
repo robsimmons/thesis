@@ -73,8 +73,9 @@
 \newcommand{\islvl}[1]{{#1}\,{\mlvl}}
 
 % judgments of linear logic
+\newcommand{\altv}{\Longrightarrow}
 \newcommand{\seq}[3]{{#1};{#2} \longrightarrow {#3} \mathstrut}
-\newcommand{\altseq}[3]{{#1};{#2} \Longrightarrow {#3} \mathstrut}
+\newcommand{\altseq}[3]{{#1};{#2} \altv {#3} \mathstrut}
 \newcommand{\pseq}[2]{{#1} \longrightarrow {#2} \mathstrut}
 
 \newcommand{\mildseq}[3]{{#1};{#2} \vdash {#3} \mathstrut}
@@ -134,8 +135,8 @@
 
 \newcommand{\susp}[1]{\langle {#1} \rangle}
 
-\newcommand{\ofirstseq}[5]{{#1};{#2};{#3};{#4} \Longrightarrow {#5} \mathstrut}
-\newcommand{\oseq}[4]{{#1};{#2};{#3} \Longrightarrow {#4} \mathstrut}
+\newcommand{\ofirstseq}[5]{{#1};{#2};{#3};{#4} \altv {#5} \mathstrut}
+\newcommand{\oseq}[4]{{#1};{#2};{#3} \altv {#4} \mathstrut}
 \newcommand{\oiseq}[2]{\oseq{#1}{\cdot}{/{#2}/}{/{#2}/}}
 \newcommand{\orseq}[4]{\oseq{#1}{#2}{{#3}}{/{#4}/}}
 \newcommand{\orfseq}[4]{\ofirstseq{\Psi}{#1}{#2}{{#3}}{/{#4}/}}
