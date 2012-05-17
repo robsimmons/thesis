@@ -2652,7 +2652,7 @@ suspended propositions.
 \]
 
 \medskip
-{\it Multiplicative connectives}
+{\it Multiplicative connectives ($\lefti$ and $\righti$ are symmetric)}
 \[
 \infer-
 {\foct{\Psi}{\cdot}{\tfocusr{\toner}}{\islvl{\one}}}
@@ -2702,6 +2702,25 @@ suspended propositions.
   {U}}
 {\foct{\Psi}
   {\tackon{\Theta}{x_1{:}{\uparrow}A^+,x_2{:}{\uparrow}B^+}}{N}{U}}
+\]
+\[
+\infer-
+{\foct{\Psi}{\Delta}
+  {\rsubsta{(\tlaml{(\tdownl{x}{\tupr{N}})})}{x'}
+    {(\tfocusr
+      {\tdownr
+       {\tlaml
+        {\etapa{z}
+          {~\etana
+            {\tfocusl{x'}
+              {\tappl
+                {(\tdownr{\tupr{\tfocusr{z}}})}
+                {(\tupl{\tdownl{x''}{\tfocusl{x''}{\tnil}}})}}}
+            {B^-}}
+          {A^+}}}})}
+    {{\downarrow}{\uparrow}A^+ \lefti {\uparrow}{\downarrow}B^-}}
+  {\istrue{{\downarrow}(A^+ \lefti B^-)}}}
+{\foct{\Psi}{x{:}\istrue{{\uparrow}A^+},\Delta}{N}{\istrue{{\downarrow}B^-}}}
 \]
 
 \caption{Unfocused admissibility for the 
