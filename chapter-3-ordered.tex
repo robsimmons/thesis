@@ -2547,7 +2547,149 @@ hypothesis on $A^-_\mlvl$ we have
 \section{Correctness of focusing}
 \label{sec:ord-correctness}
 
+
 \subsection{Erasure}
+
+As in Chapter 2, we define erasure only on stable sequents without
+suspended propositions.
+
+\begin{figure}[t]
+\small
+
+{\it Atomic propositions}
+\[
+\infer-
+{\foct{\Psi}{z{:}\susp{p^+_\mlvl}}
+  {\tfocusr{z}}
+  {\islvl{p^+_\mlvl}'}}
+{}
+\quad
+\infer-
+{\foct{\Psi}{\frameoff{\Theta}{x{:}{\uparrow}p^+_\mlvl}}
+  {\tfocusl{x}{\tupl{\tetap{z}{N}}}}
+  {U}}
+{\foct{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{p^+_\mlvl}}}}{N}{U}}
+\]
+\[
+\infer-
+{\foct{\Psi}{x{:}{p^-_\mlvl}}
+  {\tfocusl{x}{\tnil}}
+  {\islvl{\susp{p^-_\mlvl}}}}
+{}
+\quad
+\infer-
+{\foct{\Psi}{\Delta}
+  {\tfocusr{\tdownr{N^-}}}
+  {\islvl{{\downarrow}p^-_\mlvl}}}
+{\foct{\Psi}{\Delta}{N}{\islvl{p^-_\mlvl}}}
+\]
+
+\medskip
+{\it Modalities}
+\[
+\infer-
+{\foct{\Psi}{\Delta}
+  {\tfocusr{\tdownr{\tupr{N}}}}
+  {\islvl{{\downarrow}{\uparrow}A^+}}}
+{\foct{\Psi}{\Delta}{N}{\istrue{A^+}}}
+\qquad
+\infer-
+{\foct{\Psi}{\frameoff{\Theta}{x{:}{\uparrow}{\downarrow}A^-}}
+  {\tfocusl{x}{\tupl{\tdownl{x'}{N}}}}
+  {U}}
+{\foct{\Psi}{\tackon{\Theta}{x'{:}\istrue{A^-}}}{N}{U}}
+\]
+\[
+\infer-
+{\foct{\Psi}{\restrictto{\Delta}{\meph}}
+  {\rsubsta{\tupr{N}}{x}
+    {\tfocusr
+      {\tgnabr
+        {\etana
+          {\tfocusl{x}{\tupl{\tdownl{x'}{~\tfocusl{x'}{\tnil}}}}}
+          {A^-}}}}
+    {{\uparrow}{\downarrow}A^-}}{\islvl{{\gnab}A^-}}}
+{\foct{\Psi}{\Delta}{N}{\istrue{{\downarrow}A^-}}}
+\quad
+\infer-
+{\foct{\Psi}{\frameoff{\Theta}{x{:}{\uparrow}{\gnab}A^-}}
+  {\tfocusl{x}{\tupl{\tgnabl{x'}{N}}}}
+  {U}}
+{\foct{\Psi}{\tackon{\Theta}{x'{:}\iseph{A^-}}}{N}{U}}
+\]
+\[
+\infer-
+{\foct{\Psi}{\restrictto{\Delta}{\mpers}}
+  {\rsubsta{\tupr{N}}{x}
+    {\tfocusr
+      {\tbangr
+        {\etana
+          {\tfocusl{x}{\tupl{\tdownl{x'}{~\tfocusl{x'}{\tnil}}}}}
+          {A^-}}}}
+    {{\uparrow}{\downarrow}A^-}}{\islvl{{!}A^-}}}
+{\foct{\Psi}{\Delta}{N}{\istrue{{\downarrow}A^-}}}
+\quad
+\infer-
+{\foct{\Psi}{\frameoff{\Theta}{x{:}{\uparrow}{!}A^-}}
+  {\tfocusl{x}{\tupl{\tbangl{x'}{N}}}}
+  {U}}
+{\foct{\Psi}{\tackon{\Theta}{x'{:}\ispers{A^-}}}{N}{U}}
+\]
+\[
+\infer-
+{\foct{\Psi}{\Delta}
+  {\tfocusr{\tdownr{\tlaxr{N}}}}
+  {\islvl{{\downarrow}{\ocircle}A^+}}}
+{\foct{\Psi}{\Delta}{N}{\islax{A^+}}}
+\quad
+\infer-
+{\foct{\Psi}{\frameoff{\Theta}{x{:}{\ocircle}A^+}}
+  {\lsubsta
+    {\tfocusl{x}{\etapa{z}{~\tfocusr{\tdownr{\tupr{\tfocusr{z}}}}}{A^+}}}
+    {\tdownl{x'}{N}}{{\downarrow}{\uparrow}A^+}}
+  {\restrictfrom{U}{\mlax}}}
+{\foct{\Psi}{\tackon{\Theta}{x'{:}\istrue{{\uparrow}A^+}}}{N}{U}}
+\]
+
+\medskip
+{\it Multiplicative connectives}
+\[
+\infer-
+{\foct{\Psi}{\cdot}{\tfocusr{\toner}}{\islvl{\one}}}
+{}
+\quad
+\infer-
+{\foct{\Psi}{\frameoff{\Theta}{x{:}{\uparrow}\one}}
+  {\tfocusl{x}{\tupl{\tonel{N}}}}{U}}
+{\foct{\Psi}{\tackon{\Theta}{\cdot}}{N}{U}}
+\]
+\[
+\infer-
+{\foct{\Psi}{\matchconj{\Delta_1}{\Delta_2}}
+  {\rsubsta{\tupr{N_1}}{x_1}
+    {(\lsubsta{N_2}
+      {\etapa{z_2}
+        {~\tfocusl{x_1}
+          {\tupl
+            {\etapa{z_1}
+              {~\tfocusr{\tfuser{z_1}{z_2}}} 
+              {A^+}}}}
+        {B^+}}
+      {B^+})}
+    {{\uparrow}A^+}}
+  {\islvl{A^+ \fuse B^+}}}
+{\foct{\Psi}{\Delta_1}{N_1}{\istrue{A^+}}
+ &
+ \foct{\Psi}{\Delta_2}{N_2}{\istrue{B^+}}}
+\quad
+\infer-
+{}
+{}
+\]
+
+\caption{Unfocused admissibility for the 
+multiplicative, exponential fragment of \ollll}
+\end{figure}
 
 \subsection{De-focalization}
 
