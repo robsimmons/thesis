@@ -2681,10 +2681,27 @@ suspended propositions.
 {\foct{\Psi}{\Delta_1}{N_1}{\istrue{A^+}}
  &
  \foct{\Psi}{\Delta_2}{N_2}{\istrue{B^+}}}
-\quad
+\]
+\[
 \infer-
-{}
-{}
+{\foct{\Psi}{\frameoff{\Theta}{x{:}{\uparrow}(A^+ \fuse B^+)}}
+  {\tfocusl{x}
+    {\tupl
+      {\lsubsta
+        {\etapa{z_1}
+          {~\etapa{z_2}
+            {~\tfocusr
+              {\tfuser
+                {\tdownr{\tupr{\tfocusr{z_1}}}}
+                {\tdownr{\tupr{\tfocusr{z_2}}}}}}
+            {B^+}}
+          {A^+}}
+        {\tfusel{(\tdownl{x_1}{\tdownl{x_2}{N}})}}
+        {{\downarrow}{\uparrow}A^+ \fuse 
+         {\downarrow}{\uparrow}B^+}}}}
+  {U}}
+{\foct{\Psi}
+  {\tackon{\Theta}{x_1{:}{\uparrow}A^+,x_2{:}{\uparrow}B^+}}{N}{U}}
 \]
 
 \caption{Unfocused admissibility for the 
