@@ -694,6 +694,7 @@ associated with suspended positive propositions are written as
 $z$. This convention will be abandoned in future chapters.
 
 \subsection{Polarized propositions}
+\label{sec:ordpolarprop}
 
 The propositions of ordered logic are fundamentally sorted into
 positive propositions $A^+$ and negative propositions $A^-$; both
@@ -759,16 +760,20 @@ want to include such propositions in the logical framework, as to do
 so would break the distinction between concurrent and deductive proofs
 that will be discussed in Section~\ref{sec:framework-logicprog}.
 
-The presentation of the exponentials, and the logic that we now present,
-emphasises the degree to which the shifts ${\uparrow}$ and
+The presentation of the exponentials, and the logic that we now
+present, emphasises the degree to which the shifts ${\uparrow}$ and
 ${\downarrow}$ have much of the character of exponentials in a focused
-substructural logic; this point was explored in depth by Laurent in
-his thesis \cite{laurent02etude}. The upshift ${\uparrow}A^+$ is like
-an ordered variant of the lax truth ${\ocircle}A^+$ that puts no
-constraints on the form of the succeedant, and the downshift
-${\downarrow}A^-$ is like an ordered variant of the persistent and
-linear exponentials ${!}A^-$ and ${\gnab}A^-$ that puts no constraints
-on the form of the context.
+substructural logic. The upshift ${\uparrow}A^+$ is like an ordered
+variant of the lax truth ${\ocircle}A^+$ that puts no constraints on
+the form of the succeedant, and the downshift ${\downarrow}A^-$ is
+like an ordered variant of the persistent and linear exponentials
+${!}A^-$ and ${\gnab}A^-$ that puts no constraints on the form of the
+context. This point is implicit in Laurent's thesis
+\cite{laurent02etude}. In that thesis, Laurent defines the polarized
+LLP {\it without} the shifts ${\uparrow}$ and ${\downarrow}$, so that
+the only connection points between the polarities are the
+exponentials. The resulting logic is much more persistent than linear,
+a point we will return to in Section~\ref{sec:perm-fragments}.
 
 \subsection{Derivations and proof terms}
 \label{sec:ord-proof-terms}
@@ -2941,53 +2946,220 @@ ${\uparrow}{\downarrow}\ldots{\uparrow}{\downarrow}A^-$ from formulas until
 an unfocused admissibility lemma can be applied.
 \end{proof}
 
-\section{Syntactic fragments}
+\section{Properties of syntactic fragments}
+\label{sec:perm-fragments}
+
+The structural focalization methodology is such that, once 
+cut admissibility and identity expansion are established, the only
+interesting part of the proof of the completeness of focusing is 
+the definition of an erasure function and the presentation of a 
+series of unfocused admissibility lemmas. The unfocused admissibility
+lemmas for non-invertible rules, like ${\fuse}_R$ and 
+${\lefti}_L$, look straightforward:
+\[
+\infer-
+{\foc{\Psi}{\matchconj{\Delta_1}{\Delta_2}}{\islvl{A^+ \fuse B^+}}}
+{\foc{\Psi}{\Delta_1}{\istrue{A^+}}
+ &
+ \foc{\Psi}{\Delta_2}{\istrue{B^+}}}
+\quad
+\infer-
+{\foc{\Psi}{\frameoff{\Theta}{\matchconj{\Delta_A}{x{:}A^+ \lefti B^-}}}{U}}
+{\foc{\Psi}{\Delta_A}{\istrue{A^+}}
+ &
+ \foc{\Psi}{\tackon{\Theta}{x'{:}\istrue{B^-}}}{U}}
+\]
+on the other hand, because unfocused admissibility is defined only on
+stable sequents in our methodology, the invertible rules,
+like ${\fuse}_L$ and ${\lefti}_R$, require the presence of shifts.
+\[
+\infer-
+{\foc{\Psi}{\frameoff{\Theta}{x{:}{\uparrow}(A^+ \fuse B^+)}}{U}}
+{\foc{\Psi}{\tackon{\Theta}{\mkconj{x_1{:}\istrue{{\uparrow}A^+}}{x_2{:}\istrue{{\uparrow}B^+}}}}{U}}
+\quad
+\infer-
+{\foc{\Psi}{\Delta}{\islvl{{\downarrow}(A^+ \lefti B^-)}}}
+{\foc{\Psi}{\mkconj{x{:}\istrue{{\uparrow}A^+}}{\Delta}}{\istrue{{\downarrow}B^-}}}
+\]
+The presence of shifts should interest us, due to our observation in
+Section~\ref{sec:ordpolarprop} that the shifts have much of the character
+of polarities; they are simply 
+propositions that do not place any restrictions on the form of the
+context.
+
+As a thought experiment, imagine the removal of shifts ${\uparrow}$
+and ${\downarrow}$ from the language of propositions in \ollll. Were
+it not for the presence of atomic propositions $p^+$ and $p^-$, this
+change would make every proposition $A^+$ a mobile proposition
+$A^+_\meph$ and would make every proposition $A^-$ a right-permeable
+proposition $A^-_\mlax$. Of course, as arbitrary atomic propositions
+are intended to be stand-ins for arbitrary propositions! If arbitrary
+propositions lack shifts, then non-mobile atomic propositions would
+appear to no longer stand for anything. Therefore, I argue that it is
+appropriate to remove them too, leaving only the permeable, mobile,
+and right-permeable atomic propositions $p^+_\mpers$, $p^+_\meph$, and
+$p^-_\mlax$. Having done so, every positive proposition is mobile, and
+every negative proposition is right-permeable.
+
+Now we have a logical fragment where every positive proposition is is
+mobile and every negative proposition is observed to be
+right-permeable. Consider a derivation
+$\foc{\Psi}{\Delta}{\islax{A^+}}$ of where $\Delta$ is stable and
+includes only linear and persistent judgments (that is, $\Delta =
+\restrictto{\Delta}{\meph}$). It is simple to observe that, for every
+subderivation $\foc{\Psi'}{\Delta'}{U'}$, if $\Delta'$ is stable
+then $\Delta' = \restrictto{\Delta'}{\meph}$, and if $U$ is stable
+then $U = \restrictfrom{U}{\mlax}$. Given that this is the case, the
+restrictions that the focused ${\gnab}_R$ and ${\ocircle}_L$ rules
+make are {\it always satisfiable}, the same property that we previously
+observed of focused shift rules ${\downarrow}_R$ and ${\uparrow}_L$.
+In our syntactic fragment, in other words, the exponentials 
+${\gnab}$ and ${\ocircle}$ have become effective {\it replacements} for
+${\downarrow}$ and ${\uparrow}$. 
+
+The cut and identity theorems survive our restriction of the logic
+entirely intact: these theorems handle each of the connectives
+separately and are stable to the addition or removal of individual
+connectives.  That is not true for the unfocused admissibility lemmas,
+which critically and heavily use shifts. However, while we no longer
+have our original shifts, we have replacement shifts in the form of
+${\gnab}$ and ${\ocircle}$, and can replay the logic of the unfocused
+admissibility lemmas in order to gain new ones that look like this:
+\[
+\infer-
+{\foc{\Psi}{\matchconj{\Delta_1}{\Delta_2}}{\islax{A^+ \fuse B^+}}}
+{\foc{\Psi}{\Delta_1}{\islax{A^+}}
+ &
+ \foc{\Psi}{\Delta_2}{\islax{B^+}}}
+\quad
+\infer-
+{\foc{\Psi}{\frameoff{\Theta}{\matchconj{\Delta_A}{x{:}A^+ \lefti B^-}}}{U}}
+{\foc{\Psi}{\Delta_A}{\islax{A^+}}
+ &
+ \foc{\Psi}{\tackon{\Theta}{x'{:}\iseph{B^-}}}{U}}
+\]
+\[
+\infer-
+{\foc{\Psi}{\frameoff{\Theta}{x{:}{\gnab}(A^+ \fuse B^+)}}{U}}
+{\foc{\Psi}{\tackon{\Theta}{\mkconj{x_1{:}\iseph{{\gnab}A^+}}{x_2{:}\iseph{{\gnab}B^+}}}}{U}}
+\quad
+\infer-
+{\foc{\Psi}{\Delta}{\islax{{\ocircle}(A^+ \lefti B^-)}}}
+{\foc{\Psi}{\mkconj{x{:}\iseph{{\gnab}A^+}}{\Delta}}{\islax{{\ocircle}B^-}}}
+\]
+(To be clear, just as all the unfocused admissibility lemmas only applied
+to stable sequents, the unfocused admissibility lemmas above only apply when
+contexts and succeedants are both stable and free of judgments ${\istrue{T}}$.)
+
+The point of this exercise is that, given the definition and
+metatheory of \ollll, there is a reasonably large family of related
+systems, including ordered logic, lax logic, linear lax logic, and
+linear logic, that can be given erasure-based focalization proofs
+relative to \ollll; at most, the erasure function and the unfocused
+admissibility lemmas need to be adapted. The fragment we have defined
+here corresponds to regular linear logic. In the erasure of polarized
+\ollll~propositions to linear logic propositions, the
+``pseudo-shifts'' ${\ocircle}$ and ${\gnab}$ are wiped away:
+$({\ocircle}A^+)^\circ = (A^+)^\circ$ and $({\gnab}A^-)^\circ =
+(A^-)^\circ$.  Similarly, the two implications are conflated: $(A^+
+\lefti B^-)^\circ = (A^+ \righti B^-)^\circ = (A^+)^\circ \lolli
+(B^+)^\circ$. Beyond that, and the renaming of fuse to tensor -- $(A^+
+\fuse B^+)^\circ = (A^+)^\circ \otimes (B^+)^\circ$ -- the structure
+of erasure remains intact.
 
 \section{The design space of proof terms}
 
-Our ability to imagine proof terms as being fully intrinsically typed
-is an advantage to presenting a proof theory that is not fully
-dependent (which is to say, the domain of first-order quantification
-does {\it not} include expressions $E$). Hereditary substitution, 
-the computational content of the cut admissibility theorem, 
+In the design space of logical frameworks, our decision to view
+proof terms $E$ as being fully intrinsically typed representatives
+of focused derivations is somewhat unusual. This is because, in 
+a dependently typed logical framework, the variable substitution
+theorem (which we had to establish very early on) and the cut 
+admissibility theorem (which we established much later) are effectively
+the same theorem; handling everything at once is difficult at best.
 
-Presentations of hereditary
-substitution for LF (which is the computational content of cut
-admissibility) for the most part require that . For the LF
-fragment, it has been determined that computational content of cut
-admissibility
+Since the advent of Watkins' observations about the existence of
+hereditary substitution and its application to logical frameworks
+\cite{watkins02concurrent}, the dominant approach to the metatheory of
+logical frameworks has to define proof terms $E$ that have little, if
+any, implicit type structure: just enough that it is possible so that
+it is possible to define the substitution function
+$\rsubst{M}{x}{E}$. The work by Martens and Crary goes further,
+treating hereditary substitution as a relation, not a function, so
+that absolutely no type system is necessary
+\cite{martens11mechanizing}. 
 
- simply typed term language
-\cite{watkins02concurrent,harper07mechanizing} or an untyped term
-language \cite{reed07properties,martens11mechanizing} and then impose
-a Curry-style dependent typing on top of them.
+If we were to take such an approach, we would need to treat the
+judgment $\foct{\Psi}{\Delta}{E}{U}$ as a genuine four-place relation,
+rather than the three-place relation $\foc{\Psi}{\Delta}{U}$ annotated
+with a derivation $E$ of that sequent.  Then, the analogue of cut
+admissibility (part 4) would show that if
+$\foct{\Psi}{\Delta}{M}{A^-}$ and
+$\foct{\Psi}{\tackon{\Theta}{x{:}\islvl{A^-}}}{E}{U}$, and $\Xi$
+matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$, then
+$\foct{\Psi}{\Xi}{\rsubst{M}{x}{E}}{U}$, where {\it $\rsubst{M}{x}{E}$
+  is some function on proof terms that has already been defined},
+rather than just an expression of the computational content of the
+theorem as we treated it. Being able to comfortably conflate the
+computational content of a theorem with its operation on proof terms
+is the primary advantage of the approach taken in this chapter; it
+avoids a great deal of duplicated effort. (The cost is that we lose the
+ability to quantify over proof terms $E$ with the universal and
+existential quantifiers, which is a nontrivial, but hopefully
+acceptable, loss.)
 
-Based on the proofs in this section, we are not in a position to 
-say that we can define substitution on untyped terms and say that
-substitution on well-typed terms will remain well typed, because
-the functions we define on terms (especially
-hereditary substitution, the computational
-content of Theorem~\ref{thm:ord-cut}) are computationally dependent
+More importantly, it is not obvious how the substitution 
+$\rsubst{M}{x}{E}$ can be defined without accounting for the 
+full structure of derivations. The rightist substitution function,
+in particular, is  computationally dependent
 on the implicit bookkeeping associated with the matching constructs.
 The problem, if we wish to see it as a problem, is that we cannot
 substitute a derivation $M$ of $\foc{\Psi}{\Delta}{A^-}$
 into a derivation $E$ of $\foc{\Psi}{\tackon{\Theta}{x{:}\istrue{A^-}}}{U}$
 unless $x$ is {\it actually free} in $E$. Therefore, when we try to
 substitute the same $M$ into $\tfuser{V_1}{V_2}$, we are forced to determine
-whether 
+what judgment $x$ is associated with; if $x$ is associated with a
+linear or ephemeral judgment, we must track which subderivation 
+$x$ is assigned to in order to determine what is to be done next.
 
+It might be possible to bring our development more in line with other
+developments by introducing a new matching construct of substitution
+into contexts, the substitution construct $[\Delta/(x{:}\islvl{A^-})]\Xi$.
+If $\Xi = \tackon{\Theta}{x{:}\islvl{A^-}}$, then this would be the same 
+as $\frameoff{\Theta}{\Delta}$, but if $x$ is not a mapping in $\Xi$, then
+it is the same as $\Xi$. 
 \[
 \infer-[{\it rcut}]
-{\foc{\Psi}{[\Delta/x{:}\islvl{A^-}]\Xi}{U}}
+{\foct{\Psi}{[\Delta/(x{:}\islvl{A^-})]\Xi}{E'}{U}}
 {\restrictto{\Delta}{\mlvl}
  &
- \foc{\Psi}{\Delta}{A^-}
+ \foct{\Psi}{\Delta}{M}{A^-}
  &
- \foc{\Psi}{\Xi}{U}
+ \foct{\Psi}{\Xi}{E}{U}
  &
- \stableL{\Delta}}
+ \stableL{\Delta}
+ &
+ \rsubst{M}{x}{E} = E'}
 \]
+Using this formulation of {\it rcut}, it becomes unproblematic to
+define $\rsubst{M}{x}{(\tfuser{V_1}{V_2})}$ to be
+$\tfuser{(\rsubst{M}{x}{V_1})}{(\rsubst{M}{x}{V_2})}$, as we are
+allowed to substitute for $x$ even terms where the variable cannot
+appear. Using this strategy, it could be possible to describe and
+formalize the development in this chapter with proof terms that do
+nothing more than capture the binding structure of derivations, in the
+style of Crary's LF encoding of linear logic \cite{crary10higher}.
 
-Conjecture: the suitability of the framing-off operation 
-$\frameoff{\Theta}{\Delta}$ for cut admissibility, 
-proof search is a \cite{reed09queue}
+
+Another point is that, while I argue the framing-off operation 
+is {\it inconvenient} to use for specifying the {\it rcut} part
+of cut admissibility, it is clearly adequate. That is not necessarily
+the case for every logic. For instance, to give a focused presentation
+of Reed's queue logic, the substitution of contexts used to describe
+cut admissibility, $[\Delta/(x{:}\islvl{A^-})]\Xi$, would need to be
+quite different from the structure of the framing-off operation
+$\frameoff{\Delta}{x{:}A^-}$ used to describe the logic's left rules
+\cite{reed09queue}.
+I conjecture that logics where the framing-off operation is adequate
+for the presentation of cut admissibility are the same as those
+logics which can be treated in Belnap's display logic \cite{belnap82display}.
+
