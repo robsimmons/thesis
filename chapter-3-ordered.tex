@@ -59,7 +59,7 @@ clearly be kept separate)'' \cite{andreoli01focussing}. Both the full
 logic \ollll~and the general methodology followed in this chapter are
 general, foundational paradigms within which it is possible to
 instantiate families of logic programming languages and logical
-frameworks, even though we will focus on the a particular logical
+frameworks, even though we will focus on a particular logical
 framework starting in Chapter~4.
 
 \section{Ordered linear lax logic}
@@ -194,7 +194,7 @@ premises; in the case of a trivially satisfiable equality problem like
 $x \doteq x$ it will have one premise for each well-formed
 substitution that substitutes a term of the appropriate type for
 $x$. I used this exact style of presentation previously in
-\cite{simmons09weak}, but the approach is based on Schroeder-Heister's
+\cite{simmons11weak}, but the approach is based on Schroeder-Heister's
 treatment of definitional reflection \cite{schroeder93rules}.
 
 There are two important special cases. First, an unsatisfiable 
@@ -211,7 +211,7 @@ when $t$ and $s$ have a {\it most general unifier} $\sigma_{\it mgu}$,
 which just means that for all $\Psi' \vdash \sigma : \Psi$ such that
 $\sigma t = \sigma s$, it is the case that $\sigma = \sigma' \circ
 \sigma_{\it mgu}$ for some $\sigma'$.\footnote{Where $\circ$ is
-  composition -- $(\sigma' \circ \sigma_{\it mgu})t = \sigma'(\sigma
+  composition -- $(\sigma' \circ \sigma_{\it mgu})t = \sigma'(\sigma_{\it mgu}
   t)$.} In this case, the left rule for equality is equivalent to the
 following rule:
 \[
@@ -236,7 +236,7 @@ types and terms will actually be types and terms of Canonical LF
 \label{sec:contexts}
 
 First-ordered linear lax logic has a lot of contexts -- the persistent
-context $\Gamma$ the linear context $\Delta$, and the ordered context
+context $\Gamma$, the linear context $\Delta$, and the ordered context
 $\Omega$, not to mention the first-order context $\Psi$. In most rules
 these contexts just hang around, obscuring the logic's presentation
 and ensuring that the {\LaTeX} code of figures and displays remains
@@ -271,8 +271,8 @@ context also represents a finite map from variables $x$ to {\it
 or $\mtrue$.  By separating out a substructural context into three
 subsequences of persistent, linear, and ordered judgments, we can
 recover the presentations of contexts for \ollll~given in
-Figure~\ref{fig:ordered-prop}. We will use this observation, mostly
-informally, throughout the chapter, writing $\Xi = \Gamma; \Delta;
+Figure~\ref{fig:ordered-prop}. We will use this observation in an
+informal way throughout the chapter, writing $\Xi = \Gamma; \Delta;
 \Omega$.
 
 The domain represented by the metavariable $T$ is arbitrary: when
@@ -341,7 +341,7 @@ We could rewrite the {\it init} rule
 from that figure as follows:
 \[
 \infer[{\it init}]
-{x{:}p \altv /{p}/}
+{x{:}p \altv \islvl{p}}
 {}
 \]
 As in all rules involving matching constructs in the conclusion,
@@ -350,7 +350,7 @@ the ${\it init}$ rule above is the same as the ${\it init}$ rule
 below:
 \[
 \infer[{\it init}]
-{\Xi \altv /{p}/}
+{\Xi \altv \islvl{p}}
 {\Xi \textit{~matches~} x{:}p}
 \]
 
@@ -363,9 +363,8 @@ can write this missing piece as a box: $\Gamma; \Delta; \Omega_L,
 \Box, \Omega_R$. Alternatively we can think of a frame as a one-hole
 context or Huet-style zipper \cite{huet97zipper} over the structure of
 substructural contexts. We will also think of them morally
-as linear LF functions $(\lambda\Xi.\, \Xi_L, \Xi, \Xi_R)$
-\cite{simmons09linear}; that is, as linear representational
-functions defined by substitution.
+as linear functions $(\lambda\Xi.\, \Xi_L, \Xi, \Xi_R)$ as in
+\cite{simmons09linear}.
 
 The construction associated with frames, $\tackon{\Theta}{\Xi}$,
 is just a straightforward operation of filling in the hole or 
@@ -483,8 +482,8 @@ uncomplicated: if
 $\Xi = \Gamma; \Delta, \Delta'; \Omega_L, \Omega_R$, where linear contexts
 are multisets and ordered contexts are sequences, then 
 $\Xi = \mkconj{\Xi_L}{\Xi_R}$ if $\Xi_L = \Gamma; \Delta; \Omega_L$ and
-$\Xi_R = \Gamma; \Delta'; \Omega_R$. Note that we are giving up on
-having different notations for constructions and matching constructs: 
+$\Xi_R = \Gamma; \Delta'; \Omega_R$. Note that here we are using the same 
+notation for constructions and matching constructs: 
 $\matchconj{\Xi_L}{\Xi_R}$ is a matching construct when it appears
 in the conclusion of a rule, $\mkconj{\Xi_L}{\Xi_R}$ is a construction
 when it appears in the premise of a rule.
@@ -518,7 +517,7 @@ in the description of multiplicative conjunction, which is essentially
 just the propositional internalization of context conjunction:
 \[
 \infer
-{\matchconj{\Xi_L}{\Xi_R} \altv /A \fuse B/}
+{\matchconj{\Xi_L}{\Xi_R} \altv \islvl{A \fuse B}}
 {\Xi_L \altv \istrue{A} & \Xi_R \altv \istrue{B}}
 \quad
 \infer
@@ -534,7 +533,7 @@ just the propositional internalization of context conjunction:
 {\tackon{\Theta}{\cdot} \altv U}
 \]\[
 \infer
-{\Xi \altv / A \lefti B /}
+{\Xi \altv \islvl{A \lefti B}}
 {x{:}\istrue{A}, \Xi \altv \istrue{B}}
 \quad
 \infer
@@ -599,7 +598,7 @@ it says that $\Xi = \Gamma; \cdot; \cdot$. This form can then be used
 to describe the right rule for ${!}A$ in unfocused \ollll:
 \[
 \infer
-{\restrictto{\Xi}{\mpers} \altv /{!}A/}
+{\restrictto{\Xi}{\mpers} \altv \islvl{{!}A}}
 {\Xi \altv \istrue{A}}
 \]
 Similarly, $\Xi$ matches $\restrictto{\Xi}{\meph}$ if $\Xi$ contains
@@ -628,13 +627,13 @@ to $\restrictfrom{U}{\mlvl}$ as a generic matching construct.
 \section{Focused sequent calculus}
 \label{sec:ord-focused}
 
-A sequent in the focusing calculus has the form
-$\foc{\Psi}{\Delta}{U}$, where $\Psi$ is the first-order variable
-context, $\Delta$ is a substructural context as described in the previous
-section, and $U$ is a succeedant. The domain $T$ of the substructural
-context consists of stable negative propositions $A^-$, positive
-suspended propositions $\susp{A^+}$, focused negative propositions
-$[A^-]$, and inverting positive propositions $A^+$.
+A sequent in the focused sequent calculus presentation of \ollll~has
+the form $\foc{\Psi}{\Delta}{U}$, where $\Psi$ is the first-order
+variable context, $\Delta$ is a substructural context as described in
+the previous section, and $U$ is a succeedant. The domain $T$ of the
+substructural context consists of stable negative propositions $A^-$,
+positive suspended propositions $\susp{A^+}$, focused negative
+propositions $[A^-]$, and inverting positive propositions $A^+$.
 
 The form of the succeedant $U$ is $\islvl{T}$, where $\mlvl$ is either
 $\mtrue$ or $\mlax$; in this way, $U$ is just a like a special
@@ -665,7 +664,7 @@ Because there is always a distinct focused proposition in a sequent,
 we do not need a variable name to reference the focused proposition in
 a context $\Delta$ any more than we need a variable name to reference
 the unique member of the context-like succeedant $U$. Therefore, we
-write $\istrue{[B^-]}$ instead of $x{:}\istrue{[B^-]}$. Furthermore,
+can write $\istrue{[B^-]}$ instead of $x{:}\istrue{[B^-]}$. Furthermore,
 we restrict focused propositions and inverting propositions so that
 they are always associated with the judgment $\mtrue$. With this
 restriction, we can write $[A^-]$ and $x{:}A^+$ instead of
@@ -687,11 +686,11 @@ always unambiguous which proposition we are referring to in an
 invertible rule, and we write $A^+$ instead of $x{:}A^+$ or
 $x{:}\istrue{A^+}$.
 
-We will maintain the notational convention in this chapter that
+We will maintain the notational convention (only) within this chapter that
 first-order variables are written as $a$, variables associated
 with stable negative propositions are written as $x$, and variables
 associated with suspended positive propositions are written as 
-$z$. This convention will be abandoned in future chapters.
+$z$.
 
 \subsection{Polarized propositions}
 \label{sec:ordpolarprop}
@@ -772,7 +771,7 @@ context. This point is implicit in Laurent's thesis
 \cite{laurent02etude}. In that thesis, Laurent defines the polarized
 LLP {\it without} the shifts ${\uparrow}$ and ${\downarrow}$, so that
 the only connection points between the polarities are the
-exponentials. The resulting logic is much more persistent than linear,
+exponentials. The resulting logic is much persistent than linear,
 a point we will return to in Section~\ref{sec:perm-fragments}.
 
 \subsection{Derivations and proof terms}
@@ -807,9 +806,9 @@ representatives of derivations: that is, $\foct{\Psi}{\Delta}{E}{U}$
 expresses that $E$ is a derivation of the sequent
 $\foc{\Psi}{\Delta}{U}$. Justifying this close correspondence requires
 us to take care that the structure of expressions is faithful to the
-structure of proofs; this is the primary reason that we don't
+structure of proofs; this is the primary reason that we don't (yet)
 introduce the patterns that are common in other proof term assignments
-for focused logic until the next chapter
+for focused logic
 \cite{watkins02concurrent,licata08focusing,krishnaswami09focusing}.
 
 There are two caveats to the idea that expressions are representatives
@@ -832,8 +831,8 @@ The proof terms presented here will be reused in our formulation of a
 logical framework in the next chapter.  Additionally, working on the
 level of proof terms allows for a greatly compressed presentation of
 cut admissibility and identity expansion that emphasizes the
-computational nature of these proofs: cut admissibility has the clear
-form of the {\it hereditary substitution} operation in so-called {\it
+computational nature of these proofs: cut admissibility clearly
+generalizes the {\it hereditary substitution} operation in so-called {\it
   spine form} presentations of LF \cite{cervesato02linear}, and
 identity expansion is, computationally, a novel $\eta$-expansion
 property on proof terms \cite{simmons11structural}.  To be fair, much
@@ -844,10 +843,10 @@ explicit in proofs like the cut admissibility theorem.
 \subsection{Variable substitution}
 
 The first-order variables introduced by universal quantifiers (on the
-right) and existential quantifiers (on the left) are {\it variables},
-and as this is the case, the meaning of first-order variables is given
-by substitution \cite[Chapter 1]{harper12practical}. A sequent with
-free variables is thus a {\it generic} representative of all the
+right) and existential quantifiers (on the left) are proper {\it
+  variables} in the sense that the meaning of first-order variables is
+given by substitution \cite[Chapter 1]{harper12practical}. A sequent
+with free variables is thus a {\it generic} representative of all the
 sequents that can be obtained by plugging terms in for those free
 variables through the operation of substitution. This intuition is
 formalized by the variable substitution theorem,
@@ -888,7 +887,7 @@ $\sigma(\tfuser{V_1}{V_2}) = \tfuser{\sigma{V_1}}{\sigma{V_2}}$\smallskip\\
 We are given a proof of $\foc{\Psi}{\Delta}{[A^+ \fuse B^+]}$ that
 ends with the ${\fuse}_R$ rule; the subderivations are
 $V_1$, a derivation of $\foc{\Psi}{\Delta_1}{[A^+]}$, and
-$V_2$, a derivation of $\foc{\Psi}{\Delta}{[B^+]}$. Furthermore, we know that
+$V_2$, a derivation of $\foc{\Psi}{\Delta_2}{[B^+]}$. Furthermore, we know that
 $\Delta$ matches $\matchconj{\Delta_1}{\Delta_2}$. We need a lemma that
 tells us that $\sigma\Delta$ matches $\sigma\Delta_1, \sigma\Delta_2$;
 then, by rule ${\fuse}_R$, it suffices to show that

@@ -115,6 +115,14 @@
 {\orseq{\Gamma}{\Delta}{\Omega}{\top}}
 {}
 \quad
+\infer[{\with}_R]
+{\orseq{\Gamma}{\Delta}{\Omega}{A \with B}}
+{\otseq{\Gamma}{\Delta}{\Omega}{A}
+ &
+ \otseq{\Gamma}{\Delta}{\Omega}{B}}
+\]
+\vspace{-5pt}
+\[
 \infer[{\with}_{L1}]
 {\olseq{\Gamma}{\Delta}{\Omega_L}{A \with B}{\Omega_R}}
 {\opseq{\Gamma}{\Delta}{\Omega_L}{A, \Omega_R}}
@@ -122,14 +130,6 @@
 \infer[{\with}_{L2}]
 {\olseq{\Gamma}{\Delta}{\Omega_L}{A \with B}{\Omega_R}}
 {\opseq{\Gamma}{\Delta}{\Omega_L}{B, \Omega_R}}
-\]
-\vspace{-5pt}
-\[
-\infer[{\with}_R]
-{\orseq{\Gamma}{\Delta}{\Omega}{A \with B}}
-{\otseq{\Gamma}{\Delta}{\Omega}{A}
- &
- \otseq{\Gamma}{\Delta}{\Omega}{B}}
 \]
 
 

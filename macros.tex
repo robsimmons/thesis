@@ -137,9 +137,9 @@
 
 \newcommand{\ofirstseq}[5]{{#1};{#2};{#3};{#4} \altv {#5} \mathstrut}
 \newcommand{\oseq}[4]{{#1};{#2};{#3} \altv {#4} \mathstrut}
-\newcommand{\oiseq}[2]{\oseq{#1}{\cdot}{/{#2}/}{/{#2}/}}
-\newcommand{\orseq}[4]{\oseq{#1}{#2}{{#3}}{/{#4}/}}
-\newcommand{\orfseq}[4]{\ofirstseq{\Psi}{#1}{#2}{{#3}}{/{#4}/}}
+\newcommand{\oiseq}[2]{\oseq{#1}{\cdot}{/{#2}/}{\islvl{#2}}}
+\newcommand{\orseq}[4]{\oseq{#1}{#2}{{#3}}{\islvl{#4}}}
+\newcommand{\orfseq}[4]{\ofirstseq{\Psi}{#1}{#2}{{#3}}{\islvl{#4}}}
 \newcommand{\otseq}[4]{\oseq{#1}{#2}{{#3}}{\istrue{#4}}}
 \newcommand{\olseq}[5]{\oseq{#1}{#2}{{#3}/{#4}/{#5}}{U}}
 \newcommand{\olfseq}[5]{\ofirstseq{\Psi}{#1}{#2}{{#3}/{#4}/{#5}}{U}}
