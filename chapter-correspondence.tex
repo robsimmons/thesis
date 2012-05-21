@@ -1,0 +1,67 @@
+\chapter{On logical correspondence}
+
+In Part 1, we defined \sls, the logical framework of substructural
+logical specifications.
+
+\section{Logical transformation: compilation}
+
+\subsection{Tail-recursion}
+
+\subsection{Parallelism}
+
+\section{Logical transformation: defunctionalization}
+
+\section{Logical transformation: factoring}
+
+Example: exceptions
+
+\section{Exploring the richer fragment}
+
+\subsection{Mutable storage}
+\label{sec:mutable-storage}
+
+No check for pointer inequality! This is a fundamental restriction of
+the fact that we're using existential quantificaiton rather than some
+form of nominal quantification. (Hack due to Favonia and Bob, personal
+communication.)
+
+\subsection{Call-by-need}
+
+\subsection{Environment semantics}
+
+\subsection{Looking back at natural semantics}
+\label{sec:enriching-natsem}
+
+\section{Partial transformation}
+
+\subsection{Evaluation contexts}
+
+\subsection{Temporal logic}
+
+The natural semantics of \rowan~are not, on a superficial level,
+significantly more complex than other natural semantics. However, it
+turns out that the usual set of techniques for adding state to a
+natural semantics break down, and discussing a \rowan-like logic with
+state remained a challenge for many years.\robnote{Figure out from
+  Rowan what the recent work he told you about was.} Through the
+logical correspondance, it is easy to see why: the natural SSOS
+specification of \rowan~integrates both concurrent and deductive
+reasoning in an arbitrarily nested way. In fact, Figure XXX is the
+only SLS specification in this thesis that exhibits this form of
+recursive dependency between concurrent and deductive reasoning.  In
+particular, the \rowan~specification is way out of the image of the
+extended natural semantics we considered in
+Section~\ref{sec:enriching-natsem}. The natural encoding in state lies
+in the ambient substructural context of a concurrent computation, but
+that ambient computation cannot properly enter into a deductive
+sub-computation. If we tried to add state to \rowan~the same way we
+added it in Section~\ref{sec:mutable-storage}, the entire store
+would effectively leave scope whenever computation considered
+the subterm $e$ of ${\sf next}(e)$. That consideration happens
+as deductive reasoning, not as concurrent reasoning!
+
+ it is the only we
+will consider in this thesis that has with property.
+
+It's hard to include state in temporal logic! But the logical correspondence
+helps us understand why: the natural SSOS specification of 
