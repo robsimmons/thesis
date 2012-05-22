@@ -16,15 +16,45 @@ Ph.D. student Chirimar \cite{chirimar95proof}, who encoded the
 intermediate states of a $\pi$-calculus and of a low-level RISC
 machine (respectively) as contexts in focused classical linear logic.
 
-However, \sls~has an extremely rich set of tools for specifying
-concurrent computations, and we need to take some care not to end up
-as victims of our own success. In order . The ; To make a
-(carefully-chosen) analogy, various on-paper styles of specifying the
-operational semantics are well-known and visually recongizable.  To
-anyone literate in programming languages research, a quick glance
-should be sufficent to observe that, for instance, the following two
-rules give a natural (or big-step) semantics for the call-by-value
-lambda calculus:
+\sls~has an extremely rich set of tools for specifying concurrent
+computation. In order to make sense of the design space of
+substructural operational semantics, we need some design principles, a
+methodology that allows us to both {\it classify} different styles of
+presentation and {\it predict}, based on our knowledge about a
+language's features, what style we should adopt. In this chapter and
+the subsequent chapter; each specification style is strictly more
+expressive than the last.
+
+\begin{itemize}
+\item The {\it natural semantics}, or big-step operational semantics, is
+  an existing well-known specifications style that is convienent for
+  the specification of pure and determinstic programming languages.
+  State is inconvienent to describe, and language features that deal
+  with nondeterminism and non-local control are very difficult to
+  describe.
+
+\item The {\it ordered abstract machine semantics} is a generalization of
+  abstract 
+
+\item {\it Destination-passing semantics} are the style of
+  substructural operational semantics
+\end{itemize}
+
+ we will explore three styles of specification,
+where each is strictly more expressive than the last.
+
+. The first style, 
+
+
+
+\subsection*{Functional correspondence}
+
+To make a carefully-chosen analogy, various on-paper styles of
+specifying the operational semantics are well-known and visually
+recongizable.  To anyone literate in the conventions of programming
+languages researchers, a quick glance should be sufficent to classify
+the following two rules as natural semantics (or big-step semantics)
+for the call-by-value lambda calculus:
 \[
 \infer
 {\lambda x. e \Downarrow \lambda x. e \mathstrut}
@@ -38,16 +68,28 @@ lambda calculus:
  &
  [v_2/x]e \Downarrow v \mathstrut}
 \]
-Another form of semantics for programming languages, the {\it abstract
-  machine} semantics, is slightly less canonical, but abstract machine
-specifications nevertheless also have a set of common
-conventions. There are two states in an abstract machine
-specification, $k \rhd e$ (the expression $e$ is evaluating on top of
-stack $k$) and $k \lhd v$ (the value $v$ is being returned to the top
-of the stack $k$). The first rule says that, as a funtion $\lambda x.e$
-is already a value, we proceed by returning it to the stack, whereas
-for an application $e_1\,e_2$, 
+Natural semantics are a clean, high-level, and declarative way of
+describing the semantics of a simple, pure programming langauges, but
+they do not scale particularly well with the addition of effects like
+state and exceptions. Worse, natural semantics are mostly hopeless in
+the face of languages features that incoroprate nondeterminism or
+advanced control (such as first-class continuations). Furthermore,
+natural semantics is not very good as an {\it operational semantics},
+as it describes {\it what} a program may compute, but not how: many
+issues, such as the order of operations, are unspecified.
 
+Thus, a researcher interested in a simple, high level specification of
+the core features of a functional programming language might
+reasonably predict that natural semantics would be a good solution to
+their problem; one example is Murphy VII, who used natural semantics
+for the high-level formalization of Lambda 5 in his thesis
+\cite{murphy08modal}.
+
+Another style used to specify the operational semantics of programming
+languages, he {\it abstract
+  machine} semantics, is slightly less canonical but nevertheless has
+an identifiable set of conventions. The following is an abstract 
+machine semantics for our call-by-value lambda calculus:
 \[
 \infer
 {k \rhd (\lambda x. e) ~\mapsto~ k \lhd (\lambda x. e) \mathstrut} 
@@ -67,6 +109,16 @@ for an application $e_1\,e_2$,
  \mathstrut}
 {}
 \]
+
+ for programming languages, t, is slightly less canonical, but abstract machine
+specifications nevertheless also have a set of common
+conventions. There are two states in an abstract machine
+specification, $k \rhd e$ (the expression $e$ is evaluating on top of
+stack $k$) and $k \lhd v$ (the value $v$ is being returned to the top
+of the stack $k$). The first rule says that, as a funtion $\lambda x.e$
+is already a value, we proceed by returning it to the stack, whereas
+for an application $e_1\,e_2$, 
+
 
 There needs to be some structure and
 at least
