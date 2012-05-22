@@ -4,41 +4,99 @@ In Part 1, we defined \sls, the logical framework of substructural
 logical specifications. For the purposes of this thesis, we are
 primarily interested in using \sls~as a framework for specifying the
 operational semantics of programming languages, especially stateful
-and concurrent programming languages. This is not a new idea:
-specifying the operational semantics of programming languages is one
-of the examples used to illustrate the expressiveness of the original
-CLF specifiacation \cite{cervesato02concurrent}, a specification style
-that was later termed {\it substructural operational semantics} by
-Pfenning \cite{pfenning04substructural}. The general idea of
-representing the intermediate states of a computation as substructural
-process states dates back to Miller \cite{miller92pi} and his
-Ph.D. student Chirimar \cite{chirimar95proof}, who encoded the
-intermediate states of a $\pi$-calculus and of a low-level RISC
-machine (respectively) as contexts in focused classical linear logic.
+and concurrent programming languages. This is not a new idea: one of
+the original case studies on CLF specification described the semantics
+of Concurrent ML \cite{cervesato02concurrent} in a specification style
+termed {\it substructural operational semantics} by Pfenning
+\cite{pfenning04substructural}. The general idea of representing the
+intermediate states of a computation as substructural process states
+dates back to Miller \cite{miller92pi} and his Ph.D. student Chirimar
+\cite{chirimar95proof}, who encoded the intermediate states of a
+$\pi$-calculus and of a low-level RISC machine (respectively) as
+contexts in focused classical linear logic.
 
-\sls~has an extremely rich set of tools for specifying concurrent
-computation. In order to make sense of the design space of
-substructural operational semantics, we need some design principles, a
-methodology that allows us to both {\it classify} different styles of
-presentation and {\it predict}, based on our knowledge about a
-language's features, what style we should adopt. In this chapter and
-the subsequent chapter; each specification style is strictly more
-expressive than the last.
+The logical framework \sls~in general provides an extremely rich set
+of tools for specifying properties of programming langauges. In this
+chapter and the next chapter, we will consider three styles of
+specification that can be adequately represented in the
+\sls~framework; each specification style is strictly more expressive
+than the last.
 
 \begin{itemize}
-\item The {\it natural semantics}, or big-step operational semantics, is
-  an existing well-known specifications style that is convienent for
-  the specification of pure and determinstic programming languages.
-  State is inconvienent to describe, and language features that deal
-  with nondeterminism and non-local control are very difficult to
-  describe.
+\item The {\it natural semantics}, or big-step operational semantics,
+  is an existing well-known specification style that is convienent for
+  the specification of pure and determinstic programming
+  languages.
 
-\item The {\it ordered abstract machine semantics} is a generalization of
-  abstract 
+\item The {\it ordered abstract machine semantics} is a generalization
+  of abstract machine semantics that can be naturally specified in
+  \sls; this specification style naturally handles stateful and
+  parallel programming language features, as well as nondeterminism
+  \cite{pfenning09substructural}.
 
-\item {\it Destination-passing semantics} are the style of
-  substructural operational semantics
+\item The {\it destination-passing semantics} is the style of
+  substructural operational semantics first explored in CLF by
+  Cervesato et al.~\cite{cervesato02concurrent}. It allows for the
+  natural specification of features that incorporate syncronous
+  communication and non-local transfer of control.
 \end{itemize}
+
+\noindent
+The statement that each specification style is strictly more
+expressive than the last is formal: natural semantics can be
+mechnically transformed to ordered abstract machine semantics, and
+ordered abstract machine semantics can be mechanically transformed
+into destination-passing semantics, by fully atomatic and
+provably-correct transformations. These transformations are, in turn,
+instances of general transformations on \sls~specifications. In this
+chapter, we explore the first transformation, which transforms natural
+semantics to ordered abstract machine semantics. The transformation
+that does so is a general transformation on deductive
+\sls~specifications that {\it operationalizes} deductive proof search
+as concurrent proof search.
+
+: the goal of research into logical frameworks can, at some level  is to find {\it
+  right tool for the job}, and to create effe
+
+In the world of
+programming language research, the key is to 
+
+
+, can argue that we should just do all of our work using
+the destination passing semantics, as .
+
+, and one that forms the
+core of the idea that we will use to classify 
+
+ In order
+to make sense of the design space of substructural operational
+semantics, we need some design principles that allow us to both {\it
+  classify} different styles of presentation and {\it predict} what
+style(s) we should adopt based on what our goals are.  The organizing
+principle that we put forth in this chapter and the next one is called
+the {\it logical correspondence}, in analogy.
+
+In this chapter and the subsequent chapter
+we discuss three ; 
+
+\noindent
+Only the latter two of these specefication styles are properly
+classified as substructural operational semantics. While natural
+semantics can be encoded in \sls, they do not require any of its
+features, and can be encoded just as well in LF or the purely
+persistent, non-modal fragment of \sls. Furthermore, natural semantics
+is not very good as an {\it operational semantics}, as it describes
+{\it what} a program may compute, but not how: many issues, such as
+the order of operations, are unspecified. 
+
+When we say that each of the three specification styles is strictly
+more expressive than the last, this is true in a completely formal
+sense: in this chapter, we show that natural semantics can be turned
+into ordered abstract machine semantics by a general, provably-correct
+transformation on logical sepecifications. These 
+
+In fact, we will describe
+three such transformations, one 
 
  we will explore three styles of specification,
 where each is strictly more expressive than the last.
@@ -73,10 +131,7 @@ describing the semantics of a simple, pure programming langauges, but
 they do not scale particularly well with the addition of effects like
 state and exceptions. Worse, natural semantics are mostly hopeless in
 the face of languages features that incoroprate nondeterminism or
-advanced control (such as first-class continuations). Furthermore,
-natural semantics is not very good as an {\it operational semantics},
-as it describes {\it what} a program may compute, but not how: many
-issues, such as the order of operations, are unspecified.
+advanced control (such as first-class continuations). 
 
 Thus, a researcher interested in a simple, high level specification of
 the core features of a functional programming language might
