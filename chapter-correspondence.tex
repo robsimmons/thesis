@@ -5,6 +5,17 @@ logical specifications.
 
 \section{Logical transformation: compilation}
 
+\begin{figure}
+
+%\fvset{fontsize=\small,boxwidth=229pt}
+\fvset{fontsize=\small,boxwidth=187pt}
+\BVerbatimInput{sls/cbv-ev.sls}
+\fvset{fontsize=\small,boxwidth=auto}
+\BVerbatimInput{sls/cbv-ev-ssos.sls}
+
+\caption{A natural semantics for CBV and the corresponding abstract machine.}
+\end{figure}
+
 \subsection{Tail-recursion}
 
 \subsection{Parallelism}
@@ -34,7 +45,77 @@ communication.)
 
 \section{Partial transformation}
 
+
 \subsection{Evaluation contexts}
+
+Thus far, we have considered big-step operational semantics and abstract
+machines, neglecting the third great tradition of programming language
+specification, {\it structural operational semantics}. Structural
+operational semantics (SOS) define single-step evaluation inductively over
+the structure of expressions; the SOS semantics for our running example
+language is the following:
+\[
+\infer
+{\lambda x.e\,{\sf value} \mathstrut}
+{}
+\quad
+\infer
+{e_1\,e_2 \mapsto e_1'\,e_2 \mathstrut}
+{e_1 \mapsto e_1' \mathstrut}
+\quad
+\infer
+{e_1\,e_2 \mapsto e_1\,e_2' \mathstrut}
+{e_1\,{\sf value}
+ &
+ e_2 \mapsto e_2' \mathstrut}
+\quad
+\infer
+{(\lambda x. e)v \mapsto [v/x]e \mathstrut}
+{v\,{\sf value} \mathstrut}
+\]
+This inductive specification is adequately encoded on the left-hand
+side of Figure~\ref{fig:cbv-sos}, along with the proposition \Verb|ev|
+that describes a big-step operational semantics in terms of repeated
+application of the small-step operational semantics.
+
+\begin{figure}[tp]
+\fvset{fontsize=\small,boxwidth=229pt}
+\BVerbatimInput{sls/cbv-sos.sls}
+\BVerbatimInput{sls/cbv-sos-eval.sls}
+\caption{Small-step evaluation, and one corresponding abstract machine.}
+\label{fig:cbv-sos}
+\end{figure}
+
+\fvset{fontsize=\small}
+
+There are a couple of possibilities for how the 
+One obvious way to proceed is to simply translate the big-step portion
+of our semantics as encoded 
+
+
+If we just translate the {\it steps} portion of the semantics (using
+the tail-recursion optimizing translation), then we will get what is
+probabily fair to call the most boring possible substructural
+operational semantics: 
+
+\smallskip
+\VerbatimInput{sls/cbv-sos-proc.sls}
+\smallskip
+
+\noindent
+Under this semantics, the substructural context contains a single
+resource, \Verb|eval-steps(E)|, which takes steps according to the
+rules of the small-step structural operational semantics until a value
+is reached, at which point the context contains \Verb|retn-steps(V)|.
+
+
+\begin{figure}[t]
+\VerbatimInput{sls/cbv-sos-defun.sls}
+\caption{The defunctionalized abstract machine from Figure~\ref{fig:cbv-sos}.}
+\label{fig:cbv-sos-defun}
+\end{figure}
+
+The interesting observations are to be had from the other direction: what if
 
 \subsection{Temporal logic}
 
