@@ -1,9 +1,92 @@
 \chapter{On logical correspondence}
 
 In Part 1, we defined \sls, the logical framework of substructural
-logical specifications.
+logical specifications. For the purposes of this thesis, we are
+primarily interested in using \sls~as a framework for specifying the
+operational semantics of programming languages, especially stateful
+and concurrent programming languages. This is not a new idea:
+specifying the operational semantics of programming languages is one
+of the examples used to illustrate the expressiveness of the original
+CLF specifiacation \cite{cervesato02concurrent}, a specification style
+that was later termed {\it substructural operational semantics} by
+Pfenning \cite{pfenning04substructural}. The general idea of
+representing the intermediate states of a computation as substructural
+process states dates back to Miller \cite{miller92pi} and his
+Ph.D. student Chirimar \cite{chirimar95proof}, who encoded the
+intermediate states of a $\pi$-calculus and of a low-level RISC
+machine (respectively) as contexts in focused classical linear logic.
+
+However, \sls~has an extremely rich set of tools for specifying
+concurrent computations, and we need to take some care not to end up
+as victims of our own success. In order . The ; To make a
+(carefully-chosen) analogy, various on-paper styles of specifying the
+operational semantics are well-known and visually recongizable.  To
+anyone literate in programming languages research, a quick glance
+should be sufficent to observe that, for instance, the following two
+rules give a natural (or big-step) semantics for the call-by-value
+lambda calculus:
+\[
+\infer
+{\lambda x. e \Downarrow \lambda x. e \mathstrut}
+{}
+\quad
+\infer
+{e_1\,e_2 \Downarrow v \mathstrut}
+{e_1 \Downarrow \lambda x.e
+ &
+ e_2 \Downarrow v_2
+ &
+ [v_2/x]e \Downarrow v \mathstrut}
+\]
+Another form of semantics for programming languages, the {\it abstract
+  machine} semantics, is slightly less canonical, but abstract machine
+specifications nevertheless also have a set of common
+conventions. There are two states in an abstract machine
+specification, $k \rhd e$ (the expression $e$ is evaluating on top of
+stack $k$) and $k \lhd v$ (the value $v$ is being returned to the top
+of the stack $k$). The first rule says that, as a funtion $\lambda x.e$
+is already a value, we proceed by returning it to the stack, whereas
+for an application $e_1\,e_2$, 
+
+\[
+\infer
+{k \rhd (\lambda x. e) ~\mapsto~ k \lhd (\lambda x. e) \mathstrut} 
+{}
+\quad
+\infer
+{k \rhd (e_1\,e_2) ~\mapsto~ (k; \Box\,e_2) \rhd e_1 \mathstrut}
+{}
+\]\[
+\infer
+{(k; \Box\,e_2) \lhd (\lambda x.e) ~\mapsto~ (k; (\lambda x.e)\Box) \rhd e_2
+ \mathstrut}
+{}
+\quad
+\infer
+{(k; (\lambda x.e)\Box) \lhd v_2 ~\mapsto~ k \rhd [v_2/x]e
+ \mathstrut}
+{}
+\]
+
+There needs to be some structure and
+at least
+
+
+the design space
+of 
+
+ the general idea
+of representing intermedeiate states of a computation as 
+substructural process states 
+
+This chapter represents joint work with Ian Zerny.
 
 \section{Logical transformation: compilation}
+
+Deductive computation versus concurrent computation 
+Section~\ref{sec:framework-logicprog}
+
+Deductive computation
 
 \begin{figure}
 
