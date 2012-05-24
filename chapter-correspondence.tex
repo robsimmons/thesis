@@ -1,6 +1,6 @@
 \chapter{On logical correspondence}
 
-In Part 1, we defined \sls, the logical framework of substructural
+In Part 1, we defined \sls, a logical framework of substructural
 logical specifications. For the purposes of this thesis, we are
 primarily interested in using \sls~as a framework for specifying the
 operational semantics of programming languages, especially stateful
@@ -9,13 +9,13 @@ the original case studies on CLF specification described the semantics
 of Concurrent ML \cite{cervesato02concurrent} in a specification style
 termed {\it substructural operational semantics} by Pfenning
 \cite{pfenning04substructural}. The general idea of representing the
-intermediate states of a computation as substructural process states
-dates back to Miller \cite{miller92pi} and his Ph.D. student Chirimar
-\cite{chirimar95proof}, who encoded the intermediate states of a
-$\pi$-calculus and of a low-level RISC machine (respectively) as
+intermediate states of a computation as contexts in substructural
+logic dates back to Miller \cite{miller92pi} and his Ph.D. student
+Chirimar \cite{chirimar95proof}, who encoded the intermediate states
+of a $\pi$-calculus and of a low-level RISC machine (respectively) as
 contexts in focused classical linear logic.
 
-The logical framework \sls~in general provides an extremely rich set
+The logical framework \sls~provides an extremely rich set
 of tools for specifying properties of programming langauges. In this
 chapter and the next chapter, we will consider three styles of
 specification that can be adequately represented in the
@@ -26,7 +26,7 @@ than the last.
 \item The {\it natural semantics}, or big-step operational semantics,
   is an existing well-known specification style that is convienent for
   the specification of pure and determinstic programming
-  languages.
+  languages. 
 
 \item The {\it ordered abstract machine semantics} is a generalization
   of abstract machine semantics that can be naturally specified in
@@ -48,83 +48,72 @@ mechnically transformed to ordered abstract machine semantics, and
 ordered abstract machine semantics can be mechanically transformed
 into destination-passing semantics, by fully atomatic and
 provably-correct transformations. These transformations are, in turn,
-instances of general transformations on \sls~specifications. In this
-chapter, we explore the first transformation, which transforms natural
-semantics to ordered abstract machine semantics. The transformation
-that does so is a general transformation on deductive
-\sls~specifications that operationalizes deductive proof search as
-concurrent proof search.
+instances of general transformations on \sls~specifications. 
 
-\subsection*{The logical correspondance as an organizing principle}
+In this chapter, we explore transformations on \sls~specifications
+that operationalize {\it deductive} computation (backwards-chaining
+proof search for propositions of negative atomic type) as {\it
+  concurrent} computation (forward-chaining proof search for
+propositions of positive type). These transformations have the effect
+of mapping natural semantics specifications into abstract machine
+specifications.
 
-In order to make sense of the design space of substructural
-operational semantics, we need some design principles that allow us to
-both {\it classify} different styles of presentation and {\it predict}
-what style(s) we should adopt based on what our goals are.  The
-organizing principle that we put forth in this chapter and the next
-one is called the {\it logical correspondence}, in analogy.
+\subsection*{Chapter outline}
 
-Using general, provabably correct transformations on logical
-specifications is the 
+Three transformations that perform operationalizion are presented in
+Section~\ref{sec:operationalization}: a simple transformation, a
+tail-recusion optimized transformation, and a parallel
+transformation. When one of these transformations are applied to a
+natural semantics encoded in \sls, the result is an ordered abstract
+machine semantics encoded in SLS. In order to obtain the ordered
+abstract machine semantics for the call-by-value lambda calculus that
+was presented in Section~\ref{sec:intro-ssos}, we introduce a second
+transformation, defunctionalization, in
+Section~\ref{sec:defunctionalization}.
 
+In Section~\ref{sec:nat-ssos-adequacy}, I take a bit of a detour to
+discuss the traditional presentation of abstract machines. I claim
+that when we pass a \sls~encoded natural semantics first through
+(tail-recursion-optimizing) operationazation transfromation and second
+through the defunctionalization transformation, the result is a
+substructural operational semantics corresponding to the a standard
+abstract machine semantics. Making this precise requires a discussion
+of adequacy for \sls~encodings. I also discuss the connections between
+our logical correspondance and the {\it functional correspondance}
+investigated by Ager, Danvy, Midtgaard, and others.
 
-: the goal of research into logical frameworks can, at some level  is to find {\it
-  right tool for the job}, and to create effe
+Section~\ref{sec:richer-ordered-abstract} gets to the heart of why we
+are interested in the transformations discussed in this chapter: the
+ordered abstract machine semantics specification that we get when we
+operationalize a natural semantics specification is amenable to the
+modular addition of features that could not be modularly integrated
+into the natural semantics specification; we explore a non-exhaustive
+selection of these features, including mutable storage, call-by-need
+evaluation, and recoverable falure.
 
-In the world of
-programming language research, the key is to 
+Finally, in Section~\ref{sec:othertransform}, we discuss some of the
+other applications of the operationalization transformations, in order
+to emphasize that 
 
+\section{Logical transformation: operationalization}
+\label{sec:operationalization}
 
-, can argue that we should just do all of our work using
-the destination passing semantics, as .
+\begin{figure}[t]
+\begin{minipage}[b]{0.5\linewidth}
+\fbox{$e \Downarrow v$}
 
-, and one that forms the
-core of the idea that we will use to classify 
+\bigskip
 
-
-In this chapter and the subsequent chapter
-we discuss three ; 
-
-\noindent
-Only the latter two of these specefication styles are properly
-classified as substructural operational semantics. While natural
-semantics can be encoded in \sls, they do not require any of its
-features, and can be encoded just as well in LF or the purely
-persistent, non-modal fragment of \sls. Furthermore, natural semantics
-is not very good as an {\it operational semantics}, as it describes
-{\it what} a program may compute, but not how: many issues, such as
-the order of operations, are unspecified. 
-
-When we say that each of the three specification styles is strictly
-more expressive than the last, this is true in a completely formal
-sense: in this chapter, we show that natural semantics can be turned
-into ordered abstract machine semantics by a general, provably-correct
-transformation on logical sepecifications. These 
-
-In fact, we will describe
-three such transformations, one 
-
- we will explore three styles of specification,
-where each is strictly more expressive than the last.
-
-. The first style, 
-
-
-
-\subsection*{Functional correspondence}
-
-To make a carefully-chosen analogy, various on-paper styles of
-specifying the operational semantics are well-known and visually
-recongizable.  To anyone literate in the conventions of programming
-languages researchers, a quick glance should be sufficent to classify
-the following two rules as natural semantics (or big-step semantics)
-for the call-by-value lambda calculus:
 \[
-\infer
+\infer[{\sf ev/lam}]
 {\lambda x. e \Downarrow \lambda x. e \mathstrut}
 {}
-\quad
-\infer
+\]
+
+\medskip
+
+\[
+\infer[{\sf ev/app}]
 {e_1\,e_2 \Downarrow v \mathstrut}
 {e_1 \Downarrow \lambda x.e
  &
@@ -132,69 +121,21 @@ for the call-by-value lambda calculus:
  &
  [v_2/x]e \Downarrow v \mathstrut}
 \]
-Natural semantics are a clean, high-level, and declarative way of
-describing the semantics of a simple, pure programming langauges, but
-they do not scale particularly well with the addition of effects like
-state and exceptions. Worse, natural semantics are mostly hopeless in
-the face of languages features that incoroprate nondeterminism or
-advanced control (such as first-class continuations). 
 
-Thus, a researcher interested in a simple, high level specification of
-the core features of a functional programming language might
-reasonably predict that natural semantics would be a good solution to
-their problem; one example is Murphy VII, who used natural semantics
-for the high-level formalization of Lambda 5 in his thesis
-\cite{murphy08modal}.
+\bigskip
 
-Another style used to specify the operational semantics of programming
-languages, he {\it abstract
-  machine} semantics, is slightly less canonical but nevertheless has
-an identifiable set of conventions. The following is an abstract 
-machine semantics for our call-by-value lambda calculus:
-\[
-\infer
-{k \rhd (\lambda x. e) ~\mapsto~ k \lhd (\lambda x. e) \mathstrut} 
-{}
-\quad
-\infer
-{k \rhd (e_1\,e_2) ~\mapsto~ (k; \Box\,e_2) \rhd e_1 \mathstrut}
-{}
-\]\[
-\infer
-{(k; \Box\,e_2) \lhd (\lambda x.e) ~\mapsto~ (k; (\lambda x.e)\Box) \rhd e_2
- \mathstrut}
-{}
-\quad
-\infer
-{(k; (\lambda x.e)\Box) \lhd v_2 ~\mapsto~ k \rhd [v_2/x]e
- \mathstrut}
-{}
-\]
+~
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.5\linewidth}
+\VerbatimInput{sls/cbv-ev1.sls}
+\end{minipage}
+\caption{Natural semantics for the lambda calculus (call-by-value).}
+\label{fig:ns}
+\end{figure}
 
- for programming languages, t, is slightly less canonical, but abstract machine
-specifications nevertheless also have a set of common
-conventions. There are two states in an abstract machine
-specification, $k \rhd e$ (the expression $e$ is evaluating on top of
-stack $k$) and $k \lhd v$ (the value $v$ is being returned to the top
-of the stack $k$). The first rule says that, as a funtion $\lambda x.e$
-is already a value, we proceed by returning it to the stack, whereas
-for an application $e_1\,e_2$, 
+\cite{hannan92operational}
 
-
-There needs to be some structure and
-at least
-
-
-the design space
-of 
-
- the general idea
-of representing intermedeiate states of a computation as 
-substructural process states 
-
-This chapter represents joint work with Ian Zerny.
-
-\section{Logical transformation: compilation}
 
 Deductive computation versus concurrent computation 
 Section~\ref{sec:framework-logicprog}
@@ -217,12 +158,158 @@ Deductive computation
 \subsection{Parallelism}
 
 \section{Logical transformation: defunctionalization}
+\label{sec:defunctionalization}
 
-\section{Logical transformation: factoring}
+\section{Natural semantics and abstract machines}
+\label{sec:nat-ssos-adequacy}
 
-Example: exceptions
+\[
+\infer
+{k \rhd (\lambda x. e) ~\mapsto~ k \lhd (\lambda x. e) \mathstrut} 
+{}
+\quad
+\infer
+{k \rhd (e_1\,e_2) ~\mapsto~ (k; \Box\,e_2) \rhd e_1 \mathstrut}
+{}
+\]\[
+\infer
+{(k; \Box\,e_2) \lhd (\lambda x.e) ~\mapsto~ (k; (\lambda x.e)\Box) \rhd e_2
+ \mathstrut}
+{}
+\quad
+\infer
+{(k; (\lambda x.e)\Box) \lhd v_2 ~\mapsto~ k \rhd [v_2/x]e
+ \mathstrut}
+{}
+\]
+
+
+
+
+\subsection{Adequacy}
+
+XXX REREAD ANDERS'S PAPER
+
+To make a carefully-chosen analogy, various on-paper styles of
+specifying the operational semantics are well-known and visually
+recongizable.  To anyone literate in the conventions of programming
+languages researchers, a quick glance should be sufficent to classify
+the following two rules as natural semantics (or big-step semantics)
+for the call-by-value lambda calculus:
+
+
+Natural semantics are a clean, high-level, and declarative way of
+describing the semantics of a simple, pure programming langauges, but
+they do not scale particularly well with the addition of effects like
+state and exceptions. Worse, natural semantics are mostly hopeless in
+the face of languages features that incoroprate nondeterminism or
+advanced control (such as first-class continuations). 
+
+Thus, a researcher interested in a simple, high level specification of
+the core features of a functional programming language might
+reasonably predict that natural semantics would be a good solution to
+their problem; one example is Murphy VII, who used natural semantics
+for the high-level formalization of Lambda 5 in his thesis
+\cite{murphy08modal}.
+
+Another style used to specify the operational semantics of programming
+languages, he {\it abstract
+  machine} semantics, is slightly less canonical but nevertheless has
+an identifiable set of conventions. The following is an abstract 
+machine semantics for our call-by-value lambda calculus:
+
+
+ for programming languages, t, is slightly less canonical, but abstract machine
+specifications nevertheless also have a set of common
+conventions. There are two states in an abstract machine
+specification, $k \rhd e$ (the expression $e$ is evaluating on top of
+stack $k$) and $k \lhd v$ (the value $v$ is being returned to the top
+of the stack $k$). The first rule says that, as a funtion $\lambda x.e$
+is already a value, we proceed by returning it to the stack, whereas
+for an application $e_1\,e_2$, 
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/cbv-ev-ssos-fun.sls}
+\caption{An ordered abstract machine semantics for the CBV lambda calculus.}
+\end{figure}
+
+Input
+
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/cbv-ev-ssos-gen.sls}
+
+\begin{theorem}
+If $x{:}\istrue{\sf gen} \leadsto \Delta$
+\end{theorem}
+
+There needs to be some structure and
+at least
+
+
+the design space
+of 
+
+ the general idea
+of representing intermedeiate states of a computation as 
+substructural process states 
+
+This chapter represents joint work with Ian Zerny.
+
+
+\subsection{The functional correspondence}
+
+The potential design space of substructural operational semantics is
+quite large.  In order to make sense of this space, it is helpful to
+have design principles that allow us to both {\it classify} different
+styles of presentation and {\it predict} what style(s) we should adopt
+based on what our goals are. I propose that different styles of
+\sls~specification can be productively classified in terms of the
+transformations that turn one classification style into another. Most
+transformations will not have inverses, so this methadology gives us a
+formal notion of which styles are more expressive than others.
+Considering logical transformations also can lower the cost of
+mis-prediction. If one begins a development in an overly-restrictive
+style, the development can be transformed into a more expressive style
+by an automatic transformation.
+
+The organizing principle that we put forth in this chapter and the
+next one is called the {\it logical correspondence}, by analogy with
+the {\it functional correspondance} of Ager, Danvy, Midtgaard, and
+others~\cite{ager03functional,ager04functional,ager05functional,
+  danvy08defunctionalized} in which existing styles of specification
+are related to each other by way of transformations on functional
+programs. It is not our goal here to detail the parallels between the
+logical and functional correspondence; rather, we want to emphasize
+the use of the logical correspondence to relate substructural
+operational to each other and to the natural semantics.
+
+Natural semantics specifications are not substructural operational
+specifications: the LF encodings of such specifications can generally
+be done just as well in LF or in the purely-persistent, non-modal
+fragment of \sls. It is not my purpose to advocate for natural
+semantics; recall that natural semantics were used to illustrate
+problems with {\it non}-modularity in langauge specification in
+Section~\ref{sec:modularnonmodular}. Instead, we are trying to
+
+
+de-mystify operational semantics by showing that they are 
+
+Instead, we are formalizing the
+intuition that, on a ad-hoc basis, it is clear how t 
+
+But natural semantics are
+quite standard and widely understood, and 
+
+
+ and are easy to talk about
+using 
+
+reasonably illustrate
+
 
 \section{Exploring the richer fragment}
+\label{sec:richer-ordered-abstract}
 
 \subsection{Mutable storage}
 \label{sec:mutable-storage}
@@ -230,9 +317,12 @@ Example: exceptions
 No check for pointer inequality! This is a fundamental restriction of
 the fact that we're using existential quantificaiton rather than some
 form of nominal quantification. (Hack due to Favonia and Bob, personal
-communication.)
+communication, but dates back earlier - was it one of Karl's papers?
+Cheney cites it in nominal abstraction.)
 
-\subsection{Call-by-need}
+\subsection{Call-by-need evaluation}
+
+\subsection{Recoverable failure}
 
 \subsection{Environment semantics}
 
@@ -240,7 +330,7 @@ communication.)
 \label{sec:enriching-natsem}
 
 \section{Partial transformation}
-
+\label{sec:othertransform}
 
 \subsection{Evaluation contexts}
 
