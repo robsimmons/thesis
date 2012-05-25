@@ -16,7 +16,7 @@ of a $\pi$-calculus and of a low-level RISC machine (respectively) as
 contexts in focused classical linear logic.
 
 The logical framework \sls~provides an extremely rich set
-of tools for specifying properties of programming langauges. In this
+of tools for specifying properties of programming languages. In this
 chapter and the next chapter, we will consider three styles of
 specification that can be adequately represented in the
 \sls~framework; each specification style is strictly more expressive
@@ -24,8 +24,8 @@ than the last.
 
 \begin{itemize}
 \item The {\it natural semantics}, or big-step operational semantics,
-  is an existing well-known specification style that is convienent for
-  the specification of pure and determinstic programming
+  is an existing well-known specification style that is convenient for
+  the specification of pure and deterministic programming
   languages. 
 
 \item The {\it ordered abstract machine semantics} is a generalization
@@ -37,16 +37,16 @@ than the last.
 \item The {\it destination-passing semantics} is the style of
   substructural operational semantics first explored in CLF by
   Cervesato et al.~\cite{cervesato02concurrent}. It allows for the
-  natural specification of features that incorporate syncronous
+  natural specification of features that incorporate synchronous
   communication and non-local transfer of control.
 \end{itemize}
 
 \noindent
 The statement that each specification style is strictly more
 expressive than the last is formal: natural semantics can be
-mechnically transformed to ordered abstract machine semantics, and
+mechanically transformed to ordered abstract machine semantics, and
 ordered abstract machine semantics can be mechanically transformed
-into destination-passing semantics, by fully atomatic and
+into destination-passing semantics, by fully automatic and
 provably-correct transformations. These transformations are, in turn,
 instances of general transformations on \sls~specifications. 
 
@@ -64,7 +64,7 @@ This chapter represents joint work with Ian Zerny.
 
 Three transformations that perform operationalizion are presented in
 Section~\ref{sec:operationalization}: a simple transformation, a
-tail-recusion optimized transformation, and a parallel
+tail-recursion optimized transformation, and a parallel
 transformation. When one of these transformations are applied to a
 natural semantics encoded in \sls, the result is an ordered abstract
 machine semantics encoded in SLS. In order to obtain the ordered
@@ -76,12 +76,12 @@ Section~\ref{sec:defunctionalization}.
 In Section~\ref{sec:nat-ssos-adequacy}, I take a bit of a detour to
 discuss the traditional presentation of abstract machines. I claim
 that when we pass a \sls~encoded natural semantics first through
-(tail-recursion-optimizing) operationazation transfromation and second
+(tail-recursion-optimizing) operationalizion transformation and second
 through the defunctionalization transformation, the result is a
 substructural operational semantics corresponding to the a standard
 abstract machine semantics. Making this precise requires a discussion
 of adequacy for \sls~encodings. I also discuss the connections between
-our logical correspondance and the {\it functional correspondance}
+our logical correspondence and the {\it functional correspondence}
 investigated by Ager, Danvy, Midtgaard, and others.
 
 Section~\ref{sec:richer-ordered-abstract} gets to the heart of why we
@@ -91,7 +91,7 @@ operationalize a natural semantics specification is amenable to the
 modular addition of features that could not be modularly integrated
 into the natural semantics specification; we explore a non-exhaustive
 selection of these features, including mutable storage, call-by-need
-evaluation, and recoverable falure.
+evaluation, and recoverable failure.
 
 Finally, in Section~\ref{sec:othertransform}, we discuss the
 consequences of defining operationalization as a general
@@ -213,7 +213,7 @@ proposition ${\sf eval}\,\interp{e}$ is the starting point, indicating
 that we want to search for a $v$ such that $e \Downarrow v$, and the
 proposition ${\sf retn}\,\interp{v}$ indicates the successful
 completion of this procedure. Therefore, searching for a $v$ such that
-$e \Downarrow v$ is derivable will be analagous to building a trace $T
+$e \Downarrow v$ is derivable will be analogous to building a trace $T
 : x_e{:}{\sf eval}\,\interp{e} \leadsto^* x_v{:}{\sf
   retn}\,\interp{e}$ with concurrent computation.
 
@@ -230,9 +230,9 @@ stack of unfinished work in the ordered context, growing out to the
 right. Our new understanding, then, is that contexts either have the
 form $x{:}{\sf eval}\,\interp{e}, \Delta$ or the form $x{:}{\sf
   retn}\,\interp{v}, \Delta$. In the process of concurrently
-computaing a trace $x_e{:}{\sf eval}\,\interp{e_1\,e_2}, \Delta
+computing a trace $x_e{:}{\sf eval}\,\interp{e_1\,e_2}, \Delta
 \leadsto^* x_r{:}{\sf retn}\,\interp{v}, \Delta$, each of the
-recursive calls to the search procedure will involve a subtrace of the
+recursive calls to the search procedure will involve a sub-trace of the
 form
 %
 \[x_e{:}{\sf eval}\,\interp{e'}, y{:}\istrue{A^-}, \Delta
@@ -252,7 +252,7 @@ where $V = \interp{v}$, and the search procedure as a whole will be
 complete with the answer being $v$.  Thus, the negative proposition
 that implements the continuation can be written as $(\forall v. {\sf
   retn}\,v \lefti \{ {\sf retn}\,v \})$. The positive proposition that
-will create this subcomputation can be written as follows:
+will create this sub-computation can be written as follows:
 \begin{align*}
 {\it Step_4}(E,V_2) & \equiv {\sf eval}\,(E\,V_2) 
 \fuse {\downarrow}(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})
@@ -262,7 +262,7 @@ will create this subcomputation can be written as follows:
   have computed. The recursive call is to ${\sf
     eval}\,\interp{e_2}$, and assuming that it completes, we need
   to begin the fourth step. The positive proposition that will 
-  create this subcomputation can be written as follows:}
+  create this sub-computation can be written as follows:}
 %
 {\it Step_3}(E_2,E) & \equiv {\sf eval}\,E_2 
 \fuse {\downarrow}(\forall v. {\sf retn}\,v_2 \lefti \{ {\it Step_4}(E,v_2) \})
@@ -297,22 +297,22 @@ abstract machine semantics.
 
 The intuitive connection between natural semantics specifications and
 concurrent specifications has been explored previously and
-independently by Schack-Nielson \cite{schacknielsen07induction} and by
-Cruz and Favonia \cite{cruz12parallel}; Schack-Nielson proves the
+independently by Schack-Nielsen \cite{schacknielsen07induction} and by
+Cruz and Favonia \cite{cruz12parallel}; Schack-Nielsen proves the
 equivalence of the two specifications, whereas Cruz and Favonia used
 the connection informally. The contribution of this chapter is to
 describe a general transformation (of which
 Figure~\ref{fig:example-transform-cbv} is one instance) and to prove
 this transformation correct in general. From the other direction,
 Hannan and Miller \cite{hannan92operational} and Ager
-\cite{ager04natural} have also proposed the idea of operationalizing
+\cite{ager04natural} have also proposed the idea of operationalization
 natural semantics specifications as abstract machines by provably
-correct and general transformatins on logical specifications (in the
+correct and general transformations on logical specifications (in the
 case of Hannan and Miller) and the special-purpose framework of
 L-attributed natural semantics (in the case of Ager). The major
-difference in this case is that oth lines of work result in {\it
+difference in this case is that both lines of work result in {\it
   deductive} specifications of abstract machines. Our translation into
-concurrent specification has the advantage of explosing parallelism,
+concurrent specification has the advantage of exploiting parallelism,
 as demonstrated in Section~\ref{sec:trans-par} below, and also opens
 up specifications to the modular inclusion of stateful and concurrent
 features, as we will discuss in
@@ -332,12 +332,12 @@ tail-recursive and parallelism-enabling variants of the transformation
 The starting point for the operationalization transformation is a an
 deductive specification that is well-moded in the sense described in
 Section~\ref{sec:framework-modes}. Every declared negative predicate
-will either reamin defined by deductive proofs (we write these as
+will either remain defined by deductive proofs (we write these as
 $p_d^-$, $d$ for deductive) or will be transformed so that it is
 concurrently defined (we write these as $p_c$ for concurrent).
 
 For the purposes of describing and proving the correctness of the
-operationization transformation, we will assume that all transformed
+operationalization transformation, we will assume that all transformed
 predicates $p_d$ have two arguments where the first argument is moded
 as an input and the second is an output. That is, propositions $p_d^-$
 are declared as follows:
@@ -345,7 +345,7 @@ are declared as follows:
 & {\sf a} : \tau_1 \rightarrow \tau_2 \rightarrow {\sf prop}.\\
 & {\sf \#mode~a~{+}~{-}}.
 \end{align*}
-Without dependentcy, the two-place case is sufficient to for
+Without dependency, the two-place case is sufficient to for
 describing $n$-place relations.\footnote{As an example, to handle
   addition on natural numbers, defined as a three-place relation ${\sf
     add} : {\sf nat} \rightarrow {\sf nat} \rightarrow {\sf nat}
@@ -379,7 +379,7 @@ G & ::= p^-_d
     \mid p^+_\mpers \righti G
     \mid {!}D \righti G
 \end{align*}
-If {\it all} propositions are to reamin deductive, then the
+If {\it all} propositions are to remain deductive, then the
 propositions $p^-_c$ and $C$ are irrelevant, and this restriction
 describes all persistent, deductive specifications -- essentially, any
 specification that could be executed by the standard logic programming
@@ -458,9 +458,9 @@ $A^+_i,\ldots,A^+_n$.
 
 \noindent
 This operation is slightly more general than it needs to be to
-describe the transformation on signatures, becuause the substitution
+describe the transformation on signatures, because the substitution
 $\sigma$ will always just be the identity substitution ${\sf id}$.
-Non-identity substituions arise during the proof of correctness, which
+Non-identity substitutions arise during the proof of correctness, which
 is why we introduced them here.
 
 We have already given an example of the this basic operationalization
@@ -474,11 +474,7 @@ instance of this transformation.
 \subsection{Tail-recursion}
 \label{sec:trans-tail}
 
-It is possible 
-then we will get what is
-probabily fair to call the most boring possible substructural
-operational semantics: 
-
+The natural semantics 
 
 
 \begin{itemize}
@@ -539,8 +535,10 @@ operational semantics specification, shown in
 Figure~\ref{fig:sos-tailrecurstion} both without the tail-recursion
 optimization (left) and with the tail-recursion optimization (right). 
 
-The tail-recursion optimized translation is clearly superior for this
-example; 
+The tail-recursion optimized translation is definitely superior for
+this example. Concurrent proofs for the non-tail-recursion-optimized
+specification build up an enormous stack of useless copies of the
+proposition $(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})$:
 
 \begin{align*}
 & x_1{:}{\sf eval}\,\interp{e_1} \\
@@ -567,10 +565,10 @@ example;
 
 In contrast, the tail recursion optimized version on the right hand
 side of Figure~\ref{fig:sos-tailrecursion} takes half as many steps,
-and each step is smaller, simpler, and does a better job of actually
-capturing the linear computation that is actually involved in
-describing a big-step semantics using a small-step structural
-operational semantics:
+and each step is smaller, simpler, and the overall trace does a better
+job of actually capturing the linear computation that is actually
+involved in describing a big-step semantics using a small-step
+structural operational semantics:
 \[
 x_1{:}{\sf eval}\,\interp{e_1} 
  ~\leadsto~
@@ -590,7 +588,7 @@ z{:}{\sf retn}\,\interp{v}
 \subsection{Non-determinism and the natural semantics}
 
 For the purposes of illustration, we will extend the language of
-expressions with a nondeterminstic choice operator $e_1 \arb e_2$
+expressions with a nondeterministic choice operator $e_1 \arb e_2$
 (encoded in LF as ${\sf choose}\,\interp{e_1}\,\interp{e_2}$) and an
 extra expression ${\sf junk}$ that does not evaluate to anything: this
 ensures that stuck states are possible, as search for a $v$ such that
@@ -616,7 +614,7 @@ by committed choice (picking one of the two expressions $e_1$ or $e_2$
 to evaluate and never reconsidering that decision), by backtracking
 (attempting to evaluate one of $e_1$ or $e_2$, then attempting to
 evaluate the other one if that first choice gets stuck) or by
-breadth-first search (looking for derivaitions of $e_1$ and $e_2$ at
+breadth-first search (looking for derivations of $e_1$ and $e_2$ at
 the same time), then a backtracking backward-chaining interpreter or a
 breadth-first
 
@@ -661,17 +659,17 @@ XXX REREAD ANDERS'S PAPER
 
 To make a carefully-chosen analogy, various on-paper styles of
 specifying the operational semantics are well-known and visually
-recongizable.  To anyone literate in the conventions of programming
-languages researchers, a quick glance should be sufficent to classify
+recognizable.  To anyone literate in the conventions of programming
+languages researchers, a quick glance should be sufficient to classify
 the following two rules as natural semantics (or big-step semantics)
 for the call-by-value lambda calculus:
 
 
 Natural semantics are a clean, high-level, and declarative way of
-describing the semantics of a simple, pure programming langauges, but
+describing the semantics of a simple, pure programming languages, but
 they do not scale particularly well with the addition of effects like
 state and exceptions. Worse, natural semantics are mostly hopeless in
-the face of languages features that incoroprate nondeterminism or
+the face of languages features that incorporate nondeterminism or
 advanced control (such as first-class continuations). 
 
 Thus, a researcher interested in a simple, high level specification of
@@ -693,7 +691,7 @@ specifications nevertheless also have a set of common
 conventions. There are two states in an abstract machine
 specification, $k \rhd e$ (the expression $e$ is evaluating on top of
 stack $k$) and $k \lhd v$ (the value $v$ is being returned to the top
-of the stack $k$). The first rule says that, as a funtion $\lambda x.e$
+of the stack $k$). The first rule says that, as a function $\lambda x.e$
 is already a value, we proceed by returning it to the stack, whereas
 for an application $e_1\,e_2$, 
 
@@ -720,7 +718,7 @@ the design space
 of 
 
  the general idea
-of representing intermedeiate states of a computation as 
+of representing intermediate states of a computation as 
 substructural process states 
 
 This chapter represents joint work with Ian Zerny.
@@ -735,7 +733,7 @@ styles of presentation and {\it predict} what style(s) we should adopt
 based on what our goals are. I propose that different styles of
 \sls~specification can be productively classified in terms of the
 transformations that turn one classification style into another. Most
-transformations will not have inverses, so this methadology gives us a
+transformations will not have inverses, so this methodology gives us a
 formal notion of which styles are more expressive than others.
 Considering logical transformations also can lower the cost of
 mis-prediction. If one begins a development in an overly-restrictive
@@ -744,7 +742,7 @@ by an automatic transformation.
 
 The organizing principle that we put forth in this chapter and the
 next one is called the {\it logical correspondence}, by analogy with
-the {\it functional correspondance} of Ager, Danvy, Midtgaard, and
+the {\it functional correspondence} of Ager, Danvy, Midtgaard, and
 others~\cite{ager03functional,ager04functional,ager05functional,
   danvy08defunctionalized} in which existing styles of specification
 are related to each other by way of transformations on functional
@@ -758,7 +756,7 @@ specifications: the LF encodings of such specifications can generally
 be done just as well in LF or in the purely-persistent, non-modal
 fragment of \sls. It is not my purpose to advocate for natural
 semantics; recall that natural semantics were used to illustrate
-problems with {\it non}-modularity in langauge specification in
+problems with {\it non}-modularity in language specification in
 Section~\ref{sec:modularnonmodular}. Instead, we are trying to
 
 
@@ -784,7 +782,7 @@ reasonably illustrate
 \label{sec:mutable-storage}
 
 No check for pointer inequality! This is a fundamental restriction of
-the fact that we're using existential quantificaiton rather than some
+the fact that we're using existential quantification rather than some
 form of nominal quantification. (Hack due to Favonia and Bob, personal
 communication, but dates back earlier - was it one of Karl's papers?
 Cheney cites it in nominal abstraction.)
@@ -850,7 +848,7 @@ of our semantics as encoded
 
 If we just translate the {\it steps} portion of the semantics (using
 the tail-recursion optimizing translation), then we will get what is
-probabily fair to call the most boring possible substructural
+probably fair to call the most boring possible substructural
 operational semantics: 
 
 \smallskip
@@ -880,7 +878,7 @@ turns out that the usual set of techniques for adding state to a
 natural semantics break down, and discussing a \rowan-like logic with
 state remained a challenge for many years.\robnote{Figure out from
   Rowan what the recent work he told you about was.} Through the
-logical correspondance, it is easy to see why: the natural SSOS
+logical correspondence, it is easy to see why: the natural SSOS
 specification of \rowan~integrates both concurrent and deductive
 reasoning in an arbitrarily nested way. In fact, Figure XXX is the
 only SLS specification in this thesis that exhibits this form of
