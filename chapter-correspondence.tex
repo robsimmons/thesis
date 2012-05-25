@@ -58,6 +58,8 @@ propositions of positive type). These transformations have the effect
 of mapping natural semantics specifications into abstract machine
 specifications.
 
+This chapter represents joint work with Ian Zerny.
+
 \subsection*{Chapter outline}
 
 Three transformations that perform operationalizion are presented in
@@ -91,28 +93,73 @@ into the natural semantics specification; we explore a non-exhaustive
 selection of these features, including mutable storage, call-by-need
 evaluation, and recoverable falure.
 
-Finally, in Section~\ref{sec:othertransform}, we discuss some of the
-other applications of the operationalization transformations, in order
-to emphasize that 
+Finally, in Section~\ref{sec:othertransform}, we discuss the
+consequences of defining operationalization as a general
+transformation on \sls~specifications rather than a special-purpose
+transformation on natural semantics.
+
+% \begin{figure}[t]
+% \begin{minipage}[b]{0.45\linewidth}
+% \fbox{$e \Downarrow v$}
+
+% \bigskip
+
+% \[
+% \infer[{\sf ev/lam}]
+% {\lambda x. e \Downarrow \lambda x. e \mathstrut}
+% {}
+% \]\smallskip
+% \[
+% \infer[{\sf ev/app}]
+% {e_1\,e_2 \Downarrow v \mathstrut}
+% {e_1 \Downarrow \lambda x.e
+%  &
+%  e_2 \Downarrow v_2
+%  &
+%  [v_2/x]e \Downarrow v \mathstrut}
+% \]
+
+% \bigskip
+
+% \bigskip
+
+% \[
+% \infer[{\sf ev/choose1}]
+% {e_1 \arb e_2 \Downarrow v}
+% {e_1 \Downarrow v}
+% \]
+
+% \[
+% \infer[{\sf ev/choose2}]
+% {e_1 \arb e_2 \Downarrow v}
+% {e_2 \Downarrow v}
+% \]
+
+% \end{minipage}
+% \hspace{0.5cm}
+% \begin{minipage}[b]{0.55\linewidth}
+% \fvset{fontsize=\small,boxwidth=auto}
+% \VerbatimInput{sls/cbv-ev-arb.sls}
+% \end{minipage}
+% \caption{Natural semantics for the lambda calculus (call-by-value).}
+% \label{fig:ns}
+% \end{figure}
 
 \section{Logical transformation: operationalization}
 \label{sec:operationalization}
 
-\begin{figure}[t]
-\begin{minipage}[b]{0.5\linewidth}
-\fbox{$e \Downarrow v$}
+The intuition behind operationalization is rather simple: we examine
+the behavior of a deductive computation and then encode that
+operational intuition as a concurrent computation. 
 
-\medskip
-
+Before presenting the general transformation, we will motivate this
+transformation using the call-by-value natural semantics for the
+untyped lambda calculus:
 \[
 \infer[{\sf ev/lam}]
 {\lambda x. e \Downarrow \lambda x. e \mathstrut}
 {}
-\]
-
-\medskip
-
-\[
+\quad
 \infer[{\sf ev/app}]
 {e_1\,e_2 \Downarrow v \mathstrut}
 {e_1 \Downarrow \lambda x.e
@@ -121,28 +168,120 @@ to emphasize that
  &
  [v_2/x]e \Downarrow v \mathstrut}
 \]
+The natural semantics are moded with $e$ as an input and $v$ as an
+output, so it is meaningful to talk about being given a particular
+expression $e$ and searching for a $v$ such that $e \Downarrow v$ is
+derivable using deductive computation. Consider a recursive search
+procedure implementing this particular deductive computation:
+\begin{itemize}
+\item
+      If $e = \lambda x. e'$, 
+      it is possible to derive 
+      $\lambda x. e' \Downarrow \lambda x. e'$
+      with the rule ${\sf ev/lam}$.
+\item
+       If $e = e_1\,e_2$,
+       attempt to derive 
+       $e_1\,e_2 \Downarrow v$
+       using the rule ${\sf ev/app}$ by doing the following:
+    \begin{enumerate}
+    \item Search for a $v_1$ such that 
+          $e_1 \Downarrow v_1$ is derivable.
+    \item Assert that $v_1 = \lambda x.e'$ for some
+          $e'$; fail if it is not.
+    \item Search for a $v_2$ such that 
+          $e_2 \Downarrow v_2$ is derivable.
+    \item Search for a $v$ such that 
+          $[v_2/x]e \Downarrow v$ is derivable.
+    \end{enumerate}
+% \item
+%       If $e = e_1 \arb e_2$,
+%       attempt to derive $e_1 \arb e_2 \Downarrow v$ using
+%       the rule ${\sf ev/choose1}$ by searching for a 
+%       $v$ such that $e_1 \Downarrow v$ is derivable.
+% \item
+%       If $e = e_1 \arb e_2$,
+%       attempt to derive $e_1 \arb e_2 \Downarrow v$ using 
+%       the rule ${\sf ev/choose2}$ by searching for a 
+%       $v$ such that $e_2 \Downarrow v$ is derivable.  
+\end{itemize}
+%
+The goal of the operationalization transformation is to implement this
+deductive computation as a concurrent computation. The first step in
+doing so is to introduce two new ordered atomic propositions.  The
+proposition ${\sf eval}\,\interp{e}$ is the starting point, indicating
+that we want to search for a $v$ such that $e \Downarrow v$, and the
+proposition ${\sf retn}\,\interp{v}$ indicates the successful
+completion of this procedure. Therefore, searching for a $v$ such that
+$e \Downarrow v$ is derivable will be analagous to building a trace $T
+: x_e{:}{\sf eval}\,\interp{e} \leadsto^* x_v{:}{\sf
+  retn}\,\interp{e}$ with concurrent computation.
 
-\bigskip
+Representing the first case is straightforward: if we are evaluating
+$\lambda x.e$, then we have succeeded and can return $\lambda x.e$. 
+This is encoded in the rule ${\sf ev/lam}$. 
+\[
+{\sf ev/lam} : {\sf eval}\,({\sf lam}\,\lambda x.\,E\,x)
+   \lefti \{ {\sf retn}\,({\sf lam}\,\lambda x.\,E\,x) \}
+\]
+Because the second rule involves both recursion and multiple subgoals,
+we have to generalize our picture of the state to allow us to store a
+stack of unfinished work in the ordered context, growing out to the
+right. Our new understanding, then, is that contexts either have the
+form $x{:}{\sf eval}\,\interp{e}, \Delta$ or the form $x{:}{\sf
+  retn}\,\interp{v}, \Delta$. In the process of concurrently
+computaing a trace $x_e{:}{\sf eval}\,\interp{e_1\,e_2}, \Delta
+\leadsto^* x_r{:}{\sf retn}\,\interp{v}, \Delta$, each of the
+recursive calls to the search procedure will involve a subtrace of the
+form
+%
+\[x_e{:}{\sf eval}\,\interp{e'}, y{:}\istrue{A^-}, \Delta
+  \leadsto^*
+  x_r{:}{\sf retn}\,\interp{v'}, y{:}\istrue{A^-}, \Delta\]
+%
+where $A^-$ is a negative proposition that is prepared to interact
+with the final ${\sf retn}\,\interp{v'}$ proposition to kickstart the
+rest of the computation.
 
-\smallskip
-
-\end{minipage}
-\hspace{0.5cm}
-\begin{minipage}[b]{0.5\linewidth}
-\fvset{fontsize=\small,boxwidth=auto}
-\VerbatimInput{sls/cbv-ev1.sls}
-\end{minipage}
-\caption{Natural semantics for the lambda calculus (call-by-value).}
-\label{fig:ns}
-\end{figure}
-
-\cite{hannan92operational}
-
-
-Deductive computation versus concurrent computation 
-Section~\ref{sec:framework-logicprog}
-
-Deductive computation
+It's helpful to work backwards: in the fourth step, we have found
+$E\,x = \interp{e}$ and $V_2 = \interp{v_2}$, and the recursive call
+is to ${\sf eval}\,\interp{[v_2/x]e}$, which is the same thing as
+${\sf eval}\,(E\,V_2)$. If the recursive call successfully returns,
+the context will contain a proposition of the form ${\sf retn}\,V$
+where $V = \interp{v}$, and the search procedure as a whole will be
+complete with the answer being $v$.  Thus, the negative proposition
+that implements the continuation can be written as $(\forall v. {\sf
+  retn}\,v \lefti \{ {\sf retn}\,v \})$. The positive proposition that
+will create this subcomputation can be written as follows:
+\begin{align*}
+{\it Step_4}(E,V_2) & \equiv {\sf eval}\,(E\,V_2) 
+\fuse {\downarrow}(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})
+%
+\intertext{Moving backwards, in the third step we have a $E_2 =
+  \interp{e_2}$ that we were given and $E\,x = \interp{e}$ that we
+  have computed. The recursive call is to ${\sf
+    eval}\,\interp{e_2}$, and assuming that it completes, we need
+  to begin the fourth step. The positive proposition that will 
+  create this subcomputation can be written as follows:}
+%
+{\it Step_3}(E_2,E) & \equiv {\sf eval}\,E_2 
+\fuse {\downarrow}(\forall v. {\sf retn}\,v_2 \lefti \{ {\it Step_4}(E,v_2) \})
+%
+\intertext{Finally, the first two steps can be handled together. We have
+$E_1 = \interp{e_1}$ and $E_2 = \interp{e_2}$, and when we . Once the
+recursive call completes, we can enforce that the returned value has
+the form $\interp{\lambda x.e}$ in the continuation before proceeding
+to the continuation.}
+{\it Step_{1,2}}(E_1, E_2) & \equiv {\sf eval}\,E_1
+\fuse {\downarrow}(\forall e. {\sf retn}\,({\sf lam}\,\lambda x.\,e\,x)
+\lefti \{ {\it Step_3}(E_2, e)\})
+\end{align*}
+Thus, the rule implementing this entire portion of the search
+procedure is ${\sf eval}\,({\sf app}\,E_1\,E_2) \righti \{ {\it
+  Step_{1,2}}(E_1, E_2) \}$. The \sls~encoding of our example natural
+semantics is shown in Figure~\ref{fig:example-transform-cbv} alongside
+the transformed specification, which has the form of an ordered
+abstract machine semantics.
 
 \begin{figure}
 
@@ -153,11 +292,339 @@ Deductive computation
 \BVerbatimInput{sls/cbv-ev-ssos.sls}
 
 \caption{A natural semantics for CBV and the corresponding abstract machine.}
+\label{fig:example-transform-cbv}
 \end{figure}
 
+The intuitive connection between natural semantics specifications and
+concurrent specifications has been explored previously and
+independently by Schack-Nielson \cite{schacknielsen07induction} and by
+Cruz and Favonia \cite{cruz12parallel}; Schack-Nielson proves the
+equivalence of the two specifications, whereas Cruz and Favonia used
+the connection informally. The contribution of this chapter is to
+describe a general transformation (of which
+Figure~\ref{fig:example-transform-cbv} is one instance) and to prove
+this transformation correct in general. From the other direction,
+Hannan and Miller \cite{hannan92operational} and Ager
+\cite{ager04natural} have also proposed the idea of operationalizing
+natural semantics specifications as abstract machines by provably
+correct and general transformatins on logical specifications (in the
+case of Hannan and Miller) and the special-purpose framework of
+L-attributed natural semantics (in the case of Ager). The major
+difference in this case is that oth lines of work result in {\it
+  deductive} specifications of abstract machines. Our translation into
+concurrent specification has the advantage of explosing parallelism,
+as demonstrated in Section~\ref{sec:trans-par} below, and also opens
+up specifications to the modular inclusion of stateful and concurrent
+features, as we will discuss in
+Section~\ref{sec:richer-ordered-abstract}.
+
+In Section~\ref{sec:trans-subset} we will present the subset of
+specifications that are transformable, in
+Section~\ref{sec:trans-basic} we will give the basic transformation
+and prove the transformation correct, and in
+Sections~\ref{sec:trans-tail}~and~\ref{sec:trans-par} provide
+tail-recursive and parallelism-enabling variants of the transformation
+(respectively).
+
+\subsection{Transformable specifications}
+\label{sec:trans-subset}
+
+The starting point for the operationalization transformation is a an
+deductive specification that is well-moded in the sense described in
+Section~\ref{sec:framework-modes}. Every declared negative predicate
+will either reamin defined by deductive proofs (we write these as
+$p_d^-$, $d$ for deductive) or will be transformed so that it is
+concurrently defined (we write these as $p_c$ for concurrent).
+
+For the purposes of describing and proving the correctness of the
+operationization transformation, we will assume that all transformed
+predicates $p_d$ have two arguments where the first argument is moded
+as an input and the second is an output. That is, propositions $p_d^-$
+are declared as follows:
+\begin{align*}
+& {\sf a} : \tau_1 \rightarrow \tau_2 \rightarrow {\sf prop}.\\
+& {\sf \#mode~a~{+}~{-}}.
+\end{align*}
+Without dependentcy, the two-place case is sufficient to for
+describing $n$-place relations.\footnote{As an example, to handle
+  addition on natural numbers, defined as a three-place relation ${\sf
+    add} : {\sf nat} \rightarrow {\sf nat} \rightarrow {\sf nat}
+  \rightarrow {\sf type}$ with its usual mode (${\sf
+    add}~{+}~{+}~{-}$), we define a unique type ${\sf add\_in}$ with
+  one binary constructor ${\sf add\_c} : {\sf nat} \rightarrow {\sf
+    nat} \rightarrow {\sf add\_in}$. Then we can declare (${\sf add'}
+  : {\sf add\_in} \rightarrow {\sf nat} \rightarrow {\sf type}$) with
+  mode (${\sf add'}~{+}~{-}$).}  It should be possible to handle
+dependent propositions (that is, those with declarations of the form
+${\sf a} : \Pi x{:}\tau_1.\,\tau_2(x) \rightarrow {\sf type}$) but we
+will not do so here.
+
+The restriction on signatures furthermore enforces that all rules must
+be of the form ${\sf r} : C$ or ${\sf r} : D$, where $C$ and $E$ are
+refinements of the negative propositions of \sls~that are defined as
+follows:
+\begin{align*}
+C & ::= p^-_{c} 
+    \mid \forall x{:}\tau.\, C
+    \mid p^+_\mpers \righti C
+    \mid {!}p^-_c \righti C
+    \mid {!}G \righti C \\
+D & ::= p^-_{d}
+    \mid \forall x{:}\tau.\, D
+    \mid p^+_\mpers \righti D
+    \mid {!}p^-_c \righti D
+    \mid {!}G \righti C \\
+G & ::= p^-_d 
+    \mid \forall x{:}\tau.\, G
+    \mid p^+_\mpers \righti G
+    \mid {!}D \righti G
+\end{align*}
+If {\it all} propositions are to reamin deductive, then the
+propositions $p^-_c$ and $C$ are irrelevant, and this restriction
+describes all persistent, deductive specifications -- essentially, any
+specification that could be executed by the standard logic programming
+interpretation of LF \cite{pfenning98elf}. On the other hand, if all
+propositions are to be transformed, then the propositions $p^-_d$ and
+$D$ are irrelevant and this restriction amounts to restricting
+specifications to the Horn fragment.
+
+All propositions $C$ are equivalent (at the level of synthetic
+inference rules) to propositions of the form $\forall
+\overline{x_0}\ldots \forall \overline{x_n}. A^+_n \righti \ldots
+\righti A^+_1 \righti {\sf a}\,t_{0}\,t_{n-1}$,
+where the $\forall \overline{x_i}$ are shorthand for a series of
+universal quantifiers $\forall {x_{i1}}{:}{\tau_{i1}} \ldots \forall
+{x_{\it ik}}{:}{\tau_{\it ik}}$ and where each variable in
+$\overline{x_i}$ does not appear in $t_0$ (unless $i = 0$)
+nor in any $A^+_i$ with $j < i$ but does appear in either $A^+_i$ (or
+$t_0$ if $i = 0$). Therefore, when we consider moded proof
+search, the variables bound in $\underline{x_0}$ are all fixed by the
+query and those bound in the other $\underline{x_i}$ are all fixed by
+the $i^{\rm th}$ premise.
+
+\subsection{Basic transformation}
+\label{sec:trans-basic}
+
+The basic operationalization transformation operates on signatures,
+$\transbasic{\Sigma}$ that fall in the set above. We will first give
+the transformation on signatures, though the most important part, the
+transformation declarations ${\sf r} : C$, will be presented
+afterwards.
+
+\begin{itemize}
+\item $\transbasic{\cdot} = \cdot$
+\item $\transbasic{\Sigma, {\sf a} : \tau_1 \rightarrow \tau_2
+    \rightarrow {\sf prop}} = \transbasic{\Sigma}, {\sf eval\_a} :
+  \tau_1 \rightarrow {\sf prop\,ord}, {\sf retn\_a} : \tau_2
+  \rightarrow {\sf prop\,ord}$ \\ {\it (if $\sf a$ is one of the
+    predicates that we are translating)}
+\item $\transbasic{\Sigma, {\sf a} : K} = \transbasic{\Sigma}, {\sf a}
+  : K$ {\it (otherwise)}
+\item $\transbasic{\Sigma, {\sf c} : \tau} = \transbasic{\Sigma}, {\sf
+    c} : \tau$ 
+\item $\transbasic{\Sigma, {\sf r} : C} = \transbasic{\Sigma}, {\sf r}
+  : {\sf eval\_a}\,t_0 \lefti \llbracket A^+_1, \ldots, A^+_n
+  \rrbracket (t_{n+1}, {\sf id})$ \\ {\it (where $C$ is equivalent
+    to $\forall \overline{x_0}\ldots \forall \overline{x_n}. A^+_n
+    \righti \ldots \righti A^+_1 \righti {\sf a}\,t_{0}\,t_{n+1}$)}
+\item $\transbasic{\Sigma, {\sf r} : D} = \transbasic{\Sigma}, {\sf r}
+  : D'$\\{\it (where $D'$ is the proposition $D$ where all instances of
+  $p^-_c = {\sf a}\,t_1\,t_2$ have been replaced by ${\sf
+    eval\_a}\,t_1 \lefti \{ {\sf retn\_a}\,t_2 \}$)}
+\end{itemize}
+
+The transformation of a proposition $C$ of the form $\forall
+\overline{x_0}\ldots \forall \overline{x_n}. A^+_n \righti \ldots
+\righti A^+_1 \righti {\sf a}\,t_{0}\,t_{n+1}$ (or an equivalent form)
+involves the definition
+$\opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma}$, where $\sigma$
+substitutes for variables in $\overline{x_j}$ for $j < i$. The
+function is defined inductively on the length of the sequence
+$A^+_i,\ldots,A^+_n$.
+
+\begin{itemize}
+\item $\opbasic{}{t_{n+1}}{\sigma} = \{ {\sf retn\_a}\,(\sigma{t_{n+1}}) \}$
+\item $\opbasic{p^+_\mpers,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma} 
+  = \forall \overline{x_i}.\, \sigma{p^+}_\mpers \lefti \opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma}$
+\item $\opbasic{{!}p^-_c,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma}$
+  \\
+  $~ \qquad = \{ {\sf eval\_b}\,({\sigma}t^{\it in}_i) \fuse
+  (\forall\overline{x_i}.\, {\sf retn\_b}\,(\sigma{t^{\it out}_i})
+  \lefti \opbasic{A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma}) \}$\\
+  {\it (where $p^-_c$ is ${\sf b}\,t^{\it in}_i\,t^{\it out}_i$)}
+\item $\opbasic{{!}G,A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma}
+  = \forall \overline{x_i}.\, {!}\sigma{G} \lefti \opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma}$
+\end{itemize}
+
+\noindent
+This operation is slightly more general than it needs to be to
+describe the transformation on signatures, becuause the substitution
+$\sigma$ will always just be the identity substitution ${\sf id}$.
+Non-identity substituions arise during the proof of correctness, which
+is why we introduced them here.
+
+We have already given an example of the this basic operationalization
+transformation, as Figure~\ref{fig:example-transform-cbv} is an
+instance of this transformation.
+
+\subsubsection{Correctness}
+
+
+
 \subsection{Tail-recursion}
+\label{sec:trans-tail}
+
+It is possible 
+then we will get what is
+probabily fair to call the most boring possible substructural
+operational semantics: 
+
+
+
+\begin{itemize}
+\item $\opbasic{{!}{\sf a}\,t^{\it in}_n\,t_{n+1}}{t_{n+1}}{\sigma} 
+  = \{{\sf retn\_a}\,(t^{\it in}_n)\}$
+\\
+  {\it (where $t_{n+1}$ is fully general)}
+\item $\opbasic{{!}p^-_c,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma}$
+  \\
+  $~ \qquad = \{ {\sf eval\_b}\,({\sigma}t^{\it in}_i) \fuse
+  (\forall\overline{x_i}.\, {\sf retn\_b}\,(\sigma{t^{\it out}_i})
+  \lefti \opbasic{A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma}) \}$\\
+  {\it (where $p^-_c$ is ${\sf b}\,t^{\it in}_i\,t^{\it out}_i$ and
+    either ${\sf a} \neq {\sf n}$, $i < n$, $t^{\it out}_n \neq t_{n+1}$, or
+    $t_{n+1}$ is not fully general)}
+\end{itemize}
+
+\subsubsection{Example}
+
+A dramatic illustration of tail-call optimization can be given if we
+consider a big-step evaluation function that is based on a small-step
+structural operational semantics (SOS) specification. SOS
+specifications involve an inductively proposition encoding single-step
+evaluation ${\sf steps} : {\sf exp} \rightarrow {\sf exp} \rightarrow
+{\sf prop}$ (moded ${\sf exp}\,{+}\,{-}$), as well as an is-value
+function ${\sf value} : {\sf exp} \rightarrow {\sf prop}$ (moded ${\sf
+  value}\,{+}$). We will not define these propositions here, but 
+we do so later on in Section~\ref{}.
+
+Given the ${\it steps}$ predicate, it is easy to define big step
+evaluation ${\sf ev}\,\interp{e}\,\interp{v}$ as a series of small
+steps:
+
+\smallskip
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/cbv-sos-steps.sls}
+\smallskip
+
+\begin{figure}
+\begin{minipage}[b]{0.55\linewidth}
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/cbv-sos-proc2.sls}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.45\linewidth}
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/cbv-sos-proc.sls}
+\end{minipage}
+\label{fig:sos-tailrecursion}
+\caption{The transformation of a trivial big-step semantics, both
+  without (left) and with (right) tail-recursion optimization.}
+\end{figure}
+
+Running this specification through the operationalization
+transformation and only operationalizing the ${\sf ev}$ predicate
+generates what I consider to be the strictly most boring substructural
+operational semantics specification, shown in
+Figure~\ref{fig:sos-tailrecurstion} both without the tail-recursion
+optimization (left) and with the tail-recursion optimization (right). 
+
+The tail-recursion optimized translation is clearly superior for this
+example; 
+
+\begin{align*}
+& x_1{:}{\sf eval}\,\interp{e_1} \\
+\leadsto ~ & x_2{:}{\sf eval}\,\interp{e_2}, 
+  y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} \\
+\leadsto ~ & x_3{:}{\sf eval}\,\interp{e_3}, 
+  y_2{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})}, 
+  y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} \\
+\leadsto^* ~ & x_n{:}{\sf eval}\,\interp{v}, 
+  y_{n-1}{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})}, 
+  \ldots,
+  y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} \\
+\leadsto ~ & z_n{:}{\sf retn}\,\interp{v}, 
+  y_{n-1}{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})}, 
+  \ldots,
+  y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} \\
+\leadsto^* ~ & z_3{:}{\sf retn}\,\interp{v}, 
+  y_2{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})}, 
+  y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} \\
+\leadsto ~ & z_2{:}{\sf retn}\,\interp{v}, 
+  y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} \\
+\leadsto ~ & z_1{:}{\sf retn}\,\interp{v}
+\end{align*}
+
+In contrast, the tail recursion optimized version on the right hand
+side of Figure~\ref{fig:sos-tailrecursion} takes half as many steps,
+and each step is smaller, simpler, and does a better job of actually
+capturing the linear computation that is actually involved in
+describing a big-step semantics using a small-step structural
+operational semantics:
+\[
+x_1{:}{\sf eval}\,\interp{e_1} 
+ ~\leadsto~
+x_2{:}{\sf eval}\,\interp{e_2}
+ ~\leadsto~
+x_3{:}{\sf eval}\,\interp{e_3}
+ ~\leadsto^*~
+x_n{:}{\sf eval}\,\interp{v}
+ ~\leadsto~ 
+z{:}{\sf retn}\,\interp{v}
+\]
+
 
 \subsection{Parallelism}
+\label{sec:trans-par}
+
+\subsection{Non-determinism and the natural semantics}
+
+For the purposes of illustration, we will extend the language of
+expressions with a nondeterminstic choice operator $e_1 \arb e_2$
+(encoded in LF as ${\sf choose}\,\interp{e_1}\,\interp{e_2}$) and an
+extra expression ${\sf junk}$ that does not evaluate to anything: this
+ensures that stuck states are possible, as search for a $v$ such that
+$(\lambda x.\,x)\,{\sf junk} \Downarrow v$ is derivable will fail.
+
+\begin{figure}[t]
+\begin{minipage}[b]{0.45\linewidth}
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/cbv-arb.sls}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.55\linewidth}
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/cbv-arb-ssos.sls}
+\end{minipage}
+\caption{Natural semantics for the lambda calculus (call-by-value).}
+\label{fig:ns-arb}
+\end{figure}
+
+About the only thing we specified was parallel search for successful
+proofs or not: we can handle the evaluation of $e_1 \arb e_2$ either
+by committed choice (picking one of the two expressions $e_1$ or $e_2$
+to evaluate and never reconsidering that decision), by backtracking
+(attempting to evaluate one of $e_1$ or $e_2$, then attempting to
+evaluate the other one if that first choice gets stuck) or by
+breadth-first search (looking for derivaitions of $e_1$ and $e_2$ at
+the same time), then a backtracking backward-chaining interpreter or a
+breadth-first
+
+. However
+
+The operationalization transformation 
+
+
 
 \section{Logical transformation: defunctionalization}
 \label{sec:defunctionalization}
