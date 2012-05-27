@@ -92,15 +92,15 @@ Figure~\ref{fig:linear} presents a standard sequent calculus for
 linear logic, in particular the {\it multiplicative, exponential}
 fragment of intuitionistic linear logic (or {\it MELL}), so called
 because the connectives $\one$, $A \tensor B$, and $A \lolli B$ are
-considered to be the {\it mulitplicative} connectives, and the
-connective ${!}A$ is the {\it exponential} connective of intuitionstic
+considered to be the {\it multiplicative} connectives, and the
+connective ${!}A$ is the {\it exponential} connective of intuitionistic
 linear logic.\footnote{In this chapter we will mostly ignore the {\it
-    additive} connectives of intuitionstic linear logic $\zero$, $A
+    additive} connectives of intuitionistic linear logic $\zero$, $A
   \oplus B$, $\top$, and $A \with B$ and will entirely ignore the {\it
     first-order} connectives $\exists x.A$ and $\forall x.A$. The
   ``why not'' modality $\mbox{?}A$ from classical linear logic is
   sometimes treated as a second exponential connective in
-  intuitionstic linear logic \cite{chang03judgmental}, but I will not
+  intuitionistic linear logic \cite{chang03judgmental}, but I will not
   consider it at all in this thesis.} It corresponds most closely to
 Barber's dual intuitionistic linear logic \cite{barber96dual}, but
 also to Andreoli's dyadic system \cite{andreoli92logic} and Chang et
@@ -132,14 +132,14 @@ Written as a series of transitions, the picture looks like this:
 \begin{array}{ccccc}
 \begin{array}{c}
 \mbox{\it \$6 (1)}\medskip\\ 
-\mbox{\it battery-free robot (1)} \medskip\\ 
+\mbox{\it battery-less robot (1)} \medskip\\ 
 \mbox{\it turn \$6 into a battery}\\
 \mbox{\it (all you want)}
 \end{array}
 & \leadsto &
 \begin{array}{c}
 \mbox{\it battery  (1)}\medskip\\ 
-\mbox{\it battery-free robot (1)} \medskip\\ 
+\mbox{\it battery-less robot (1)} \medskip\\ 
 \mbox{\it turn \$6 into a battery}\\
 \mbox{\it (all you want)}
 \end{array}
@@ -180,7 +180,7 @@ Chirmar's 1995 Ph.D. thesis, has sought to use linear logic as a {\it
 
 Generally speaking, logical frameworks use the {\it structure} of
 proofs in a logic (like linear logic) to describe the structures we're
-really interested in (like the process of obtaining a robot).  There
+interested in (like the process of obtaining a robot).  There
 are two related reasons why linear logic as described in
 Figure~\ref{fig:linear} is not immediately useful as a logical
 framework. First, the structure of the derivation in
@@ -306,51 +306,110 @@ polarized intuitionistic persistent logic
 asynchronous rules as confluent rather than fixed, (a point that will
 be discussed in Section~\ref{sec:confluent-v-fixed}).
 
-\subsection{Polarization}
+\subsection{Polarity}
 \label{sec:linpolar}
 
 The first step in describing a focused sequent calculus is to classify
-connectives into two groups.  Some connectives, such as linear
-implication $A \lolli B$, are called {\it asynchronous} because their
-right rules can always be applied eagerly, without backtracking,
-during bottom-up proof search. Other connectives, such as disjunction
-$A \tensor B$, are called {\it synchronous} because their right rules
-cannot be applied eagerly. For instance, if we are trying to prove
-$\seq{\Gamma}{A \tensor B}{B \tensor A}$, the ${\tensor}R$ rule cannot
-be applied eagerly; we first have to decompose $A \tensor B$ on the
-left using the ${\tensor}L$ rule.\footnote{Andreoli dealt with a
+connectives into two groups \cite{andreoli92logic}.  Some connectives,
+such as linear implication $A \lolli B$, are called {\it asynchronous}
+because their right rules can always be applied eagerly, without
+backtracking, during bottom-up proof search. Other connectives, such
+as multiplicative conjunction $A \tensor B$, are called {\it
+  synchronous} because their right rules cannot be applied
+eagerly. For instance, if we are trying to prove $\seq{\Gamma}{A
+  \tensor B}{B \tensor A}$, the ${\tensor}R$ rule cannot be applied
+eagerly; we first have to decompose $A \tensor B$ on the left using
+the ${\tensor}L$ rule. Andreoli's designation makes more sense in a
+one-sided classical sequent calculus.\footnote{Andreoli dealt with a
   one-sided classical sequent calculus; in intuitionistic logics, it
-  is common to call asynchronous connectives {\it right}-asynchronous
-  and {\it left}-synchronous. Similarly, it is common to call
-  synchronous connectives {\it right}-synchronous and {\it
-    left}-asynchronous.
+  is common to call asynchronous or negative connectives {\it
+    right}-asynchronous and {\it left}-synchronous. Similarly, it is
+  common to call synchronous connectives {\it right}-synchronous and
+  {\it left}-asynchronous.} For our purposes, it is more helpful to
+call the synchronous connectives {\it positive} ($\zero$, $\oplus$,
+$\one$, and $\otimes$ in full propositional linear logic) and call the
+asynchronous connectives {\it negative} ($\lolli$, $\top$ and $\with$
+in full propositional linear logic); this assignment is called the
+proposition's {\it polarity}. Each atomic proposition must be assigned
+to have only one polarity, though this assignment can be made
+arbitrarily.
 
-  Synchronicity, a property of connectives, is closely connected to
-  (and sometimes conflated with) a property of rules called {\it
-    invertibility}; a rule is invertible if the conclusion of the rule
-  implies the premises. So ${\lolli}R$ is invertible
-  ($\seq{\Gamma}{\Delta}{A \lolli B}$ implies $\seq{\Gamma}{\Delta,
-    A}{B}$) but ${\lolli}L$ is not ($\seq{\Gamma}{\Delta, A \lolli
-    B}{C}$ does not imply that $\Delta = \Delta_1, \Delta_2$ such that
-  $\seq{\Gamma}{\Delta_1}{A}$ and $\seq{\Gamma}{\Delta_2, B}{C}$).
-  Rules that can be applied eagerly need to be invertible, so
-  asynchronous connectives have invertible right rules and synchronous
-  connectives have invertible left rules. Therefore, in the literature
-  a common synonym for asynchronous/negative is {\it
-    right-invertible}, and the analogous synonym for
-  synchronous/positive is {\it left-invertible}.}  The nontrivial
-result of focusing is that it is possible to separate a proof into
-phases: inversion phases in which all asynchronous rules are applied
-exhaustively, and focused phases where synchronous rules are applied
-repeatedly and exhaustively to a single proposition (the proposition
-{\it in focus}).
+The nontrivial result of focusing is that it is possible to separate a
+proof into phases: inversion phases in which any positive proposition
+on the left and any negative proposition on the right is decomposed
+eagerly and exhaustively using invertible
+rules,\footnote{Synchronicity or polarity, a property of connectives, is
+  closely connected to (and sometimes conflated with) a property of
+  rules called {\it invertibility}; a rule is invertible if the
+  conclusion of the rule implies the premises. So ${\lolli}R$ is
+  invertible ($\seq{\Gamma}{\Delta}{A \lolli B}$ implies
+  $\seq{\Gamma}{\Delta, A}{B}$) but ${\lolli}L$ is not
+  ($\seq{\Gamma}{\Delta, A \lolli B}{C}$ does not imply that $\Delta =
+  \Delta_1, \Delta_2$ such that $\seq{\Gamma}{\Delta_1}{A}$ and
+  $\seq{\Gamma}{\Delta_2, B}{C}$).  Rules that can be applied eagerly
+  need to be invertible, so asynchronous connectives have invertible
+  right rules and synchronous connectives have invertible left
+  rules. Therefore, in the literature a common synonym for
+  asynchronous/negative is {\it right-invertible}, and the analogous
+  synonym for synchronous/positive is {\it left-invertible}.}  and
+focused phases where a single proposition (the proposition {\it in
+  focus}: either a positive proposition in right focus or a negative
+proposition in left focus) is decomposed repeatedly and exhaustively
+using generally non-invertible rules.
 
-We call the asynchronous connectives {\it negative} ($\lolli$, $\top$
-and $\with$ in full propositional linear logic) and call the
-synchronous connectives {\it positive} ($\zero$, $\oplus$, $\one$, and
-$\otimes$ in full propositional linear logic). Each atomic proposition
-must be assigned to be either positive or negative, though this
-assignment can be arbitrary. At this point, there is an important
+If consider this discipline applied to our robot example where all
+atoms have been assigned positive polarity, we would begin with an
+inversion phase, decomposing the negative implication on the right and
+the positive tensor and exponential on the left:
+\[
+\infer[{\lolli}_R]
+{\seq{\cdot}{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}) \otimes
+                    {\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot}) \lolli {\sf robot}}}
+{\infer[{\otimes}_L]
+{\seq{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}) \otimes
+                    {\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
+{\infer[{!}_L]
+{\seq{\cdot}{{!}({\sf 6bucks} \lolli {\sf battery}),
+                    {\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
+{\infer[{\otimes}_L]
+{\seq{\Gamma}{{\sf 6bucks} \otimes 
+                    ({\sf battery} \lolli {\sf robot})}{{\sf robot}}}
+{\deduce
+{\seq{\Gamma}{{\sf 6bucks}, 
+                    {\sf battery} \lolli {\sf robot}}{{\sf robot}}}
+{\vdots}}}}}
+\]
+Then, we must pick a negative proposition on the left or a positive
+proposition on the right as our focus in order to proceed. The right
+choice in this context is to pick the negative proposition ${\sf
+  6bucks} \lolli {\sf battery}$ in $\Gamma$ and to decompose it using
+the non-invertible rule ${\lolli}_L$.
+\[
+\infer[{\it copy}]
+{\deduce[\vdots]{}{\seq{\Gamma}{{\sf 6bucks}, 
+                    {\sf battery} \lolli {\sf robot}}{{\sf robot}}}}
+{\infer[{\lolli}_L]
+{\seq{\Gamma}{{\sf 6bucks}, 
+                    {\sf battery} \lolli {\sf robot}, 
+   {\sf 6bucks} \lolli {\sf battery}}{{\sf robot}}}
+{\infer[{\it init}]
+ {\seq{\Gamma}{{\sf 6bucks}}{{\sf 6bucks}}}
+ {}
+ &
+ \deduce
+ {\seq{\Gamma}{{\sf battery} \lolli {\sf robot}, 
+   {\sf battery}}{{\sf robot}}}
+ {\vdots}}}
+\]
+A focused phase below an inversion phase is called a {\it bipole} by
+Andreoli, a point we will return to in Section~\ref{sec:linsynthetic}.
+
+\subsection{Polarization}
+
+At this point, there is an important
 choice to make. One way forward is to treat positive and negative
 propositions as a syntactic refinements of the set of all
 propositions, in which case we end up focusing a standard
@@ -373,7 +432,12 @@ expressed. This extra expressiveness won't help us in the design of
 logical frameworks, but the use of shifts simplifies the proof of
 identity expansion in Section~\ref{sec:linindentity} and the proof of
 completeness in Section~\ref{sec:lincorrectness}, so we will describe
-focusing for a polarized linear logic with shifts.
+focusing for a polarized linear logic with shifts, starting with the 
+following grammar of polarized propositions, positive and negative:
+\begin{align*}
+A^+ & ::= p^+ \mid {\downarrow}A^- \mid {!}A^- \mid \one \mid A^+ \tensor B^+\\
+A^- & ::= p^- \mid {\uparrow}A^+ \mid A^+ \lolli B^-
+\end{align*}
 
 \input{figs/fig-lin-shift}
 
@@ -431,27 +495,33 @@ By adding a side condition to the three rules ${\it focus}_R$, ${\it
 the succeedant $U$ can contain an in-focus proposition $[A^+]$ or
 $[A^-]$, derivations can maintain the invariant that there is always
 at most one proposition in focus, effectively restoring the situation
-in which there are three distinct judgments. From this point on, we
-will only consider sequents with at most one focus; we will write
-$\underline{\Delta}$ or $\underline{U}$ to indicate when $\Delta$ may
-contain a focus $[A^-]$ and when $U$ may be a focus $[A^+]$;
-the sequent form $\mildseq{\Gamma}{\underline{\Delta}}{\underline{U}}$
-will always be restricted to contain at most one focus.  Pfenning, who
-developed this construction in \cite{pfenning12chaining}, calls this
-the {\it focusing constraint}, and writes $\delta$ and $\gamma$
-instead of $\underline{\Delta}$ and $\underline{U}$.
+in which there are three distinct judgments.\footnote{Treating these
+  extra conditions as a side condition is strictly a cosmetic matter;
+  we don't want to have to write them constantly in proofs.}  From
+this point on, we will only consider sequents with at most one focus;
+we will write $\underline{\Delta}$ or $\underline{U}$ to indicate when
+$\Delta$ may contain a focus $[A^-]$ and when $U$ may be a focus
+$[A^+]$; the sequent form
+$\mildseq{\Gamma}{\underline{\Delta}}{\underline{U}}$ will always be
+restricted to contain at most one focus.  Pfenning, who developed this
+construction in \cite{pfenning12chaining}, calls this the {\it
+  focusing constraint}, and writes $\delta$ and $\gamma$ instead of
+$\underline{\Delta}$ and $\underline{U}$.
 
 The focusing constraint alone
 gives us what Pfenning calls a {\it chaining} logic
 \cite{pfenning12chaining} and which Laurent calls a {\it weakly
-  focused} logic \cite{laurent04proof}.\footnote{This is not what I
-  called a weakly focused logic \cite{simmons09weak}. That weakly
+  focused} logic \cite{laurent04proof}.\footnote{Unfortunately,
+  I made the meaning of ``weak focusing'' less precise by calling
+  a different sort of logic weakly focused  in \cite{simmons09weak}. 
+  That weakly
   focused system had an additional restriction that invertible rules
-  could not be applied when any other proposition was in focus; this
-  corresponded to what Laurent called a strongly $+$-focused logic.
-  Oops.}
-We obtain a fully focused logic by further restricting these three
-rules so that they only apply when the sequent below the line is {\it
+  could {\it not} be applied when any other proposition was in focus; this
+  corresponds to what Laurent called a strongly $+$-focused logic.}
+We obtain a fully focused logic by further restricting the three
+critical rules ${\it focus}_R$, ${\it
+  focus}_L$, and ${\it copy}$ 
+so that they only apply when the sequent below the line is {\it
   stable}.  A sequent $\mildseq{\Gamma}{\Delta}{U}$ is stable if the
 context $\Delta$ contains only negative propositions $A^-$ and
 suspended positive propositions $\langle A^+ \rangle$ and the
@@ -566,7 +636,8 @@ Unlike cut admissibility, which we discuss in
 Section~\ref{sec:lincut}, both of the focal substitution principles
 are straightforward inductions over the structure of the derivation
 containing the suspended proposition. In the Structural
-Focalization development, I discuss how, if we encode the focused
+Focalization development \cite{simmons11structural}, 
+I discuss how, if we encode the focused
 sequent calculus for persistent logic in LF, a suspended positive
 premise can be encoded as a hypothetical right focus. This encoding
 makes the ${\it id}^+$ rule an instance of the hypothesis rule
@@ -593,6 +664,12 @@ which we indicate using a dashed line:
  \mildseq{\Gamma}{\Delta', [A^-]}{U}}
 \]
 
+Note the way in which these admissible substitution principles
+generalize the logic: the ${\it subst}^+$ or ${\it subst}^-$ are the
+only rules we have discussed that allow us to introduce non-atomic
+suspended propositions, because only {\it atomic} suspended propositions are
+introduced explicitly by rules $\eta^+$ and $\eta^-$.
+
 \subsection{Identity expansion}
 \label{sec:linindentity}
 
@@ -601,7 +678,7 @@ two places: in the identity rules, which we have just discussed
 and connected with the focal substitution principles, and in
 the rules marked $\eta^+$ and $\eta^-$, which are also the only
 mention of atomic propositions in the presentation. It is here that we
-need to make an absolutely critical shift of perspective from
+need to make an critical shift of perspective from
 unfocused to focused logic. In an unfocused logic, the rules
 nondeterministically break down propositions, and the initial rule
 {\it init} puts an end to this process when an atomic proposition is
@@ -628,7 +705,13 @@ atomic suspension rules $\eta^+$ and $\eta^-$ are instances of an admissible
 {\mildseq{\Gamma}{\Delta}{A^-}}
 {\mildseq{\Gamma}{\Delta}{\langle A^- \rangle}}
 \]
-Or, phrased as a theorem:
+In other words, the identity expansion theorem allows us to pretend that
+the $\eta^+$ and $\eta^-$ rules apply to {\it arbitrary} propositions,
+not just atomic propositions. The atomic propositions must be handled
+by an explicit rule, but the general case is admissible given that
+rule.
+
+Phrased as an admissible rule:
 
 \bigskip
 \begin{theorem}[Identity expansion]~
@@ -701,7 +784,7 @@ Focalization development.\footnote{The main ``untidy'' aspect of
   and right commutative cuts is discussed in Section~\ref{sec:ord-cut}.)
 
   In addition to this duplication, the proof of part 4 is almost
-  identitical in form to the proof of part 5, a defect that will also
+  identical in form to the proof of part 5, a defect that will also
   be addressed in the next chapter.}
 %
 The only important caveat about 
@@ -798,15 +881,16 @@ then $\seq{\Gamma^\circ}{\underline{\Delta}^\circ}{\underline{U}^\circ}$.
 \end{proof}
 
 \begin{theorem}[Completeness of focusing]\label{thm:linfoccomplete}
-If $\seq{\Gamma^\circ}{\Delta^\circ}{C^\circ}$, where $\Delta$ and $U$ are
+If $\seq{\Gamma^\circ}{\Delta^\circ}{U^\circ}$, where $\Delta$ and $U$ are
 stable,
-then $\mildseq{\Gamma}{\Delta}{C}$. 
+then $\mildseq{\Gamma}{\Delta}{U}$. 
 \end{theorem}
 
 \begin{proof}
   By induction on the first given derivation. Each rule in 
   Figure~\ref{fig:linear} corresponds to one {\it unfocused admissibility 
-  lemma} that we must prove in the focused system, some extra steps 
+  lemma} that we must prove in the focused system, plus 
+  some extra steps 
   to take care of leftover shifts. In addition to cut admissibility
   and identity expansion, most of the unfocused admissibility 
   lemmas use two derived forms, ${\downarrow}{\uparrow}_R$ and
@@ -1243,7 +1327,7 @@ sufficient for our purposes here and in later chapters.
 Figure~\ref{fig:focused-robot} gives the result of taking our 
 robot example, Figure~\ref{fig:unfocused-robot}, through the 
 polarization process and then running the result through
-Theorem~\ref{thm:linfocomplete}. There is indeed only one 
+Theorem~\ref{thm:linfoccomplete}. There is indeed only one 
 proof of this focused proposition up to the reordering of 
 invertible rules, and only one proof period if we always
 decompose invertible propositions in a left-most, depth-first
@@ -1256,14 +1340,14 @@ informal series of transitions:
 \begin{array}{ccccc}
 \begin{array}{c}
 \mbox{\it \$6 (1)}\medskip\\ 
-\mbox{\it battery-free robot (1)} \medskip\\ 
+\mbox{\it battery-less robot (1)} \medskip\\ 
 \mbox{\it turn \$6 into a battery}\\
 \mbox{\it (all you want)}
 \end{array}
 & \leadsto &
 \begin{array}{c}
 \mbox{\it battery  (1)}\medskip\\ 
-\mbox{\it battery-free robot (1)} \medskip\\ 
+\mbox{\it battery-less robot (1)} \medskip\\ 
 \mbox{\it turn \$6 into a battery}\\
 \mbox{\it (all you want)}
 \end{array}
@@ -1339,7 +1423,12 @@ into a single synthetic rule:
 {\mildseq{\Gamma, a^+ \lolli {\uparrow}b^+}{\Delta, \langle b^+ \rangle}{U}}
 \]
 Similar rules can be given for focusing phases associated with the
-${\it focus}_L$ and ${\it focus}_R$ rules:
+${\it focus}_L$ and ${\it focus}_R$ rules. Any positive atomic
+proposition has an associated ${\sf RF}$ rule, and every negative atomic
+proposition has associated ${\sf CP}$ and ${\sf LF}$ rules, though
+as Andreoli noted, the structure of the
+proposition doesn't affect the structure of the associated synthetic
+connective beyond the outermost two polarity shifts. 
 \[
 \infer[{\sf LP}_{a^+ \lolli {\uparrow}b^+}]
 {\mildseq{\Gamma}{\Delta, \langle a^+ \rangle, a^+ \lolli {\uparrow}b^+}{U}}
@@ -1359,27 +1448,31 @@ ${\it focus}_L$ and ${\it focus}_R$ rules:
 \]
 
 \begin{figure}
-{\small\[
-\infer[{\sf RF}_{{\downarrow}({!}A^- \otimes b^+ \otimes {\downarrow}C^- \lolli 
-   {\uparrow}D^+)}]
+\small\[
+\infer[{\sf RF}%_{{\downarrow}({!}A^- \otimes b^+ \otimes {\downarrow}C^- \lolli 
+%   {\uparrow}D^+)}
+]
 {\mildseq{\cdot}{\cdot}
    {{\downarrow}({!}({\sf 6bucks} \lolli {\uparrow}{\sf battery}) \otimes
              {\sf 6bucks} \otimes 
              {\downarrow}({\sf battery} \lolli {\uparrow}{\sf robot}) \lolli 
              {\uparrow}{\sf robot})}}
-{\infer[{\sf CP}_{a^+ \lolli {\uparrow}b^+}]
+{\infer[{\sf CP}%_{a^+ \lolli {\uparrow}b^+}
+]
  {\mildseq{{\sf 6bucks} \lolli {\uparrow}{\sf battery}\quad}
     {\quad\langle {\sf 6bucks} \rangle, ~~
      {\sf battery} \lolli {\uparrow}{\sf robot}\quad}{\quad{\sf robot}}}
- {\infer[{\sf LF}_{a^+\lolli{\uparrow}b^+}]
+ {\infer[{\sf LF}%_{a^+\lolli{\uparrow}b^+}
+]
   {\mildseq{{\sf 6bucks} \lolli {\uparrow}{\sf battery}\quad}
     {\quad{\sf battery} \lolli {\uparrow}{\sf robot}, ~~
      \langle {\sf battery} \rangle\quad}{\quad{\sf robot}}}
-  {\infer[{\sf RF}_{a^+}]
+  {\infer[{\sf RF}%_{a^+}
+]
    {\mildseq{{\sf 6bucks} \lolli {\uparrow}{\sf battery}\quad}
        {\quad\langle {\sf robot} \rangle\quad}{\quad{\sf robot}}}
    {}}}}
-\]}
+\]
 \caption{Our running example, presented with synthetic rules.}
 \label{fig:synthetic-robot}
 \end{figure}
@@ -1392,10 +1485,10 @@ system takes four steps. The last three steps, furthermore, correspond
 precisely to the three steps in our informal description of the
 robot-battery-store system.
 
-In important side note: the fact that the structure of synthetic
-connectives is {\it
-  entirely} determined by our choice of which proposition to focus 
-on is an artifact of our restriction to MALL. If
+In important side note: every positive proposition is associated with
+{\it exactly one} {\sf RF} rule and that every negative proposition
+is associated with one {\sf LF} and one {\sf CP} rule
+is an artifact of our restriction to propositional MALL. If
 we also consider additive connectives, we can identify some number of
 synthetic rules for each right focus, left focus, or copy (possibly
 zero; there's no way to successfully right focus on a proposition
@@ -1415,12 +1508,12 @@ intuitionistic analogue to Andreoli's original presentation of focusing
 \cite{pfenning12chaining}.\footnote{We will blur the lines, in this
   section, between Andreoli's original presentation of focused
   classical linear logic and Pfenning's adaptation to intuitionistic
-  linear logic. In particular We will mostly use the notation of
+  linear logic. In particular, we will mostly use the notation of
   Pfenning's presentation, but the observations are equally applicable
   in Andreoli's focused triadic system.}  Nor does it have the same
 synthetic inference rules as the focused presentation used in the
-language of ordered logical specifications presented by Pfenning and I
-\cite{pfenning09substructural}.
+language of ordered logical specifications presented that Pfenning and I
+presented in \cite{pfenning09substructural}.
 % However, our current objective is not simply to study
 % focused logic; we want to use the structure of proofs in focused
 % logics as a logical framework for encoding systems we are interested
@@ -1440,7 +1533,8 @@ ${!}A$, and the interaction between them.
   logic and the unfocused logic.
 \item The {\it adjoint logic} of Benton and Wadler
   \cite{benton96linear} introduces a new syntactic class of persistent
-  propositions that .
+  propositions, restricting linear propositions to the linear 
+  context and persistent propositions to the persistent context.
 \item The introduction of {\it permeable atomic propositions}, a
   notion (which dates at least back to Girard's LU
   \cite{girard93unity}), that some propositions can be treated as {\it
@@ -1462,7 +1556,7 @@ observed (but not consumed), $q$ is an atomic proposition that is
 consumed in the transition, and $r$ is an atomic proposition that is
 generated as the result of the transition. In the kinds of
 specifications we will be dealing with, the ability to form these
-synthetic inference rules is absolutely critical. In some uses, the
+synthetic inference rules is critical. In some uses, the
 persistent resource acts as {\it permission} to consume $q$ and
 produce $r$. In other uses, $p$ represents knowledge that we must
 currently possess in order to enact a transition. America's 2010 health care
@@ -1729,8 +1823,8 @@ a positive proposition for an atomic proposition, the proof's structure
 remained fundamentally unchanged -- instances of the $\eta^+$ rule
 on $p^+$ turned
 into admissible instances of the general identity expansion rule 
-$\eta^+$ on $A^+$. We first have to explain what ${\pbang}p^+$ even becomes
-when we substitute $A^+$ for $p^+$, since ${\pbang}A^+$ is not a 
+$\eta^+$ on $A^+$. We first have what it even means to substitute
+$A^+$ for $p^+$ in ${\pbang}p^+$, since ${\pbang}A^+$ is not a 
 syntactically valid proposition; the only obvious candidate seems to be
 ${!}{\uparrow}A^+$. That substitution may require us to change the
 structure of proofs in a significant way, as shown in 
@@ -1748,7 +1842,7 @@ propositions as stand-ins for arbitrary propositions, another instance
 of the same problematic pattern arises when we try to establish the
 critical cut admissibility theorem for the
 logic with ${\pbang}p^+$. 
-The most of the new cases are unproblematic,
+Most of the new cases are unproblematic,
 but trouble arises in part 1
 when we cut a right-focused proof of ${\pbang}p^+$  
 against a proof that is decomposing ${\pbang}p^+$ on the left:
@@ -1966,7 +2060,7 @@ For such a seemingly simple change, the atom optimization adds a
 surprising amount of complexity to the cut admissibility theorem for
 focused linear logic. What's more, the three extra cases of cut that
 we had to introduce were all for the purpose of handling a single 
-problemantic case
+problematic case
 in the proof of part 1 where both derivations were decomposing the
 principal cut formula ${\pbang}p^+$.
 
@@ -2314,7 +2408,7 @@ is an instance of this pattern:
     \otimes {\downarrow}B 
     \otimes {\downarrow}C 
     \otimes {\downarrow}D \rangle}
-   {[{\downarrow}\top]}}
+   {{\downarrow}\top}}
  {\infer[{\downarrow}_R]
   {\mildseq{\Gamma}
     {\langle {\downarrow}A 
@@ -2464,18 +2558,17 @@ give a compressed proof of our motivating example:
 \subsubsection{Permeable atomic propositions}
 \label{sec:permable-atomic}
 
-It would have been possible, in the discussion of focused
-linear logic in Section~\ref{sec:foclinlog}, to present
-identity expansion as conceptually prior to atomic propositions, only
-introducing atomic propositions. In this retelling, 
-the $\eta^+$ and $\eta^-$ rules can be motivated as the
-necessary base cases of identity expansion when we have a propositional
-variable. Conversely, we can now present a new class of 
-{\it permeable} atomic propositions $p^+_p$ that stand in for arbitrary 
-permeable propositions $A^+_p$. These add a new base case to 
-permeable identity expansion (Theorem~\ref{thm:permident}) 
-that can only be satisfied with
-an explicit $\eta^+_p$ rule:
+It would have been possible, in the discussion of focused linear logic
+in Section~\ref{sec:foclinlog}, to present identity expansion as
+conceptually prior to atomic propositions. In such a retelling, the
+$\eta^+$ and $\eta^-$ rules can be motivated as the necessary base
+cases of identity expansion when we have propositional variables that
+stand for positive and negative propositions,
+respectively. Conversely, we can now present a new class of {\it
+  permeable} atomic propositions $p^+_p$ that stand in for arbitrary
+permeable propositions $A^+_p$. These add a new base case to permeable
+identity expansion (Theorem~\ref{thm:permident}) that can only be
+satisfied with an explicit $\eta^+_p$ rule:
 \[
 \infer[\eta^+_p]
 {\mildseq{\Gamma}{\Delta, p^+_p}{U}}
@@ -2751,14 +2844,34 @@ equivalence relation was used in the definition of CLF
 \cite{watkins02concurrent}, but in a greatly restricted way that will
 be reflected in Chapter 4.
 
-Concurrent
-equality gives rise to an
-equivalence relation on focused derivations. This equivalence
-relation is related to the equivalence relation induced
-by {\it multifocusing} \cite{chaudhuri08canonical}, though multifocusing
+Concurrent equality gives rise to an equivalence relation on focused
+derivations. This equivalence relation is related to the equivalence
+relation induced by {\it multifocusing}
+\cite{chaudhuri08canonical}. Multifocusing is a concept that has only
+been carefully explored in classical linear logic; the central change
+is that the rules which begins a focusing phase (in our presentation
+of MELL there were three: ${\it focus_L}$, ${\it focus_R}$, and ${\it
+  copy}$) are allowed to simultaneously pull other propositions into
+focus.  As an illustration, if we reusing our notation from
+Section~\ref{sec:linnote} we can present the following plausible
+candidates for the multifocus rules in an intuitionistic system:
+\[
+\infer[{\it focus}_L]
+{\mildseq{\Gamma}{\Delta / A_1^-, \ldots, A_n^- }{U}}
+{n > 1
+ &
+ \mildseq{\Gamma}{\Delta, [A_1^-], \ldots, [A_n^-]}{U}}
+\quad
+\infer[{\it focus}_R]
+{\mildseq{\Gamma}{\Delta / A_1^-, \ldots, A_n^-}{C^+}}
+{n \geq 1
+ &
+ \mildseq{\Gamma}{\Delta, [A_1^-], \ldots, [A_n^-]}{[C^+]}}
+\]
+Multifocusing, however,
 appears to provide an even coarser notion of equivalence on focused
-proofs than concurrent equality does. In particular, these two
-distinct focusing proofs are not concurrently equal: the proof
+proofs than concurrent equality does. In particular, the two
+distinct focusing proofs below are not concurrently equal: the proof
 on the right succeeds at proving $\langle c^- \rangle$ in one step,
 but leaves a subgoal in which $b^+$ is proved indirectly, whereas the
 proof at the right first transitions from having $\langle a^+ \rangle$
@@ -2814,14 +2927,14 @@ a subgoal in which $b^+$ is proved directly.
   {~~b^+}}
 {}}}
 \]
-While there is no full account of multifocusing in intuitionistic
-logic, the analogue of this sequent in classical linear logic has only
-one multifocused proof, and it is reasonable to conjecture that 
-an account of multifocusing for intuitionistic logic would also
-relate these proofs. In classical linear logic, multifocusing
-offers a very fundamental normal form: any two proofs that can be made
-equal by locally permuting inference rules have the same multifocused
-proof. 
+Despite the lack of a full account of intuitionistic multifocusing, we
+can observe that the analogue of this sequent in classical linear
+logic has only one multifocused proof, and it is reasonable to
+conjecture that an account of multifocusing for intuitionistic logic
+would also relate these proofs. In classical linear logic,
+multifocusing offers a very fundamental normal form: any two proofs
+that can be made equal by locally permuting inference rules have the
+same multifocused proof.
 
 CLF's restricted form of concurrent equality will be sufficient for
 the logical framework in Chapter 4. In fact, for the fragment of the
@@ -2838,14 +2951,14 @@ intuitionistic logic.
 \label{sec:warning}
 
 In our earlier discussion of hereditary substitution and canonical
-forms, we mentioned that the normalization theorem provided by
-hereditary substitution was weaker than the so-called weak
-normalization theorem for LF. That is because the weak normalization
-theorem says that any well-typed term can be converted into a
-canonical ($\beta$-normal and $\eta$-long) term by a particular series
-of $\beta$ and $\eta$ conversions. It is self-evident, by this statement
-of the theorem, that the resulting canonical term is equivalent
-to the original term. 
+forms in Section~\ref{sec:linlogicalframeworks}, we mentioned that the
+normalization theorem provided by hereditary substitution was weaker
+than the so-called weak normalization theorem for LF. That is because
+the weak normalization theorem says that any well-typed term can be
+converted into a canonical ($\beta$-normal and $\eta$-long) term by a
+particular series of $\beta$ and $\eta$ conversions. It is
+self-evident, by this statement of the theorem, that the resulting
+canonical term is equivalent to the original term.
 
 On the other hand, when we use hereditary substitution in the obvious
 way to obtain a Canonical LF term from an arbitrary non-canonical LF

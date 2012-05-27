@@ -423,10 +423,11 @@ afterwards.
 \item $\transbasic{\Sigma, {\sf c} : \tau} = \transbasic{\Sigma}, {\sf
     c} : \tau$ 
 \item $\transbasic{\Sigma, {\sf r} : C} = \transbasic{\Sigma}, {\sf r}
-  : {\sf eval\_a}\,t_0 \lefti \llbracket A^+_1, \ldots, A^+_n
-  \rrbracket (t_{n+1}, {\sf id})$ \\ {\it (where $C$ is equivalent
-    to $\forall \overline{x_0}\ldots \forall \overline{x_n}. A^+_n
-    \righti \ldots \righti A^+_1 \righti {\sf a}\,t_{0}\,t_{n+1}$)}
+  : \forall \overline{x_0}.\, {\sf eval\_a}\,t_0 \lefti \llbracket A^+_1,
+  \ldots, A^+_n \rrbracket (t_{n+1}, {\sf id})$ \\ {\it (where $C$ is
+    equivalent to $\forall \overline{x_0}\ldots \forall
+    \overline{x_n}.\, A^+_n \righti \ldots \righti A^+_1 \righti {\sf
+      a}\,t_{0}\,t_{n+1}$)}
 \item $\transbasic{\Sigma, {\sf r} : D} = \transbasic{\Sigma}, {\sf r}
   : D'$\\{\it (where $D'$ is the proposition $D$ where all instances of
   $p^-_c = {\sf a}\,t_1\,t_2$ have been replaced by ${\sf
@@ -469,13 +470,63 @@ instance of this transformation.
 
 \subsubsection{Correctness}
 
-
+XXX Correctness
 
 \subsection{Tail-recursion}
 \label{sec:trans-tail}
 
-The natural semantics 
+Consider again our motivating example, the procedure for that takes
+expressions $e$ and searches for expressions $v$ such that $e
+\Downarrow v$ is derivable. If we were to implement that procedure as
+a functional program, the procedure would be {\it tail-recursive}. In
+the procedure that handles the case when $e = e_1\,e_2$, the last step
+is that the search procedure is involed recursively. If and when that
+callee returns $v$, then the caller will also return $v$.
 
+Tail-recursion is significant in functional programming because
+tail-recursive calls can be implemented without allocating a stack
+frame: when a compiler makes this more efficient choice, we say it is
+performing {\it tail-recursion optimization}.\footnote{Or {\it tail
+    call optimization}, as a tail-recursive function call is just a
+  specific instance of a tail call.} An analagous opportunity for
+tail-recursion optimization also arises in our logical compilation
+procedure. In our motivating example, the last step in the $e_1\,e_2$
+case was operationlized as a positive proposition of the form ${\sf
+  eval}\,(E\, V) \fuse (\forall v.\,{\sf retn}\,v \lefti \{ {\sf
+  retn}\,v \})$. In a successful search, the process state 
+\[ x{:}{\sf
+  eval}\,(E\, V), y{:}\istrue{(\forall v.\,{\sf retn}\,v \lefti \{
+  {\sf retn}\,v \})}, \Delta\]
+will concurrently compute until the
+state 
+\[ x'{:}{\sf retn}\,V, y{:}\istrue{(\forall v.\,{\sf retn}\,v \lefti
+  \{ {\sf retn}\,v \})}, \Delta\] is reached, at which point the next
+step \[y'{:}{\sf retn}\,V, \Delta\] is reached in one step by focusing
+on $y$. 
+
+If we instead operationalize the last step in the $e_1\,e_2$ case as
+simply ${\sf eval}\,(E\,V)$, we will reach the same final state with
+one less transition. The tail-recursion optimizing version of the
+operationalization transformation, $\transtail{\Sigma}$, creates
+concurrent computations that avoid these useless steps.
+
+We cannot perform tail recursion in general. The obvious reason for
+this to be the case is when the output of the last subgoal is
+different from the output of the goal. For example, the rule ${\sf r}
+: \forall{x}.\,\forall{y}.\,{!}{\sf a}\,x\,y \righti {\sf a}\,({\sf
+  c}\,x)\,({\sf c}\,y)$, will translate to
+\[ {\sf r} : \forall{x}.\,{\sf eval\_a}\,({\sf c}\,x) \lefti \{ {\sf
+  eval\_a}\,x \fuse (\forall y.\, {\sf retn\_a}\,y \lefti \{ {\sf
+  retn\_a}\,({\sf c}\,y) \} ) \} \] There is no opportunity for
+tail-recursion optimization, because the output of the last search
+procedure, $t^{\it out}_n = y$, is different than the value returned
+down the stack, $t_{n+1} = {\sf c}\,y$. This case corresponds to
+functional programs that cannot be tail-call optimized.
+
+More subtly, we cannot even eliminate all cases where $t^{\it out}_n =
+t_{n+1}$ unless these functions are {\it fully general}, meaning that
+of their free variables are in $\overline{x_n}$ (and therefore not
+fixed by the input or any other premises) . If we have a function
 
 \begin{itemize}
 \item $\opbasic{{!}{\sf a}\,t^{\it in}_n\,t_{n+1}}{t_{n+1}}{\sigma} 
