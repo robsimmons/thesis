@@ -292,13 +292,15 @@ the transformed specification, which has the form of an ordered
 abstract machine semantics.
 
 \begin{figure}
-
-%\fvset{fontsize=\small,boxwidth=229pt}
-\fvset{fontsize=\small,boxwidth=187pt}
-\BVerbatimInput{sls/cbv-ev.sls}
+\begin{minipage}[b]{0.36\linewidth}
 \fvset{fontsize=\small,boxwidth=auto}
-\BVerbatimInput{sls/cbv-ev-ssos.sls}
-
+\VerbatimInput{sls/cbv-ev.sls}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.64\linewidth}
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/cbv-ev-ssos.sls}
+\end{minipage}
 \caption{A natural semantics for CBV and the corresponding abstract machine.}
 \label{fig:example-transform-cbv}
 \end{figure}
@@ -656,6 +658,23 @@ XXX Correctness
 
 \subsection{Parallelism}
 \label{sec:trans-par}
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/cbv-ev-ssos-par.sls}
+\caption{The parallel, tail-recursion optimized ordered abstract machine for
+ call-by-value evaluation.}
+\label{fig:cbv-ev-ssos-par}
+\end{figure}
+
+The result of running the natural semantics from
+Figure~\ref{fig:example-transform-cbv} through the parallel and
+tail-recursion optimizing ordered abstract machine is shown in
+Figure~\ref{fig:cbv-ev-ssos-par}.
+
+\subsubsection{Correctness}
+
+XXX Correctness
 
 \subsection{Non-determinism and the natural semantics}
 
