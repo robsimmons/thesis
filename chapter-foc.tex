@@ -2601,7 +2601,7 @@ satisfied with an explicit $\eta^+_p$ rule:
 {\mildseq{\Gamma, \langle p^+_p \rangle}{\Delta}{U}}
 \]
 Because the permeable propositions are a syntactic refinement of the
-positive propositions, $p^+_p$ must be valid positive atomic propositions
+positive propositions, $p^+_p$ must be a valid positive atomic proposition
 as well. This is the revised grammar for 
 intuitionistic MELL with permeable atomic propositions:
 \begin{align*}
@@ -2701,15 +2701,13 @@ which we have argued is a more natural presentation,
 effectively avoid this problem.
 
 However, it's not necessary to view Andreoli's proliferation of rules
-as a problem. While the proliferation of inference rules under the
-atom optimization seems like it would be a problem if, for instance,
-we need to represent synthetic inference rules on a computer, the
-problem if correctly viewed is merely one of notation. It is already
-the case that, in writing sequent calculus rules, we tacitly use of a
-fairly large number of notational conventions, at least relative to
-Gentzen's original formulation where all contexts were treated as
-sequences of propositions \cite{gentzen35untersuchungen}.  For
-instance, the bottom-up reading of the ${\one}_R$ rule's conclusion,
+as a problem with the logic; rather, it is possible to view it merely
+as a problem of notation. It is already the case that, in writing
+sequent calculus rules, we tacitly use of a fairly large number of
+notational conventions, at least relative to Gentzen's original
+formulation where all contexts were treated as sequences of
+propositions \cite{gentzen35untersuchungen}.  For instance, the
+bottom-up reading of the ${\one}_R$ rule's conclusion,
 $\mildseq{\Gamma}{\cdot}{[\one]}$, indicates the presence of an
 additional premise checking that the linear context is empty, and the
 conclusion $\mildseq{\Gamma}{\Delta_1, \Delta_2}{[A \otimes B]}$ of
@@ -2721,15 +2719,15 @@ shape of the context $\Delta$.\footnote{More than anything else I have
   discussed so far, this is a view of inference rules that emphasizes
   {\it bottom-up} proof search and proof construction. A view of
   linear logic that is informed by the inverse method, or top-down
-  proof construction, is bound to look very different
-  (see, for example, \cite{chaudhuri06focused}).}
+  proof construction, is bound to look very different (see, for
+  example, \cite{chaudhuri06focused}).}
 
 I propose to deal with the apparent proliferation of synthetic rules
 in a system with the atom optimization by adding a new matching
 construct for the conclusion of rules. We can say that $\Gamma;
 \Delta$ matches $\Gamma; \Delta' / \langle p^+ \rangle$ either when
 $\langle p^+ \rangle \in \Gamma$ and $\Delta = \Delta'$ or when
-$\Delta = \Delta', \langle p^+ \rangle$. We can also iterate this
+$\Delta = (\Delta', \langle p^+ \rangle)$. We can also iterate this
 construction, so that $\Gamma; \Delta$ matches $\Gamma; \Delta_n /
 \langle p^+_1 \rangle, \ldots, \langle p^+_n \rangle$ if $\Gamma;
 \Delta$ matches $\Gamma; \Delta_1 / \langle p^+_1 \rangle$, $\Gamma;
@@ -2750,7 +2748,7 @@ we can also use it to combine the two positive identity rules ${\it
 equivalently, ${\it id}^+$ and ${\it id}^+_p$ (in the system
 incorporating permeability).  Furthermore, by giving $\Gamma; \Delta /
 A^-$ the obviously analogous meaning, we can fuse the ${\it
-  focus}_L$ rule and the ${\it copy}_L$ rule into a single rule that
+  focus}_L$ rule and the ${\it copy}$ rule into a single rule that
 is unconcerned with whether the proposition in question came from the
 persistent or linear contexts:
 \[
@@ -2878,7 +2876,7 @@ been carefully explored in classical linear logic; the central change
 is that the rules which begins a focusing phase (in our presentation
 of MELL there were three: ${\it focus_L}$, ${\it focus_R}$, and ${\it
   copy}$) are allowed to simultaneously pull other propositions into
-focus.  As an illustration, if we reusing our notation from
+focus.  As an illustration, if we reuse our notation from
 Section~\ref{sec:linnote} we can present the following plausible
 candidates for the multifocus rules in an intuitionistic system:
 \[
