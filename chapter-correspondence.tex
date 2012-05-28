@@ -24,9 +24,9 @@ than the last.
 
 \begin{itemize}
 \item The {\it natural semantics}, or big-step operational semantics,
-  is an existing well-known specification style that is convenient for
-  the specification of pure and deterministic programming
-  languages. 
+  is an existing and well-known specification style that is convenient
+  for the specification of pure and deterministic programming
+  languages.
 
 \item The {\it ordered abstract machine semantics} is a generalization
   of abstract machine semantics that can be naturally specified in
@@ -43,20 +43,19 @@ than the last.
 
 \noindent
 The statement that each specification style is strictly more
-expressive than the last is formal: natural semantics can be
-mechanically transformed to ordered abstract machine semantics, and
+expressive than the last is formal: by using fully automatic and
+provably-correct transformations, natural semantics can be
+mechanically transformed to ordered abstract machine semantics and
 ordered abstract machine semantics can be mechanically transformed
-into destination-passing semantics, by fully automatic and
-provably-correct transformations. These transformations are, in turn,
-instances of general transformations on \sls~specifications. 
+into destination-passing semantics. These transformations are, in
+turn, instances of general transformations on \sls~specifications.
 
 In this chapter, we explore transformations on \sls~specifications
-that operationalize {\it deductive} computation (backwards-chaining
-proof search for propositions of negative atomic type) as {\it
-  concurrent} computation (forward-chaining proof search for
-propositions of positive type). These transformations have the effect
-of mapping natural semantics specifications into abstract machine
-specifications.
+that operationalize deductive computation (backwards-chaining proof
+search for propositions of negative atomic type) as concurrent
+computation (forward-chaining proof search for propositions of
+positive type). These transformations have the effect of mapping
+natural semantics specifications into abstract machine specifications.
 
 This chapter represents joint work with Ian Zerny.
 
@@ -74,24 +73,27 @@ transformation, defunctionalization, in
 Section~\ref{sec:defunctionalization}.
 
 In Section~\ref{sec:nat-ssos-adequacy}, I take a bit of a detour to
-discuss the traditional presentation of abstract machines. I claim
-that when we pass a \sls~encoded natural semantics first through
+discuss the traditional presentation of abstract machines. The ordered
+abstract machine semantics presented in Section~\ref{sec:intro-ssos}
+is now identifiable as the call-by-value natural semantics for the
+lambda calculus after being transformed, first by the
 (tail-recursion-optimizing) operationalizion transformation and second
-through the defunctionalization transformation, the result is a
+by the defunctionalization transformation. I claim it is {\it also} a
 substructural operational semantics corresponding to the a standard
-abstract machine semantics. Making this precise requires a discussion
-of adequacy for \sls~encodings. I also discuss the connections between
-our logical correspondence and the {\it functional correspondence}
-investigated by Ager, Danvy, Midtgaard, and others.
+call-by-value abstract machine semantics for the lambda calculus, but
+making this precise requires a discussion of adequacy for
+\sls~encodings. I also discuss the connections between our logical
+correspondence and the {\it functional correspondence} investigated by
+Ager, Danvy, Midtgaard, and others.
 
 Section~\ref{sec:richer-ordered-abstract} gets to the heart of why we
 are interested in the transformations discussed in this chapter: the
 ordered abstract machine semantics specification that we get when we
 operationalize a natural semantics specification is amenable to the
 modular addition of features that could not be modularly integrated
-into the natural semantics specification; we explore a non-exhaustive
-selection of these features, including mutable storage, call-by-need
-evaluation, and recoverable failure.
+into the natural semantics specification. We explore a selection of
+these features, including mutable storage, call-by-need evaluation,
+and recoverable failure.
 
 Finally, in Section~\ref{sec:othertransform}, we discuss the
 consequences of defining operationalization as a general
@@ -170,8 +172,8 @@ untyped lambda calculus:
 \]
 The natural semantics are moded with $e$ as an input and $v$ as an
 output, so it is meaningful to talk about being given a particular
-expression $e$ and searching for a $v$ such that $e \Downarrow v$ is
-derivable using deductive computation. Consider a recursive search
+expression $e$ and using deductive computation to search for a $v$
+such that $e \Downarrow v$ is derivable. Consider a recursive search
 procedure implementing this particular deductive computation:
 \begin{itemize}
 \item
@@ -214,7 +216,7 @@ that we want to search for a $v$ such that $e \Downarrow v$, and the
 proposition ${\sf retn}\,\interp{v}$ indicates the successful
 completion of this procedure. Therefore, searching for a $v$ such that
 $e \Downarrow v$ is derivable will be analogous to building a trace $T
-: x_e{:}{\sf eval}\,\interp{e} \leadsto^* x_v{:}{\sf
+:: x_e{:}{\sf eval}\,\interp{e} \leadsto^* x_v{:}{\sf
   retn}\,\interp{e}$ with concurrent computation.
 
 Representing the first case is straightforward: if we are evaluating
@@ -225,7 +227,7 @@ This is encoded in the rule ${\sf ev/lam}$.
    \lefti \{ {\sf retn}\,({\sf lam}\,\lambda x.\,E\,x) \}
 \]
 Because the second rule involves both recursion and multiple subgoals,
-we have to generalize our picture of the state to allow us to store a
+we will generalize our picture of the process state to allow us to store a
 stack of unfinished work in the ordered context, growing out to the
 right. Our new understanding, then, is that contexts either have the
 form $x{:}{\sf eval}\,\interp{e}, \Delta$ or the form $x{:}{\sf
@@ -268,7 +270,8 @@ will create this sub-computation can be written as follows:
 \fuse {\downarrow}(\forall v. {\sf retn}\,v_2 \lefti \{ {\it Step_4}(E,v_2) \})
 %
 \intertext{Finally, the first two steps can be handled together. We have
-$E_1 = \interp{e_1}$ and $E_2 = \interp{e_2}$, and when we . Once the
+$E_1 = \interp{e_1}$ and $E_2 = \interp{e_2}$; the recursive
+call is to ${\sf eval}\,\interp{e_1}$. Once the
 recursive call completes, we can enforce that the returned value has
 the form $\interp{\lambda x.e}$ in the continuation before proceeding
 to the continuation.}
@@ -277,8 +280,13 @@ to the continuation.}
 \lefti \{ {\it Step_3}(E_2, e)\})
 \end{align*}
 Thus, the rule implementing this entire portion of the search
-procedure is ${\sf eval}\,({\sf app}\,E_1\,E_2) \righti \{ {\it
-  Step_{1,2}}(E_1, E_2) \}$. The \sls~encoding of our example natural
+procedure is 
+\[
+\forall e_1.\,\forall e_2.\,
+{\sf eval}\,({\sf app}\,E_1\,E_2) \righti \{ {\it
+  Step_{1,2}}(E_1, E_2) \}
+\]
+The \sls~encoding of our example natural
 semantics is shown in Figure~\ref{fig:example-transform-cbv} alongside
 the transformed specification, which has the form of an ordered
 abstract machine semantics.
@@ -305,7 +313,7 @@ describe a general transformation (of which
 Figure~\ref{fig:example-transform-cbv} is one instance) and to prove
 this transformation correct in general. From the other direction,
 Hannan and Miller \cite{hannan92operational} and Ager
-\cite{ager04natural} have also proposed the idea of operationalization
+\cite{ager04natural} have also proposed the idea of operationalizing
 natural semantics specifications as abstract machines by provably
 correct and general transformations on logical specifications (in the
 case of Hannan and Miller) and the special-purpose framework of
@@ -319,28 +327,29 @@ features, as we will discuss in
 Section~\ref{sec:richer-ordered-abstract}.
 
 In Section~\ref{sec:trans-subset} we will present the subset of
-specifications that are transformable, in
+specifications that our transformation handles, in
 Section~\ref{sec:trans-basic} we will give the basic transformation
 and prove the transformation correct, and in
-Sections~\ref{sec:trans-tail}~and~\ref{sec:trans-par} provide
-tail-recursive and parallelism-enabling variants of the transformation
-(respectively).
+Sections~\ref{sec:trans-tail}~and~\ref{sec:trans-par} we present
+tail-recursive and parallelism-enabling variants of the transformation.
 
 \subsection{Transformable specifications}
 \label{sec:trans-subset}
 
-The starting point for the operationalization transformation is a an
+The starting point for the operationalization transformation is a
 deductive specification that is well-moded in the sense described in
 Section~\ref{sec:framework-modes}. Every declared negative predicate
-will either remain defined by deductive proofs (we write these as
-$p_d^-$, $d$ for deductive) or will be transformed so that it is
-concurrently defined (we write these as $p_c$ for concurrent).
+will either remain defined by deductive proofs (we write the atomic
+propositions built with these predicates as $p_d^-$, $d$ for
+deductive) or will be transformed so that it is concurrently defined
+(we write the atomic propositions built with these predicates as
+$p_c^-$, $c$ for concurrent).
 
 For the purposes of describing and proving the correctness of the
 operationalization transformation, we will assume that all transformed
-predicates $p_d$ have two arguments where the first argument is moded
-as an input and the second is an output. That is, propositions $p_d^-$
-are declared as follows:
+atomic propositions $p_d^-$ have two arguments where the first
+argument is moded as an input and the second is an output. That is,
+their predicates are declared as follows:
 \begin{align*}
 & {\sf a} : \tau_1 \rightarrow \tau_2 \rightarrow {\sf prop}.\\
 & {\sf \#mode~a~{+}~{-}}.
@@ -355,7 +364,7 @@ describing $n$-place relations.\footnote{As an example, to handle
     nat} \rightarrow {\sf add\_in}$. Then we can declare (${\sf add'}
   : {\sf add\_in} \rightarrow {\sf nat} \rightarrow {\sf type}$) with
   mode (${\sf add'}~{+}~{-}$).}  It should be possible to handle
-dependent propositions (that is, those with declarations of the form
+dependent predicates (that is, those with declarations of the form
 ${\sf a} : \Pi x{:}\tau_1.\,\tau_2(x) \rightarrow {\sf type}$) but we
 will not do so here.
 
@@ -366,18 +375,18 @@ follows:
 \begin{align*}
 C & ::= p^-_{c} 
     \mid \forall x{:}\tau.\, C
-    \mid p^+_\mpers \righti C
-    \mid {!}p^-_c \righti C
-    \mid {!}G \righti C \\
+    \mid p^+_\mpers \lefti C
+    \mid {!}p^-_c \lefti C
+    \mid {!}G \lefti C \\
 D & ::= p^-_{d}
     \mid \forall x{:}\tau.\, D
-    \mid p^+_\mpers \righti D
-    \mid {!}p^-_c \righti D
-    \mid {!}G \righti C \\
+    \mid p^+_\mpers \lefti D
+    \mid {!}p^-_c \lefti D
+    \mid {!}G \lefti C \\
 G & ::= p^-_d 
     \mid \forall x{:}\tau.\, G
-    \mid p^+_\mpers \righti G
-    \mid {!}D \righti G
+    \mid p^+_\mpers \lefti G
+    \mid {!}D \lefti G
 \end{align*}
 If {\it all} propositions are to remain deductive, then the
 propositions $p^-_c$ and $C$ are irrelevant, and this restriction
@@ -390,8 +399,8 @@ specifications to the Horn fragment.
 
 All propositions $C$ are equivalent (at the level of synthetic
 inference rules) to propositions of the form $\forall
-\overline{x_0}\ldots \forall \overline{x_n}. A^+_n \righti \ldots
-\righti A^+_1 \righti {\sf a}\,t_{0}\,t_{n-1}$,
+\overline{x_0}\ldots \forall \overline{x_n}.\,A^+_n \lefti \ldots
+\lefti A^+_1 \lefti {\sf a}\,t_{0}\,t_{n-1}$,
 where the $\forall \overline{x_i}$ are shorthand for a series of
 universal quantifiers $\forall {x_{i1}}{:}{\tau_{i1}} \ldots \forall
 {x_{\it ik}}{:}{\tau_{\it ik}}$ and where each variable in
@@ -400,16 +409,16 @@ nor in any $A^+_i$ with $j < i$ but does appear in either $A^+_i$ (or
 $t_0$ if $i = 0$). Therefore, when we consider moded proof
 search, the variables bound in $\underline{x_0}$ are all fixed by the
 query and those bound in the other $\underline{x_i}$ are all fixed by
-the $i^{\rm th}$ premise.
+the output position of the $i^{\rm th}$ premise.
 
 \subsection{Basic transformation}
 \label{sec:trans-basic}
 
-The basic operationalization transformation operates on signatures,
-$\transbasic{\Sigma}$ that fall in the set above. We will first give
-the transformation on signatures, though the most important part, the
-transformation declarations ${\sf r} : C$, will be presented
-afterwards.
+The basic operationalization transformation $\transbasic{\Sigma}$
+operates on signatures $\Sigma$ that have the form described above. We
+will first give the transformation on signatures; the transformation
+of rule declarations ${\sf r} : C$ is the most important and involves
+a definition that will be presented next.
 
 \begin{itemize}
 \item $\transbasic{\cdot} = \cdot$
@@ -426,7 +435,7 @@ afterwards.
   : \forall \overline{x_0}.\, {\sf eval\_a}\,t_0 \lefti \llbracket A^+_1,
   \ldots, A^+_n \rrbracket (t_{n+1}, {\sf id})$ \\ {\it (where $C$ is
     equivalent to $\forall \overline{x_0}\ldots \forall
-    \overline{x_n}.\, A^+_n \righti \ldots \righti A^+_1 \righti {\sf
+    \overline{x_n}.\, A^+_n \lefti \ldots \lefti A^+_1 \lefti {\sf
       a}\,t_{0}\,t_{n+1}$)}
 \item $\transbasic{\Sigma, {\sf r} : D} = \transbasic{\Sigma}, {\sf r}
   : D'$\\{\it (where $D'$ is the proposition $D$ where all instances of
@@ -435,11 +444,10 @@ afterwards.
 \end{itemize}
 
 The transformation of a proposition $C$ of the form $\forall
-\overline{x_0}\ldots \forall \overline{x_n}. A^+_n \righti \ldots
-\righti A^+_1 \righti {\sf a}\,t_{0}\,t_{n+1}$ (or an equivalent form)
-involves the definition
+\overline{x_0}\ldots \forall \overline{x_n}.\,A^+_n \lefti \ldots
+\lefti A^+_1 \lefti {\sf a}\,t_{0}\,t_{n+1}$ involves the definition
 $\opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma}$, where $\sigma$
-substitutes for variables in $\overline{x_j}$ for $j < i$. The
+substitutes only for variables in $\overline{x_j}$ where $j < i$. The
 function is defined inductively on the length of the sequence
 $A^+_i,\ldots,A^+_n$.
 
@@ -513,7 +521,7 @@ concurrent computations that avoid these useless steps.
 We cannot perform tail recursion in general. The obvious reason for
 this to be the case is when the output of the last subgoal is
 different from the output of the goal. For example, the rule ${\sf r}
-: \forall{x}.\,\forall{y}.\,{!}{\sf a}\,x\,y \righti {\sf a}\,({\sf
+: \forall{x}.\,\forall{y}.\,{!}{\sf a}\,x\,y \lefti {\sf a}\,({\sf
   c}\,x)\,({\sf c}\,y)$, will translate to
 \[ {\sf r} : \forall{x}.\,{\sf eval\_a}\,({\sf c}\,x) \lefti \{ {\sf
   eval\_a}\,x \fuse (\forall y.\, {\sf retn\_a}\,y \lefti \{ {\sf
@@ -524,24 +532,34 @@ down the stack, $t_{n+1} = {\sf c}\,y$. This case corresponds to
 functional programs that cannot be tail-call optimized.
 
 More subtly, we cannot even eliminate all cases where $t^{\it out}_n =
-t_{n+1}$ unless these functions are {\it fully general}, meaning that
-of their free variables are in $\overline{x_n}$ (and therefore not
-fixed by the input or any other premises) . If we have a function
+t_{n+1}$ unless these functions are {\it fully general}. We say that
+$t_{n+1}$ with type $\tau$ is fully general if all of its free
+variables are in $\overline{x_n}$ (and therefore not fixed by the
+input or any other premises) and if, for any variable-free term $t'$
+of type $\tau$, there exists a substituion $\sigma$ such that $t =
+{\sigma}t_{n+1}$. The simplest example way to do this is to force
+$t_{n+1} = t^{\it out}_n = y$ where $y = \overline{x_n}$, but it is
+also possible to have a fully general $t_{n+1} = {\sf c}\,y_1\,y_2$
+if, for instance, ${\sf c}$ has type $\tau_1 \rightarrow \tau_2
+\rightarrow {\sf foo}$ and there are no other constructors of type
+${\sf foo}$. This condition doesn't have an analouge in functional
+programming, because it corresponds to the possibility that 
+moded deduction computation can perform pattern matching on 
+{\it outputs}.
+
+The tail-recursive procedure can be described by adding a new 
+case to the definition of 
+$\opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma}$:
 
 \begin{itemize}
 \item $\opbasic{{!}{\sf a}\,t^{\it in}_n\,t_{n+1}}{t_{n+1}}{\sigma} 
   = \{{\sf retn\_a}\,(t^{\it in}_n)\}$
 \\
   {\it (where $t_{n+1}$ is fully general)}
-\item $\opbasic{{!}p^-_c,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma}$
-  \\
-  $~ \qquad = \{ {\sf eval\_b}\,({\sigma}t^{\it in}_i) \fuse
-  (\forall\overline{x_i}.\, {\sf retn\_b}\,(\sigma{t^{\it out}_i})
-  \lefti \opbasic{A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma}) \}$\\
-  {\it (where $p^-_c$ is ${\sf b}\,t^{\it in}_i\,t^{\it out}_i$ and
-    either ${\sf a} \neq {\sf n}$, $i < n$, $t^{\it out}_n \neq t_{n+1}$, or
-    $t_{n+1}$ is not fully general)}
 \end{itemize}
+This case overlaps with the third case of the definition given
+in Section~\ref{sec:trans-basic}, which represents that tail-recursion
+optimization can be applied or not in a non-determinstic manner.
 
 \subsubsection{Example}
 
@@ -549,15 +567,15 @@ A dramatic illustration of tail-call optimization can be given if we
 consider a big-step evaluation function that is based on a small-step
 structural operational semantics (SOS) specification. SOS
 specifications involve an inductively proposition encoding single-step
-evaluation ${\sf steps} : {\sf exp} \rightarrow {\sf exp} \rightarrow
+evaluation ${\sf step} : {\sf exp} \rightarrow {\sf exp} \rightarrow
 {\sf prop}$ (moded ${\sf exp}\,{+}\,{-}$), as well as an is-value
 function ${\sf value} : {\sf exp} \rightarrow {\sf prop}$ (moded ${\sf
   value}\,{+}$). We will not define these propositions here, but 
 we do so later on in Section~\ref{}.
 
-Given the ${\it steps}$ predicate, it is easy to define big step
-evaluation ${\sf ev}\,\interp{e}\,\interp{v}$ as a series of small
-steps:
+Given the small-step ${\sf step}$ predicate, it is easy to define 
+big-step evaluation ${\sf ev}\,\interp{e}\,\interp{v}$ as a series of
+small steps:
 
 \smallskip
 \fvset{fontsize=\small,boxwidth=auto}
@@ -574,23 +592,22 @@ steps:
 \fvset{fontsize=\small,boxwidth=auto}
 \VerbatimInput{sls/cbv-sos-proc.sls}
 \end{minipage}
-\label{fig:sos-tailrecursion}
 \caption{The transformation of a trivial big-step semantics, both
   without (left) and with (right) tail-recursion optimization.}
+\label{fig:sos-tailrecursion}
 \end{figure}
 
 Running this specification through the operationalization
 transformation and only operationalizing the ${\sf ev}$ predicate
-generates what I consider to be the strictly most boring substructural
-operational semantics specification, shown in
-Figure~\ref{fig:sos-tailrecurstion} both without the tail-recursion
-optimization (left) and with the tail-recursion optimization (right). 
+results in what I consider to be the strictly most boring
+substructural operational semantics specification, shown in
+Figure~\ref{fig:sos-tailrecursion} both without the tail-recursion
+optimization (left) and with the tail-recursion optimization (right).
 
 The tail-recursion optimized translation is definitely superior for
 this example. Concurrent proofs for the non-tail-recursion-optimized
 specification build up an enormous stack of useless copies of the
 proposition $(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})$:
-
 \begin{align*}
 & x_1{:}{\sf eval}\,\interp{e_1} \\
 \leadsto ~ & x_2{:}{\sf eval}\,\interp{e_2}, 
@@ -598,22 +615,23 @@ proposition $(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})$:
 \leadsto ~ & x_3{:}{\sf eval}\,\interp{e_3}, 
   y_2{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})}, 
   y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} \\
-\leadsto^* ~ & x_n{:}{\sf eval}\,\interp{v}, 
+\leadsto ~ & \cdots\\
+\leadsto ~ & x_n{:}{\sf eval}\,\interp{v}, 
   y_{n-1}{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})}, 
-  \ldots,
+  \cdots,
   y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} \\
 \leadsto ~ & z_n{:}{\sf retn}\,\interp{v}, 
   y_{n-1}{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})}, 
-  \ldots,
+  \cdots,
   y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} \\
-\leadsto^* ~ & z_3{:}{\sf retn}\,\interp{v}, 
+\leadsto ~ & \cdots \\
+\leadsto ~ & z_3{:}{\sf retn}\,\interp{v}, 
   y_2{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})}, 
   y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} \\
 \leadsto ~ & z_2{:}{\sf retn}\,\interp{v}, 
   y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} \\
 \leadsto ~ & z_1{:}{\sf retn}\,\interp{v}
 \end{align*}
-
 In contrast, the tail recursion optimized version on the right hand
 side of Figure~\ref{fig:sos-tailrecursion} takes half as many steps,
 and each step is smaller, simpler, and the overall trace does a better
@@ -626,12 +644,15 @@ x_1{:}{\sf eval}\,\interp{e_1}
 x_2{:}{\sf eval}\,\interp{e_2}
  ~\leadsto~
 x_3{:}{\sf eval}\,\interp{e_3}
- ~\leadsto^*~
+ ~\leadsto~ \cdots ~\leadsto~
 x_n{:}{\sf eval}\,\interp{v}
  ~\leadsto~ 
 z{:}{\sf retn}\,\interp{v}
 \]
 
+\subsubsection{Correctness}
+
+XXX Correctness
 
 \subsection{Parallelism}
 \label{sec:trans-par}
@@ -897,7 +918,7 @@ One obvious way to proceed is to simply translate the big-step portion
 of our semantics as encoded 
 
 
-If we just translate the {\it steps} portion of the semantics (using
+If we just translate the ${\sf ev}$ portion of the semantics (using
 the tail-recursion optimizing translation), then we will get what is
 probably fair to call the most boring possible substructural
 operational semantics: 

@@ -1,2 +1,2 @@
-ev/steps: ev E V <- steps E E' <- ev E V.
+ev/steps: ev E V <- step E E' <- ev E V.
 ev/value: ev V V <- value V.
