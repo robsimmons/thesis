@@ -547,9 +547,10 @@ are the main nonstandard aspect of this presentation.  The $\eta^+$
 and $\eta^-$ rules are restricted to atomic propositions, and there is
 no other way for suspended propositions to be introduced into the
 context with rules, so it would seem be natural to restrict ${\it
-  id}^+$ to atomic propositions as well. To explain how this seemingly
-unnecessarily general choice will make our life easier later
-on,\robnote{reconsider} we will turn our attention to suspended
+  id}^+$ to atomic propositions as well. Though the identity rules
+seem unnecessarily general, this generality will make it much easier
+to establish the standard metatheory of this sequent calculus. To see
+why this is the case, we will turn our attention to suspended
 propositions and the four admissible rules (two focal substitution
 principles and two identity expansion principles) that interact with
 them.
@@ -913,10 +914,27 @@ then $\mildseq{\Gamma}{\Delta}{U}$.
 \begin{proof}
   By induction on the first given derivation. Each rule in the
   unfocused system (Figure~\ref{fig:linear}) corresponds to one {\it
-    unfocused admissibility lemma} that we must prove in the focused
-  system, plus some extra steps to take care of leftover shifts. These
-  leftover shifts are handled by two derivable rules
-  ${\downarrow}{\uparrow}_R$ and ${\uparrow}{\downarrow}_L$:
+    unfocused admissibility lemma}, plus a some extra steps.
+
+  These extra steps arise are due to the generality of erasure. If we
+  know that ${!}A = (C^+)^\circ$ (as in the case for ${!}_R$ below),
+  then by case analysis on the structure of $C^+$, $C^+$ must be
+  either ${!}B^-$ (for some $B^-$) or ${\downarrow}C_1^-$ (for some
+  $C_1^-$). Then, by case analysis on $C_1^-$, it can only be the case
+  that $C_1^- = {\uparrow}C_2^+$. But then $C_2^+$ can be either
+  ${!}B_2^-$ or ${\downarrow}C_3^-$; in the latter case $C^+ =
+  {\downarrow}{\uparrow}{\downarrow}C_3^-$, and this can go on
+  arbitrarily long (but not forever, because $C^-$ is a finitely-sized
+  term). So we say that, by induction on the structure of $C^+$, there
+  exists an $A^-$ such that $C^+ =
+  {\downarrow}{\uparrow}\ldots{\downarrow}{\uparrow}{!}A^-$ 
+  and $A = (A^-)^\circ$. Depending on the case, we then repeatedly
+  apply either the ${\uparrow}{\downarrow}_R$ or the
+  ${\downarrow}{\uparrow}_L$, both of which are derived below, to get
+  rid of all the extra shifts.  (Zero or more instances of a rule are
+  indicated by a double-ruled inference rule.)
+
+\vspace{-7pt}
   {\small \[
   \infer[{\downarrow}{\uparrow}_R]
   {\mildseq{\Gamma}{\Delta}{{\downarrow}{\uparrow}A^+}}
@@ -997,16 +1015,15 @@ then $\mildseq{\Gamma}{\Delta}{U}$.
 %    \mildseq{\Gamma}{\Delta, {\uparrow}{\downarrow}A^-}{U}}
 %   \]
 
-\noindent
-Multiple uses of this rule (zero or more) will be indicated with 
-a double-ruled inference rule.
+\vspace{-13pt}
 
+\noindent
 We will describe a few cases to illustrate how unfocused admissibility
 lemmas work.
 
   Rule {\it copy}: We are given 
   $\seq{\Gamma^\circ, A}{\Delta^\circ, A}{U^\circ}$, which is
-  used to derive $\seq{\Gamma^\circ, A}{\Delta^\circ, A}{U^\circ}$.
+  used to derive $\seq{\Gamma^\circ, A}{\Delta^\circ}{U^\circ}$.
   We know $A = (A^-)^\circ$. By the induction hypothesis, we have
   $\mildseq{\Gamma, A^-}{\Delta, A^-}{U}$, and we conclude
   with the unfocused admissibility lemma ${\it copy}_u$:
@@ -1029,11 +1046,10 @@ lemmas work.
   $\seq{\Gamma^\circ}{\Delta^\circ, {!}A}{U^\circ}$.  We know ${!}A =
   (C^-)^\circ$; by induction on the structure of $C^-$ there exists
   $A^-$ such that $C^- =
-  {\uparrow}{\downarrow}\ldots{\downarrow}{\uparrow}{!}A^-$.\robnote{Add
-    a footnote here explaining what is going on.}  By the induction
-  hypothesis, we have $\mildseq{\Gamma, A^-}{\Delta}{U}$, and we
-  conclude by the unfocused admissibility lemma ${!}_{uL}$, which is
-  derivable:
+  {\uparrow}{\downarrow}\ldots{\downarrow}{\uparrow}{!}A^-$.  By the
+  induction hypothesis, we have $\mildseq{\Gamma, A^-}{\Delta}{U}$,
+  and we conclude by the unfocused admissibility lemma ${!}_{uL}$,
+  which is derivable:
   \[
   \infer=[{\uparrow}{\downarrow}_L]
   {\mildseq{\Gamma}
@@ -1100,8 +1116,8 @@ lemmas work.
   $C^- = 
    {\uparrow}{\downarrow}\ldots{\uparrow}{\downarrow}(A^+ \lolli B^-)$.
   By the induction hypothesis, we have
-  $\mildseq{\Gamma}{\Delta_A}{A}$ and
-  $\mildseq{\Gamma}{\Delta, B}{U}$, and we conclude
+  $\mildseq{\Gamma}{\Delta_A}{A^+}$ and
+  $\mildseq{\Gamma}{\Delta, B^-}{U}$, and we conclude
   by the unfocused admissibility lemma ${\lolli}_{uL}$:
   \[
   \infer=[{\uparrow}{\downarrow}_L]
@@ -1154,7 +1170,7 @@ lemmas work.
    {\downarrow}{\uparrow}\ldots{\uparrow}{\downarrow}
     (A^+ \lolli B^-)$.
   By the induction hypothesis, we have
-  $\mildseq{\Gamma}{\Delta, {\downarrow}A^+}{{\uparrow}B^+}$, 
+  $\mildseq{\Gamma}{\Delta, {\uparrow}A^+}{{\downarrow}B^+}$, 
   and we conclude by the 
   unfocused admissibility lemma ${\lolli}_{uR}$:
   \[
@@ -2399,7 +2415,15 @@ presentation of intuitionistic linear logic.
 \subsection{Permeability}
 \label{sec:permeable}
 
-Our\robnote{Re-introduce why we're doing this.} final attempt to
+In our attempts to motivate a notion of persistent positive
+propositions, we have now surveyed Andreoli's atom optimization that
+interferes with the structure of cut admissibility, the bang
+optimization that lacks a good interpretation in unfocused linear
+logic, and an adjoint formulation of linear logic that introduces
+persistent positive propositions as members of a syntactic class $X$
+of persistent propositions that usually lies hidden in between the two
+right-synchronous and right-asynchronous (that is, positive and
+negative) halves of the ${!}$ connective.  Our final attempt to
 logically motivate a notion of a persistent positive proposition will
 be based on an analysis of {\it permeability}.  Permeability in
 classical presentations of linear logic dates back to Girard's LU
