@@ -96,6 +96,10 @@
 \newcommand{\rfoct}[4]{{#1};{#2} \vdash {#3} : [{#4}]}
 \newcommand{\lfoct}[4]{{#1};{#2}[{#3}] \vdash {#3} : [{#4}]}
 
+\newcommand{\slss}[4]{{#2}; {#3} \vdash_{#1} {#4}}
+\newcommand{\slst}[5]{{#2}; {#3} \vdash_{#1} {#4} : {#5}}
+
+
 \newcommand{\tfocusr}[1]{{#1}}
 \newcommand{\tfocusl}[2]{{#1} \circ {#2}}
 \newcommand{\tetan}[1]{\langle {#1} \rangle}
@@ -158,6 +162,11 @@
 \newcommand{\tackon}[2]{{#1}\{{#2}\}}
 \newcommand{\frameoff}[2]{{#1}\mbox{$\{\hspace{-4pt}\{$}{#2}\mbox{$\}\hspace{-4pt}\}$}}
 
+\newcommand{\tackonstart}{\{}
+\newcommand{\tackonstop}{\}}
+\newcommand{\frameoffstart}{\mbox{$\{\hspace{-4pt}\{$}}
+\newcommand{\frameoffstop}{\mbox{$\}\hspace{-4pt}\}$}}
+
 \newcommand{\urfoc}[3]{{#1};{#2} \longrightarrow [{#3}] \mathstrut}
 \newcommand{\ulfoc}[4]{{#1};{#2} \,[#3] \longrightarrow {#4} \mathstrut}
 \newcommand{\uinv}[4]{{#1};{#2};{#3} \longrightarrow {#4} \mathstrut}
@@ -177,8 +186,9 @@
 \newcommand{\arb}{\mathbin{??}}
 \newcommand{\interp}[1]{{\ulcorner{#1}\urcorner}}
 
-\newcommand{\transbasic}[1]{{\it OB}({#1})}
-\newcommand{\transtail}[1]{{\it OT}({#1})}
-\newcommand{\transpar}[1]{{\it OP}({#1})}
+\newcommand{\transop}[1]{{\it Op}({#1})}
 
 \newcommand{\opbasic}[3]{\llbracket {#1} \rrbracket({#2},{#3})}
+\newcommand{\opsubst}[1]{{{#1}^\dag}}
+
+\newcommand{\tlet}[2]{{\sf let}\,{#1}\,{\sf in}\,\{ {#2} \}}

@@ -61,15 +61,15 @@ This chapter represents joint work with Ian Zerny.
 
 \subsection*{Chapter outline}
 
-Three transformations that perform operationalizion are presented in
-Section~\ref{sec:operationalization}: a simple transformation, a
-tail-recursion optimized transformation, and a parallel
-transformation. When one of these transformations are applied to a
-natural semantics encoded in \sls, the result is an ordered abstract
-machine semantics encoded in SLS. In order to obtain the ordered
-abstract machine semantics for the call-by-value lambda calculus that
-was presented in Section~\ref{sec:intro-ssos}, we introduce a second
-transformation, defunctionalization, in
+Three versions of a transformation that performs operationalizion are
+presented in Section~\ref{sec:operationalization}: a simple
+transformation, a tail-recursion optimized transformation, and a
+parallel transformation. When one of these transformations is applied
+to a natural semantics encoded in \sls, the result is an ordered
+abstract machine semantics encoded in SLS. In order to obtain the
+ordered abstract machine semantics for the call-by-value lambda
+calculus that was presented in Section~\ref{sec:intro-ssos}, we
+introduce a second transformation, defunctionalization, in
 Section~\ref{sec:defunctionalization}.
 
 In Section~\ref{sec:nat-ssos-adequacy}, I take a bit of a detour to
@@ -79,7 +79,7 @@ is now identifiable as the call-by-value natural semantics for the
 lambda calculus after being transformed, first by the
 (tail-recursion-optimizing) operationalizion transformation and second
 by the defunctionalization transformation. I claim it is {\it also} a
-substructural operational semantics corresponding to the a standard
+substructural operational semantics corresponding to a standard
 call-by-value abstract machine semantics for the lambda calculus, but
 making this precise requires a discussion of adequacy for
 \sls~encodings. I also discuss the connections between our logical
@@ -216,8 +216,8 @@ that we want to search for a $v$ such that $e \Downarrow v$, and the
 proposition ${\sf retn}\,\interp{v}$ indicates the successful
 completion of this procedure. Therefore, searching for a $v$ such that
 $e \Downarrow v$ is derivable will be analogous to building a trace $T
-:: x_e{:}{\sf eval}\,\interp{e} \leadsto^* x_v{:}{\sf
-  retn}\,\interp{e}$ with concurrent computation.
+:: x_e{:}\susp{{\sf eval}\,\interp{e}} \leadsto^* x_v{:}\susp{{\sf
+    retn}\,\interp{e}}$ with concurrent computation.
 
 Representing the first case is straightforward: if we are evaluating
 $\lambda x.e$, then we have succeeded and can return $\lambda x.e$. 
@@ -230,16 +230,16 @@ Because the second rule involves both recursion and multiple subgoals,
 we will generalize our picture of the process state to allow us to store a
 stack of unfinished work in the ordered context, growing out to the
 right. Our new understanding, then, is that contexts either have the
-form $x{:}{\sf eval}\,\interp{e}, \Delta$ or the form $x{:}{\sf
-  retn}\,\interp{v}, \Delta$. In the process of concurrently
-computing a trace $x_e{:}{\sf eval}\,\interp{e_1\,e_2}, \Delta
-\leadsto^* x_r{:}{\sf retn}\,\interp{v}, \Delta$, each of the
+form $x{:}\susp{{\sf eval}\,\interp{e}}, \Delta$ or the form $x{:}\susp{{\sf
+  retn}\,\interp{v}}, \Delta$. In the process of concurrently
+computing a trace $x_e{:}\susp{{\sf eval}\,\interp{e_1\,e_2}}, \Delta
+\leadsto^* x_r{:}\susp{{\sf retn}\,\interp{v}}, \Delta$, each of the
 recursive calls to the search procedure will involve a sub-trace of the
 form
 %
-\[x_e{:}{\sf eval}\,\interp{e'}, y{:}\istrue{A^-}, \Delta
+\[x_e{:}\susp{{\sf eval}\,\interp{e'}}, y{:}\istrue{A^-}, \Delta
   \leadsto^*
-  x_r{:}{\sf retn}\,\interp{v'}, y{:}\istrue{A^-}, \Delta\]
+  x_r{:}\susp{{\sf retn}\,\interp{v'}}, y{:}\istrue{A^-}, \Delta\]
 %
 where $A^-$ is a negative proposition that is prepared to interact
 with the final ${\sf retn}\,\interp{v'}$ proposition to kickstart the
@@ -249,15 +249,15 @@ It's helpful to work backwards: in the fourth step, we have found
 $E\,x = \interp{e}$ and $V_2 = \interp{v_2}$, and the recursive call
 is to ${\sf eval}\,\interp{[v_2/x]e}$, which is the same thing as
 ${\sf eval}\,(E\,V_2)$. If the recursive call successfully returns,
-the context will contain a proposition of the form ${\sf retn}\,V$
-where $V = \interp{v}$, and the search procedure as a whole will be
-complete with the answer being $v$.  Thus, the negative proposition
-that implements the continuation can be written as $(\forall v. {\sf
-  retn}\,v \lefti \{ {\sf retn}\,v \})$. The positive proposition that
+the context will contain a suspended atomic proposition of the form
+${\sf retn}\,V$ where $V = \interp{v}$, and the search procedure as a
+whole is complete: the answer is $v$.  Thus, the negative proposition
+that implements the continuation can be written as $(\forall V. {\sf
+  retn}\,V \lefti \{ {\sf retn}\,V \})$. The positive proposition that
 will create this sub-computation can be written as follows:
 \begin{align*}
 {\it Step_4}(E,V_2) & \equiv {\sf eval}\,(E\,V_2) 
-\fuse {\downarrow}(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})
+\fuse {\downarrow}(\forall V.\, {\sf retn}\,V \lefti \{ {\sf retn}\,V \})
 %
 \intertext{Moving backwards, in the third step we have a $E_2 =
   \interp{e_2}$ that we were given and $E\,x = \interp{e}$ that we
@@ -267,22 +267,23 @@ will create this sub-computation can be written as follows:
   create this sub-computation can be written as follows:}
 %
 {\it Step_3}(E_2,E) & \equiv {\sf eval}\,E_2 
-\fuse {\downarrow}(\forall v. {\sf retn}\,v_2 \lefti \{ {\it Step_4}(E,v_2) \})
+\fuse {\downarrow}(\forall V_2.\,
+  {\sf retn}\,V_2 \lefti \{ {\it Step_4}(E,V_2) \})
 %
 \intertext{Finally, the first two steps can be handled together. We have
 $E_1 = \interp{e_1}$ and $E_2 = \interp{e_2}$; the recursive
 call is to ${\sf eval}\,\interp{e_1}$. Once the
 recursive call completes, we can enforce that the returned value has
-the form $\interp{\lambda x.e}$ in the continuation before proceeding
+the form $\interp{\lambda x.e}$ before proceeding
 to the continuation.}
 {\it Step_{1,2}}(E_1, E_2) & \equiv {\sf eval}\,E_1
-\fuse {\downarrow}(\forall e. {\sf retn}\,({\sf lam}\,\lambda x.\,e\,x)
-\lefti \{ {\it Step_3}(E_2, e)\})
+\fuse {\downarrow}(\forall E.\, {\sf retn}\,({\sf lam}\,\lambda x.\,E\,x)
+\lefti \{ {\it Step_3}(E_2, E)\})
 \end{align*}
 Thus, the rule implementing this entire portion of the search
 procedure is 
 \[
-\forall e_1.\,\forall e_2.\,
+\forall E_1.\,\forall E_2.\,
 {\sf eval}\,({\sf app}\,E_1\,E_2) \righti \{ {\it
   Step_{1,2}}(E_1, E_2) \}
 \]
@@ -318,11 +319,11 @@ Hannan and Miller \cite{hannan92operational} and Ager
 \cite{ager04natural} have also proposed the idea of operationalizing
 natural semantics specifications as abstract machines by provably
 correct and general transformations on logical specifications (in the
-case of Hannan and Miller) and the special-purpose framework of
-L-attributed natural semantics (in the case of Ager). The major
+case of Hannan and Miller) or on the special-purpose framework of
+L-attributed natural semantics (in the case of Ager). A major
 difference in this case is that both lines of work result in {\it
   deductive} specifications of abstract machines. Our translation into
-concurrent specification has the advantage of exploiting parallelism,
+concurrent specifications has the advantage of exploiting parallelism,
 as demonstrated in Section~\ref{sec:trans-par} below, and also opens
 up specifications to the modular inclusion of stateful and concurrent
 features, as we will discuss in
@@ -332,8 +333,9 @@ In Section~\ref{sec:trans-subset} we will present the subset of
 specifications that our transformation handles, in
 Section~\ref{sec:trans-basic} we will give the basic transformation
 and prove the transformation correct, and in
-Sections~\ref{sec:trans-tail}~and~\ref{sec:trans-par} we present
-tail-recursive and parallelism-enabling variants of the transformation.
+Sections~\ref{sec:trans-tail}~and~\ref{sec:trans-par} we extend the
+basic transformation to be both tail-recursion optimizing and
+parallelism-enabling.
 
 \subsection{Transformable specifications}
 \label{sec:trans-subset}
@@ -356,19 +358,19 @@ their predicates are declared as follows:
 & {\sf a} : \tau_1 \rightarrow \tau_2 \rightarrow {\sf prop}.\\
 & {\sf \#mode~a~{+}~{-}}.
 \end{align*}
-Without dependency, the two-place case is sufficient to for
-describing $n$-place relations.\footnote{As an example, to handle
-  addition on natural numbers, defined as a three-place relation ${\sf
-    add} : {\sf nat} \rightarrow {\sf nat} \rightarrow {\sf nat}
-  \rightarrow {\sf type}$ with its usual mode (${\sf
-    add}~{+}~{+}~{-}$), we define a unique type ${\sf add\_in}$ with
-  one binary constructor ${\sf add\_c} : {\sf nat} \rightarrow {\sf
-    nat} \rightarrow {\sf add\_in}$. Then we can declare (${\sf add'}
-  : {\sf add\_in} \rightarrow {\sf nat} \rightarrow {\sf type}$) with
-  mode (${\sf add'}~{+}~{-}$).}  It should be possible to handle
-dependent predicates (that is, those with declarations of the form
-${\sf a} : \Pi x{:}\tau_1.\,\tau_2(x) \rightarrow {\sf type}$) but we
-will not do so here.
+Without dependency, two-place relations are sufficient for describing
+$n$-place relations.\footnote{As an example, to handle addition on
+  natural numbers, defined as a three-place relation ${\sf add} : {\sf
+    nat} \rightarrow {\sf nat} \rightarrow {\sf nat} \rightarrow {\sf
+    type}$ with its usual mode (${\sf add}~{+}~{+}~{-}$), we define a
+  unique type ${\sf add\_in}$ with one binary constructor ${\sf
+    add\_c} : {\sf nat} \rightarrow {\sf nat} \rightarrow {\sf
+    add\_in}$. Then we can declare (${\sf add'} : {\sf add\_in}
+  \rightarrow {\sf nat} \rightarrow {\sf type}$) with mode (${\sf
+    add'}~{+}~{-}$).}  It should be possible to handle dependent
+predicates (that is, those with declarations of the form ${\sf a} :
+\Pi x{:}\tau_1.\,\tau_2(x) \rightarrow {\sf type}$), but we will not do
+so here.
 
 The restriction on signatures furthermore enforces that all rules must
 be of the form ${\sf r} : C$ or ${\sf r} : D$, where $C$ and $E$ are
@@ -402,47 +404,52 @@ specifications to the Horn fragment.
 All propositions $C$ are equivalent (at the level of synthetic
 inference rules) to propositions of the form $\forall
 \overline{x_0}\ldots \forall \overline{x_n}.\,A^+_n \lefti \ldots
-\lefti A^+_1 \lefti {\sf a}\,t_{0}\,t_{n-1}$,
-where the $\forall \overline{x_i}$ are shorthand for a series of
-universal quantifiers $\forall {x_{i1}}{:}{\tau_{i1}} \ldots \forall
-{x_{\it ik}}{:}{\tau_{\it ik}}$ and where each variable in
-$\overline{x_i}$ does not appear in $t_0$ (unless $i = 0$)
-nor in any $A^+_i$ with $j < i$ but does appear in either $A^+_i$ (or
-$t_0$ if $i = 0$). Therefore, when we consider moded proof
-search, the variables bound in $\underline{x_0}$ are all fixed by the
-query and those bound in the other $\underline{x_i}$ are all fixed by
-the output position of the $i^{\rm th}$ premise.
+\lefti A^+_1 \lefti {\sf a}\,t_{0}\,t_{n-1}$, where the $\forall
+\overline{x_i}$ are shorthand for a series of universal quantifiers
+$\forall {x_{i1}}{:}{\tau_{i1}} \ldots \forall {x_{\it
+    ik}}{:}{\tau_{\it ik}}$ and where each variable in
+$\overline{x_i}$ does not appear in $t_0$ (unless $i = 0$) nor in any
+$A^+_i$ with $j < i$ but does appear in $A^+_i$ (or $t_0$ if $i =
+0$). Therefore, when we consider moded proof search, the variables
+bound in $\underline{x_0}$ are all fixed by the query and those bound
+in the other $\underline{x_i}$ are all fixed by the output position of
+the $i^{\rm th}$ premise.
 
 \subsection{Basic transformation}
 \label{sec:trans-basic}
 
-The basic operationalization transformation $\transbasic{\Sigma}$
+The operationalization transformation $\transop{\Sigma}$
 operates on signatures $\Sigma$ that have the form described above. We
 will first give the transformation on signatures; the transformation
-of rule declarations ${\sf r} : C$ is the most important and involves
-a definition that will be presented next.
+of rule declarations ${\sf r} : C$ is the key case.
+
+Each predicate ${\sf a}$ that we plan to operationalize
+gets turned into two predicates ${\sf eval\_a}$ and ${\sf retn\_a}$.
+We will write $\opsubst{X}$ for the operation of substituting all
+occurrences of $p^-_c = {\sf a}\,t_1\,t_2$ with $({\sf eval\_a}\,t_1
+\lefti \{ {\sf retn\_a}\,t_2 \})$ in $X$. This substitution operation
+is used on propositions, contexts, and frames; it appears in the 
+transformation of rules ${\sf r} : D$ below.
 
 \begin{itemize}
-\item $\transbasic{\cdot} = \cdot$
-\item $\transbasic{\Sigma, {\sf a} : \tau_1 \rightarrow \tau_2
-    \rightarrow {\sf prop}} = \transbasic{\Sigma}, {\sf eval\_a} :
+\item $\transop{\cdot} = \cdot$
+\item $\transop{\Sigma, {\sf a} : \tau_1 \rightarrow \tau_2
+    \rightarrow {\sf prop}} = \transop{\Sigma}, {\sf eval\_a} :
   \tau_1 \rightarrow {\sf prop\,ord}, {\sf retn\_a} : \tau_2
   \rightarrow {\sf prop\,ord}$ \\ {\it (if $\sf a$ is one of the
     predicates that we are translating)}
-\item $\transbasic{\Sigma, {\sf a} : K} = \transbasic{\Sigma}, {\sf a}
+\item $\transop{\Sigma, {\sf a} : K} = \transop{\Sigma}, {\sf a}
   : K$ {\it (otherwise)}
-\item $\transbasic{\Sigma, {\sf c} : \tau} = \transbasic{\Sigma}, {\sf
+\item $\transop{\Sigma, {\sf c} : \tau} = \transop{\Sigma}, {\sf
     c} : \tau$ 
-\item $\transbasic{\Sigma, {\sf r} : C} = \transbasic{\Sigma}, {\sf r}
+\item $\transop{\Sigma, {\sf r} : C} = \transop{\Sigma}, {\sf r}
   : \forall \overline{x_0}.\, {\sf eval\_a}\,t_0 \lefti \llbracket A^+_1,
   \ldots, A^+_n \rrbracket (t_{n+1}, {\sf id})$ \\ {\it (where $C$ is
     equivalent to $\forall \overline{x_0}\ldots \forall
     \overline{x_n}.\, A^+_n \lefti \ldots \lefti A^+_1 \lefti {\sf
       a}\,t_{0}\,t_{n+1}$)}
-\item $\transbasic{\Sigma, {\sf r} : D} = \transbasic{\Sigma}, {\sf r}
-  : D'$\\{\it (where $D'$ is the proposition $D$ where all instances of
-  $p^-_c = {\sf a}\,t_1\,t_2$ have been replaced by ${\sf
-    eval\_a}\,t_1 \lefti \{ {\sf retn\_a}\,t_2 \}$)}
+\item $\transop{\Sigma, {\sf r} : D} = \transop{\Sigma}, {\sf r}
+  : \opsubst{D}$
 \end{itemize}
 
 The transformation of a proposition $C$ of the form $\forall
@@ -463,8 +470,9 @@ $A^+_i,\ldots,A^+_n$.
   (\forall\overline{x_i}.\, {\sf retn\_b}\,(\sigma{t^{\it out}_i})
   \lefti \opbasic{A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma}) \}$\\
   {\it (where $p^-_c$ is ${\sf b}\,t^{\it in}_i\,t^{\it out}_i$)}
-\item $\opbasic{{!}G,A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma}
-  = \forall \overline{x_i}.\, {!}\sigma{G} \lefti \opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma}$
+\item $\opbasic{{!}G,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma} = \forall
+  \overline{x_i}.\, {!}\sigma\opsubst{G} \lefti
+  \opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma}$
 \end{itemize}
 
 \noindent
@@ -478,10 +486,6 @@ We have already given an example of the this basic operationalization
 transformation, as Figure~\ref{fig:example-transform-cbv} is an
 instance of this transformation.
 
-\subsubsection{Correctness}
-
-XXX Correctness
-
 \subsection{Tail-recursion}
 \label{sec:trans-tail}
 
@@ -490,7 +494,7 @@ expressions $e$ and searches for expressions $v$ such that $e
 \Downarrow v$ is derivable. If we were to implement that procedure as
 a functional program, the procedure would be {\it tail-recursive}. In
 the procedure that handles the case when $e = e_1\,e_2$, the last step
-is that the search procedure is involed recursively. If and when that
+is that the search procedure is invoked recursively. If and when that
 callee returns $v$, then the caller will also return $v$.
 
 Tail-recursion is significant in functional programming because
@@ -498,7 +502,7 @@ tail-recursive calls can be implemented without allocating a stack
 frame: when a compiler makes this more efficient choice, we say it is
 performing {\it tail-recursion optimization}.\footnote{Or {\it tail
     call optimization}, as a tail-recursive function call is just a
-  specific instance of a tail call.} An analagous opportunity for
+  specific instance of a tail call.} An analogous opportunity for
 tail-recursion optimization also arises in our logical compilation
 procedure. In our motivating example, the last step in the $e_1\,e_2$
 case was operationlized as a positive proposition of the form ${\sf
@@ -514,11 +518,12 @@ state
 step \[y'{:}{\sf retn}\,V, \Delta\] is reached in one step by focusing
 on $y$. 
 
-If we instead operationalize the last step in the $e_1\,e_2$ case as
-simply ${\sf eval}\,(E\,V)$, we will reach the same final state with
-one less transition. The tail-recursion optimizing version of the
-operationalization transformation, $\transtail{\Sigma}$, creates
-concurrent computations that avoid these useless steps.
+If we operationalize the last step in the $e_1\,e_2$ case as ${\sf
+  eval}\,(E\,V)$ instead of as ${\sf eval}\,(E\, V) \fuse (\forall
+v.\,{\sf retn}\,v \lefti \{ {\sf retn}\,v \})$, we will reach the same
+final state with one less transition. The tail-recursion optimizing
+version of the operationalization transformation creates concurrent
+computations that avoid these useless steps.
 
 We cannot perform tail recursion in general. The obvious reason for
 this to be the case is when the output of the last subgoal is
@@ -534,20 +539,26 @@ down the stack, $t_{n+1} = {\sf c}\,y$. This case corresponds to
 functional programs that cannot be tail-call optimized.
 
 More subtly, we cannot even eliminate all cases where $t^{\it out}_n =
-t_{n+1}$ unless these functions are {\it fully general}. We say that
+t_{n+1}$ unless these terms are {\it fully general}. We say that
 $t_{n+1}$ with type $\tau$ is fully general if all of its free
 variables are in $\overline{x_n}$ (and therefore not fixed by the
-input or any other premises) and if, for any variable-free term $t'$
-of type $\tau$, there exists a substituion $\sigma$ such that $t =
+input or any other premise) and if, for any variable-free term $t'$ of
+type $\tau$, there exists a substitution $\sigma$ such that $t =
 {\sigma}t_{n+1}$. The simplest example way to do this is to force
-$t_{n+1} = t^{\it out}_n = y$ where $y = \overline{x_n}$, but it is
-also possible to have a fully general $t_{n+1} = {\sf c}\,y_1\,y_2$
-if, for instance, ${\sf c}$ has type $\tau_1 \rightarrow \tau_2
-\rightarrow {\sf foo}$ and there are no other constructors of type
-${\sf foo}$. This condition doesn't have an analouge in functional
-programming, because it corresponds to the possibility that 
-moded deduction computation can perform pattern matching on 
-{\it outputs}.
+$t_{n+1} = t^{\it out}_n = y$ where $y = \overline{x_n}$.\footnote{It
+  is also possible to have a fully general $t_{n+1} = {\sf
+    c}\,y_1\,y_2$ if, for instance, ${\sf c}$ has type $\tau_1
+  \rightarrow \tau_2 \rightarrow {\sf foo}$ and there are no other
+  constructors of type ${\sf foo}$. However, we also have to check
+  that there are no other first-order variables in $\Psi$ with types
+  like $\tau_3 \rightarrow {\sf foo}$ that could be used to make other
+  terms of type ${\sf foo}$. The technology to handle this, worlds
+  checking and subordination analysis, is well-understood and surveyed
+  elsewhere \cite{harper07mechanizing}, but this is tangential to the
+  current discussion.} This condition doesn't have an analogue in
+functional programming, because it corresponds to the possibility that
+moded deduction computation can perform pattern matching on {\it
+  outputs} and fail if the pattern match fails.
 
 The tail-recursive procedure can be described by adding a new 
 case to the definition of 
@@ -555,29 +566,29 @@ $\opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma}$:
 
 \begin{itemize}
 \item $\opbasic{{!}{\sf a}\,t^{\it in}_n\,t_{n+1}}{t_{n+1}}{\sigma} 
-  = \{{\sf retn\_a}\,(t^{\it in}_n)\}$
+  = \{{\sf eval\_a}\,({\sigma}{t^{\it in}_n})\}$
 \\
   {\it (where $t_{n+1}$ is fully general)}
 \end{itemize}
 This case overlaps with the third case of the definition given
-in Section~\ref{sec:trans-basic}, which represents that tail-recursion
-optimization can be applied or not in a non-determinstic manner.
+in Section~\ref{sec:trans-basic}, which indicates that tail-recursion
+optimization can be applied or not in a nondeterministic manner.
 
 \subsubsection{Example}
 
 A dramatic illustration of tail-call optimization can be given if we
 consider a big-step evaluation function that is based on a small-step
-structural operational semantics (SOS) specification. SOS
-specifications involve an inductively proposition encoding single-step
-evaluation ${\sf step} : {\sf exp} \rightarrow {\sf exp} \rightarrow
-{\sf prop}$ (moded ${\sf exp}\,{+}\,{-}$), as well as an is-value
-function ${\sf value} : {\sf exp} \rightarrow {\sf prop}$ (moded ${\sf
-  value}\,{+}$). We will not define these propositions here, but 
-we do so later on in Section~\ref{}.
+structural operational semantics (SOS) specification. In SOS
+specifications, single-step evaluation is defined as the two-place
+relation ${\sf step} : {\sf exp} \rightarrow {\sf exp} \rightarrow
+{\sf prop}$ (moded ${\sf exp}\,{+}\,{-}$) that makes use of the helper
+judgment ${\sf value} : {\sf exp} \rightarrow {\sf prop}$ (moded ${\sf
+  value}\,{+}$). We will not define these propositions here, but we do
+so later on in Section~\ref{sec:evaluationcontexts}.
 
-Given the small-step ${\sf step}$ predicate, it is easy to define 
-big-step evaluation ${\sf ev}\,\interp{e}\,\interp{v}$ as a series of
-small steps:
+Given the definition of ${\sf step}\,\interp{e}\,\interp{e'}$, it is
+easy to define big-step evaluation ${\sf ev}\,\interp{e}\,\interp{v}$
+as a series of small steps:
 
 \smallskip
 \fvset{fontsize=\small,boxwidth=auto}
@@ -601,8 +612,8 @@ small steps:
 
 Running this specification through the operationalization
 transformation and only operationalizing the ${\sf ev}$ predicate
-results in what I consider to be the strictly most boring
-substructural operational semantics specification, shown in
+results in what I consider to be the most boring substructural
+operational semantics specification, shown in
 Figure~\ref{fig:sos-tailrecursion} both without the tail-recursion
 optimization (left) and with the tail-recursion optimization (right).
 
@@ -634,7 +645,7 @@ proposition $(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})$:
   y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} \\
 \leadsto ~ & z_1{:}{\sf retn}\,\interp{v}
 \end{align*}
-In contrast, the tail recursion optimized version on the right hand
+In contrast, the tail-recursion optimized version on the right hand
 side of Figure~\ref{fig:sos-tailrecursion} takes half as many steps,
 and each step is smaller, simpler, and the overall trace does a better
 job of actually capturing the linear computation that is actually
@@ -652,10 +663,6 @@ x_n{:}{\sf eval}\,\interp{v}
 z{:}{\sf retn}\,\interp{v}
 \]
 
-\subsubsection{Correctness}
-
-XXX Correctness
-
 \subsection{Parallelism}
 \label{sec:trans-par}
 
@@ -663,7 +670,81 @@ Both the basic transformation and the tail-recursive transformation
 are sequential: if $x{:}{\sf eval}\,\interp{e} \leadsto^* \Delta$,
 then the process state $\Delta$ contains at most one proposition ${\sf
   eval}\,\interp{e'}$ or ${\sf retn}\,\interp{v}$ that can potentially
-be a part of any further transition. Put differently,
+be a part of any further transition. Put differently, the first two
+operationalization transformations express deductive computation as a
+concurrent computation that does not exhibit concurrency (sequential
+computation being a special case of concurrent computation).
+
+Sometimes, this is what we want: in
+Section~\ref{sec:nat-ssos-adequacy} we will see that the sequential
+tail-recursion-optimized abstract machine is what we want to
+adequately represent the traditional on-paper abstract machines for
+the call-by-value lambda calculus. In general, however, when distinct
+subgoals do not have input-output dependencies (that is, when none of
+subgoal $i$'s outputs are inputs to subgoal $i+1$), deductive computation
+can search for subgoal $i$ and $i+1$ simultaneously, and this can 
+be represented in the operationalization transformation.
+
+In the previous transformations, our process states were structured
+such that every negative proposition $A^-$ was waiting on a single
+${\sf retn}$ to be computed to its left; at that point, the negative
+proposition could be focused on, which effectively invokes the
+continuation stored in that negative proposition. If we ignore the
+first-order structure of the concurrent computation, the intermediate
+states of look like this:
+\[
+  (\mbox{subgoal 1}), y{:}\istrue{({\sf retn} \lefti {\it cont})}
+\]
+Note that $(\mbox{subgoal 1})$ is intended to represent some nonempty
+sequence of ordered propositions, not a single proposition. With the
+parallelism-enabling transformation, subgoal 1 can even be performing
+parallel search for its own subgoals:
+\[
+ (\mbox{subgoal 1.1}), (\mbox{subgoal 1.2}), 
+   y_1{:}\istrue{({\sf retn}_{1.1} \fuse {\sf retn}_{1.2} \lefti {\it cont}_1)}, 
+   y{:}\istrue{({\sf retn} \lefti {\it cont})}
+\]
+The two subcomputations $(\mbox{subgoal 1.1})$ and $(\mbox{subgoal
+  1.2})$ are next to one another in the ordered context, but the
+structure of transformed specifications ensures that the only way they
+can interact is if they both finish (becoming $z_{1.1}{:}\susp{{\sf
+    retn}_{1.1}}$ and $z_{1.2}{:}\susp{{\sf retn}_{1.2}}$), which will
+allow us to focus on $y_1$ and begin working on the continuation ${\it
+  cont}_1$. The principle at work is the same one that says that postfix
+notations like Reverse Polish notation are unambiguous: there's always
+only one way to reconstruct the tree of subgoals. 
+
+To allow for the transformed programs to have parallelism, we again
+add a new case to the function that transforms propositions $C$ in the
+signature.  In this case, the new case will actually subsume the old
+case that dealt with sequences of the form ${!}p_c^-,
+A^+_{i+1},\ldots,A^+_n$; that old case is now an instance of the
+general case where $i = j$. 
+
+\begin{itemize}
+\item $\opbasic{{!}p^-_{ci},\ldots,{!}p^-_{cj},A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma}$
+  \\
+  $~ \qquad = \{ {\sf eval\_bi}\,({\sigma}t^{\it in}_i) 
+                    \fuse \ldots \fuse
+                 {\sf eval\_bj}\,({\sigma}t^{\it in}_j)$
+  \\
+  $~ \qquad \qquad (\forall\overline{x_i}\ldots\forall\overline{x_j}.\, 
+     {\sf retn\_bi}\,(\sigma{t^{\it out}_i})
+     \fuse \ldots \fuse 
+     {\sf retn\_bj}\,(\sigma{t^{\it out}_j})$
+  \\
+  $~ \qquad \qquad \quad
+   \lefti \opbasic{A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma}) \}$\\
+  {\it (where
+   $p^-_{ck}$ is ${\sf bk}\,t^{\it in}_k\,t^{\it out}_k$ 
+   and $FV(t_k^{\it in}) \notin (\overline{x_i} \cup \ldots \cup \overline{x_j})$ 
+   for $i \leq k \leq j$)}
+\end{itemize}
+
+\noindent
+Note that the second side condition on the free variables of inputs is
+necessary if the resulting term is to be well-scoped, and is trivially 
+satisfied in the sequential case where $i = j$. 
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=auto}
@@ -676,11 +757,275 @@ be a part of any further transition. Put differently,
 The result of running the natural semantics from
 Figure~\ref{fig:example-transform-cbv} through the parallel and
 tail-recursion optimizing ordered abstract machine is shown in
-Figure~\ref{fig:cbv-ev-ssos-par}.
+Figure~\ref{fig:cbv-ev-ssos-par}; it represents that we can
+search for the subgoals $e_1 \Downarrow \lambda x.e$ and
+$e_2 \Downarrow v_2$ in parallel. We cannot, of course, run either
+of these subgoals in parallel with the third subgoal 
+$[v_2/x]e \Downarrow v$ because the input $[v_2/x]e$ mentions the outputs
+of both of the previous subgoals. 
 
-\subsubsection{Correctness}
+\subsection{Correctness}
 
-XXX Correctness
+The correctness of the basic, tail-recursion-optimizing, and parallel
+transformations all follow from the correctness of the parallel
+transformation; because transformation is nondeterministic, the
+previously presented transformations are just instances of this most
+general one.
+
+\bigskip
+\begin{theorem}[No effect on the LF fragment]
+  $\Psi \vdash_\Sigma t : \tau$ if and only if $\Psi
+  \vdash_{\transop{\Sigma}} t : \tau$.
+\end{theorem}
+
+\begin{proof}
+Straightforward induction in both directions; the transformation 
+leaves the LF-relevant part of the signature unchanged.
+\end{proof}
+
+\bigskip
+\begin{theorem}[Completeness of operationalization]
+If all propositions in $\Gamma$ have the form 
+$x{:}D$ or $z{:}\susp{p^+_{\mpers}}$, then
+\begin{enumerate}
+\item  
+If $\slss{\Sigma}{\Psi}{\Gamma}{\susp{p^-_d}}$,
+then $\slss{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}}{\susp{p^-_d}}$.
+\item  
+If $\slss{\Sigma}{\Psi}{\Gamma, [D]}{\susp{p^-_d}}$,
+then $\slss{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}, [\opsubst{D}]}{\susp{p^-_d}}$.
+\item  
+If $\slss{\Sigma}{\Psi}{\Gamma}{G}$,
+then $\slss{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}}{\opsubst{G}}$.
+\item
+If $\Delta$ matches $\frameoff{\Theta}{\Gamma}$ 
+and $\slss{\Sigma}{\Psi}{\Gamma}{\susp{p^-_c}}$
+(where $p^-_c = {\sf a}\,t\,s$),\\
+then
+$(\Psi; \tackon{\opsubst{\Theta}}{x{:}\susp{{\sf eval\_a}\,t}}) 
+  \leadsto^*_{\transop{\Sigma}}
+ (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,s}})$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Mutual induction on the size 
+of the input derivation.
+
+The first three parts are straightforward. In part 1, we have
+$\slst{\Sigma}{\Psi}{\Gamma}{\tfocusl{h}{\Sp}}{\susp{p^-_d}}$ where
+either $h = x$ and $x{:}D \in \Gamma$ or else $h = {\sf r}$ and ${\sf
+  c}{:}D \in \Sigma$. In either case the necessary result is
+$\tfocusl{h}{\Sp'}$, where we get $\Sp'$ from the induction hypothesis
+(part 2) on $\Sp$.
+
+In part 2, we proceed by case analysis on the proposition $D$ in focus. 
+The only interesting case is where $D = {!}p^-_c \lefti D'$
+\begin{itemize}
+\item If $D = p_d^-$, $\Sp = \tnil$ and $\tnil$ gives the desired result.
+
+\item If $D = \forall x{:}\tau.\,D'$ or $D = p^+_{\sf
+    pers} \lefti D'$, then $\Sp = (\tforalll{t}{\Sp'})$ 
+  or $\Sp = (\tappl{z}{\Sp'})$ (respectively). The necessary result is
+  $(\tforalll{t}{\Sp''})$ 
+  or $(\tappl{z}{\Sp''})$ (respectively) where we get $\Sp''$ from the
+  induction hypothesis (part 2) on $\Sp'$. 
+
+\item If $D = {!}p^-_c \lefti D'$ and $p^-_c = {\sf a}\,t_1\,t_2$, then 
+  $\Sp = (\tappl{\tbangr{\tetan{N}}}{\Sp'})$
+  and $\opsubst{D} = {!}({\sf eval}\,t_1 \lefti \{ {\sf retn}\,t_2 \}) \lefti \opsubst{D'}$.
+
+  \begin{tabbing}
+  $\slst{\Sigma}{\Psi}{\Gamma}{N}{\susp{p^-_c}}$
+  \` (given)
+  \\
+  $\slst{\Sigma}{\Psi}{\Gamma, [D]}{\Sp'}{\susp{p^-_d}}$
+  \` (given)
+  \\
+  $T :: (\Psi; \opsubst{\Gamma}, x{:}{\sf eval_a}\,t_1)
+    \leadsto^*_{\transop{E}} (\Psi; \opsubst{\Gamma}, y{:}{\sf eval_a}\,t_2)$
+  \` (ind. hyp. (part 2) on $N$)
+  \\
+  $\slst{\transop{\Sigma}}{\Psi}{\Gamma, [\opsubst{D'}]}{\Sp''}{\susp{p_d^-}}$
+  \` (ind. hyp. (part 2) on $\Sp'$)
+  \\
+  $\slst{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}}
+    {\tlaml{\tetap{x}{\,\tlet{T}{y}}}}
+    {{\sf eval\_a}\,t_1 \lefti \{ {\sf retn\_a}\,t_2 \}}$
+  \` (construction)
+  \\
+  $\slst{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}, [\opsubst{D}]}
+    {\tappl{\tbangr{(\tlaml{\tetap{x}{\,\tlet{T}{y}}})}}{\Sp'}}
+    {\susp{p^-_d}}$
+  \` (construction)
+  \end{tabbing}
+\item If $D = {!}G \lefti D'$, then $\Sp =
+  (\tappl{\tbangr{\tetan{N}}}{\Sp'})$. The necessary result is
+  $(\tappl{\tbangr{\tetan{N'}}}{\Sp''})$; we get $N'$ from the
+  induction hypothesis (part 3) on $N$ and get $\Sp''$ from the induction
+  hypothesis (part 2) on $\Sp'$.
+\end{itemize}
+
+The cases of part 3 follow the same pattern as the ones from part 2, but
+without the interesting case (which is excluded from the refinement $G$);
+the result follows by the induction hypothesis (part 3 or part 1). 
+
+In part 4, we have $\slst{\Sigma}{\Psi}{\Gamma}{\tfocusl{\sf
+    c}{\Sp}}{\susp{p^-_d}}$, where ${\sf r}{:}C \in \Sigma$ and the
+proposition $C$ is equivalent to
+$\forall{\overline{x_0}}\ldots\forall{\overline{x_n}}.\, A^+_n \lefti
+\ldots \lefti A^+_1 \lefti {\sf a}\,t_0\,t_{n+1}$ as described in
+Section~\ref{sec:trans-basic}. This means we can decompose $\Sp$ to
+get $\sigma_i = (\overline{s_0}/\overline{x_0},\ldots,
+\overline{s_i}/\overline{x_i})$ (for some terms $\overline{s_0} \ldots
+\overline{s_i}$ that have the correct type in $\Psi$) and a value
+$\slst{\Sigma}{\Psi}{\Gamma}{V_i}{[\sigma_i{A^+_i}]}$ for each $0 \leq
+i \leq n$. We also have $t = \sigma_0{t_0}$ and $s = \sigma_n{t_{n+1}}$.
+
+Because 
+${\sf r}{:}\forall\overline{x_0}.\,{\sf eval\_a}\,t_0 \lefti \opbasic{A_1, \ldots, A_n}{t_{n+1}}{{\sf id}} \in \transop{\Sigma}$, by left-focusing
+on that constant
+it suffices to show that there is a $\Sp'$ such that 
+$\slst{\transop\Sigma}{\Psi}{\Gamma,[
+\opbasic{A_1^+, \ldots, A_n^+}{t_{n+1}}{\sigma_0}
+]}{\Sp'}{\susp{\{C^+\}}}$ and a trace of the form
+$T :: (\Psi; \tackon{\Theta}{C^+}) \leadsto^*_{\transop{\Sigma}}
+ (\Psi; \tackon{\Theta}{y{:}{\sf retn\_a}\,})$. We will prove this
+by induction on the length of the trace; the general statement is that
+there is a $\Sp'$ such that 
+$\slst{\transop\Sigma}{\Psi}{\Gamma,[
+\opbasic{A_i^+, \ldots, A_n^+}{t_{n+1}}{\sigma_{i-1}}
+]}{\Sp'}{\susp{\{C^+\}}}$ and a trace of the form
+$T :: (\Psi; \tackon{\Theta}{C^+}) \leadsto^*_{\transop{\Sigma}}
+ (\Psi; \tackon{\Theta}{y{:}{\sf retn\_a}\,s})$. We proceed
+by case analysis on the definition of the operationalization transformation:
+\begin{itemize}
+\item $\opbasic{}{t_{n+1}}{\sigma_n} = \{ {\sf retn\_a}\,(\sigma_{n}{t_{n+1}}) \}$
+
+  \bigskip
+  This is a base case: $\Sp' = \tnil$ and because $\sigma_n{t_{n+1}} = s$, 
+  $(\Psi; \tackon{\Theta}{{\sf retn\_a}\,(\sigma_{n}{t_{n+1}})})$ decomposes
+  to $(\Psi; 
+  \tackon{\Theta}{y{:}{\susp{{\sf retn\_a}\,(\sigma_{n}{t_{n+1}})}}})$
+  in an inversion phase.
+  \bigskip
+
+\item $\opbasic{{!}{\sf a}\,t^{\it in}_n\,t_{n+1}}{t_{n+1}}{\sigma_{n-1}} 
+  = \{{\sf eval\_a}\,(\sigma_{n-1}{t^{\it in}_n})\}$
+
+  \bigskip
+  We are given a value 
+  $\slst{\Sigma}{\Psi}{\Gamma}{\tbangr{N}}
+   {[{\bang}{\sf a}\,\sigma_n{t^{\it in}_n}\,\sigma_n{t_{n+1}}]}$;
+  observe that $\sigma_{n-1}{t_n^{\it in}} = \sigma_n{t_n^{\it in}}$
+
+  \smallskip
+  This is also a base case of the inner induction: $\Sp' = \tnil$ and
+  $(\Psi; 
+  \tackon{\Theta}
+  {{\sf eval\_a}\,(\sigma_{n}{t^{\it in}_n})})$
+  decomposes to 
+  $(\Psi; 
+  \tackon{\Theta}
+  {x_{n}{:}{\susp{{\sf eval\_a}\,(\sigma_{n}{t^{\it in}_n})}}})$.
+  We must demonstrate a trace the rest of the way to
+  $(\Psi; \tackon{\Theta}{y{:}{\sf retn\_a}\,s})$. Because 
+  $s = \sigma_n{t_{n+1}}$, this is established by the 
+  outer induction hypothesis (part 4) on $N$. 
+  \bigskip
+
+\item $\opbasic{p^+_\mpers,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}} 
+  = \forall \overline{x_i}.\, \sigma_{i-1}{p^+}_\mpers \lefti \opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}$
+
+  \begin{tabbing}
+  $\slst{\Sigma}{\Psi}{\Gamma}{z}{[\sigma_i{p^+_\mpers}]}$
+  \` (given) 
+  \\
+  $\sigma_i = (\sigma_{i-1}, \overline{s_i}/\overline{x_i})$.
+  \` (definition of $\sigma_i$)
+  \\
+  $\slst{\transop{\Sigma}}{\Psi}{\Gamma, [\opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma_{i}}]}{\Sp'}{\susp{\{ C^+ \} }}$
+  \` (by inner ind. hyp.)
+  \\
+  $T :: (\Psi; \tackon{\Theta}{C^+}) \leadsto^*_{\transop{\Sigma}}
+   (\Psi; \tackon{\Theta}{y{:}{\sf retn\_a}\,s})$
+  \` (by inner ind. hyp.)
+  \\
+  $\slst{\transop{\Sigma}}{\Psi}
+    {\Gamma, [\forall \overline{x_i}.\, \sigma_{i-1}{p^+}_\mpers 
+                \lefti \opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}]}
+    {\left(\tforalll{\overline{s_i}}{\tappl{z}{\Sp'}}\right)}{\susp{\{ C^+ \}}}$
+  \\ 
+  \` (construction)
+  \end{tabbing}
+
+\item $\opbasic{{!}p^-_{ci},\ldots,{!}p^-_{cj},A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}$
+  \\
+  $~ \qquad = \{ {\sf eval\_bi}\,({\sigma_{i-1}}t^{\it in}_i) 
+                    \fuse  \ldots \fuse
+                 {\sf eval\_bj}\,({\sigma_{i-1}}t^{\it in}_j)$
+  \\
+  $~ \qquad \qquad (\forall\overline{x_i}\ldots\forall\overline{x_j}.\, 
+     {\sf retn\_bi}\,(\sigma_{i-1}{t^{\it out}_i})
+     \fuse \ldots \fuse 
+     {\sf retn\_bj}\,(\sigma_{i-1}{t^{\it out}_j})$
+  \\
+  $~ \qquad \qquad \quad
+   \lefti \opbasic{A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}) \}$\\
+  {\it (where
+   $p^-_{ck}$ is ${\sf bk}\,t^{\it in}_k\,t^{\it out}_k$ 
+   and $FV(t_k^{\it in}) \notin (\overline{x_i} \cup \ldots \cup \overline{x_j})$ 
+   for $i \leq k \leq j$)}
+
+  \bigskip
+  Let $\Sp = \tnil$. It then suffices to show that there is a trace
+\begin{align*}
+    &(\Psi, \Theta \tackonstart
+        x_i{:}\susp{{\sf eval\_bi}\,({\sigma_{i-1}}t^{\it in}_i)}, \ldots,
+    x_j{:}\susp{{\sf eval\_bj}\,({\sigma_{i-1}}t^{\it in}_j)},
+  \\
+  & \qquad\qquad y_{ij}{:}(\forall\overline{x_i}\ldots\forall\overline{x_j}.\, 
+     {\sf retn\_bi}\,(\sigma_{i-1}{t^{\it out}_i})
+     \fuse \ldots \fuse 
+     {\sf retn\_bj}\,(\sigma_{i-1}{t^{\it out}_j})\\
+  & \qquad\qquad\qquad
+      \lefti \opbasic{A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}})\,\mtrue
+       \tackonstop)
+  \\
+  & \quad \leadsto^*_{\transop{\Sigma}} 
+     (\Psi; \tackon{\Theta}{y{:}{\sf retn\_a}\,s})
+\end{align*}
+
+  \begin{tabbing}
+  $\slst{\Sigma}{\Psi}{\Gamma}{\tbangr{N_k}}{[{!}{{\sf bk}\,({\sigma_k}t_k^{\it in})\,({\sigma_k}t_k^{\it out})}]}$ \quad $(i \leq k \leq j)$
+  \` (given) 
+  \\
+  $\slst{\Sigma}{\Psi}{\Gamma}{\tbangr{N_k}}{[{!}{{\sf bk}\,({\sigma_{i-1}}t_k^{\it in})\,({\sigma_j}t_k^{\it out})}]}$
+  \` (side translation of ) 
+  \\
+  \end{tabbing}
+
+\item $\opbasic{{!}G,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma} = \forall
+  \overline{x_i}.\, {!}\sigma\opsubst{G} \lefti
+  \opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma}$
+
+  \smallskip
+  We are given a value 
+  $\slst{\Sigma}{\Psi}{\Gamma}{\tbangr{N}}{[{!}\sigma_i{G}]}$; observe that
+  $\sigma_i = (\sigma_{i-1}, \overline{s_i}/\overline{x_i})$.
+
+  \smallskip
+  We get $\Sp'$ and $T$ directly from the induction hypothesis.
+  The necessary result has the form 
+  $\tforalll{\overline{s_i}}{\tappl{\tbangr{N'}}{\Sp'}}$;
+  an appropriate number of instances of $\forall_L$ followed by
+  ${\lefti}_L$ on $N'$ and $\Sp'$. 
+
+\end{itemize}
+
+This inner induction concludes the proof.
+\end{proof}
+
 
 \subsection{Non-determinism and the natural semantics}
 
@@ -752,7 +1097,6 @@ The operationalization transformation
 
 \subsection{Adequacy}
 
-XXX REREAD ANDERS'S PAPER
 
 To make a carefully-chosen analogy, various on-paper styles of
 specifying the operational semantics are well-known and visually
@@ -897,6 +1241,7 @@ Cheney cites it in nominal abstraction.)
 \label{sec:othertransform}
 
 \subsection{Evaluation contexts}
+\label{sec:evaluationcontexts}
 
 Thus far, we have considered big-step operational semantics and abstract
 machines, neglecting the third great tradition of programming language
