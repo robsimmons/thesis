@@ -544,14 +544,15 @@ The use of suspended propositions $\langle A^+ \rangle$ and $\langle
 A^- \rangle$, and the four rules that interact with suspended
 propositions -- ${\it id}^+$, ${\it id}^-$, $\eta^+$, and $\eta^-$ --
 are the main nonstandard aspect of this presentation.  The $\eta^+$
-and $\eta^-$ rules are restricted to negative propositions, and there
-is no other way for suspended propositions to be introduced into the
+and $\eta^-$ rules are restricted to atomic propositions, and there is
+no other way for suspended propositions to be introduced into the
 context with rules, so it would seem be natural to restrict ${\it
-  id}^+$ to atomic propositions as well. To explain why this seemingly
-natural choice is the wrong one, we will turn our attention to
-suspended propositions and the four admissible rules (two focal
-substitution principles and two identity expansion principles) that
-interact with them.
+  id}^+$ to atomic propositions as well. To explain how this seemingly
+unnecessarily general choice will make our life easier later
+on,\robnote{reconsider} we will turn our attention to suspended
+propositions and the four admissible rules (two focal substitution
+principles and two identity expansion principles) that interact with
+them.
 
 \subsection{Suspended propositions}
 \label{sec:lin-suspended}
@@ -1023,16 +1024,16 @@ lemmas work.
    \mildseq{\Gamma, A^-}{\Delta, A^-}{U}}
   \]
 
-  Rule ${!}_L$: We are given 
-  $\seq{\Gamma^\circ, A}{\Delta^\circ}{U^\circ}$,
-  which is used to derive
-  $\seq{\Gamma^\circ}{\Delta^\circ, {!}A}{U^\circ}$.
-  We know ${!}A = (C^-)^\circ$; by induction on the structure of 
-  $C^-$ there exists $A^-$ such that 
-  $C^- = {\uparrow}{\downarrow}\ldots{\downarrow}{\uparrow}{!}A^-$.
-  By the induction hypothesis, we have 
-  $\mildseq{\Gamma, A^-}{\Delta}{U}$, and we conclude by the 
-  unfocused admissibility lemma ${!}_{uL}$, which is derivable: 
+  Rule ${!}_L$: We are given $\seq{\Gamma^\circ,
+    A}{\Delta^\circ}{U^\circ}$, which is used to derive
+  $\seq{\Gamma^\circ}{\Delta^\circ, {!}A}{U^\circ}$.  We know ${!}A =
+  (C^-)^\circ$; by induction on the structure of $C^-$ there exists
+  $A^-$ such that $C^- =
+  {\uparrow}{\downarrow}\ldots{\downarrow}{\uparrow}{!}A^-$.\robnote{Add
+    a footnote here explaining what is going on.}  By the induction
+  hypothesis, we have $\mildseq{\Gamma, A^-}{\Delta}{U}$, and we
+  conclude by the unfocused admissibility lemma ${!}_{uL}$, which is
+  derivable:
   \[
   \infer=[{\uparrow}{\downarrow}_L]
   {\mildseq{\Gamma}
@@ -1449,7 +1450,9 @@ proposition has an associated ${\sf RF}$ rule, and every negative atomic
 proposition has associated ${\sf CP}$ and ${\sf LF}$ rules, though
 as Andreoli noted, the structure of the
 proposition doesn't affect the structure of the associated synthetic
-inference rule beyond the outermost two polarity shifts. 
+inference rule beyond the outermost two polarity shifts. Here are
+three examples relevant to our running example out of the countably
+infinite space of possible rules.
 \[
 \infer[{\sf LP}_{a^+ \lolli {\uparrow}b^+}]
 {\mildseq{\Gamma}{\Delta, \langle a^+ \rangle, a^+ \lolli {\uparrow}b^+}{U}}
@@ -2396,21 +2399,20 @@ presentation of intuitionistic linear logic.
 \subsection{Permeability}
 \label{sec:permeable}
 
-Our final attempt to logically motivate a notion of a persistent
-positive proposition will be based on an analysis of {\it
-  permeability}.  Permeability in classical presentations of linear
-logic dates back to Girard's LU \cite{girard93unity}. 
-In this section, we will motivate
-permeable atomic propositions in intuitionistic linear logic by first
+Our\robnote{Re-introduce why we're doing this.} final attempt to
+logically motivate a notion of a persistent positive proposition will
+be based on an analysis of {\it permeability}.  Permeability in
+classical presentations of linear logic dates back to Girard's LU
+\cite{girard93unity}.  In this section, we will motivate permeable
+atomic propositions in intuitionistic linear logic by first
 considering a new identity expansion principle that only applies to
 permeable propositions, which are a syntactic refinement of the
 positive propositions.\footnote{Permeable {\it negative} propositions
   are relevant to classical linear logic, but the asymmetry of
-  intuitionistic linear logic means that, for now, 
-  it is reasonable to consider
-  permeability exclusively as a property of positive propositions. We 
-  will consider a certain kind  
-  of right-permeable propositions in Chapter 3.}
+  intuitionistic linear logic means that, for now, it is reasonable to
+  consider permeability exclusively as a property of positive
+  propositions. We will consider a certain kind of right-permeable
+  propositions in Chapter 3.}
 
 The admissible identity expansion rule can be very helpful as a way
 of writing down proofs that avoid doing unnecessary work which

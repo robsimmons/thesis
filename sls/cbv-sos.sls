@@ -1,4 +1,4 @@
-value: type.
+value: exp -> prop.
 value/lam: value (lam \x. E x).
 
 step: exp -> exp -> prop.

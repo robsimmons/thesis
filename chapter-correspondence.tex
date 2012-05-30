@@ -659,6 +659,12 @@ XXX Correctness
 \subsection{Parallelism}
 \label{sec:trans-par}
 
+Both the basic transformation and the tail-recursive transformation
+are sequential: if $x{:}{\sf eval}\,\interp{e} \leadsto^* \Delta$,
+then the process state $\Delta$ contains at most one proposition ${\sf
+  eval}\,\interp{e'}$ or ${\sf retn}\,\interp{v}$ that can potentially
+be a part of any further transition. Put differently,
+
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=auto}
 \VerbatimInput{sls/cbv-ev-ssos-par.sls}
