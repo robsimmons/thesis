@@ -1,4 +1,4 @@
-\chapter{On logical correspondence}
+\chapter{Ordered abstract machines}
 
 In Part 1, we defined \sls, a logical framework of substructural
 logical specifications. For the purposes of this thesis, we are
@@ -1083,7 +1083,68 @@ the proof.
 \end{proof}
 
 
-\subsection{Non-determinism and the natural semantics}
+\section{On logical correspondance}
+
+The examples given in the previous section have given so far all deal
+call-by-value semantics for the untyped lambda calculus, which has the
+property that any expression will either evaluate forever or will
+eventually evaluate to a value $\lambda x. e$. One of the advantages
+of the operationalization transformation, however, is that it allows
+us to
+
+The potential design space of substructural operational semantics is
+quite large.  In order to make sense of this space, it is helpful to
+have design principles that allow us to both {\it classify} different
+styles of presentation and {\it predict} what style(s) we should adopt
+based on what our goals are. I propose that different styles of
+\sls~specification can be productively classified in terms of the
+transformations that turn one classification style into another. Most
+transformations will not have inverses, so this methodology gives us a
+formal notion of which styles are more expressive than others.
+Considering logical transformations also can lower the cost of
+mis-prediction. If one begins a development in an overly-restrictive
+style, the development can be transformed into a more expressive style
+by an automatic transformation.
+
+The organizing principle that we put forth in this chapter and the
+next one is called the {\it logical correspondence}, by analogy with
+the {\it functional correspondence} of Ager, Danvy, Midtgaard, and
+others~\cite{ager03functional,ager04functional,ager05functional,
+  danvy08defunctionalized} in which existing styles of specification
+are related to each other by way of transformations on functional
+programs. It is not our goal here to detail the parallels between the
+logical and functional correspondence; rather, we want to emphasize
+the use of the logical correspondence to relate substructural
+operational to each other and to the natural semantics.
+
+Natural semantics specifications are not substructural operational
+specifications: the LF encodings of such specifications can generally
+be done just as well in LF or in the purely-persistent, non-modal
+fragment of \sls. It is not my purpose to advocate for natural
+semantics; recall that natural semantics were used to illustrate
+problems with {\it non}-modularity in language specification in
+Section~\ref{sec:modularnonmodular}. Instead, we are trying to
+
+
+de-mystify operational semantics by showing that they are 
+
+Instead, we are formalizing the
+intuition that, on a ad-hoc basis, it is clear how t 
+
+But natural semantics are
+quite standard and widely understood, and 
+
+
+ and are easy to talk about
+using 
+
+reasonably illustrate
+
+
+To finish the presentation of the operationalization transformation,
+we give a few more examples, which 
+
+\subsection{Arbitrary choice and failure}
 
 For the purposes of illustration, we will extend the language of
 expressions with a nondeterministic choice operator $e_1 \arb e_2$
@@ -1091,6 +1152,10 @@ expressions with a nondeterministic choice operator $e_1 \arb e_2$
 extra expression ${\sf junk}$ that does not evaluate to anything: this
 ensures that stuck states are possible, as search for a $v$ such that
 $(\lambda x.\,x)\,{\sf junk} \Downarrow v$ is derivable will fail.
+The natural semantics rules for this extension and their
+(tail-recursion optimized) operationalization are shown in
+Figure~\ref{fig:ns-arb}; there are no rules for ${\sf junk}$, as it is
+a stuck expression.
 
 \begin{figure}[t]
 \begin{minipage}[b]{0.45\linewidth}
@@ -1106,21 +1171,166 @@ $(\lambda x.\,x)\,{\sf junk} \Downarrow v$ is derivable will fail.
 \label{fig:ns-arb}
 \end{figure}
 
-About the only thing we specified was parallel search for successful
-proofs or not: we can handle the evaluation of $e_1 \arb e_2$ either
-by committed choice (picking one of the two expressions $e_1$ or $e_2$
-to evaluate and never reconsidering that decision), by backtracking
-(attempting to evaluate one of $e_1$ or $e_2$, then attempting to
-evaluate the other one if that first choice gets stuck) or by
-breadth-first search (looking for derivations of $e_1$ and $e_2$ at
-the same time), then a backtracking backward-chaining interpreter or a
-breadth-first
+We need to think about the desired semantics of $(\lambda y.\,y\,y)
+\arb ((\lambda x.\,x)\,{\sf junk})$ -- if the first subexpression
+$(\lambda y.\,y\,y)$ is chosen for evaluation, then the expression
+evaluates to a value, but if the second subexpression $(\lambda
+x.\,x)\,{\sf junk}$ is chosen, then the subexpression will evaluate to
+${\sf junk}$ and be effectively stuck. Our small-step intutitions
+about language safety say that this is a problem we should avoid, but
+natural semantics do not have an internal way of expressing that a
+successful evaluation exists along some paths but not along others.
+This is one of the ways in which our transformed specification is more
+expressive than the original semantics: it's possible to say
+$x{:}\susp{{\sf eval}\,\interp{(\lambda y.\,y\,y) \arb ((\lambda
+    x.\,x)\,{\sf junk})}} \leadsto^* \Delta$ such that $\Delta \neq
+y{:}\susp{{\sf retn}\,V}$ and $\Delta \not\leadsto$; we can't hope to
+reason about the absense of stuck states if we cannot express
+them. Our ability to reason about stuck concurrent computations is an
+artifact the fact that \sls~allows us to talk about traces $T$ in
+addition to talking about complete proofs.  The operationalization
+transformation allows us to transfer this concept to natural semantics
+specifications by way of translation.
 
-. However
+\begin{figure}[t]
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/cbv-bad-ite.sls}
+\caption{Operationalization of the problematic natural semantics for {\it if}-statements.}
+\label{fig:sls-bad-ite}
+\end{figure}
 
-The operationalization transformation 
+\subsection{Conditionals and factoring}
+
+Another extension that we can introduce complicates this view. A
+common way of giving a natural semantics for {\it if}-statements is
+through these two rules:
+\[
+\infer
+{{\sf true} \Downarrow {\sf true} \mathstrut}
+{}
+\quad
+\infer
+{{\sf false} \Downarrow {\sf false} \mathstrut}
+{}
+\quad
+\infer
+{{\sf if}\,e\,{\sf then}\,e_t\,{\sf else}\,e_f \Downarrow v \mathstrut}
+{e \Downarrow {\sf true}
+ &
+ e_t \Downarrow v \mathstrut}
+\quad
+\infer
+{{\sf if}\,e\,{\sf then}\,e_t\,{\sf else}\,e_f \Downarrow v \mathstrut}
+{e \Downarrow {\sf false}
+ &
+ e_f \Downarrow v \mathstrut}
+\]
+However, according to the straightfoward operationalization of these
+rules (shown in Figure~\ref{fig:sls-bad-ite}), we would be forced,
+when we first encounter an {\it if}-statement, to nondeterminstically
+choose whether the conditional will evaluate to ${\sf true}$ or ${\sf
+  false}$, just as we nondeterminstically chose one of the two
+expressions $e_1 \arb e_2$. If we make the wrong choice (and, assuming
+$e$ evaluates to anything at all, we always {\it can} make the wrong
+choice) then the concurrent computation will get stuck. Superficially,
+the following trace is indistinguishable from the stuck trace that
+arises from the previous example that was nondeterminstically ${\sf
+  junk}$, but there is nothing wrong with including {\it if}-statements
+in the language!
+\begin{align*}
+ & x_1{:}\susp{{\sf eval}\,\interp{{\sf if}\,{\sf false}\,{\sf then}\,e_t\,{\sf else}\,e_f}}
+\\
+\leadsto ~ & 
+x_2{:}\susp{{\sf eval}\,{\sf false}},
+y_2{:}\istrue{({\sf retn}\,{\sf true} \lefti \{ {\sf eval}\,\interp{e_t}\})}
+\\
+\leadsto ~ &
+x_3{:}\susp{{\sf retn}\,{\sf false}},
+y_2{:}\istrue{({\sf retn}\,{\sf true} \lefti \{ {\sf eval}\,\interp{e_t}\})}
+\\
+\not\leadsto ~ & (!!!)
+\end{align*}
 
 
+\begin{figure}[t]
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/cbv-ok-ite.sls}
+\caption{Operationalization of the fixed, determinstic natural semantics for {\it if}-statements.}
+\label{fig:sls-ok-ite}
+\end{figure}
+
+It is highly desirable to maintain our ability to talk about stuck
+states through the natural semantics; the easiest way to do so is 
+by modfying the natural semantics into a different natural semantics
+that is equivalent but more operational:
+\[
+\infer
+{{\sf pick}\,{\sf true}\,e_t\,e_f\,e_t\mathstrut}
+{}
+\quad
+\infer
+{{\sf pick}\,{\sf false}\,e_t\,e_f\,e_f\mathstrut}
+{}
+\quad
+\infer
+{{\sf true} \Downarrow {\sf true} \mathstrut}
+{}
+\quad
+\infer
+{{\sf false} \Downarrow {\sf false} \mathstrut}
+{}
+\quad
+\infer
+{{\sf if}\,e\,{\sf then}\,e_t\,{\sf else}\,e_f \Downarrow v' \mathstrut}
+{e \Downarrow v
+ & 
+ {\sf pick}\,v\,e_t\,e_f\,e'\mathstrut
+ & e' \Downarrow v'}
+\] 
+We can prove, with the existing metatheoretic machinery of Twelf, that this
+natural semantics is equivalent to the previous one in terms of 
+which judgments $e \Downarrow v$ are derivable, but the operationalization
+of this version, given in Figure~\ref{fig:sls-ok-ite}, is free
+of the previous version's problems.
+
+These two different versions of the same rule are related by a
+transformation called {\it factoring}. While factoring has been
+expressed by Polakow as a transformation on functional programs in a
+variant of the Delphin programming language
+\cite{poswolsky03factoring}, I am unaware of any treatment of the
+factoring transformation as a generally-correct {\it logical}
+transformation on Prolog, $\lambda$Prolog, or Twelf specifications,
+and I will not do so here.
+
+\subsubsection{Flat resolution for deductive computation}
+
+The operationalization transformation is inspired by the threatment of
+the operational semantics of LF in Tom Murphy VII's thesis
+\cite{murphy08modal}. In that thesis, he describes a natural semantics
+for Lambda 5, a distributed programming language, and then wanted to
+interpret that natural semantics as an {\it operational} semantics for
+Lambda 5. By modifying the checks that Twelf performs with a special
+purpose partiality directive, he was able to check that moded proof
+search for proofs in his natural semantics would never fail and never
+backtrack, though it might diverge. This check amounted to a proof of
+safety (progress and preservation) for his natural semantics. 
+
+The consideration of non-backtracking search is an interesting one,
+because it indicates that, {\it in the context of natural semantics},
+we are interested an interpretation of deductive computation that is
+not the usual backtracking interpretation.\footnote{This committed
+  choice form of deductive computation also goes by the name {\it flat
+    resolution} \cite{aitkaci99warrens}.} It is natural, then, to
+represent this computation as a concurrent computation, which is
+naturally interpreted as committed choice. 
+
+This works both ways, 
+however: in Section~\ref{sec:evaluationcontexts} we transform a
+a small-step structural operational semantics. As a deductive
+comptuation, SOS specifications are naturally backtracking, so 
+the concurrent computations we derive also need to be interpreted
+with backtracking search if we want to capture the operational
+intuition correctly. 
 
 \section{Logical transformation: defunctionalization}
 \label{sec:defunctionalization}
@@ -1223,53 +1433,6 @@ This chapter represents joint work with Ian Zerny.
 
 \subsection{The functional correspondence}
 
-The potential design space of substructural operational semantics is
-quite large.  In order to make sense of this space, it is helpful to
-have design principles that allow us to both {\it classify} different
-styles of presentation and {\it predict} what style(s) we should adopt
-based on what our goals are. I propose that different styles of
-\sls~specification can be productively classified in terms of the
-transformations that turn one classification style into another. Most
-transformations will not have inverses, so this methodology gives us a
-formal notion of which styles are more expressive than others.
-Considering logical transformations also can lower the cost of
-mis-prediction. If one begins a development in an overly-restrictive
-style, the development can be transformed into a more expressive style
-by an automatic transformation.
-
-The organizing principle that we put forth in this chapter and the
-next one is called the {\it logical correspondence}, by analogy with
-the {\it functional correspondence} of Ager, Danvy, Midtgaard, and
-others~\cite{ager03functional,ager04functional,ager05functional,
-  danvy08defunctionalized} in which existing styles of specification
-are related to each other by way of transformations on functional
-programs. It is not our goal here to detail the parallels between the
-logical and functional correspondence; rather, we want to emphasize
-the use of the logical correspondence to relate substructural
-operational to each other and to the natural semantics.
-
-Natural semantics specifications are not substructural operational
-specifications: the LF encodings of such specifications can generally
-be done just as well in LF or in the purely-persistent, non-modal
-fragment of \sls. It is not my purpose to advocate for natural
-semantics; recall that natural semantics were used to illustrate
-problems with {\it non}-modularity in language specification in
-Section~\ref{sec:modularnonmodular}. Instead, we are trying to
-
-
-de-mystify operational semantics by showing that they are 
-
-Instead, we are formalizing the
-intuition that, on a ad-hoc basis, it is clear how t 
-
-But natural semantics are
-quite standard and widely understood, and 
-
-
- and are easy to talk about
-using 
-
-reasonably illustrate
 
 
 \section{Exploring the richer fragment}
