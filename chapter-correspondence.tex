@@ -1,3 +1,20 @@
+\chapter{On logical correspondence}
+
+\begin{center}
+{\it Theme:}
+
+\medskip
+
+A logical framework based on forward reasoning in substructural logic
+supports many styles of programming language specification. These
+styles can be formally classified and connected by considering
+generally applicable transformations on logical
+specifications. Generally applicable transformations on logical
+specifications are also useful for derive program analyses from those
+operational semantics specifications.
+\end{center}
+
+
 \chapter{Ordered abstract machines}
 
 In Part 1, we defined \sls, a logical framework of substructural
@@ -57,20 +74,43 @@ computation (forward-chaining proof search for propositions of
 positive type). These transformations have the effect of mapping
 natural semantics specifications into abstract machine specifications.
 
-This chapter represents joint work with Ian Zerny.
+\subsection*{The logical correspondance}
+
+The potential design space of substructural operational semantics is
+quite large.  In order to make sense of this space, it is helpful to
+have design principles that allow us to both {\it classify} different
+styles of presentation and {\it predict} what style(s) we should adopt
+based on what our goals are. A major theme of this part of the thesis
+is that 
+
+I propose that different styles of
+\sls~specification can be productively classified in terms of the
+transformations that turn one classification style into another. Most
+transformations will not have inverses, so this methodology gives us a
+formal notion of which styles are more expressive than others.
+Considering logical transformations also can lower the cost of
+mis-prediction. If one begins a development in an overly-restrictive
+style, the development can be transformed into a more expressive style
+by an automatic transformation.
+
+A major theme of this part 
 
 \subsection*{Chapter outline}
 
-Three versions of a transformation that performs operationalizion are
-presented in Section~\ref{sec:operationalization}: a simple
-transformation, a tail-recursion optimized transformation, and a
-parallel transformation. When one of these transformations is applied
-to a natural semantics encoded in \sls, the result is an ordered
-abstract machine semantics encoded in SLS. In order to obtain the
-ordered abstract machine semantics for the call-by-value lambda
-calculus that was presented in Section~\ref{sec:intro-ssos}, we
-introduce a second transformation, defunctionalization, in
-Section~\ref{sec:defunctionalization}.
+The operationalization transformation is presented in
+Section~\ref{sec:operationalization}. When one of these
+transformations is applied to a natural semantics encoded in \sls, the
+result is a (higher-order) ordered abstract machine semantics encoded
+in SLS. A second transformation, defunctionalization, is presented in
+Section~\ref{sec:intro-ssos}; this transformation is turns
+higher-order SSOS specifications into first-order SSOS specifications.
+
+Taken together, operationalization and defunctionalization allow us to
+transform the call-by-value natural semantics for the untyped lambda
+calculus into the set of rules for call-by-value evaluation that we
+presented in Section~\ref{sec:intro-ssos}. This 
+
+
 
 In Section~\ref{sec:nat-ssos-adequacy}, I take a bit of a detour to
 discuss the traditional presentation of abstract machines. The ordered
@@ -82,9 +122,7 @@ by the defunctionalization transformation. I claim it is {\it also} a
 substructural operational semantics corresponding to a standard
 call-by-value abstract machine semantics for the lambda calculus, but
 making this precise requires a discussion of adequacy for
-\sls~encodings. I also discuss the connections between our logical
-correspondence and the {\it functional correspondence} investigated by
-Ager, Danvy, Midtgaard, and others.
+\sls~encodings. 
 
 Section~\ref{sec:richer-ordered-abstract} gets to the heart of why we
 are interested in the transformations discussed in this chapter: the
@@ -95,10 +133,22 @@ into the natural semantics specification. We explore a selection of
 these features, including mutable storage, call-by-need evaluation,
 and recoverable failure.
 
+Section~\ref{sec:relatedwork} discusses the {\it logical
+  correspondence}, which situates this chapter alongside the work
+
+I also discuss the connections between our logical
+correspondence and the {\it functional correspondence} investigated by
+Ager, Danvy, Midtgaard, and others.
+
+
+
 Finally, in Section~\ref{sec:othertransform}, we discuss the
 consequences of defining operationalization as a general
 transformation on \sls~specifications rather than a special-purpose
 transformation on natural semantics.
+
+This chapter represents joint work with Ian Zerny.
+
 
 % \begin{figure}[t]
 % \begin{minipage}[b]{0.45\linewidth}
@@ -170,11 +220,12 @@ untyped lambda calculus:
  &
  [v_2/x]e \Downarrow v \mathstrut}
 \]
-The natural semantics are moded with $e$ as an input and $v$ as an
-output, so it is meaningful to talk about being given a particular
-expression $e$ and using deductive computation to search for a $v$
-such that $e \Downarrow v$ is derivable. Consider a recursive search
-procedure implementing this particular deductive computation:
+The natural semantics specification is moded with $e$ as an input and
+$v$ as an output, so it is meaningful to talk about being given a
+particular expression $e$ and using deductive computation to search
+for a $v$ such that $e \Downarrow v$ is derivable. Consider a
+recursive search procedure implementing this particular deductive
+computation:
 \begin{itemize}
 \item
       If $e = \lambda x. e'$, 
@@ -246,11 +297,12 @@ with the final ${\sf retn}\,\interp{v'}$ proposition to kickstart the
 rest of the computation.
 
 It's helpful to work backwards: in the fourth step, we have found
-$E\,x = \interp{e}$ and $V_2 = \interp{v_2}$, and the recursive call
-is to ${\sf eval}\,\interp{[v_2/x]e}$, which is the same thing as
-${\sf eval}\,(E\,V_2)$. If the recursive call successfully returns,
-the context will contain a suspended atomic proposition of the form
-${\sf retn}\,V$ where $V = \interp{v}$, and the search procedure as a
+$E\,x = \interp{e}$ (where $e$ potentially has $x$ free) and $V_2 =
+\interp{v_2}$, and the recursive call is to ${\sf
+  eval}\,\interp{[v_2/x]e}$, which is the same thing as ${\sf
+  eval}\,(E\,V_2)$. If the recursive call successfully returns, the
+context will contain a suspended atomic proposition of the form ${\sf
+  retn}\,V$ where $V = \interp{v}$, and the search procedure as a
 whole is complete: the answer is $v$.  Thus, the negative proposition
 that implements the continuation can be written as $(\forall V. {\sf
   retn}\,V \lefti \{ {\sf retn}\,V \})$. The positive proposition that
@@ -287,10 +339,21 @@ procedure is
 {\sf eval}\,({\sf app}\,E_1\,E_2) \righti \{ {\it
   Step_{1,2}}(E_1, E_2) \}
 \]
-The \sls~encoding of our example natural
-semantics is shown in Figure~\ref{fig:example-transform-cbv} alongside
-the transformed specification, which has the form of an ordered
-abstract machine semantics.
+The \sls~encoding of our example natural semantics is shown in
+Figure~\ref{fig:example-transform-cbv} alongside the transformed
+specification, which has the form of an ordered abstract machine
+semantics, though it is different than the ordered abstract machine
+semantics presented in the introduction. We say the specificaiton
+above is {\it higher-order}, as ${\sf ev/app}$ is a rule that, when it
+participates in a transition, produces a new rule $(\forall E.\,{\sf
+  retn}\,({\sf lam}\,\lambda x.\,E\,x) \lefti \{ \ldots \})$ that
+lives in the context. The ordered abstract machine semantics from the
+introduction was {\it first-order}, because the head $\{ A^+ \}$ of
+every concurrent rule contains only positive atomic propositions.  We
+discuss the defunctionalization transformation, which allows us to
+derive first-order specificaitons from specifications that are
+higher-order in this way, in Section~\ref{sec:defunctionalization}
+below.
 
 \begin{figure}
 \begin{minipage}[b]{0.36\linewidth}
@@ -337,11 +400,11 @@ Sections~\ref{sec:trans-tail}~and~\ref{sec:trans-par} we extend the
 basic transformation to be both tail-recursion optimizing and
 parallelism-enabling.
 
-\subsection{Transformable specifications}
+\subsection{Transformable signatures}
 \label{sec:trans-subset}
 
 The starting point for the operationalization transformation is a
-deductive specification that is well-moded in the sense described in
+deductive signature that is well-moded in the sense described in
 Section~\ref{sec:framework-modes}. Every declared negative predicate
 will either remain defined by deductive proofs (we write the atomic
 propositions built with these predicates as $p_d^-$, $d$ for
@@ -395,11 +458,11 @@ G & ::= p^-_d
 If {\it all} propositions are to remain deductive, then the
 propositions $p^-_c$ and $C$ are irrelevant, and this restriction
 describes all persistent, deductive specifications -- essentially, any
-specification that could be executed by the standard logic programming
+signature that could be executed by the standard logic programming
 interpretation of LF \cite{pfenning98elf}. On the other hand, if all
 propositions are to be transformed, then the propositions $p^-_d$ and
 $D$ are irrelevant and this restriction amounts to restricting
-specifications to the Horn fragment.
+rules to the Horn fragment.
 
 All propositions $C$ are equivalent (at the level of synthetic
 inference rules) to propositions of the form $\forall
@@ -409,7 +472,7 @@ inference rules) to propositions of the form $\forall
 $\forall {x_{i1}}{:}{\tau_{i1}} \ldots \forall {x_{\it
     ik}}{:}{\tau_{\it ik}}$ and where each variable in
 $\overline{x_i}$ does not appear in $t_0$ (unless $i = 0$) nor in any
-$A^+_i$ with $j < i$ but does appear in $A^+_i$ (or $t_0$ if $i =
+$A^+_j$ with $j < i$ but does appear in $A^+_i$ (or $t_0$ if $i =
 0$). Therefore, when we consider moded proof search, the variables
 bound in $\underline{x_0}$ are all fixed by the query and those bound
 in the other $\underline{x_i}$ are all fixed by the output position of
@@ -419,7 +482,8 @@ the $i^{\rm th}$ premise.
 \label{sec:trans-basic}
 
 The operationalization transformation $\transop{\Sigma}$
-operates on signatures $\Sigma$ that have the form described above. We
+operates on SLS signatures $\Sigma$ that have the form described in the
+previous section. We
 will first give the transformation on signatures; the transformation
 of rule declarations ${\sf r} : C$ is the key case.
 
@@ -434,21 +498,21 @@ transformation of rules ${\sf r} : D$ below.
 \begin{itemize}
 \item $\transop{\cdot} = \cdot$
 \item $\transop{\Sigma, {\sf a} : \tau_1 \rightarrow \tau_2
-    \rightarrow {\sf prop}} = \transop{\Sigma}, {\sf eval\_a} :
-  \tau_1 \rightarrow {\sf prop\,ord}, {\sf retn\_a} : \tau_2
+    \rightarrow {\sf prop}} = \transop{\Sigma}, ~ {\sf eval\_a} :
+  \tau_1 \rightarrow {\sf prop\,ord}, ~ {\sf retn\_a} : \tau_2
   \rightarrow {\sf prop\,ord}$ \\ {\it (if $\sf a$ is one of the
     predicates that we are translating)}
-\item $\transop{\Sigma, {\sf a} : K} = \transop{\Sigma}, {\sf a}
+\item $\transop{\Sigma, {\sf a} : K} = \transop{\Sigma}, ~ {\sf a}
   : K$ {\it (otherwise)}
-\item $\transop{\Sigma, {\sf c} : \tau} = \transop{\Sigma}, {\sf
+\item $\transop{\Sigma, {\sf c} : \tau} = \transop{\Sigma}, ~ {\sf
     c} : \tau$ 
-\item $\transop{\Sigma, {\sf r} : C} = \transop{\Sigma}, {\sf r}
+\item $\transop{\Sigma, {\sf r} : C} = \transop{\Sigma}, ~ {\sf r}
   : \forall \overline{x_0}.\, {\sf eval\_a}\,t_0 \lefti \llbracket A^+_1,
   \ldots, A^+_n \rrbracket (t_{n+1}, {\sf id})$ \\ {\it (where $C$ is
     equivalent to $\forall \overline{x_0}\ldots \forall
     \overline{x_n}.\, A^+_n \lefti \ldots \lefti A^+_1 \lefti {\sf
       a}\,t_{0}\,t_{n+1}$)}
-\item $\transop{\Sigma, {\sf r} : D} = \transop{\Sigma}, {\sf r}
+\item $\transop{\Sigma, {\sf r} : D} = \transop{\Sigma}, ~ {\sf r}
   : \opsubst{D}$
 \end{itemize}
 
@@ -463,7 +527,7 @@ $A^+_i,\ldots,A^+_n$.
 \begin{itemize}
 \item $\opbasic{}{t_{n+1}}{\sigma} = \{ {\sf retn\_a}\,(\sigma{t_{n+1}}) \}$
 \item $\opbasic{p^+_\mpers,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma} 
-  = \forall \overline{x_i}.\, \sigma{p^+}_\mpers \lefti \opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma}$
+  = \forall \overline{x_i}.\, (\sigma{p^+_\mpers}) \lefti \opbasic{A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma}$
 \item $\opbasic{{!}p^-_c,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma}$
   \\
   $~ \qquad = \{ {\sf eval\_b}\,({\sigma}t^{\it in}_i) \fuse
@@ -471,8 +535,8 @@ $A^+_i,\ldots,A^+_n$.
   \lefti \opbasic{A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma}) \}$\\
   {\it (where $p^-_c$ is ${\sf b}\,t^{\it in}_i\,t^{\it out}_i$)}
 \item $\opbasic{{!}G,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma} = \forall
-  \overline{x_i}.\, {!}\sigma\opsubst{G} \lefti
-  \opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma}$
+  \overline{x_i}.\, {!}(\sigma\opsubst{G}) \lefti
+  \opbasic{A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma}$
 \end{itemize}
 
 \noindent
@@ -500,8 +564,7 @@ callee returns $v$, then the caller will also return $v$.
 Tail-recursion is significant in functional programming because
 tail-recursive calls can be implemented without allocating a stack
 frame: when a compiler makes this more efficient choice, we say it is
-performing {\it tail-recursion optimization}.\footnote{Or {\it tail
-    call optimization}, as a tail-recursive function call is just a
+performing {\it tail-recursion optimization}.\footnote{Or {\it tail-call optimization}, as a tail-recursive function call is just a
   specific instance of a tail call.} An analogous opportunity for
 tail-recursion optimization also arises in our logical compilation
 procedure. In our motivating example, the last step in the $e_1\,e_2$
@@ -542,7 +605,7 @@ More subtly, we cannot even eliminate all cases where $t^{\it out}_n =
 t_{n+1}$ unless these terms are {\it fully general}. We say that
 $t_{n+1}$ with type $\tau$ is fully general if all of its free
 variables are in $\overline{x_n}$ (and therefore not fixed by the
-input or any other premise) and if, for any variable-free term $t'$ of
+input of any other premise) and if, for any variable-free term $t'$ of
 type $\tau$, there exists a substitution $\sigma$ such that $t =
 {\sigma}t_{n+1}$. The simplest example way to do this is to force
 $t_{n+1} = t^{\it out}_n = y$ where $y = \overline{x_n}$.\footnote{It
@@ -768,7 +831,7 @@ of both of the previous subgoals.
 
 The correctness of the basic, tail-recursion-optimizing, and parallel
 transformations all follow from the correctness of the parallel
-transformation; because transformation is nondeterministic, the
+transformation; because the transformation is nondeterministic, the
 previously presented transformations are just instances of this most
 general one.
 
@@ -1082,67 +1145,10 @@ This completes the inner induction in the fourth part, and hence
 the proof.
 \end{proof}
 
+\section{Logical transformation: defunctionalization}
+\label{sec:defunctionalization}
 
-\section{On logical correspondance}
-
-The examples given in the previous section have given so far all deal
-call-by-value semantics for the untyped lambda calculus, which has the
-property that any expression will either evaluate forever or will
-eventually evaluate to a value $\lambda x. e$. One of the advantages
-of the operationalization transformation, however, is that it allows
-us to
-
-The potential design space of substructural operational semantics is
-quite large.  In order to make sense of this space, it is helpful to
-have design principles that allow us to both {\it classify} different
-styles of presentation and {\it predict} what style(s) we should adopt
-based on what our goals are. I propose that different styles of
-\sls~specification can be productively classified in terms of the
-transformations that turn one classification style into another. Most
-transformations will not have inverses, so this methodology gives us a
-formal notion of which styles are more expressive than others.
-Considering logical transformations also can lower the cost of
-mis-prediction. If one begins a development in an overly-restrictive
-style, the development can be transformed into a more expressive style
-by an automatic transformation.
-
-The organizing principle that we put forth in this chapter and the
-next one is called the {\it logical correspondence}, by analogy with
-the {\it functional correspondence} of Ager, Danvy, Midtgaard, and
-others~\cite{ager03functional,ager04functional,ager05functional,
-  danvy08defunctionalized} in which existing styles of specification
-are related to each other by way of transformations on functional
-programs. It is not our goal here to detail the parallels between the
-logical and functional correspondence; rather, we want to emphasize
-the use of the logical correspondence to relate substructural
-operational to each other and to the natural semantics.
-
-Natural semantics specifications are not substructural operational
-specifications: the LF encodings of such specifications can generally
-be done just as well in LF or in the purely-persistent, non-modal
-fragment of \sls. It is not my purpose to advocate for natural
-semantics; recall that natural semantics were used to illustrate
-problems with {\it non}-modularity in language specification in
-Section~\ref{sec:modularnonmodular}. Instead, we are trying to
-
-
-de-mystify operational semantics by showing that they are 
-
-Instead, we are formalizing the
-intuition that, on a ad-hoc basis, it is clear how t 
-
-But natural semantics are
-quite standard and widely understood, and 
-
-
- and are easy to talk about
-using 
-
-reasonably illustrate
-
-
-To finish the presentation of the operationalization transformation,
-we give a few more examples, which 
+\section{Nondeterminism}
 
 \subsection{Arbitrary choice and failure}
 
@@ -1302,7 +1308,7 @@ factoring transformation as a generally-correct {\it logical}
 transformation on Prolog, $\lambda$Prolog, or Twelf specifications,
 and I will not do so here.
 
-\subsubsection{Flat resolution for deductive computation}
+\subsection{Flat resolution for deductive computation}
 
 The operationalization transformation is inspired by the threatment of
 the operational semantics of LF in Tom Murphy VII's thesis
@@ -1317,23 +1323,20 @@ safety (progress and preservation) for his natural semantics.
 
 The consideration of non-backtracking search is an interesting one,
 because it indicates that, {\it in the context of natural semantics},
-we are interested an interpretation of deductive computation that is
+we are interested in an interpretation of deductive computation that is
 not the usual backtracking interpretation.\footnote{This committed
   choice form of deductive computation also goes by the name {\it flat
     resolution} \cite{aitkaci99warrens}.} It is natural, then, to
 represent this computation as a concurrent computation, which is
 naturally interpreted as committed choice. 
 
-This works both ways, 
-however: in Section~\ref{sec:evaluationcontexts} we transform a
-a small-step structural operational semantics. As a deductive
-comptuation, SOS specifications are naturally backtracking, so 
-the concurrent computations we derive also need to be interpreted
-with backtracking search if we want to capture the operational
-intuition correctly. 
-
-\section{Logical transformation: defunctionalization}
-\label{sec:defunctionalization}
+This works both ways, however: in Section~\ref{sec:evaluationcontexts}
+we transform a small-step structural operational semantics to obtain
+an SLS analouge of evaluation contexts. As a deductive comptuation,
+SOS specifications are naturally backtracking, so the concurrent
+computations we derive also need to be interpreted with backtracking
+search if we want to preserve the operational behavior of the
+specification.
 
 \section{Natural semantics and abstract machines}
 \label{sec:nat-ssos-adequacy}
@@ -1560,3 +1563,64 @@ will consider in this thesis that has with property.
 
 It's hard to include state in temporal logic! But the logical correspondence
 helps us understand why: the natural SSOS specification of 
+
+\section{Related work}
+\label{sec:related work}
+
+The potential design space of substructural operational semantics is
+quite large.  In order to make sense of this space, it is helpful to
+have design principles that allow us to both {\it classify} different
+styles of presentation and {\it predict} what style(s) we should adopt
+based on what our goals are. I propose that different styles of
+\sls~specification can be productively classified in terms of the
+transformations that turn one classification style into another. Most
+transformations will not have inverses, so this methodology gives us a
+formal notion of which styles are more expressive than others.
+Considering logical transformations also can lower the cost of
+mis-prediction. If one begins a development in an overly-restrictive
+style, the development can be transformed into a more expressive style
+by an automatic transformation.
+
+The organizing principle that we put forth in this chapter and the
+next one is called the {\it logical correspondence}, by analogy with
+the {\it functional correspondence} of Ager, Danvy, Midtgaard, and
+others~\cite{ager03functional,ager04functional,ager05functional,
+  danvy08defunctionalized,danvy12interderiving} in which existing styles of specification
+are related to each other by way of transformations on functional
+programs. It is not our goal here to detail the parallels between the
+logical and functional correspondence; rather, we want to emphasize
+the use of the logical correspondence to relate substructural
+operational to each other and to the natural semantics.
+
+Natural semantics specifications are not substructural operational
+specifications: the LF encodings of such specifications can generally
+be done just as well in LF or in the purely-persistent, non-modal
+fragment of \sls. It is not my purpose to advocate for natural
+semantics; recall that natural semantics were used to illustrate
+problems with {\it non}-modularity in language specification in
+Section~\ref{sec:modularnonmodular}. Instead, we are trying to
+
+The examples given in the previous section have given so far all deal
+with call-by-value semantics for the untyped lambda calculus, which
+has the property that any expression will either evaluate forever or
+will eventually evaluate to a value $\lambda x. e$. One of the
+advantages of the operationalization transformation, however, is that
+it allows us to
+
+de-mystify operational semantics by showing that they are 
+
+Instead, we are formalizing the
+intuition that, on a ad-hoc basis, it is clear how t 
+
+But natural semantics are
+quite standard and widely understood, and 
+
+
+ and are easy to talk about
+using 
+
+reasonably illustrate
+
+
+To finish the presentation of the operationalization transformation,
+we give a few more examples, which 

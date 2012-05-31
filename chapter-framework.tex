@@ -2,13 +2,35 @@
 
 Logical framework time!
 
+Example of active (or higher-order) rewriting rules
+\begin{align*}
+x_1{:}\susp{{\sf p2}({\sf c})}, ~~
+x_2{:}\susp{{\sf p1}({\sf c})}, ~~
+x_3{:}\istrue{(\forall x.\,{\sf p_1}(x) 
+                \lefti \{ {\sf p_2}(x) \lefti \{ {\sf p_3}(x) \} \})}, ~~
+x_4{:}\istrue{({\sf p3}({\sf c}) \lefti \{ {\sf p_4} \})} & \\
+\leadsto ~~~ 
+x_1{:}\susp{{\sf p2}({\sf c})}, ~~
+x_5{:}\istrue{({\sf p_2}({\sf c}) \lefti \{ {\sf p_3}({\sf c}) \})}, ~~
+x_4{:}\istrue{({\sf p3}({\sf c}) \lefti \{ {\sf p_4} \})} & \\
+\leadsto ~~~ 
+x_6{:}\susp{{\sf p3}({\sf c})}, ~~
+x_4{:}\istrue{({\sf p3}({\sf c}) \lefti \{ {\sf p_4} \})} & \\
+\leadsto ~~~ 
+x_7{:}\susp{{\sf p_4}} & \\
+\end{align*}
+
+
 \section{}
+
 
 \subsection{Partial dependency}
 \label{sec:why-not-fully-dependent}
 
 Talk about Jason's thesis \cite{}. Talk about the pain of concurrent 
 equality \cite{}.
+
+
 
 \section{Logic programming interpretation}
 \label{sec:framework-logicprog}
