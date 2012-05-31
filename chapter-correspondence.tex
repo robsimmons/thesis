@@ -783,7 +783,14 @@ Straightforward induction in both directions; the transformation
 leaves the LF-relevant part of the signature unchanged.
 \end{proof}
 
-\bigskip
+\begin{theorem}[Soundness of operationalization]
+XXX Soundness
+\end{theorem}
+
+\begin{proof}
+XXX Proof
+\end{proof}
+
 \begin{theorem}[Completeness of operationalization]
 If all propositions in $\Gamma$ have the form 
 $x{:}D$ or $z{:}\susp{p^+_{\mpers}}$, then
@@ -889,24 +896,24 @@ it suffices to show that there is a $\Sp'$ such that
 $\slst{\transop\Sigma}{\Psi}{\Gamma,[
 \opbasic{A_1^+, \ldots, A_n^+}{t_{n+1}}{\sigma_0}
 ]}{\Sp'}{\susp{\{C^+\}}}$ and a trace of the form
-$T :: (\Psi; \tackon{\Theta}{C^+}) \leadsto^*_{\transop{\Sigma}}
- (\Psi; \tackon{\Theta}{y{:}{\sf retn\_a}\,})$. We will prove this
+$T :: (\Psi; \tackon{\opsubst{\Theta}}{C^+}) \leadsto^*_{\transop{\Sigma}}
+ (\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,})$. We will prove this
 by induction on the length of the trace; the general statement is that
 there is a $\Sp'$ such that 
 $\slst{\transop\Sigma}{\Psi}{\Gamma,[
 \opbasic{A_i^+, \ldots, A_n^+}{t_{n+1}}{\sigma_{i-1}}
 ]}{\Sp'}{\susp{\{C^+\}}}$ and a trace of the form
-$T :: (\Psi; \tackon{\Theta}{C^+}) \leadsto^*_{\transop{\Sigma}}
- (\Psi; \tackon{\Theta}{y{:}{\sf retn\_a}\,s})$. We proceed
+$T :: (\Psi; \tackon{\opsubst{\Theta}}{C^+}) \leadsto^*_{\transop{\Sigma}}
+ (\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,s})$. We proceed
 by case analysis on the definition of the operationalization transformation:
 \begin{itemize}
 \item $\opbasic{}{t_{n+1}}{\sigma_n} = \{ {\sf retn\_a}\,(\sigma_{n}{t_{n+1}}) \}$
 
   \bigskip
   This is a base case: $\Sp' = \tnil$ and because $\sigma_n{t_{n+1}} = s$, 
-  $(\Psi; \tackon{\Theta}{{\sf retn\_a}\,(\sigma_{n}{t_{n+1}})})$ decomposes
+  $(\Psi; \tackon{\opsubst{\Theta}}{{\sf retn\_a}\,(\sigma_{n}{t_{n+1}})})$ decomposes
   to $(\Psi; 
-  \tackon{\Theta}{y{:}{\susp{{\sf retn\_a}\,(\sigma_{n}{t_{n+1}})}}})$
+  \tackon{\opsubst{\Theta}}{y{:}{\susp{{\sf retn\_a}\,(\sigma_{n}{t_{n+1}})}}})$
   in an inversion phase.
   \bigskip
 
@@ -922,14 +929,14 @@ by case analysis on the definition of the operationalization transformation:
   \smallskip
   This is also a base case of the inner induction: $\Sp' = \tnil$ and
   $(\Psi; 
-  \tackon{\Theta}
+  \tackon{\opsubst{\Theta}}
   {{\sf eval\_a}\,(\sigma_{n}{t^{\it in}_n})})$
   decomposes to 
   $(\Psi; 
-  \tackon{\Theta}
+  \tackon{\opsubst{\Theta}}
   {x_{n}{:}{\susp{{\sf eval\_a}\,(\sigma_{n}{t^{\it in}_n})}}})$.
   We must demonstrate a trace the rest of the way to
-  $(\Psi; \tackon{\Theta}{y{:}{\sf retn\_a}\,s})$. Because 
+  $(\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,s})$. Because 
   $s = \sigma_n{t_{n+1}}$, this is established by the 
   outer induction hypothesis (part 4) on $N$. 
   \bigskip
@@ -947,8 +954,8 @@ by case analysis on the definition of the operationalization transformation:
   $\slst{\transop{\Sigma}}{\Psi}{\Gamma, [\opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma_{i}}]}{\Sp'}{\susp{\{ C^+ \} }}$
   \` (by inner ind. hyp.)
   \\
-  $T :: (\Psi; \tackon{\Theta}{C^+}) \leadsto^*_{\transop{\Sigma}}
-   (\Psi; \tackon{\Theta}{y{:}{\sf retn\_a}\,s})$
+  $T :: (\Psi; \tackon{\opsubst{\Theta}}{C^+}) \leadsto^*_{\transop{\Sigma}}
+   (\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,s})$
   \` (by inner ind. hyp.)
   \\
   $\slst{\transop{\Sigma}}{\Psi}
@@ -980,7 +987,7 @@ by case analysis on the definition of the operationalization transformation:
   \bigskip
   Let $\Sp = \tnil$. It then suffices to show that there is a trace
 \begin{align*}
-    &(\Psi, \Theta \tackonstart
+    &(\Psi, \opsubst{\Theta} \tackonstart
         x_i{:}\susp{{\sf eval\_bi}\,({\sigma_{i-1}}t^{\it in}_i)}, \ldots,
     x_j{:}\susp{{\sf eval\_bj}\,({\sigma_{i-1}}t^{\it in}_j)},
   \\
@@ -993,37 +1000,86 @@ by case analysis on the definition of the operationalization transformation:
        \tackonstop)
   \\
   & \quad \leadsto^*_{\transop{\Sigma}} 
-     (\Psi; \tackon{\Theta}{y{:}{\sf retn\_a}\,s})
+     (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,s}})
 \end{align*}
 
   \begin{tabbing}
   $\slst{\Sigma}{\Psi}{\Gamma}{\tbangr{N_k}}{[{!}{{\sf bk}\,({\sigma_k}t_k^{\it in})\,({\sigma_k}t_k^{\it out})}]}$ \quad $(i \leq k \leq j)$
   \` (given) 
   \\
-  $\slst{\Sigma}{\Psi}{\Gamma}{\tbangr{N_k}}{[{!}{{\sf bk}\,({\sigma_{i-1}}t_k^{\it in})\,({\sigma_j}t_k^{\it out})}]}$
-  \` (side translation of ) 
+  $\slst{\Sigma}{\Psi}{\Gamma}{\tbangr{N_k}}{[{!}{{\sf bk}\,({\sigma_{i-1}}t_k^{\it in})\,({\sigma_j}t_k^{\it out})}]}$ \quad $(i \leq k \leq j)$
+  \` (condition on translation, defn. of $\sigma_k$)
   \\
+  $T :: (\Psi$\=$, \opsubst{\Theta} \tackonstart
+        x_i{:}\susp{{\sf eval\_bi}\,({\sigma_{i-1}}t^{\it in}_i)}, \ldots,
+    x_j{:}\susp{{\sf eval\_bj}\,({\sigma_{i-1}}t^{\it in}_j)},$\\
+  \>$~ \qquad y_{ij}{:}(\forall\overline{x_i}\ldots\forall\overline{x_j}.\, 
+     {\sf retn\_bi}\,(\sigma_{i-1}{t^{\it out}_i})
+     \fuse \ldots \fuse 
+     {\sf retn\_bj}\,(\sigma_{i-1}{t^{\it out}_j})$\\
+  \>$~ \qquad\qquad
+      \lefti \opbasic{A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}})\,\mtrue
+       \tackonstop)$\\
+  $~ \qquad \leadsto^*_{\transop{\Sigma}} 
+        (\Psi$\=$, \opsubst{\Theta} \tackonstart
+        y_i{:}\susp{{\sf retn\_bi}\,({\sigma_{j}}t^{\it in}_i)}, \ldots,
+    y_j{:}\susp{{\sf eval\_bj}\,({\sigma_{j}}t^{\it in}_j)},$\\
+  \>$~ \qquad y_{ij}{:}(\forall\overline{x_i}\ldots\forall\overline{x_j}.\, 
+     {\sf retn\_bi}\,(\sigma_{i-1}{t^{\it out}_i})
+     \fuse \ldots \fuse 
+     {\sf retn\_bj}\,(\sigma_{i-1}{t^{\it out}_j})$\\
+  \>$~ \qquad\qquad
+      \lefti \opbasic{A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}})\,\mtrue
+       \tackonstop)$\\
+  \` (by outer ind. hyp. (part 4) on each of the $N_k$ in turn)
+  \\
+  $\slst{\transop{\Sigma}}{\Psi}
+     {\Gamma,[\opbasic{A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{j}}]}
+     {\Sp'}{\susp{\{ C^+ \}}}$  \` (by inner ind. hyp.)
+  \\
+  $T' :: (\Psi, \tackon{\opsubst{\Theta}}{C^+}) \leadsto^*_{\transop{\Sigma}}
+        (\Psi, \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,s}})$ 
+   \` (by inner ind. hyp.)
   \end{tabbing}
+
+  The construction 
+  $\left(T; \tstep{\mkpat{C^+}}{y_{ij}}{(\tforalll{\overline{s_i}\ldots\overline{s_j}}{\tappl{(\tfuser{y_i}{\tfuser{\ldots}{y_j}})}{\Sp'}})}; T'\right) $
+  is then a trace of the correct type.
+  \bigskip
 
 \item $\opbasic{{!}G,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma} = \forall
   \overline{x_i}.\, {!}\sigma\opsubst{G} \lefti
   \opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma}$
 
-  \smallskip
-  We are given a value 
-  $\slst{\Sigma}{\Psi}{\Gamma}{\tbangr{N}}{[{!}\sigma_i{G}]}$; observe that
+  \begin{tabbing}
+  $\slst{\Sigma}{\Psi}{\Gamma}{\tbangr{N}}{[{!}\sigma_i{G}]}$
+  \` (given) 
+  \\
+  $\slst{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}}{N'}{\sigma_i{\opsubst{G}}}$
+  \` (by outer ind. hyp. (part 3)  on $N$) 
+  \\
   $\sigma_i = (\sigma_{i-1}, \overline{s_i}/\overline{x_i})$.
-
-  \smallskip
-  We get $\Sp'$ and $T$ directly from the induction hypothesis.
-  The necessary result has the form 
-  $\tforalll{\overline{s_i}}{\tappl{\tbangr{N'}}{\Sp'}}$;
-  an appropriate number of instances of $\forall_L$ followed by
-  ${\lefti}_L$ on $N'$ and $\Sp'$. 
-
+  \` (definition of $\sigma_i$)
+  \\
+  $\slst{\transop{\Sigma}}{\Psi}{\Gamma, [\opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma_{i}}]}{\Sp'}{\susp{\{ C^+ \} }}$
+  \` (by inner ind. hyp.)
+  \\
+  $T :: (\Psi; \tackon{\opsubst{\Theta}}{C^+}) \leadsto^*_{\transop{\Sigma}}
+   (\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,s})$
+  \` (by inner ind. hyp.)
+  \\
+  $\slst{\transop{\Sigma}}{\Psi}
+    {\Gamma, [\forall \overline{x_i}.\, {!}(\sigma_{i-1}{G})
+                \lefti \opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}]}
+    {\left(\tforalll{\overline{s_i}}{\tappl{\tbangr{N}}{\Sp'}}\right)}{\susp{\{ C^+ \}}}$
+  \\ 
+  \` (construction)
+  \end{tabbing}
 \end{itemize}
 
-This inner induction concludes the proof.
+\noindent
+This completes the inner induction in the fourth part, and hence
+the proof.
 \end{proof}
 
 
