@@ -107,7 +107,7 @@ styles is more expressive than the last.
 \end{figure}
 
 This classification of substructural operational semantics is
-illustrated graphcially in Figure~\ref{fig:class-prevwork}. Existing
+illustrated graphically in Figure~\ref{fig:class-prevwork}. Existing
 published work on substructural operational semantics specifications
 is placed in the figure, with arrows indicating the range of styles
 that are considered. With the possible exception of certain aspects of
@@ -122,8 +122,8 @@ semantics and ordered abstract machines) to the more expressive
 formalisms (ordered abstract machines and destination-passing).  The
 investigation of provably-correct transformations on
 \sls~specifications is therefore the means by which we classify of
-SSOS semantics. We call this methadology the {\it logical
-  correspondance}, and it is the focus of this portion of the thesis,
+SSOS semantics. We call this methodology the {\it logical
+  correspondence}, and it is the focus of this portion of the thesis,
 which justifies the following argument:
 
 \begin{quote} 
@@ -172,7 +172,7 @@ rule ${\sf ev/app}$, the subexpressions $e_1$ and $e_2$ can be
 evaluated to values in either order and can even be evaluated in
 parallel.
 
-We turn natural semantics into ordered abstract mahcines by
+We turn natural semantics into ordered abstract machines by
 a transformation called {\it operationalization}, and turn ordered
 abstract machine specifications into destination-passing
 specifications by a transformation called {\it destination-adding}.
@@ -180,7 +180,7 @@ Destination-passing specifications can then be transformed into a
 collecting semantics by the simple transformation of {\it
   abstraction}, after which they can be further abstracted to obtain
 program analyses like control flow analysis. These major
-transformations are presented graphcially in
+transformations are presented graphically in
 Figure~\ref{fig:class-transform}.
 
 \begin{figure}
@@ -241,8 +241,8 @@ Figure~\ref{fig:class-transform}.
 \end{figure}
 
 There are many other smaller design decisions that can be made in the
-creation of a substructural operational semantcs. Only one is
-graphcially represented in
+creation of a substructural operational semantics. Only one is
+graphically represented in
 Figures~\ref{fig:class-prevwork}~and~\ref{fig:class-transform}, the
 distinction between {\it higher-order} or {\it first-order}
 specifications. This distinction applies to all concurrent
@@ -290,16 +290,16 @@ x_7{:}\susp{{\sf p_4}} &
 \end{figure}
 
 Other distinctions between \sls~specifications can also be understood
-in terms of nondeterminstic choices that can be made by the various
+in terms of nondeterministic choices that can be made by the various
 transformations we consider: for instance, the operationalization
 transformation can produce ordered abstract machines that evaluate
 subcomputations in parallel or in sequence or not, and the
 destination-adding transformation can make continuations either linear
-or persistent. The existance of these nondeterminstic choices have two
+or persistent. The existence of these nondeterministic choices have two
 important consequences. First, it is generally the case that one source
 specification (a natural semantics or an ordered abstract machine
 specification) can give rise to several different target
-specifications (ordered abstract machine specificationss or
+specifications (ordered abstract machine specifications or
 destination-passing specifications). The correctness of the
 transformation also acts as a simple proof of the equivalence of the
 several target specifications.
@@ -318,22 +318,125 @@ during proof search.
 \section{Related work}
 
 This part of the thesis document document draws from many different
-sources of inspiration. 
+sources of inspiration. In this section, we survey this related work
+and, where applicable, outline how our use of logical correspondence
+differs from existing work.
 
-\subsection{Partiality in proof search}
+\subsection{Partiality in deductive computation}
 
-The operationalization transformation is inspired by the threatment of
-the operational semantics of LF in Tom Murphy VII's thesis
-\cite{murphy08modal}. In that thesis, he describes a natural semantics
-for Lambda 5, a distributed programming language, and then wanted to
-interpret that natural semantics as an {\it operational} semantics for
-Lambda 5. By modifying the checks that Twelf performs with a special
-purpose partiality directive, he was able to check that moded proof
-search for proofs in his natural semantics would never fail and never
-backtrack, though it might diverge. This check amounted to a proof of
-safety (progress and preservation) for his natural semantics. 
+The genesis of the operationalization transformation discussed in
+Chapter~6 can be found in the treatment of the operational semantics
+of LF in Tom Murphy VII's thesis \cite{murphy08modal}. In his thesis,
+Murphy described a natural semantics for Lambda 5, a distributed
+programming language, and then wanted to interpret that natural
+semantics as an {\it operational} semantics for Lambda 5. As discussed
+above, natural semantics are not operational. However, by interpreting
+the natural semantics as a moded logic program, Murphy stipulated that
+the operational semantics were precisely those given by moded, {\it
+  non-backtracking} deductive proof search. Then, by modifying the
+checks that Twelf performs with a special purpose partiality
+directive, he was able to check that moded proof search would never
+fail and never backtrack, though it might diverge. This check amounted
+to a proof of safety (progress and preservation) for his natural
+semantics. I believe his mechanized proof to be the only existing
+non-classical proof of safety for a big-step operational semantics.
+
+Murphy's proof only works because his formulation of Lambda 5 was {\it
+  intrinsically typed}, meaning that, using the facilities provided by
+LF's dependent types, he enforced that only well-typed terms could
+possibly be evaluated. His approach would also work for our untyped
+lambda calculus above, as closed terms in the untyped lambda calculus
+can never get stuck. However, as soon as we extend the untyped lambda
+calculus with some other values (numbers, Booleans, pairs, etc\ldots)
+or even just with a nonsense term ${\sf junk}$, then progress and
+preservation apply only to well-typed and not to arbitrary terms. In
+this case, Murphy's partiality checks no longer hold, so we cannot use
+his methadology to reason about safety. 
+
+One way to look at the operationalization transformation presented in
+Chapter~6 is as a way to make the internal structure of a deductive
+computation explicit as a concurrent computation. Having done so, we
+can explicitly represent complete, unfinished, and stuck (or failing)
+computations as concurrent traces.
 
 \subsection{A coinductive interpretation}
+
+Murphy proved safety for a natural semantics specification by
+reinterpreting the inductive definition of the natural semantics as a
+logic program and reasoning about the logic program. Leroy and Grall,
+in \cite{leroy09coinductive}, use a different reinterpretation: they
+reinterpret the inductive definition of natural semantics as 
+a {\it coinductive} specification, that is, the {\it greatest} fixed point
+of the following rules.
+\[
+\infer%[{\sf evco/lam}]
+{\lambda x. e \Downarrow^{\sf co} \lambda x. e \mathstrut}
+{}
+\quad
+\infer%[{\sf evco/app}]
+{e_1\,e_2 \Downarrow^{\sf co} v \mathstrut}
+{e_1 \Downarrow^{\sf co} \lambda x.e
+ &
+ e_2 \Downarrow^{\sf co} v_2
+ &
+ [v_2/x]e \Downarrow^{\sf co} v \mathstrut}
+\]
+Of course, aside from the ${\sf co}$ annotation and the different
+interpretation, these rules are syntactically identical to the inductively
+defined natural semantics above.
+
+Directly reinterpreting the inductive specification as an inductive
+specification doesn't quite produce the right result: for some
+diverging terms like $\omega = (\lambda x.\,x\,x)\,(\lambda
+x.\,x\,x)$, we can derive $\omega \Downarrow^{\sf co} e$ for any
+expression $e$, including expressions that are not values and
+expressions like ${\sf junk}$ with no relation to the original
+term. Conversely, there are diverging terms ${\it Div}$ such that
+${\sf div} \Downarrow^{\sf co} e$ is not derivable for {\it any}
+$e$.\footnote{Leroy and Grall discuss a counterexample due to Filinski
+  where ${\it Div} = {\it Y}{\it F}x$ where $\it Y$ is the fixed-point
+  combinator $\lambda f.\,(\lambda x.\,f\,(\lambda
+  v.\,(x\,x)\,v))\,(\lambda x.\,f\,(\lambda v.\,(x\,x)\,v))$ and $\it
+  F$ is $\lambda f.\,\lambda x.\,(\lambda g.\,\lambda
+  y.\,g\,y)\,(f\,x)$ \cite{leroy09coinductive}.} As a result, Leroy
+and Grall also give a greatest-fixed-point definition of diverging
+terms $e \Downarrow^\infty$ that is based on the least-fixed-point
+specification $e \Downarrow v$.
+\[
+\infer%[{\sf div/app1}]
+{e_1\,e_2 \Downarrow^\infty}
+{e_1 \Downarrow^\infty}
+\quad
+\infer%[{\sf div/app2}]
+{e_1\,e_2 \Downarrow^\infty}
+{e_1 \Downarrow (\lambda x.\,e)
+ & 
+ e_2 \Downarrow^\infty}
+\quad
+\infer%[{\sf div/app3}]
+{e_1\,e_2 \Downarrow^\infty}
+{e_1 \Downarrow (\lambda x.\,e)
+ & 
+ e_2 \Downarrow v_2
+ &
+ [v_2/x]e \Downarrow^\infty}
+\]
+Now diverging expressions are fully characterized as derivations for
+which $e \Downarrow^\infty$ is derivable by infinite derivation trees,
+thereby capturing both converging and diverging executions.  With this
+definition, Leroy and Grall prove a type safety propety: if $e$ has
+type $\tau$, then either $e \Downarrow v$ or $e \Downarrow^{\infty}$.
+However, the disjunctive character of this theorem means that a
+constructive proof of type safety would be required to take a typing
+derivation $e : \tau$ as input and produce as output either a proof of
+termination $e \Downarrow v$ or a proof of divergence $e
+\Downarrow^\infty$. This seems to imply that a constructive type
+safety theorem would additionally decide termination, and so it is
+unsuprising that type safety is proved classically by Leroy and Grall.
+
+We suggest that the operationalization transformation is superior to
+the coinductive (re)interpreation as a way of understanding the 
+behavior of infinite terms in the natural semantics. 
 
 \subsection{Transformation on specifications}
 
@@ -417,7 +520,7 @@ we give a few more examples, which
 
 \section{Expressiveness and modular extension}
 
-The functional correspondance is largely concerned with the 
+The functional correspondence is largely concerned with the 
 
 \sls~is very
 The potential design space of substructural operational semantics is
