@@ -7,7 +7,7 @@ operational semantics of programming languages, especially stateful
 and concurrent programming languages. This is not a new idea: one of
 the original case studies on CLF specification described the semantics
 of Concurrent ML \cite{cervesato02concurrent} in a specification style
-termed {\it substructural operational semantics} by Pfenning
+termed {\it substructural operational semantics}, or SSOS, by Pfenning
 \cite{pfenning04substructural}. The general idea of representing the
 intermediate states of a computation as contexts in substructural
 logic dates back to Miller \cite{miller92pi} and his Ph.D. student
@@ -16,13 +16,13 @@ of a $\pi$-calculus and of a low-level RISC machine (respectively) as
 contexts in focused classical linear logic.
 
 However, the design space of substructural operational semantics is
-extremely large and rich. In order to make sense of the design space,
-it is helpful to have design principles that allow us to both {\it
-  classify} different styles of presentation and {\it predict} what
-style(s) we should adopt based on what our goals are. In this thesis,
-I propose a classification scheme for substructural operational
-semantics based on the consideration of three major specification styles,
-where each 
+extremely rich. In order to make sense of the design space, it is
+helpful to have design principles that allow us to both {\it classify}
+different styles of presentation and {\it predict} what style(s) we
+should adopt based on what our goals are. In this thesis, I propose a
+classification scheme for substructural operational semantics based on
+the consideration of three major specification styles.  Each of these
+styles is more expressive than the last.
 
 \begin{itemize}
 \item The {\it natural semantics}, or big-step operational semantics,
@@ -40,36 +40,13 @@ where each
   substructural operational semantics first explored in CLF by
   Cervesato et al.~\cite{cervesato02concurrent}. It allows for the
   natural specification of features that incorporate synchronous
-  communication and non-local transfer of control.
+  communication and non-local transfer of control. Destination-passing
+  semantics are classified into two subspecies: those with linear
+  continuations and those with persistent continuations. Persistent
+  continuations are necessary to give a substructural operational
+  semantics for first-class continuations.
 \end{itemize}
 
-\noindent
-Destination-passing semantics are further classified into two groups
-based on whether the continuations in are treated as ephemeral
-(linear, consumable) or persistent (unrestricted, reusable) resources.
-
-Both ordered abstract machine semantics and destination-passing 
-semantics are further characterized by whether the specifications
-are {\it higher-order} or {\it first-order}. 
-
-The natural semantics is not properly 
-
-
- In order to make sense of this space, it is helpful to
-have design principles that allow us to both {\it classify} different
-styles of presentation and {\it predict} what style(s) we should adopt
-based on what our goals are. A major theme of this part of the thesis
-is that 
-In the two 
-
-The logical framework \sls~provides an extremely rich set of tools for
-specifying properties of programming languages. In the two chapters
-that follow, we will consider three styles of specification that can
-be adequately represented in the \sls~framework; each specification
-style is strictly more expressive than the last.
-
-\cite{watkins02concurrent}
-\cite{pfenning12chaining}
 
 \begin{figure}
 \begin{center}
@@ -91,11 +68,11 @@ style is strictly more expressive than the last.
 \draw[dotted] (0,1.5) -- (13.5,1.5);
 \draw[thick](0,3) -- (13.5,3);
 %
-\draw (-.8,2.45) node{(higher-};
-\draw (-.8,2.05) node{order)};
+\draw (-.8,2.45) node{\it (higher-};
+\draw (-.8,2.05) node{\it order)};
 %
-\draw (-.8,0.95) node{(first-};
-\draw (-.8,0.55) node{order)};
+\draw (-.8,0.95) node{\it (first-};
+\draw (-.8,0.55) node{\it order)};
 %
 \draw (3,1.2) node{\cite{pfenning04substructural}};
 \draw (3,.75) node{\cite{pfenning09substructural}};
@@ -104,6 +81,7 @@ style is strictly more expressive than the last.
 \draw (7.8,.3) node{\cite{pfenning12substructural}};
 \draw (6.4,2.5) node{\cite{cervesato02concurrent}};
 \draw (6.4,2.05) node{\cite{schacknielsen07induction}};
+\draw (3,-.4) node{\bf Increasing expressiveness};
 %
 \pgfsetarrowsstart{latex} 
 \pgfsetlinewidth{.3pt} 
@@ -121,23 +99,154 @@ style is strictly more expressive than the last.
 \draw (8.1,2.5) -- (7.45,2.5);
 \draw (8.1,2.05) -- (7.1,2.05);
 %
+\draw (12,-.4) -- (5.5,-.4);
 \end{tikzpicture} 
 \end{center}
-\caption{Classification of existing work on SSOS specifications}
+\caption{Classification of existing work on SSOS specifications.}
 \label{fig:class-prevwork}
 \end{figure}
 
+This classification of substructural operational semantics is
+illustrated graphcially in Figure~\ref{fig:class-prevwork}. Existing
+published work on substructural operational semantics specifications
+is placed in the figure, with arrows indicating the range of styles
+that are considered. With the possible exception of certain aspects of
+the SSOS presentation in Pfenning's course notes
+\cite{pfenning12substructural}, the taxonomy described above neatly
+captures previous work. 
 
-\noindent
 The statement that each specification style is strictly more
-expressive than the last is formal: by using fully automatic and
-provably-correct transformations, natural semantics can be
-mechanically transformed to ordered abstract machine semantics and
-ordered abstract machine semantics can be mechanically transformed
-into destination-passing semantics. These transformations are, in
-turn, instances of general transformations on \sls~specifications.
+expressive than the last is formal: there are automatic and
+provably-correct transformations from the expressive styles (natural
+semantics and ordered abstract machines) to the more expressive
+formalisms (ordered abstract machines and destination-passing).  The
+investigation of provably-correct transformations on
+\sls~specifications is therefore the means by which we classify of
+SSOS semantics. We call this methadology the {\it logical
+  correspondance}, and it is the focus of this portion of the thesis,
+which justifies the following argument:
+
+\begin{quote} 
+  {\bf Thesis (part 2):} A logical framework based on forward
+  reasoning in substructural logic supports many styles of programming
+  language specification. These styles can be formally classified and
+  connected by considering general transformations on logical
+  specifications. 
+ 
+  Generally applicable transformations on logical
+  specifications are also useful for deriving manifestly correct
+  program analyses from those operational semantics specifications.
+\end{quote} 
+
+In this introductory chapter, we will outline the 
 
 \section{Logical correspondence}
+
+The logical 
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}
+\draw (1.75,5.8) node{Natural semantics};
+\draw[thick](-.5cm,4cm) -- (-.5cm,5.5cm) -- (4cm,5.5cm) 
+  -- (4cm,4cm) -- (-.5cm,4cm);
+%
+\draw (11.75,-.7) node{Program analyses};
+\draw[thick](9.5cm,-1cm) -- (9.5cm,-2.5cm) -- (14cm,-2.5cm) 
+  -- (14cm,-1cm) -- (9.5cm,-1cm);
+%
+\draw[thick](0cm,0cm) -- (0cm,3cm);
+\draw (2.25,3.7) node{Ordered};
+\draw (2.25,3.3) node{abstract machines};
+%
+\draw[thick](4.5cm,0cm) -- (4.5cm,3cm);
+\draw (9,3.7) node{Destination-passing};
+\draw (6.75,3.3) node{\it (linear continuation)};
+%
+\draw[dotted](9cm,0cm) -- (9cm,3cm);
+\draw (11.25,3.3) node{\it (persistent continuation)};
+%
+\draw[thick](13.5cm,0cm) -- (13.5cm,3cm);
+%
+\draw[thick](0,0) -- (13.5,0);
+\draw[dotted] (0,1.5) -- (13.5,1.5);
+\draw[thick](0,3) -- (13.5,3);
+%
+\draw (-.8,2.45) node{\it (higher-};
+\draw (-.8,2.05) node{\it order)};
+%
+\draw (-.8,0.95) node{\it (first-};
+\draw (-.8,0.55) node{\it order)};
+%
+\draw[double,->] (3.9,2) -- (3.9,1);
+\draw[double,->] (6.75,2) -- (6.75,1);
+\draw[double,->] (9.6,2) -- (9.6,1);
+\draw (6.75,1.6) node {\fboxsep=0pt\fbox{\colorbox{white}{\rule[-0.5ex]{0em}{2.5ex}\bf ~Defunctionalization~(Sec.~\ref{sec:defunctionalization})~}}};
+%
+\draw (1.75,5.1) node {\bf Operationalization};
+\draw (1.75,4.6) node {\bf (Sec.~\ref{sec:operationalization})~};
+\draw[double,->,rounded corners=2cm] (.5,4.8) -- (-1,3) -- (1.5,2.5);
+%
+\draw (1.6,1) node {\bf Destination-};
+\draw (1.6,.5) node {\bf adding (Sec.~\ref{sec:destination})};
+\draw[double,->] (3.2,.6) -- (10,.6);
+\draw[double,->] (3.2,.4) -- (5.5,.4);
+%
+\draw[double,->,rounded corners=2cm] (.5,4.8) -- (-1,3) -- (1.5,2.5);
+\end{tikzpicture} 
+\end{center}
+\caption{Classification of existing work on SSOS specifications.}
+\label{fig:class-transform}
+\end{figure}
+
+
+SSOS specifications, both ordered abstract machine semantics and
+destination-passing semantics, are further characterized by whether
+the specifications are {\it higher-order} or {\it
+  first-order}. First-order \sls~specifications are like classic
+rewriting rules $\left( p_1 \fuse \ldots \fuse p_n \lefti \{ q_1 \fuse
+  \ldots \fuse q_m \} \right)$ where the head of the rule $\{ q_1
+\fuse \ldots \fuse q_m \}$ contains only atomic
+propositions. Higher-order \sls~specifications, on the other hand,
+contain {\it rules} in the conclusions of rules; when the rule fires,
+the resulting process state contains the rule. If ${\sf p1}$, ${\sf
+  p2}$ and ${\sf p3}$ are all ordered atomic propositions, then the
+following trance represents the evolution of higher-order process
+state:
+\begin{align*}
+x_1{:}\susp{{\sf p2}({\sf c})}, ~~
+x_2{:}\susp{{\sf p1}({\sf c})}, ~~
+x_3{:}\istrue{(\forall x.\,{\sf p_1}(x) 
+                \lefti \{ {\sf p_2}(x) \lefti \{ {\sf p_3}(x) \} \})}, ~~
+x_4{:}\istrue{({\sf p3}({\sf c}) \lefti \{ {\sf p_4} \})} & \\
+\leadsto ~~~ 
+x_1{:}\susp{{\sf p2}({\sf c})}, ~~
+x_5{:}\istrue{({\sf p_2}({\sf c}) \lefti \{ {\sf p_3}({\sf c}) \})}, ~~
+x_4{:}\istrue{({\sf p3}({\sf c}) \lefti \{ {\sf p_4} \})} & \\
+\leadsto ~~~ 
+x_6{:}\susp{{\sf p3}({\sf c})}, ~~
+x_4{:}\istrue{({\sf p3}({\sf c}) \lefti \{ {\sf p_4} \})} & \\
+\leadsto ~~~ 
+x_7{:}\susp{{\sf p_4}} & 
+\end{align*}
+Order matters for these rules as well: $\left(x{:}\susp{\sf p1(c)}, ~
+y{:}\istrue{\left( {\sf p1(c)} \lefti \{ {\sf p2(c)} \} \right)}\right)
+\leadsto \left(z{:}\susp{\sf p2(c)}\right)$, whereas 
+$\left(y{:}\istrue{\left( {\sf p1(c)} \lefti \{ {\sf p2(c)} \} \right)},~
+x{:}\susp{\sf p1(c)}\right)
+\not \leadsto$. 
+%
+The choice of higher-order versus first-order specification does not
+impact expressiveness, but it does influence our ability to read
+specifications (opinions differ as to which style is clearer) and
+influences the way we can reason about them.
+
+
+\section{Related work}
+
+\section{Expressiveness and modular extension}
+
+The functional correspondance is largely concerned with the 
 
 \sls~is very
 The potential design space of substructural operational semantics is
