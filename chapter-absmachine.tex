@@ -1053,6 +1053,14 @@ the proof.
 
 \section{Nondeterminism}
 
+The examples given in the previous section have given so far all deal
+with call-by-value semantics for the untyped lambda calculus, which
+has the property that any expression will either evaluate forever or
+will eventually evaluate to a value $\lambda x. e$. One of the
+advantages of the operationalization transformation, however, is that
+it allows us to
+
+
 \subsection{Arbitrary choice and failure}
 
 For the purposes of illustration, we will extend the language of
@@ -1232,6 +1240,10 @@ specification.
 
 \section{Adequacy with abstract machines}
 \label{sec:nat-ssos-adequacy}
+
+(Danvy calls this an SC machine in BRICS-RS-03-33, as; the formulation also corresponds
+to Harper's $\mathcal K\{{\sf nat}{\rightharpoonup}\}$
+it is
 
 \[
 \infer

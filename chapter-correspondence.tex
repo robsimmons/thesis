@@ -140,7 +140,10 @@ which justifies the following argument:
 
 \noindent
 In this introductory chapter, we will outline our use of logical
-correspondence and connect it to previous work.
+correspondence and connect it to previous work. The development of the
+logical correspondence as presented in this chapter, and the
+operationalization and defunctionalization transformations presented
+in the next chapter, represent joint work with Ian Zerny.
 
 \section{Logical correspondence}
 
@@ -351,13 +354,14 @@ calculus with some other values (numbers, Booleans, pairs, etc\ldots)
 or even just with a nonsense term ${\sf junk}$, then progress and
 preservation apply only to well-typed and not to arbitrary terms. In
 this case, Murphy's partiality checks no longer hold, so we cannot use
-his methadology to reason about safety. 
+his methodology to reason about safety. 
 
 One way to look at the operationalization transformation presented in
 Chapter~6 is as a way to make the internal structure of a deductive
 computation explicit as a concurrent computation. Having done so, we
 can explicitly represent complete, unfinished, and stuck (or failing)
-computations as concurrent traces.
+computations as concurrent traces and reason about these traces with a
+richer set of tools than the limited set Murphy successfully utilized.
 
 \subsection{A coinductive interpretation}
 
@@ -424,7 +428,7 @@ specification $e \Downarrow v$.
 Now diverging expressions are fully characterized as derivations for
 which $e \Downarrow^\infty$ is derivable by infinite derivation trees,
 thereby capturing both converging and diverging executions.  With this
-definition, Leroy and Grall prove a type safety propety: if $e$ has
+definition, Leroy and Grall prove a type safety property: if $e$ has
 type $\tau$, then either $e \Downarrow v$ or $e \Downarrow^{\infty}$.
 However, the disjunctive character of this theorem means that a
 constructive proof of type safety would be required to take a typing
@@ -432,93 +436,93 @@ derivation $e : \tau$ as input and produce as output either a proof of
 termination $e \Downarrow v$ or a proof of divergence $e
 \Downarrow^\infty$. This seems to imply that a constructive type
 safety theorem would additionally decide termination, and so it is
-unsuprising that type safety is proved classically by Leroy and Grall.
+unsurprising that type safety is proved classically by Leroy and Grall.
 
-We suggest that the operationalization transformation is superior to
-the coinductive (re)interpreation as a way of understanding the 
-behavior of infinite terms in the natural semantics. 
-
-\subsection{Transformation on specifications}
-
-From the other direction,
-Hannan and Miller \cite{hannan92operational} and Ager
-\cite{ager04natural} have also proposed the idea of operationalizing
-natural semantics specifications as abstract machines by provably
-correct and general transformations on logical specifications (in the
-case of Hannan and Miller) or on the special-purpose framework of
-L-attributed natural semantics (in the case of Ager). A major
-difference in this case is that both lines of work result in {\it
-  deductive} specifications of abstract machines. Our translation into
-concurrent specifications has the advantage of exploiting parallelism,
-as demonstrated in Section~\ref{sec:trans-par} below, and also opens
-up specifications to the modular inclusion of stateful and concurrent
-features, as we will discuss in
-Section~\ref{sec:richer-ordered-abstract}.
+We suggest that the operationalization transformation, seen as a
+logical extension to Murphy's methodology, is superior to the
+coinductive (re)interpretation as a way of understanding the behavior
+of infinite terms in the natural semantics. Both approaches
+reinterpret the logical artifact of natural semantics in an
+operational way, but the operationalization transformation gives us a
+satisfactory treatment of diverging terms without requiring the
+definition of an additional coinductive judgment $e
+\Downarrow^\infty$.
 
 \subsection{The functional correspondence}
 
-The potential design space of substructural operational semantics is
-quite large.  In order to make sense of this space, it is helpful to
-have design principles that allow us to both {\it classify} different
-styles of presentation and {\it predict} what style(s) we should adopt
-based on what our goals are. I propose that different styles of
-\sls~specification can be productively classified in terms of the
-transformations that turn one classification style into another. Most
-transformations will not have inverses, so this methodology gives us a
-formal notion of which styles are more expressive than others.
-Considering logical transformations also can lower the cost of
-mis-prediction. If one begins a development in an overly-restrictive
-style, the development can be transformed into a more expressive style
-by an automatic transformation.
-
-The organizing principle that we put forth in this chapter and the
-next one is called the {\it logical correspondence}, by analogy with
-the {\it functional correspondence} of Ager, Danvy, Midtgaard, and
+The ordered abstract machine that results from our operationalization
+transformation corresponds to a standard abstract machine model (a
+statement we will make precise in
+Section~\ref{sec:nat-ssos-adequacy}). In this sense, the logical
+correspondence has a great deal in common with the {\it functional
+  correspondence} of Ager, Danvy, Midtgaard, and
 others~\cite{ager03functional,ager04functional,ager05functional,
-  danvy08defunctionalized,danvy12interderiving} in which existing styles of specification
-are related to each other by way of transformations on functional
-programs. It is not our goal here to detail the parallels between the
-logical and functional correspondence; rather, we want to emphasize
-the use of the logical correspondence to relate substructural
-operational to each other and to the natural semantics.
+  danvy08defunctionalized,danvy12interderiving}. 
 
-Natural semantics specifications are not substructural operational
-specifications: the LF encodings of such specifications can generally
-be done just as well in LF or in the purely-persistent, non-modal
-fragment of \sls. It is not my purpose to advocate for natural
-semantics; recall that natural semantics were used to illustrate
-problems with {\it non}-modularity in language specification in
-Section~\ref{sec:modularnonmodular}. Instead, we are trying to
+The goal of the functional correspondence is encode various styles of
+semantic specifications (natural semantics, abstract machines,
+small-step structural operational semantics, environment semantics,
+etc.) as functional programs. It is then possible to show that these
+styles can be related by off-the-shelf and fully correct
+transformations on functional programs. The largest essential difference
+between the functional and logical correspondences, then, is that
+the functional correspondence acts on functional programs, whereas
+the logical correspondence acts on specifications encoded in a logical
+framework (in our case, the logical framework \sls). 
 
-The examples given in the previous section have given so far all deal
-with call-by-value semantics for the untyped lambda calculus, which
-has the property that any expression will either evaluate forever or
-will eventually evaluate to a value $\lambda x. e$. One of the
-advantages of the operationalization transformation, however, is that
-it allows us to
-
-de-mystify operational semantics by showing that they are 
-
-Instead, we are formalizing the
-intuition that, on a ad-hoc basis, it is clear how t 
-
-But natural semantics are
-quite standard and widely understood, and 
+While the functional and logical correspondences can be 
 
 
- and are easy to talk about
-using 
+However, the functional correspondence as given assumes that 
+semantic specifications are adequately represented as functional
+programs. 
+%
+The
+%interpretations
+representations and the adequacy of the encoding with respect to the ``on paper''
+semantics is an assumed prerequisite in existing work. 
+% tighten this next sentence up
+This is potentially
+problematic: the function space of a general programming language
+is much more open-ended than necessary or even desirable. The correspondence
+remains a useful methodology, but is not 
+directly applicable to the analysis 
+(particularly mechanized analysis) of semantic specifications.
 
-reasonably illustrate
 
+\subsection{Transformation on specifications}
 
-To finish the presentation of the operationalization transformation,
-we give a few more examples, which 
+ This aspect of
+operationalization -- taking a logical specification of a language's
+natural semantics and transforming it to obtain an abstract machine --
+has been explored by others, including Hannan and Miller
+\cite{hannan92operational} and Ager \cite{ager04natural} have also
+proposed the idea of operationalizing natural semantics specifications
+as abstract machines by provably correct and general transformations
+on logical specifications (in the case of Hannan and Miller) or on the
+special-purpose framework of L-attributed natural semantics (in the
+case of Ager). 
 
-\subsection{}
+A major difference in this case is that both lines of
+work result in {\it deductive} specifications of abstract
+machines. Our translation into concurrent specifications has the
+advantage of exploiting parallelism, as demonstrated in
+Section~\ref{sec:trans-par} below, and also opens up specifications to
+the modular inclusion of stateful and concurrent features, as we will
+discuss in Section~\ref{sec:richer-ordered-abstract}.
 
 
 \section{Expressiveness and modular extension}
+
+Much of the work in the previous section concerned itself with {\it
+  correspondence} -- in both the work of Ager et al.~and the work of
+Hannan and Miller, two or more specifications (often natural semantics
+and abstract machines) are presented and then shown to correspond
+exactly. But it is not my intent to advocate strongly for the use of
+natural semantics specifications; recall that natural semantics were
+used to illustrate problems with {\it non}-modularity in language
+specification in Section~\ref{sec:modularnonmodular}. Instead, our
+use 
 
 The functional correspondence is largely concerned with the 
 
@@ -537,18 +541,5 @@ style, the development can be transformed into a more expressive style
 by an automatic transformation.
 
 
-\begin{center}
-{\it Theme:}
-
-\medskip
-
-A logical framework based on forward reasoning in substructural logic
-supports many styles of programming language specification. These
-styles can be formally classified and connected by considering
-generally applicable transformations on logical
-specifications. Generally applicable transformations on logical
-specifications are also useful for derive program analyses from those
-operational semantics specifications.
-\end{center}
 
 
