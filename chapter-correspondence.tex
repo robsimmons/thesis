@@ -44,7 +44,7 @@ styles is more expressive than the last.
   semantics are classified into two subspecies: those with linear
   continuations and those with persistent continuations. Persistent
   continuations are necessary to give a substructural operational
-  semantics for first-class continuations.
+  semantics to languages with first-class continuations.
 \end{itemize}
 
 
@@ -138,11 +138,50 @@ which justifies the following argument:
   program analyses from those operational semantics specifications.
 \end{quote} 
 
-In this introductory chapter, we will outline the 
+\noindent
+In this introductory chapter, we will outline our use of logical
+correspondence and connect it to previous work.
 
 \section{Logical correspondence}
 
-The logical 
+As stated above, we will primarily discuss and connect three different
+styles that are used specifying the operational semantics of
+programming languages. Natural semantics is a high-level, declarative
+style of specification. For illustration, the call-by-value natural
+semantics for the untyped lambda calculus is comprised of two rules:
+\[
+\infer[{\sf ev/lam}]
+{\lambda x. e \Downarrow \lambda x. e \mathstrut}
+{}
+\quad
+\infer[{\sf ev/app}]
+{e_1\,e_2 \Downarrow v \mathstrut}
+{e_1 \Downarrow \lambda x.e
+ &
+ e_2 \Downarrow v_2
+ &
+ [v_2/x]e \Downarrow v \mathstrut}
+\]
+This inductive definition assigns meaning to all the terminating
+expressions in the lambda calculus. However, natural semantics are not
+{\it operational} semantics, except in the very loose sense that they
+are {\it moded} in the sense of Section~\ref{sec:framework-modes}: we
+can think of the $e$ in $e \Downarrow v$ as being an input and the $v$
+as being output. The order of evaluation is unspecified, however.  In
+rule ${\sf ev/app}$, the subexpressions $e_1$ and $e_2$ can be
+evaluated to values in either order and can even be evaluated in
+parallel.
+
+We turn natural semantics into ordered abstract mahcines by
+a transformation called {\it operationalization}, and turn ordered
+abstract machine specifications into destination-passing
+specifications by a transformation called {\it destination-adding}.
+Destination-passing specifications can then be transformed into a
+collecting semantics by the simple transformation of {\it
+  abstraction}, after which they can be further abstracted to obtain
+program analyses like control flow analysis. These major
+transformations are presented graphcially in
+Figure~\ref{fig:class-transform}.
 
 \begin{figure}
 \begin{center}
@@ -188,31 +227,47 @@ The logical
 \draw[double,->,rounded corners=2cm] (.5,4.8) -- (-1,3) -- (1.5,2.5);
 %
 \draw (1.6,1) node {\bf Destination-};
-\draw (1.6,.5) node {\bf adding (Sec.~\ref{sec:destination})};
+\draw (1.6,.5) node {\bf adding (Sec.~\ref{sec:destination-adding})};
 \draw[double,->] (3.2,.6) -- (10,.6);
 \draw[double,->] (3.2,.4) -- (5.5,.4);
 %
-\draw[double,->,rounded corners=2cm] (.5,4.8) -- (-1,3) -- (1.5,2.5);
+\draw[double,->,rounded corners=2cm] (9.5,.3) -- (7.5,-1) -- (11.1,-1.6);
+\draw[double,->,rounded corners=2.5cm] (7.5,.3) -- (5.1,-.6) -- (11.1,-1.6);
+\draw (7,-1.2) node {\fboxsep=0pt\fbox{\colorbox{white}{\rule[-0.5ex]{0em}{2.5ex}\bf ~Abstraction~(Sec.~\ref{sec:abstraction})~}}};
 \end{tikzpicture} 
 \end{center}
-\caption{Classification of existing work on SSOS specifications.}
+\caption{Major transformations on \sls~specifications.}
 \label{fig:class-transform}
 \end{figure}
 
-
-SSOS specifications, both ordered abstract machine semantics and
-destination-passing semantics, are further characterized by whether
-the specifications are {\it higher-order} or {\it
-  first-order}. First-order \sls~specifications are like classic
-rewriting rules $\left( p_1 \fuse \ldots \fuse p_n \lefti \{ q_1 \fuse
-  \ldots \fuse q_m \} \right)$ where the head of the rule $\{ q_1
-\fuse \ldots \fuse q_m \}$ contains only atomic
+There are many other smaller design decisions that can be made in the
+creation of a substructural operational semantcs. Only one is
+graphcially represented in
+Figures~\ref{fig:class-prevwork}~and~\ref{fig:class-transform}, the
+distinction between {\it higher-order} or {\it first-order}
+specifications. This distinction applies to all concurrent
+\sls~specifications, not just those that specify substructural
+operational semantics. First-order
+specifications are like rewriting rules $\left( p_1 \fuse \ldots \fuse
+  p_n \lefti \{ q_1 \fuse \ldots \fuse q_m \} \right)$, where the head
+of the rule $\{ q_1 \fuse \ldots \fuse q_m \}$ contains only atomic
 propositions. Higher-order \sls~specifications, on the other hand,
 contain {\it rules} in the conclusions of rules; when the rule fires,
-the resulting process state contains the rule. If ${\sf p1}$, ${\sf
-  p2}$ and ${\sf p3}$ are all ordered atomic propositions, then the
-following trance represents the evolution of higher-order process
-state:
+the resulting process state contains the rule. An example is given 
+in Figure~\ref{fig:ho-evo-ex}.
+Order matters in higher-order process states: $\left(x{:}\susp{\sf p1(c)}, ~
+y{:}\istrue{\left( {\sf p1(c)} \lefti \{ {\sf p2(c)} \} \right)}\right)
+\leadsto \left(z{:}\susp{\sf p2(c)}\right)$, whereas 
+$\left(y{:}\istrue{\left( {\sf p1(c)} \lefti \{ {\sf p2(c)} \} \right)},~
+x{:}\susp{\sf p1(c)}\right)
+\not \leadsto$. 
+%
+The choice of higher-order versus first-order specification does not
+impact expressiveness, but it does influence our ability to read
+specifications (opinions differ as to which style is clearer) and 
+the ways we reason about them.
+
+\begin{figure}
 \begin{align*}
 x_1{:}\susp{{\sf p2}({\sf c})}, ~~
 x_2{:}\susp{{\sf p1}({\sf c})}, ~~
@@ -229,20 +284,136 @@ x_4{:}\istrue{({\sf p3}({\sf c}) \lefti \{ {\sf p_4} \})} & \\
 \leadsto ~~~ 
 x_7{:}\susp{{\sf p_4}} & 
 \end{align*}
-Order matters for these rules as well: $\left(x{:}\susp{\sf p1(c)}, ~
-y{:}\istrue{\left( {\sf p1(c)} \lefti \{ {\sf p2(c)} \} \right)}\right)
-\leadsto \left(z{:}\susp{\sf p2(c)}\right)$, whereas 
-$\left(y{:}\istrue{\left( {\sf p1(c)} \lefti \{ {\sf p2(c)} \} \right)},~
-x{:}\susp{\sf p1(c)}\right)
-\not \leadsto$. 
-%
-The choice of higher-order versus first-order specification does not
-impact expressiveness, but it does influence our ability to read
-specifications (opinions differ as to which style is clearer) and
-influences the way we can reason about them.
+\caption{Evolution of a higher-order \sls~process state (${\sf p1}$, ${\sf
+  p2}$ and ${\sf p3}$ are all ordered atomic propositions).}
+\label{fig:ho-evo-ex}
+\end{figure}
 
+Other distinctions between \sls~specifications can also be understood
+in terms of nondeterminstic choices that can be made by the various
+transformations we consider: for instance, the operationalization
+transformation can produce ordered abstract machines that evaluate
+subcomputations in parallel or in sequence or not, and the
+destination-adding transformation can make continuations either linear
+or persistent. The existance of these nondeterminstic choices have two
+important consequences. First, it is generally the case that one source
+specification (a natural semantics or an ordered abstract machine
+specification) can give rise to several different target
+specifications (ordered abstract machine specificationss or
+destination-passing specifications). The correctness of the
+transformation also acts as a simple proof of the equivalence of the
+several target specifications.
+
+The other interesting consequence of nondeterministic choices is the
+different options give us a rigorous vocabulary for describing choices
+that otherwise seem ad-hoc. An example of this can be found in the
+paper that introduced the destination-adding and abstraction
+transformations \cite{simmons11logical}. In that article, we had to
+motivate an ad-hoc change to the usual abstract machine semantics. In
+this thesis, by the time we encounter a similar specification in
+Chapter 8, we will be able to see that this distinction corresponds to
+the choice of whether or not tail-recursion optimization is performed
+during proof search.
 
 \section{Related work}
+
+This part of the thesis document document draws from many different
+sources of inspiration. 
+
+\subsection{Partiality in proof search}
+
+The operationalization transformation is inspired by the threatment of
+the operational semantics of LF in Tom Murphy VII's thesis
+\cite{murphy08modal}. In that thesis, he describes a natural semantics
+for Lambda 5, a distributed programming language, and then wanted to
+interpret that natural semantics as an {\it operational} semantics for
+Lambda 5. By modifying the checks that Twelf performs with a special
+purpose partiality directive, he was able to check that moded proof
+search for proofs in his natural semantics would never fail and never
+backtrack, though it might diverge. This check amounted to a proof of
+safety (progress and preservation) for his natural semantics. 
+
+\subsection{A coinductive interpretation}
+
+\subsection{Transformation on specifications}
+
+From the other direction,
+Hannan and Miller \cite{hannan92operational} and Ager
+\cite{ager04natural} have also proposed the idea of operationalizing
+natural semantics specifications as abstract machines by provably
+correct and general transformations on logical specifications (in the
+case of Hannan and Miller) or on the special-purpose framework of
+L-attributed natural semantics (in the case of Ager). A major
+difference in this case is that both lines of work result in {\it
+  deductive} specifications of abstract machines. Our translation into
+concurrent specifications has the advantage of exploiting parallelism,
+as demonstrated in Section~\ref{sec:trans-par} below, and also opens
+up specifications to the modular inclusion of stateful and concurrent
+features, as we will discuss in
+Section~\ref{sec:richer-ordered-abstract}.
+
+\subsection{The functional correspondence}
+
+The potential design space of substructural operational semantics is
+quite large.  In order to make sense of this space, it is helpful to
+have design principles that allow us to both {\it classify} different
+styles of presentation and {\it predict} what style(s) we should adopt
+based on what our goals are. I propose that different styles of
+\sls~specification can be productively classified in terms of the
+transformations that turn one classification style into another. Most
+transformations will not have inverses, so this methodology gives us a
+formal notion of which styles are more expressive than others.
+Considering logical transformations also can lower the cost of
+mis-prediction. If one begins a development in an overly-restrictive
+style, the development can be transformed into a more expressive style
+by an automatic transformation.
+
+The organizing principle that we put forth in this chapter and the
+next one is called the {\it logical correspondence}, by analogy with
+the {\it functional correspondence} of Ager, Danvy, Midtgaard, and
+others~\cite{ager03functional,ager04functional,ager05functional,
+  danvy08defunctionalized,danvy12interderiving} in which existing styles of specification
+are related to each other by way of transformations on functional
+programs. It is not our goal here to detail the parallels between the
+logical and functional correspondence; rather, we want to emphasize
+the use of the logical correspondence to relate substructural
+operational to each other and to the natural semantics.
+
+Natural semantics specifications are not substructural operational
+specifications: the LF encodings of such specifications can generally
+be done just as well in LF or in the purely-persistent, non-modal
+fragment of \sls. It is not my purpose to advocate for natural
+semantics; recall that natural semantics were used to illustrate
+problems with {\it non}-modularity in language specification in
+Section~\ref{sec:modularnonmodular}. Instead, we are trying to
+
+The examples given in the previous section have given so far all deal
+with call-by-value semantics for the untyped lambda calculus, which
+has the property that any expression will either evaluate forever or
+will eventually evaluate to a value $\lambda x. e$. One of the
+advantages of the operationalization transformation, however, is that
+it allows us to
+
+de-mystify operational semantics by showing that they are 
+
+Instead, we are formalizing the
+intuition that, on a ad-hoc basis, it is clear how t 
+
+But natural semantics are
+quite standard and widely understood, and 
+
+
+ and are easy to talk about
+using 
+
+reasonably illustrate
+
+
+To finish the presentation of the operationalization transformation,
+we give a few more examples, which 
+
+\subsection{}
+
 
 \section{Expressiveness and modular extension}
 
