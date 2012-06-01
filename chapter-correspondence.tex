@@ -446,100 +446,163 @@ reinterpret the logical artifact of natural semantics in an
 operational way, but the operationalization transformation gives us a
 satisfactory treatment of diverging terms without requiring the
 definition of an additional coinductive judgment $e
-\Downarrow^\infty$.
+\Downarrow^\infty$. And even {\it with} the addition of the
+coinductively defined judgment $e \Downarrow^\infty$, coinductive
+big-step operational semantics have significant issues handling
+nondeterministic languages, a point that we will elaborate on 
+later in Section~\ref{sec:absmachine-nondeterminism}.
 
 \subsection{The functional correspondence}
 
 The ordered abstract machine that results from our operationalization
 transformation corresponds to a standard abstract machine model (a
-statement we will make precise in
+statement that is made precise
 Section~\ref{sec:nat-ssos-adequacy}). In this sense, the logical
 correspondence has a great deal in common with the {\it functional
   correspondence} of Ager, Danvy, Midtgaard, and
 others~\cite{ager03functional,ager04functional,ager05functional,
   danvy08defunctionalized,danvy12interderiving}. 
 
-The goal of the functional correspondence is encode various styles of
-semantic specifications (natural semantics, abstract machines,
+The goal of the functional correspondence is to encode various styles
+of semantic specifications (natural semantics, abstract machines,
 small-step structural operational semantics, environment semantics,
 etc.) as functional programs. It is then possible to show that these
 styles can be related by off-the-shelf and fully correct
-transformations on functional programs. The largest essential difference
-between the functional and logical correspondences, then, is that
-the functional correspondence acts on functional programs, whereas
-the logical correspondence acts on specifications encoded in a logical
-framework (in our case, the logical framework \sls). 
+transformations on functional programs. The largest essential
+difference between the functional and logical correspondences, then,
+is that the functional correspondence acts on functional programs,
+whereas the logical correspondence acts on specifications encoded in a
+logical framework (in our case, the logical framework \sls).
 
-While the functional and logical correspondences can be 
-
-
-However, the functional correspondence as given assumes that 
-semantic specifications are adequately represented as functional
-programs. 
-%
-The
-%interpretations
-representations and the adequacy of the encoding with respect to the ``on paper''
-semantics is an assumed prerequisite in existing work. 
-% tighten this next sentence up
-This is potentially
-problematic: the function space of a general programming language
-is much more open-ended than necessary or even desirable. The correspondence
-remains a useful methodology, but is not 
-directly applicable to the analysis 
-(particularly mechanized analysis) of semantic specifications.
-
+However, the functional correspondence as given assumes that semantic
+specifications are adequately represented as functional programs. The
+correspondence of this encoding with respect to the ``on paper''
+semantics is an assumed prerequisite in work on the functional
+correspondence, whereas the grounding of the logical correspondence in
+the \sls~framework makes it possible to reason precisely about
+adequate representation. The functional correspondence also shares
+some of the coinductive reinterpretation's difficulties in dealing
+with nondeterministic and parallel execution: it seems to be the case
+that a nondeterministic or parallel functional language would be
+necessary to faithfully encode nondeterministic or parallel programming
+language features.
 
 \subsection{Transformation on specifications}
 
- This aspect of
-operationalization -- taking a logical specification of a language's
-natural semantics and transforming it to obtain an abstract machine --
-has been explored by others, including Hannan and Miller
-\cite{hannan92operational} and Ager \cite{ager04natural} have also
-proposed the idea of operationalizing natural semantics specifications
-as abstract machines by provably correct and general transformations
-on logical specifications (in the case of Hannan and Miller) or on the
-special-purpose framework of L-attributed natural semantics (in the
-case of Ager). 
+Two papers by Hannan and Miller \cite{hannan92operational} and Ager
+\cite{ager04natural} are the most closely related to our work in this
+portion of the thesis. Both papers propose operationalizing natural
+semantics specifications as abstract machines by provably correct and
+general transformations on logical specifications (in the case of
+Hannan and Miller) or on the special-purpose framework of L-attributed
+natural semantics (in the case of Ager).
 
 A major difference in this case is that both lines of
 work result in {\it deductive} specifications of abstract
 machines. Our translation into concurrent specifications has the
-advantage of exploiting parallelism, as demonstrated in
-Section~\ref{sec:trans-par} below, and also opens up specifications to
+advantage of exploiting parallelism, and also opens up specifications to
 the modular inclusion of stateful and concurrent features, as we will
 discuss in Section~\ref{sec:richer-ordered-abstract}.
 
 
-\section{Expressiveness and modular extension}
+\section{Transformation and modular extension}
 
-Much of the work in the previous section concerned itself with {\it
-  correspondence} -- in both the work of Ager et al.~and the work of
-Hannan and Miller, two or more specifications (often natural semantics
-and abstract machines) are presented and then shown to correspond
-exactly. But it is not my intent to advocate strongly for the use of
-natural semantics specifications; recall that natural semantics were
-used to illustrate problems with {\it non}-modularity in language
-specification in Section~\ref{sec:modularnonmodular}. Instead, our
-use 
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}
+%\draw[thick](-4.5cm,0cm) -- (-4.5cm,3cm);
+\draw (-2.25,3.3) node{Natural semantics};
+%
+\draw (-2.25,2.4) node{Call-by-value functions};
+\draw[double,->] (-.15,2.4) -- (6.5,2.4);
+\draw (-2.25,1.7) node{Numbers \& base types};
+\draw[double,->] (-.15,1.7) -- (6.5,1.7);
+\draw (-2.25,1) node{Recursion};
+\draw[double,->] (-.15,1) -- (6.5,1);
+%
+\draw[dotted](0cm,-4.6cm) -- (0cm,3cm);
+\draw (2.25,3.7) node{Ordered};
+\draw (2.25,3.3) node{abstract machines};
+%
+\draw (2.25,.3) node{Mutable storage};
+\draw[double,->] (4.35,.3) -- (6.5,.3);
+\draw (2.25,-.4) node{Call-by-need};
+\draw (2.25,-.8) node{suspensions};
+\draw[double,->] (4.35,-.6) -- (6.5,-.6);
+\draw (2.25,-1.5) node{Recoverable failure};
+\draw[double,->] (4.35,-1.5) -- (6.5,-1.5);
+%
+\draw[thick](4.5cm,-4.6cm) -- (4.5cm,3cm);
+\draw (6.75,3.3) node{Destination-passing};
+%
+\draw (6.75,-2.2) node{Parallel pairs};
+\draw (6.75,-2.9) node{Interaction of};
+\draw (6.75,-3.3) node{parallelism \& failure};
+\draw (6.75,-4) node{First-class continuations};
+%
+\draw[thick](9cm,-4.6cm) -- (9cm,3cm);
+%
+%\draw[thick](13.5cm,0cm) -- (13.5cm,3cm);
+%
+%\draw[thick](-4.5,0) -- (9,0);
+%\draw[dotted] (-4.5,1.5) -- (13.5,1.5);
+\draw[dotted](-4.5,3) -- (4.5,3);
+\draw[thick](4.5,3) -- (9,3);
+\draw[thick](4.5,-4.6) -- (9,-4.6);
+\end{tikzpicture} 
+\end{center}
+\caption{Using the logical correspondence for the modular extension of
+  a programming language's features.}
+\label{fig:modularcompose}
+\end{figure}
 
-The functional correspondence is largely concerned with the 
+Without exception, the work discussed above was interested in {\it
+  correspondence} -- both in the process of transforming natural
+semantics into abstract machines (for instance) and in the
+consideration of abstract machines that are in the image of this
+translation. It is possible to view the logical correspondence in the
+same light, but that is not how logical correspondence will be
+principally used in this thesis.  Indeed, it is not my intent to
+advocate strongly for the use of natural semantics specifications at
+all; recall that natural semantics were used to illustrate problems
+with {\it non}-modularity in language specification in
+Section~\ref{sec:modularnonmodular}. 
 
-\sls~is very
-The potential design space of substructural operational semantics is
-quite large. 
+Instead, we will view the transformations outlined in
+Figure~\ref{fig:class-transform} in an expressly directed fashion,
+operationalizing natural semantics as ordered abstract machines and
+transforming ordered abstract machines into destination-passing
+semantics without giving too much thought to the opposite
+direction. This is because reason that the transformations are
+important are that they {\it expose more of the semantics to
+  manipulation and modular extension}.  The operationalization
+transformation in Chapter 7 exposes the order of evaluation, and the
+\sls~framework then makes it possible to modularly extend the language
+with stateful features: this is exactly what we demonstrated in
+Section~\ref{sec:modularnonmodular} and will demonstrate again in
+Section~\ref{sec:richer-ordered-abstract}.  The destination-adding
+transformation exposes the control structure of programs; this makes
+it possible to write first-class continuations as well as the
+interaction of parallelism and failure.  The control structure exposed
+by the destination-adding transformation is also what makes it
+possible to consider control flow analysis in Chapter 8.
 
-I propose that different styles of
-\sls~specification can be productively classified in terms of the
-transformations that turn one classification style into another. Most
-transformations will not have inverses, so this methodology gives us a
-formal notion of which styles are more expressive than others.
-Considering logical transformations also can lower the cost of
-mis-prediction. If one begins a development in an overly-restrictive
-style, the development can be transformed into a more expressive style
-by an automatic transformation.
-
+In this part, we will present natural semantics specifications and
+substructural operational semantics specifications in a number of
+styles, but we will do so with the confidence that these
+specifications can be automatically transformed into the ``lowest
+common denominator'' of first-order destination-passing specifications
+with persistent continuations, which in turn allows them to be
+composed with any other specifications. Certainly, this means that we
+should be unconcerned with using a higher-level style such as the
+ordered abstract machine semantics, because if we need the richer
+structure of destination-passing semantics later on, the specification
+can be automatically transformed. In the limit, we can even imagine a
+hybrid development like the one sketched out in
+Figure~\ref{fig:modularcompose}. In such a development, individual
+language features can be specified at the highest-level specification
+style that is reasonable and then automatically transformed into a
+single compatible specification.
 
 
 
