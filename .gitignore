@@ -1,5 +1,14 @@
 .cm
 *~
+chapter-1.tex
+chapter-2.tex
+chapter-3.tex
+chapter-4.tex
+chapter-5.tex
+chapter-6.tex
+chapter-7.tex
+chapter-8.tex
+chapter-9.tex
 *.ps
 *.dvi
 *.log

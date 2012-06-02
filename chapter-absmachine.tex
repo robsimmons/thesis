@@ -1,120 +1,9 @@
 \chapter{Ordered abstract machines}
 \label{chapter-absmachine}
 
-In this chapter, we explore transformations on \sls~specifications
-that operationalize deductive computation (backwards-chaining proof
-search for propositions of negative atomic type) as concurrent
-computation (forward-chaining proof search for propositions of
-positive type). These transformations have the effect of mapping
-natural semantics specifications into abstract machine specifications.
-
-
-This chapter represents joint work with Ian Zerny.
-
-\subsection*{Chapter outline}
-
-The operationalization transformation is presented in
-Section~\ref{sec:operationalization}. When one of these
-transformations is applied to a natural semantics encoded in \sls, the
-result is a (higher-order) ordered abstract machine semantics encoded
-in SLS. A second transformation, defunctionalization, is presented in
-Section~\ref{sec:intro-ssos}; this transformation is turns
-higher-order SSOS specifications into first-order SSOS specifications.
-
-Taken together, operationalization and defunctionalization allow us to
-transform the call-by-value natural semantics for the untyped lambda
-calculus into the set of rules for call-by-value evaluation that we
-presented in Section~\ref{sec:intro-ssos}. This 
-
-
-
-In Section~\ref{sec:nat-ssos-adequacy}, I take a bit of a detour to
-discuss the traditional presentation of abstract machines. The ordered
-abstract machine semantics presented in Section~\ref{sec:intro-ssos}
-is now identifiable as the call-by-value natural semantics for the
-lambda calculus after being transformed, first by the
-(tail-recursion-optimizing) operationalizion transformation and second
-by the defunctionalization transformation. I claim it is {\it also} a
-substructural operational semantics corresponding to a standard
-call-by-value abstract machine semantics for the lambda calculus, but
-making this precise requires a discussion of adequacy for
-\sls~encodings. 
-
-Section~\ref{sec:richer-ordered-abstract} gets to the heart of why we
-are interested in the transformations discussed in this chapter: the
-ordered abstract machine semantics specification that we get when we
-operationalize a natural semantics specification is amenable to the
-modular addition of features that could not be modularly integrated
-into the natural semantics specification. We explore a selection of
-these features, including mutable storage, call-by-need evaluation,
-and recoverable failure.
-
-Section~\ref{sec:relatedwork} discusses the {\it logical
-  correspondence}, which situates this chapter alongside the work
-
-I also discuss the connections between our logical
-correspondence and the {\it functional correspondence} investigated by
-Ager, Danvy, Midtgaard, and others.
-
-
-
-Finally, in Section~\ref{sec:othertransform}, we discuss the
-consequences of defining operationalization as a general
-transformation on \sls~specifications rather than a special-purpose
-transformation on natural semantics.
-
-This chapter represents joint work with Ian Zerny.
-
-
-% \begin{figure}[t]
-% \begin{minipage}[b]{0.45\linewidth}
-% \fbox{$e \Downarrow v$}
-
-% \bigskip
-
-% \[
-% \infer[{\sf ev/lam}]
-% {\lambda x. e \Downarrow \lambda x. e \mathstrut}
-% {}
-% \]\smallskip
-% \[
-% \infer[{\sf ev/app}]
-% {e_1\,e_2 \Downarrow v \mathstrut}
-% {e_1 \Downarrow \lambda x.e
-%  &
-%  e_2 \Downarrow v_2
-%  &
-%  [v_2/x]e \Downarrow v \mathstrut}
-% \]
-
-% \bigskip
-
-% \bigskip
-
-% \[
-% \infer[{\sf ev/choose1}]
-% {e_1 \arb e_2 \Downarrow v}
-% {e_1 \Downarrow v}
-% \]
-
-% \[
-% \infer[{\sf ev/choose2}]
-% {e_1 \arb e_2 \Downarrow v}
-% {e_2 \Downarrow v}
-% \]
-
-% \end{minipage}
-% \hspace{0.5cm}
-% \begin{minipage}[b]{0.55\linewidth}
-% \fvset{fontsize=\small,boxwidth=auto}
-% \VerbatimInput{sls/cbv-ev-arb.sls}
-% \end{minipage}
-% \caption{Natural semantics for the lambda calculus (call-by-value).}
-% \label{fig:ns}
-% \end{figure}
-
-\section{Logical transformation: operationalization}
-\label{sec:operationalization}
+This chapter presents two transformations on logical specifications.
+The first is operationalization, which interprets a limited set of
+deductive computations as concurrent computations
 
 The intuition behind operationalization is rather simple: we examine
 the behavior of a deductive computation and then encode that
@@ -136,6 +25,18 @@ untyped lambda calculus:
  &
  [v_2/x]e \Downarrow v \mathstrut}
 \]
+
+\begin{align*}
+{\sf abs/lam}{:} & ~~ k \rhd \lambda x.e ~ \mapsto ~ k \lhd \lambda x.e
+\\
+{\sf abs/app}{:} & ~~ k \rhd e_1\,e_2 ~ \mapsto ~ (k; \Box\,e_2) \rhd e_1
+\\
+{\sf abs/app1}{:} & ~~ 
+  (k; \Box\,e_2) \lhd \lambda x.e ~ \mapsto ~ (k; (\lambda x.e)\,\Box) \rhd e_2
+\\
+{\sf abs/app2}{:} & ~~
+  (k; (\lambda x.e)\,\Box) \lhd v_2 ~ \mapsto ~ k \rhd [v_2/x]e
+\end{align*}
 The natural semantics specification is moded with $e$ as an input and
 $v$ as an output, so it is meaningful to talk about being given a
 particular expression $e$ and using deductive computation to search
@@ -294,6 +195,123 @@ the connection informally. The contribution of this chapter is to
 describe a general transformation (of which
 Figure~\ref{fig:example-transform-cbv} is one instance) and to prove
 this transformation correct in general. 
+
+
+In this chapter, we explore transformations on \sls~specifications
+that operationalize deductive computation (backwards-chaining proof
+search for propositions of negative atomic type) as concurrent
+computation (forward-chaining proof search for propositions of
+positive type). These transformations have the effect of mapping
+natural semantics specifications into abstract machine specifications.
+
+
+This chapter represents joint work with Ian Zerny.
+
+\subsection*{Chapter outline}
+
+The operationalization transformation is presented in
+Section~\ref{sec:operationalization}. When one of these
+transformations is applied to a natural semantics encoded in \sls, the
+result is a (higher-order) ordered abstract machine semantics encoded
+in SLS. A second transformation, defunctionalization, is presented in
+Section~\ref{sec:intro-ssos}; this transformation is turns
+higher-order SSOS specifications into first-order SSOS specifications.
+
+Taken together, operationalization and defunctionalization allow us to
+transform the call-by-value natural semantics for the untyped lambda
+calculus into the set of rules for call-by-value evaluation that we
+presented in Section~\ref{sec:intro-ssos}. This 
+
+
+
+In Section~\ref{sec:nat-ssos-adequacy}, I take a bit of a detour to
+discuss the traditional presentation of abstract machines. The ordered
+abstract machine semantics presented in Section~\ref{sec:intro-ssos}
+is now identifiable as the call-by-value natural semantics for the
+lambda calculus after being transformed, first by the
+(tail-recursion-optimizing) operationalizion transformation and second
+by the defunctionalization transformation. I claim it is {\it also} a
+substructural operational semantics corresponding to a standard
+call-by-value abstract machine semantics for the lambda calculus, but
+making this precise requires a discussion of adequacy for
+\sls~encodings. 
+
+Section~\ref{sec:richer-ordered-abstract} gets to the heart of why we
+are interested in the transformations discussed in this chapter: the
+ordered abstract machine semantics specification that we get when we
+operationalize a natural semantics specification is amenable to the
+modular addition of features that could not be modularly integrated
+into the natural semantics specification. We explore a selection of
+these features, including mutable storage, call-by-need evaluation,
+and recoverable failure.
+
+Section~\ref{sec:relatedwork} discusses the {\it logical
+  correspondence}, which situates this chapter alongside the work
+
+I also discuss the connections between our logical
+correspondence and the {\it functional correspondence} investigated by
+Ager, Danvy, Midtgaard, and others.
+
+
+
+Finally, in Section~\ref{sec:othertransform}, we discuss the
+consequences of defining operationalization as a general
+transformation on \sls~specifications rather than a special-purpose
+transformation on natural semantics.
+
+This chapter represents joint work with Ian Zerny.
+
+
+% \begin{figure}[t]
+% \begin{minipage}[b]{0.45\linewidth}
+% \fbox{$e \Downarrow v$}
+
+% \bigskip
+
+% \[
+% \infer[{\sf ev/lam}]
+% {\lambda x. e \Downarrow \lambda x. e \mathstrut}
+% {}
+% \]\smallskip
+% \[
+% \infer[{\sf ev/app}]
+% {e_1\,e_2 \Downarrow v \mathstrut}
+% {e_1 \Downarrow \lambda x.e
+%  &
+%  e_2 \Downarrow v_2
+%  &
+%  [v_2/x]e \Downarrow v \mathstrut}
+% \]
+
+% \bigskip
+
+% \bigskip
+
+% \[
+% \infer[{\sf ev/choose1}]
+% {e_1 \arb e_2 \Downarrow v}
+% {e_1 \Downarrow v}
+% \]
+
+% \[
+% \infer[{\sf ev/choose2}]
+% {e_1 \arb e_2 \Downarrow v}
+% {e_2 \Downarrow v}
+% \]
+
+% \end{minipage}
+% \hspace{0.5cm}
+% \begin{minipage}[b]{0.55\linewidth}
+% \fvset{fontsize=\small,boxwidth=auto}
+% \VerbatimInput{sls/cbv-ev-arb.sls}
+% \end{minipage}
+% \caption{Natural semantics for the lambda calculus (call-by-value).}
+% \label{fig:ns}
+% \end{figure}
+
+\section{Logical transformation: operationalization}
+\label{sec:operationalization}
+
 
 In Section~\ref{sec:trans-subset} we will present the subset of
 specifications that our transformation handles, in
