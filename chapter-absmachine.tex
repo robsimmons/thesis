@@ -31,21 +31,21 @@ evaluation for the lambda calculus as our running example:
 Abstract machine semantics are less prevelant than natural
 semantics. The most well-known is almost certainly Landin's SECD
 machine \cite{landin64mechanical}, though the abstract machine is much
-more similar to what Danvy calls a ``SC machine'' in
-\cite{danvy03rational} and to Harper's $\mathcal K\{{\sf
-  nat}{\rightharpoonup}\}$ in \cite[Chapter 27]{harper12practical}.
-The abstract machine semantics that we will show to be has two states
-$s$. The state $k \rhd e$ represents the expression $e$ being
-evaluated on top of the stack $k$, the state $k \lhd v$ represents the
-value $v$. {\it Stacks} $k$ are left-associative stacks of {\it
-  frames} $f$ with the form $((\ldots({\sf halt}; f_1); \ldots);
-f_n)$, and each frame $f$ either has the form $\Box\,e_2$ (an
-application frame waiting for an evaluated function to be returned to
-it) or the form $(\lambda x.e)\,\Box$ (an applicaiton frame with an
-evaluated fuction waiting for an evaluated value to be returned to
-it). Given states, stacks, and frames, we can define a ``classical''
-abstract machine for call-by-value evaluation of the lambda calculus
-with four rules:
+more similar to Danvy's SC machine from \cite{danvy03rational} and
+Harper's $\mathcal K\{{\sf nat}{\rightharpoonup}\}$ system from
+\cite[Chapter 27]{harper12practical}.  The abstract machine semantics
+that we will show to be has two states $s$. The state $s = k \rhd e$
+represents the expression $e$ being evaluated on top of the stack $k$,
+and the state $s = k \lhd v$ represents the value $v$ being returned
+to the stack $k$. Stacks $k$ are sequences of frames $f$
+with the form $((\ldots({\sf halt}; f_1); \ldots); f_n)$, and each
+frame $f$ either has the form $\Box\,e_2$ (an application frame
+waiting for an evaluated function to be returned to it) or the form
+$(\lambda x.e)\,\Box$ (an applicaiton frame with an evaluated fuction
+waiting for an evaluated value to be returned to it). Given states,
+stacks, and frames, we can define a ``classical'' abstract machine for
+call-by-value evaluation of the lambda calculus as a transition system
+with four transition rules:
 \begin{align*}
 {\sf absmachine/lam}{:} & ~~ k \rhd \lambda x.e ~ \mapsto ~ k \lhd \lambda x.e
 \\
@@ -60,36 +60,41 @@ with four rules:
 
 The operational intuition for these rules is precisely the same as the
 operational intuition for the rewriting rules given in
-Section~\ref{sec:intro-ssos}. This is exactly the point: that
-concurrent \sls~specification from the introduction is the specification
-that that 
+Section~\ref{sec:intro-ssos}. This is not coincidental: the
+\sls~specification from the introduction adequately encodes the
+transition system $s \mapsto s'$ defined above, a point that we will
+make precise in Section~\ref{sec:nat-ssos-adequacy}. The
+\sls~specification from the introduction is {\it also} the result of
+applying the operationalization and defunctionalization
+transformations to the \sls~encoding of the natural semantics given
+above, so the these two transformations combined with the adequacy
+arguments at either end constitue a logical correspondence between
+natural semantics and abstract machines. 
 
-the \sls~specification 
+As discussed in Section~\ref{sec:the-point-is-modular-extension}, it
+is interesting to put existing specification styles into logical
+correspondence, but that is not our main reason for being interested
+in the logical correspondence. Instead, we are primarily interested in
+exploring the set of programming language features that can be
+modularly integrated into a transformed \sls~specification that could
+not be integrated into a natural semantics specification.  In
+Section~\ref{sec:richer-ordered-abstract} we explore a selection of
+these features, including mutable storage, call-by-need evaluation,
+and recoverable failure.
 
-Section~\ref{sec:nat-ssos-adequacy}
-
-discussed in , allow us to
-establish 
-
- establish
-a correspondence between the \sls~encoding of abstract machines
-
-
-which interprets a limited set of
-deductive computations as concurrent computations
+\section{Logical transformation: operationalization}
+\label{sec:operationalization}
 
 The intuition behind operationalization is rather simple: we examine
 the behavior of a deductive computation and then encode that
-operational intuition as a concurrent computation. 
+operational intuition as a concurrent computation.  Before presenting
+the general transformation, we will motivate this transformation using
+our natural semantics specification of call-by-value-evaluation. 
 
-Before presenting the general transformation, we will motivate this
-transformation using the call-by-value natural semantics for the
-untyped lambda calculus:
-
-The natural semantics specification is moded with $e$ as an input and
+The definition of $e \Downarrow v$ is moded with $e$ as an input and
 $v$ as an output, so it is meaningful to talk about being given a
 particular expression $e$ and using deductive computation to search
-for a $v$ such that $e \Downarrow v$ is derivable. Consider a
+for a $v$ such that $e \Downarrow v$ is derivable.  Consider a
 recursive search procedure implementing this particular deductive
 computation:
 \begin{itemize}
@@ -240,135 +245,20 @@ concurrent specifications has been explored previously and
 independently by Schack-Nielsen \cite{schacknielsen07induction} and by
 Cruz and Favonia \cite{cruz12parallel}; Schack-Nielsen proves the
 equivalence of the two specifications, whereas Cruz and Favonia used
-the connection informally. The contribution of this chapter is to
+the connection informally. The contribution of this section is to
 describe a general transformation (of which
 Figure~\ref{fig:example-transform-cbv} is one instance) and to prove
-this transformation correct in general. 
-
-
-In this chapter, we explore transformations on \sls~specifications
-that operationalize deductive computation (backwards-chaining proof
-search for propositions of negative atomic type) as concurrent
-computation (forward-chaining proof search for propositions of
-positive type). These transformations have the effect of mapping
-natural semantics specifications into abstract machine specifications.
-
-
-This chapter represents joint work with Ian Zerny.
-
-\subsection*{Chapter outline}
-
-The operationalization transformation is presented in
-Section~\ref{sec:operationalization}. When one of these
-transformations is applied to a natural semantics encoded in \sls, the
-result is a (higher-order) ordered abstract machine semantics encoded
-in SLS. A second transformation, defunctionalization, is presented in
-Section~\ref{sec:intro-ssos}; this transformation is turns
-higher-order SSOS specifications into first-order SSOS specifications.
-
-Taken together, operationalization and defunctionalization allow us to
-transform the call-by-value natural semantics for the untyped lambda
-calculus into the set of rules for call-by-value evaluation that we
-presented in Section~\ref{sec:intro-ssos}. This 
-
-
-
-In Section~\ref{sec:nat-ssos-adequacy}, I take a bit of a detour to
-discuss the traditional presentation of abstract machines. The ordered
-abstract machine semantics presented in Section~\ref{sec:intro-ssos}
-is now identifiable as the call-by-value natural semantics for the
-lambda calculus after being transformed, first by the
-(tail-recursion-optimizing) operationalizion transformation and second
-by the defunctionalization transformation. I claim it is {\it also} a
-substructural operational semantics corresponding to a standard
-call-by-value abstract machine semantics for the lambda calculus, but
-making this precise requires a discussion of adequacy for
-\sls~encodings. 
-
-Section~\ref{sec:richer-ordered-abstract} gets to the heart of why we
-are interested in the transformations discussed in this chapter: the
-ordered abstract machine semantics specification that we get when we
-operationalize a natural semantics specification is amenable to the
-modular addition of features that could not be modularly integrated
-into the natural semantics specification. We explore a selection of
-these features, including mutable storage, call-by-need evaluation,
-and recoverable failure.
-
-Section~\ref{sec:relatedwork} discusses the {\it logical
-  correspondence}, which situates this chapter alongside the work
-
-I also discuss the connections between our logical
-correspondence and the {\it functional correspondence} investigated by
-Ager, Danvy, Midtgaard, and others.
-
-
-
-Finally, in Section~\ref{sec:othertransform}, we discuss the
-consequences of defining operationalization as a general
-transformation on \sls~specifications rather than a special-purpose
-transformation on natural semantics.
-
-This chapter represents joint work with Ian Zerny.
-
-
-% \begin{figure}[t]
-% \begin{minipage}[b]{0.45\linewidth}
-% \fbox{$e \Downarrow v$}
-
-% \bigskip
-
-% \[
-% \infer[{\sf ev/lam}]
-% {\lambda x. e \Downarrow \lambda x. e \mathstrut}
-% {}
-% \]\smallskip
-% \[
-% \infer[{\sf ev/app}]
-% {e_1\,e_2 \Downarrow v \mathstrut}
-% {e_1 \Downarrow \lambda x.e
-%  &
-%  e_2 \Downarrow v_2
-%  &
-%  [v_2/x]e \Downarrow v \mathstrut}
-% \]
-
-% \bigskip
-
-% \bigskip
-
-% \[
-% \infer[{\sf ev/choose1}]
-% {e_1 \arb e_2 \Downarrow v}
-% {e_1 \Downarrow v}
-% \]
-
-% \[
-% \infer[{\sf ev/choose2}]
-% {e_1 \arb e_2 \Downarrow v}
-% {e_2 \Downarrow v}
-% \]
-
-% \end{minipage}
-% \hspace{0.5cm}
-% \begin{minipage}[b]{0.55\linewidth}
-% \fvset{fontsize=\small,boxwidth=auto}
-% \VerbatimInput{sls/cbv-ev-arb.sls}
-% \end{minipage}
-% \caption{Natural semantics for the lambda calculus (call-by-value).}
-% \label{fig:ns}
-% \end{figure}
-
-\section{Logical transformation: operationalization}
-\label{sec:operationalization}
-
+the transformation correct in general. 
 
 In Section~\ref{sec:trans-subset} we will present the subset of
-specifications that our transformation handles, in
-Section~\ref{sec:trans-basic} we will give the basic transformation
-and prove the transformation correct, and in
+specifications that our operationalization transformation handles, and
+in Section~\ref{sec:trans-basic} we present the most basic form of the
+transformation.  In
 Sections~\ref{sec:trans-tail}~and~\ref{sec:trans-par} we extend the
 basic transformation to be both tail-recursion optimizing and
-parallelism-enabling.
+parallelism-enabling. Finally, in
+Section~\ref{sec:operationalization-correct}, we establish the
+correctness of the overall transformation.
 
 \subsection{Transformable signatures}
 \label{sec:trans-subset}
@@ -457,13 +347,13 @@ previous section. We
 will first give the transformation on signatures; the transformation
 of rule declarations ${\sf r} : C$ is the key case.
 
-Each predicate ${\sf a}$ that we plan to operationalize
-gets turned into two predicates ${\sf eval\_a}$ and ${\sf retn\_a}$.
-We will write $\opsubst{X}$ for the operation of substituting all
-occurrences of $p^-_c = {\sf a}\,t_1\,t_2$ with $({\sf eval\_a}\,t_1
-\lefti \{ {\sf retn\_a}\,t_2 \})$ in $X$. This substitution operation
-is used on propositions, contexts, and frames; it appears in the 
-transformation of rules ${\sf r} : D$ below.
+Each two-place predicate ${\sf a}$ that we plan to operationalize gets
+turned into two one-place predicates ${\sf eval\_a}$ and ${\sf
+  retn\_a}$.  We will write $\opsubst{X}$ for the operation of
+substituting all occurrences of $p^-_c = {\sf a}\,t_1\,t_2$ with
+$({\sf eval\_a}\,t_1 \lefti \{ {\sf retn\_a}\,t_2 \})$ in $X$. This
+substitution operation is used on propositions, contexts, and frames;
+it appears in the transformation of rules ${\sf r} : D$ below.
 
 \begin{itemize}
 \item $\transop{\cdot} = \cdot$
@@ -798,6 +688,7 @@ $[v_2/x]e \Downarrow v$ because the input $[v_2/x]e$ mentions the outputs
 of both of the previous subgoals. 
 
 \subsection{Correctness}
+\label{sec:operationalization-correct}
 
 The correctness of the basic, tail-recursion-optimizing, and parallel
 transformations all follow from the correctness of the parallel
@@ -1118,33 +1009,15 @@ the proof.
 \section{Logical transformation: defunctionalization}
 \label{sec:defunctionalization}
 
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/cbv-ev-ssos-fun.sls}
+\caption{An ordered abstract machine semantics for the CBV lambda calculus.}
+\label{fig:cbv-ev-ssos-fun}
+\end{figure}
+
 \section{Adequacy with abstract machines}
 \label{sec:nat-ssos-adequacy}
-
-(Danvy calls this an SC machine in BRICS-RS-03-33, as; the formulation also corresponds
-to Harper's $\mathcal K\{{\sf nat}{\rightharpoonup}\}$
-it is
-
-\[
-\infer
-{k \rhd (\lambda x. e) ~\mapsto~ k \lhd (\lambda x. e) \mathstrut} 
-{}
-\quad
-\infer
-{k \rhd (e_1\,e_2) ~\mapsto~ (k; \Box\,e_2) \rhd e_1 \mathstrut}
-{}
-\]\[
-\infer
-{(k; \Box\,e_2) \lhd (\lambda x.e) ~\mapsto~ (k; (\lambda x.e)\Box) \rhd e_2
- \mathstrut}
-{}
-\quad
-\infer
-{(k; (\lambda x.e)\Box) \lhd v_2 ~\mapsto~ k \rhd [v_2/x]e
- \mathstrut}
-{}
-\]
-
 
 
 
@@ -1189,11 +1062,6 @@ of the stack $k$). The first rule says that, as a function $\lambda x.e$
 is already a value, we proceed by returning it to the stack, whereas
 for an application $e_1\,e_2$, 
 
-\begin{figure}
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/cbv-ev-ssos-fun.sls}
-\caption{An ordered abstract machine semantics for the CBV lambda calculus.}
-\end{figure}
 
 Input
 
