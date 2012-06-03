@@ -1,5 +1,10 @@
-eval: exp -> exp -> prop ord. 
-retn: exp -> exp -> prop ord. 
+frame: type.
+cont: frame -> prop ord.
+eval: exp -> prop ord. 
+retn: exp -> prop ord. 
+
+app1: exp -> frame.
+app2: exp -> frame.
 
 ev/lam:  eval (lam \x. E x)  
           >-> {retn (lam \x. E x)}.
@@ -12,3 +17,4 @@ ev/app1: retn (lam \x. E x) * cont (app1 E2)
 
 ev/app2: retn V2 * cont (app2 \x. E x)
           >-> {eval (E V2)}.
+

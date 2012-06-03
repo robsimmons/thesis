@@ -1009,6 +1009,130 @@ the proof.
 \section{Logical transformation: defunctionalization}
 \label{sec:defunctionalization}
 
+Defunctionalization is a procedure for turning higher-order
+concurrent \sls~specifications into first-order concurrent
+\sls~specifications. It is based on the following intuitions:
+if $A^-$ is a closed negative proposition
+of the form $\forall \overline{x}.\,p^+_\mtrue \lefti \{ A^+ \}$
+and we have a single-step transition 
+$(\Psi; \tackon{\Theta}{z{:}\susp{p^+_\mtrue}, y{:}\istrue{A^-}}) 
+ \leadsto_{\Sigma} 
+ (\Psi; \tackon{\Theta}{A^+})$
+in an \sls~specification (witnessed by the step 
+$(\tstep{\mkpat{A^+}}{y}{(\tforalll{\overline{t}}{\tappl{z}{\tnil}})})$), 
+then we can define an augmented signature
+\begin{align*}
+\Sigma' = ~ & \Sigma, 
+\\    ~~ & {\sf cont} : {\sf prop\,ord}, 
+\\    ~~ & {\sf run\_cont} : \forall{\overline x}.\,p^+_\mtrue \fuse {\sf cont} \lefti \{ A^+ \}
+\end{align*}
+and it is the case that 
+$(\Psi; \tackon{\Theta}{z{:}\susp{p^+_\mtrue}, y{:}\susp{\sf cont}}) 
+ \leadsto_{\Sigma'} 
+ (\Psi; \tackon{\Theta}{A^+})$
+as well; this new transition is witnessed by the step
+$(\tstep{\mkpat{A^+}}{\sf run\_cont}{(\tappl{(\tfuser{z}{y})}{\tnil})})$.
+
+More generally, if we are allowed to extend the signature and $A^-$
+falls into the very specific form we have
+specified,\footnote{Obviously, the restriction to propositions $A^-$
+  of the form $\forall \overline{x}.\,p^+_\mtrue \lefti \{ A^+ \}$ is
+  overly specific and designed to apply specifically to the output of
+  operationalization, but we will not consider a generalization here.
+  Conceptually, it is not complicated to consider a similar operation
+  on other propositions, but it is difficult to elegantly describe the
+  more general transformation due our use of ordered logic, and we do
+  not currently need the more general transformation.}  we can create
+a new ordered atomic proposition to do a negative proposition's
+job. As long as $\Delta = \tackon{\Theta}{x{:}\susp{\sf cont}}$ and
+${\sf cont}$ does not appear in $\Theta$, then $[{\downarrow}A^- /{\sf
+  cont}]\Delta \leadsto_\Sigma [{\downarrow}A^- /{\sf cont}]\Delta'$
+if and only if $\Delta \leadsto_{\Sigma'} \Delta'$. \footnote{Recall
+  from Section~\ref{sec:framework-substprop} that we treat
+  %
+  $[{\downarrow}A^-/{\sf cont}](\tackon{\Theta}{z{:}\istrue{\susp{\sf cont}}})$
+  %
+  as being equal to the context in which we {\it first} perform the
+  straightfoward substitution, giving us
+  $(\tackon{\Theta}{z{:}\istrue{{\downarrow}A^-}})$, and then {\it
+    second} apply invertible rules, giving us
+  $(\tackon{\Theta}{z'{:}\istrue{A^-}})$.} 
+
+We need not restrict ${\sf cont}$ to just a single appearence
+suspended in the process state, however. Multiple instances of ${\sf
+  cont}$ can appear in the process state without a problem.  It is
+similarly unproblematic for ${\sf cont}$ to appear inside of a monadic
+positive proposition, because after any transition it will either
+continue to be inside of a monadic positive proposition or they will
+have been released to live in the process state as suspended ordered
+propositions. And by the same reasoning, we can replace propsitions
+in the heads of signature clauses like this one:
+\begin{align*}
+& \Sigma, \\
+& {\sf r} : {\sf a} \lefti \{ {\sf b} \fuse ({\sf c} \lefti \{ {\sf d} \fuse ({\sf e} \lefti \{ {\sf f} \}) \}) \}
+\intertext{to produce a signature that looks like this:}
+& \Sigma, \\
+& {\sf cont1} : {\sf prop\,ord}, \\
+& {\sf r1} : {\sf c} \fuse {\sf cont1} \lefti \{ {\sf d} \fuse ({\sf e} \lefti \{ {\sf f} \}) \}, \\
+& {\sf r} : {\sf a} \lefti \{ {\sf b} \fuse {\sf cont1} \}
+\intertext{and the process can be iterated to obtain 
+a fully first-order signature:}
+& \Sigma, \\
+& {\sf cont2} : {\sf prop\,ord}, \\
+& {\sf r2} : {\sf e} \fuse {\sf cont2} \lefti \{ {\sf f} \}, \\
+& {\sf cont1} : {\sf prop\,ord}, \\
+& {\sf r1} : {\sf c} \fuse {\sf cont1} \lefti \{ {\sf d} \fuse {\sf cont2} \}, \\
+& {\sf r} : {\sf a} \lefti \{ {\sf b} \fuse {\sf cont1} \}
+\end{align*}
+
+We can go further: even if $A^-$ contains free variables from $\Psi$,
+it is always possible to define a type constructor $B^-$ with kind
+$(\Pi x_1{:}\tau_1\ldots \Pi x_n{:}\tau_n.{\sf prop})$ 
+such that $A^- = B^-\,t_1\ldots t_n$.
+In this more general case, we can let
+\begin{align*}
+\Sigma'' = ~ & \Sigma,
+\\    ~~ & {\sf cont} : 
+       \Pi x_1{:}\tau_1\ldots \Pi x_n{:}\tau_n.\, {\sf prop\,ord},
+\\    ~~ & {\sf run\_cont} : \forall x_1{:}\tau_1\ldots\forall x_n{:}\tau_n.\,
+       {\sf cont}({\sf f}\,x_1\ldots\,x_n) \lefti B^-\,x_1\ldots x_n
+\end{align*}
+As long as 
+$({\sf cont}\,t_1\ldots t_n)$ only appears in $\Delta$ as a 
+suspended atomic proposition, then it is the case that
+$[{\downarrow}(B^-\,x_1\ldots x_n)
+    /{\sf cont}\,x_1\ldots x_n]\Delta 
+ \leadsto_\Sigma
+ [{\downarrow}(B^-\,x_1\ldots x_n)
+    /{\sf cont}\,x_1\ldots\,x_n]\Delta'$ 
+if and only if 
+%
+$\Delta \leadsto_{\Sigma''} \Delta'$.\footnote{Recall from
+  Section~\ref{sec:framework-substprop} that
+  $[{\downarrow}(B^-\,x_1\ldots x_n)/({\sf cont}\,x_1\ldots
+  x_n)](z{:}\susp{{\sf cont}\,t_1\ldots t_n})$ as being equal to the
+  context in which we substitue and then apply invertible rules, i.e.
+  $z{:}\istrue{B^-\,t_1\ldots t_n}$}
+
+In addition to allowing these newly introduced 
+atomic propositions to appear suspended in the context, it is not 
+a problem to allow them to appear in the heads of monadic clauses. 
+This means that we can 
+
+ monadic
+clauses, there is no 
+
+The defunctionalization transformation then applies the same reasoning
+to signatures: if a proposition ${\downarrow}A^-$ appears in the monadic
+head of some rule, 
+
+ $A^- = B^-\,t_1\,t_2\,t_3$
+
+This is even
+true if $A^-$ has free variables: we can always define a closed
+$B^- : $
+
+
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/cbv-ev-ssos-fun.sls}
