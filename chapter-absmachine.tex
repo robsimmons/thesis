@@ -1,17 +1,19 @@
 \chapter{Ordered abstract machines}
 \label{chapter-absmachine}
 
-This chapter presents two transformations on logical specifications.
-The first is operationalization, which interprets a limited set of
-deductive computations as concurrent computations
+This chapter centers around two transformations on logical
+specifications.  Taken together, the operationalization transformation
+(Section~\ref{sec:operationalization}), and the defunctionalization
+transformation (Section~\ref{sec:defunctionalization}) allow us to
+establish the logical correspondence between the deductive SLS
+specification of a natural semantics and the concurrent SLS
+specification of an abstract machine.
 
-The intuition behind operationalization is rather simple: we examine
-the behavior of a deductive computation and then encode that
-operational intuition as a concurrent computation. 
-
-Before presenting the general transformation, we will motivate this
-transformation using the call-by-value natural semantics for the
-untyped lambda calculus:
+Natural semantics specifications are very common in the literature,
+and are also easy to encode in either the deductive fragment of
+\sls~or in a purely deductive logical framework like LF.  We will
+continue to use the natural semantics specication of call-by-value
+evaluation for the lambda calculus as our running example:
 \[
 \infer[{\sf ev/lam}]
 {\lambda x. e \Downarrow \lambda x. e \mathstrut}
@@ -26,17 +28,64 @@ untyped lambda calculus:
  [v_2/x]e \Downarrow v \mathstrut}
 \]
 
+Abstract machine semantics are less prevelant than natural
+semantics. The most well-known is almost certainly Landin's SECD
+machine \cite{landin64mechanical}, though the abstract machine is much
+more similar to what Danvy calls a ``SC machine'' in
+\cite{danvy03rational} and to Harper's $\mathcal K\{{\sf
+  nat}{\rightharpoonup}\}$ in \cite[Chapter 27]{harper12practical}.
+The abstract machine semantics that we will show to be has two states
+$s$. The state $k \rhd e$ represents the expression $e$ being
+evaluated on top of the stack $k$, the state $k \lhd v$ represents the
+value $v$. {\it Stacks} $k$ are left-associative stacks of {\it
+  frames} $f$ with the form $((\ldots({\sf halt}; f_1); \ldots);
+f_n)$, and each frame $f$ either has the form $\Box\,e_2$ (an
+application frame waiting for an evaluated function to be returned to
+it) or the form $(\lambda x.e)\,\Box$ (an applicaiton frame with an
+evaluated fuction waiting for an evaluated value to be returned to
+it). Given states, stacks, and frames, we can define a ``classical''
+abstract machine for call-by-value evaluation of the lambda calculus
+with four rules:
 \begin{align*}
-{\sf abs/lam}{:} & ~~ k \rhd \lambda x.e ~ \mapsto ~ k \lhd \lambda x.e
+{\sf absmachine/lam}{:} & ~~ k \rhd \lambda x.e ~ \mapsto ~ k \lhd \lambda x.e
 \\
-{\sf abs/app}{:} & ~~ k \rhd e_1\,e_2 ~ \mapsto ~ (k; \Box\,e_2) \rhd e_1
+{\sf absmachine/app}{:} & ~~ k \rhd e_1\,e_2 ~ \mapsto ~ (k; \Box\,e_2) \rhd e_1
 \\
-{\sf abs/app1}{:} & ~~ 
+{\sf absmachine/app1}{:} & ~~ 
   (k; \Box\,e_2) \lhd \lambda x.e ~ \mapsto ~ (k; (\lambda x.e)\,\Box) \rhd e_2
 \\
-{\sf abs/app2}{:} & ~~
+{\sf absmachine/app2}{:} & ~~
   (k; (\lambda x.e)\,\Box) \lhd v_2 ~ \mapsto ~ k \rhd [v_2/x]e
 \end{align*}
+
+The operational intuition for these rules is precisely the same as the
+operational intuition for the rewriting rules given in
+Section~\ref{sec:intro-ssos}. This is exactly the point: that
+concurrent \sls~specification from the introduction is the specification
+that that 
+
+the \sls~specification 
+
+Section~\ref{sec:nat-ssos-adequacy}
+
+discussed in , allow us to
+establish 
+
+ establish
+a correspondence between the \sls~encoding of abstract machines
+
+
+which interprets a limited set of
+deductive computations as concurrent computations
+
+The intuition behind operationalization is rather simple: we examine
+the behavior of a deductive computation and then encode that
+operational intuition as a concurrent computation. 
+
+Before presenting the general transformation, we will motivate this
+transformation using the call-by-value natural semantics for the
+untyped lambda calculus:
+
 The natural semantics specification is moded with $e$ as an input and
 $v$ as an output, so it is meaningful to talk about being given a
 particular expression $e$ and using deductive computation to search
@@ -1068,194 +1117,6 @@ the proof.
 
 \section{Logical transformation: defunctionalization}
 \label{sec:defunctionalization}
-
-\section{Nondeterminism}
-\label{sec:absmachine-nondeterminism}
-
-The examples given in the previous section have given so far all deal
-with call-by-value semantics for the untyped lambda calculus, which
-has the property that any expression will either evaluate forever or
-will eventually evaluate to a value $\lambda x. e$. One of the
-advantages of the operationalization transformation, however, is that
-it allows us to
-
-
-\subsection{Arbitrary choice and failure}
-
-For the purposes of illustration, we will extend the language of
-expressions with a nondeterministic choice operator $e_1 \arb e_2$
-(encoded in LF as ${\sf choose}\,\interp{e_1}\,\interp{e_2}$) and an
-extra expression ${\sf junk}$ that does not evaluate to anything: this
-ensures that stuck states are possible, as search for a $v$ such that
-$(\lambda x.\,x)\,{\sf junk} \Downarrow v$ is derivable will fail.
-The natural semantics rules for this extension and their
-(tail-recursion optimized) operationalization are shown in
-Figure~\ref{fig:ns-arb}; there are no rules for ${\sf junk}$, as it is
-a stuck expression.
-
-\begin{figure}[t]
-\begin{minipage}[b]{0.45\linewidth}
-\fvset{fontsize=\small,boxwidth=auto}
-\VerbatimInput{sls/cbv-arb.sls}
-\end{minipage}
-\hspace{0.5cm}
-\begin{minipage}[b]{0.55\linewidth}
-\fvset{fontsize=\small,boxwidth=auto}
-\VerbatimInput{sls/cbv-arb-ssos.sls}
-\end{minipage}
-\caption{Natural semantics for the lambda calculus (call-by-value).}
-\label{fig:ns-arb}
-\end{figure}
-
-We need to think about the desired semantics of $(\lambda y.\,y\,y)
-\arb ((\lambda x.\,x)\,{\sf junk})$ -- if the first subexpression
-$(\lambda y.\,y\,y)$ is chosen for evaluation, then the expression
-evaluates to a value, but if the second subexpression $(\lambda
-x.\,x)\,{\sf junk}$ is chosen, then the subexpression will evaluate to
-${\sf junk}$ and be effectively stuck. Our small-step intutitions
-about language safety say that this is a problem we should avoid, but
-natural semantics do not have an internal way of expressing that a
-successful evaluation exists along some paths but not along others.
-This is one of the ways in which our transformed specification is more
-expressive than the original semantics: it's possible to say
-$x{:}\susp{{\sf eval}\,\interp{(\lambda y.\,y\,y) \arb ((\lambda
-    x.\,x)\,{\sf junk})}} \leadsto^* \Delta$ such that $\Delta \neq
-y{:}\susp{{\sf retn}\,V}$ and $\Delta \not\leadsto$; we can't hope to
-reason about the absense of stuck states if we cannot express
-them. Our ability to reason about stuck concurrent computations is an
-artifact the fact that \sls~allows us to talk about traces $T$ in
-addition to talking about complete proofs.  The operationalization
-transformation allows us to transfer this concept to natural semantics
-specifications by way of translation.
-
-\begin{figure}[t]
-\fvset{fontsize=\small,boxwidth=auto}
-\VerbatimInput{sls/cbv-bad-ite.sls}
-\caption{Operationalization of the problematic natural semantics for {\it if}-statements.}
-\label{fig:sls-bad-ite}
-\end{figure}
-
-\subsection{Conditionals and factoring}
-
-Another extension that we can introduce complicates this view. A
-common way of giving a natural semantics for {\it if}-statements is
-through these two rules:
-\[
-\infer
-{{\sf true} \Downarrow {\sf true} \mathstrut}
-{}
-\quad
-\infer
-{{\sf false} \Downarrow {\sf false} \mathstrut}
-{}
-\quad
-\infer
-{{\sf if}\,e\,{\sf then}\,e_t\,{\sf else}\,e_f \Downarrow v \mathstrut}
-{e \Downarrow {\sf true}
- &
- e_t \Downarrow v \mathstrut}
-\quad
-\infer
-{{\sf if}\,e\,{\sf then}\,e_t\,{\sf else}\,e_f \Downarrow v \mathstrut}
-{e \Downarrow {\sf false}
- &
- e_f \Downarrow v \mathstrut}
-\]
-However, according to the straightfoward operationalization of these
-rules (shown in Figure~\ref{fig:sls-bad-ite}), we would be forced,
-when we first encounter an {\it if}-statement, to nondeterminstically
-choose whether the conditional will evaluate to ${\sf true}$ or ${\sf
-  false}$, just as we nondeterminstically chose one of the two
-expressions $e_1 \arb e_2$. If we make the wrong choice (and, assuming
-$e$ evaluates to anything at all, we always {\it can} make the wrong
-choice) then the concurrent computation will get stuck. Superficially,
-the following trace is indistinguishable from the stuck trace that
-arises from the previous example that was nondeterminstically ${\sf
-  junk}$, but there is nothing wrong with including {\it if}-statements
-in the language!
-\begin{align*}
- & x_1{:}\susp{{\sf eval}\,\interp{{\sf if}\,{\sf false}\,{\sf then}\,e_t\,{\sf else}\,e_f}}
-\\
-\leadsto ~ & 
-x_2{:}\susp{{\sf eval}\,{\sf false}},
-y_2{:}\istrue{({\sf retn}\,{\sf true} \lefti \{ {\sf eval}\,\interp{e_t}\})}
-\\
-\leadsto ~ &
-x_3{:}\susp{{\sf retn}\,{\sf false}},
-y_2{:}\istrue{({\sf retn}\,{\sf true} \lefti \{ {\sf eval}\,\interp{e_t}\})}
-\\
-\not\leadsto ~ & (!!!)
-\end{align*}
-
-
-\begin{figure}[t]
-\fvset{fontsize=\small,boxwidth=auto}
-\VerbatimInput{sls/cbv-ok-ite.sls}
-\caption{Operationalization of the fixed, determinstic natural semantics for {\it if}-statements.}
-\label{fig:sls-ok-ite}
-\end{figure}
-
-It is highly desirable to maintain our ability to talk about stuck
-states through the natural semantics; the easiest way to do so is 
-by modfying the natural semantics into a different natural semantics
-that is equivalent but more operational:
-\[
-\infer
-{{\sf pick}\,{\sf true}\,e_t\,e_f\,e_t\mathstrut}
-{}
-\quad
-\infer
-{{\sf pick}\,{\sf false}\,e_t\,e_f\,e_f\mathstrut}
-{}
-\quad
-\infer
-{{\sf true} \Downarrow {\sf true} \mathstrut}
-{}
-\quad
-\infer
-{{\sf false} \Downarrow {\sf false} \mathstrut}
-{}
-\quad
-\infer
-{{\sf if}\,e\,{\sf then}\,e_t\,{\sf else}\,e_f \Downarrow v' \mathstrut}
-{e \Downarrow v
- & 
- {\sf pick}\,v\,e_t\,e_f\,e'\mathstrut
- & e' \Downarrow v'}
-\] 
-We can prove, with the existing metatheoretic machinery of Twelf, that this
-natural semantics is equivalent to the previous one in terms of 
-which judgments $e \Downarrow v$ are derivable, but the operationalization
-of this version, given in Figure~\ref{fig:sls-ok-ite}, is free
-of the previous version's problems.
-
-These two different versions of the same rule are related by a
-transformation called {\it factoring}. While factoring has been
-expressed by Polakow as a transformation on functional programs in a
-variant of the Delphin programming language
-\cite{poswolsky03factoring}, I am unaware of any treatment of the
-factoring transformation as a generally-correct {\it logical}
-transformation on Prolog, $\lambda$Prolog, or Twelf specifications,
-and I will not do so here.
-
-\subsection{Flat resolution for deductive computation}
-
-The consideration of non-backtracking search is an interesting one,
-because it indicates that, {\it in the context of natural semantics},
-we are interested in an interpretation of deductive computation that is
-not the usual backtracking interpretation.\footnote{This committed
-  choice form of deductive computation also goes by the name {\it flat
-    resolution} \cite{aitkaci99warrens}.} It is natural, then, to
-represent this computation as a concurrent computation, which is
-naturally interpreted as committed choice. 
-
-This works both ways, however: in Section~\ref{sec:evaluationcontexts}
-we transform a small-step structural operational semantics to obtain
-an SLS analouge of evaluation contexts. As a deductive comptuation,
-SOS specifications are naturally backtracking, so the concurrent
-computations we derive also need to be interpreted with backtracking
-search if we want to preserve the operational behavior of the
-specification.
 
 \section{Adequacy with abstract machines}
 \label{sec:nat-ssos-adequacy}
