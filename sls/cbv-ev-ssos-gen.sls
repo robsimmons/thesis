@@ -1,5 +1,5 @@
 gen: prop ord.
 
-gen/eval: gen >-> {eval E}.
-gen/retn: gen >-> {retn E}.
-gen/cont: gen >-> {cont F * gen}.
+#rule gen/eval: gen >-> {eval E}.
+#rule gen/retn: gen >-> {retn E}.
+#rule gen/cont: gen >-> {cont F * gen}.

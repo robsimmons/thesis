@@ -12,7 +12,7 @@ specification of an abstract machine.
 Natural semantics specifications are very common in the literature,
 and are also easy to encode in either the deductive fragment of
 \sls~or in a purely deductive logical framework like LF.  We will
-continue to use the natural semantics specication of call-by-value
+continue to use the natural semantics specification of call-by-value
 evaluation for the lambda calculus as our running example:
 \[
 \infer[{\sf ev/lam}]
@@ -28,7 +28,7 @@ evaluation for the lambda calculus as our running example:
  [v_2/x]e \Downarrow v \mathstrut}
 \]
 
-Abstract machine semantics are less prevelant than natural
+Abstract machine semantics are less prevalent than natural
 semantics. The most well-known is almost certainly Landin's SECD
 machine \cite{landin64mechanical}, though the abstract machine is much
 more similar to Danvy's SC machine from \cite{danvy03rational} and
@@ -41,7 +41,7 @@ to the stack $k$. Stacks $k$ are sequences of frames $f$
 with the form $((\ldots({\sf halt}; f_1); \ldots); f_n)$, and each
 frame $f$ either has the form $\Box\,e_2$ (an application frame
 waiting for an evaluated function to be returned to it) or the form
-$(\lambda x.e)\,\Box$ (an applicaiton frame with an evaluated fuction
+$(\lambda x.e)\,\Box$ (an application frame with an evaluated function
 waiting for an evaluated value to be returned to it). Given states,
 stacks, and frames, we can define a ``classical'' abstract machine for
 call-by-value evaluation of the lambda calculus as a transition system
@@ -68,7 +68,7 @@ make precise in Section~\ref{sec:nat-ssos-adequacy}. The
 applying the operationalization and defunctionalization
 transformations to the \sls~encoding of the natural semantics given
 above, so the these two transformations combined with the adequacy
-arguments at either end constitue a logical correspondence between
+arguments at either end constitute a logical correspondence between
 natural semantics and abstract machines. 
 
 As discussed in Section~\ref{sec:the-point-is-modular-extension}, it
@@ -214,7 +214,7 @@ The \sls~encoding of our example natural semantics is shown in
 Figure~\ref{fig:example-transform-cbv} alongside the transformed
 specification, which has the form of an ordered abstract machine
 semantics, though it is different than the ordered abstract machine
-semantics presented in the introduction. We say the specificaiton
+semantics presented in the introduction. We say the specification
 above is {\it higher-order}, as ${\sf ev/app}$ is a rule that, when it
 participates in a transition, produces a new rule $(\forall E.\,{\sf
   retn}\,({\sf lam}\,\lambda x.\,E\,x) \lefti \{ \ldots \})$ that
@@ -222,7 +222,7 @@ lives in the context. The ordered abstract machine semantics from the
 introduction was {\it first-order}, because the head $\{ A^+ \}$ of
 every concurrent rule contains only positive atomic propositions.  We
 discuss the defunctionalization transformation, which allows us to
-derive first-order specificaitons from specifications that are
+derive first-order specifications from specifications that are
 higher-order in this way, in Section~\ref{sec:defunctionalization}
 below.
 
@@ -236,7 +236,8 @@ below.
 \fvset{fontsize=\small,boxwidth=auto}
 \VerbatimInput{sls/cbv-ev-ssos.sls}
 \end{minipage}
-\caption{A natural semantics for CBV and the corresponding abstract machine.}
+\caption{A natural semantics for CBV (left) and the corresponding (higher-order)
+  ordered abstract machine (right).}
 \label{fig:example-transform-cbv}
 \end{figure}
 
@@ -497,15 +498,26 @@ This case overlaps with the third case of the definition given
 in Section~\ref{sec:trans-basic}, which indicates that tail-recursion
 optimization can be applied or not in a nondeterministic manner.
 
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/cbv-ev-ssos-tail.sls}
+\caption{A higher-order ordered abstract machine semantics for the CBV
+  evaluation.}
+\label{fig:cbv-ev-ssos-tail}
+\end{figure}
+
 \subsubsection{Example}
 
-A dramatic illustration of tail-call optimization can be given if we
-consider a big-step evaluation function that is based on a small-step
-structural operational semantics (SOS) specification. In SOS
-specifications, single-step evaluation is defined as the two-place
-relation ${\sf step} : {\sf exp} \rightarrow {\sf exp} \rightarrow
-{\sf prop}$ (moded ${\sf exp}\,{+}\,{-}$) that makes use of the helper
-judgment ${\sf value} : {\sf exp} \rightarrow {\sf prop}$ (moded ${\sf
+Operationalizing the natural semantics from
+\ref{fig:example-transform-cbv} results in the ordered abstract
+machine in Figure~\ref{fig:cbv-ev-ssos-tail}.  A more dramatic
+illustration of tail-call optimization can be given if we consider a
+big-step evaluation function that is based on a small-step structural
+operational semantics (SOS) specification. In SOS specifications,
+single-step evaluation is defined as the two-place relation ${\sf
+  step} : {\sf exp} \rightarrow {\sf exp} \rightarrow {\sf prop}$
+(moded ${\sf exp}\,{+}\,{-}$) that makes use of the helper judgment
+${\sf value} : {\sf exp} \rightarrow {\sf prop}$ (moded ${\sf
   value}\,{+}$). We will not define these propositions here, but we do
 so later on in Section~\ref{sec:evaluationcontexts}.
 
@@ -540,10 +552,7 @@ operational semantics specification, shown in
 Figure~\ref{fig:sos-tailrecursion} both without the tail-recursion
 optimization (left) and with the tail-recursion optimization (right).
 
-The tail-recursion optimized translation is definitely superior for
-this example. Concurrent proofs for the non-tail-recursion-optimized
-specification build up an enormous stack of useless copies of the
-proposition $(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})$:
+\begin{figure}
 \begin{align*}
 & x_1{:}{\sf eval}\,\interp{e_1} \\
 \leadsto ~ & x_2{:}{\sf eval}\,\interp{e_2}, 
@@ -568,6 +577,16 @@ proposition $(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})$:
   y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} \\
 \leadsto ~ & z_1{:}{\sf retn}\,\interp{v}
 \end{align*}
+\caption{Example trace with the non-tail-recursion-optimized
+  semantics in Figure~\ref{fig:sos-tailrecursion}}
+\label{fig:example-proc-non-tail-recursive-trace}
+\end{figure}
+
+The tail-recursion optimized translation is definitely superior for
+this example. Concurrent proofs for the non-tail-recursion-optimized
+specification build up an enormous stack of useless copies of the
+proposition $(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})$,
+as shown in Figure~\ref{fig:example-proc-non-tail-recursive-trace}.
 In contrast, the tail-recursion optimized version on the right hand
 side of Figure~\ref{fig:sos-tailrecursion} takes half as many steps,
 and each step is smaller, simpler, and the overall trace does a better
@@ -1013,13 +1032,13 @@ Defunctionalization is a procedure for turning higher-order
 concurrent \sls~specifications into first-order concurrent
 \sls~specifications. It is based on the following intuitions:
 if $A^-$ is a closed negative proposition
-of the form $\forall \overline{x}.\,p^+_\mtrue \lefti \{ A^+ \}$
+of the form $\forall \overline{x}.\,A^+_1 \lefti \{ A^+_2 \}$
 and we have a single-step transition 
-$(\Psi; \tackon{\Theta}{z{:}\susp{p^+_\mtrue}, y{:}\istrue{A^-}}) 
+$(\Psi; \tackon{\Theta}{y{:}\istrue{A^-}}) 
  \leadsto_{\Sigma} 
- (\Psi; \tackon{\Theta}{A^+})$
+ (\Psi; \Delta')$
 in an \sls~specification (witnessed by the step 
-$(\tstep{\mkpat{A^+}}{y}{(\tforalll{\overline{t}}{\tappl{z}{\tnil}})})$), 
+$(\tstep{\mkpat{A^+_2}}{y}{(\tforalll{\overline{t}}{\tappl{V}{\tnil}})})$), 
 then we can define an augmented signature
 \begin{align*}
 \Sigma' = ~ & \Sigma, 
@@ -1027,11 +1046,11 @@ then we can define an augmented signature
 \\    ~~ & {\sf run\_cont} : \forall{\overline x}.\,p^+_\mtrue \fuse {\sf cont} \lefti \{ A^+ \}
 \end{align*}
 and it is the case that 
-$(\Psi; \tackon{\Theta}{z{:}\susp{p^+_\mtrue}, y{:}\susp{\sf cont}}) 
+$(\Psi; \tackon{\Theta}{y{:}\susp{\sf cont}}) 
  \leadsto_{\Sigma'} 
- (\Psi; \tackon{\Theta}{A^+})$
+ (\Psi; \Delta')$
 as well; this new transition is witnessed by the step
-$(\tstep{\mkpat{A^+}}{\sf run\_cont}{(\tappl{(\tfuser{z}{y})}{\tnil})})$.
+$(\tstep{\mkpat{A^+}}{\sf run\_cont}{(\tappl{(\tfuser{V}{y})}{\tnil})})$.
 
 More generally, if we are allowed to extend the signature and $A^-$
 falls into the very specific form we have
@@ -1053,27 +1072,32 @@ if and only if $\Delta \leadsto_{\Sigma'} \Delta'$. \footnote{Recall
   $[{\downarrow}A^-/{\sf cont}](\tackon{\Theta}{z{:}\istrue{\susp{\sf cont}}})$
   %
   as being equal to the context in which we {\it first} perform the
-  straightfoward substitution, giving us
+  straightforward substitution, giving us
   $(\tackon{\Theta}{z{:}\istrue{{\downarrow}A^-}})$, and then {\it
     second} apply invertible rules, giving us
   $(\tackon{\Theta}{z'{:}\istrue{A^-}})$.} 
 
-We need not restrict ${\sf cont}$ to just a single appearence
+We need not restrict ${\sf cont}$ to just a single appearance
 suspended in the process state, however. Multiple instances of ${\sf
   cont}$ can appear in the process state without a problem.  It is
-similarly unproblematic for ${\sf cont}$ to appear inside of a monadic
-positive proposition, because after any transition it will either
-continue to be inside of a monadic positive proposition or they will
-have been released to live in the process state as suspended ordered
-propositions. And by the same reasoning, we can replace propsitions
-in the heads of signature clauses like this one:
+similarly unproblematic for ${\sf cont}$ to appear in the monadic head
+of some other rule in the process state, as the appearance of an
+ordered atomic proposition in a monadic head will not effect the
+existence of any transition, but may cause the ordered atomic
+proposition to become a suspended ordered proposition in the process
+state after the transition. 
+
+By the same reasoning, it is similarly
+unproblematic for ${\sf cont}$ to appear in the head of a rule in the
+signature.  Therefore, we can replace propositions in the monadic heads
+of rules in the signature, like this one:
 \begin{align*}
 & \Sigma, \\
-& {\sf r} : {\sf a} \lefti \{ {\sf b} \fuse ({\sf c} \lefti \{ {\sf d} \fuse ({\sf e} \lefti \{ {\sf f} \}) \}) \}
+& {\sf r} : {\sf a} \lefti \{ {\sf b} \fuse {\uparrow}({\sf c} \lefti \{ {\sf d} \fuse {\uparrow}({\sf e} \lefti \{ {\sf f} \}) \}) \}
 \intertext{to produce a signature that looks like this:}
 & \Sigma, \\
 & {\sf cont1} : {\sf prop\,ord}, \\
-& {\sf r1} : {\sf c} \fuse {\sf cont1} \lefti \{ {\sf d} \fuse ({\sf e} \lefti \{ {\sf f} \}) \}, \\
+& {\sf r1} : {\sf c} \fuse {\sf cont1} \lefti \{ {\sf d} \fuse {\uparrow}({\sf e} \lefti \{ {\sf f} \}) \}, \\
 & {\sf r} : {\sf a} \lefti \{ {\sf b} \fuse {\sf cont1} \}
 \intertext{and the process can be iterated to obtain 
 a fully first-order signature:}
@@ -1084,68 +1108,270 @@ a fully first-order signature:}
 & {\sf r1} : {\sf c} \fuse {\sf cont1} \lefti \{ {\sf d} \fuse {\sf cont2} \}, \\
 & {\sf r} : {\sf a} \lefti \{ {\sf b} \fuse {\sf cont1} \}
 \end{align*}
+This propositional transformation is similar to the one proposed by
+Miller in~\cite{miller02higherorder}, where the new propositions were
+introduced to hide the internal states of processes.
 
-We can go further: even if $A^-$ contains free variables from $\Psi$,
-it is always possible to define a type constructor $B^-$ with kind
-$(\Pi x_1{:}\tau_1\ldots \Pi x_n{:}\tau_n.{\sf prop})$ 
-such that $A^- = B^-\,t_1\ldots t_n$.
-In this more general case, we can let
+We can go further and allow $A^-$ to contain free variables if
+$A^- = [t_1/y_1]\ldots[t_m/x_m]B^-$ where $B^- = \forall
+\overline{x}.\,B_1^+ \lefti \{ B_2^+ \}$ has only the variables
+$\overline{y} = y_1\ldots y_m$ free.  In this more general case, we
+can revise the signature as follows:
 \begin{align*}
 \Sigma'' = ~ & \Sigma,
 \\    ~~ & {\sf cont} : 
-       \Pi x_1{:}\tau_1\ldots \Pi x_n{:}\tau_n.\, {\sf prop\,ord},
-\\    ~~ & {\sf run\_cont} : \forall x_1{:}\tau_1\ldots\forall x_n{:}\tau_n.\,
-       {\sf cont}({\sf f}\,x_1\ldots\,x_n) \lefti B^-\,x_1\ldots x_n
+       \Pi x_y{:}\tau_1\ldots \Pi y_m{:}\tau_m.\, {\sf prop\,ord},
+\\    ~~ & {\sf run\_cont} : \forall \overline{x}.\,\forall \overline{y}.\,
+       p^+_\mtrue \fuse {\sf cont}\,\overline{y} \lefti \{ B^+ \}
 \end{align*}
-As long as 
-$({\sf cont}\,t_1\ldots t_n)$ only appears in $\Delta$ as a 
-suspended atomic proposition, then it is the case that
-$[{\downarrow}(B^-\,x_1\ldots x_n)
-    /{\sf cont}\,x_1\ldots x_n]\Delta 
- \leadsto_\Sigma
- [{\downarrow}(B^-\,x_1\ldots x_n)
-    /{\sf cont}\,x_1\ldots\,x_n]\Delta'$ 
-if and only if 
+With this revision, we maintain that
 %
-$\Delta \leadsto_{\Sigma''} \Delta'$.\footnote{Recall from
-  Section~\ref{sec:framework-substprop} that
-  $[{\downarrow}(B^-\,x_1\ldots x_n)/({\sf cont}\,x_1\ldots
-  x_n)](z{:}\susp{{\sf cont}\,t_1\ldots t_n})$ as being equal to the
-  context in which we substitue and then apply invertible rules, i.e.
-  $z{:}\istrue{B^-\,t_1\ldots t_n}$}
+$[{\downarrow}B^-/{\sf cont}\,\overline{x}]\Delta \leadsto_{\Sigma}
+[{\downarrow}B^-/{\sf cont}\,\overline{x}]\Delta'$ if and only if
+$\Delta \leadsto_{\Sigma''} \Delta'$ (as long as propositions of the
+form ${\sf cont}\,\overline{t}$ only appear suspended in the process
+state or in the monadic heads of rules that appear in the process
+state).\issue{The process of proving this is mostly an issue of
+  stating it precisely, which is a pain. I'd appreciate feedback as to
+  whether this seems clear or whether I need to write out the detailed
+  proof.}
 
-In addition to allowing these newly introduced 
-atomic propositions to appear suspended in the context, it is not 
-a problem to allow them to appear in the heads of monadic clauses. 
-This means that we can 
-
- monadic
-clauses, there is no 
-
-The defunctionalization transformation then applies the same reasoning
-to signatures: if a proposition ${\downarrow}A^-$ appears in the monadic
-head of some rule, 
-
- $A^- = B^-\,t_1\,t_2\,t_3$
-
-This is even
-true if $A^-$ has free variables: we can always define a closed
-$B^- : $
-
+The one twist we make to the defunctionalization transformation is
+that, instead of introducing a new ordered atomic proposition ${\sf
+  cont}\,\overline{t}$ for each iteration of the defunctionalization
+procedure, we introduce a single type $({\sf frame} : {\sf type})$ and a
+single atomic proposition $({\sf cont} : {\sf frame} \rightarrow {\sf
+  prop\,ord})$. Then, each iteration of the defunctionalization
+procedure produces a new constant with type $\Pi x_y{:}\tau_1\ldots
+\Pi y_m{:}\tau_m.\, {\sf frame}$ instead of a new atomic proposition
+with kind $\Pi x_y{:}\tau_1\ldots \Pi y_m{:}\tau_m.\, {\sf
+  prop\,ord}$.  Operationally, these two approaches are equivalent,
+though the approach using frames requires us to disallow variables
+that can construct new terms of type ${\sf frame}$ from appearing in
+the variable context $\Psi$.
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/cbv-ev-ssos-fun.sls}
-\caption{An ordered abstract machine semantics for the CBV lambda calculus.}
+\caption{A first-order ordered abstract machine semantics for CBV
+  evaluation.}
 \label{fig:cbv-ev-ssos-fun}
 \end{figure}
+
+Using defunctionalization procedure outlined above, we obtain the
+first-order specification in Figure~\ref{fig:cbv-ev-ssos-fun} from the
+higher-order specification in Figure~\ref{fig:cbv-ev-ssos-tail}, which
+was in turn derived from the natural semantics for CBV evaluation by
+operationalization with tail-recursion optimization.
+
+% As long as 
+% $({\sf cont}\,t_1\ldots t_n)$ only appears in $\Delta$ as a 
+% suspended atomic proposition, then it is the case that
+% $[{\downarrow}(B^-\,x_1\ldots x_n)
+%     /{\sf cont}\,x_1\ldots x_n]\Delta 
+%  \leadsto_\Sigma
+%  [{\downarrow}(B^-\,x_1\ldots x_n)
+%     /{\sf cont}\,x_1\ldots\,x_n]\Delta'$ 
+% if and only if 
+% %
+% $\Delta \leadsto_{\Sigma''} \Delta'$.\footnote{Recall from
+%   Section~\ref{sec:framework-substprop} that
+%   $[{\downarrow}(B^-\,x_1\ldots x_n)/({\sf cont}\,x_1\ldots
+%   x_n)](z{:}\susp{{\sf cont}\,t_1\ldots t_n})$ as being equal to the
+%   context in which we substitue and then apply invertible rules, i.e.
+%   $z{:}\istrue{B^-\,t_1\ldots t_n}$}
+
+% In addition to allowing these newly introduced 
+% atomic propositions to appear suspended in the context, it is not 
+% a problem to allow them to appear in the heads of monadic clauses. 
+% This means that we can 
+
+%  monadic
+% clauses, there is no 
+
+% The defunctionalization transformation then applies the same reasoning
+% to signatures: if a proposition ${\downarrow}A^-$ appears in the monadic
+% head of some rule, 
+
+%  $A^- = B^-\,t_1\,t_2\,t_3$
+
+% This is even
+% true if $A^-$ has free variables: we can always define a closed
+% $B^- : $
+
+
+
 
 \section{Adequacy with abstract machines}
 \label{sec:nat-ssos-adequacy}
 
+I claim that the four-rule abstract machine specification given at the
+beginning of this chapter is adequately represented by the derived
+\sls~specification in Figure~\ref{fig:cbv-ev-ssos-fun}. For terms and
+for deductive computations, adequacy is a well-understood concept: we
+know what it means to define an adequate encoding function $\interp{e}
+= t$ from ``on-paper'' terms $e$ with (potentially) variables
+$x_1,\ldots,x_n$ free to LF terms $t$ where $x_1{:}{\sf
+  exp},\ldots,x_n{:}{\sf exp} \vdash t : {\sf exp}$, and we know what
+it means to adequately encode the judgment $e \Downarrow v$ as a
+negative atomic \sls~proposition ${\sf ev}\,\interp{e}\,\interp{v}$
+and to encode derivations of this judgment to \sls~terms $N$ where
+$\slst{\Sigma}{\cdot}{\cdot}{N}{\susp{{\sf
+      ev}\,\interp{e}\,\interp{v}}}$
+\cite{harper93framework,harper07mechanizing}. What does it mean to
+adequately represent machine states as process states (that is,
+substructural contexts) and to encode a transition system as a 
+concurrent \sls~specification? 
 
+The answer given in the literature by Cervesato et
+al.~\cite{cervesato02concurrent} and by
+Schack-Nielsen~\cite{schacknielsen07induction} has three steps. The
+first step is to, define an interpretation function from states $s$
+and stacks $k$ to process states $\Delta$, so that, for example, the
+state
+\[
+((\ldots({\sf halt}; \Box\,e_1)\ldots); (\lambda x.e_n)\,\Box) \lhd v
+\]
+is interpreted as the process state
+\[
+x_1{:}\susp{{\sf cont}\,({\sf app1}\,\interp{e_1})}, ~~
+\ldots, ~~
+x_n{:}\susp{{\sf cont}\,({\sf app2}\,\lambda x.\interp{e_n})}, ~~
+y{:}\susp{{\sf retn}\,\interp{v}}
+\]
+The second step is to, prove a preservation-like adequacy theorem. Let
+$\Sigma\ref{fig:cbv-ev-ssos-fun}$ be the signature from
+Figure~\ref{fig:cbv-ev-ssos-fun}: we show that if state $s$ is
+interpreted and $\Delta$ and $\Delta
+\leadsto_{\Sigma\ref{fig:cbv-ev-ssos-fun}} \Delta'$, then there is a
+state $s'$ such that $s'$ is interpreted as $\Delta'$. Then we can
+prove the main adequacy result: that the interpretation of state $s$
+steps to the interpretation of state $s'$ if and only if $s \mapsto
+s'$.
 
-\subsection{Adequacy}
+I believe that the approach to adequacy given in previous work is
+unsatisfactory because the interpretation of process states into
+contexts is 1-to-1 but not onto (and therefore not invertible).  This
+means that there is no {\it internal} notion of what it means for a
+process state to encode a state $s$ or a stack $k$. By analogy,
+``having type ${\sf exp}$'' captures what it means for an LF term
+encode an expression and ``having type ${\sf
+  ev}\,\interp{e}\,\interp{v}$'' captures what it means for an
+\sls~term to encode a derivation of $e \Downarrow v$.
+
+In this section, we will present a different three-part approach that
+addresses this perceived deficiency. First, we create a signature
+$\Sigma\sf gen$ that encodes well-formed states: the $\Delta$ such
+that $x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta$ and ${\sf
+  gen} \notin \Delta$ are in a bijection with the states $s$
+(Section~\ref{sec:nat-ssos-adequacy-gen}). This gives us the internal
+notion of what it means to encode a process state, which is what we
+were previously lacking. Second, we prove the preservation-like
+property from before. The difference is that this can now be stated
+formally as a property of \sls~specifications: if $x{:}\susp{\sf gen}
+\leadsto^*_{\Sigma\sf gen} \Delta$ and $\Delta
+\leadsto_{\Sigma\ref{fig:cbv-ev-ssos-fun}} \Delta'$, then $x{:}
+\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta'$
+(Section~\ref{sec:nat-ssos-adequacy-pres}). The structure of this
+theorem is critical, a point that we will consider in greater depth in
+Part III of this thesis. Finally, the third step is the same as it was
+in other approaches: we prove that the interpretation of state $s$
+steps to the interpretation of state $s'$ if and only if $s \mapsto s'$.
+
+\subsection{Adequacy of states}
+\label{sec:nat-ssos-adequacy-gen}
+
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/cbv-ev-ssos-gen.sls}
+
+\bigskip
+\begin{theorem}[Adequacy of states]~
+\begin{itemize}
+\item There is a bijection between contexts $\Delta$ such that
+  $x{:}\susp{\sf gen} \leadsto_{\Sigma\sf gen} \Delta$ where ${\sf gen} \notin \Delta$
+  and states $s$.
+\item There is a bijection between frames $\Theta$ such that $x{:}\susp{\sf
+    gen} \leadsto_{\Sigma\sf gen} \tackon{\Theta}{x'{:}{\sf gen}}$ and
+  stacks $k$.
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+We will give only the two translation from the ``on paper''
+semantic artifacts (states $s$ and stacks $k$) to traces:
+\begin{itemize}
+\item $\interp{s},$ which outputs
+a trace $T$ with type $x{:}\susp{\sf gen} \leadsto_{\Sigma\sf gen} \Delta$
+where ${\sf gen} \not\in \Delta$, and 
+\item $\interp{k}$, which outputs
+both a trace $T$ with type 
+$x{:}\susp{\sf gen}
+  \leadsto_{\Sigma\sf gen} \tackon{\Theta}{x'{:}\susp{\sf gen}}$ where
+${\sf gen} \not\in \Delta$ and the variable name $x'$ of the resulting
+${\sf gen}$ proposition (which may be the same as $x$). Rather than 
+representing this output explicitly, we just assume it is always
+named $x'$ in the definition below.  
+\end{itemize}
+Note that both functions builds contexts only indirectly by building 
+traces; similarly, the inverses of these functions are defined by induction
+on the structure of traces, not on the structure of contexts.
+\begin{tabbing}
+~~ \= \qquad\quad\qquad \= $~ :: ~$ \=\kill
+\> $\interp{k \rhd e} = \interp{k}; 
+     \tstep{z}{\sf gen/eval}{(\tforalll{\interp{e}}{(\tappl{x'}{\tnil})})}$
+\\ \>\> $~ :: ~$ 
+  \> $x{:}\susp{\sf gen} 
+       \leadsto^* \tackon{\Theta}{x'{:}\susp{\sf gen}} 
+       \leadsto \tackon{\Theta}{z{:}\susp{{\sf eval}\,\interp{e}}}$
+\\[4pt]
+\> $\interp{k \lhd v} = \interp{k}; 
+     \tstep{z}{\sf gen/retn}{(\tforalll{\interp{v}}{(\tappl{x'}{\tnil})})}$
+\\ \>\> $~ :: ~$ 
+  \> $x{:}{\sf gen} 
+       \leadsto^* \tackon{\Theta}{x'{:}\susp{\sf gen}} 
+       \leadsto \tackon{\Theta}{z{:}\susp{{\sf retn}\,\interp{v}}}$
+\\[4pt]
+\> $\interp{{\sf halt}} = \emptytrace$
+\> $~ :: ~$
+  \> $x{:}\susp{\sf gen} \leadsto^* x{:}\susp{\sf gen}$
+\\[4pt]
+\> $\interp{k; \Box\,e_2} = \interp{k}; \tstep{z, x''}{\sf gen/cont}
+     {(\tforalll{{\sf app1}\,\interp{e_2}}{(\tappl{x'}{\tnil})})}$
+\\ \>\> $~ :: ~$
+ \> $x{:}\susp{\sf gen}
+       \leadsto^* \tackon{\Theta}{x'{:}\susp{\sf gen}}
+       \leadsto \tackon{\Theta}
+            {\mkconj
+               {z{:}\susp{{\sf cont}\,({\sf app1}\,\interp{e_2})}}
+               {x''{:}\susp{\sf gen}}}$
+\\[4pt]
+\> $\interp{k; (\lambda x.e)\,\Box} = \interp{k}; \tstep{z, x''}{\sf gen/cont}
+     {(\tforalll{{\sf app1}\,\interp{e_2}}{(\tappl{x'}{\tnil})})}$
+\\ \>\> $~ :: ~$
+ \> $x{:}\susp{\sf gen}
+       \leadsto^* \tackon{\Theta}{x'{:}\susp{\sf gen}}
+       \leadsto \tackon{\Theta}
+            {\mkconj
+               {z{:}\susp{{\sf cont}\,({\sf app2}\,\lambda x.\interp{e})}}
+               {x''{:}\susp{\sf gen}}}$
+\end{tabbing}
+To complete the theorem, it is necessary to show that the two encoding
+functions are one-to-one and onto. This can be done by demonstrating
+the existence of a function $\interp{T}^{-1}_s = s$ from traces $T$
+with type $x{:}\susp{\sf gen} \leadsto_{\Sigma\sf gen} \Delta$ where
+${\sf gen} \notin \Delta$ to states $s$ and a function
+$\interp{T}^{-1}_k = k$ from traces $T$ with type $x{:}\susp{\sf gen}
+\leadsto_{\Sigma\sf gen} \tackon{\Theta}{x'{:}{\sf gen}}$ (where $x$
+and $x'$ may be the same) to stacks $k$ and then showing that
+the functions compose to the identity in both directions. In this case,
+that proof is tedious but straightforward.
+\end{proof}
+
+\subsection{Preservation of adequacy}
+\label{sec:nat-ssos-adequacy-pres}
+
+\subsection{Adequacy of the transition system}
+\label{sec:nat-ssos-adequacy-absmachine}
 
 
 To make a carefully-chosen analogy, various on-paper styles of
@@ -1189,8 +1415,6 @@ for an application $e_1\,e_2$,
 
 Input
 
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/cbv-ev-ssos-gen.sls}
 
 \begin{theorem}
 If $x{:}\istrue{\sf gen} \leadsto \Delta$
