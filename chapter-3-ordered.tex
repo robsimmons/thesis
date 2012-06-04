@@ -619,7 +619,7 @@ $\Xi$ matches $\restrictto{\Xi'}{\mpers}$ if
 $\Xi$ has only persistent and affine resources and $\Xi'$ 
 contains the same persistent resources as $\Xi$ but none of the affine ones.
 
-We can describe a mirror-image operation on succeedants $U$.  $U$
+We can describe a mirror-image operation on succedents $U$.  $U$
 matches $\restrictfrom{U}{\mlax}$ only if it has the form $\islax{T}$,
 and $U$ always matches $\restrictfrom{U}{\mtrue}$. The latter matching
 construct is another degenerate form that similarly allows us to refer
@@ -635,16 +635,16 @@ as a judgment to mean that $U$ matches $\restrictfrom{U}{\mtrue}$.
 A sequent in the focused sequent calculus presentation of \ollll~has
 the form $\foc{\Psi}{\Delta}{U}$, where $\Psi$ is the first-order
 variable context, $\Delta$ is a substructural context as described in
-the previous section, and $U$ is a succeedant. The domain $T$ of the
+the previous section, and $U$ is a succedent. The domain $T$ of the
 substructural context consists of stable negative propositions $A^-$,
 positive suspended propositions $\susp{A^+}$, focused negative
 propositions $[A^-]$, and inverting positive propositions $A^+$.
 
-The form of the succeedant $U$ is $\islvl{T}$, where $\mlvl$ is either
+The form of the succedent $U$ is $\islvl{T}$, where $\mlvl$ is either
 $\mtrue$ or $\mlax$; in this way, $U$ is just a like a special
 substructural context with exactly one element -- we don't need
 to care about the name of the variable, because there's only one.  The
-domain of $T$ for succeedants is complementary to the domain of $T$
+domain of $T$ for succedents is complementary to the domain of $T$
 for contexts: stable positive propositions $A^+$, negative suspended
 propositions $\susp{A^-}$, focused positive propositions $[A^+]$, and
 inverting negative propositions $A^-$.
@@ -652,9 +652,9 @@ inverting negative propositions $A^-$.
 \subsection{Restrictions on the form of sequents}
 
 A sequent $\foc{\Psi}{\Delta}{U}$ is {\it stable} when the context
-$\Delta$ and succeedant $U$ contain only stable propositions ($A^-$ in
-the context, $A^+$ in the succeedant) and suspended propositions
-($\susp{A^+}$ in the context, $\susp{A^-}$ in the succeedant). We
+$\Delta$ and succedent $U$ contain only stable propositions ($A^-$ in
+the context, $A^+$ in the succedent) and suspended propositions
+($\susp{A^+}$ in the context, $\susp{A^-}$ in the succedent). We
 repeat the focusing constraint discussed in Chapter 2: there is only
 ever at most one focused proposition in a sequent, and if there is
 focused proposition in the sequent, then the sequent is otherwise
@@ -668,7 +668,7 @@ proof of a stable sequent.
 Because there is always a distinct focused proposition in a sequent,
 we do not need a variable name to reference the focused proposition in
 a context $\Delta$ any more than we need a variable name to reference
-the unique member of the context-like succeedant $U$. Therefore, we
+the unique member of the context-like succedent $U$. Therefore, we
 can write $\istrue{[B^-]}$ instead of $x{:}\istrue{[B^-]}$. Furthermore,
 we restrict focused propositions and inverting propositions so that
 they are always associated with the judgment $\mtrue$. With this
@@ -685,7 +685,7 @@ presentation of logic from the structural focalization development
 invertible proposition in a sequent, {\it only} the leftmost one will
 be treated as eligible to have a rule applied to it. All the
 propositions in $\Delta$ are treated as being to the left of the
-succeedant $U$, so we always prioritize inversion on positive
+succedent $U$, so we always prioritize inversion on positive
 propositions in $\Delta$. With this additional restriction, it is
 always unambiguous which proposition we are referring to in an
 invertible rule, and we write $A^+$ instead of $x{:}A^+$ or
@@ -769,7 +769,7 @@ present, emphasises the degree to which the shifts ${\uparrow}$ and
 ${\downarrow}$ have much of the character of exponentials in a focused
 substructural logic. The upshift ${\uparrow}A^+$ is like an ordered
 variant of the lax truth ${\ocircle}A^+$ that puts no constraints on
-the form of the succeedant, and the downshift ${\downarrow}A^-$ is
+the form of the succedent, and the downshift ${\downarrow}A^-$ is
 like an ordered variant of the persistent and linear exponentials
 ${!}A^-$ and ${\gnab}A^-$ that puts no constraints on the form of the
 context. This point is implicit in Laurent's thesis
@@ -1113,12 +1113,12 @@ represented as follows:
 \section{Cut admissibility}
 \label{sec:ord-cut}
 
-It is a little wordy to say that, in a context or succeedant, the only
+It is a little wordy to say that, in a context or succedent, the only
 judgments involving suspensions are $(\ispers{\susp{p^+_\mpers}})$,
 $(\iseph{\susp{p^+_\meph}})$, $(\istrue{\susp{p^+}})$,
 $(\istrue{\susp{p^-}})$, and $(\islax{\susp{p^-_\mlax}})$, but this is a
 critical precondition of cut admissibility property for focused
-\ollll. We'll call contexts and succeedants with this property {\it
+\ollll. We'll call contexts and succedents with this property {\it
   suspension-normal}.
 
 \bigskip
@@ -2595,9 +2595,9 @@ phenomena of erasure.
 We have to define erasure on non-stable sequents in order for the
 soundness of focusing to go through, though we will only define
 erasure on suspension-normal sequents.  The erasure of sequents,
-$U^\circ$, maps polarized succeedants $\islvl{A^+}$,
+$U^\circ$, maps polarized succedents $\islvl{A^+}$,
 $\islvl{\susp{p^-_\mlvl}}$, $[A^+]$, and $A^-$ in the obvious way to
-unpolarized succeedants $\islvl{(A^+)^\circ}$, $\islvl{p^-_\mlvl}$,
+unpolarized succedents $\islvl{(A^+)^\circ}$, $\islvl{p^-_\mlvl}$,
 $\istrue{(A^+)^\circ}$, and $\istrue{(A^-)^\circ}$, respectively.  To
 describe the erasure of contexts more simply, we will assume that we
 can give a presentation of unfocused \ollll~that uses unified
@@ -3058,7 +3058,7 @@ admissibility lemmas in order to gain new ones that look like this:
 \]
 (To be clear, just as all the unfocused admissibility lemmas only applied
 to stable sequents, the unfocused admissibility lemmas above only apply when
-contexts and succeedants are both stable and free of judgments ${\istrue{T}}$.)
+contexts and succedents are both stable and free of judgments ${\istrue{T}}$.)
 
 The point of this exercise is that, given the definition and
 metatheory of \ollll, there is a reasonably large family of related

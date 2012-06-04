@@ -413,35 +413,37 @@ Andreoli, a point we will return to in Section~\ref{sec:linsynthetic}.
 
 \subsection{Polarization}
 
-At this point, there is an important
-choice to make. One way forward is to treat positive and negative
-propositions as a syntactic refinements of the set of all
-propositions, in which case we end up focusing a standard
-intuitionistic linear logic. The other way forward is to treat
-positive and negative propositions as distinct syntactic classes $A^+$
-and $A^-$ with explicit inclusions, called {\it shifts}, between
-them. In this second case, we end up focusing a {\it polarized} linear
-logic.  The positive proposition ${\downarrow}A^-$, pronounced
-``downshift $A$'' or ``down $A$,'' has a subterm that is a negative
-proposition; the negative proposition ${\uparrow}A^+$, pronounced
-``upshift $A$'' or ``up $A$,'' has a subterm that is a positive
-proposition.
-
-For our purposes, the choice is mainly technical.  Polarized logics
-are interesting, and polarized linear logic is a bit more expressive
-than regular linear logic, as heavily-shifted propositions like
-${\downarrow}{\uparrow}A^+$ and
-${\uparrow}{\downarrow}{\uparrow}{\downarrow}A^-$ can be
-expressed. This extra expressiveness won't help us in the design of
-logical frameworks, but the use of shifts simplifies the proof of
-identity expansion in Section~\ref{sec:linindentity} and the proof of
-completeness in Section~\ref{sec:lincorrectness}, so we will describe
-focusing for a polarized linear logic with shifts, starting with the 
-following grammar of polarized propositions, positive and negative:
+At this point, there is an important choice to make. One way forward
+is to treat positive and negative propositions as a syntactic
+refinements of the set of all propositions. This will lead to the
+development focused presentation of a standard intuitionistic linear
+logic with the connections and propositions that we have already
+considered. The other way forward is to treat positive and negative
+propositions as distinct syntactic classes $A^+$ and $A^-$ with
+explicit inclusions, called {\it shifts}, between them. In this second
+case, we end up focusing a {\it polarized} linear logic.  The positive
+proposition ${\downarrow}A^-$, pronounced ``downshift $A$'' or ``down
+$A$,'' has a subterm that is a negative proposition; the negative
+proposition ${\uparrow}A^+$, pronounced ``upshift $A$'' or ``up $A$,''
+has a subterm that is a positive proposition.
 \begin{align*}
 A^+ & ::= p^+ \mid {\downarrow}A^- \mid {!}A^- \mid \one \mid A^+ \tensor B^+\\
 A^- & ::= p^- \mid {\uparrow}A^+ \mid A^+ \lolli B^-
 \end{align*}
+
+Polarized logics are independently interesting as objects of
+investigation: for instance, the Curry-Howard interpretation of
+polarised persistent logic has been independently studied by Levy as
+Call-by-Push-Value \cite{levy04call}.  However, the independent study
+of polarized logic is not our current goal; rather, we want merely to
+characterize the structure of focused proofs and show that every
+derivation in linear logic can be turned to a focused proof in linear
+logic. Polarization does not explicitly help us achieve this goal, but
+the use of polarized logic simplifies the proof of identity expansion
+in Section~\ref{sec:linindentity} and the proof of completeness in
+Section~\ref{sec:lincorrectness}, so we will describe focusing for a
+polarized linear logic with shifts, starting with the following
+grammar of polarized propositions, positive and negative:
 
 \input{figs/fig-lin-shift}
 
@@ -488,10 +490,10 @@ Another reasonable presentation of linear logic, and the one we will
 adopt in this section, uses only one sequent form
 $\mildseq{\Gamma}{\underline{\Delta}}{\underline{U}}$, that
 generalizes what is to allowed to to appear in the linear context
-$\underline{\Delta}$ or in the succeedant $\underline{U}$. We will use
+$\underline{\Delta}$ or in the succedent $\underline{U}$. We will use
 this interpretation to understand the logic described in
 Figure~\ref{fig:kaustuv-focused}. The grammar of contexts
-$\underline{\Delta}$ and succeedants $\underline{U}$ allows them to
+$\underline{\Delta}$ and succedents $\underline{U}$ allows them to
 contain left focuses $[ A^- ]$ and right focuses $[ A^+ ]$. We will
 henceforth write $\Delta$ and $U$ to indicate the refinements of
 $\underline{\Delta}$ and $\underline{U}$ that do not contain any
@@ -501,7 +503,7 @@ focus.
 
 By adding a side condition to the three rules ${\it focus}_R$, ${\it
   focus}_L$, and ${\it copy}$ that neither the context $\Delta$ nor
-the succeedant $U$ can contain an in-focus proposition $[A^+]$ or
+the succedent $U$ can contain an in-focus proposition $[A^+]$ or
 $[A^-]$, derivations can maintain the invariant that there is always
 at most one proposition in focus in any sequent, effectively restoring
 the situation in which there are three distinct
@@ -533,7 +535,7 @@ so that they only apply when the sequent below the line is {\it
   stable}.  A sequent $\mildseq{\Gamma}{\Delta}{U}$ is stable if the
 context $\Delta$ contains only negative propositions $A^-$ and
 suspended positive propositions $\langle A^+ \rangle$ and the
-succeedant $U$ is either a positive proposition $A^+$ or a suspended
+succedent $U$ is either a positive proposition $A^+$ or a suspended
 negative propositions $\langle A^- \rangle$. In light of this restriction,
 whenever we consider a focused sequent
 $\mildseq{\Gamma}{\Delta, [A^-]}{U}$ or 
@@ -577,17 +579,29 @@ stays exactly the same, except that instances of initial sequents
 become admissible instances of the identity theorem.
 
 To my knowledge, all published proof systems for focused logic have
-attempted to replicate this initial rule {\it init} to some
-degree. I believe this to
-be a design error, and it is one that has historically made it
-enormously (and unnecessarily) difficult to prove the identity theorem
-for focused systems. This presentation uses {\it suspensions}:
-suspended positive propositions $\langle A^+ \rangle$ only appear in
-the linear context $\Delta$, and suspended negative propositions
-$\langle A^- \rangle$ only appear as succeedants. They are treated as
-stable (we never break down a suspended proposition) and are only used
-to immediately prove a proposition in focus with one of the identity
-rules ${\it id}^+$ or ${\it id}^-$.
+incorporated a focused version of the ${\it init}$ rule that also
+applies only to atomic propositions. This treatment is not incorrect
+and is obviously analogous to the ${\it init}$ rule from the unfocused
+system. Nevertheless, I believe this to be a design error, and it is
+one that has historically made it enormously (and unnecessarily)
+difficult to prove the identity theorem for focused systems. This
+presentation uses {\it suspensions}: suspended positive propositions
+$\langle A^+ \rangle$ only appear in the linear context $\Delta$, and
+suspended negative propositions $\langle A^- \rangle$ only appear as
+succedents. They are treated as stable (we never break down a
+suspended proposition) and are only used to immediately prove a
+proposition in focus with one of the identity rules ${\it id}^+$ or
+${\it id}^-$. The rules ${\it id}^+$ and ${\it id}^-$ are more general
+focused versions of the unfocused ${\it init}$ rule.\footnote{As we
+  discuss below in Section~\ref{sec:linindentity}, this extra
+  generality does not influence the structure of proofs because
+  suspended propositions can only be introduced into the context or
+  the succedent by the $\eta^+$ and $\eta^-$ rules, and those rules
+  {\it are} restricted to atomic propositions.}
+% The restriction of these
+% identity rules to suspended propositions allows us to maintain the
+% structure of the logic, but the generalization of the identity rules
+% to arbitrary suspended propositions g.
 
 \paragraph{Suspended positive propositions} act much like regular variables in a
 natural deduction system. The positive identity rule ${\it id}^+$
@@ -876,7 +890,7 @@ polarized logic that we discussed in Section~\ref{sec:linpolar}: that
 there is an unfocused derivation of $(A^+)^\circ$ or $(A^-)^\circ$ if
 and only if there is a focused derivation of $A^+$ or $A^-$.  The
 proof requires us to lift our erasure function to contexts and
-succeedants, which is done in Figure~\ref{fig:lin-shift-ctx}. Note
+succedents, which is done in Figure~\ref{fig:lin-shift-ctx}. Note
 that erasure is only defined on focused sequents
 $\mildseq{\Gamma}{\underline{\Delta}}{\underline{U}}$ when
 $\underline{\Delta}$ and $\underline{U}$ contain only atomic suspended
@@ -1423,7 +1437,7 @@ whether the last rule is
 \begin{itemize}
 \item ${\it copy}$ on some proposition $A^-$ from $\Gamma$, 
 \item ${\it focus}_L$ on some proposition $A^-$ in $\Delta$, or
-\item ${\it focus}_R$ on the succeedant $A^+$
+\item ${\it focus}_R$ on the succedent $A^+$
 \end{itemize} (it must be one of these
 three), then the structure of the proof is completely determined
 up to the next occurrences of stable sequents. 
@@ -1605,8 +1619,8 @@ include calorie information. This means that, in the near future, we
 can exchange six bucks for a soup and salad at Panera, but only if we
 know how many calories are in the meal. The six bucks, soup, and salad
 remain ephemeral resources like $q$ and $r$, but the calorie count is
-persistent. It is mathematical knowledge, which is not consumed by the
-transition.
+persistent. It is mathematical and scientific knowledge, 
+a resource that is not consumed by the transition.
 
 My justification for presenting Chaudhuri's system as the canonical
 focusing system for linear logic in Section~\ref{sec:foclinlog} is
@@ -2329,9 +2343,9 @@ X, Y, Z & ::= G A \mid x \mid X \supset Y \mid X \times Y\\
 A, B, C & ::= F X \mid a \mid A \lolli B \mid A \otimes B
 \end{align*}
 In adjoint logic, persistent propositions $X$ appear in the
-persistent context $\Gamma$ and as the succeedants of sequents
+persistent context $\Gamma$ and as the succedents of sequents
 $\pseq{\Gamma}{X}$, whereas linear propositions $A$ appear in
-the linear context $\Delta$ and as the succeedants of sequents
+the linear context $\Delta$ and as the succedents of sequents
 $\seq{\Gamma}{\Delta}{A}$. A fragment of the logic is shown in
 Figure~\ref{fig:fragment-adjoint}.  Note the similarity between the
 $G_L$ rule and our unfocused ${\it copy}$ rule, as well as the

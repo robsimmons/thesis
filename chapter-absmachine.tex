@@ -1234,10 +1234,10 @@ state
 \]
 is interpreted as the process state
 \[
-x_1{:}\susp{{\sf cont}\,({\sf app1}\,\interp{e_1})}, ~~
-\ldots, ~~
+y{:}\susp{{\sf retn}\,\interp{v}}, ~~
 x_n{:}\susp{{\sf cont}\,({\sf app2}\,\lambda x.\interp{e_n})}, ~~
-y{:}\susp{{\sf retn}\,\interp{v}}
+\ldots, ~~
+x_1{:}\susp{{\sf cont}\,({\sf app1}\,\interp{e_1})}, ~~
 \]
 The second step is to, prove a preservation-like adequacy theorem. Let
 $\Sigma\ref{fig:cbv-ev-ssos-fun}$ be the signature from
@@ -1281,17 +1281,53 @@ steps to the interpretation of state $s'$ if and only if $s \mapsto s'$.
 \subsection{Adequacy of states}
 \label{sec:nat-ssos-adequacy-gen}
 
+Our first goal is to describe a signature $\Sigma\sf gen$ with the
+property that if $x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen}
+\Delta$ and ${\sf gen} \notin \Delta$ then $\Delta$. A well-formed
+process state represting a state $k \rhd e$ has the form
+\[
+y{:}\susp{{\sf eval}\,\interp{e}}, ~~
+x_n{:}\susp{{\sf cont}\,\interp{f_n}}, ~~
+\ldots, ~~
+x_1{:}\susp{{\sf cont}\,\interp{f_1}}
+\]
+where $\interp{\Box\,e_2} = {\sf app1}\,\interp{e_2}$ and
+$\interp{(\lambda x.e)\,\Box} = {\sf app2}\,(\lambda.\interp{e})$. 
+A well-formed process state representing a state $k \lhd e$ has 
+the same form, but with a suspended ${\sf retn}\,\interp{v}$ instead
+of ${\sf eval}\,\interp{e}$. 
+
+The simplest \sls~signature that encodes this structure essentially
+has the structure of a Chomsky normal form describing well-formed
+contexts, with two unary productions and one unary production.
+
+\smallskip
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/cbv-ev-ssos-gen.sls}
+\smallskip
+
+\noindent In addition to the four declarations above, the full
+signature $\Sigma\sf gen$ includes all the type, proposition, and
+constant declarations from Figure~\ref{fig:cbv-ev-ssos-fun}, but none
+of the rules.
+
+Note that this specification most definitely is {\it not} well-moded.
+{\it Generative signatures} such as this one are not generally moded,
+and we don't think about traces under these signatures as 
+necessarily being concurrent computations in the same way we think
+about ordered abstract machines being concurrent computations. That is,
+rather than thinking of traces in these signatures being produced by
+different computations, such as the computational content of the adequacy
+theorem:
 
 \bigskip
 \begin{theorem}[Adequacy of states]~
 \begin{itemize}
 \item There is a bijection between contexts $\Delta$ such that
-  $x{:}\susp{\sf gen} \leadsto_{\Sigma\sf gen} \Delta$ where ${\sf gen} \notin \Delta$
+  $x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta$ where ${\sf gen} \notin \Delta$
   and states $s$.
 \item There is a bijection between frames $\Theta$ such that $x{:}\susp{\sf
-    gen} \leadsto_{\Sigma\sf gen} \tackon{\Theta}{x'{:}{\sf gen}}$ and
+    gen} \leadsto^*_{\Sigma\sf gen} \tackon{\Theta}{x'{:}{\sf gen}}$ and
   stacks $k$.
 \end{itemize}
 \end{theorem}
@@ -1321,15 +1357,17 @@ on the structure of traces, not on the structure of contexts.
      \tstep{z}{\sf gen/eval}{(\tforalll{\interp{e}}{(\tappl{x'}{\tnil})})}$
 \\ \>\> $~ :: ~$ 
   \> $x{:}\susp{\sf gen} 
-       \leadsto^* \tackon{\Theta}{x'{:}\susp{\sf gen}} 
-       \leadsto \tackon{\Theta}{z{:}\susp{{\sf eval}\,\interp{e}}}$
+       \leadsto^*_{\Sigma\sf gen} \tackon{\Theta}{x'{:}\susp{\sf gen}} 
+       \leadsto_{\Sigma\sf gen} 
+          \tackon{\Theta}{z{:}\susp{{\sf eval}\,\interp{e}}}$
 \\[4pt]
 \> $\interp{k \lhd v} = \interp{k}; 
      \tstep{z}{\sf gen/retn}{(\tforalll{\interp{v}}{(\tappl{x'}{\tnil})})}$
 \\ \>\> $~ :: ~$ 
   \> $x{:}{\sf gen} 
-       \leadsto^* \tackon{\Theta}{x'{:}\susp{\sf gen}} 
-       \leadsto \tackon{\Theta}{z{:}\susp{{\sf retn}\,\interp{v}}}$
+       \leadsto^*_{\Sigma\sf gen} \tackon{\Theta}{x'{:}\susp{\sf gen}} 
+       \leadsto_{\Sigma\sf gen} 
+          \tackon{\Theta}{z{:}\susp{{\sf retn}\,\interp{v}}}$
 \\[4pt]
 \> $\interp{{\sf halt}} = \emptytrace$
 \> $~ :: ~$
@@ -1339,8 +1377,8 @@ on the structure of traces, not on the structure of contexts.
      {(\tforalll{{\sf app1}\,\interp{e_2}}{(\tappl{x'}{\tnil})})}$
 \\ \>\> $~ :: ~$
  \> $x{:}\susp{\sf gen}
-       \leadsto^* \tackon{\Theta}{x'{:}\susp{\sf gen}}
-       \leadsto \tackon{\Theta}
+       \leadsto^*_{\Sigma\sf gen} \tackon{\Theta}{x'{:}\susp{\sf gen}}
+       \leadsto_{\Sigma\sf gen} \tackon{\Theta}
             {\mkconj
                {z{:}\susp{{\sf cont}\,({\sf app1}\,\interp{e_2})}}
                {x''{:}\susp{\sf gen}}}$
@@ -1349,8 +1387,8 @@ on the structure of traces, not on the structure of contexts.
      {(\tforalll{{\sf app1}\,\interp{e_2}}{(\tappl{x'}{\tnil})})}$
 \\ \>\> $~ :: ~$
  \> $x{:}\susp{\sf gen}
-       \leadsto^* \tackon{\Theta}{x'{:}\susp{\sf gen}}
-       \leadsto \tackon{\Theta}
+       \leadsto^*_{\Sigma\sf gen} \tackon{\Theta}{x'{:}\susp{\sf gen}}
+       \leadsto_{\Sigma\sf gen} \tackon{\Theta}
             {\mkconj
                {z{:}\susp{{\sf cont}\,({\sf app2}\,\lambda x.\interp{e})}}
                {x''{:}\susp{\sf gen}}}$
@@ -1367,8 +1405,26 @@ the functions compose to the identity in both directions. In this case,
 that proof is tedious but straightforward.
 \end{proof}
 
-\subsection{Preservation of adequacy}
+Note that two traces $T :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf
+  gen} \Delta$ and $T' :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf
+  gen} \Delta'$ are distinct if and only if the contexts $\Delta$ and
+$\Delta'$ are distinct. Therefore, we can equivalently see adequacy as
+a bijection between traces and abstract machine states $s$ or as a
+bijection between contexts and abstract machine states $s$. In a
+situation where this 1-to-1 correspondence between states and traces
+did not exist (because two traces generated the same context), it is
+not entirely clear whether it would be preferable to define adquecy in
+terms of contexts or in terms of traces.
+
+\subsection{Preservation}
 \label{sec:nat-ssos-adequacy-pres}
+
+\begin{theorem}[Preservation of the $\Sigma\sf gen$ invariant]~\\
+If $x{:}\susp{\sf gen}
+\leadsto^*_{\Sigma\sf gen} \Delta$ and $\Delta
+\leadsto_{\Sigma\ref{fig:cbv-ev-ssos-fun}} \Delta'$, then $x{:}
+\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta'$
+\end{theorem}
 
 \subsection{Adequacy of the transition system}
 \label{sec:nat-ssos-adequacy-absmachine}
