@@ -58,3 +58,8 @@ Frontend.load "exp.sls";
 Frontend.load "evalretn.sls";
 Frontend.load "contframe.sls";
 Frontend.load "cbv-ev-ssos-gen.sls";
+
+(* Section 6.6 *)
+Frontend.load "exp.sls";
+Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.load "ssos-mutable.sls";

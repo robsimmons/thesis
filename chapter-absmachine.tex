@@ -1633,8 +1633,20 @@ $\interp{s'} :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta'$.
 \section{Exploring the richer fragment}
 \label{sec:richer-ordered-abstract}
 
+
+
 \subsection{Mutable storage}
 \label{sec:mutable-storage}
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/ssos-mutable.sls}
+\caption{SSOS semantics of mutable storage.}
+\label{fig:ssos-mutable}
+\end{figure}
+
+
+\subsubsection{Existential angst} 
 
 No check for pointer inequality! This is a fundamental restriction of
 the fact that we're using existential quantification rather than some
@@ -1645,6 +1657,8 @@ Cheney cites it in nominal abstraction.)
 \subsection{Call-by-need evaluation}
 
 \subsection{Recoverable failure}
+
+\subsubsection{Failures and the parallel translation}
 
 \subsection{Environment semantics}
 
