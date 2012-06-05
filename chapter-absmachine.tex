@@ -1419,12 +1419,99 @@ terms of contexts or in terms of traces.
 \subsection{Preservation}
 \label{sec:nat-ssos-adequacy-pres}
 
-\begin{theorem}[Preservation of the $\Sigma\sf gen$ invariant]~\\
-If $x{:}\susp{\sf gen}
-\leadsto^*_{\Sigma\sf gen} \Delta$ and $\Delta
-\leadsto_{\Sigma\ref{fig:cbv-ev-ssos-fun}} \Delta'$, then $x{:}
-\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta'$
+Before we prove that the concurrent system from
+Figure~\ref{fig:cbv-ev-ssos-fun} adequately represents the transition
+system from the beginning of the chapter, we must show that our
+criteria for context well-formedness is actually preserved by the
+concurrent computations in Figure~\ref{fig:cbv-ev-ssos-fun}. This is
+part of the adequacy argument, but because we state it in terms of the
+generative signature $\Sigma\sf gen$, it is also a reasonable
+standalone theorem entirely about of \sls~specifications. We will
+return to theorems of this form in Part III of this thesis.
+
+\bigskip
+\begin{theorem}[Generation by $\Sigma\sf gen$ is invariant under
+ $\Sigma\ref{fig:cbv-ev-ssos-fun}$]~\\
+  If $x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta$ and
+  $\Delta \leadsto_{\Sigma\ref{fig:cbv-ev-ssos-fun}} \Delta'$, then
+  $x{:} \susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta'$
 \end{theorem}
+
+\begin{proof}
+  Primarily by enumeration of the possible synthetic transitions of
+  $\Sigma\ref{fig:cbv-ev-ssos-fun}$ and secondarily by case analysis
+  on the structure of the trace $T :: x{:}\susp{\sf gen}
+  \leadsto^*_{\Sigma\sf gen} \Delta$.
+
+  \begin{itemize}
+  \item $\tstep{z}{\sf ev/lam}{(\tforalll{\lambda x.e\,x}
+                                {(\tappl{y}{\tnil})})}$
+
+    \qquad $:: \frameoff{\Theta}
+                 {y{:}\susp{{\sf eval}\,({\sf lam}\,\lambda x.e\,x)}}
+               \leadsto
+               \tackon{\Theta}
+                 {z{:}\susp{{\sf retn}\,({\sf lam}\,\lambda x.e\,x)}} $
+
+    \medskip
+
+    $T = T'; \tstep{y}{\sf gen/eval}{(\tforalll{{\sf lam}\,\lambda x.e\,x}{\tappl{x'}{\tnil}})}$,
+    so we construct\\
+    $T'; \tstep{z}{\sf gen/retn}{(\tforalll{{\sf lam}\,\lambda x.e\,x}{\tappl{x'}{\tnil}})}$
+
+    \medskip
+
+  \item $\tstep{z_1, z_2}{\sf ev/app}{(\tforalll{e_1}
+                                {\tforalll{e_2}{(\tappl{y}{\tnil})}})}$
+
+    \qquad $:: \frameoff{\Theta}
+                 {y{:}\susp{{\sf eval}\,({\sf app}\,e_1\,e_2)}}
+               \leadsto
+               \tackon{\Theta}
+                 {\mkconj
+                  {z_1{:}\susp{{\sf eval}\,e_1}}
+                  {z_2{:}\susp{{\sf cont}\,({\sf app1}\,e_2)}}} $
+
+    \medskip
+
+    $T = T'; \tstep{y}{\sf gen/eval}{(\tforalll{{\sf app}\,e_1\,e_2}{\tappl{x'}{\tnil}})}$,
+    so we construct\\
+    $T'; ~~
+     \tstep{x_1, x_2}{\sf gen/cont}{(\tforalll{{\sf app1}\,e_2}{(\tappl{x'}{\tnil})})}; ~~
+     \tstep{z}{\sf gen/retn}{(\tforalll{{\sf lam}\,\lambda x.e\,x}{\tappl{x'}{\tnil}})}$
+
+    \medskip
+
+
+  \item $\tstep{z_1, z_2}{\sf ev/app1}{(\tforalll{\lambda x.e\,x}
+                       {\tforalll{e_2}{(\tappl{\tfuser{y_1}{y_2}}{\tnil})}})}$
+
+    \qquad $:: \frameoff{\Theta}
+                 {\matchconj
+                  {y_1{:}\susp{{\sf retn}\,({\sf lam}\,\lambda x.e\,x)}}
+                  {y_2{:}\susp{{\sf cont}\,({\sf app1}\,e_2)}}}$
+
+    \qquad\qquad
+               $\leadsto
+               \tackon{\Theta}
+                 {\mkconj
+                  {z_1{:}\susp{{\sf eval}\,e_2}}
+                  {z_2{:}\susp{{\sf cont}\,({\sf app2}\,(\lambda x.e\,x))}}} $
+
+  \item $\tstep{z}{\sf ev/app2}{(\tforalll{v_2}
+                       {\tforalll{\lambda x.e\,x}
+                         {(\tappl{\tfuser{y_1}{y_2}}{\tnil})}})}$
+
+    \qquad $:: \frameoff{\Theta}
+                 {\matchconj
+                  {y_1{:}\susp{{\sf retn}\,v_2}}
+                  {y_2{:}\susp{{\sf cont}\,({\sf app2}\,\lambda x.e\,x)}}}
+               \leadsto
+               \tackon{\Theta}
+                 {z{:}\susp{{\sf eval}\,(e\,v_2)}} $
+
+  \end{itemize}
+\end{proof}
 
 \subsection{Adequacy of the transition system}
 \label{sec:nat-ssos-adequacy-absmachine}
