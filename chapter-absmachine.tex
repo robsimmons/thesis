@@ -1322,13 +1322,15 @@ theorem:
 
 \bigskip
 \begin{theorem}[Adequacy of states]~
+\label{thm:adequacy-states}
 \begin{itemize}
-\item There is a bijection between contexts $\Delta$ such that
-  $x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta$ where ${\sf gen} \notin \Delta$
-  and states $s$.
-\item There is a bijection between frames $\Theta$ such that $x{:}\susp{\sf
-    gen} \leadsto^*_{\Sigma\sf gen} \tackon{\Theta}{x'{:}{\sf gen}}$ and
-  stacks $k$.
+\item There is a bijection (up to the renaming of variables in the context) 
+  between states $s$ and contexts $\Delta$ such that
+  $x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta$ where 
+  ${\sf gen} \notin \Delta$.
+\item There is a bijection (up to the renaming of variables in the context) 
+  between stacks $k$ and frames $\Theta$ such that $x{:}\susp{\sf
+    gen} \leadsto^*_{\Sigma\sf gen} \tackon{\Theta}{x'{:}{\sf gen}}$.
 \end{itemize}
 \end{theorem}
 
@@ -1431,7 +1433,7 @@ return to theorems of this form in Part III of this thesis.
 
 \bigskip
 \begin{theorem}[Generation by $\Sigma\sf gen$ is invariant under
- $\Sigma\ref{fig:cbv-ev-ssos-fun}$]~\\
+ $\Sigma\ref{fig:cbv-ev-ssos-fun}$]\label{thm:adequate-pres}~\\
   If $x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta$ and
   $\Delta \leadsto_{\Sigma\ref{fig:cbv-ev-ssos-fun}} \Delta'$, then
   $x{:} \susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta'$
@@ -1550,7 +1552,83 @@ generative traces covered all the cases.\robnote{Fill in a forward
 \subsection{Adequacy of the transition system}
 \label{sec:nat-ssos-adequacy-absmachine}
 
+The most interesting part of the adequacy proof was showing that
+formation by generative signature $\Sigma\sf gen$ was an invariant of
+$\Sigma\ref{fig:cbv-ev-ssos-fun}$. With that property established, the
+final step is as straightforward as 
 
+\bigskip
+\begin{theorem}[Adequacy of the transition system]
+$s \mapsto s'$ if and only if there exist $\Delta$ and $\Delta'$
+such that
+$\Delta \leadsto_{\Sigma\ref{fig:cbv-ev-ssos-fun}} \Delta'$,
+$\interp{s} :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta$, and
+$\interp{s'} :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta'$. 
+\end{theorem}
+
+\begin{proof} The proof is by straightforward case analysis and
+  construction; we will give the case associated with ${\sf ev/app}$
+  in both directions.
+
+  The forward direction prooceeds by case analysis over the definition
+  of the transition system from the beginning of the chapter.  For
+  instance, if $k \rhd e_1\,e_2 \mapsto (k; \Box\,e_2) \rhd e_1$ by
+  rule ${\sf absmachine/app}$ then we can form (by
+  Theorem~\ref{thm:adequacy-states}) the following traces:
+  \begin{align*}
+  \interp{k \rhd e_1\,e_2} 
+  & :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen}
+       \tackon{\Theta}
+        {y{:}\susp{{\sf eval}\,({\sf app}\,\interp{e_1}\,\interp{e_2})}}
+\\
+  \interp{(k; \Box\,e_2) \rhd e_1} 
+  & :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen}
+       \tackon{\Theta}
+        {\mkconj{z_1{:}\susp{{\sf eval}\,\interp{e_1}}}
+         {z_2{:}\susp{{\sf cont}\,({\sf app1}\,\interp{e_2})}}}
+  \end{align*}
+  It is then possible to construct the required step:
+  \begin{align*} 
+  &\tstep{z_1, z_2}{\sf ev/app}{(\tforalll{\interp{e_1}}{\tforalll{\interp{e_2}}{(\tappl{y}{\tnil})}})}
+  \\
+  &\qquad\qquad :: \tackon{\Theta}
+        {y{:}\susp{{\sf eval}\,({\sf app}\,\interp{e_1}\,\interp{e_2})}}
+     \leadsto_{\Sigma\ref{fig:cbv-ev-ssos-fun}}
+     \tackon{\Theta}
+        {\mkconj{z_1{:}\susp{{\sf eval}\,\interp{e_1}}}
+         {z_2{:}\susp{{\sf cont}\,({\sf app1}\,\interp{e_2})}}}
+  \end{align*}
+
+  In the backward direciton, we are given a step in the dynamic 
+  semantics, such as the one above, as well as the two traces 
+  \begin{align*}
+  T_1
+  & :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen}
+       \tackon{\Theta}
+        {y{:}\susp{{\sf eval}\,({\sf app}\,\interp{e_1}\,\interp{e_2})}}
+\\
+  T_2
+  & :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen}
+       \tackon{\Theta}
+        {\mkconj{z_1{:}\susp{{\sf eval}\,\interp{e_1}}}
+         {z_2{:}\susp{{\sf cont}\,({\sf app1}\,\interp{e_2})}}}
+  \end{align*}
+  By the same case analysis on the structure of the trace that we performed
+  in the preservation theorem (Theorem~\ref{thm:adequate-pres}) and
+  , we 
+  need to establish that \medskip \\
+  $T_1 = T'; \tstep{y}{\sf gen/eval}{(\tforalll{\interp{e_1}}{\tforalll{\interp{e_2}}{(\tappl{x'}{\tnil})}})}$ and \\
+  $T_2 = T'; \tstep{z', z_2}{\sf gen/cont}{(\tforalll{{\sf app1}\,\interp{e_2}}{(\tappl{x'}{\tnil})})}; \tstep{z_1}{\sf gen/eval}{(\tforalll{\interp{e_1}}{(\tappl{z'}{\tnil})})}$ \medskip\\
+  % 
+  where $T' :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen}
+  \tackon{\Theta}{x'{:}{\sf gen}}$ in both cases. Therefore,
+  Theorem~\ref{thm:adequacy-states} there is a stack $k$ such that
+  $\interp{k} = T'$, $\interp{k \rhd e_1\,e_2} = T_1$, and
+  $\interp{(k; \Box\,e_2) \rhd e_1} = T_2$.
+  We conclude, then, by observing that 
+  $k \rhd e_1\,e_2 \mapsto (k; \Box\,e_2) \rhd e_1$ by rule 
+  ${\sf absmachine/app}$.
+\end{proof}
 
 \section{Exploring the richer fragment}
 \label{sec:richer-ordered-abstract}
