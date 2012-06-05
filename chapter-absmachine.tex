@@ -9,7 +9,7 @@ establish the logical correspondence between the deductive SLS
 specification of a natural semantics and the concurrent SLS
 specification of an abstract machine.
 
-Natural semantics specifications are very common in the literature,
+Natural semantics specifications are common in the literature,
 and are also easy to encode in either the deductive fragment of
 \sls~or in a purely deductive logical framework like LF.  We will
 continue to use the natural semantics specification of call-by-value
@@ -1131,7 +1131,7 @@ $[{\downarrow}B^-/{\sf cont}\,\overline{x}]\Delta \leadsto_{\Sigma}
 $\Delta \leadsto_{\Sigma''} \Delta'$ (as long as propositions of the
 form ${\sf cont}\,\overline{t}$ only appear suspended in the process
 state or in the monadic heads of rules that appear in the process
-state).\issue{The process of proving this is mostly an issue of
+state).\robnote{The process of proving this is mostly an issue of
   stating it precisely, which is a pain. I'd appreciate feedback as to
   whether this seems clear or whether I need to write out the detailed
   proof.}
@@ -1455,7 +1455,7 @@ return to theorems of this form in Part III of this thesis.
 
     \medskip
 
-    $T = T'; \tstep{y}{\sf gen/eval}{(\tforalll{{\sf lam}\,\lambda x.e\,x}{\tappl{x'}{\tnil}})}$,
+    $T = T'; \tstep{y}{\sf gen/eval}{(\tforalll{{\sf lam}\,\lambda x.e\,x}{\tappl{x'}{\tnil}})}$,\\
     so we construct\\
     $T'; \tstep{z}{\sf gen/retn}{(\tforalll{{\sf lam}\,\lambda x.e\,x}{\tappl{x'}{\tnil}})}$
 
@@ -1474,11 +1474,11 @@ return to theorems of this form in Part III of this thesis.
 
     \medskip
 
-    $T = T'; \tstep{y}{\sf gen/eval}{(\tforalll{{\sf app}\,e_1\,e_2}{\tappl{x'}{\tnil}})}$,
+    $T = T'; \tstep{y}{\sf gen/eval}{(\tforalll{{\sf app}\,e_1\,e_2}{\tappl{x'}{\tnil}})}$,\\
     so we construct\\
-    $T'; ~~
-     \tstep{x_1, x_2}{\sf gen/cont}{(\tforalll{{\sf app1}\,e_2}{(\tappl{x'}{\tnil})})}; ~~
-     \tstep{z}{\sf gen/retn}{(\tforalll{{\sf lam}\,\lambda x.e\,x}{\tappl{x'}{\tnil}})}$
+    $T'; 
+     \tstep{z', z_2}{\sf gen/cont}{(\tforalll{{\sf app1}\,e_2}{(\tappl{x'}{\tnil})})};
+     \tstep{z_1}{\sf gen/eval}{(\tforalll{e_1}{\tappl{z'}{\tnil}})}$
 
     \medskip
 
@@ -1498,6 +1498,19 @@ return to theorems of this form in Part III of this thesis.
                   {z_1{:}\susp{{\sf eval}\,e_2}}
                   {z_2{:}\susp{{\sf cont}\,({\sf app2}\,(\lambda x.e\,x))}}} $
 
+    \medskip
+
+    $T =
+     T'; 
+     \tstep{y', y_2}{\sf gen/cont}{(\tforalll{{\sf app1}\,e_2}{\tappl{x'}{\tnil}})};
+     \tstep{y_1}{\sf gen/retn}{(\tforalll{{\sf lam}\,\lambda x.e\,x}{(\tappl{y'}{\tnil})})}$,\\
+    so we construct\\
+    $T'; 
+     \tstep{z', z_2}{\sf gen/cont}{(\tforalll{{\sf app2}\,\lambda x.e\,x}{(\tappl{x'}{\tnil})})};
+     \tstep{z_1}{\sf gen/eval}{(\tforalll{e_2}{\tappl{z'}{\tnil}})}$
+
+    \medskip
+
   \item $\tstep{z}{\sf ev/app2}{(\tforalll{v_2}
                        {\tforalll{\lambda x.e\,x}
                          {(\tappl{\tfuser{y_1}{y_2}}{\tnil})}})}$
@@ -1510,73 +1523,32 @@ return to theorems of this form in Part III of this thesis.
                \tackon{\Theta}
                  {z{:}\susp{{\sf eval}\,(e\,v_2)}} $
 
+    \medskip
+
+    $T =
+     T'; 
+     \tstep{y', y_2}{\sf gen/cont}{(\tforalll{{\sf app2}\,\lambda x.e\,x}{\tappl{x'}{\tnil}})};
+     \tstep{y_1}{\sf gen/retn}{(\tforalll{v_2}{(\tappl{y'}{\tnil})})}$,\\
+    so we construct\\
+    $T'; 
+     \tstep{z}{\sf gen/eval}{(\tforalll{e\,v_2}{\tappl{x'}{\tnil}})}$
+
+    \medskip
+
   \end{itemize}
+
+\noindent
+This completes the proof. 
 \end{proof}
+
+It is straightfoward to see that the primary pattern match in this
+proof covers all the cases. We postpone, for now, the less obvious
+discussion of how we ensure that the secondary case analyses on
+generative traces covered all the cases.\robnote{Fill in a forward
+  reference above with a concrete reference when one exists}
 
 \subsection{Adequacy of the transition system}
 \label{sec:nat-ssos-adequacy-absmachine}
-
-
-To make a carefully-chosen analogy, various on-paper styles of
-specifying the operational semantics are well-known and visually
-recognizable.  To anyone literate in the conventions of programming
-languages researchers, a quick glance should be sufficient to classify
-the following two rules as natural semantics (or big-step semantics)
-for the call-by-value lambda calculus:
-
-
-Natural semantics are a clean, high-level, and declarative way of
-describing the semantics of a simple, pure programming languages, but
-they do not scale particularly well with the addition of effects like
-state and exceptions. Worse, natural semantics are mostly hopeless in
-the face of languages features that incorporate nondeterminism or
-advanced control (such as first-class continuations). 
-
-Thus, a researcher interested in a simple, high level specification of
-the core features of a functional programming language might
-reasonably predict that natural semantics would be a good solution to
-their problem; one example is Murphy VII, who used natural semantics
-for the high-level formalization of Lambda 5 in his thesis
-\cite{murphy08modal}.
-
-Another style used to specify the operational semantics of programming
-languages, he {\it abstract
-  machine} semantics, is slightly less canonical but nevertheless has
-an identifiable set of conventions. The following is an abstract 
-machine semantics for our call-by-value lambda calculus:
-
-
- for programming languages, t, is slightly less canonical, but abstract machine
-specifications nevertheless also have a set of common
-conventions. There are two states in an abstract machine
-specification, $k \rhd e$ (the expression $e$ is evaluating on top of
-stack $k$) and $k \lhd v$ (the value $v$ is being returned to the top
-of the stack $k$). The first rule says that, as a function $\lambda x.e$
-is already a value, we proceed by returning it to the stack, whereas
-for an application $e_1\,e_2$, 
-
-
-Input
-
-
-\begin{theorem}
-If $x{:}\istrue{\sf gen} \leadsto \Delta$
-\end{theorem}
-
-There needs to be some structure and
-at least
-
-
-the design space
-of 
-
- the general idea
-of representing intermediate states of a computation as 
-substructural process states 
-
-
-
-\subsection{The functional correspondence}
 
 
 
