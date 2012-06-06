@@ -13,4 +13,3 @@ ev (app E1 E2) V
  <- ev E2 V2
 
  <- ev (E V2) V.
-

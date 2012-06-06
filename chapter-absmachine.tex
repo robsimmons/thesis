@@ -1284,7 +1284,7 @@ steps to the interpretation of state $s'$ if and only if $s \mapsto s'$.
 Our first goal is to describe a signature $\Sigma\sf gen$ with the
 property that if $x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen}
 \Delta$ and ${\sf gen} \notin \Delta$ then $\Delta$. A well-formed
-process state represting a state $k \rhd e$ has the form
+process state representing a state $k \rhd e$ has the form
 \[
 y{:}\susp{{\sf eval}\,\interp{e}}, ~~
 x_n{:}\susp{{\sf cont}\,\interp{f_n}}, ~~
@@ -1415,7 +1415,7 @@ a bijection between traces and abstract machine states $s$ or as a
 bijection between contexts and abstract machine states $s$. In a
 situation where this 1-to-1 correspondence between states and traces
 did not exist (because two traces generated the same context), it is
-not entirely clear whether it would be preferable to define adquecy in
+not entirely clear whether it would be preferable to define adequacy in
 terms of contexts or in terms of traces.
 
 \subsection{Preservation}
@@ -1543,11 +1543,13 @@ return to theorems of this form in Part III of this thesis.
 This completes the proof. 
 \end{proof}
 
-It is straightfoward to see that the primary pattern match in this
-proof covers all the cases. We postpone, for now, the less obvious
-discussion of how we ensure that the secondary case analyses on
-generative traces covered all the cases.\robnote{Fill in a forward
-  reference above with a concrete reference when one exists}
+The primary case analysis is just an enumeration of the possible
+synthetic transitions, whereas the secondary case analyses on
+generative traces, which allows us to say that only one generative
+trace is possible in each case, requires more justification. We will
+postpone a further discussion of this for now, however.\robnote{Fill
+  in a forward reference above with a concrete reference when one
+  exists}.
 
 \subsection{Adequacy of the transition system}
 \label{sec:nat-ssos-adequacy-absmachine}
@@ -1570,7 +1572,7 @@ $\interp{s'} :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta'$.
   construction; we will give the case associated with ${\sf ev/app}$
   in both directions.
 
-  The forward direction prooceeds by case analysis over the definition
+  The forward direction proceeds by case analysis over the definition
   of the transition system from the beginning of the chapter.  For
   instance, if $k \rhd e_1\,e_2 \mapsto (k; \Box\,e_2) \rhd e_1$ by
   rule ${\sf absmachine/app}$ then we can form (by
@@ -1599,7 +1601,7 @@ $\interp{s'} :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta'$.
          {z_2{:}\susp{{\sf cont}\,({\sf app1}\,\interp{e_2})}}}
   \end{align*}
 
-  In the backward direciton, we are given a step in the dynamic 
+  In the backward direction, we are given a step in the dynamic 
   semantics, such as the one above, as well as the two traces 
   \begin{align*}
   T_1
