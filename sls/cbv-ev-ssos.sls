@@ -1,11 +1,11 @@
 eval: exp -> prop ord. 
 retn: exp -> prop ord. 
 
-#rule ev/lam: 
+ev/lam: 
 eval (lam \x. E x) 
  >-> {retn (lam \x. E x)}.
 
-#rule ev/app: 
+ev/app: 
 eval (app E1 E2) 
  >-> {eval E1 *
       (All E. retn (lam \x. E x) 

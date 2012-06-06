@@ -1,6 +1,6 @@
-#rule ev/lam: eval (lam \x. E x) >-> {retn (lam \x. E x)}.
+ev/lam: eval (lam \x. E x) >-> {retn (lam \x. E x)}.
 
-#rule ev/app: eval (app E1 E2) 
+ev/app: eval (app E1 E2) 
          >-> {eval E1 *
               (All E. retn (lam \x. E x) 
                 >-> {eval E2 * 
