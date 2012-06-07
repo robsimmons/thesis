@@ -1667,8 +1667,9 @@ operationalization translation will make this difficult or impossible.
 A more modular semantics of parallel evaluation will be presented
 in Section~\ref{sec:modular-parallelism}.
 
-\subsection{Mutable storage}
-\label{sec:mutable-storage}
+This section will present extensions to the sequential, first-order
+abstract machine for parallel evaluation presented in
+Figure~\ref{fig:cbv-ev-ssos-fun}.
 
 \begin{figure}[t]
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -1676,6 +1677,18 @@ in Section~\ref{sec:modular-parallelism}.
 \caption{SSOS semantics of mutable storage.}
 \label{fig:ssos-mutable}
 \end{figure}
+
+\subsection{Mutable storage}
+\label{sec:mutable-storage}
+
+The classic stateful programming language feature is mutable storage,
+which forms the basis of imperitive algorithms. We will consider
+ML-style references, which add three new syntax forms to the language
+for creating ($\interp{{\sf ref}\,e} = {\sf ref}\,\interp{e}$),
+dereferencing ($\interp{{!}e} = {\sf get}\,\interp{e}$), and updating
+($\interp{e_1 := e_2} = {\sf set}\,\interp{e_1}\,\interp{e_2}$)
+
+$\interp{{!}e} = {\sf get}\,e$
 
 
 \subsubsection{Existential angst} 
