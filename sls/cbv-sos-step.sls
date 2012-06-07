@@ -1,5 +1,5 @@
-step: exp -> exp -> prop.
 #mode step + -.
+step: exp -> exp -> prop.
 
 step/app1: 
 step (app E1 E2) (app E1' E2)

@@ -1,3 +1,2 @@
-ev: exp -> exp -> prop.
 #mode ev + -.
-
+ev: exp -> exp -> prop.
