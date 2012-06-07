@@ -1639,11 +1639,33 @@ Work in the functional correspondence is generally concerned with
 exploring tight correspondences between different styles of
 specification. However, as we expressed in
 Section~\ref{sec:the-point-is-modular-extension}, one of the main
-reasons the logical correspondence in \sls~is interesting is
-because, once we translate from a less expressive style to 
-a more expressive style, we can consider new modular extensions.
+reasons the logical correspondence in \sls~is interesting is because,
+once we translate from a less expressive style to a more expressive
+style, we can consider new modular extensions. The opportunity for
+modular extension are what primarily distinguish the logical
+correspondence we have presented from the work by Hannan and Miller
+\cite{hannan92operational} and Ager \cite{ager04natural}. Both of
+those papers translated natural semantics into a syntactic
+specification of abstract machines that was modularly extensible to
+the degree that concurrent \sls~specifications are.
 
-The first extensions 
+The ordered abstract machine style of specification facilitates
+modular extension with features that involve {\it state} and {\it
+  parallel evaluation}. We have already seem examples of the latter:
+the operationalization translation (as extended in
+Section~\ref{sec:trans-par}) can put natural semantics into logical
+correspondence with either a sequential ordered abstract machine or a
+parallel ordered abstract machine. In this section, we will consider
+some other extensions: stateful features like mutable storage
+(Section~\ref{sec:mutable-storage}) and call-by-need evaluation
+(Section~\ref{sec:call-by-need}). We will also discuss the semantics
+of recoverable failure in Section~\ref{sec:failure}. The presentation
+of recoverable failure will lead us to consider a point of
+non-modularity: if we want to extend our language flexibly with
+non-local control features like recoverable failure, the parallel
+operationalization translation will make this difficult or impossible.
+A more modular semantics of parallel evaluation will be presented
+in Section~\ref{sec:modular-parallelism}.
 
 \subsection{Mutable storage}
 \label{sec:mutable-storage}
