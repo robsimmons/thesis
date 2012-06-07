@@ -70,8 +70,16 @@ Frontend.load "evalretn.sls";
 Frontend.load "contframe.sls";
 Frontend.load "cbv-ev-ssos-gen.sls";
 
-(* Section 6.6 *)
+(* Figure 6.6 *)
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "cbv-ev-ssos-fun.sls";
+
+(* Figure 6.7 *)
 Frontend.load "ssos-mutable.sls";
+
+(* Figure 6.8 *)
+Frontend.load "ssos-cbneed.sls";
+
+(* Figure 6.9 *)
+Frontend.load "ssos-cbneed-refun.sls";

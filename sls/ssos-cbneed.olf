@@ -1,0 +1,10 @@
+r1: eval (lam \x. E x) >-> retn (lam \x. E x).
+r2: eval (app E1 E2) >-> eval E1 * cont (app1 E2).
+r3: retn (lam \x. E x) * cont (app1 E2) >-> eval E2 * cont (app2 \x. E x).
+r4: retn V2 * cont (app2 \x. E x) >-> eval (E V2).
+
+r5: eval (thunk E) >-> Ex e. $susp e E * retn (thunk e).
+r6: eval (force E) >-> eval E * cont ()
+
+
+%trace 200 eval(app (lam \f. (app (lam \x. app f (app x x)) (lam \x. app f (app x x)))) (lam \x. x)).

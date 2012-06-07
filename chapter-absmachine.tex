@@ -1635,12 +1635,20 @@ $\interp{s'} :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta'$.
 \section{Exploring the richer fragment}
 \label{sec:richer-ordered-abstract}
 
+Work in the functional correspondence is generally concerned with
+exploring tight correspondences between different styles of
+specification. However, as we expressed in
+Section~\ref{sec:the-point-is-modular-extension}, one of the main
+reasons the logical correspondence in \sls~is interesting is
+because, once we translate from a less expressive style to 
+a more expressive style, we can consider new modular extensions.
 
+The first extensions 
 
 \subsection{Mutable storage}
 \label{sec:mutable-storage}
 
-\begin{figure}
+\begin{figure}[t]
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-mutable.sls}
 \caption{SSOS semantics of mutable storage.}
@@ -1657,8 +1665,30 @@ communication, but dates back earlier - was it one of Karl's papers?
 Cheney cites it in nominal abstraction.)
 
 \subsection{Call-by-need evaluation}
+\label{sec:call-by-need}
+
+\subsubsection{Recursive suspensions}
+
+\begin{figure}[t]
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/ssos-cbneed.sls}
+\caption{SSOS semantics of call-by-need recursive suspensions.}
+\label{fig:ssos-cbneed}
+\end{figure}
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/ssos-cbneed-refun.sls}
+\caption{SSOS semantics of call-by-need recursive suspensions.}
+\label{fig:ssos-cbneed-refun}
+\end{figure}
+
+\subsubsection{Lazy evaluation}
+
+
 
 \subsection{Recoverable failure}
+\label{sec:failure}
 
 \subsubsection{Failures and the parallel translation}
 
