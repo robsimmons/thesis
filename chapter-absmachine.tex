@@ -1632,31 +1632,314 @@ $\interp{s'} :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta'$.
   ${\sf absmachine/app}$.
 \end{proof}
 
+
+
+\begin{figure}[t]
+\begin{minipage}[b]{0.2\linewidth}
+\[
+\infer
+{{\sf fix}\,x.e \Downarrow v}
+{[{\sf fix}\,x.e/x]e \Downarrow v}
+\]
+~
+\[
+\infer
+{\langle e_1, e_2 \rangle \Downarrow \langle v_1, v_2 \rangle}
+{e_1 \Downarrow v_1 & e_2 \Downarrow v_2}
+\]
+
+\[
+\infer
+{e.1 \Downarrow v_1}
+{e \Downarrow \langle v_1, v_2 \rangle}
+\]\[
+\infer
+{e.2 \Downarrow v_2}
+{e \Downarrow \langle v_1, v_2 \rangle}
+\]
+~
+\[
+\infer
+{{\sf z} \Downarrow {\sf z}}
+{}
+\]
+\[
+\infer
+{{\sf s}\,e \Downarrow {\sf s}\,v}
+{e \Downarrow v}
+\]
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.8\linewidth}
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/ssos-minml-core.sls}
+\end{minipage}
+\caption{Pure functional features of Mini-ML.}
+\label{fig:ssos-minml-core}
+\end{figure}
+
+\section{Exploring the image of the translation}
+\label{sec:absmachine-nondeterminism}
+
+The examples given in the previous section have given so far all deal
+with call-by-value semantics for the untyped lambda calculus, which
+has the property that any expression will either evaluate forever or
+will eventually evaluate to a value $\lambda x. e$. An interesting
+discussion of ordered abstract machines requires us to consider traces
+that might get {\it stuck}. One way to raise the possibility of stuck
+states is to add values besides $\lambda x.e$. In
+Figure~\ref{fig:ssos-minml-core} we present an extension to
+Figure~\ref{fig:cbv-ev-ssos-fun} with some of the features of a pure
+``Mini-ML'' functional programming language: fixed-point recursion,
+pairs ($\interp{\langle e_1, e_2 \rangle} = {\sf
+  pair}\,\interp{e_1}\,\interp{e_2}$), projections ($\interp{e.1} =
+{\sf fst}\,\interp{e})$, $\interp{e.2} = {\sf snd}\,\interp{e}$), and
+natural numbers ($\interp{{\sf z}} = {\sf zero}$, $\interp{{\sf s}\,e}
+= {\sf succ}\,\interp{e}$.  The natural semantics is given on the
+left-hand side of that figure, and the operationalized and
+defunctionalized ordered abstract machine that arises from (an
+\sls~encoding of) that natural semantics is given on the right. 
+
+Note that, facilitated by the nondeterminism inherent in
+operationalization, we chose a parallel semantics for the evaluation
+of pairs even though the presentation of functions was sequential.
+This means, among other things, that it is not possible to show that
+this ordered abstract machine adequately encodes a traditional
+abstract machine presentation of Mini-ML, because traditional abstract
+machines do not handle parallel evaluation.
+
+In an inductively-defined natural semantics, it is not possible to
+distinguish a non-terminating term like ${\sf fix}\,x.x$ from a stuck
+term like ${\sf z}.1$.  This is one of the problems that Leroy and
+Grall sought to overcome in their presentation of coinductive big-step
+operational semantics \cite{leroy09coinductive}. They defined the
+judgment $e \Uparrow^\infty$ coinductively; therefore it is easy to
+show that ${\sf fix}\,x.x \Uparrow^\infty$, but there $v$ such that
+${\sf z}.1 \Downarrow v$ or ${\sf z}.1 \Uparrow^\infty$, so 
+${\sf fix}\,x.x$ can be seen as safely non-terminating whereas 
+${\sf z}.1$ is stuck. 
+
+The translation of natural semantics into ordered abstract machines
+also allows us to distinguish ${\sf fix}\,x.x$ from ${\sf z}.1$.
+The former expression generates a trace that can always be extended:
+\[ x_1{:}\susp{{\sf eval}\,({\sf fix}\,\lambda x.x)} \leadsto
+   x_2{:}\susp{{\sf eval}\,({\sf fix}\,\lambda x.x)} \leadsto
+   x_3{:}\susp{{\sf eval}\,({\sf fix}\,\lambda x.x)} \leadsto \ldots 
+\]whereas the latter gets stuck and can make no more transitions:\[ 
+  x_1{:}\susp{{\sf eval}\,({\sf fst}\,{\sf z})} \leadsto
+  x_2{:}\susp{{\sf eval}\,{\sf z}}, y{:}\susp{{\sf cont}\,{\sf fst1}} \leadsto
+  x_3{:}\susp{{\sf retn}\,{\sf z}}, y{:}\susp{{\sf cont}\,{\sf fst1}} 
+  \not\leadsto
+\]
+
+\subsection{Arbitrary choice and failure}
+
+For the purposes of illustration, we will extend the language of
+expressions with a nondeterministic choice operator $e_1 \arb e_2$
+(encoded in LF as ${\sf choose}\,\interp{e_1}\,\interp{e_2}$) and an
+extra expression ${\sf junk}$ that does not evaluate to anything: this
+ensures that stuck states are possible, as search for a $v$ such that
+$(\lambda x.\,x)\,{\sf junk} \Downarrow v$ is derivable will fail.
+The natural semantics rules for this extension and their
+(tail-recursion optimized) operationalization are shown in
+Figure~\ref{fig:ns-arb}; there are no rules for ${\sf junk}$, as it is
+a stuck expression.
+
+\begin{figure}[t]
+\begin{minipage}[b]{0.45\linewidth}
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/cbv-arb.sls}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.55\linewidth}
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/cbv-arb-ssos.sls}
+\end{minipage}
+\caption{Natural semantics for the lambda calculus (call-by-value).}
+\label{fig:ns-arb}
+\end{figure}
+
+We need to think about the desired semantics of $(\lambda y.\,y\,y)
+\arb ((\lambda x.\,x)\,{\sf junk})$ -- if the first subexpression
+$(\lambda y.\,y\,y)$ is chosen for evaluation, then the expression
+evaluates to a value, but if the second subexpression $(\lambda
+x.\,x)\,{\sf junk}$ is chosen, then the subexpression will evaluate to
+${\sf junk}$ and be effectively stuck. Our small-step intuitions
+about language safety say that this is a problem we should avoid, but
+natural semantics do not have an internal way of expressing that a
+successful evaluation exists along some paths but not along others.
+This is one of the ways in which our transformed specification is more
+expressive than the original semantics: it's possible to say
+$x{:}\susp{{\sf eval}\,\interp{(\lambda y.\,y\,y) \arb ((\lambda
+    x.\,x)\,{\sf junk})}} \leadsto^* \Delta$ such that $\Delta \neq
+y{:}\susp{{\sf retn}\,V}$ and $\Delta \not\leadsto$; we can't hope to
+reason about the absence of stuck states if we cannot express
+them. Our ability to reason about stuck concurrent computations is an
+artifact the fact that \sls~allows us to talk about traces $T$ in
+addition to talking about complete proofs.  The operationalization
+transformation allows us to transfer this concept to natural semantics
+specifications by way of translation.
+
+\begin{figure}[t]
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/cbv-bad-ite.sls}
+\caption{Operationalization of the problematic natural semantics for {\it if}-statements.}
+\label{fig:sls-bad-ite}
+\end{figure}
+
+\subsection{Conditionals and factoring}
+
+Another extension that we can introduce complicates this view. A
+common way of giving a natural semantics for {\it if}-statements is
+through these two rules:
+\[
+\infer
+{{\sf true} \Downarrow {\sf true} \mathstrut}
+{}
+\quad
+\infer
+{{\sf false} \Downarrow {\sf false} \mathstrut}
+{}
+\quad
+\infer
+{{\sf if}\,e\,{\sf then}\,e_t\,{\sf else}\,e_f \Downarrow v \mathstrut}
+{e \Downarrow {\sf true}
+ &
+ e_t \Downarrow v \mathstrut}
+\quad
+\infer
+{{\sf if}\,e\,{\sf then}\,e_t\,{\sf else}\,e_f \Downarrow v \mathstrut}
+{e \Downarrow {\sf false}
+ &
+ e_f \Downarrow v \mathstrut}
+\]
+However, according to the straightforward operationalization of these
+rules (shown in Figure~\ref{fig:sls-bad-ite}), we would be forced,
+when we first encounter an {\it if}-statement, to nondeterministically
+choose whether the conditional will evaluate to ${\sf true}$ or ${\sf
+  false}$, just as we nondeterministically chose one of the two
+expressions $e_1 \arb e_2$. If we make the wrong choice (and, assuming
+$e$ evaluates to anything at all, we always {\it can} make the wrong
+choice) then the concurrent computation will get stuck. Superficially,
+the following trace is indistinguishable from the stuck trace that
+arises from the previous example that was nondeterministically ${\sf
+  junk}$, but there is nothing wrong with including {\it if}-statements
+in the language!
+\begin{align*}
+ & x_1{:}\susp{{\sf eval}\,\interp{{\sf if}\,{\sf false}\,{\sf then}\,e_t\,{\sf else}\,e_f}}
+\\
+\leadsto ~ & 
+x_2{:}\susp{{\sf eval}\,{\sf false}},
+y_2{:}\istrue{({\sf retn}\,{\sf true} \lefti \{ {\sf eval}\,\interp{e_t}\})}
+\\
+\leadsto ~ &
+x_3{:}\susp{{\sf retn}\,{\sf false}},
+y_2{:}\istrue{({\sf retn}\,{\sf true} \lefti \{ {\sf eval}\,\interp{e_t}\})}
+\\
+\not\leadsto ~ & (!!!)
+\end{align*}
+
+
+\begin{figure}[t]
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/cbv-ok-ite.sls}
+\caption{Operationalization of the fixed, deterministic natural semantics for {\it if}-statements.}
+\label{fig:sls-ok-ite}
+\end{figure}
+
+It is highly desirable to maintain our ability to talk about stuck
+states through the natural semantics; the easiest way to do so is 
+by modifying the natural semantics into a different natural semantics
+that is equivalent but more operational:
+\[
+\infer
+{{\sf pick}\,{\sf true}\,e_t\,e_f\,e_t\mathstrut}
+{}
+\quad
+\infer
+{{\sf pick}\,{\sf false}\,e_t\,e_f\,e_f\mathstrut}
+{}
+\quad
+\infer
+{{\sf true} \Downarrow {\sf true} \mathstrut}
+{}
+\quad
+\infer
+{{\sf false} \Downarrow {\sf false} \mathstrut}
+{}
+\quad
+\infer
+{{\sf if}\,e\,{\sf then}\,e_t\,{\sf else}\,e_f \Downarrow v' \mathstrut}
+{e \Downarrow v
+ & 
+ {\sf pick}\,v\,e_t\,e_f\,e'\mathstrut
+ & e' \Downarrow v'}
+\] 
+We can prove, with the existing metatheoretic machinery of Twelf, that this
+natural semantics is equivalent to the previous one in terms of 
+which judgments $e \Downarrow v$ are derivable, but the operationalization
+of this version, given in Figure~\ref{fig:sls-ok-ite}, is free
+of the previous version's problems.
+
+These two different versions of the same rule are related by a
+transformation called {\it factoring}. While factoring has been
+expressed by Polakow as a transformation on functional programs in a
+variant of the Delphin programming language
+\cite{poswolsky03factoring}, I am unaware of any treatment of the
+factoring transformation as a generally-correct {\it logical}
+transformation on Prolog, $\lambda$Prolog, or Twelf specifications,
+and I will not do so here.
+
+\subsection{Flat resolution for deductive computation}
+
+The consideration of non-backtracking search is an interesting one,
+because it indicates that, {\it in the context of natural semantics},
+we are interested in an interpretation of deductive computation that is
+not the usual backtracking interpretation.\footnote{This committed
+  choice form of deductive computation also goes by the name {\it flat
+    resolution} \cite{aitkaci99warrens}.} It is natural, then, to
+represent this computation as a concurrent computation, which is
+naturally interpreted as committed choice. 
+
+This works both ways, however: in Section~\ref{sec:evaluationcontexts}
+we transform a small-step structural operational semantics to obtain
+an SLS analogue of evaluation contexts. As a deductive computation,
+SOS specifications are naturally backtracking, so the concurrent
+computations we derive also need to be interpreted with backtracking
+search if we want to preserve the operational behavior of the
+specification.
+
+
+
 \section{Exploring the richer fragment}
 \label{sec:richer-ordered-abstract}
 
 Work in the functional correspondence is generally concerned with
 exploring tight correspondences between different styles of
-specification. However, as we expressed in
+specification. However, as we discussed in
 Section~\ref{sec:the-point-is-modular-extension}, one of the main
 reasons the logical correspondence in \sls~is interesting is because,
-once we translate from a less expressive style to a more expressive
-style, we can consider new modular extensions. The opportunity for
-modular extension are what primarily distinguish the logical
-correspondence we have presented from the work by Hannan and Miller
-\cite{hannan92operational} and Ager \cite{ager04natural}. Both of
-those papers translated natural semantics into a syntactic
-specification of abstract machines that was modularly extensible to
-the degree that concurrent \sls~specifications are.
+once we translate from a less expressive style (like natural
+semantics) to a more expressive style (like ordered abstract machine
+semantics), we can consider new modular extensions in the more
+expressive style that were not possible in the less expressive
+style. The opportunities for modular extension are what primarily
+distinguish the logical correspondence we have presented from the work
+by Hannan and Miller \cite{hannan92operational} and Ager
+\cite{ager04natural}. Both of those papers translated natural
+semantics into a syntactic specification of abstract machines that was
+modularly extensible to the degree that concurrent \sls~specifications
+are.
 
 The ordered abstract machine style of specification facilitates
 modular extension with features that involve {\it state} and {\it
   parallel evaluation}. We have already seem examples of the latter:
 the operationalization translation (as extended in
-Section~\ref{sec:trans-par}) can put natural semantics into logical
-correspondence with either a sequential ordered abstract machine or a
-parallel ordered abstract machine. In this section, we will consider
-some other extensions: stateful features like mutable storage
+Section~\ref{sec:trans-par}) can put a natural semantics specification
+into logical correspondence with either a sequential ordered abstract
+machine semantics or a parallel ordered abstract machine semantics. In
+this section, we will consider some other extensions, focusing on
+stateful features like mutable storage
 (Section~\ref{sec:mutable-storage}) and call-by-need evaluation
 (Section~\ref{sec:call-by-need}). We will also discuss the semantics
 of recoverable failure in Section~\ref{sec:failure}. The presentation
@@ -1664,8 +1947,8 @@ of recoverable failure will lead us to consider a point of
 non-modularity: if we want to extend our language flexibly with
 non-local control features like recoverable failure, the parallel
 operationalization translation will make this difficult or impossible.
-A more modular semantics of parallel evaluation will be presented
-in Section~\ref{sec:modular-parallelism}.
+A more modular semantics of parallel evaluation will be presented in
+Section~\ref{sec:modular-parallelism}.
 
 This section will present extensions to the sequential, first-order
 abstract machine for parallel evaluation presented in
@@ -1682,7 +1965,7 @@ Figure~\ref{fig:cbv-ev-ssos-fun}.
 \label{sec:mutable-storage}
 
 The classic stateful programming language feature is mutable storage,
-which forms the basis of imperitive algorithms. We will consider
+which forms the basis of imperative algorithms. We will consider
 ML-style references, which add three new syntax forms to the language
 for creating ($\interp{{\sf ref}\,e} = {\sf ref}\,\interp{e}$),
 dereferencing ($\interp{{!}e} = {\sf get}\,\interp{e}$), and updating

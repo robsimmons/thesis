@@ -111,3 +111,14 @@ Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "cbv-sos-ctx.auto.sls";
 Frontend.reset ();
+
+
+Frontend.load "exp.sls";
+Frontend.read "#operationalize \"lc-ssos.auto.sls\"\n(ev0 ~> eval retn).";
+Frontend.load "lc-ev.sls";
+Frontend.read "#operationalize stop.";
+Frontend.reset ();
+
+Frontend.load "exp.sls";
+Frontend.load "lc-ssos.auto.sls";
+Frontend.reset ();
