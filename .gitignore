@@ -1,5 +1,6 @@
 .cm
 *~
+*.auto.sls
 chapter-1.tex
 chapter-2.tex
 chapter-3.tex

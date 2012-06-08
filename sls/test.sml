@@ -8,6 +8,10 @@ Frontend.read "#operationalize \"cbv-ev-ssos.auto.sls\"\n(ev ~> eval retn).";
 Frontend.load "cbv-ev.sls";
 Frontend.read "#operationalize stop.";
 
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "cbv-ev-ssos.auto.sls";
+
 (* Figure 6.1, right-hand side *)
 Frontend.reset ();
 Frontend.load "exp.sls";
@@ -24,10 +28,16 @@ Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "cbv-sos-value.sls";
 Frontend.load "cbv-sos-step.sls";
-Frontend.read "#operationalize \"cbv-sos-steps.auto.sls\"\n(ev ~> eval retn).";
+Frontend.read "#operationalize \"cbv-sos-proc2.auto.sls\"\n(ev ~> eval retn).";
 Frontend.load "ev.sls";
 Frontend.load "cbv-sos-steps.sls";
 Frontend.read "#operationalize stop.";
+
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "cbv-sos-value.sls";
+Frontend.load "cbv-sos-step.sls";
+Frontend.load "cbv-sos-proc2.auto.sls";
 
 (* Figure 6.3, left-hand side *)
 Frontend.reset ();
@@ -93,7 +103,11 @@ Frontend.reset ();
 
 
 Frontend.load "exp.sls";
-Frontend.read "#operationalize \"cbv-sos.auto.sls\"\n(step ~> eval retn).";
+Frontend.read "#operationalize \"cbv-sos-ctx.auto.sls\"\n(step ~> eval retn).";
 Frontend.load "cbv-sos.sls";
 Frontend.read "#operationalize stop.";
+Frontend.reset ();
+
+Frontend.load "exp.sls";
+Frontend.load "cbv-sos-ctx.auto.sls";
 Frontend.reset ();
