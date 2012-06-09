@@ -5,7 +5,7 @@ ev/case1: eval retn V' * cont (case1 Ez \x. Es x)
 ev/case2: rnat V * cont enat1 >-> {retn V}.
 
 casen/z:  enat zero Ez (\x. Es x)
-           >-> {eval Ez
+           >-> {eval Ez * cont enat2}.
 
                 (All V': exp. retn V' 
                   >-> {enat V' Ez (\x. Es x) * 

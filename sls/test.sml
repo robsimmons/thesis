@@ -60,18 +60,6 @@ Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "cbv-ev-ssos-par.sls";
 
-(* Removed 1 *)
-Frontend.reset ();
-Frontend.load "exp.sls";
-Frontend.load "ev.sls";
-Frontend.load "cbv-arb.sls";
-
-(* Removed 2 *)
-Frontend.reset ();
-Frontend.load "exp.sls";
-Frontend.load "evalretn.sls";
-Frontend.load "cbv-arb-ssos.sls";
-
 (* Figure 6.6 *)
 Frontend.reset ();
 Frontend.load "exp.sls";
@@ -84,10 +72,54 @@ Frontend.load "evalretn.sls";
 Frontend.load "contframe.sls";
 Frontend.load "cbv-ev-ssos-gen.sls";
 
-(* Figure 6.6 *)
+(* NATURAL SEMANTICS FOR MINIML *)
+
+(* Figure 6.7 - "left hand side + bad case analysis" *)
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.read "#operationalize \"ssos-ml-core.auto.sls\"\n(ev ~> eval retn).";
+Frontend.load "ev.sls";
+Frontend.load "ev-minml-core.sls";
+
+(* Figure 6.8 - left hand side *)
+Frontend.load "cbv-arb.sls";
+
+Frontend.read "#operationalize stop.";
+
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.load "ssos-ml-core.auto.sls";
+
+
+(* Figure 6.9, 6.10 *)
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.load "ssos-minml-case-bad.sls";
+Frontend.load "ssos-minml-case-bad-defun.sls";
+
+
+
+(*
+(* Figure 6.9 prelude, not given explicitly *)
+
+Frontend.read "#operationalize stop.";
+
+
+(* Removed 1 *)
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "ev.sls";
+Frontend.load "cbv-arb.sls";
+
+(* Removed 2 *)
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "evalretn.sls";
+Frontend.load "cbv-arb-ssos.sls";
+
 
 (* Figure 6.7 *)
 Frontend.load "ssos-mutable.sls";
@@ -122,3 +154,4 @@ Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "lc-ssos.auto.sls";
 Frontend.reset ();
+*)

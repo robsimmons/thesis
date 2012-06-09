@@ -1634,6 +1634,28 @@ $\interp{s'} :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta'$.
 
 
 
+\section{Exploring the image of the translation}
+\label{sec:absmachine-nondeterminism}
+
+The examples given in the previous section have given so far all deal
+with call-by-value semantics for the untyped lambda calculus, which
+has the property that any expression will either evaluate forever or
+will eventually evaluate to a value $\lambda x. e$. An interesting
+discussion of ordered abstract machines requires us to consider traces
+that might get {\it stuck}. One way to raise the possibility of stuck
+states is to add values besides $\lambda x.e$. In
+Figure~\ref{fig:ssos-minml-core} we present an extension to
+Figure~\ref{fig:cbv-ev-ssos-fun} with some of the features of a pure
+``Mini-ML'' functional programming language: fixed-point recursion,
+pairs ($\interp{\langle e_1, e_2 \rangle} = {\sf
+  pair}\,\interp{e_1}\,\interp{e_2}$), projections ($\interp{e.1} =
+{\sf fst}\,\interp{e})$, $\interp{e.2} = {\sf snd}\,\interp{e}$), and
+natural numbers ($\interp{{\sf z}} = {\sf zero}$, $\interp{{\sf s}\,e}
+= {\sf succ}\,\interp{e}$.  The natural semantics is given on the
+left-hand side of that figure, and the operationalized and
+defunctionalized ordered abstract machine that arises from (an
+\sls~encoding of) that natural semantics is given on the right. 
+
 \begin{figure}[t]
 \begin{minipage}[b]{0.2\linewidth}
 \[
@@ -1674,39 +1696,18 @@ $\interp{s'} :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta'$.
 \fvset{fontsize=\small,boxwidth=auto}
 \VerbatimInput{sls/ssos-minml-core.sls}
 \end{minipage}
-\caption{Pure functional features of Mini-ML.}
+\caption{Semantics of some pure functional features.}
 \label{fig:ssos-minml-core}
 \end{figure}
 
-\section{Exploring the image of the translation}
-\label{sec:absmachine-nondeterminism}
-
-The examples given in the previous section have given so far all deal
-with call-by-value semantics for the untyped lambda calculus, which
-has the property that any expression will either evaluate forever or
-will eventually evaluate to a value $\lambda x. e$. An interesting
-discussion of ordered abstract machines requires us to consider traces
-that might get {\it stuck}. One way to raise the possibility of stuck
-states is to add values besides $\lambda x.e$. In
-Figure~\ref{fig:ssos-minml-core} we present an extension to
-Figure~\ref{fig:cbv-ev-ssos-fun} with some of the features of a pure
-``Mini-ML'' functional programming language: fixed-point recursion,
-pairs ($\interp{\langle e_1, e_2 \rangle} = {\sf
-  pair}\,\interp{e_1}\,\interp{e_2}$), projections ($\interp{e.1} =
-{\sf fst}\,\interp{e})$, $\interp{e.2} = {\sf snd}\,\interp{e}$), and
-natural numbers ($\interp{{\sf z}} = {\sf zero}$, $\interp{{\sf s}\,e}
-= {\sf succ}\,\interp{e}$.  The natural semantics is given on the
-left-hand side of that figure, and the operationalized and
-defunctionalized ordered abstract machine that arises from (an
-\sls~encoding of) that natural semantics is given on the right. 
-
 Note that, facilitated by the nondeterminism inherent in
-operationalization, we chose a parallel semantics for the evaluation
-of pairs even though the presentation of functions was sequential.
-This means, among other things, that it is not possible to show that
-this ordered abstract machine adequately encodes a traditional
-abstract machine presentation of Mini-ML, because traditional abstract
-machines do not handle parallel evaluation.
+operationalization, we chose parallel evaluation of pairs even though
+the execution of functions is sequential in
+Figure~\ref{fig:cbv-ev-ssos-fun}.  Traditional abstract machine
+semantics are syntactic and do not handle parallel evaluation;
+therefore, it is not possible to show that this ordered abstract
+machine adequately encodes a traditional abstract machine presentation
+of Mini-ML.
 
 In an inductively-defined natural semantics, it is not possible to
 distinguish a non-terminating term like ${\sf fix}\,x.x$ from a stuck
@@ -1714,10 +1715,10 @@ term like ${\sf z}.1$.  This is one of the problems that Leroy and
 Grall sought to overcome in their presentation of coinductive big-step
 operational semantics \cite{leroy09coinductive}. They defined the
 judgment $e \Uparrow^\infty$ coinductively; therefore it is easy to
-show that ${\sf fix}\,x.x \Uparrow^\infty$, but there $v$ such that
-${\sf z}.1 \Downarrow v$ or ${\sf z}.1 \Uparrow^\infty$, so 
-${\sf fix}\,x.x$ can be seen as safely non-terminating whereas 
-${\sf z}.1$ is stuck. 
+show that ${\sf fix}\,x.x \Uparrow^\infty$ on one hand, but on the
+other hand that there is no $v$ such that ${\sf z}.1 \Downarrow v$ or
+${\sf z}.1 \Uparrow^\infty$. Therefore, ${\sf fix}\,x.x$ can be seen
+as safely non-terminating whereas ${\sf z}.1$ is stuck.
 
 The translation of natural semantics into ordered abstract machines
 also allows us to distinguish ${\sf fix}\,x.x$ from ${\sf z}.1$.
@@ -1726,24 +1727,37 @@ The former expression generates a trace that can always be extended:
    x_2{:}\susp{{\sf eval}\,({\sf fix}\,\lambda x.x)} \leadsto
    x_3{:}\susp{{\sf eval}\,({\sf fix}\,\lambda x.x)} \leadsto \ldots 
 \]whereas the latter gets stuck and can make no more transitions:\[ 
-  x_1{:}\susp{{\sf eval}\,({\sf fst}\,{\sf z})} \leadsto
-  x_2{:}\susp{{\sf eval}\,{\sf z}}, y{:}\susp{{\sf cont}\,{\sf fst1}} \leadsto
-  x_3{:}\susp{{\sf retn}\,{\sf z}}, y{:}\susp{{\sf cont}\,{\sf fst1}} 
+  x_1{:}\susp{{\sf eval}\,({\sf fst}\,{\sf zero})} \leadsto
+  x_2{:}\susp{{\sf eval}\,{\sf zero}}, y{:}\susp{{\sf cont}\,{\sf fst1}} \leadsto
+  x_3{:}\susp{{\sf retn}\,{\sf zero}}, y{:}\susp{{\sf cont}\,{\sf fst1}} 
   \not\leadsto
 \]
+Thus, for deterministic semantics, both coinductive big-step
+operational semantics and the operationalization transformation
+represent ways of reasoning about the difference between
+non-termination and failure in a natural semantics. Our approach has
+the advantage of being automatic rather than requiring the definition
+of a new coinductive relation $e \Uparrow^\infty$, though it would
+presumably be possible to consider synthesizing the definition of $e
+\Uparrow^\infty$ from the definition of $e \Downarrow v$ by an
+analogue of our operationalization transformation in the context of
+Leroy and Grall's approach.
+
+In Section~\ref{sec:choicefail}, we discuss the advantages that the
+operationalization approach has in dealing with nondeterministic
+language features. These advantages do come with a cost when 
+we consider natural semantics specifications that make deterministic
+choices, which we discuss in Section~\ref{sec:choicecase}.
 
 \subsection{Arbitrary choice and failure}
+\label{sec:choicefail}
 
 For the purposes of illustration, we will extend the language of
-expressions with a nondeterministic choice operator $e_1 \arb e_2$
-(encoded in LF as ${\sf choose}\,\interp{e_1}\,\interp{e_2}$) and an
-extra expression ${\sf junk}$ that does not evaluate to anything: this
-ensures that stuck states are possible, as search for a $v$ such that
-$(\lambda x.\,x)\,{\sf junk} \Downarrow v$ is derivable will fail.
-The natural semantics rules for this extension and their
+expressions with a nondeterministic choice operator $\interp{e_1 \arb
+  e_2} = {\sf choose}\,\interp{e_1}\,\interp{e_2}$).  The two
+(\sls-encoded) natural semantics rules for this extension and their
 (tail-recursion optimized) operationalization are shown in
-Figure~\ref{fig:ns-arb}; there are no rules for ${\sf junk}$, as it is
-a stuck expression.
+Figure~\ref{fig:ns-arb}.
 
 \begin{figure}[t]
 \begin{minipage}[b]{0.45\linewidth}
@@ -1755,140 +1769,150 @@ a stuck expression.
 \fvset{fontsize=\small,boxwidth=auto}
 \VerbatimInput{sls/cbv-arb-ssos.sls}
 \end{minipage}
-\caption{Natural semantics for the lambda calculus (call-by-value).}
+\caption{Semantics of nondeterministic choice.}
 \label{fig:ns-arb}
 \end{figure}
 
-We need to think about the desired semantics of $(\lambda y.\,y\,y)
-\arb ((\lambda x.\,x)\,{\sf junk})$ -- if the first subexpression
-$(\lambda y.\,y\,y)$ is chosen for evaluation, then the expression
-evaluates to a value, but if the second subexpression $(\lambda
-x.\,x)\,{\sf junk}$ is chosen, then the subexpression will evaluate to
-${\sf junk}$ and be effectively stuck. Our small-step intuitions
-about language safety say that this is a problem we should avoid, but
-natural semantics do not have an internal way of expressing that a
-successful evaluation exists along some paths but not along others.
-This is one of the ways in which our transformed specification is more
-expressive than the original semantics: it's possible to say
-$x{:}\susp{{\sf eval}\,\interp{(\lambda y.\,y\,y) \arb ((\lambda
-    x.\,x)\,{\sf junk})}} \leadsto^* \Delta$ such that $\Delta \neq
-y{:}\susp{{\sf retn}\,V}$ and $\Delta \not\leadsto$; we can't hope to
-reason about the absence of stuck states if we cannot express
-them. Our ability to reason about stuck concurrent computations is an
+We need to think about the desired semantics of $(\lambda y.\,y)
+\arb {\sf z}.1$ -- if the first subexpression $(\lambda y.\,y)$ is
+chosen for evaluation, then the expression evaluates to a value, but
+if the second subexpression ${\sf z}.1$ is chosen. Small-step
+intuitions about language safety say that this is a possibly we should
+be able to express, if only to exclude it with an appropriately
+designed type system and type safety proof. The ordered abstract
+machine semantics allows us to produce traces where
+%
+$x{:}\susp{\interp{(\lambda y.\,y) \arb {\sf z}.1}} \leadsto^* 
+ y{:}\susp{{\sf lam}\,\lambda y.y}$
+%
+and where
+%
+$x{:}\susp{{\sf eval}\,\interp{(\lambda y.\,y) \arb {\sf z}.1}} \leadsto^* 
+ (x'{:}\susp{{\sf retn}\,{\sf zero}}, y{:}\susp{{\sf cont}\,{\sf fst1}})
+ \not\leadsto$
+%
+as we would hope. Natural semantics specifications (including
+coinductive big step operational semantics) merely conclude
+that $(\lambda y.\,y\,y) \arb {\sf z}.1 \Downarrow (\lambda
+y.\,y\,y)$. Capturing the stuck behavior in this situation 
+would require defining an extra inductive judgment capturing 
+all the situations where $e$ can get stuck, which is undesirable.
+
+Our ability to reason about stuck concurrent computations is an
 artifact the fact that \sls~allows us to talk about traces $T$ in
 addition to talking about complete proofs.  The operationalization
 transformation allows us to transfer this concept to natural semantics
 specifications by way of translation.
 
-\begin{figure}[t]
+\subsection{Conditionals and factoring}
+\label{sec:choicecase}
+
+It is great that we're able to reason about nondeterministic
+specifications in the output of the operationalization transformation!
+But we run into a problem if we try to to encode a Mini-ML feature
+that was conspicuously missing from Figure~\ref{fig:ssos-minml-core}:
+the elimination form for natural numbers $\interp{{\sf case}\,e\,{\sf
+    of}\,{\sf z} \Rightarrow e_z \mid {\sf s}\,x \Rightarrow e_s} =
+{\sf case}\,\interp{e}\,\interp{e_z}\,(\lambda x.\interp{e_s})$.  The
+usual natural semantics for case analysis look like this: 
+\[
+\infer[{\sf ev/casez}]
+{\left({\sf case}\,e\,{\sf of}\,
+   {\sf z} \Rightarrow e_z \mid {\sf s}\,x \Rightarrow e_s\right) \Downarrow v}
+{e \Downarrow {\sf z}
+ &
+ e_z \Downarrow v}
+\quad
+\infer[{\sf ev/cases}]
+{\left({\sf case}\,e\,{\sf of}\,
+   {\sf z} \Rightarrow e_z \mid {\sf s}\,x \Rightarrow e_s\right) \Downarrow v}
+{e \Downarrow {\sf s}\,v'
+ &
+ [v'/x]e_s \Downarrow v}
+\]
+
+\begin{figure}
 \fvset{fontsize=\small,boxwidth=auto}
-\VerbatimInput{sls/cbv-bad-ite.sls}
-\caption{Operationalization of the problematic natural semantics for {\it if}-statements.}
-\label{fig:sls-bad-ite}
+\VerbatimInput{sls/ssos-minml-case-bad.sls}
+\caption{Problematic semantics of case analysis (not defunctionalized).}
+\label{fig:ssos-minml-case-bad}
+\bigskip
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/ssos-minml-case-bad-defun.sls}
+\caption{Problematic semantics of case analysis (defunctionalized).}
+\label{fig:ssos-minml-case-bad-defun}
 \end{figure}
 
-\subsection{Conditionals and factoring}
-
-Another extension that we can introduce complicates this view. A
-common way of giving a natural semantics for {\it if}-statements is
-through these two rules:
-\[
-\infer
-{{\sf true} \Downarrow {\sf true} \mathstrut}
-{}
-\quad
-\infer
-{{\sf false} \Downarrow {\sf false} \mathstrut}
-{}
-\quad
-\infer
-{{\sf if}\,e\,{\sf then}\,e_t\,{\sf else}\,e_f \Downarrow v \mathstrut}
-{e \Downarrow {\sf true}
- &
- e_t \Downarrow v \mathstrut}
-\quad
-\infer
-{{\sf if}\,e\,{\sf then}\,e_t\,{\sf else}\,e_f \Downarrow v \mathstrut}
-{e \Downarrow {\sf false}
- &
- e_f \Downarrow v \mathstrut}
-\]
-However, according to the straightforward operationalization of these
-rules (shown in Figure~\ref{fig:sls-bad-ite}), we would be forced,
-when we first encounter an {\it if}-statement, to nondeterministically
-choose whether the conditional will evaluate to ${\sf true}$ or ${\sf
-  false}$, just as we nondeterministically chose one of the two
-expressions $e_1 \arb e_2$. If we make the wrong choice (and, assuming
-$e$ evaluates to anything at all, we always {\it can} make the wrong
-choice) then the concurrent computation will get stuck. Superficially,
-the following trace is indistinguishable from the stuck trace that
-arises from the previous example that was nondeterministically ${\sf
-  junk}$, but there is nothing wrong with including {\it if}-statements
-in the language!
+If we operationalize this specification directly, we get an
+ordered abstract machine shown in Figure~\ref{fig:ssos-minml-case-bad}
+before defunctionalization and in
+Figure~\ref{fig:ssos-minml-case-bad-defun} after defunctionalization.
+This operational semantics is nondeterministic much as the semantics of
+$e_1 \arb e_2$ were, in that we can evaluate a case expression either
+with rule ${\sf casez}$, which effectively predicts that the answer
+will be zero, or with rule ${\sf cases}$, which effectively predicts
+that the answer will be the successor of some value. But this means that
+it is possible to get stuck while executing 
+an intuitively type-safe expression if we predict the wrong branch:
 \begin{align*}
- & x_1{:}\susp{{\sf eval}\,\interp{{\sf if}\,{\sf false}\,{\sf then}\,e_t\,{\sf else}\,e_f}}
+ & x_1{:}\susp{{\sf eval}\,({\sf case}\,{\sf zero}\,e_z\,\lambda x.\,e_s)}
 \\
 \leadsto ~ & 
-x_2{:}\susp{{\sf eval}\,{\sf false}},
-y_2{:}\istrue{({\sf retn}\,{\sf true} \lefti \{ {\sf eval}\,\interp{e_t}\})}
+x_2{:}\susp{{\sf eval}\,{\sf zero}},
+y_2{:}\susp{{\sf cont}\,({\sf cases}\,\lambda x.\,e_s)}
 \\
-\leadsto ~ &
-x_3{:}\susp{{\sf retn}\,{\sf false}},
-y_2{:}\istrue{({\sf retn}\,{\sf true} \lefti \{ {\sf eval}\,\interp{e_t}\})}
+\leadsto ~ & 
+x_3{:}\susp{{\sf retn}\,{\sf zero}},
+y_2{:}\susp{{\sf cont}\,({\sf cases}\,\lambda x.\,e_s)}
 \\
 \not\leadsto ~ & (!!!)
 \end{align*}
 
+This is actually a special case of a problem that appears in the logic
+programming literature: interpreted as a deductive computation, the
+natural semantics rules ${\sf ev/casez}$ and ${\sf ev/cases}$ may
+require backtracking: if we try to evaluate $e$ using one of the rules
+and fail, a backtracking semantics means that we will apply the other
+rule, {\it re-evaluating} the scrutinee $e$ to a value. 
 
-\begin{figure}[t]
-\fvset{fontsize=\small,boxwidth=auto}
-\VerbatimInput{sls/cbv-ok-ite.sls}
-\caption{Operationalization of the fixed, deterministic natural semantics for {\it if}-statements.}
-\label{fig:sls-ok-ite}
-\end{figure}
+It is possible to avoid that backtracking by a transformation called
+{\it factoring}. While factoring has been expressed by Polakow as a
+transformation on functional programs in a variant of the Delphin
+programming language \cite{poswolsky03factoring}, I am unaware of any
+treatment of the factoring transformation as a generally-correct {\it
+  logical} transformation on Prolog, $\lambda$Prolog, or Twelf
+specifications. I will not do so here, but in this particular instance
+there are two ways to factor the natural semantics to avoid
+backtracking.  Both of them are provably equivalent to the original
+natural semantics (in terms of the judgments $e \Downarrow v$ that are
+derivable), and it is possible to use the existing metatheoretic
+machinery of Twelf to verify this fact. Furthermore, both of them can
+be operationalized into ordered abstract machine semantics that are
+free of the unnecessary stuck stakes described above. 
 
-It is highly desirable to maintain our ability to talk about stuck
-states through the natural semantics; the easiest way to do so is 
-by modifying the natural semantics into a different natural semantics
-that is equivalent but more operational:
+One option is to create a new judgment ${\sf casen}\,v'\,e_z\,(x.e_s)\,v$
+that is mutually recursive with the definition of $e \Downarrow v$. 
 \[
-\infer
-{{\sf pick}\,{\sf true}\,e_t\,e_f\,e_t\mathstrut}
-{}
+\infer[{\sf ev/case}]
+{\left({\sf case}\,e\,{\sf of}\,
+   {\sf z} \Rightarrow e_z \mid {\sf s}\,x \Rightarrow e_s\right) \Downarrow v}
+{e \Downarrow v'
+ &
+ {\sf casen}\,v'\,e_z\,(x.e_s)\,v}
+\]
+\[
+\infer[{\sf casen/z}]
+{{\sf casen}\,{\sf z}\,e_z\,(x.e_s)\,v}
+{e_z \Downarrow v}
 \quad
-\infer
-{{\sf pick}\,{\sf false}\,e_t\,e_f\,e_f\mathstrut}
-{}
-\quad
-\infer
-{{\sf true} \Downarrow {\sf true} \mathstrut}
-{}
-\quad
-\infer
-{{\sf false} \Downarrow {\sf false} \mathstrut}
-{}
-\quad
-\infer
-{{\sf if}\,e\,{\sf then}\,e_t\,{\sf else}\,e_f \Downarrow v' \mathstrut}
-{e \Downarrow v
- & 
- {\sf pick}\,v\,e_t\,e_f\,e'\mathstrut
- & e' \Downarrow v'}
-\] 
-We can prove, with the existing metatheoretic machinery of Twelf, that this
-natural semantics is equivalent to the previous one in terms of 
-which judgments $e \Downarrow v$ are derivable, but the operationalization
-of this version, given in Figure~\ref{fig:sls-ok-ite}, is free
-of the previous version's problems.
+\infer[{\sf casen/s}]
+{{\sf casen}\,({\sf s}\,v')\,e_z\,(x.e_s)\,v}
+{[v'/x]e_s \Downarrow v}
+\]
+This works, but the transformation of this specification needs to
+operationalize both the judgment $e \Downarrow v$ and the judgment
+${\sf casen}\,v'\,e_z\,(x.e_s)\,v$. Essentially, the result is 
 
-These two different versions of the same rule are related by a
-transformation called {\it factoring}. While factoring has been
-expressed by Polakow as a transformation on functional programs in a
-variant of the Delphin programming language
-\cite{poswolsky03factoring}, I am unaware of any treatment of the
-factoring transformation as a generally-correct {\it logical}
-transformation on Prolog, $\lambda$Prolog, or Twelf specifications,
-and I will not do so here.
 
 \subsection{Flat resolution for deductive computation}
 

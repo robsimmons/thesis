@@ -41,3 +41,5 @@ set1: exp -> frame.
 set2: mutable_loc -> frame.
 force1: frame.
 bind1: bind_loc -> frame.
+casez: exp -> frame.
+cases: (exp -> exp) -> frame.
