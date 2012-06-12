@@ -1,6 +1,8 @@
 ev/fix:   eval (fix (\x. E x)) 
            >-> {eval (E (fix (\x. E x)))}.
 
+ev/unit:  eval unit unit.
+
 ev/pair:  eval (pair E1 E2)
            >-> {eval E1 * eval E2 * cont pair1}.
 ev/pair1: retn V1 * retn V2 * cont pair1

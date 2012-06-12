@@ -100,38 +100,41 @@ Frontend.load "cbv-ev-ssos-fun.sls";
 Frontend.load "ssos-minml-case-bad.sls";
 Frontend.load "ssos-minml-case-bad-defun.sls";
 
+(* Figure 6.11, 6.12 *)
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.load "ssos-minml-case-good.sls";
+Frontend.load "ssos-minml-case-good-defun.sls";
 
+(* Figure 6.13 *)
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.load "ssos-mutable.sls";
 
-
-(*
-(* Figure 6.9 prelude, not given explicitly *)
-
-Frontend.read "#operationalize stop.";
-
-
-(* Removed 1 *)
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "ev.sls";
-Frontend.load "cbv-arb.sls";
+Frontend.read "#operationalize \"case.auto.sls\"\n(ev ~> eval retn).";
+Frontend.load "ev-miniml-case-good.sls";
+Frontend.read "#operationalize stop.";
 
-(* Removed 2 *)
 Frontend.reset ();
 Frontend.load "exp.sls";
-Frontend.load "evalretn.sls";
-Frontend.load "cbv-arb-ssos.sls";
+Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.load "case.auto.sls";
 
-
-(* Figure 6.7 *)
-Frontend.load "ssos-mutable.sls";
-
-(* Figure 6.8 *)
+(* Figure 6.14 *)
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "cbv-ev-ssos-fun.sls";
 Frontend.load "ssos-cbneed.sls";
 
-(* Figure 6.9 *)
+(* Figure 6.15 *)
 Frontend.load "ssos-cbneed-refun.sls";
 
-
+(*
 Frontend.reset ();
 
 

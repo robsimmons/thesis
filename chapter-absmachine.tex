@@ -1650,14 +1650,15 @@ states is to add values besides $\lambda x.e$. In
 Figure~\ref{fig:ssos-minml-core} we present an extension to
 Figure~\ref{fig:cbv-ev-ssos-fun} with some of the features of a pure
 ``Mini-ML'' functional programming language: fixed-point recursion,
-pairs ($\interp{\langle e_1, e_2 \rangle} = {\sf
+units and pairs ($\interp{\langle\rangle} = {\sf unit}$,
+$\interp{\langle e_1, e_2 \rangle} = {\sf
   pair}\,\interp{e_1}\,\interp{e_2}$), projections ($\interp{e.1} =
 {\sf fst}\,\interp{e})$, $\interp{e.2} = {\sf snd}\,\interp{e}$), and
 natural numbers ($\interp{{\sf z}} = {\sf zero}$, $\interp{{\sf s}\,e}
 = {\sf succ}\,\interp{e}$.  The natural semantics is given on the
 left-hand side of that figure, and the operationalized and
 defunctionalized ordered abstract machine that arises from (an
-\sls~encoding of) that natural semantics is given on the right. 
+\sls~encoding of) that natural semantics is given on the right.
 
 \begin{figure}[t]
 \begin{minipage}[b]{0.2\linewidth}
@@ -1665,6 +1666,11 @@ defunctionalized ordered abstract machine that arises from (an
 \infer
 {{\sf fix}\,x.e \Downarrow v}
 {[{\sf fix}\,x.e/x]e \Downarrow v}
+\]
+\[
+\infer
+{\langle\rangle \Downarrow \langle\rangle}
+{}
 \]
 ~
 \[
@@ -1979,31 +1985,37 @@ Figure~\ref{fig:ssos-minml-case-good-defun}.
 
 \subsection{Flat resolution for deductive computation}
 
-When we described the semantics of nondeterminstic choice $e_1 \arb e_2$,
+When we described the semantics of nondeterminstic choice $e_1 \arb
+e_2$, or operational intuition was to search either for a value such
+that $e_1 \Downarrow v$ or a value such that $e_2 \Downarrow v$. We do
+not want the operational semantics to backtrack and reconsider that
+decision if the initial choice results in a stuck state. This
+non-backtracking behavior is made explicit by the operationalization
+transformation when we interpret the concurrent specification as a
+committed-choice forward chaining logic program.
 
+Maintaing this non-backtracking intuition means that some natural
+semantics specifications, such as those for case analysis, need to be
+treated carefully in order to have the correct behavior. Care is
+needed in part because natural semantics do not {\it a priori} have an
+interpretation as deductive computation, and also because the standard
+interpretation of deductive computation is as backtracking search.
+The discussion above clarifies that, {\it in the context of natural
+  semantics specifications}, we are interested in an interpretation of
+deductive computation that is not the usual backtracking
+interpretation.\footnote{This committed choice form of deductive
+  computation also goes by the name {\it flat resolution}
+  \cite{aitkaci99warrens}.} It is natural, then, to represent this
+computation as a concurrent computation, which is naturally
+interpreted as committed choice.
 
-Our intention in describing the semantics of nondeterminstic choice
-
-The factoring transformation reduces or eliminated the need for
-backtracking in computation. 
-
-The consideration of non-backtracking search is an interesting one,
-because it indicates that, {\it in the context of natural semantics},
-we are interested in an interpretation of deductive computation that is
-not the usual backtracking interpretation.\footnote{This committed
-  choice form of deductive computation also goes by the name {\it flat
-    resolution} \cite{aitkaci99warrens}.} It is natural, then, to
-represent this computation as a concurrent computation, which is
-naturally interpreted as committed choice. 
-
-This works both ways, however: in Section~\ref{sec:evaluationcontexts}
+This works both ways: in Section~\ref{sec:evaluationcontexts}
 we transform a small-step structural operational semantics to obtain
 an SLS analogue of evaluation contexts. As a deductive computation,
 SOS specifications are naturally backtracking, so the concurrent
 computations we derive also need to be interpreted with backtracking
-search if we want to preserve the operational behavior of the
-specification.
-
+search if we want to give the resulting encoding a proper computational
+interpretation.
 
 
 \section{Exploring the richer fragment}
@@ -2018,13 +2030,13 @@ once we translate from a less expressive style (like natural
 semantics) to a more expressive style (like ordered abstract machine
 semantics), we can consider new modular extensions in the more
 expressive style that were not possible in the less expressive
-style. The opportunities for modular extension are what primarily
-distinguish the logical correspondence we have presented from the work
-by Hannan and Miller \cite{hannan92operational} and Ager
+style. The opportunities for modular extension are what part of what
+distinguishes the logical correspondence we have presented from the
+work by Hannan and Miller \cite{hannan92operational} and Ager
 \cite{ager04natural}. Both of those papers translated natural
-semantics into a syntactic specification of abstract machines that was
-modularly extensible to the degree that concurrent \sls~specifications
-are.
+semantics into a syntactic specification of abstract machines; suc
+specifications are not modularly extensible to the degree that
+concurrent \sls~specifications are.
 
 The ordered abstract machine style of specification facilitates
 modular extension with features that involve {\it state} and {\it
@@ -2032,17 +2044,18 @@ modular extension with features that involve {\it state} and {\it
 the operationalization translation (as extended in
 Section~\ref{sec:trans-par}) can put a natural semantics specification
 into logical correspondence with either a sequential ordered abstract
-machine semantics or a parallel ordered abstract machine semantics. In
-this section, we will consider some other extensions, focusing on
-stateful features like mutable storage
-(Section~\ref{sec:mutable-storage}) and call-by-need evaluation
-(Section~\ref{sec:call-by-need}). We will also discuss the semantics
-of recoverable failure in Section~\ref{sec:failure}. The presentation
-of recoverable failure will lead us to consider a point of
-non-modularity: if we want to extend our language flexibly with
-non-local control features like recoverable failure, the parallel
-operationalization translation will make this difficult or impossible.
-A more modular semantics of parallel evaluation will be presented in
+machine semantics or a parallel ordered abstract machine semantics,
+and our running example evaluates pairs in parallel. In this section,
+we will consider some other extensions, focusing on stateful features
+like mutable storage (Section~\ref{sec:mutable-storage}) and
+call-by-need evaluation (Section~\ref{sec:call-by-need}). We will also
+discuss the semantics of recoverable failure in
+Section~\ref{sec:failure}. The presentation of recoverable failure
+will lead us to consider a point of non-modularity: if we want to
+extend our language flexibly with non-local control features like
+recoverable failure, the parallel operationalization translation will
+make this difficult or impossible.  A more modular semantics of
+parallel evaluation will be presented in
 Section~\ref{sec:modular-parallelism}.
 
 This section will present extensions to the sequential, first-order
@@ -2061,15 +2074,92 @@ Figure~\ref{fig:cbv-ev-ssos-fun}.
 
 The classic stateful programming language feature is mutable storage,
 which forms the basis of imperative algorithms. We will consider
-ML-style references, which add three new syntax forms to the language
-for creating ($\interp{{\sf ref}\,e} = {\sf ref}\,\interp{e}$),
-dereferencing ($\interp{{!}e} = {\sf get}\,\interp{e}$), and updating
-($\interp{e_1 := e_2} = {\sf set}\,\interp{e_1}\,\interp{e_2}$)
+ML-style references, which add four new syntax forms to the language.
+The first three create ($\interp{{\sf ref}\,e} = {\sf
+  ref}\,\interp{e}$), dereference ($\interp{{!}e} = {\sf
+  get}\,\interp{e}$), and update ($\interp{e_1 := e_2} = {\sf
+  set}\,\interp{e_1}\,\interp{e_2}$) locations in the mutable
+store. The fourth, ${\sf loc}\,l$ is a value that represents pointers
+to allocated memory. The term $l$ is of a type ${\sf mutable\_loc}$
+that has no constructors; locations $l$ can only be allocated at
+runtime.
 
-$\interp{{!}e} = {\sf get}\,e$
+We also introduce a new ${\it linear}$ atomic proposition ${\sf
+  cell}\,l\,v$ representing a piece of allocated memory (at location
+$l$) and its contents (the value $v$). Recall that, without mutable
+state or parallel computation, we maintain the invariant that the
+process state is made up of either a suspended ${\sf eval}\,e$
+proposition or a suspended ${\sf retn}\,v$ proposition to the left of
+some number of suspended ${\sf cont}\,f$ propositions. Once we add
+mutable state, the LF context becomes non-empty, and we maintain the
+invariant that the context has one mutable location for each allocated
+cell:
+\[
+(l_1{:}{\sf mutable\_loc}, \ldots, l_n{:}{\sf mutable\_loc}; ~~
+ x_1{:}\susp{{\sf cell}\,l_1\,v_1}, \ldots, 
+ x_n{:}\susp{{\sf cell}\,l_n\,v_n}, 
+ \Delta)
+\]
+where $\Delta$ has the form described before. Because the ${\sf
+  cell}\,l_i\,v_i$ propositions are linear, the order of cells and
+their placement relative to $\Delta$ are irrelevant.
 
+The ${\sf ev/get}$ evaluates an expression
+to a value of the form ${\sf loc}\,l$ and then 
+and ${\sf ev/get1}$ takes the (unique, by invariant) cell assocaited
+with that location, reads its value, and restores the cell to the
+context. The synthetic transition associated with ${\sf ev/get1}$ is 
+as follows:
+\begin{align*}
+(\Psi&;  \frameoff{\Theta}{x{:}\susp{{\sf retn}\,({\sf loc}\,l)}, y{:}\susp{{\sf cont}\,{\sf get1}}, z{:}\susp{{\sf cell}\,l\,v}})
+\leadsto 
+(\Psi; \tackon{\Theta}{w{:}\susp{{\sf retn}\,v},
+z'{:}\susp{{\sf cell}\,l\,v}})
+\end{align*}
+Again, it is critical, when reading this rule, to account for the fact
+that ${\sf retn}$ and ${\sf cont}$ are ordered predicates but ${\sf
+  cell}$ is a linear predicate.
+
+The ${\sf set}$ rule is similar, except that we also evaluate a new value
+$v_2$ and restore that to the process state instead of the value originally
+contained in the cell. We mention ${\sf cell}\,l\,\_$ in the
+premise of ${\sf ev/set2}$ only to consume the old cell associated with $l$
+before we replace it with something new.
+
+Finally, the ${\sf ref}$ rules evaluate the subexpression to a value
+$v$ and then, in rule ${\sf ev/ref1}$, allocate a new cell to hold
+that value. This new cell, according to our context invariant, needs
+to be associated with a new variable $l$, which we generate with
+existential quantification in the head of the ${\sf ev/ref1}$ rule.
+The synthetic transition associated with ${\sf ev/ref1}$ therefore has
+an extended LF context after the transition:
+\begin{align*}
+(\Psi;  \frameoff{\Theta}{x{:}\susp{{\sf retn}\,v}, y{:}\susp{{\sf cont}\,{\sf ref1}}})
+\leadsto 
+(\Psi, l{:}{\sf mutable\_loc}; \tackon{\Theta}{w{:}\susp{{\sf retn}\,({\sf loc}\,l)},
+z{:}\susp{{\sf cell}\,l\,v}})
+\end{align*}
 
 \subsubsection{Existential angst} 
+
+Our semantics of mutable storage uses existential quantification almost 
+as a symbol generator to conjure up new locations. However, it is important
+to remember that LF variables in $\Psi$ are defined by substitution, so it
+is not possible to compare mutable locations for inequality. This, in turn,
+means our specification of Mini-ML with mutable references {\it cannot}
+be further extended to include the tests for reference equality that 
+languages like Standard ML or Ocaml have. 
+
+
+The use of existential quantification 
+
+The context invariant we described above 
+\[
+\forall l_1.\,\forall v_1.\,\forall l_2.\,\forall v_2.\,
+  {\sf cell}\,l_1\,v_1 \fuse {\sf cell}\,l_2\,v_2 
+  \righti \{ l_1 \doteq l_2 \fuse 
+             {\sf cell}\,l_1\,v_1 \fuse {\sf cell}\,l_2\,v_2 \}
+\]
 
 No check for pointer inequality! This is a fundamental restriction of
 the fact that we're using existential quantification rather than some
@@ -2092,7 +2182,7 @@ Cheney cites it in nominal abstraction.)
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-cbneed-refun.sls}
-\caption{SSOS semantics of call-by-need recursive suspensions.}
+\caption{SSOS semantics of call-by-need recursive suspensions, refunctionalized.}
 \label{fig:ssos-cbneed-refun}
 \end{figure}
 
