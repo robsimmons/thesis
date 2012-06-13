@@ -134,6 +134,15 @@ Frontend.load "ssos-cbneed.sls";
 (* Figure 6.15 *)
 Frontend.load "ssos-cbneed-refun.sls";
 
+
+
+
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.read "#operationalize \"nat.auto.sls\"\n(inc ~> inc retn_inc)\n(plus ~> plus retn_plus).";
+Frontend.load "nat.sls";
+Frontend.read "#operationalize stop.";
+
 (*
 Frontend.reset ();
 

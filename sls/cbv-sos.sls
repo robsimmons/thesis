@@ -10,10 +10,14 @@ step (app E1 E2) (app E1' E2)
 
 
 
+
+
 step/app2: 
 step (app E1 E2) (app E1 E2')
  <- value E1
  <- step E2 E2'.
+
+
 
 
 step/appred:

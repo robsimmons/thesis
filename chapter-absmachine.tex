@@ -1937,7 +1937,7 @@ handle the specification above,\footnote{The operationalization
     return type} $\tau_2$.  This would allow ${\sf ev}$ and ${\sf
     casen}$ to share the same return predicate, facilitating the use
   of tail-call optimization in the operationalization of ${\sf
-    ev/case}$, ${\sf casen/z}$, and ${\sf casen/s}$.} but there is a
+    ev/case}$, ${\sf casen/z}$, and ${\sf casen/s}$. \label{returntypefootnote}} but there is a
 simpler elegant option that uses the operationalization transformation
 we have already described: we define a similar predicate ${\sf selectn}$
 (mode ${\sf selectn} + + + -$) that merely performs the action of 
@@ -2481,54 +2481,177 @@ context avaialble to concurrent \sls~specifications, introducing new
 linear and persistent ordered atomic propositions that can be added to
 to the context (and, in the linear case, removed as well).
 
-For extensions that are entirely modular, 
-stateful extensions, we can consider what it would take to extend
-specif
+For extensions to sequential ordered abstract machines that are only
+based on extending the state, we can consider what it would mean to
+reverse-engineer a natural semantics formalism that is as extensible
+as the resulting ordered abstract machine. The primary judgment of
+such a specification is not $e \Downarrow v$ as before; rather, the
+primary judgment becomes $\{ e \| \mu \}_\Psi \Downarrow \{ v \| \mu
+\}_{\Psi'}$.\footnote{The notaiton $\{ e \| \mu \}_\Psi$ is intended
+  to invoke Harper's notation $\nu \Sigma \{ e \| \mu \}$, which is
+  used to decribe mutable references and lazy evaluation in Chapters
+  36 and 37 of \cite{harper12practical}. The critical semantic
+  distinction is that our $\Psi$ contains variables whereas $\Sigma$
+  contains proper symbols that are not available in \sls, as discussed
+  in Section~\ref{sec:mutable-storage}.} The variable contexts $\Psi$
+and $\Psi'$ are the same variable contexts that appear in our process
+states $(\Psi; \Delta)$ and our specifications are expected to
+maintain the invariant that $\Psi \subseteq \Psi'$. The objects $e$
+and $v$ remain syntactic objects adequatly representable in LF, as
+before, whereas $\mu$ is an extensible bag of objects $\mu = J_1
+\otimes \ldots \otimes J_n$ that correspond to the propositions in our
+linear and persistent context; we treat $\otimes$ as an associative
+and commutiative operator (just like conjunction in linear logic).  A
+new judgment in the state can be treated as a new member of $J$.  For
+instance, lazy call-by-need functions as defined in
+Figure~\ref{fig:ssos-by-need} uses three judgments:
+$x{\hookrightarrow}e$ (corresponding to ${\sf susp'}\,x\,e$),
+$x{\hookrightarrow}{\fuse}$ (corresponding to ${\sf blackhole'}\,x$),
+and $x{\rightarrowtriangle}v$ (corresponding to ${\sf bind'}\,x\,v$).
+We can give a statefully-modular natural semantics for call-by-need
+lazy functions as follows:
 
 \[
 \infer
-{\nu \Sigma \{ (\lambda x.e) \| \mu \} 
+{\{ \lambda x.e \| \mu \}_\Psi
   \Downarrow 
- \nu \Sigma \{ (\lambda x.e) \| \mu \} \mathstrut}
+ \{ \lambda x.e \| \mu \}_\Psi \mathstrut}
 {}
 \]
 \[
 \infer
-{\nu \Sigma \{ e_1\,e_2 \| \mu \} \Downarrow v \| \mu'' \mathstrut}
-{\nu \Sigma \{ e_1 \| \mu \} \Downarrow 
- \nu \Sigma' \{ \lambda x. e \| \mu' \}
+{\{ e_1\,e_2 \| \mu \}_\Psi
+  \Downarrow 
+ \{ v \| \mu'' \}_{\Psi''} \mathstrut}
+{\{ e_1 \| \mu \}_\Psi
+  \Downarrow 
+ \{ \lambda x. e \| \mu' \}_{\Psi'}
  &
- \nu (\Sigma',x) \{ e \| (x {\hookrightarrow} e_1 \otimes \mu') \} 
- \Downarrow 
- \nu \Sigma'' \{ v \| \mu'' \} \mathstrut}
+ \{ e \| x {\hookrightarrow} e_1 \otimes \mu' \}_{\Psi', x}
+  \Downarrow 
+ \{ v \| \mu'' \}_{\Psi''} \mathstrut}
 \]
 \[
 \infer
-{\nu (\Sigma, x) \{ x \| (x {\hookrightarrow} e \otimes \mu) \} 
- \Downarrow
- \nu (\Sigma, x) \{ v \| (x{\rightarrowtriangle}v \otimes \mu) \} \mathstrut}
-{e \| (x {\hookrightarrow}{\fuse} \otimes \mu)
- \Downarrow
- v \| (x {\rightarrowtriangle}v \otimes \mu) \mathstrut}
+{\{ x \| x {\hookrightarrow} e \otimes \mu \}_{\Psi, x} 
+  \Downarrow
+ \{ v \| x{\rightarrowtriangle}v \otimes \mu' \}_{\Psi', x} \mathstrut}
+{\{ e \| x {\hookrightarrow}{\fuse} \otimes \mu \}_{\Psi, x}
+  \Downarrow
+ \{ v \| x {\hookrightarrow}{\fuse} \otimes \mu' \}_{\Psi', x} \mathstrut}
 \]
 \[
 \infer
-{x \| (x {\rightarrowtriangle}v \otimes \mu) \Downarrow v \| (x {\rightarrowtriangle}v \otimes \mu)}
+{\{ x \| x {\rightarrowtriangle}v \otimes \mu \}_{\Psi, x}
+  \Downarrow 
+ \{ v \| (x {\rightarrowtriangle}v \otimes \mu \}_{\Psi, x} }
 {}
 \]
+
+This style of natural semantics specification cannot be directly
+represented in \sls. Nevertheless, the example above suggests that a
+carefully-defined formalism for statefully-modular natural semantics
+specifications could be similarly compiled into (or, indeed, {\it
+  defined in terms of}) their operationalization as concurrent
+\sls~specifications.
+
+There is a great deal of work on special-purpose formalisms the
+modular specification and extension of operational semantics
+specifications. The specification above follows Harper's development
+in \cite{harper12practical}, and Mosses's Modular Structural
+Operational Semantics (MSOS) is a similar development
+\cite{mosses04modular}. Previous work is primarily interested in the
+modular extension of small-step structural sperational semantics
+specifications rather than big-step natural semantics, though Mosses
+does discuss the latter. The operationization transformation applies
+to SOS specifications (as discussed below in
+Section~\ref{sec:evaluationcontexts}), but the result is something
+besides an ordered abstract machine semantics.
+
+The functional correspondence connects structural operational
+semantics and abstract machines \cite{danvy08defunctionalized}. A
+logical correspondance between SOS specficiations and ordered abstrct
+machines in \sls~might give us insight into a modular formalism for
+SOS that is defined in terms of concurrent \sls~specifications, but
+this is left for future work.
+
+% \begin{figure}
+% \begin{minipage}[b]{0.43\linewidth}
+% \fvset{fontsize=\small,boxwidth=auto}
+% \VerbatimInput{sls/nat.sls}
+% \end{minipage}
+% \hspace{0.5cm}
+% \begin{minipage}[b]{0.57\linewidth}
+% \fvset{fontsize=\small,boxwidth=auto}
+% \VerbatimInput{sls/nat-ssos.sls}
+% \end{minipage}
+% \caption{Two versions of binary addition.}
+% \label{fig:nat}
+% \end{figure}
 
 \section{Partial transformation}
 \label{sec:othertransform}
 
+Thus far, we have only discussed the application of the
+operationalization and defunctionalization transformations to natural
+semantics specifications. However, both transformations are general
+and can be applied to many different specifications. 
+
+In this section, we will consider the meaning of the
+operationalization on two other types of deductive
+\sls~specifications: small-step structural operational semantics
+specifications and the semantics of Davies' staged computation
+language \rowan. Both are also interesting examples of partial
+transformation where we use the generality of operationalization
+to transform only some of the predicates in a program.
+
+
+% As one example, consider Pfenning's course notes. 
+% For instance, in course notes, Pfenning describes
+% addition of binary numbers\footnote{Bits are encoded as a type ${\sf
+%     bit}$ with two elements ${\sf b0}$ and ${\sf b1}$, and binary
+%   natural numbers have the form $n ::= \epsilon \mid n{\sf 0} \mid n{\sf 1}$
+%   and are encoded in a type ${\sf bin}$ as follows: $\interp{\epsilon}
+%   = {\sf e}$, $\interp{n{\sf 0}} = {\sf d}\,\interp{n}\,{\sf b0}$, and
+%   $\interp{n{\sf 1}} = {\sf d}\,\interp{n}\,{\sf b1}$.}
+% both as an ordered abstract machine and a deductive specification; 
+% we can 
+
+% both as an ordered abstract machine and a deductive 
+
+% a type of binary numbers that can be encoded in the LF type
+% ${\sf bin}$ as follows: $\interp{\epsilon} = {\sf e}$, 
+% $\interp{n{\sf 0}} = {\sf b}\,\interp{n}\,{\sf b0}$, and
+% $\interp{n{\sf 1}} = {\sf b}\,\interp{n}\,{\sf b1}$.
+% a concurrent specification of binary addition 
+
+% (as alluded to in Footnote~\ref{returntypefootnote}
+% above).
+
 \subsection{Evaluation contexts}
 \label{sec:evaluationcontexts}
 
-Thus far, we have considered big-step operational semantics and abstract
-machines, neglecting the third great tradition of programming language
-specification, {\it structural operational semantics}. Structural
-operational semantics (SOS) define single-step evaluation inductively over
-the structure of expressions; the SOS semantics for our running example
-language is the following:
+\begin{figure}[tp]
+\begin{minipage}[b]{0.450\linewidth}
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/cbv-sos.sls}
+\end{minipage}
+\hspace{0.5cm}
+\begin{minipage}[b]{0.50\linewidth}
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/cbv-sos-eval.sls}
+\end{minipage}
+\caption{Small-step evaluation, and one corresponding abstract machine.}
+\label{fig:cbv-sos}
+\end{figure}
+
+We have thus far considered big-step operational semantics and
+abstract machines, mostly neglecting the third great tradition of
+programming language specification, {\it structural operational
+  semantics} or SOS specifications. Small-step structural operational
+semantics specifications define single-step evaluation inductively
+over the structure of expressions. This is the SOS semantics for our 
+call-by-value evaluation of the untyped lambda calculus:
 \[
 \infer
 {\lambda x.e\,{\sf value} \mathstrut}
@@ -2549,17 +2672,15 @@ language is the following:
 {v\,{\sf value} \mathstrut}
 \]
 This inductive specification is adequately encoded on the left-hand
-side of Figure~\ref{fig:cbv-sos}, along with the proposition \Verb|ev|
-that describes a big-step operational semantics in terms of repeated
-application of the small-step operational semantics.
+side of Figure~\ref{fig:cbv-sos}, along with the proposition ${\sf
+  ev}\,e\,v$ that describes a big-step operational semantics in terms
+of repeated application of the small-step operational semantics. This
+is the complete specification that we referred to in
+Section~\ref{sec:trans-tail} when we operationalized the ${\sf
+  ev}$ predicate only to motivate tail recursion. On the right-hand
+side of Figure~\ref{fig:cbv-sos}, we show the specification that
+results if we instead operationalize and defunctionalize 
 
-\begin{figure}[tp]
-\fvset{fontsize=\small,boxwidth=229pt}
-\BVerbatimInput{sls/cbv-sos.sls}
-\BVerbatimInput{sls/cbv-sos-eval.sls}
-\caption{Small-step evaluation, and one corresponding abstract machine.}
-\label{fig:cbv-sos}
-\end{figure}
 
 \fvset{fontsize=\small}
 

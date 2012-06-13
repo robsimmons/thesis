@@ -2,6 +2,14 @@ nat: type.
 z: nat.
 s: nat -> nat.
 
+bit: type.
+b0: bit.
+b1: bit.
+
+bin: type.
+e: bin.
+d: bin -> bit -> bin.
+
 
 mutable_loc: type.
 bind_loc: type.
@@ -48,3 +56,10 @@ bind1': exp -> frame.
 casez: exp -> frame.
 cases: (exp -> exp) -> frame.
 case1: exp -> (exp -> exp) -> frame.
+inc0: frame.
+p00: frame.
+p01: frame.
+p11: frame.
+p11: frame.
+ap1: exp -> frame.
+ap2: exp -> frame.
