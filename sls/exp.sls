@@ -33,7 +33,10 @@ fst: exp -> exp.
 snd: exp -> exp.
 prev: exp -> exp.
 next: exp -> exp.
-lazylam: exp -> exp.
+lazylam: (exp -> exp) -> exp.
+envlam: (exp -> exp) -> exp.
+fail: exp.
+catch: exp -> exp -> exp.
 
 ref1: frame.
 get1: frame.

@@ -1,0 +1,7 @@
+ev/envlam:  eval (envlam \x. E x) (envlam \x. E x).
+
+ev/appenv1: retn (evlam \x. E x) * cont (app1 E2)
+             >-> {Exists x. eval E2 * cont (app2' x (E x))}.
+
+ev/appenv2: retn V2 * cont (app2' X E)
+             >-> {eval E * bind' x V}.
