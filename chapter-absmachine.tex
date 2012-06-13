@@ -2060,7 +2060,9 @@ Section~\ref{sec:modular-parallelism}.
 
 This section will present extensions to the sequential, first-order
 abstract machine for parallel evaluation presented in
-Figure~\ref{fig:cbv-ev-ssos-fun}.
+Figure~\ref{fig:cbv-ev-ssos-fun}. Most of the semantics we consider in
+this section were first introduced in by Pfenning and I in
+\cite{pfenning09substructural}.
 
 \begin{figure}[t]
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -2150,27 +2152,48 @@ means our specification of Mini-ML with mutable references {\it cannot}
 be further extended to include the tests for reference equality that 
 languages like Standard ML or Ocaml have. 
 
+The use of existential quantification suggests the desirability of a
+genuine logical facility for creating true names that can be compared
+for inequality, but existential quantification doesn't fully give us
+that facility. Instead, these existentially quantified locations, as
+variables of a type with no constructors, are variables that stand in
+for the ``true'' locations, the ones that can be compared for
+inequality and that \sls~is unable to represent.  If we wanted to
+represent Standard ML's pointer inequality in \sls, we would then have
+to do symbol generation manually, perhaps by tagging each memory cell
+with a unique natural number, as natural numbers certainly can be
+compared for inequality.
 
-The use of existential quantification 
-
-The context invariant we described above 
-\[
-\forall l_1.\,\forall v_1.\,\forall l_2.\,\forall v_2.\,
-  {\sf cell}\,l_1\,v_1 \fuse {\sf cell}\,l_2\,v_2 
-  \righti \{ l_1 \doteq l_2 \fuse 
-             {\sf cell}\,l_1\,v_1 \fuse {\sf cell}\,l_2\,v_2 \}
-\]
-
-No check for pointer inequality! This is a fundamental restriction of
-the fact that we're using existential quantification rather than some
-form of nominal quantification. (Hack due to Favonia and Bob, personal
-communication, but dates back earlier - was it one of Karl's papers?
-Cheney cites it in nominal abstraction.)
+I believe that a substructural treatment of nominal quantification
+could be incorporated into \sls~and would allow for locations to be
+handled in a more satisfying way along the lines of proposals by
+Cheney and Harper \cite{cheney12dependent,harper12practical}. This
+extension to the \sls~framework is beyond the scope of this thesis,
+however. Luckily, aside from being unable to elegantly represent tests
+for pointer inequality or the entirety of Harper's Modernized Algol
+\cite[Chapter 35]{harper12practical}, we will not miss name generation
+facilities in the context of this thesis. One of the most important
+use cases of name generation and nominal abstraction is in reasoning
+{\it about} logical specifications within a uniform logic
+\cite{gacek11nominal}, and this thesis does not consider a unform {\it
+  meta}logic for \sls~specifiations.
 
 \subsection{Call-by-need evaluation}
 \label{sec:call-by-need}
 
-\subsubsection{Recursive suspensions}
+Ambient state is an obvious use of ambient state; another use is to
+represent {\it call-by-need} evaluation. The basic key idea in
+call-by-need evaluation is that an expression is not evaluated
+eagerly; rather, instead, it is stored until the value of that
+expression is suspended. Once a value of a by-need suspension is
+needed, it is computed and the value of that computation is memoized;
+therefore, a suspended expression will be computed at most once.
+
+I give two presentations of by-need evaluation, which correspond to
+the two versions of lazy evaluation discussed by Harper in
+\cite[Chapter 37]{harper12practical}.
+
+
 
 \begin{figure}[t]
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -2179,6 +2202,38 @@ Cheney cites it in nominal abstraction.)
 \label{fig:ssos-cbneed}
 \end{figure}
 
+\subsubsection{Recursive suspensions}
+
+
+Recursive suspensions (Figure ~\ref{fig:ssos-cbneed}) replace the
+fixed-point operator ${\sf fix}\,x.e$ with a thunked expression
+$\interp{{\sf thunk}\,x.e} = {\sf thunk}\,(\lambda
+x.\,\interp{e})$. Whereas the fixed-point operator returns a value (or
+fails to terminate), thunked expressions always immediately return a
+value ${\sf issusp}\,l$, where $l$ is a location of type ${\sf
+  bind\_loc}$. This location is initially associated with a linear
+atomic proposition ${\sf susp}\,l\,(\lambda x.\interp{e})$ (rule ${\sf
+  ev/thunk}$).
+
+When we apply the ${\sf force}$ operator to an expression that reutrns
+${\sf issusp}\,l$ for the first time, then the the location $l$ stops
+being associated with an linear atomic proposition of the form ${\sf
+  susp}\,l\,(\lambda x.\interp{e})$ and becomes associated with a
+linear atomic proposition of the form ${\sf blackhole}\,l$ (rule ${\sf
+  ev/force1a}$). This ${\sf blackhole}\,l$ proposition represents that
+an expression that needs to directly reference its own value in the
+process of computing to a value will never evaluate to a value; in
+this example, such a value will end up stuck, but a rule with the
+premise ${\sf retn}\,({\sf issusp}\,l) \fuse {\sf cont}\,{\sf force1}
+\fuse {\sf blackhole}\,l$ could instead be used to loop endlessly 
+or signal finite failure. 
+
+Once a suspended expression has been fully evaluated (rule ${\sf ev/force2b}$),
+the black hole is removed and the location $l$ is permanently assocaited
+with the value $v$; future attempts to force the same suspended
+expression will trigger encounter rule ${\sf ev/force1b}$ instead of 
+${\sf ev/force1a}$ and will immediately return the memoized value.
+
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-cbneed-refun.sls}
@@ -2186,9 +2241,52 @@ Cheney cites it in nominal abstraction.)
 \label{fig:ssos-cbneed-refun}
 \end{figure}
 
+The last four rules in Figure~\ref{fig:ssos-cbneed} (and the one
+commented-out pseudo-rule) are all part of one multi-stage protocol.
+It may be enlightening to consider the {\it re}functionalization of
+Figure~\ref{fig:ssos-cbneed} presented in
+Figure~\ref{fig:ssos-cbneed-refun}. This rule has a conjunctive
+continuation, with one conjunct for two of the three atomic propositions a
+${\sf bind\_loc}$ can be associated with: the linear proposition
+${\sf susp}\,l\,(\lambda x.e)$, the linear proposition 
+${\sf blackhole}\,l$ (which cannot be handled by the continuation and 
+so can result in a stuck state), and the persistent proposition
+${\sf bind}\,l\,v$. 
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/ssos-by-need.sls}
+\caption{SSOS semantics of lazy call-by-need functions.}
+\label{fig:ssos-by-need}
+\end{figure}
+
+
 \subsubsection{Lazy evaluation}
 
+An alternative to explicit suspensions that must be forced is a
+semantics of lazy evaluation, which better matches the semantics of
+popular call-by-need languages like Haskell. For this semantics, we
+will not create a new abstract location type
+like ${\sf mutable\_loc}$ or ${\sf bind\_loc}$; instead, we will 
+associate . 
 
+We can treat lazy call-by-need functions $({\sf lazylam}\,\lambda
+x.e)$ as an extension to the language that already includes
+call-by-value functions $({\sf lam}\,\lambda x.e)$. Lazy functions
+are values (rule ${\sf ev/lazylam}$), but when a lazy function
+is returned to a frame $\interp{\Box\,e_2} = {\sf app1}\,\interp{e_2}$, 
+we do not evaluate $e_2$ to a value immediately. Instead, we create
+a free variable $x$ of type ${\sf exp}$ and substitute that into 
+the lazy function. 
+
+This effectively adds free variables to the language of expressions,
+though not to the language of values, so we must have some way of
+evaluating free variables. This is handled by the three rules ${\sf
+  ev/susp'}$, ${\sf ev/susp1'}$, and ${\sf ev/bind'}$ the same way it
+was handled before when we dealt with recursive suspensions: each free
+expression variable $x$ is either associated with a unique linear
+atomic proposition ${\sf susp'}\,x\,e_2$, a black hole
+${\sf blackhole'}\,x$, or a persistent binding ${\sf bind'}\,x\,v$. 
 
 \subsection{Recoverable failure}
 \label{sec:failure}

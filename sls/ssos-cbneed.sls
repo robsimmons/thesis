@@ -13,10 +13,11 @@ ev/force:   eval (force E)
 ev/force1a: retn (issusp L) * cont force1 * susp L (\x. E' x) 
              >-> {eval (E' (issusp L)) * cont (bind1 L) * blackhole L}.
 
+ev/force2a: retn V * cont (bind1 L) * blackhole L
+             >-> {retn V * bind L V}.
+
 #| STUCK -  retn (issusp L) * cont force1 * blackhole L >-> ??? |#
 
 ev/force1b: retn (issusp L) * cont force1 * bind L V
              >-> {retn V}.
 
-ev/force2b: retn V * cont (bind1 L) * blackhole L
-             >-> {retn V * bind L V}.

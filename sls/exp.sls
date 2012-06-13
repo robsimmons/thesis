@@ -33,7 +33,7 @@ fst: exp -> exp.
 snd: exp -> exp.
 prev: exp -> exp.
 next: exp -> exp.
-
+lazylam: exp -> exp.
 
 ref1: frame.
 get1: frame.
@@ -41,6 +41,7 @@ set1: exp -> frame.
 set2: mutable_loc -> frame.
 force1: frame.
 bind1: bind_loc -> frame.
+bind1': exp -> frame.
 casez: exp -> frame.
 cases: (exp -> exp) -> frame.
 case1: exp -> (exp -> exp) -> frame.

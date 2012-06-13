@@ -163,15 +163,16 @@ defined by two rules:
  [v_2/x]e \Downarrow v \mathstrut}
 \]
 This inductive definition assigns meaning to all the terminating
-expressions in the lambda calculus. Natural semantics are (obviously)
-a semantics, but they are not an {\it operational} semantics, except a
-loose sense. However, the specification above can be {\it moded} in
-the sense of Section~\ref{sec:framework-modes}, so we can impose an
-operational intuition onto the definition of $e \Downarrow v$: $e$ is
-an input and $v$ is an output. The order of evaluation is not fully
-specified by this intuition, however: in rule ${\sf ev/app}$, for
-instance, we have no information as to whether $e_1$ or $e_2$ should
-be evaluated in some particular order or in parallel.
+expressions in the lambda calculus. Natural semantics specifications
+are (obviously) semantics, but they are not, in general, operational
+enough for our purposes. Because the definition of $e \Downarrow v$
+above can be {\it moded} in the sense of
+Section~\ref{sec:framework-modes}, it does admit an operational
+interpretation that sees $e$ is an input and $v$ is an output. The
+order of evaluation is not fully specified by this reading, however:
+in rule ${\sf ev/app}$ we have no information as to
+whether $e_1$ or $e_2$ should be evaluated in some particular order or
+in parallel.
 
 We transform natural semantics into ordered abstract machines by a
 transformation called {\it operationalization} that fixes the
@@ -335,8 +336,12 @@ that Twelf performs with a special purpose partiality directive,
 Murphy was therefore able to check that moded proof search would never
 fail and never backtrack, though it might diverge. This check amounted
 to a proof of safety (progress and preservation) for his natural
-semantics. I believe that his mechanized proof is the only existing
-non-classical proof of safety for a big-step operational semantics.
+semantics. I believe that every other existing proof of
+safety\footnote{Progress in particular is the theorem of concern:
+  proving preservation for a big-step operational semantics is
+  straightforward.} for a big-step operational semantics is either
+classical (as Leroy and Grall's technique was) or else depends on a
+separate proof of equivalence with a small-step operational semantics.
 
 Murphy's proof only works because his formulation of Lambda 5 was {\it
   intrinsically typed}, meaning that, using the facilities provided by
@@ -349,12 +354,13 @@ then progress and preservation apply only to well-typed terms and not
 to arbitrary terms. In this case, Murphy's partiality checks no longer
 hold, so we cannot use his methodology to reason about safety.
 
-The operationalization transformation is a way to make the internal
-structure of a deductive computation explicit as a concurrent
-computation. Having made this structure accessible, we can explicitly
-represent complete, unfinished, and stuck (or failing) computations as
-concurrent traces and reason about these traces with a richer set of
-tools than the limited set Murphy successfully utilized.
+The operationalization transformation is a way to automatically derive
+a correct small-step semantics from the big-step semantics by making
+the internal structure of a deductive computation explicit as a
+concurrent computation. Having made this structure accessible, we
+can explicitly represent complete, unfinished, and stuck (or failing)
+computations as concurrent traces and reason about these traces with a
+richer set of tools than the limited set Murphy successfully utilized.
 
 \subsection*{A coinductive interpretation}
 
