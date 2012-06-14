@@ -1,35 +1,35 @@
 value: type.
 value/lam: value (lam \x. E x).
 
-eval: exp -> prop ord.
-retn: exp -> prop ord.
+decomp: exp -> prop ord.
+plug: exp -> prop ord.
 
 step/app1:
-eval (app E1 E2)
- >-> {eval E1 * cont (ap1 E2)}.
+decomp (app E1 E2)
+ >-> {decomp E1 * cont (ap1 E2)}.
 
-step/app11:
-retn E1' * cont (app1 E2)
- >-> {retn (app E1' E2)}.
+step/app1/1:
+plug E1' * cont (app1 E2)
+ >-> {plug (app E1' E2)}.
 
 step/app2:
-eval (app E1 E2) * !value V1
- >-> {eval E2 * cont (ap2 V1)}.
+decomp (app E1 E2) * !value V1
+ >-> {decomp E2 * cont (ap2 V1)}.
 
-step/app21: 
-retn E2' * cont (app2 E2)
- >-> {retn (app E1 E2')}.
+step/app2/1: 
+plug E2' * cont (app2 E2)
+ >-> {plug (app E1 E2')}.
 
 step/appred:
-eval (app (lam \x. E x) V) * 
+decomp (app (lam \x. E x) V) * 
 !value V
- >-> {retn (E V)}.
+ >-> {plug (E V)}.
 
 ev: exp -> exp -> prop.
 
 ev/steps:
 ev E V
- <- (eval E >-> {retn E'})
+ <- (decomp E >-> {plug E'})
  <- ev E' V.
 
 ev/steps:
