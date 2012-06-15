@@ -32,5 +32,5 @@ ev E V
  <- (decomp E >-> {plug E'})
  <- ev E' V.
 
-ev/steps:
+ev/value:
 ev V V <- value V.
