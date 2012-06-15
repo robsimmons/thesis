@@ -775,7 +775,7 @@ $\tfocusl{h}{\Sp'}$, where we get $\Sp'$ from the induction hypothesis
 In part 2, we proceed by case analysis on the proposition $D$ in focus. 
 The only interesting case is where $D = {!}p^-_c \lefti D'$
 \begin{itemize}
-\item If $D = p_d^-$, and $\Sp = \tnil$ and $\tnil$ gives the desired result.
+\item If $D = p_d^-$, then $\Sp = \tnil$ and $\tnil$ gives the desired result.
 
 \item If $D = \forall x{:}\tau.\,D'$ or $D = p^+_{\sf
     pers} \lefti D'$, then $\Sp = (\tforalll{t}{\Sp'})$ 
@@ -784,9 +784,9 @@ The only interesting case is where $D = {!}p^-_c \lefti D'$
   or $(\tappl{z}{\Sp''})$ (respectively) where we get $\Sp''$ from the
   induction hypothesis (part 2) on $\Sp'$. 
 
-\item If $D = {!}p^-_c \lefti D'$ and $p^-_c = {\sf a}\,t_1\,t_2$, then 
+\item If $D = {!}p^-_c \lefti D'$ and $p^-_c = {\sf ac}\,t_1\,t_2$, then 
   $\Sp = (\tappl{\tbangr{\tetan{N}}}{\Sp'})$
-  and $\opsubst{D} = {!}({\sf eval}\,t_1 \lefti \{ {\sf retn}\,t_2 \}) \lefti \opsubst{D'}$.
+  and $\opsubst{D} = {!}({\sf eval\_a}\,t_1 \lefti \{ {\sf retn\_a}\,t_2 \}) \lefti \opsubst{D'}$.
 
   \begin{tabbing}
   $\slst{\Sigma}{\Psi}{\Gamma}{N}{\susp{p^-_c}}$
@@ -795,9 +795,9 @@ The only interesting case is where $D = {!}p^-_c \lefti D'$
   $\slst{\Sigma}{\Psi}{\Gamma, [D]}{\Sp'}{\susp{p^-_d}}$
   \` (given)
   \\
-  $T :: (\Psi; \opsubst{\Gamma}, x{:}{\sf eval_a}\,t_1)
-    \leadsto^*_{\transop{E}} (\Psi; \opsubst{\Gamma}, y{:}{\sf eval_a}\,t_2)$
-  \` (ind. hyp. (part 2) on $N$)
+  $T :: (\Psi; \opsubst{\Gamma}, x{:}{\sf eval\_a}\,t_1)
+    \leadsto^*_{\transop{E}} (\Psi; \opsubst{\Gamma}, y{:}{\sf retn\_a}\,t_2)$
+  \` (ind. hyp. (part 4) on $N$)
   \\
   $\slst{\transop{\Sigma}}{\Psi}{\Gamma, [\opsubst{D'}]}{\Sp''}{\susp{p_d^-}}$
   \` (ind. hyp. (part 2) on $\Sp'$)
@@ -819,19 +819,24 @@ The only interesting case is where $D = {!}p^-_c \lefti D'$
   hypothesis (part 2) on $\Sp'$.
 \end{itemize}
 
-The cases of part 3 follow the same pattern as the ones from part 2, but
-without the interesting case (which is excluded from the refinement $G$);
-the result follows by the induction hypothesis (part 3 or part 1). 
+The cases of part 3 are straightforward invocations of the induction
+hypothesis (part 1 or part 3). For instance, if $G = {!}D \lefti G'$
+and then the we have a derivation of the form $\tlaml{\tbangl{x}{N}}$
+where $\slst{\Sigma}{\Psi}{\Gamma, x{:}\ispers{D}}{N}{G'}$. By the
+induction hypothesis (part 3) we have
+$\slst{\transop{\Sigma}}{\Psi}{\mkconj{\opsubst{\Gamma}}
+ {x{:}\ispers{\opsubst{D}}}}{N'}{\opsubst{G'}}$, and we conclude by
+constructing $\tlaml{\tbangl{x}{N'}}$.
 
 In part 4, we have $\slst{\Sigma}{\Psi}{\Gamma}{\tfocusl{\sf
     c}{\Sp}}{\susp{p^-_d}}$, where ${\sf r}{:}C \in \Sigma$ and the
 proposition $C$ is equivalent to
 $\forall{\overline{x_0}}\ldots\forall{\overline{x_n}}.\, A^+_n \lefti
-\ldots \lefti A^+_1 \lefti {\sf a}\,t_0\,t_{n+1}$ as described in
+\ldots \lefti A^+_1 \lefti {\sf ac}\,t_0\,t_{n+1}$ as described in
 Section~\ref{sec:trans-basic}. This means we can decompose $\Sp$ to
 get $\sigma_i = (\overline{s_0}/\overline{x_0},\ldots,
 \overline{s_i}/\overline{x_i})$ (for some terms $\overline{s_0} \ldots
-\overline{s_i}$ that have the correct type in $\Psi$) and a value
+\overline{s_i}$ that correspond to the correct variables) and a value
 $\slst{\Sigma}{\Psi}{\Gamma}{V_i}{[\sigma_i{A^+_i}]}$ for each $0 \leq
 i \leq n$. We also have $t = \sigma_0{t_0}$ and $s = \sigma_n{t_{n+1}}$.
 
@@ -839,51 +844,53 @@ Because
 ${\sf r}{:}\forall\overline{x_0}.\,{\sf eval\_a}\,t_0 \lefti \opbasic{A_1, \ldots, A_n}{t_{n+1}}{{\sf id}} \in \transop{\Sigma}$, by left-focusing
 on that constant
 it suffices to show that there is a $\Sp'$ such that 
-$\slst{\transop\Sigma}{\Psi}{\Gamma,[
+$\slst{\transop\Sigma}{\Psi}{\opsubst{\Gamma},[
 \opbasic{A_1^+, \ldots, A_n^+}{t_{n+1}}{\sigma_0}
 ]}{\Sp'}{\susp{\{C^+\}}}$ and a trace of the form
 $T :: (\Psi; \tackon{\opsubst{\Theta}}{C^+}) \leadsto^*_{\transop{\Sigma}}
- (\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,})$. We will prove this
+ (\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,(\sigma_nt_{n+1})})$. 
+We will prove this
 by induction on the length of the trace; the general statement is that
 there is a $\Sp'$ such that 
 $\slst{\transop\Sigma}{\Psi}{\Gamma,[
 \opbasic{A_i^+, \ldots, A_n^+}{t_{n+1}}{\sigma_{i-1}}
 ]}{\Sp'}{\susp{\{C^+\}}}$ and a trace of the form
 $T :: (\Psi; \tackon{\opsubst{\Theta}}{C^+}) \leadsto^*_{\transop{\Sigma}}
- (\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,s})$. We proceed
+ (\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,(\sigma_nt_{n+1})})$. We proceed
 by case analysis on the definition of the operationalization transformation:
 \begin{itemize}
 \item $\opbasic{}{t_{n+1}}{\sigma_n} = \{ {\sf retn\_a}\,(\sigma_{n}{t_{n+1}}) \}$
 
   \bigskip
-  This is a base case: $\Sp' = \tnil$ and because $\sigma_n{t_{n+1}} = s$, 
+  This is a base case: 
+  let $\Sp' = \tnil$. Because 
   $(\Psi; \tackon{\opsubst{\Theta}}{{\sf retn\_a}\,(\sigma_{n}{t_{n+1}})})$ decomposes
   to $(\Psi; 
-  \tackon{\opsubst{\Theta}}{y{:}{\susp{{\sf retn\_a}\,(\sigma_{n}{t_{n+1}})}}})$
-  in an inversion phase.
+  \tackon{\opsubst{\Theta}}{y{:}{\susp{{\sf retn\_a}\,(\sigma_{n}{t_{n+1}})}}})$,
+  we are done.
   \bigskip
 
-\item $\opbasic{{!}{\sf a}\,t^{\it in}_n\,t_{n+1}}{t_{n+1}}{\sigma_{n-1}} 
+\item $\opbasic{{!}{\sf ac}\,t^{\it in}_n\,t_{n+1}}{t_{n+1}}{\sigma_{n-1}} 
   = \{{\sf eval\_a}\,(\sigma_{n-1}{t^{\it in}_n})\}$
 
   \bigskip
   We are given a value 
   $\slst{\Sigma}{\Psi}{\Gamma}{\tbangr{N}}
-   {[{\bang}{\sf a}\,\sigma_n{t^{\it in}_n}\,\sigma_n{t_{n+1}}]}$;
+   {[{\bang}{\sf ac}\,\sigma_n{t^{\it in}_n}\,\sigma_n{t_{n+1}}]}$;
   observe that $\sigma_{n-1}{t_n^{\it in}} = \sigma_n{t_n^{\it in}}$
 
   \smallskip
-  This is also a base case of the inner induction: $\Sp' = \tnil$ and
+  This is also a base case: let $\Sp' = \tnil$. The process state
   $(\Psi; 
   \tackon{\opsubst{\Theta}}
   {{\sf eval\_a}\,(\sigma_{n}{t^{\it in}_n})})$
   decomposes to 
   $(\Psi; 
   \tackon{\opsubst{\Theta}}
-  {x_{n}{:}{\susp{{\sf eval\_a}\,(\sigma_{n}{t^{\it in}_n})}}})$.
-  We must demonstrate a trace the rest of the way to
-  $(\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,s})$. Because 
-  $s = \sigma_n{t_{n+1}}$, this is established by the 
+  {x_{n}{:}{\susp{{\sf eval\_a}\,(\sigma_{n}{t^{\it in}_n})}}})$, so we must
+  demonstrate a trace the rest of the way to
+  $(\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,s})$. 
+  This follows from the
   outer induction hypothesis (part 4) on $N$. 
   \bigskip
 
@@ -901,7 +908,7 @@ by case analysis on the definition of the operationalization transformation:
   \` (by inner ind. hyp.)
   \\
   $T :: (\Psi; \tackon{\opsubst{\Theta}}{C^+}) \leadsto^*_{\transop{\Sigma}}
-   (\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,s})$
+   (\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,(\sigma_nt_{n+1})})$
   \` (by inner ind. hyp.)
   \\
   $\slst{\transop{\Sigma}}{\Psi}
@@ -946,7 +953,7 @@ by case analysis on the definition of the operationalization transformation:
        \tackonstop)
   \\
   & \quad \leadsto^*_{\transop{\Sigma}} 
-     (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,s}})
+     (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,(\sigma_nt_{n+1})}})
 \end{align*}
 
   \begin{tabbing}
@@ -968,8 +975,8 @@ by case analysis on the definition of the operationalization transformation:
        \tackonstop)$\\
   $~ \qquad \leadsto^*_{\transop{\Sigma}} 
         (\Psi$\=$, \opsubst{\Theta} \tackonstart
-        y_i{:}\susp{{\sf retn\_bi}\,({\sigma_{j}}t^{\it in}_i)}, \ldots,
-    y_j{:}\susp{{\sf eval\_bj}\,({\sigma_{j}}t^{\it in}_j)},$\\
+        y_i{:}\susp{{\sf retn\_bi}\,({\sigma_{j}}t^{\it out}_i)}, \ldots,
+    y_j{:}\susp{{\sf retn\_bj}\,({\sigma_{j}}t^{\it out}_j)},$\\
   \>$~ \qquad y_{ij}{:}(\forall\overline{x_i}\ldots\forall\overline{x_j}.\, 
      {\sf retn\_bi}\,(\sigma_{i-1}{t^{\it out}_i})
      \fuse \ldots \fuse 
@@ -993,9 +1000,9 @@ by case analysis on the definition of the operationalization transformation:
   is then a trace of the correct type.
   \bigskip
 
-\item $\opbasic{{!}G,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma} = \forall
-  \overline{x_i}.\, {!}\sigma\opsubst{G} \lefti
-  \opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma}$
+\item $\opbasic{{!}G,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}} = \forall
+  \overline{x_i}.\, {!}\sigma_{i-1}\opsubst{G} \lefti
+  \opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}$
 
   \begin{tabbing}
   $\slst{\Sigma}{\Psi}{\Gamma}{\tbangr{N}}{[{!}\sigma_i{G}]}$
@@ -1058,13 +1065,12 @@ $(\tstep{\mkpat{A^+}}{\sf run\_cont}{(\tappl{(\tfuser{V}{y})}{\tnil})})$.
 More generally, if we are allowed to extend the signature and $A^-$
 falls into the very specific form we have
 specified,\footnote{Obviously, the restriction to propositions $A^-$
-  of the form $\forall \overline{x}.\,p^+_\mtrue \lefti \{ A^+ \}$ is
+  of the form $\forall \overline{x}.\,A^+ \lefti \{ A^+ \}$ is
   overly specific and designed to apply specifically to the output of
   operationalization, but we will not consider a generalization here.
   Conceptually, it is not complicated to consider a similar operation
   on other propositions, but it is difficult to elegantly describe the
-  more general transformation due our use of ordered logic, and we do
-  not currently need the more general transformation.}  we can create
+  more general transformation due our use of ordered logic.}  we can create
 a new ordered atomic proposition to do a negative proposition's
 job. As long as $\Delta = \tackon{\Theta}{x{:}\susp{\sf cont}}$ and
 ${\sf cont}$ does not appear in $\Theta$, then $[{\downarrow}A^- /{\sf
@@ -1081,8 +1087,7 @@ if and only if $\Delta \leadsto_{\Sigma'} \Delta'$. \footnote{Recall
   $(\tackon{\Theta}{z'{:}\istrue{A^-}})$.} 
 
 We need not restrict ${\sf cont}$ to just a single appearance
-suspended in the process state, however. Multiple instances of ${\sf
-  cont}$ can appear in the process state without a problem.  It is
+suspended in the process state.  It is
 similarly unproblematic for ${\sf cont}$ to appear in the monadic head
 of some other rule in the process state, as the appearance of an
 ordered atomic proposition in a monadic head will not effect the
@@ -1113,7 +1118,7 @@ a fully first-order signature:}
 \end{align*}
 This propositional transformation is similar to the one proposed by
 Miller in~\cite{miller02higherorder}, where the new propositions were
-introduced to hide the internal states of processes.
+introduced and locally quantified to hide the internal states of processes.
 
 We can go further and allow $A^-$ to contain free variables if
 $A^- = [t_1/y_1]\ldots[t_m/x_m]B^-$ where $B^- = \forall
@@ -1123,7 +1128,7 @@ can revise the signature as follows:
 \begin{align*}
 \Sigma'' = ~ & \Sigma,
 \\    ~~ & {\sf cont} : 
-       \Pi x_y{:}\tau_1\ldots \Pi y_m{:}\tau_m.\, {\sf prop\,ord},
+       \Pi y_1{:}\tau_1\ldots \Pi y_m{:}\tau_m.\, {\sf prop\,ord},
 \\    ~~ & {\sf run\_cont} : \forall \overline{x}.\,\forall \overline{y}.\,
        p^+_\mtrue \fuse {\sf cont}\,\overline{y} \lefti \{ B^+ \}
 \end{align*}
@@ -1131,10 +1136,10 @@ With this revision, we maintain that
 %
 $[{\downarrow}B^-/{\sf cont}\,\overline{x}]\Delta \leadsto_{\Sigma}
 [{\downarrow}B^-/{\sf cont}\,\overline{x}]\Delta'$ if and only if
-$\Delta \leadsto_{\Sigma''} \Delta'$ (as long as propositions of the
+$\Delta \leadsto_{\Sigma''} \Delta'$ as long as propositions of the
 form ${\sf cont}\,\overline{t}$ only appear suspended in the process
 state or in the monadic heads of rules that appear in the process
-state).\robnote{The process of proving this is mostly an issue of
+state.\robnote{The process of proving this is mostly an issue of
   stating it precisely, which is a pain. I'd appreciate feedback as to
   whether this seems clear or whether I need to write out the detailed
   proof.}
@@ -1145,13 +1150,10 @@ that, instead of introducing a new ordered atomic proposition ${\sf
 procedure, we introduce a single type $({\sf frame} : {\sf type})$ and a
 single atomic proposition $({\sf cont} : {\sf frame} \rightarrow {\sf
   prop\,ord})$. Then, each iteration of the defunctionalization
-procedure produces a new constant with type $\Pi x_y{:}\tau_1\ldots
+procedure produces a new constant with type $\Pi y_1{:}\tau_1\ldots
 \Pi y_m{:}\tau_m.\, {\sf frame}$ instead of a new atomic proposition
-with kind $\Pi x_y{:}\tau_1\ldots \Pi y_m{:}\tau_m.\, {\sf
-  prop\,ord}$.  Operationally, these two approaches are equivalent,
-though the approach using frames requires us to disallow variables
-that can construct new terms of type ${\sf frame}$ from appearing in
-the variable context $\Psi$.
+with kind $\Pi y_1{:}\tau_1\ldots \Pi y_m{:}\tau_m.\, {\sf
+  prop\,ord}$.  Operationally, these two approaches are equivalent.
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -1161,7 +1163,7 @@ the variable context $\Psi$.
 \label{fig:cbv-ev-ssos-fun}
 \end{figure}
 
-Using defunctionalization procedure outlined above, we obtain the
+Using the defunctionalization procedure outlined above, we obtain the
 first-order specification in Figure~\ref{fig:cbv-ev-ssos-fun} from the
 higher-order specification in Figure~\ref{fig:cbv-ev-ssos-tail}, which
 was in turn derived from the natural semantics for CBV evaluation by
@@ -1229,7 +1231,7 @@ concurrent \sls~specification?
 The answer given in the literature by Cervesato et
 al.~\cite{cervesato02concurrent} and by
 Schack-Nielsen~\cite{schacknielsen07induction} has three steps. The
-first step is to, define an interpretation function from states $s$
+first step is to define an interpretation function from states $s$
 and stacks $k$ to process states $\Delta$, so that, for example, the
 state
 \[
@@ -1242,7 +1244,7 @@ x_n{:}\susp{{\sf cont}\,({\sf app2}\,\lambda x.\interp{e_n})}, ~~
 \ldots, ~~
 x_1{:}\susp{{\sf cont}\,({\sf app1}\,\interp{e_1})}, ~~
 \]
-The second step is to, prove a preservation-like adequacy theorem. Let
+The second step is to prove a preservation-like adequacy theorem. Let
 $\Sigma\ref{fig:cbv-ev-ssos-fun}$ be the signature from
 Figure~\ref{fig:cbv-ev-ssos-fun}: we show that if state $s$ is
 interpreted and $\Delta$ and $\Delta
@@ -1286,8 +1288,9 @@ steps to the interpretation of state $s'$ if and only if $s \mapsto s'$.
 
 Our first goal is to describe a signature $\Sigma\sf gen$ with the
 property that if $x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen}
-\Delta$ and ${\sf gen} \notin \Delta$ then $\Delta$. A well-formed
-process state representing a state $k \rhd e$ has the form
+\Delta$ and ${\sf gen} \notin \Delta$ then $\Delta$ encodes a state
+$s$. A well-formed process state that represents an abstract machine
+state $((\ldots({\sf halt}; f_1); \ldots); f_n) \rhd e$ has the form
 \[
 y{:}\susp{{\sf eval}\,\interp{e}}, ~~
 x_n{:}\susp{{\sf cont}\,\interp{f_n}}, ~~
@@ -1296,13 +1299,14 @@ x_1{:}\susp{{\sf cont}\,\interp{f_1}}
 \]
 where $\interp{\Box\,e_2} = {\sf app1}\,\interp{e_2}$ and
 $\interp{(\lambda x.e)\,\Box} = {\sf app2}\,(\lambda.\interp{e})$. 
-A well-formed process state representing a state $k \lhd e$ has 
+A well-formed process state representing a state $k \lhd v$ has 
 the same form, but with a suspended ${\sf retn}\,\interp{v}$ instead
 of ${\sf eval}\,\interp{e}$. 
 
 The simplest \sls~signature that encodes this structure essentially
-has the structure of a Chomsky normal form describing well-formed
-contexts, with two unary productions and one unary production.
+has the structure of a CBF grammar for describing well-formed
+contexts, with two unary productions ${\sf gen/eval}$ and ${\sf gen/retn}$
+and one binary production ${\sf gen/cont}$.
 
 \smallskip
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -1314,14 +1318,15 @@ signature $\Sigma\sf gen$ includes all the type, proposition, and
 constant declarations from Figure~\ref{fig:cbv-ev-ssos-fun}, but none
 of the rules.
 
-Note that this specification most definitely is {\it not} well-moded.
+Note that this specification is most definitely {\it not} well-moded.
 {\it Generative signatures} such as this one are not generally moded,
 and we don't think about traces under these signatures as 
 necessarily being concurrent computations in the same way we think
-about ordered abstract machines being concurrent computations. That is,
-rather than thinking of traces in these signatures being produced by
-different computations, such as the computational content of the adequacy
-theorem:
+about ordered abstract machines as encoding concurrent computations. 
+Rather than traces in these signatures being produced by
+concurrent computation, they are produced 
+and manipulated by the constructive content of
+theorems like the ones in this section.
 
 \bigskip
 \begin{theorem}[Adequacy of states]~
@@ -1338,20 +1343,19 @@ theorem:
 \end{theorem}
 
 \begin{proof}
-We will give only the two translation from the ``on paper''
+We will give only the translation from the ``on paper''
 semantic artifacts (states $s$ and stacks $k$) to traces:
 \begin{itemize}
-\item $\interp{s},$ which outputs
+\item $\interp{s},$ which outputs 
 a trace $T$ with type $x{:}\susp{\sf gen} \leadsto_{\Sigma\sf gen} \Delta$
 where ${\sf gen} \not\in \Delta$, and 
-\item $\interp{k}$, which outputs
-both a trace $T$ with type 
-$x{:}\susp{\sf gen}
-  \leadsto_{\Sigma\sf gen} \tackon{\Theta}{x'{:}\susp{\sf gen}}$ where
-${\sf gen} \not\in \Delta$ and the variable name $x'$ of the resulting
-${\sf gen}$ proposition (which may be the same as $x$). Rather than 
-representing this output explicitly, we just assume it is always
-named $x'$ in the definition below.  
+\item $\interp{k}$, which outputs two things: first, a trace $T$ with
+  type $x{:}\susp{\sf gen} \leadsto_{\Sigma\sf gen}
+  \tackon{\Theta}{x'{:}\susp{\sf gen}}$ where ${\sf gen} \not\in
+  \Delta$; and second, the variable name $x'$ of the resulting ${\sf
+    gen}$ proposition (which may be the same as $x$). Rather than
+  representing this output explicitly, we just assume it is always
+  named $x'$ in the definition below.
 \end{itemize}
 Note that both functions builds contexts only indirectly by building 
 traces; similarly, the inverses of these functions are defined by induction
@@ -1406,8 +1410,8 @@ ${\sf gen} \notin \Delta$ to states $s$ and a function
 $\interp{T}^{-1}_k = k$ from traces $T$ with type $x{:}\susp{\sf gen}
 \leadsto_{\Sigma\sf gen} \tackon{\Theta}{x'{:}{\sf gen}}$ (where $x$
 and $x'$ may be the same) to stacks $k$ and then showing that
-the functions compose to the identity in both directions. In this case,
-that proof is tedious but straightforward.
+the functions compose to the identity in both directions. 
+That proof is tedious but straightforward.
 \end{proof}
 
 Note that two traces $T :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf
@@ -1417,8 +1421,8 @@ $\Delta'$ are distinct. Therefore, we can equivalently see adequacy as
 a bijection between traces and abstract machine states $s$ or as a
 bijection between contexts and abstract machine states $s$. In a
 situation where this 1-to-1 correspondence between states and traces
-did not exist (because two traces generated the same context), it is
-not entirely clear whether it would be preferable to define adequacy in
+did not exist (because two traces generate the same context), it is
+not clear whether it would be preferable to define adequacy in
 terms of contexts or in terms of traces.
 
 \subsection{Preservation}
@@ -1430,7 +1434,7 @@ system from the beginning of the chapter, we must show that our
 criteria for context well-formedness is actually preserved by the
 concurrent computations in Figure~\ref{fig:cbv-ev-ssos-fun}. This is
 part of the adequacy argument, but because we state it in terms of the
-generative signature $\Sigma\sf gen$, it is also a reasonable
+generative signature $\Sigma\sf gen$, it is also a 
 standalone theorem entirely about of \sls~specifications. We will
 return to theorems of this form in Part III of this thesis.
 
