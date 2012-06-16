@@ -1083,7 +1083,8 @@ $\transop{\Sigma}$ has the form ${\sf r} : \forall \overline{x}.\,
 \begin{theorem}[Rearrangement]\label{thm:rearrangement}~
 If $\Delta$ contains only atomic propositions, persistent propositions
 of the form $D$, and ordered 
-propositions of the form $R$,
+propositions of the form $R$, and if $\Gamma$ matches
+$z{:}\susp{{\sf retn\_z}\,t_z}$, 
 then 
 \begin{enumerate}
 \item If $\Delta$ matches 
@@ -1096,14 +1097,14 @@ $\frameoff{\Theta}
       {x_n{:}\susp{{\sf retn\_bn}\,t_n}}
       {y{:}{(\forall \overline{x}.\,{\sf retn\_b1},s_1 \fuse \ldots \fuse {\sf retn\_bn}\,s_n \lefti S)}}}}}$ and 
 $T :: (\Psi; \Delta) \leadsto^*_{\transop{\Sigma}}
-(\Psi; z{:}\susp{{\sf retn\_z}\,t_z})$, then 
+(\Psi; \Gamma)$, then 
 $T \equiv \tstep{p}{y}{(\tforalll{\overline{u}}{(\tappl{(\tfuser{x_1}{\tfuser{\ldots}{x_n}})}{\Sp})})}; T'$
 where $(\overline{u}/\overline{x})s_i = t_i$ for $1 \leq i \leq n$.
 \item If $\Delta$ matches
 $\frameoff{\Theta}
  {y{:}\susp{{\sf eval\_b}\,t}}$ and 
 $T :: (\Psi; \Delta) \leadsto^*_{\transop{\Sigma}}
-(\Psi; z{:}\susp{{\sf retn\_z}\,t_z})$, 
+(\Psi; \Gamma)$, 
 then $T \equiv \tstep{p}{\sf r}{(\tforalll{\overline{u}}{(\tappl{y}{\Sp})})}; T'$
 where 
 ${\sf r} : \forall \overline{x}.\,{\sf eval\_b}\,s \lefti S 
@@ -1150,12 +1151,22 @@ then $\slss{\Sigma}{\Psi}{\Gamma}{\susp{p^-_d}}$.
 \item If $\slss{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}, [\opsubst{D}]}{\susp{p^-_d}}$, then $\slss{\Sigma}{\Psi}{\Gamma, [D]}{\susp{p^-_d}}$.
 \item If $\slss{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}}{\opsubst{G}}$, then
  $\slss{\Sigma}{\Psi}{\Gamma}{G}$.
-\item If $\Delta$ matches $\frameoff{\opsubst{\Theta}}{\opsubst{\Gamma}}$ and
-$(\Psi; \frameoff{\opsubst{\Theta}}{x{:}\susp{{\sf eval\_a}\,t}}) \leadsto^*_{\transop{\Sigma}} (\Psi; z{:}\susp{{\sf retn\_z}\,t_z})$, then there exists an $s$ such that
+\item If $\Delta$ matches $\frameoff{\opsubst{\Theta}}{\opsubst{\Gamma}}$,
+$\Gamma_z$ matches $z{:}\susp{{\sf retn\_z}\,t_z}$, \\
+and
+$(\Psi; \frameoff{\opsubst{\Theta}}{\mkconj{\Gamma}{x{:}\susp{{\sf eval\_a}\,t}}}) \leadsto^*_{\transop{\Sigma}} (\Psi; \Gamma_z)$, \\
+then there exists an $s$ s.t.
 $\slss{\Sigma}{\Psi}{\Gamma}{\susp{{\sf ac}\,t\,s}}$ and
 $(\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,s}}) 
    \leadsto^*_{\transop{\Sigma}}
- (\Psi; \mkconj{\Gamma}{z{:}{\sf retn\_z}\,t_z})$.
+ (\Psi; \Gamma_z)$.
+\item If $\Delta$ matches $\frameoff{\opsubst{\Theta}}{\opsubst{\Gamma}}$,
+$\Gamma_z$ matches $z{:}\susp{{\sf retn\_z}\,t_z}$, \\
+$\slss{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}, [\opbasic{A_i,\ldots,A_n}{t_{n+1}}{\sigma_i}]}{\susp{\{C^+\}}}{}$, and 
+$(\Psi; \tackon{\opsubst{\Theta}}{C^+})
+         \leadsto^*_{\transop{\Sigma}}
+       (\Psi; \Gamma_z)$, \\
+then there exists a $\sigma$ such that 
 \end{enumerate}
 \end{theorem}
 
@@ -1173,7 +1184,10 @@ the given derivation is
 $\Sp = \tappl{\tbangr{(\tlaml{\tetap{x}{\tlet{T}{y}}})}}{\Sp'}$.
 
 \begin{tabbing}
-$T :: (\Psi; \Gamma, x{:}\susp{{\sf eval\_a}\,t_1}) \leadsto^*_{\transop{\Sigma}} (\Psi; \Gamma, y{:}\susp{{\sf retn\_a}\,t_2})$
+$T :: (\Psi; \Gamma, x{:}\susp{{\sf eval\_a}\,t_1}) \leadsto^*_{\transop{\Sigma}} (\Psi; \Gamma_z)$
+ \` (given)
+\\
+$\Gamma_z$ matches $y{:}\susp{{\sf retn\_a}\,t_2}$ 
  \` (given)
 \\
 $\slst{\transop{\Sigma}}{\Psi}{\Gamma, [\opsubst{D'}]}{\Sp'}{\susp{p^-_d}}$
@@ -1187,7 +1201,7 @@ $\slst{\Sigma}{\Psi}{\Gamma}{N}{\susp{{\sf ac}\,t_1\,s}}$
 \\
 $T' :: (\Psi; \Gamma, y'{:}\susp{{\sf retn\_a}\,s})
          \leadsto^*_{\transop{\Sigma}}
-       (\Psi; \Gamma, y{:}\susp{{\sf retna\_a}\,t_2})$
+       (\Psi; \Gamma_z)$
  \` (ind. hyp. (part 4) on $T$)
 \\
 $T' = \emptytrace$, $y' = y$, and $t_2 = s$
@@ -1197,7 +1211,30 @@ $\slst{\Sigma}{\Psi}{\Gamma, [D]}{\tappl{\tbangr{N}}{\Sp'}}{\susp{p^-_d}}$
  \` (construction)
 \end{tabbing}
 
-To prove Part 3, 
+In part 4, we are given a trace 
+$T :: (\Psi; \frameoff{\opsubst{\Theta}}{x{:}\susp{{\sf eval\_a}\,t}}) 
+       \leadsto^*_{\transop{\Sigma}} 
+      (\Psi; \Gamma_z)$
+and we use Theorem~\ref{thm:rearrangement} to get
+$T \equiv \tstep{p}{{\sf r}}{(\tforalll{\overline{u}}{(\tappl{x}{\Sp})})}; T'$;
+we let $\sigma_0 = (\overline{u}/\overline{x})$. 
+\begin{tabbing}
+${\sf r} : \forall \overline{x_0}.\, {\sf eval\_a}\,t_0 \lefti \llbracket A^+_1,
+  \ldots, A^+_n \rrbracket (t_{n+1}, {\sf id}) \in \transop{\Sigma}$ 
+ \` (given)
+\\
+$t = {\sigma_0}t_0$ 
+ \` (given)
+\\
+$\slst{\transop{\Sigma}}{\Psi}{\Gamma,[\opbasic{A_1^+,\ldots,A_n^+}{t_{n+1}}{\sigma_0}]}{\Sp}{\susp{\{ C^+ \}}}$ 
+ \` (given)
+\\
+$T' :: (\Psi; \tackon{\opsubst{\Theta}}{C^+})
+         \leadsto^*_{\transop{\Sigma}}
+       (\Psi; \Gamma_z)$ 
+ \` (given)
+\\
+\end{tabbing}
 
 \end{proof}
 
