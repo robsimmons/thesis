@@ -757,13 +757,19 @@ S & ::= \forall x{:}\tau.\,S
    \mid p^+_\mpers \lefti S
    \mid {!}A^- \lefti S
    \mid \{ {\sf eval\_b1}\,t_1 \fuse \ldots \fuse {\sf eval\_bn}\,t_n 
-           \fuse R \}
+           \fuse {\downarrow}R \}
+   \mid \{ {\sf eval\_b}\,t \} 
 \end{align*}
+
+\noindent
+Every concurrent rule in a transformed signature
+$\transop{\Sigma}$ has the form ${\sf r} : \forall \overline{x}.\,
+{\sf eval\_b}\,t \lefti S$. 
 
 \bigskip
 \begin{theorem}[Rearrangement]\label{thm:rearrangement}~
-If $\Theta$ contains only atomic propositions, persistent propositions
-of the form $D$ and ordered 
+If $\Delta$ contains only atomic propositions, persistent propositions
+of the form $D$, and ordered 
 propositions of the form $R$,
 then 
 \begin{enumerate}
@@ -775,16 +781,48 @@ $\frameoff{\Theta}
     {\ldots}
     {\matchconj 
       {x_n{:}\susp{{\sf retn\_bn}\,t_n}}
-      {y{:}{(\forall \overline{x}\,{\sf retn\_b1},s_1 \fuse \ldots \fuse {\sf retn\_bn}\,s_n \lefti S)}}}}}$ and $T :: \Delta \leadsto^*_{\transop{\Sigma}}
-{\sf retn\_x}\,t_x$, then $T \equiv \tstep{p}{y}{\Sp}; T'$.
+      {y{:}{(\forall \overline{x}.\,{\sf retn\_b1},s_1 \fuse \ldots \fuse {\sf retn\_bn}\,s_n \lefti S)}}}}}$ and 
+$T :: (\Psi; \Delta) \leadsto^*_{\transop{\Sigma}}
+(\Psi; z{:}\susp{{\sf retn\_z}\,t_z})$, then 
+$T \equiv \tstep{p}{y}{(\tforalll{\overline{u}}{(\tappl{(\tfuser{x_1}{\tfuser{\ldots}{x_n}})}{\Sp})})}; T'$
+where $(\overline{u}/\overline{x})s_i = t_i$ for $1 \leq i \leq n$.
 \item If $\Delta$ matches
 $\frameoff{\Theta}
- {x{:}\susp{{\sf eval\_b}\,t_1}}$ and $T :: \Delta \leadsto^*_{\transop{\Sigma}}
-{\sf retn\_x}\,t_x$, then $T \equiv \tstep{p}{\sf r}{\Sp}; T'$. 
+ {y{:}\susp{{\sf eval\_b}\,t}}$ and 
+$T :: (\Psi; \Delta) \leadsto^*_{\transop{\Sigma}}
+(\Psi; z{:}\susp{{\sf retn\_z}\,t_z})$, 
+then $T \equiv \tstep{p}{\sf r}{(\tforalll{\overline{u}}{(\tappl{y}{\Sp})})}; T'$
+where 
+${\sf r} : \forall \overline{x}.\,{\sf eval\_b}\,s \lefti S 
+\in \transop{\Sigma}$.
 \end{enumerate}
 \end{theorem}
 
 \begin{proof}
+By induction over the structure of traces.
+
+The transitions described {\it must} happen at some point: the
+negative proposition associated with $y$ in part 1 and the suspended
+${\sf eval}$ proposition in part 2 are not in the final state $(\Psi;
+z{:}\susp{{\sf retn\_z}\,t_z})$, so the base cases where $T =
+\emptytrace$ is vacuous. The actual base case is when first step 
+focuses on $y$ (part 1) or consumes $y$ by focusing on some 
+rule in the transformed signature (part 2), in which case the 
+result follows immediately. 
+
+The inductive case is when the first step occurs by focusing on 
+some 
+$y'{:}\istrue{R}$ in $\Delta$ that is distinct from $y$ (part 1)
+or on some
+transformed rule from the signature that does not first 
+consume $x$ (part 2). It is necessary to show that this step will not
+consume $y$ or, in part 1, any $x_i{:}\susp{{\sf retn\_bi}\,t_i}$ (part 1),
+which allows us to invoke the induction hypothesis and permute the
+step we're looking for to the beginning of the subtrace. We then have
+to check that the first step doesn't introduce any variables or resources
+that can be consumed by the step we're looking for (which is now the second
+step); this is immediate from the structure of $R$, $S$, and transformed
+signatures. 
 \end{proof}
 
 \begin{theorem}[Soundness of operationalization]\label{thm:opersound}
