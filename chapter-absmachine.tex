@@ -730,11 +730,12 @@ Correctness is fundamentally the property that
 we have $\slss{\Sigma}{\Psi}{\Gamma}{\susp{p^-_d}}$ if and only if 
 $\slss{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}}{\susp{p^-_d}}$
 and $\slss{\Sigma}{\Psi}{\Gamma}{\susp{{\sf ac}\,t_1\,t_2}}$ if and only if
-$(\Psi; \mkconj{\Gamma}{{\sf eval\_a}\,t_1}) \leadsto^*_{\transop{\Sigma}} (\Psi; \mkconj{\Gamma}{{\sf retn}\,({\sf retn\_a}\,t_2)})$, we label the
-forward direction ``completeness'' and the backward direction ``soundness'' but
-that assignment is (as usuall) somewhat arbitrary. Soundness is a corollary
-of Theorem~\ref{thm:opersound}, and completeness is a corollary of 
-Theorem~\ref{thm:opercomp}. We use Theorem~\ref{thm:operlf} pervasively
+$(\Psi; \mkconj{\Gamma}{{\sf eval\_a}\,t_1}) \leadsto^*_{\transop{\Sigma}} (\Psi; \mkconj{\Gamma}{{\sf retn}\,({\sf retn\_a}\,t_2)})$. We label the
+forward direction ``completeness'' and the backward direction ``soundness''
+but directional assignment is (as usuall) somewhat arbitrary. 
+Completeness is a corollary
+of Theorem~\ref{thm:opercomp}, and soundness is a corollary of 
+Theorem~\ref{thm:opersound}. We use Theorem~\ref{thm:operlf} pervasively
 and usually without mention. 
 
 \bigskip
@@ -748,102 +749,11 @@ Straightforward induction in both directions; the transformation
 leaves the LF-relevant part of the signature unchanged.
 \end{proof}
 
-Soundness under the parallel translation requires that we be able
-to manipulate traces into other (permutively equivalent) traces. 
-\begin{align*}
-R & ::= \forall \overline{x}.\,{\sf retn\_b1}\,t_1 \fuse \ldots \fuse {\sf retn\_bn}\,t_n \lefti S
-\\
-S & ::= \forall x{:}\tau.\,S 
-   \mid p^+_\mpers \lefti S
-   \mid {!}A^- \lefti S
-   \mid \{ {\sf eval\_b1}\,t_1 \fuse \ldots \fuse {\sf eval\_bn}\,t_n 
-           \fuse {\downarrow}R \}
-   \mid \{ {\sf eval\_b}\,t \} 
-\end{align*}
-
-\noindent
-Every concurrent rule in a transformed signature
-$\transop{\Sigma}$ has the form ${\sf r} : \forall \overline{x}.\,
-{\sf eval\_b}\,t \lefti S$. 
-
-\bigskip
-\begin{theorem}[Rearrangement]\label{thm:rearrangement}~
-If $\Delta$ contains only atomic propositions, persistent propositions
-of the form $D$, and ordered 
-propositions of the form $R$,
-then 
-\begin{enumerate}
-\item If $\Delta$ matches 
-$\frameoff{\Theta}
- {\matchconj
-  {x_1{:}\susp{{\sf retn\_b1}\,t_1}}
-  {\matchconj
-    {\ldots}
-    {\matchconj 
-      {x_n{:}\susp{{\sf retn\_bn}\,t_n}}
-      {y{:}{(\forall \overline{x}.\,{\sf retn\_b1},s_1 \fuse \ldots \fuse {\sf retn\_bn}\,s_n \lefti S)}}}}}$ and 
-$T :: (\Psi; \Delta) \leadsto^*_{\transop{\Sigma}}
-(\Psi; z{:}\susp{{\sf retn\_z}\,t_z})$, then 
-$T \equiv \tstep{p}{y}{(\tforalll{\overline{u}}{(\tappl{(\tfuser{x_1}{\tfuser{\ldots}{x_n}})}{\Sp})})}; T'$
-where $(\overline{u}/\overline{x})s_i = t_i$ for $1 \leq i \leq n$.
-\item If $\Delta$ matches
-$\frameoff{\Theta}
- {y{:}\susp{{\sf eval\_b}\,t}}$ and 
-$T :: (\Psi; \Delta) \leadsto^*_{\transop{\Sigma}}
-(\Psi; z{:}\susp{{\sf retn\_z}\,t_z})$, 
-then $T \equiv \tstep{p}{\sf r}{(\tforalll{\overline{u}}{(\tappl{y}{\Sp})})}; T'$
-where 
-${\sf r} : \forall \overline{x}.\,{\sf eval\_b}\,s \lefti S 
-\in \transop{\Sigma}$.
-\end{enumerate}
-\end{theorem}
-
-\begin{proof}
-By induction over the structure of traces.
-
-The transitions described {\it must} happen at some point: the
-negative proposition associated with $y$ in part 1 and the suspended
-${\sf eval}$ proposition in part 2 are not in the final state $(\Psi;
-z{:}\susp{{\sf retn\_z}\,t_z})$, so the base cases where $T =
-\emptytrace$ is vacuous. The actual base case is when first step 
-focuses on $y$ (part 1) or consumes $y$ by focusing on some 
-rule in the transformed signature (part 2), in which case the 
-result follows immediately. 
-
-The inductive case is when the first step occurs by focusing on 
-some 
-$y'{:}\istrue{R}$ in $\Delta$ that is distinct from $y$ (part 1)
-or on some
-transformed rule from the signature that does not first 
-consume $x$ (part 2). It is necessary to show that this step will not
-consume $y$ or, in part 1, any $x_i{:}\susp{{\sf retn\_bi}\,t_i}$ (part 1),
-which allows us to invoke the induction hypothesis and permute the
-step we're looking for to the beginning of the subtrace. We then have
-to check that the first step doesn't introduce any variables or resources
-that can be consumed by the step we're looking for (which is now the second
-step); this is immediate from the structure of $R$, $S$, and transformed
-signatures. 
-\end{proof}
-
-\begin{theorem}[Soundness of operationalization]\label{thm:opersound}
-If all propositions in $\Gamma$ have the form 
-$x{:}D$ or $z{:}\susp{p^+_{\mpers}}$, then
-\begin{enumerate}
-\item If $\slss{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}}{\susp{p^-_d}}$,
-then $\slss{\Sigma}{\Psi}{\Gamma}{\susp{p^-_d}}$.
-\item 
-\item 
-\item 
-\end{enumerate}
-\end{theorem}
-
-\begin{proof}
-XXX Proof
-\end{proof}
+\subsubsection{Completeness}
 
 \begin{theorem}[Completeness of operationalization]\label{thm:opercomp}
 If all propositions in $\Gamma$ have the form 
-$x{:}D$ or $z{:}\susp{p^+_{\mpers}}$, then
+$x{:}\ispers{D}$ or $z{:}\susp{p^+_{\mpers}}$, then
 \begin{enumerate}
 \item  
 If $\slss{\Sigma}{\Psi}{\Gamma}{\susp{p^-_d}}$,
@@ -1140,8 +1050,157 @@ by case analysis on the definition of the operationalization transformation:
 
 \noindent
 This completes the inner induction in the fourth part, and hence
-the proof.
+the completeness proof.
 \end{proof}
+
+\subsubsection{Soundness}
+
+Soundness under the parallel translation requires that we be able
+to manipulate traces into other (permutively equivalent) traces, which
+means we need to be a bit more explicit about the global structure of 
+contexts. To this end, we describe two new refinements of negative
+propositions that capture the structure of transformed concurrent
+rules. 
+\begin{align*}
+R & ::= \forall \overline{x}.\,{\sf retn\_b1}\,t_1 \fuse \ldots \fuse {\sf retn\_bn}\,t_n \lefti S
+\\
+S & ::= \forall x{:}\tau.\,S 
+   \mid p^+_\mpers \lefti S
+   \mid {!}A^- \lefti S
+   \mid \{ {\sf eval\_b1}\,t_1 \fuse \ldots \fuse {\sf eval\_bn}\,t_n 
+           \fuse {\downarrow}R \}
+   \mid \{ {\sf eval\_b}\,t \} 
+\end{align*}
+
+\noindent
+Every concurrent rule in a transformed signature
+$\transop{\Sigma}$ has the form ${\sf r} : \forall \overline{x}.\,
+{\sf eval\_b}\,t \lefti S$. 
+
+
+
+\bigskip
+\begin{theorem}[Rearrangement]\label{thm:rearrangement}~
+If $\Delta$ contains only atomic propositions, persistent propositions
+of the form $D$, and ordered 
+propositions of the form $R$,
+then 
+\begin{enumerate}
+\item If $\Delta$ matches 
+$\frameoff{\Theta}
+ {\matchconj
+  {x_1{:}\susp{{\sf retn\_b1}\,t_1}}
+  {\matchconj
+    {\ldots}
+    {\matchconj 
+      {x_n{:}\susp{{\sf retn\_bn}\,t_n}}
+      {y{:}{(\forall \overline{x}.\,{\sf retn\_b1},s_1 \fuse \ldots \fuse {\sf retn\_bn}\,s_n \lefti S)}}}}}$ and 
+$T :: (\Psi; \Delta) \leadsto^*_{\transop{\Sigma}}
+(\Psi; z{:}\susp{{\sf retn\_z}\,t_z})$, then 
+$T \equiv \tstep{p}{y}{(\tforalll{\overline{u}}{(\tappl{(\tfuser{x_1}{\tfuser{\ldots}{x_n}})}{\Sp})})}; T'$
+where $(\overline{u}/\overline{x})s_i = t_i$ for $1 \leq i \leq n$.
+\item If $\Delta$ matches
+$\frameoff{\Theta}
+ {y{:}\susp{{\sf eval\_b}\,t}}$ and 
+$T :: (\Psi; \Delta) \leadsto^*_{\transop{\Sigma}}
+(\Psi; z{:}\susp{{\sf retn\_z}\,t_z})$, 
+then $T \equiv \tstep{p}{\sf r}{(\tforalll{\overline{u}}{(\tappl{y}{\Sp})})}; T'$
+where 
+${\sf r} : \forall \overline{x}.\,{\sf eval\_b}\,s \lefti S 
+\in \transop{\Sigma}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+By induction over the structure of traces.
+
+The transitions described {\it must} happen at some point: the
+negative proposition associated with $y$ in part 1 and the suspended
+${\sf eval}$ proposition in part 2 are not in the final state $(\Psi;
+z{:}\susp{{\sf retn\_z}\,t_z})$, so the base cases where $T =
+\emptytrace$ is vacuous. The actual base case is when first step 
+focuses on $y$ (part 1) or consumes $y$ by focusing on some 
+rule in the transformed signature (part 2), in which case the 
+result follows immediately. 
+
+The inductive case is when the first step occurs by focusing on 
+some 
+$y'{:}\istrue{R}$ in $\Delta$ that is distinct from $y$ (part 1)
+or on some
+transformed rule from the signature that does not first 
+consume $x$ (part 2). It is necessary to show that this step will not
+consume $y$ or, in part 1, any $x_i{:}\susp{{\sf retn\_bi}\,t_i}$ (part 1),
+which allows us to invoke the induction hypothesis and permute the
+step we're looking for to the beginning of the subtrace. We then have
+to check that the first step doesn't introduce any variables or resources
+that can be consumed by the step we're looking for (which is now the second
+step); this is immediate from the structure of $R$, $S$, and transformed
+signatures. 
+\end{proof}
+
+\begin{theorem}[Soundness of operationalization]\label{thm:opersound}
+If all propositions in $\Gamma$ have the form 
+$x{:}\ispers{D}$ or $z{:}\susp{p^+_{\mpers}}$, and all propositions in 
+$\Delta$ have the form $x{:}\ispers{D}$, $z{:}\susp{p^+_{\mpers}}$,
+$x{:}\susp{{\sf eval\_b}\,t}$, $x{:}\susp{{\sf retn\_b}\,t}$, or
+$x{:}\istrue{R}$, 
+\begin{enumerate}
+\item If $\slss{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}}{\susp{p^-_d}}$,
+then $\slss{\Sigma}{\Psi}{\Gamma}{\susp{p^-_d}}$.
+\item If $\slss{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}, [\opsubst{D}]}{\susp{p^-_d}}$, then $\slss{\Sigma}{\Psi}{\Gamma, [D]}{\susp{p^-_d}}$.
+\item If $\slss{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}}{\opsubst{G}}$, then
+ $\slss{\Sigma}{\Psi}{\Gamma}{G}$.
+\item If $\Delta$ matches $\frameoff{\opsubst{\Theta}}{\opsubst{\Gamma}}$ and
+$(\Psi; \frameoff{\opsubst{\Theta}}{x{:}\susp{{\sf eval\_a}\,t}}) \leadsto^*_{\transop{\Sigma}} (\Psi; z{:}\susp{{\sf retn\_z}\,t_z})$, then there exists an $s$ such that
+$\slss{\Sigma}{\Psi}{\Gamma}{\susp{{\sf ac}\,t\,s}}$ and
+$(\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,s}}) 
+   \leadsto^*_{\transop{\Sigma}}
+ (\Psi; \mkconj{\Gamma}{z{:}{\sf retn\_z}\,t_z})$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+By induction on the structure of the given derivation or given trace. Parts 
+1 and 3 exactly match the structure of the completeness proof 
+(Theorem~\ref{thm:opercomp}), and the only difference in Part 2 is the case
+where $D = {!}p_c \lefti D'$. 
+
+In the interesting case of part 2, $D = {!}p_c \lefti D'$ where ${\sf
+  p_c} = {\sf ac}\,t_1\,t_2$, and we have that 
+$\opsubst{D} = {!}({\sf eval\_a}\,t_1
+\lefti \{ {\sf retn\_a}\,t_2 \}) \lefti \opsubst{D'}$. Thus, 
+the given derivation is 
+$\Sp = \tappl{\tbangr{(\tlaml{\tetap{x}{\tlet{T}{y}}})}}{\Sp'}$.
+
+\begin{tabbing}
+$T :: (\Psi; \Gamma, x{:}\susp{{\sf eval\_a}\,t_1}) \leadsto^*_{\transop{\Sigma}} (\Psi; \Gamma, y{:}\susp{{\sf retn\_a}\,t_2})$
+ \` (given)
+\\
+$\slst{\transop{\Sigma}}{\Psi}{\Gamma, [\opsubst{D'}]}{\Sp'}{\susp{p^-_d}}$
+ \` (given)
+\\
+$\slst{{\Sigma}}{\Psi}{\Gamma, [{D'}]}{\Sp''}{\susp{p^-_d}}$
+ \` (ind. hyp. (part 2) on $\Sp'$)
+\\
+$\slst{\Sigma}{\Psi}{\Gamma}{N}{\susp{{\sf ac}\,t_1\,s}}$
+ \` (ind. hyp. (part 4) on $T$)
+\\
+$T' :: (\Psi; \Gamma, y'{:}\susp{{\sf retn\_a}\,s})
+         \leadsto^*_{\transop{\Sigma}}
+       (\Psi; \Gamma, y{:}\susp{{\sf retna\_a}\,t_2})$
+ \` (ind. hyp. (part 4) on $T$)
+\\
+$T' = \emptytrace$, $y' = y$, and $t_2 = s$
+ \` (case analysis on the structure of $T'$)
+\\
+$\slst{\Sigma}{\Psi}{\Gamma, [D]}{\tappl{\tbangr{N}}{\Sp'}}{\susp{p^-_d}}$
+ \` (construction)
+\end{tabbing}
+
+To prove Part 3, 
+
+\end{proof}
+
 
 \section{Logical transformation: defunctionalization}
 \label{sec:defunctionalization}
