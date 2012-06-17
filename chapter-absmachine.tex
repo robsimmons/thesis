@@ -2649,7 +2649,7 @@ with the value $v$; future attempts to force the same suspended
 expression will trigger rule ${\sf ev/force1b}$ instead of 
 ${\sf ev/force1a}$ and will immediately return the memoized value.
 
-\begin{figure}
+\begin{figure}[t]
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-cbneed-refun.sls}
 \caption{SSOS semantics of call-by-need recursive suspensions, refunctionalized.}
@@ -2715,24 +2715,27 @@ or a persistent binding ${\sf bind'}\,x\,v$.
 \subsection{Environment semantics}
 
 Toninho, Caires, and Pfenning have observed that call-by-need and
-call-by-value are closely related as sequential variants of
-speculative execution (or call-by-future) in which the evaluation of
-arguments is scheduled either as early as possible (call-by-value) or
-as late as possible (call-by-need) \cite{toninho12functions}. The
-relationship between the lazy call-by-need semantics from
-Figure~\ref{fig:ssos-by-need} and call-by-value is better presented by
-giving a variant of what Pfenning and I called an {\it environment
-  semantics} in \cite{pfenning09substructural}.
+call-by-value can both be seen in a larger family of {\it sharing}
+evaluation strategies (if and when the argument to $\lambda x. e$ is
+evaluated, the work of evaluating that argument to a value is shared
+across all occurrences of $x$). Call-by-name, in contrast, is called a
+{\it copying} evaluation strategy, since the unevaluated argument of
+$\lambda x. e$ is copied to all occurrences of $x$
+\cite{toninho12functions}. This relationship between the lazy
+call-by-need semantics from Figure~\ref{fig:ssos-by-need} and
+call-by-value is better presented by giving a variant of what Pfenning
+and I called an {\it environment semantics} in
+\cite{pfenning09substructural}.
 
 
 As with the lazy call-by-name semantics, we introduce the environment
 semantics by creating a new function value ${\sf evlam}\,(\lambda
 x.\,e)$ instead of reinterpreting the existing function value ${\sf
   lam}\,(\lambda x.\,e)$. When a value of the form ${\sf
-  lazylam}\,(\lambda x.\,e)$ is returned to a frame ${\sf app1}\,e_2$
+  lazylam}\,(\lambda x.\,e)$ was returned to a frame ${\sf app1}\,e_2$
 in rule ${\sf ev/applazy}$ from Figure~\ref{fig:ssos-by-need}, we
-immediately create the new expression variable $x$, suspend the
-argument $e_2$, and schedule the function body for evaluation. When a
+immediately created a new expression variable $x$, suspended the
+argument $e_2$, and scheduled the function body for evaluation. When a
 value of the form ${\sf evlam}\,(\lambda x.\,e)$ is returned to a
 frame ${\sf app1}\,e_2$ frame in rule ${\sf ev/appev1}$ in
 Figure~\ref{fig:ssos-by-env}, we likewise create the new expression
@@ -2757,13 +2760,6 @@ was done in \cite{pfenning09substructural} and
 \cite{simmons11logical}.
 
 
-\begin{figure}
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/ssos-fail.sls}
-\caption{SSOS semantics of recoverable failure.}
-\label{fig:ssos-fail}
-\end{figure}
-
 
 \subsection{Recoverable failure}
 \label{sec:failure}
@@ -2780,6 +2776,14 @@ by zero or encountering the black hole in in the commented-out case of
 Figure~\ref{fig:ssos-cbneed}.} and
 can be handled by the expression $\interp{{\sf try}\,e_1\,{\sf ow}\,e_2} = 
 {\sf catch}\,e_1\,e_2$. 
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/ssos-fail.sls}
+\caption{SSOS semantics of recoverable failure.}
+\label{fig:ssos-fail}
+\end{figure}
+
 
 We can extend {\it sequential} ordered abstract machines with
 exceptions in a modular way, as shown in
