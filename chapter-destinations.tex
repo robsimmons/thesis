@@ -66,9 +66,119 @@ about specifications like the one in Figure~\ref{fig:pda-lin}.
 When the destination-adding translation is applied to ordered abstract
 machine SSOS specifications, the result is a style of SSOS
 specification called {\it destination-passing}. Destination-passing
+specifications were the original style of SSOS specification proposed
+in the CLF tech reports~\cite{cervesato02concurrent}. Whereas the
+operationalization transformation exposed the structure of natural
+semantics proofs so that they could be modularly extended with
+stateful features, the destination-adding translation exposes the
+control structure of specifications, allowing the language to be
+modularly extended with control effects and effects like
+synchronoization in concurrent specifications.
 
 \section{Logical transformation: destination-adding}
 \label{sec:destination-adding}
+
+The destination-adding translation presented here is essentially the
+same as the one presented and proved correct in
+\cite{simmons11logical}. The translation in that paper operated over
+rules of the form $\forall \overline{x}. S_1 \righti \{ S_2 \}$,
+whereas ours will operate over rules of the form $\forall
+\overline{x}. S_1 \lefti \{ S_2 \}$, but the difference between
+$\righti$ and $\lefti$ is irrelevant for first-order
+\sls~specifications.\footnote{The monad $\{ S_2 \}$ did not actually
+  appear in \cite{simmons11logical}, and the presentation took
+  polarity into account but was not explicitly polarized. We are
+  justified in reading the lax modality back in by the sort of erasure
+  argument discussed in Section~\ref{sec:perm-fragments}.} The syntactic
+category $S$ is a refinement of the positive types $A^+$ defined by
+the following grammar:
+\[
+S ::= p^+_\mpers \mid p^+_\meph \mid p^+ \mid \one
+\mid t \doteq s \mid S_1 \fuse S_2 \mid \exists x{:}\tau. S
+\]
+The translation of a rule $\forall \overline{x}. S_1 \lefti \{ S_2 \}$
+is then $\forall \overline{x}.\, \forall d_L{:}{\sf dest}.\, \forall
+d_R{:}{\sf dest}.\, \llbracket S_1 \rrbracket^{d_L}_{d_R} \lefti \{
+\llbracket S_2 \rrbracket^{d_L}_{d_R} \}$, where $\llbracket S
+\rrbracket^{d_L}_{d_R}$ is defined in Figure~\ref{fig:destadd-pos}. It
+is also necessary to transform all ordered predicates with kind
+$\Pi. x_1{:}\tau_1\ldots \Pi.x_n{:}\tau_n.\,{\sf prop\,ord}$ that are
+declared in the signature into predicates with kind
+$\Pi. x_1{:}\tau_1\ldots \Pi.x_n{:}\tau_n.\, \Pi.d_L{:}{\sf dest}.\,
+\Pi.d_R{:}{\sf dest}.\, {\sf prop\,ord}$ in order for the translation
+of an ordered atomic proposition $p^+$ to reamin a valid type in
+the transformed signature.
+
+\begin{figure}
+\begin{align*}
+\llbracket p^+ \rrbracket^{d_L}_{d_R} & := 
+ {\sf a}\,t_1\ldots t_n\,d_L\,d_R ~~~ \mbox{(where $p^+ = {\sf a}\,t_1\ldots t_n$)}
+\\
+\llbracket p^+_\meph \rrbracket^{d_L}_{d_R} & := p^+_\meph \fuse d_L \doteq d_R
+\\
+\llbracket p^+_\mpers \rrbracket^{d_L}_{d_R} & := p^+_\mpers \fuse d_L \doteq d_R
+\\
+\llbracket \one \rrbracket^{d_L}_{d_R} & := d_L \doteq d_R
+\\
+\llbracket t \doteq s \rrbracket^{d_L}_{d_R} & := t \doteq s \fuse d_L \doteq d_R
+\\
+\llbracket S_1 \fuse S_2 \rrbracket^{d_L}_{d_R} & := 
+ \exists d_M{:}{\sf dest}.\, 
+   \llbracket S_1 \rrbracket^{d_L}_{d_M}
+   \fuse
+   \llbracket S_2 \rrbracket^{d_M}_{d_R}
+\\
+\llbracket \exists x{:}\tau.\,S \rrbracket^{d_L}_{d_R} & := 
+ \exists x{:}\tau.\, \llbracket S \rrbracket^{d_L}_{d_R}
+\end{align*}
+\caption{Destination-adding transformation on positive propositions.}
+\label{fig:destadd-pos}
+\end{figure}
+
+According to Figure~\ref{fig:destadd-pos}, the rule 
+${\sf pop}$ in Figure~\ref{fig:pda-lin} should actually be written as
+follows:
+\begin{align*} 
+  {\sf pop} & : 
+  \forall x{:}{\sf tok}.\,
+  \forall l{:}{\sf dest}.\,
+  \forall r{:}{\sf dest}.\,
+  \\
+  & \qquad (\exists m_1{:}{\sf dest}.\, {\sf stack}\,x\,l\,m \fuse
+   (\exists m_2{:}{\sf dest}.\, {\sf hd}\,m_1\,m_2 \fuse
+     {\sf right}\,x\,m_2\,r))
+  \\ 
+  & \qquad\quad \lefti
+  \{ 
+    {\sf hd}\,l\,r
+  \}
+\end{align*}
+The destination-passing transformation as implemented\robnote{Implement,
+or don't say this.} produces rules that are equivalent to 
+
+destination-adding transformation furthermore if
+$S_2$ contains any ordered atomic propositions $p^+$, $S_1$
+must contain at least one ordered atomic propositions as well.
+
+and the difference between
+the shift and the lax modality is unimportant in this case; the framework
+used in 
+
+presence or
+absence of a monad makes no difference 
+
+One difference is that 
+
+ That paper presents a translation for rules
+of the form $\forall \overline{x}. A_1^+ \righti \{ A_2^+ \}$ (note
+that the distinction between $A_1^+ \lefti \{ A_2^+ \}$ and $A_1^+
+\righti \{ A_2^+ \}$ is unimportant in a SLS specification). 
+
+The version of destination-adding that is
+implemented in the \sls~prototype\robnote{Actually implement this or
+  remove.} produces 
+
+specifications with slightly fewer artifacts
 
 Foo
 
