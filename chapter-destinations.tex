@@ -1,8 +1,85 @@
 \chapter{Destination-passing}
 \label{chapter-destinations}
 
+The natural notion of ordering provided by ordered linear logic
+is quite convienent for encoding transition systems that 
+have a stack or tree-based control structure. The ordered
+abstract machine SSOS specifications from Chapter~6 demonstrate
+this; another example is the push-down automata for parenthesis
+matching discussed in the introduction, which we can now present,
+in Figure~\ref{fig:pda-ord}, as an \sls~specification.
+
+\begin{figure}[ht]
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/pda-ord.sls}
+\caption{Ordered \sls~specification of a PDA for parenthesis matching.}
+\label{fig:pda-ord}
+\end{figure}
+
+The natural expression of order provided by \sls~makes ordered
+abstract machine specifications and the PDA specification in
+Figure~\ref{fig:pda-ord} much more concise. However, in a way that we
+will make precise in this chapter, ordered logic does not actually add
+any more {\it expressiveness} to concurrent specifications relative to
+linear logic. In Chapter~5, we argued that ordered abstract machines
+were at least as expressive as (moded) natural semantics by giving a
+transformation, operationalization, from the latter to the
+former. Analogusly, in this chapter we will argue that concurrent
+specifications in linear logic are just as expressive as concurrent
+specifications in ordered logic by giving a transformation, {\it
+  destination-adding}, from the latter to the former.  As 
+originally presented by Pfenning and I in \cite{simmons11logical}, 
+the destination-adding transformation turns all ordered
+atomic propositions into linear atomic propositions, but tagged them
+with two new arguments (the destinations of the destination-adding
+transformation) that serve as a link between the formerly-ordered
+atomic proposition and the formerly-ordered atomic propositions that
+were previously to their left and to their right. 
+
+Destinations (terms of type ${\sf dest}$) have no constructors, they
+are only introduced as variables by existential quantification.  When
+we perform the destination-adding transformation on the PDA in
+Figure~\ref{fig:pda-ord}, we get the PDA in Figure~\ref{fig:pda-lin}.
+
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/pda-lin.sls}
+\caption{Linear \sls~specification of a PDA for parenthesis matching.}
+\label{fig:pda-lin}
+\end{figure}
+
+As an aside, the specification in Figure~\ref{fig:pda-lin}, like every
+other specification that results from destination-adding, has no
+occurances of ${\downarrow}A^-$ and no ordered atomic propositions. By
+the discussion in Section~\ref{sec:perm-fragments}, we would therefore
+be justified in viewing this specification as a linear logical
+specification (or a CLF specification) instead of a ordered logical
+specification in \sls.  This would not impact the structure of the
+derivations significantly; essentially, it just means that we would
+write $A^+_1 \lolli \{ A^+_2 \}$ instead of $A^+_1 \lefti \{ A^+_2
+\}$.  This reinterpretation was used in \cite{simmons11logical}, but
+we will stick with the notation of ordered logic for consistency,
+while recognizing that there is nothing ordered
+about specifications like the one in Figure~\ref{fig:pda-lin}. 
+
+When the destination-adding translation is applied to ordered abstract
+machine SSOS specifications, the result is a style of SSOS
+specification called {\it destination-passing}. Destination-passing
+
 \section{Logical transformation: destination-adding}
 \label{sec:destination-adding}
+
+Foo
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/pda-pers.sls}
+\caption{Linear/persistent \sls~specification of a PDA for parenthesis
+  matching.}
+\label{fig:pda-pers}
+\end{figure}
+
 
 \section{Alternate semantics for parallelism and exceptions}
 \label{sec:modular-parallelism}
