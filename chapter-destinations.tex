@@ -443,25 +443,48 @@ specification.
 \section{Exploring the richer fragment}
 
 In \cite{simmons11logical}, the only motivation for the
-destination-adding transformation was that it exposes information
-about the control structure of computations 
+destination-adding transformation was to exposes information about the
+control structure of computations, which could then be harnessed by a
+the program abstraction methodology described in the next chapter to
+derive program analyses. The exposure of control structure also allows
+us to modularly extend specifications with additional features
+relating to control. The semantics of parallelism and failure
+presented in Section~\ref{sec:modular-parallelism} is new, the
+semantics of futures (Section~\ref{sec:dest-futures}) and
+syncronization (Section~\ref{sec:dest-synch}) are a variant on the
+specifications first presented in the CLF tech report
+\cite{cervesato02concurrent}, and the semantics of first-class
+continuations presented in
+\cite{pfenning04substructural,pfenning09substructural}. 
+
+For the purposes of this section, we will
+explore 
 
 \subsection{Alternate semantics for parallelism and exceptions}
 \label{sec:modular-parallelism}
 
+In Section~\ref{sec:failure}, we discussed how the ordered abstract
+machines
+
+
+
+\subsection{Synchronization}
+\label{sec:dest-synch}
+
 
 
 \subsection{Futures}
+\label{sec:dest-futures}
 
-
-
-\subsection{Process calculus}
-
+Futures is are a ; they do not interact well with parallelism as it is encoded
+in the ordered 
 
 
 \subsection{First-class continuations}
+\label{sec:dest-continuations}
 
-
-
-
+The interaction of parallel evaluation and first-class continuations
+has been evaluated by Moreau and Ribbens in the context of Scheme
+\cite{moreau96semantics}; giving an SSOS encoding of their abstract
+machine would be interesting, but we do not do so here.
 

@@ -1,15 +1,15 @@
 ev/next:  
-ev (next E) (next V)
- <- evn (s z) E V.
+ev (next E) (next E')
+ <- evn (s z) E E'.
 
 evn/next: 
-evn N (next E) (next V)
- <- evn (s N) E V.
+evn N (next E) (next E')
+ <- evn (s N) E E'.
 
 ev/prev:  
-evn (s z) (prev E) V
- <- ev E (next V).
+evn (s z) (prev E) E'
+ <- ev E (next E').
 
 evn/prev: 
-evn (s (s N)) (prev E) (prev V)
- <- evn (s N) E V.
+evn (s (s N)) (prev E) (prev E')
+ <- evn (s N) E E'.

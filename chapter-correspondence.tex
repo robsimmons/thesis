@@ -538,7 +538,7 @@ discuss in Section~\ref{sec:richer-ordered-abstract}.
 \draw (6.75,-2.2) node{Parallel pairs};
 \draw (6.75,-2.9) node{Interaction of};
 \draw (6.75,-3.3) node{parallelism \& failure};
-\draw (6.75,-4) node{First-class continuations};
+\draw (6.75,-4) node{Synchronization};
 %
 \draw[thick](9cm,-4.6cm) -- (9cm,3cm);
 %
@@ -585,9 +585,11 @@ demonstrated in Section~\ref{sec:modularnonmodular} and will
 demonstrate again in Section~\ref{sec:richer-ordered-abstract}.  The
 destination-adding transformation exposes the control structure of
 programs; this makes it possible to discuss first-class continuations
-as well as the interaction of parallelism and failure.  The control
-structure exposed by the destination-adding transformation is the
-basis of the control flow analysis in Chapter 8. 
+as well as the interaction of parallelism and failure (though not
+necessarily at the same time, as discussed in
+Section~\ref{sec:dest-continuations}).  The control structure exposed
+by the destination-adding transformation is the basis of the control
+flow analysis in Chapter 8.
 % This is also what
 % ultimately distinguishes this work from the work of Hannan, Miller,
 % and Ager, as the abstract machine semantics they derive from natural
