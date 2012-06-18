@@ -1,5 +1,6 @@
 CM.make "../../r/sls/sources.cm";
 Frontend.init ();
+fun HEADING s = print ("\n\n== "^s^" ==\n\n");
 
 (* Figure 6.1, left-hand side *)
 Frontend.reset ();
@@ -55,93 +56,124 @@ Frontend.load "cbv-sos-step.sls";
 Frontend.load "evalretn.sls";
 Frontend.load "cbv-sos-proc.sls";
 
-(* Figure 6.5 *)
+HEADING "Figure 6.5: Parallel evaluation of application";
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "cbv-ev-ssos-par.sls";
 
-(* Figure 6.6 *)
+HEADING "Figure 6.6: A first order ordered abstract machine semantics for CBV";
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "cbv-ev-ssos-fun.sls";
 
-(* Section 6.3, in-line with text *)
+HEADING "Section 6.3, generative signature (in-line with text)";
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "evalretn.sls";
 Frontend.load "contframe.sls";
 Frontend.load "cbv-ev-ssos-gen.sls";
 
-(* NATURAL SEMANTICS FOR MINIML *)
 
-(* Figure 6.7 - "left hand side + bad case analysis" *)
+
+(* FIGURE 6.7 -- Semantics of some pure functional features *)
+
+HEADING "Fig 6.7, left-hand side along with the bad case analysis rule";
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "cbv-ev-ssos-fun.sls";
 Frontend.read "#operationalize \"ssos-ml-core.auto.sls\"\n(ev ~> eval retn).";
 Frontend.load "ev.sls";
 Frontend.load "ev-minml-core.sls";
-
-(* Figure 6.8 - left hand side *)
-Frontend.load "cbv-arb.sls";
-
 Frontend.read "#operationalize stop.";
 
+HEADING "Fig 6.7, checking the operationalization of the left-hand side";
 Frontend.reset ();
 Frontend.load "exp.sls";
-Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.load "evalretn.sls";
 Frontend.load "ssos-ml-core.auto.sls";
 
+HEADING "Fig 6.7, right-hand side (ordered abstract machine)";
+Frontend.load "exp.sls";
+Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.load "ssos-minml-core.sls";
 
-(* Figure 6.9, 6.10 *)
+
+
+(* FIGURE 6.8 - Semantics of nondeterminstic choice *)
+
+HEADING "Fig 6.8, left-hand side (natural semantics)";
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "ev.sls";
+Frontend.load "cbv-arb.sls";
+
+HEADING "Fig 6.8, right-hand side (ordered abstract machine)";
+Frontend.load "exp.sls";
+Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.load "cbv-arb-ssos.sls";
+
+
+
+(* SECTION 6.4.2, Conditionals  and factoring *)
+
+HEADING "Fig 6.9, problematic semantics of case analysis (not defun)";
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "cbv-ev-ssos-fun.sls";
 Frontend.load "ssos-minml-case-bad.sls";
+
+HEADING "Fig 6.10, problematic semantics of case analysis (defun)";
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "cbv-ev-ssos-fun.sls";
 Frontend.load "ssos-minml-case-bad-defun.sls";
 
-(* Figure 6.11, 6.12 *)
+HEADING "Fig 6.11, good semantics of case analysis (not defun)";
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "cbv-ev-ssos-fun.sls";
 Frontend.load "ssos-minml-case-good.sls";
+
+HEADING "Fig 6.12, good semantics of case analysis (defun)";
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.load "selectn.sls";
 Frontend.load "ssos-minml-case-good-defun.sls";
 
-(* Figure 6.13 *)
+
+
+(* SECTION 6.5, Exploring the richer fragment *)
+
+HEADING "Fig 6.13, mutable storage";
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "cbv-ev-ssos-fun.sls";
 Frontend.load "ssos-mutable.sls";
 
-Frontend.reset ();
-Frontend.load "exp.sls";
-Frontend.load "ev.sls";
-Frontend.read "#operationalize \"case.auto.sls\"\n(ev ~> eval retn).";
-Frontend.load "ev-miniml-case-good.sls";
-Frontend.read "#operationalize stop.";
-
-Frontend.reset ();
-Frontend.load "exp.sls";
-Frontend.load "cbv-ev-ssos-fun.sls";
-Frontend.load "case.auto.sls";
-
-(* Figure 6.14 *)
+HEADING "Fig 6.14, call-by-need recursive suspensions";
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "cbv-ev-ssos-fun.sls";
 Frontend.load "ssos-cbneed.sls";
 
-(* Figure 6.15 *)
+HEADING "Fig 6.15, call-by-need recursive suspensions (refunctionalized)";
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.load "bindloc.sls";
 Frontend.load "ssos-cbneed-refun.sls";
 
+HEADING "Fig 6.16, lazy call-by-need functions";
 
 
-
+(*
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.read "#operationalize \"nat.auto.sls\"\n(inc ~> inc retn_inc)\n(plus ~> plus retn_plus).";
 Frontend.load "nat.sls";
 Frontend.read "#operationalize stop.";
+*)
 
 (*
 Frontend.reset ();

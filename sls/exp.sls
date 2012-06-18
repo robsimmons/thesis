@@ -63,3 +63,7 @@ p11: frame.
 p11: frame.
 ap1: exp -> frame.
 ap2: exp -> frame.
+pair1: frame.
+fst1: frame.
+snd1: frame.
+succ1: frame.
