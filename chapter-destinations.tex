@@ -188,9 +188,15 @@ instead of the concurrent fragment presented here and in here
 operate on a propositional fragment without the unit of multiplicative
 conjunction $\one$; as discussed in \cite[p.~57]{simmons11logical},
 the addition non-ordered atomic propositions, $\one$, and $t \doteq s$
-complicates matters significantly. The transformation as we have given
-it also simplifies the proof, and the additional existential quantifiers
-give us more structure to work with in the proof of 
+complicates matters significantly. 
+
+In addition to following van Bentham's relational models, the
+transformation as we have given it simplifies the correctness
+proof (Theorem~\ref{thm:destcorrect}). The additional existential
+quantifiers give us more structure to work with when considering
+program abstraction in Chapter 8, and the result of applying the
+transformation to ordered abstract machines is more in line with 
+existing destination-passing SSOS specifications.
 
 % Another reason for preserving the existential quantifier in the head
 % of the ${\sf push}$ rule is that it allows us to make an extension to
@@ -213,16 +219,8 @@ $(\Psi; \llbracket \Delta \rrbracket^{d_L}_{d_R}) \leadsto_{{\it Dest}(\Sigma)}
 \end{theorem}
 
 \begin{proof}
-As in \cite[Appendix A]{simmons11logical}.
+As in \cite[Theorem 2]{simmons11logical}.
 \end{proof}
-
-Their work was more general
-in that it dealt 
-
- this work (which only
-considered the propositional fragment of ordered logic and did not
-consider $\one$, 
-
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -231,13 +229,6 @@ consider $\one$,
 \label{fig:dest-vestige}
 \end{figure}
 
-\subsection{Vestigial destinations}
-
-When we apply the translation of expressions to the call-by-value 
-lambda calculus specification from Figure~\ref{fig:cbv-ev-ssos-fun}, we get
-the specification in Figure~\ref{fig:dest-vestige}, which is nice but
-has 
-
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/dest-cbv.sls}
@@ -245,33 +236,117 @@ has
 \label{fig:dest-cbv}
 \end{figure}
 
+\subsection{Vestigial destinations}
+
+When we apply the translation of expressions to the call-by-value
+lambda calculus specification from Figure~\ref{fig:cbv-ev-ssos-fun},
+we get the specification in Figure~\ref{fig:dest-vestige}, which is
+has one problem: the second argument to ${\sf eval}$ and ${\sf retn}$
+is always $d'$, and the destination never changes; it is essentially a
+vestage of the destination-adding transformation. As long as we are
+transforming a sequential ordered abstract machine, we can eliminate
+this vestigaial destination, giving us the specification in
+Figure~\ref{fig:dest-cbv}. This extra destination is {\it not}
+vestigial when we translate a parallel specification, but as we
+discuss in Section~\ref{sec:modular-parallelism}, we don't necessarily
+want to run destination-adding on parallel ordered abstract machines
+anyway.
 
 \subsection{Persistent destination passing}
 
-\begin{figure}
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/pda-pers.sls}
-\caption{Linear/persistent \sls~specification of a PDA for parenthesis
-  matching.}
-\label{fig:pda-pers}
-\end{figure}
+When we translate our PDA specification, it is actually not necessary
+to translate ${\sf hd}$, ${\sf left}$, ${\sf right}$ and ${\sf stack}$ into
+linear atomic propositions; if we translate ${\sf hd}$ as
+a linear predicate but translate the other predicates as persistent
+predicates, it will still be the case that there is always exactly one
+linear atomic proposition ${\sf hd}\,d_L\,d_R$ in the context, at most one
+${\sf stack}\,x\,d\,d_L$ proposition with the same destination $d_L$, 
+and at most one ${\sf right}\,x\,d_R\,d$ or ${\sf left}\,x\,d_R\,d$ 
+with the same destination $d_R$. This means it is still the case that the
+PDA accepts the string if and only if there is the following series of 
+transitions:
+\begin{align*}
+ (d_0{:}{\sf dest}, \ldots, d_{n+1}{:}{\sf dest}; 
+    x{:}\susp{{\sf hd}\,d_0\,d_1}, 
+    y_1{:}\susp{{\sf left}\,x_1\,d_1\,d_2},
+    \ldots&,
+    y_n{:}\susp{{\sf right}\,x_n\,d_n\,d_{n+1}})
+\\
+ & \leadsto^*
+   (\Psi; \Gamma, z{:}\susp{{\sf hd}\,d_0\,d_{n+1}})
+\end{align*}
+The difference is that the final context $\Gamma$ may hold many extra
+persistent propositions than it did in the entirely-linear PDA
+specification: all the original ${\sf left}\,x\,d_i\,d_{i+1}$ and
+${\sf right}\,x\,d_i\,d_{i+1}$ propositions will remain in the final context
+along with all the ${\sf stack}\,x\,d\,d'$ propositions that were created
+during the course of evaluation.
 
-It is not the case (as I originally conjectured) that this is possible
-for specifications to be blindly turned into persistent forward-chaining
-specifications 
+% \begin{figure}[t]
+% \fvset{fontsize=\small,boxwidth=229pt}
+% \VerbatimInput{sls/pda-pers.sls}
+% \caption{Linear/persistent \sls~specification of a PDA for parenthesis
+%   matching.}
+% \label{fig:pda-pers}
+% \end{figure}
 
-\section{Alternate semantics for parallelism and exceptions}
+I originally conjectured that a version of Theorem~\ref{thm:destcorrect}
+would hold in any specification that assigned ordered atomic propositions
+to either linear or persistent propositions but that left at least
+one formerly-ordered atomic proposition in the premise of every rule
+as a linear atomic proposition with destinations; this would have given
+a generic justification to 
+turing ${\sf left}$, ${\sf right}$ and ${\sf stack}$ persistent in 
+Figure~\ref{fig:pda-lin} and to turning ${\sf cont}$ persistent in
+Figure~\ref{fig:dest-cbv}. However, that condition is not strong enough.
+To see why, 
+consider a rule ${\sf a} \fuse {\sf b} \fuse {\sf a} \lefti \{ {\sf b} \}$
+where ${\sf a}$ and ${\sf b}$ are ordered atomic propositions.
+We have 
+\begin{align*}
+& (x_1{:}\susp{\sf a}, x_2{:}\susp{\sf b}, x_3{:}\susp{\sf a}, 
+  x_4{:}\susp{\sf b}, x_5{:}\susp{\sf a})
+\leadsto 
+(x{:}\susp{\sf b},
+  x_4{:}\susp{\sf b}, x_5{:}\susp{\sf a})
+\not\leadsto  
+\intertext{and}
+& (x_1{:}\susp{\sf a}, x_2{:}\susp{\sf b}, x_3{:}\susp{\sf a}, 
+  x_4{:}\susp{\sf b}, x_5{:}\susp{\sf a})
+\leadsto 
+(x_1{:}\susp{\sf a}, x_2{:}\susp{\sf b}, x{:}\susp{\sf b})
+\not\leadsto 
+\intertext{but if we perform destination-passing on the rule, letting
+${\sf a}$ be persistent predicate and letting ${\sf b}$ be a linear
+predicate, then we have a series of transitions}
+& (d_0, d_1, d_2, d_3, d_4, d_5; ~~
+   x_1{:}\susp{{\sf a}\,d_0\,d_1}, 
+   x_2{:}\susp{{\sf b}\,d_1\,d_2}, 
+   x_3{:}\susp{{\sf a}\,d_2\,d_3}, 
+   x_4{:}\susp{{\sf b}\,d_3\,d_4}, 
+   x_5{:}\susp{{\sf a}\,d_4\,d_5})
+\end{align*}
+ 
+\section{Exploring the richer fragment}
+
+foo
+
+\subsection{Alternate semantics for parallelism and exceptions}
 \label{sec:modular-parallelism}
 
-\section{First-class continuations}
-
-\section{Exploring the richer fragment}
+a
 
 \subsection{Futures}
 
+b
+
 \subsection{Process calculus}
 
+c
+
 \subsection{First-class continuations}
+
+d
 
 \section{Why not just destinations?}
 
