@@ -153,14 +153,15 @@ follows:
     {\sf hd}\,l\,r
   \}
 \end{align*}
-The destination-passing transformation as
+The destination-adding transformation as
 implemented\robnote{Implement, or don't say this; also discuss the
   implementation of the probably-correct transformation on
   higher-order specs if you get to that.} produces rules that are
 equivalent to the specification in Figure~\ref{fig:destadd-pos}
 but that avoid unnecessary equalities and push existential quantifiers
 as far out as possible to get specifications that look more like
-Figure~\ref{fig:pda-lin}. 
+Figure~\ref{fig:pda-lin}. We write the result of the destination-adding
+transformation on the signature $\Sigma$ as ${\it Dest}(\Sigma)$. 
 
 We could consider another simplification: is it necessary to generate
 a new destination $m$ by existential quantification in the head
@@ -211,16 +212,52 @@ existing destination-passing SSOS specifications.
 % that might be used to successfully right focus on a translated positive 
 % proposition $\llbracket S \rrbracket^{d_L}_{d_R}$ is a 
 
-\bigskip
+To prove the correctness of destination-adding, we must describe a 
+translation $\llbracket \Psi; \Delta \rrbracket$ from process states
+with ordered, linear, and persistent atomic propositions to ones
+with only linear and persistent atomic propositions:
+\begin{align*}
+\llbracket \Psi; \cdot \rrbracket & = (\Psi, d_L{:}{\sf dest}; \cdot) 
+\\
+\llbracket \Psi; \Delta, x{:}\susp{{\sf a}\,t_1\ldots t_n} \rrbracket 
+& = (\Psi', d_L{:}{\sf dest}, d_R{:}{\sf dest}; 
+     \Delta', x{:}\susp{{\sf a}\,t_1\ldots t_n\,d_L\,d_R})\\
+& \qquad
+  \mbox{(where $\sf a$ is ordered and
+  $\llbracket \Psi; \Delta \rrbracket = (\Psi', d_L{:}{\sf dest}; \Delta') $)}
+\\
+\llbracket \Psi; \Delta, x{:}\susp{p^+_\meph} \rrbracket 
+& = (\Psi'; \Delta', x{:}\susp{p^+\meph})
+ \qquad \mbox{(where
+       $\llbracket \Psi; \Delta \rrbracket = (\Psi'; \Delta') $)}
+\\
+\llbracket \Psi; \Delta, x{:}\susp{p^+_\mpers} \rrbracket 
+& = (\Psi'; \Delta', x{:}\susp{p^+\mpers})
+  \qquad \mbox{(where 
+       $\llbracket \Psi; \Delta \rrbracket = (\Psi'; \Delta') $)}
+\end{align*}
+
 \begin{theorem}[Correctness of destination-adding]~\\\label{thm:destcorrect}
-$(\Psi; \Delta) \leadsto_\Sigma (\Psi; \Delta')$ if and only if
-$(\Psi; \llbracket \Delta \rrbracket^{d_L}_{d_R}) \leadsto_{{\it Dest}(\Sigma)}
- (\Psi; \llbracket \Delta' \rrbracket^{d_L}_{d_R})$.
+$\llbracket \Psi; \Delta \rrbracket \leadsto_{{\it Dest}(\Sigma)}
+ (\Psi_l; \Delta_l)$ if and only if 
+$(\Psi; \Delta) \leadsto_\Sigma (\Psi_o; \Delta_o)$ and
+$(\Psi_l; \Delta_l) = \llbracket \Psi_o, \Psi''; \Delta_o \rrbracket$ 
+for some variable 
+context $\Psi''$ containing destinations free in the first translated
+context but not the second.
 \end{theorem}
 
 \begin{proof}
-As in \cite[Theorem 2]{simmons11logical}.
+As in \cite[Theorem 2]{simmons11logical}.\robnote{Double check how the 
+variable slack works.}
 \end{proof}
+
+\begin{figure}[t]
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/dest-vestige.sls}
+\caption{Translation of Figure~\ref{fig:cbv-ev-ssos-fun} with vestigial destinations.}
+\label{fig:dest-vestige}
+\end{figure}
 
 If we leave off explicitly mentioning the variable context $\Psi$, 
 then the trace that represents successfully processing 
@@ -255,12 +292,6 @@ for emphasis):
 \leadsto ~ & y_4{:}\susp{\underline{\sf hd}\,d_0\,d_5}
 \end{align*}
 
-\begin{figure}
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/dest-vestige.sls}
-\caption{Translation of Figure~\ref{fig:cbv-ev-ssos-fun} with vestigial destinations.}
-\label{fig:dest-vestige}
-\end{figure}
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -268,6 +299,8 @@ for emphasis):
 \caption{Translation of Figure~\ref{fig:cbv-ev-ssos-fun} without vestigial destinations.}
 \label{fig:dest-cbv}
 \end{figure}
+
+
 
 \subsection{Vestigial destinations}
 
@@ -333,9 +366,10 @@ turing ${\sf left}$, ${\sf right}$ and ${\sf stack}$ persistent in
 Figure~\ref{fig:pda-lin} and to turning ${\sf cont}$ persistent in
 Figure~\ref{fig:dest-cbv}. However, that condition is not strong enough.
 To see why, 
-consider a rule ${\sf a} \fuse {\sf b} \fuse {\sf a} \lefti \{ {\sf b} \}$
+consider a signature with one rule, 
+${\sf a} \fuse {\sf b} \fuse {\sf a} \lefti \{ {\sf b} \}$,
 where ${\sf a}$ and ${\sf b}$ are ordered atomic propositions.
-We have 
+We can consturct the following trace:
 \begin{align*}
 & (x_1{:}\susp{\sf a}, x_2{:}\susp{\sf b}, x_3{:}\susp{\sf a}, 
   x_4{:}\susp{\sf b}, x_5{:}\susp{\sf a})
@@ -343,23 +377,51 @@ We have
 (x{:}\susp{\sf b},
   x_4{:}\susp{\sf b}, x_5{:}\susp{\sf a})
 \not\leadsto  
-\intertext{and}
+\intertext{From the same starting point, exactly one
+other trace is possible:}
 & (x_1{:}\susp{\sf a}, x_2{:}\susp{\sf b}, x_3{:}\susp{\sf a}, 
   x_4{:}\susp{\sf b}, x_5{:}\susp{\sf a})
 \leadsto 
 (x_1{:}\susp{\sf a}, x_2{:}\susp{\sf b}, x{:}\susp{\sf b})
 \not\leadsto 
-\intertext{but if we perform destination-passing on the rule, letting
-${\sf a}$ be persistent predicate and letting ${\sf b}$ be a linear
-predicate, then we have a series of transitions}
-& (d_0, d_1, d_2, d_3, d_4, d_5; ~~
-   x_1{:}\susp{{\sf a}\,d_0\,d_1}, 
+\end{align*}
+However, if we perform the destination-passing transformation, letting
+${\sf a}\,d\,d'$ be persistent atomic proposition and letting ${\sf
+  b}\,d\,d'$ be a linear atomic proposition, then we have a series of
+transitions in the transformed specification that can reuse the atomic
+proposition ${\sf a}\,d_2\,d_3$ in a way that doesn't correspond to
+any series of transitions in ordered logic:
+\begin{align*}
+&  x_1{:}\susp{{\sf a}\,d_0\,d_1}, 
    x_2{:}\susp{{\sf b}\,d_1\,d_2}, 
    x_3{:}\susp{{\sf a}\,d_2\,d_3}, 
    x_4{:}\susp{{\sf b}\,d_3\,d_4}, 
-   x_5{:}\susp{{\sf a}\,d_4\,d_5})
+   x_5{:}\susp{{\sf a}\,d_4\,d_5}
+\\ \leadsto~
+&  x_1{:}\susp{{\sf a}\,d_0\,d_1}, 
+   \underline{x{:}\susp{{\sf b}\,d_0\,d_3}}, 
+   x_3{:}\susp{{\sf a}\,d_2\,d_3}, 
+   x_4{:}\susp{{\sf b}\,d_3\,d_4}, 
+   x_5{:}\susp{{\sf a}\,d_4\,d_5}
+\\ \leadsto~
+&  x_1{:}\susp{{\sf a}\,d_0\,d_1}, 
+   x{:}\susp{{\sf b}\,d_0\,d_3}, 
+   x_3{:}\susp{{\sf a}\,d_2\,d_3}, 
+   \underline{x'{:}\susp{{\sf b}\,d_2\,d_5}}, 
+   x_5{:}\susp{{\sf a}\,d_4\,d_5}
 \end{align*}
- 
+In the
+first process state, there is a path $d_0, d_1, d_2, d_3, d_4, d_5$ through
+the context that reconstructs the ordering in the original ordered context.
+In the second process, there is still a path $d_0, d_3, d_4, d_5$ that
+allows us to reconstruct the ordered context
+$(x{:}\susp{\sf b},
+  x_4{:}\susp{\sf b}, x_5{:}\susp{\sf a})$ by ignoring $x_1$ and $x_3$. 
+However, in the third process state above, no path exists, so the final
+state cannot be reconstructed as any ordered context. 
+
+Without identifying XXX finish
+
 \section{Exploring the richer fragment}
 
 foo
@@ -367,19 +429,19 @@ foo
 \subsection{Alternate semantics for parallelism and exceptions}
 \label{sec:modular-parallelism}
 
-a
+
 
 \subsection{Futures}
 
-b
+
 
 \subsection{Process calculus}
 
-c
+
 
 \subsection{First-class continuations}
 
-d
+
 
 
 
