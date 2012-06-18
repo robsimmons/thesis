@@ -1,4 +1,4 @@
-error: prop >-> ord.
+error: prop ord.
 handle: exp -> prop ord.
 
 ev/fail:   eval fail >-> {error}.

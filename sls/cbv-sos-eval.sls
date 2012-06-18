@@ -1,4 +1,4 @@
-value: type.
+value: exp -> prop.
 value/lam: value (lam \x. E x).
 
 decomp: exp -> prop ord.

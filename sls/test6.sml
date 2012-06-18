@@ -164,8 +164,56 @@ Frontend.load "cbv-ev-ssos-fun.sls";
 Frontend.load "bindloc.sls";
 Frontend.load "ssos-cbneed-refun.sls";
 
-HEADING "Fig 6.16, lazy call-by-need functions";
+HEADING "Fig 6.16 & 6.17, lazy call-by-need functions and env. semantics";
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.load "ssos-by-need.sls";
+Frontend.load "ssos-by-env.sls";
 
+HEADING "Fig 6.18, recoverable failure";
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.load "ssos-fail.sls";
+
+HEADING "Section 6.5.4, refunctionalized successor";
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.load "ssos-fail.sls";
+
+HEADING "Section 6.5.4, parallel exception handling";
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.read "cont2: frame -> prop ord. error: prop ord.";
+Frontend.load "ssos-fail-binary.sls";
+
+HEADING "Figure 6.19, left-hand side (small-step evaluation)";
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "cbv-sos.sls";
+
+HEADING "Figure 6.19, right-hand side (small-step evaluation)";
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.read "cont: frame -> prop ord.";
+Frontend.load "cbv-sos-eval.sls";
+
+HEADING "Figure 6.20/6.21 left-hand side, natural semantics for lambdacircle";
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "ev.sls";
+Frontend.load "lc-ev2.sls";
+Frontend.load "lc-ev3.sls";
+
+HEADING "Figure 6.20/6.21 right-hand side, SSOS for lambdacircle";
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.load "lc-ev2.sls";
+Frontend.load "lc-ssos-3.sls";
 
 (*
 Frontend.reset ();
