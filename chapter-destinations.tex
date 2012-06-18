@@ -222,6 +222,39 @@ $(\Psi; \llbracket \Delta \rrbracket^{d_L}_{d_R}) \leadsto_{{\it Dest}(\Sigma)}
 As in \cite[Theorem 2]{simmons11logical}.
 \end{proof}
 
+If we leave off explicitly mentioning the variable context $\Psi$, 
+then the trace that represents successfully processing 
+the string {\sf [ ( ) ] }
+with the transformed push-down automata 
+specification in Figure~\ref{fig:pda-lin} 
+is as follows (we again underline ${\sf hd}$
+for emphasis):
+\begin{align*}
+           & y_0{:}\susp{\underline{\sf hd}\,d_0\,d_1},
+             x_1{:}\susp{{\sf left}\,{\sf sq}\,d_1\,d_2},
+             x_2{:}\susp{{\sf left}\,{\sf pa}\,d_2\,d_3},
+             x_3{:}\susp{{\sf right}\,{\sf pa}\,d_3\,d_4},
+             x_4{:}\susp{{\sf right}\,{\sf sq}\,d_4\,d_5}
+\\
+\leadsto ~ & z_1{:}\susp{{\sf stack}\,{\sf sq}\,d_0\,d_6},
+             y_1{:}\susp{\underline{\sf hd}\,d_6\,d_2}
+             x_2{:}\susp{{\sf left}\,{\sf pa}\,d_2\,d_3},
+             x_3{:}\susp{{\sf right}\,{\sf pa}\,d_3\,d_4},
+             x_4{:}\susp{{\sf right}\,{\sf sq}\,d_4\,d_5}
+\\
+\leadsto ~ & z_1{:}\susp{{\sf stack}\,{\sf sq}\,d_0\,d_6},
+             z_2{:}\susp{{\sf stack}\,{\sf pa}\,d_6\,d_7},
+             y_2{:}\susp{\underline{\sf hd}\,d_7\,d_3}
+             x_3{:}\susp{{\sf right}\,{\sf pa}\,d_3\,d_4},
+             x_4{:}\susp{{\sf right}\,{\sf sq}\,d_4\,d_5}
+\\
+\leadsto ~ & z_1{:}\susp{{\sf stack}\,{\sf sq}\,d_0\,d_6},
+             y_3{:}\susp{\underline{\sf hd}\,d_6\,d_4}
+             x_4{:}\susp{{\sf right}\,{\sf sq}\,d_4\,d_5}
+\\
+\leadsto ~ & y_4{:}\susp{\underline{\sf hd}\,d_0\,d_5}
+\end{align*}
+
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/dest-vestige.sls}
@@ -348,21 +381,5 @@ c
 
 d
 
-\section{Why not just destinations?}
 
-Seeing as the destination-passing semantics is the most general form
-of substructural operational semantics presentation, and that it
-subsumes both the ordered abstract machine semantics, it is worth
-addressing the question: why not do {\it all} our work as a
-destination-passing semantics? We could! But just as our goal in the
-modular specification of programming languages is to make sure that
-the semantics of call-by-need evaluation doesn't infect the
-description of the semantics of
-
-(Illustrate a hypothetical language development: natural numbers,
-booleans, functions are specified with natural semantics, parallel
-pairs, mutable state, and exceptions are specified with ordered
-abstract machine semantics, and the pair/exception interface,
-continations, and recursive suspensions are specified with
-destination-passing semantics.)
 
