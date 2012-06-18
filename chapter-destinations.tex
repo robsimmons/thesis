@@ -153,34 +153,100 @@ follows:
     {\sf hd}\,l\,r
   \}
 \end{align*}
-The destination-passing transformation as implemented\robnote{Implement,
-or don't say this.} produces rules that are equivalent to 
+The destination-passing transformation as
+implemented\robnote{Implement, or don't say this; also discuss the
+  implementation of the probably-correct transformation on
+  higher-order specs if you get to that.} produces rules that are
+equivalent to the specification in Figure~\ref{fig:destadd-pos}
+but that avoid unnecessary equalities and push existential quantifiers
+as far out as possible to get specifications that look more like
+Figure~\ref{fig:pda-lin}. 
 
-destination-adding transformation furthermore if
-$S_2$ contains any ordered atomic propositions $p^+$, $S_1$
-must contain at least one ordered atomic propositions as well.
+We could consider another simplification: is it necessary to generate
+a new destination $m$ by existential quantification in the head
+$\exists m.\,{\sf stack}\,x\,l\,m \fuse {\sf hd}\,m\,r$ of ${\sf
+  push}$ in Figure~\ref{fig:pda-lin}? There is already a destination
+$m$ mentioned in the head that will be unused in the conclusion.  And
+for the translation that takes all formerly-ordered atomic
+propositions to linear atomic propositions, it would, in fact, be
+possible to avoid generating new destinations in the transformation of
+rules $\forall \overline{x}.\,S_1 \lefti \{ S_2 \}$ where the head
+$S_2$ contains no more ordered atomic propositions than the premise
+$S_1$. 
 
-and the difference between
-the shift and the lax modality is unimportant in this case; the framework
-used in 
+We preserve this quantifier in part because, as presented above, our
+translation closely follows the contours of work by Morrill, Moot, and
+Piazza on translating ordered logic into linear logic
+\cite{morrill95higher,moot01linguistic}. That work is, in turn, based
+on van Benthem's relational models of ordered logic, which closely
+associate multiplicative conjunction $A \fuse B$ with exisential
+quantification \cite{vanbenthem91relational}. In some ways, the
+aforemntioned translations are more general than our
+destination-adding transformation, as they handle a uniform logic
+instead of the concurrent fragment presented here and in here
+\cite{simmons11logical}. On the other hand, those translations only
+operate on a propositional fragment without the unit of multiplicative
+conjunction $\one$; as discussed in \cite[p.~57]{simmons11logical},
+the addition non-ordered atomic propositions, $\one$, and $t \doteq s$
+complicates matters significantly. The transformation as we have given
+it also simplifies the proof, and the additional existential quantifiers
+give us more structure to work with in the proof of 
 
-presence or
-absence of a monad makes no difference 
+% Another reason for preserving the existential quantifier in the head
+% of the ${\sf push}$ rule is that it allows us to make an extension to
+% the destination-adding transformation beyond what was considered in
+% \cite{simmons11logical}. As long as the head of every translated rule
+% contains at least one formerly-ordered atomic proposition that has
+% been turned into a linear atomic propsition, it is possible to 
+% without breaking Theorem~\ref{thm:destcorrect}. 
 
-One difference is that 
+%  The correctness of the transformation 
+% depends critically on the fact that every portion of the context
+% that might be used to successfully right focus on a translated positive 
+% proposition $\llbracket S \rrbracket^{d_L}_{d_R}$ is a 
 
- That paper presents a translation for rules
-of the form $\forall \overline{x}. A_1^+ \righti \{ A_2^+ \}$ (note
-that the distinction between $A_1^+ \lefti \{ A_2^+ \}$ and $A_1^+
-\righti \{ A_2^+ \}$ is unimportant in a SLS specification). 
+\bigskip
+\begin{theorem}[Correctness of destination-adding]~\\\label{thm:destcorrect}
+$(\Psi; \Delta) \leadsto_\Sigma (\Psi; \Delta')$ if and only if
+$(\Psi; \llbracket \Delta \rrbracket^{d_L}_{d_R}) \leadsto_{{\it Dest}(\Sigma)}
+ (\Psi; \llbracket \Delta' \rrbracket^{d_L}_{d_R})$.
+\end{theorem}
 
-The version of destination-adding that is
-implemented in the \sls~prototype\robnote{Actually implement this or
-  remove.} produces 
+\begin{proof}
+As in \cite[Appendix A]{simmons11logical}.
+\end{proof}
 
-specifications with slightly fewer artifacts
+Their work was more general
+in that it dealt 
 
-Foo
+ this work (which only
+considered the propositional fragment of ordered logic and did not
+consider $\one$, 
+
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/dest-vestige.sls}
+\caption{Translation of Figure~\ref{cbv-ev-ssos-fun} with vestigial destinations.}
+\label{fig:dest-vestige}
+\end{figure}
+
+\subsection{Vestigial destinations}
+
+When we apply the translation of expressions to the call-by-value 
+lambda calculus specification from Figure~\ref{cbv-ev-ssos-fun}, we get
+the specification in Figure~\ref{fig:dest-vestige}, which is nice but
+has 
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/dest-cbv.sls}
+\caption{Translation of Figure~\ref{cbv-ev-ssos-fun} without vestigial destinations.}
+\label{fig:dest-cbv}
+\end{figure}
+
+
+\subsection{Persistent destination passing}
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -190,6 +256,9 @@ Foo
 \label{fig:pda-pers}
 \end{figure}
 
+It is not the case (as I originally conjectured) that this is possible
+for specifications to be blindly turned into persistent forward-chaining
+specifications 
 
 \section{Alternate semantics for parallelism and exceptions}
 \label{sec:modular-parallelism}
