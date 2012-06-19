@@ -570,7 +570,7 @@ computation (rule ${\sf ev/send}$). The inter-process communication is
 driven by rule ${\sf ev/send1}$, which allows computation to continue
 in both the sender and the receiver.
 
-Synchronois communication introduces the possibility of
+Synchronous communication introduces the possibility of
 deadlocks. Without synchronous communication, a suspended atomic
 proposition ${\sf eval}\,e\,d$ can always cause a transition to
 happen, and the combination of a proposition ${\sf retn}\,v\,d$ and a
@@ -594,17 +594,83 @@ ${\sf await}\,c\,d$.
 \subsubsection{Labeled transitions}
 
 Substructural operational semantics are a very continuation-focused
-formalism: this is part of what motivated our operationalization
-transformation from natural semantics and our informal discussion of
-statefully-modular natural semantics in
-Section~\ref{sec:enriching-natsem}.
+formalism, and continuations are not always the most natural way to
+express a specification. This observation motivated our
+operationalization transformation from natural semantics and our
+informal discussion of statefully-modular natural semantics in
+Section~\ref{sec:enriching-natsem}. 
+
+In Chapter~6, we showed that the continuation-focused perspective of
+SSOS allowed us to expose computation to the ambient state. With the
+example of synchronization above, we see that destination-passing SSOS
+specifications also expose computations in the process state to {\it
+  other computations}, which is what allows the synchronization in
+rule ${\sf ev/send1}$ to take place. In small-step operational
+semantics, labeled deduction is used to describe specifications like
+the one above:
+\begin{itemize}
+\item $e ~{\stackrel{\footnotesize{c{\textbf{!}}v}}{\longmapsto}}~
+e'$ if $e$ steps to $e'$ by reducing some subterm ${\sf send}\,c\,v$,
+to $\interp{\langle\rangle} = {\sf unit}$,
+\item $e
+~{\stackrel{\footnotesize{c{\textbf{?}}v}}{\longmapsto}}~ e'$ if $e$
+steps to $e'$ by reducing some subterm ${\sf recv}\,c$ to $v$, and 
+\item $e_1$ in parallel with $e_2$ can reduce to $e_1'$
+in parallel with $e_2'$ if $e_1
+~{\stackrel{\footnotesize{c{\textbf{!}}v}}{\longmapsto}}~ e_1'$ and
+$e_2 ~{\stackrel{\footnotesize{c{\textbf{?}}v}}{\longmapsto}}~ e_2'$.
+\end{itemize}
+Labels essentially serve to pass messages up through the inductive
+structure of a proposition.  In destination-passing SSOS semantics, on
+the other hand, the internal structure of $e$ is spread out as a
+series of continuation frames throughout the context, and so the
+innermost redexes of terms can be directly connected. It would be
+interesting (but probably quite nontrivial) to consider a translation
+from labeled deduction systems to destination-passing SSOS
+specifications for synchronization along the lines of the
+operationalization transformation.
+
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/dest-futures.sls}
+\caption{Call-by-future.}
+\label{fig:dest-futures}
+\end{figure}
 
 \subsection{Futures}
 \label{sec:dest-futures}
 
-Futures is are a ; they do not interact well with parallelism as it is encoded
-in the ordered 
+Futures can be seen as a parallel version of call-by-value, and the
+presentation in Figure~\ref{fig:dest-futures} can be compared to the
+environment semantics for call-by-value in
+Figure~\ref{fig:ssos-by-env}. We introduce future-functions as a new
+kind of function ${\sf flam}\,\lambda x.e$ comparable to plain-vanilla
+call-by-value functions ${\sf lam}\,\lambda x.e$, lazy call-by-need
+functions ${\sf lazylam}\,\lambda x.e$, and environment-semantics
+functions ${\sf envlam}\,\lambda x.e$. As in the environment semantics
+specification, when a call-by-future function returns to a frame
+$\interp{\Box\,e_2} = {\sf app1}\,e_2$, we create a new expression $x$
+by existential quantification. However, instead of suspending the
+function body on the stack as we did in Figure~\ref{fig:ssos-by-env},
+in Figure~\ref{fig:dest-futures} we create a new destination ${\it
+  dfuture}$ and start evaluating the function argument towards that
+destination (rule ${\sf ev/fapp1}$). We also create a linear
+proposition -- ${\sf promise}\,{\it dfuture}\,x$ -- that will take
+any value returned to ${\it dfuture}$ and permanently bind it to $x$
+(rule ${\sf ev/promise}$). As a proposition that only exists during
+the course of evaluating the argument, ${\sf promise}$ is analogous to
+the ${\sf blackhole}$ predicate form the call-by-need specification.
 
+Futures illustrate the use of destination-passing to create new and
+potentially disconnected threads of computation. This was not possible
+in the ordered framework where every computation had to be somewhere
+specific in the ordered context relative to the current computation --
+either to the left, or to the right. The destination-passing semantics
+of continuations interact seamlessly with the semantics of
+synchronization and parallelism, but not with the semantics of
+recoverable failure: we would have to make some choice about what to 
+do when a future signals failure.
 
 \subsection{First-class continuations}
 \label{sec:dest-continuations}
