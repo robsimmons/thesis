@@ -2858,7 +2858,11 @@ is in the way. This seems to force us into treating parallel
 evaluations asymmetrically: if $e_{\it raise}$ signals failure and
 $e_{\it loop}$ loops forever, then the two Mini-ML pair expressions
 $\langle e_{\it raise}, e_{\it loop} \rangle$ and $\langle e_{\it
-  loop}, e_{\it raise} \rangle$ are observably different. That is bad.
+  loop}, e_{\it raise} \rangle$ are observably different. That is arguably
+bad, though if we switch the relative position of $e_1$ and $e_2$
+in the context, it can also be seen as an implementation of the
+sequential semantics for exceptions followed implemented by Manticore
+\cite{}.
 
 In my thesis proposal, I suggested a fix: we can defunctionalize ${\it
   sequential}$ propositions of the form $\forall \overline{x}.\,{\sf

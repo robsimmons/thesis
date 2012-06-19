@@ -472,13 +472,76 @@ semantics of first-class continuations
 \subsection{Alternate semantics for parallelism and exceptions}
 \label{sec:modular-parallelism}
 
-In Section~\ref{sec:failure}, we discussed how the ordered abstract
-machines can be used to integrate paralellism and failure 
+In Section~\ref{sec:failure}, we discussed how parallel evaluation and
+recoverable failure can be combined in an ordered abstract machine
+SSOS specification. Due to the fact that the two parts of a parallel
+ordered abstract machine are separated by an arbitrary amount of
+ordered context, some potentially desirable semantics ways of
+integrating parallelism and failure were difficult or impossible to
+express, however. 
 
+Once we transition to destination-passing SSOS specifications, it is
+possible to give a more direct semantics to parallel evalution that
+better facilitates talking about failure. Instead of having the stack
+frame associated with parallel pairs be ${\sf cont}\,{\sf pair1}$ (as
+in Figure~\ref{fig:ssos-minml-core}) or ${\sf cont2}\,{\sf pair1}$ (as
+discussed in Section~\ref{sec:failure}), we create a continuation
+${\sf cont2}\,{\sf pair1}\,d_1\,d_2\,d$ with {\it three} destinations;
+$d_1$ and $d_2$ represent the return destinations points of the two
+subcomputations, whereas $d$ represents the destination to which the
+evaluated pair is to be returned. This strategy applied to the
+parallel evaluation of paris is shown in Figure~\ref{fig:dest-pair}.
 
+In ordered specifications, an ordered atomic proposition can be
+directly connected to at most two other ordered propositions: the
+proposition immediately to the left in the ordered context, and the
+proposition immediately to the right in the ordered context. What
+Figure~\ref{fig:dest-pair} demonstrates is that, with destinations, a
+linear proposition can be locally connected to {\it any finite number}
+of other propositions. Whereas in ordered abstract machine
+specifications the parallel structure of a computation had to be
+reconstructed by parsing the context in postfix, a linear
+destination-passing specification uses destinations to thread together
+the treelike dependencies in the context. It would presumably be
+possible to consider a different version of the parallel
+operationalization that targeted this form of destination-passing
+specification specifically, but we will not consider such a
+transformation in this thesis. 
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/dest-fail-paror.sls}
+\caption{Integration of parallelism and exceptions; signals failure as
+  soon as possible.}
+\label{fig:dest-fail-paror}
+\end{figure}
+
+By the destination-based parallel continuations, we give, in
+Figure~\ref{fig:dest-fail-paror}, a semantics for recoverable failure
+that eagerly returns errors from either branch of a parallel
+computation. The rules ${\sf ev/errorL}$ and ${\sf ev/errorR}$ pass on
+errors returned to a place where the computation forks.  Those two
+rules also leave behind a linear proposition ${\sf terminate}\,d$ that
+will abort the other branch of computation if it returns succesfully
+(rule ${\sf term/retn}$) or with an error (rule ${\sf term/err}$). It
+would also be possible to add additional rules like ${\sf cont}\,d'\,d
+\fuse {\sf terminate}\,d \lefti \{ {\sf terminate}\,d' \}$ that
+actively aborted the useless branch instaead of passively waiting for
+it to finish.
 
 \subsection{Synchronization}
 \label{sec:dest-synch}
+
+The CLF tech report gives a presentation of the full set of Concurrent
+ML primitives that is equally applicable to destination-passing
+\sls~specifications \cite{cervesato02concurrent}.
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/dest-synch.sls}
+\caption{Simple synchronization.}
+\label{fig:dest-synch}
+\end{figure}
 
 
 
