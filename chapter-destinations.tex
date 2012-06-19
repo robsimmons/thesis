@@ -2,10 +2,10 @@
 \label{chapter-destinations}
 
 The natural notion of ordering provided by ordered linear logic
-is quite convienent for encoding transition systems that 
+is quite convenient for encoding transition systems that 
 have a stack or tree-based control structure. The ordered
 abstract machine SSOS specifications from Chapter~6 demonstrate
-this; another example is the push-down automata for parenthesis
+this; another example is the push-down automaton for parenthesis
 matching discussed in the introduction, which we can now present,
 in Figure~\ref{fig:pda-ord}, as an \sls~specification.
 
@@ -24,7 +24,7 @@ any more {\it expressiveness} to concurrent specifications relative to
 linear logic. In Chapter~5, we argued that ordered abstract machines
 were at least as expressive as (moded) natural semantics by giving a
 transformation, operationalization, from the latter to the
-former. Analogusly, in this chapter we will argue that concurrent
+former. Analogously, in this chapter we will argue that concurrent
 specifications in linear logic are just as expressive as concurrent
 specifications in ordered logic by giving a transformation, {\it
   destination-adding}, from the latter to the former.  As 
@@ -51,7 +51,7 @@ Figure~\ref{fig:pda-ord}, we get the PDA in Figure~\ref{fig:pda-lin}.
 
 As an aside, the specification in Figure~\ref{fig:pda-lin}, like every
 other specification that results from destination-adding, has no
-occurances of ${\downarrow}A^-$ and no ordered atomic propositions. By
+occurrences of ${\downarrow}A^-$ and no ordered atomic propositions. By
 the discussion in Section~\ref{sec:perm-fragments}, we would therefore
 be justified in viewing this specification as a linear logical
 specification (or a CLF specification) instead of a ordered logical
@@ -73,7 +73,7 @@ semantics proofs so that they could be modularly extended with
 stateful features, the destination-adding translation exposes the
 control structure of specifications, allowing the language to be
 modularly extended with control effects and effects like
-synchronoization in concurrent specifications.
+synchronization in concurrent specifications.
 
 \section{Logical transformation: destination-adding}
 \label{sec:destination-adding}
@@ -106,7 +106,7 @@ $\Pi. x_1{:}\tau_1\ldots \Pi.x_n{:}\tau_n.\,{\sf prop\,ord}$ that are
 declared in the signature into predicates with kind
 $\Pi. x_1{:}\tau_1\ldots \Pi.x_n{:}\tau_n.\, \Pi.d_L{:}{\sf dest}.\,
 \Pi.d_R{:}{\sf dest}.\, {\sf prop\,ord}$ in order for the translation
-of an ordered atomic proposition $p^+$ to reamin a valid type in
+of an ordered atomic proposition $p^+$ to remain a valid type in
 the transformed signature.
 
 \begin{figure}
@@ -180,9 +180,9 @@ translation closely follows the contours of work by Morrill, Moot, and
 Piazza on translating ordered logic into linear logic
 \cite{morrill95higher,moot01linguistic}. That work is, in turn, based
 on van Benthem's relational models of ordered logic, which closely
-associate multiplicative conjunction $A \fuse B$ with exisential
+associate multiplicative conjunction $A \fuse B$ with existential
 quantification \cite{vanbenthem91relational}. In some ways, the
-aforemntioned translations are more general than our
+aforementioned translations are more general than our
 destination-adding transformation, as they handle a uniform logic
 instead of the concurrent fragment presented here and in here
 \cite{simmons11logical}. On the other hand, those translations only
@@ -256,7 +256,7 @@ variable slack works.}
 If we leave off explicitly mentioning the variable context $\Psi$, 
 then the trace that represents successfully processing 
 the string {\sf [ ( ) ] }
-with the transformed push-down automata 
+with the transformed push-down automaton 
 specification in Figure~\ref{fig:pda-lin} 
 is as follows (we again underline ${\sf hd}$
 for emphasis):
@@ -310,9 +310,9 @@ lambda calculus specification from Figure~\ref{fig:cbv-ev-ssos-fun},
 we get the specification in Figure~\ref{fig:dest-vestige}, which is
 has one problem: the second argument to ${\sf eval}$ and ${\sf retn}$
 is always $d'$, and the destination never changes; it is essentially a
-vestage of the destination-adding transformation. As long as we are
+vestige of the destination-adding transformation. As long as we are
 transforming a sequential ordered abstract machine, we can eliminate
-this vestigaial destination, giving us the specification in
+this vestigial destination, giving us the specification in
 Figure~\ref{fig:dest-cbv}. This extra destination is {\it not}
 vestigial when we translate a parallel specification, but as we
 discuss in Section~\ref{sec:modular-parallelism}, we don't necessarily
@@ -344,7 +344,7 @@ transitions:
 %   (\Psi; 
 (\Gamma, z{:}\susp{{\sf hd}\,d_0\,d_{n+1}})%)
 \end{align*}
-Unlike the entirey-linear PDA specificaiton, the final state may include
+Unlike the entirely-linear PDA specification, the final state may include
 some additional 
 persistent propositions, represented by $\Gamma$. Specifically, the final state
 contains all the original ${\sf left}\,x\,d_i\,d_{i+1}$ and
@@ -366,13 +366,13 @@ turned some ordered atomic propositions linear and others
 persistent just as long as at least one atomic proposition in
 the premise of every rule remained linear after transformation.  
 This would have given a
-generic justification to turing ${\sf left}$, ${\sf right}$ and ${\sf
+generic justification for turning ${\sf left}$, ${\sf right}$ and ${\sf
   stack}$ persistent in Figure~\ref{fig:pda-lin} and to turning ${\sf
   cont}$ persistent in Figure~\ref{fig:dest-cbv}. However, that
 condition is not strong enough.  To see why, consider a signature with
 one rule, ${\sf a} \fuse {\sf b} \fuse {\sf a} \lefti \{ {\sf b} \}$,
 where ${\sf a}$ and ${\sf b}$ are ordered atomic propositions.  We can
-consturct the following trace:
+construct the following trace:
 \begin{align*}
 & (x_1{:}\susp{\sf a}, x_2{:}\susp{\sf b}, x_3{:}\susp{\sf a}, 
   x_4{:}\susp{\sf b}, x_5{:}\susp{\sf a})
@@ -428,7 +428,7 @@ It would be good to identify a condition that allowed us to
 selectively turn some ordered propositions persistent when
 destination-adding without violating (a version of)
 Theorem~\ref{thm:destcorrect}. In the absence of such a generic
-condition, it is still straightforward to see that peforming
+condition, it is still straightforward to see that performing
 destination-passing and then turning some propositions persistent is
 an {\it abstraction}: if the original system can make a series of
 transitions, the transformed system can simulate those transitions,
