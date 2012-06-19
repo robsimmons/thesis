@@ -436,31 +436,45 @@ but the reverse may not be true. Furthermore, for systems we are
 interested in (like push-down automata with persistent ${\sf stack}$,
 ${\sf left}$, and ${\sf right}$ or the sequential ordered abstract
 machines with persistent ${\sf cont}$), it happens to be the case that
-the abstraction is precise: the destination-passing specificiation can
+the abstraction is precise: the destination-passing specification can
 only make transitions which were possible in the ordered
 specification.
 
 \section{Exploring the richer fragment}
 
-In \cite{simmons11logical}, the destination-adding transformation was
-used to to expose information about the control structure of
-computations; this control structure can be harnessed by the program
-abstraction methodology described in the next chapter to derive
-program analyses. The exposure of control structure also allows us to
-modularly extend specifications with additional features relating to
-control. In this section, we explore programming language features
-that are not easily expressible with ordered abstract machine SSOS
-specifications but that can be easily expressed with
-destination-passing SSOS specifications.
+In \cite{simmons11logical}, we were interested in exact logical
+correspondence between ordered abstract machine SSOS specifications
+and destination-passing SSOS specifications. Destination-adding was
+useful in that setting because it exposes information about the
+control structure of computations; this control structure can be
+harnessed by the program abstraction methodology described in the next
+chapter to derive program analyses. In keeping with our broader use of
+the logical correspondence, in this section we will discuss
+programming language features that are not easily expressible with
+ordered abstract machine SSOS specifications but that can be easily
+expressed with destination-passing SSOS specifications. Consequently,
+these are features that can be modularly added to (sequential) ordered
+abstract machine specifications that have undergone the
+destination-adding transformation.
 
 The semantics of parallelism and failure presented in
 Section~\ref{sec:modular-parallelism} are new. The semantics of
-futures (Section~\ref{sec:dest-futures}) and syncronization
+futures (Section~\ref{sec:dest-futures}) and synchronization
 (Section~\ref{sec:dest-synch}) are a based on the specifications first
 presented in the CLF tech report \cite{cervesato02concurrent}; the
 semantics of first-class continuations
 (Section~\ref{sec:dest-continuations}) were presented previously in
-\cite{pfenning04substructural,pfenning09substructural}.
+\cite{pfenning04substructural,pfenning09substructural}. In
+destination-passing semantics, when we are dealing with fine-grained
+issues of control flow, the interaction of programming language
+features becomes more delicate.  Parallel evaluation, recoverable
+failure, and synchronization are compatible features, as are
+synchronization and futures. Failure and first-class continuations are
+also compatible. We will not handle other interactions, though it
+would be interesting to explore the adaptation of Moreau and Ribbens'
+abstract machine for Scheme with parallel evaluation and ${\sf
+  callcc}$ as a substructural operational semantics
+\cite{moreau96semantics}
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -481,7 +495,7 @@ integrating parallelism and failure were difficult or impossible to
 express, however. 
 
 Once we transition to destination-passing SSOS specifications, it is
-possible to give a more direct semantics to parallel evalution that
+possible to give a more direct semantics to parallel evaluation that
 better facilitates talking about failure. Instead of having the stack
 frame associated with parallel pairs be ${\sf cont}\,{\sf pair1}$ (as
 in Figure~\ref{fig:ssos-minml-core}) or ${\sf cont2}\,{\sf pair1}$ (as
@@ -490,7 +504,7 @@ ${\sf cont2}\,{\sf pair1}\,d_1\,d_2\,d$ with {\it three} destinations;
 $d_1$ and $d_2$ represent the return destinations points of the two
 subcomputations, whereas $d$ represents the destination to which the
 evaluated pair is to be returned. This strategy applied to the
-parallel evaluation of paris is shown in Figure~\ref{fig:dest-pair}.
+parallel evaluation of pairs is shown in Figure~\ref{fig:dest-pair}.
 
 In ordered specifications, an ordered atomic proposition can be
 directly connected to at most two other ordered propositions: the
@@ -522,11 +536,11 @@ that eagerly returns errors from either branch of a parallel
 computation. The rules ${\sf ev/errorL}$ and ${\sf ev/errorR}$ pass on
 errors returned to a place where the computation forks.  Those two
 rules also leave behind a linear proposition ${\sf terminate}\,d$ that
-will abort the other branch of computation if it returns succesfully
+will abort the other branch of computation if it returns successfully
 (rule ${\sf term/retn}$) or with an error (rule ${\sf term/err}$). It
 would also be possible to add additional rules like ${\sf cont}\,d'\,d
 \fuse {\sf terminate}\,d \lefti \{ {\sf terminate}\,d' \}$ that
-actively aborted the useless branch instaead of passively waiting for
+actively aborted the useless branch instead of passively waiting for
 it to finish.
 
 \subsection{Synchronization}
@@ -534,7 +548,9 @@ it to finish.
 
 The CLF tech report gives a presentation of the full set of Concurrent
 ML primitives that is equally applicable to destination-passing
-\sls~specifications \cite{cervesato02concurrent}.
+\sls~specifications \cite{cervesato02concurrent}. Rather than
+reprising that specification, we will discuss an extremely simple form
+of synchronous communication in Figure~\ref{fig:dest-synch}. 
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -543,7 +559,45 @@ ML primitives that is equally applicable to destination-passing
 \label{fig:dest-synch}
 \end{figure}
 
+New channels are created by the evaluating $\interp{{\sf chan}\,c.e} =
+{\sf chan}\,\lambda x.\,\interp{e}$, which introduces a new channel
+(an LF term of the type ${\sf channel}$ that has no constructors and
+substituted it for the bound $c$ in $e$). Synchronization happens when
+there is both a send ${\sf send}\,c\,e$ in one computation and a
+receive ${\sf recv}\,c$ in a different computation along the same
+channel. The expression $e$ will evaluate to a value $v$ in the first
+computation (rule ${\sf ev/send}$). The inter-process communication is
+driven by rule ${\sf ev/send1}$, which allows computation to continue
+in both the sender and the receiver.
 
+Synchronois communication introduces the possibility of
+deadlocks. Without synchronous communication, a suspended atomic
+proposition ${\sf eval}\,e\,d$ can always cause a transition to
+happen, and the combination of a proposition ${\sf retn}\,v\,d$ and a
+continuation ${\sf cont}\,f\,d\,d'$ can either immediately transition
+or else are permanently in a stuck
+state. In~\cite{pfenning09substructural}, this observation motivated a
+classification of atomic propositions as {\it active} propositions
+like ${\sf eval}\,e\,d$ that independently drive computation, {\it
+  passive} propositions like ${\sf cont}\,f\,d'\,d$ that do not drive
+computation, and {\it latent} propositions like ${\sf retn}\,f\,d$
+that may or may not drive computation based on the ambient environment
+of passive propositions. The specification in
+Figure~\ref{fig:dest-synch} does not respect this classification
+because ${\sf eval}\,({\sf recv}\,c)\,d$ cannot immediately
+transition. We could restore this classification by having a rule
+${\sf eval}\,({\sf recv}\,c)\,d \lefti \{ {\sf await}\,c\,d \}$ for
+some new passive linear predicate ${\sf await}$ and then replacing the
+premise ${\sf eval}\,({\sf recv}\,c)\,d$ in ${\sf ev/send1}$ with
+${\sf await}\,c\,d$.
+
+\subsubsection{Labeled transitions}
+
+Substructural operational semantics are a very continuation-focused
+formalism: this is part of what motivated our operationalization
+transformation from natural semantics and our informal discussion of
+statefully-modular natural semantics in
+Section~\ref{sec:enriching-natsem}.
 
 \subsection{Futures}
 \label{sec:dest-futures}
@@ -557,6 +611,8 @@ in the ordered
 
 The interaction of parallel evaluation and first-class continuations
 has been evaluated by Moreau and Ribbens in the context of Scheme
-\cite{moreau96semantics}; giving an SSOS encoding of their abstract
+\cite{moreau96semantics}
+
+; giving an SSOS encoding of their abstract
 machine would be interesting, but we do not do so here.
 
