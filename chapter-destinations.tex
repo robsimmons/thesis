@@ -320,6 +320,7 @@ want to run destination-adding on parallel ordered abstract machines
 anyway.
 
 \subsection{Persistent destination passing}
+\label{sec:persistentdestpass}
 
 When we translate our PDA specification, it is actually not necessary
 to translate ${\sf hd}$, ${\sf left}$, ${\sf right}$ and ${\sf stack}$ into
@@ -675,10 +676,64 @@ do when a future signals failure.
 \subsection{First-class continuations}
 \label{sec:dest-continuations}
 
-The interaction of parallel evaluation and first-class continuations
-has been evaluated by Moreau and Ribbens in the context of Scheme
-\cite{moreau96semantics}
+First-class continuations are an advanced control feature that give a
+Curry-Howard interpretation to classical logic. Continuations are
+another name for the stacks $k$ in abstract machine semantics with
+states $k \rhd e$ and $k \lhd v$ (and also, potentially, $k
+{\blacktriangleleft}$). First-class continuations introduce a 
+new value, ${\sf cont}\,k$, to the language. Programmers cannot 
+write continuations $k$ directly, just as they cannot write locations $l$
+directly; rather, the expression $\interp{{\sf letcc}\,x.e} = {\sf letcc}\,\lambda x.\interp{e}$ captures the current expression as a continuation:
+\begin{align*}
+  k \rhd {\sf letcc}\,x.e ~&\mapsto~ k \rhd [{\sf cont}\,k/x]e
+  \intertext{There is a third construct, $\interp{{\sf
+        throw}\,e_1\,{\sf to}\,e_2} = {\sf throw}\,e_1\,e_2$ that
+    evaluates $e_1$ to a value $v_1$, evaluates $e_2$ to a
+    continuation value ${\sf cont}\,k'$, and then throws away the
+    current continuation in favor of returning $v_1$ to $k'$:}  
+  k \rhd {\sf throw}\,e_1\,{\sf to}\,e_2 ~&\mapsto~
+  (k; {\sf throw}\,\Box\,{\sf to}\,e_2) \rhd e_1
+  \\
+  (k; {\sf throw}\,\Box\,{\sf to}\,e_2) \lhd v_1 ~&\mapsto~ (k; {\sf
+    throw}\,v_1\,{\sf to}\,\Box) \rhd e_2
+  \\
+  (k; {\sf throw}\,v_1\,{\sf to}\,\Box) \lhd {\sf cont}\,k' ~&\mapsto~
+  k' \lhd v_1
+\end{align*}
+When handled in a typed setting, a programming language with
+first-class continuations can be seen as a Curry-Howard interpretation
+of classical logic.
 
-; giving an SSOS encoding of their abstract
-machine would be interesting, but we do not do so here.
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/dest-letcc.sls}
+\caption{First-class continuations (with ${\sf letcc}$).}
+\label{fig:dest-letcc}
+\end{figure}
 
+
+In destination-passing SSOS specifications, we never represent
+continuations or control stacks $k$ directly. However, we showed in
+Section~\ref{sec:nat-ssos-adequacy} that a control stack $k$ is
+encoded in the context as a series of ${\sf cont}$ frames. In a
+destination-passing specification, it is reasonable to associate a $k$
+continuation with the destination $d$ that points to the topmost frame
+${\sf cont}\,f\,d\,d'$ in $k$. Destinations therefore stand for
+continuations in much the same way that introduced variables $x$ in
+the environment semantics stand for the values $v$ they are bound to
+through persistent ${\sf bind}\,x\,v$ propositions. In
+Figure~\ref{fig:dest-letcc}, the rule ${\sf ev/letcc}$ captures the
+current continuation $d$ as an expression ${\sf cont}\,d$ that is
+substituted into the subexpression. In rule ${\sf ev/throw2}$, the
+destination ${\sf cont}\,{\it dk}$ gets the value $v_1$ returned to
+it; the previous continuation, represented by the destination $d$, is
+abandoned.
+
+Just as it is critical for the ${\sf bind}$ predicate in the
+environment semantics to be persistent, it is necessary, when dealing
+with first-class-continuations, to have the ${\sf cont}$ predicate be
+persistent. As discussed in Section~\ref{sec:persistentdestpass}
+above, the precise destination-adding translation requires that ${\sf
+  cont}$ be linear, but it does not change the behavior of any SSOS
+specifications we have discussed if linear ${\sf cont}$ predicates are
+turned into persistent ${\sf cont}$ predicates.
