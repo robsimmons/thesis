@@ -1,13 +1,13 @@
 \chapter{Destination-passing}
 \label{chapter-destinations}
 
-The natural notion of ordering provided by ordered linear logic
-is quite convenient for encoding transition systems that 
-have a stack or tree-based control structure. The ordered
-abstract machine SSOS specifications from Chapter~6 demonstrate
-this; another example is the push-down automaton for parenthesis
-matching discussed in the introduction, which we can now present,
-in Figure~\ref{fig:pda-ord}, as an \sls~specification.
+The natural notion of ordering provided by ordered linear logic is
+quite convenient for encoding transition systems that maintain a stack
+or tree-based control structure. The ordered abstract machine SSOS
+specifications from Chapter~6 demonstrate this; another example is the
+push-down automaton for parenthesis matching discussed in the
+introduction, which we can now present, in Figure~\ref{fig:pda-ord},
+as an \sls~specification.
 
 \begin{figure}[ht]
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -16,30 +16,29 @@ in Figure~\ref{fig:pda-ord}, as an \sls~specification.
 \label{fig:pda-ord}
 \end{figure}
 
-The natural expression of order provided by \sls~makes ordered
-abstract machine specifications and the PDA specification in
-Figure~\ref{fig:pda-ord} much more concise. However, in a way that we
-will make precise in this chapter, ordered logic does not actually add
-any more {\it expressiveness} to concurrent specifications relative to
-linear logic. In Chapter~5, we argued that ordered abstract machines
-were at least as expressive as (moded) natural semantics by giving a
-transformation, operationalization, from the latter to the
-former. Analogously, in this chapter we will argue that concurrent
-specifications in linear logic are just as expressive as concurrent
-specifications in ordered logic by giving a transformation, {\it
-  destination-adding}, from the latter to the former.  As 
-originally presented by Pfenning and I in \cite{simmons11logical}, 
-the destination-adding transformation turns all ordered
-atomic propositions into linear atomic propositions, but tagged them
-with two new arguments (the destinations of the destination-adding
-transformation) that serve as a link between the formerly-ordered
-atomic proposition and the formerly-ordered atomic propositions that
-were previously to their left and to their right. 
+Ordered atomic propositions in \sls~can make specifications more
+concise. However, in a way that we will make precise in this chapter,
+ordered logic does not actually add any {\it expressiveness} to
+concurrent specifications relative to linear logic. In Chapter~5, we
+argued that ordered abstract machines were at least as expressive as
+(moded) natural semantics by giving a transformation,
+operationalization, from the latter to the former. Analogously, in
+this chapter we will argue that concurrent specifications in linear
+logic are just as expressive as concurrent specifications in ordered
+logic by giving a transformation, {\it destination-adding}, from the
+latter to the former.  As originally presented by Pfenning and I in
+\cite{simmons11logical}, the destination-adding transformation turns
+all ordered atomic propositions into linear atomic propositions, but
+tags them with two new arguments (the destinations of the
+destination-adding transformation) that serve as a link between the
+formerly-ordered atomic proposition and the formerly-ordered atomic
+propositions that were previously to their left and to their right.
 
 Destinations (terms of type ${\sf dest}$) have no constructors, they
 are only introduced as variables by existential quantification.  When
-we perform the destination-adding transformation on the PDA in
-Figure~\ref{fig:pda-ord}, we get the PDA in Figure~\ref{fig:pda-lin}.
+we perform the destination-adding transformation on the specification
+in Figure~\ref{fig:pda-ord}, we get the specification in
+Figure~\ref{fig:pda-lin}.
 
 
 \begin{figure}
@@ -79,7 +78,7 @@ synchronization in concurrent specifications.
 \label{sec:destination-adding}
 
 The destination-adding translation presented here is essentially the
-same as the one presented and proved correct in
+same as the one presented in
 \cite{simmons11logical}. The translation in that paper operated over
 rules of the form $\forall \overline{x}. S_1 \righti \{ S_2 \}$,
 whereas ours will operate over rules of the form $\forall
@@ -163,33 +162,32 @@ as far out as possible to get specifications that look more like
 Figure~\ref{fig:pda-lin}. We write the result of the destination-adding
 transformation on the signature $\Sigma$ as ${\it Dest}(\Sigma)$. 
 
-We could consider another simplification: is it necessary to generate
+We can consider a further simplification: is it necessary to generate
 a new destination $m$ by existential quantification in the head
 $\exists m.\,{\sf stack}\,x\,l\,m \fuse {\sf hd}\,m\,r$ of ${\sf
   push}$ in Figure~\ref{fig:pda-lin}? There is already a destination
-$m$ mentioned in the head that will be unused in the conclusion.  And
-for the translation that takes all formerly-ordered atomic
-propositions to linear atomic propositions, it would, in fact, be
-possible to avoid generating new destinations in the transformation of
-rules $\forall \overline{x}.\,S_1 \lefti \{ S_2 \}$ where the head
-$S_2$ contains no more ordered atomic propositions than the premise
-$S_1$. 
+$m$ mentioned in the head that will be unused in the conclusion.  It
+would, in fact, be possible to avoid generating new destinations in
+the transformation of rules $\forall \overline{x}.\,S_1 \lefti \{ S_2
+\}$ where the head $S_2$ contains no more ordered atomic propositions
+than the premise $S_1$. 
 
-We preserve this quantifier in part because, as presented above, our
-translation closely follows the contours of work by Morrill, Moot, and
-Piazza on translating ordered logic into linear logic
-\cite{morrill95higher,moot01linguistic}. That work is, in turn, based
-on van Benthem's relational models of ordered logic, which closely
-associate multiplicative conjunction $A \fuse B$ with existential
-quantification \cite{vanbenthem91relational}. In some ways, the
-aforementioned translations are more general than our
+We don't perform this simplification for a
+number of reasons.  First and foremost, the transformation described
+in Figure~\ref{fig:destadd-pos} closely follows the contours of work
+by Morrill, Moot, and Piazza on translating ordered logic into linear
+logic \cite{morrill95higher,moot01linguistic}. That work is, in turn,
+based on van Benthem's relational models of ordered logic, which
+closely associate multiplicative conjunction $A \fuse B$ with
+existential quantification \cite{vanbenthem91relational}. In some
+ways, the aforementioned translations are more general than our
 destination-adding transformation, as they handle a uniform logic
 instead of the concurrent fragment presented here and in here
 \cite{simmons11logical}. On the other hand, those translations only
 operate on a propositional fragment without the unit of multiplicative
 conjunction $\one$; as discussed in \cite[p.~57]{simmons11logical},
-the addition non-ordered atomic propositions, $\one$, and $t \doteq s$
-complicates matters significantly. 
+it complicates matters significantly when we add
+non-ordered atomic propositions, $\one$, and $t \doteq s$.
 
 In addition to following van Bentham's relational models, the
 transformation as we have given it simplifies the correctness
@@ -307,24 +305,24 @@ for emphasis):
 
 When we apply the translation of expressions to the call-by-value
 lambda calculus specification from Figure~\ref{fig:cbv-ev-ssos-fun},
-we get the specification in Figure~\ref{fig:dest-vestige}, which is
-has one problem: the second argument to ${\sf eval}$ and ${\sf retn}$
-is always $d'$, and the destination never changes; it is essentially a
-vestige of the destination-adding transformation. As long as we are
-transforming a sequential ordered abstract machine, we can eliminate
-this vestigial destination, giving us the specification in
-Figure~\ref{fig:dest-cbv}. This extra destination is {\it not}
+we get the specification in Figure~\ref{fig:dest-vestige}.  This
+specification has one problem: the second argument to ${\sf eval}$ and
+${\sf retn}$ is always $d'$, and the destination never changes; it is
+essentially a vestige of the destination-adding transformation. As
+long as we are transforming a sequential ordered abstract machine, we
+can eliminate this vestigial destination, giving us the specification
+in Figure~\ref{fig:dest-cbv}. This extra destination is {\it not}
 vestigial when we translate a parallel specification, but as we
 discuss in Section~\ref{sec:modular-parallelism}, we don't necessarily
-want to run destination-adding on parallel ordered abstract machines
+want to apply destination-adding to parallel ordered abstract machines
 anyway.
 
 \subsection{Persistent destination passing}
 \label{sec:persistentdestpass}
 
 When we translate our PDA specification, it is actually not necessary
-to translate ${\sf hd}$, ${\sf left}$, ${\sf right}$ and ${\sf stack}$ into
-linear atomic propositions; if we translate ${\sf hd}$ as
+to translate ${\sf hd}$, ${\sf left}$, ${\sf right}$ and ${\sf stack}$ as
+linear atomic propositions. If we translate ${\sf hd}$ as
 a linear predicate but translate the other predicates as persistent
 predicates, it will still be the case that there is always exactly one
 linear atomic proposition ${\sf hd}\,d_L\,d_R$ in the context, at most one
@@ -433,36 +431,36 @@ condition, it is still straightforward to see that performing
 destination-passing and then turning some propositions persistent is
 an {\it abstraction}: if the original system can make a series of
 transitions, the transformed system can simulate those transitions,
-but the reverse may not be true. Furthermore, for systems we are
-interested in (like push-down automata with persistent ${\sf stack}$,
-${\sf left}$, and ${\sf right}$ or the sequential ordered abstract
-machines with persistent ${\sf cont}$), it happens to be the case that
-the abstraction is precise: the destination-passing specification can
-only make transitions which were possible in the ordered
-specification.
+but the reverse may not be true. For systems we are interested in
+(like push-down automata with persistent ${\sf stack}$, ${\sf left}$,
+and ${\sf right}$ or the sequential ordered abstract machines with
+persistent ${\sf cont}$), it happens to be the case that the
+abstraction is precise: the partially-persistent destination-passing
+specification can only make transitions that were possible in the
+ordered specification.
 
 \section{Exploring the richer fragment}
 
 In \cite{simmons11logical}, we were interested in exact logical
 correspondence between ordered abstract machine SSOS specifications
-and destination-passing SSOS specifications. Destination-adding was
-useful in that setting because it exposes information about the
+and destination-passing SSOS specifications. (Destination-adding was
+useful in that context because it exposes information about the
 control structure of computations; this control structure can be
 harnessed by the program abstraction methodology described in the next
-chapter to derive program analyses. In keeping with our broader use of
-the logical correspondence, in this section we will discuss
-programming language features that are not easily expressible with
-ordered abstract machine SSOS specifications but that can be easily
-expressed with destination-passing SSOS specifications. Consequently,
-these are features that can be modularly added to (sequential) ordered
-abstract machine specifications that have undergone the
-destination-adding transformation.
+chapter to derive program analyses.) In keeping with our broader use
+of the logical correspondence, this section will cover programming
+language features that are not easily expressible with ordered
+abstract machine SSOS specifications but that can be easily expressed
+with destination-passing SSOS specifications. Consequently, these are
+features that can be modularly added to (sequential) ordered abstract
+machine specifications that have undergone the destination-adding
+transformation.
 
 The semantics of parallelism and failure presented in
 Section~\ref{sec:modular-parallelism} are new. The semantics of
 futures (Section~\ref{sec:dest-futures}) and synchronization
 (Section~\ref{sec:dest-synch}) are a based on the specifications first
-presented in the CLF tech report \cite{cervesato02concurrent}; the
+presented in the CLF tech report \cite{cervesato02concurrent}. The
 semantics of first-class continuations
 (Section~\ref{sec:dest-continuations}) were presented previously in
 \cite{pfenning04substructural,pfenning09substructural}. In
@@ -475,7 +473,7 @@ also compatible. We will not handle other interactions, though it
 would be interesting to explore the adaptation of Moreau and Ribbens'
 abstract machine for Scheme with parallel evaluation and ${\sf
   callcc}$ as a substructural operational semantics
-\cite{moreau96semantics}
+\cite{moreau96semantics}.
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -491,7 +489,7 @@ In Section~\ref{sec:failure}, we discussed how parallel evaluation and
 recoverable failure can be combined in an ordered abstract machine
 SSOS specification. Due to the fact that the two parts of a parallel
 ordered abstract machine are separated by an arbitrary amount of
-ordered context, some potentially desirable semantics ways of
+ordered context, some potentially desirable ways of
 integrating parallelism and failure were difficult or impossible to
 express, however. 
 
@@ -502,7 +500,7 @@ frame associated with parallel pairs be ${\sf cont}\,{\sf pair1}$ (as
 in Figure~\ref{fig:ssos-minml-core}) or ${\sf cont2}\,{\sf pair1}$ (as
 discussed in Section~\ref{sec:failure}), we create a continuation
 ${\sf cont2}\,{\sf pair1}\,d_1\,d_2\,d$ with {\it three} destinations;
-$d_1$ and $d_2$ represent the return destinations points of the two
+$d_1$ and $d_2$ represent the return destinations for the two
 subcomputations, whereas $d$ represents the destination to which the
 evaluated pair is to be returned. This strategy applied to the
 parallel evaluation of pairs is shown in Figure~\ref{fig:dest-pair}.
@@ -531,18 +529,18 @@ transformation in this thesis.
 \label{fig:dest-fail-paror}
 \end{figure}
 
-By the destination-based parallel continuations, we give, in
+Using destination-based parallel continuations, we give, in
 Figure~\ref{fig:dest-fail-paror}, a semantics for recoverable failure
 that eagerly returns errors from either branch of a parallel
-computation. The rules ${\sf ev/errorL}$ and ${\sf ev/errorR}$ pass on
-errors returned to a place where the computation forks.  Those two
-rules also leave behind a linear proposition ${\sf terminate}\,d$ that
-will abort the other branch of computation if it returns successfully
-(rule ${\sf term/retn}$) or with an error (rule ${\sf term/err}$). It
-would also be possible to add additional rules like ${\sf cont}\,d'\,d
-\fuse {\sf terminate}\,d \lefti \{ {\sf terminate}\,d' \}$ that
-actively aborted the useless branch instead of passively waiting for
-it to finish.
+computation. The rules ${\sf ev/errorL}$ and ${\sf ev/errorR}$
+immediately pass on errors returned to a frame where the computation
+forked.  Those two rules also leave behind a linear proposition ${\sf
+  terminate}\,d$ that will abort the other branch of computation if it
+returns successfully (rule ${\sf term/retn}$) or with an error (rule
+${\sf term/err}$). It would also be possible to add additional rules
+like ${\sf cont}\,d'\,d \fuse {\sf terminate}\,d \lefti \{ {\sf
+  terminate}\,d' \}$ that actively aborted the useless branch instead
+of passively waiting for it to finish.
 
 \subsection{Synchronization}
 \label{sec:dest-synch}
@@ -566,17 +564,17 @@ New channels are created by the evaluating $\interp{{\sf chan}\,c.e} =
 substituted it for the bound $c$ in $e$). Synchronization happens when
 there is both a send ${\sf send}\,c\,e$ in one computation and a
 receive ${\sf recv}\,c$ in a different computation along the same
-channel. The expression $e$ will evaluate to a value $v$ in the first
-computation (rule ${\sf ev/send}$). The inter-process communication is
+channel. The expression $e$ will first evaluate to a value $v$ 
+(rule ${\sf ev/send}$). Communication is
 driven by rule ${\sf ev/send1}$, which allows computation to continue
 in both the sender and the receiver.
 
 Synchronous communication introduces the possibility of
-deadlocks. Without synchronous communication, a suspended atomic
-proposition ${\sf eval}\,e\,d$ can always cause a transition to
-happen, and the combination of a proposition ${\sf retn}\,v\,d$ and a
-continuation ${\sf cont}\,f\,d\,d'$ can either immediately transition
-or else are permanently in a stuck
+deadlocks. Without synchronous communication, the presence of a
+suspended atomic proposition ${\sf eval}\,e\,d$ always indicates the
+possibility of some transition, and the combination of a proposition
+${\sf retn}\,v\,d$ and a continuation ${\sf cont}\,f\,d\,d'$ can
+either immediately transition or else are permanently in a stuck
 state. In~\cite{pfenning09substructural}, this observation motivated a
 classification of atomic propositions as {\it active} propositions
 like ${\sf eval}\,e\,d$ that independently drive computation, {\it
@@ -594,21 +592,24 @@ ${\sf await}\,c\,d$.
 
 \subsubsection{Labeled transitions}
 
-Substructural operational semantics are a very continuation-focused
-formalism, and continuations are not always the most natural way to
-express a specification. This observation motivated our
-operationalization transformation from natural semantics and our
-informal discussion of statefully-modular natural semantics in
-Section~\ref{sec:enriching-natsem}. 
+Substructural  operational semantics  are a  very continuation-focused
+formalism.  Continuations  are not  always  the  most  natural way  to
+express a specification, and this observation motivated our discussion
+of  the operationalization transformation  from natural  semantics and
+our  informal discussion  of statefully-modular  natural  semantics in
+Section~\ref{sec:enriching-natsem}.  In Chapter~6,  we showed that the
+continuation-focused  perspective   of  SSOS  allowed   us  to  expose
+computation to the ambient  state. With the example of synchronization
+above, we see that destination-passing SSOS specifications also expose
+computations in  the process state to {\it  other computations}, which
+is what  allows the synchronization  in rule ${\sf ev/send1}$  to take
+place.
 
-In Chapter~6, we showed that the continuation-focused perspective of
-SSOS allowed us to expose computation to the ambient state. With the
-example of synchronization above, we see that destination-passing SSOS
-specifications also expose computations in the process state to {\it
-  other computations}, which is what allows the synchronization in
-rule ${\sf ev/send1}$ to take place. In small-step operational
-semantics, labeled deduction is used to describe specifications like
-the one above:
+In small-step operational
+semantics, {\it labeled deduction} is used to describe specifications like
+the one above. We inductively define a small step judgment 
+$e ~{\stackrel{\footnotesize{\it lab}}{\longmapsto}}~
+e'$ with the property that
 \begin{itemize}
 \item $e ~{\stackrel{\footnotesize{c{\textbf{!}}v}}{\longmapsto}}~
 e'$ if $e$ steps to $e'$ by reducing some subterm ${\sf send}\,c\,v$,
@@ -616,7 +617,7 @@ to $\interp{\langle\rangle} = {\sf unit}$,
 \item $e
 ~{\stackrel{\footnotesize{c{\textbf{?}}v}}{\longmapsto}}~ e'$ if $e$
 steps to $e'$ by reducing some subterm ${\sf recv}\,c$ to $v$, and 
-\item $e_1$ in parallel with $e_2$ can reduce to $e_1'$
+\item $e_1$ in parallel with $e_2$ can step to $e_1'$
 in parallel with $e_2'$ if $e_1
 ~{\stackrel{\footnotesize{c{\textbf{!}}v}}{\longmapsto}}~ e_1'$ and
 $e_2 ~{\stackrel{\footnotesize{c{\textbf{?}}v}}{\longmapsto}}~ e_2'$.
@@ -628,8 +629,8 @@ series of continuation frames throughout the context, and so the
 innermost redexes of terms can be directly connected. It would be
 interesting (but probably quite nontrivial) to consider a translation
 from labeled deduction systems to destination-passing SSOS
-specifications for synchronization along the lines of the
-operationalization transformation.
+specifications along the lines of the operationalization
+transformation.
 
 
 \begin{figure}
@@ -661,7 +662,7 @@ proposition -- ${\sf promise}\,{\it dfuture}\,x$ -- that will take
 any value returned to ${\it dfuture}$ and permanently bind it to $x$
 (rule ${\sf ev/promise}$). As a proposition that only exists during
 the course of evaluating the argument, ${\sf promise}$ is analogous to
-the ${\sf blackhole}$ predicate form the call-by-need specification.
+the black hole in our specification of lazy call-by-need.
 
 Futures illustrate the use of destination-passing to create new and
 potentially disconnected threads of computation. This was not possible
@@ -676,14 +677,15 @@ do when a future signals failure.
 \subsection{First-class continuations}
 \label{sec:dest-continuations}
 
-First-class continuations are an advanced control feature that give a
-Curry-Howard interpretation to classical logic. Continuations are
-another name for the stacks $k$ in abstract machine semantics with
-states $k \rhd e$ and $k \lhd v$ (and also, potentially, $k
-{\blacktriangleleft}$). First-class continuations introduce a 
-new value, ${\sf cont}\,k$, to the language. Programmers cannot 
-write continuations $k$ directly, just as they cannot write locations $l$
-directly; rather, the expression $\interp{{\sf letcc}\,x.e} = {\sf letcc}\,\lambda x.\interp{e}$ captures the current expression as a continuation:
+First-class continuations are a sophisticated control feature.
+{\it Continuations} are another name for the stacks $k$ in abstract machine
+semantics with states $k \rhd e$ and $k \lhd v$ (and also,
+potentially, $k {\blacktriangleleft}$). First-class continuations
+introduce a new value, ${\sf cont}\,k$, to the language. Programmers
+cannot write continuations $k$ directly, just as they cannot write
+locations $l$ directly; rather, the expression $\interp{{\sf
+    letcc}\,x.e} = {\sf letcc}\,\lambda x.\interp{e}$ captures the
+current expression as a continuation:
 \begin{align*}
   k \rhd {\sf letcc}\,x.e ~&\mapsto~ k \rhd [{\sf cont}\,k/x]e
   \intertext{There is a third construct, $\interp{{\sf
@@ -716,12 +718,13 @@ In destination-passing SSOS specifications, we never represent
 continuations or control stacks $k$ directly. However, we showed in
 Section~\ref{sec:nat-ssos-adequacy} that a control stack $k$ is
 encoded in the context as a series of ${\sf cont}$ frames. In a
-destination-passing specification, it is reasonable to associate a $k$
-continuation with the destination $d$ that points to the topmost frame
-${\sf cont}\,f\,d\,d'$ in $k$. Destinations therefore stand for
-continuations in much the same way that introduced variables $x$ in
-the environment semantics stand for the values $v$ they are bound to
-through persistent ${\sf bind}\,x\,v$ propositions. In
+destination-passing specification, it is therefore reasonable to
+associate a $k$ continuation with the destination $d$ that points to
+the topmost frame ${\sf cont}\,f\,d\,d'$ in the stack $k$ encoded in
+the process state. Destinations therefore stand for continuations in
+much the same way that introduced variables $x$ in the environment
+semantics stand for the values $v$ they are bound to through
+persistent ${\sf bind}\,x\,v$ propositions. In
 Figure~\ref{fig:dest-letcc}, the rule ${\sf ev/letcc}$ captures the
 current continuation $d$ as an expression ${\sf cont}\,d$ that is
 substituted into the subexpression. In rule ${\sf ev/throw2}$, the
@@ -732,8 +735,7 @@ abandoned.
 Just as it is critical for the ${\sf bind}$ predicate in the
 environment semantics to be persistent, it is necessary, when dealing
 with first-class-continuations, to have the ${\sf cont}$ predicate be
-persistent. As discussed in Section~\ref{sec:persistentdestpass}
-above, the precise destination-adding translation requires that ${\sf
-  cont}$ be linear, but it does not change the behavior of any SSOS
-specifications we have discussed if linear ${\sf cont}$ predicates are
-turned into persistent ${\sf cont}$ predicates.
+persistent. As discussed in Section~\ref{sec:persistentdestpass} it
+does not change the behavior of any SSOS specifications we have
+discussed if linear ${\sf cont}$ predicates are turned into persistent
+${\sf cont}$ predicates.
