@@ -131,8 +131,8 @@ Our logic has first-order quantification, so we can describe a more
 general push-down automata that uses ${\sf left}(X)$ and ${\sf
   right}(X)$ to describe left and right angle braces ($X = {\sf an}$),
 square braces ($X = {\sf sq}$), or parentheses ($X = {\sf pa}$). The
-string {\sf [ \textless~\textgreater~( [ ] ) ]} could be represented by the following
-sequence of ordered atomic propositions:
+string {\sf [ \textless~\textgreater~( [ ] ) ]} could be represented
+by the following sequence of ordered atomic propositions:
 \[
 {\sf 
   left(sq) ~~
@@ -153,10 +153,47 @@ The following rules describe the more general push-down automaton:
 {\sf pop} &: ~~ \forall x.\, 
   {\sf stack}(x) \fuse {\sf hd} \fuse {\sf right}(x) ~\lefti~ \{ {\sf hd} \}
 \end{align*}
-Actually showing
+Note that while we use the fuse connective to indicate adjacent tokens
+in the rules above, no fuses appear in
+Figure~\ref{fig:pda-transitions}. That is because the intermediate
+states are not propositions in the same way rules are
+propositions. Rather, the intermediate states in
+Figure~\ref{fig:pda-transitions} are {\it contexts} in ordered logic,
+which we will call {\it process states}. 
+
+Part~1 of this thesis is concerned with the design of a logical
+framework for specifying transition systems. The most distinctive
+characteristic of these transition systems is that the intermediate
+states of computation are entirely encoded in the structure of a
+contexts. In this respect, the work follows in the footsteps of
+Miller's Forum \cite{miller96forum}, Cervesato and Scedrov's multiset
+rewriting language $\omega$ \cite{cervesato09relating}, and Watkins et
+al.'s CLF \cite{watkins02concurrent}. The major contribution of this
+part is the development of {\it structural focalization}, which
+unifies Andreoli's work on focused logics \cite{andreoli92logic} with
+the {\it hereditary substitution} technique that Watkins developed in
+the context of CLF \cite{watkins02concurrent}. Chapter~2 explains
+structural focalization in the context of linear logic, Chatper~3
+establishes focalization for a richer substructural logic \ollll, and
+Chapter~4 takes focused \ollll~and carves out \sls, a CLF-like
+framework of \underline{\bf s}ubstructural \underline{\bf l}ogical
+\underline{\bf s}pecifications.
 
 \section{Substructural operational semantics}
 \label{sec:intro-ssos}
+
+We are not primarily interested in representing systems like PDAs;
+rather, our main empahsis is in the represetnation of the operational
+semantics of programming languages. We can represent operational
+semantics in \sls~in many ways, most of are in a broad specification
+style called {\it substructural operational semantics}, or
+SSOS.\footnote{The term {\it substructural operational semantics} is a
+  bit of a portmanteau, merging structural operational semantics
+  \cite{plotkin04structural}, which we seek to generalize, and
+  substructural logic, which forms the basis of our specificaiton
+  framework.} SSOS is a synthesis of structural operational semantics,
+abstract machines, and logical specifications where machine states are
+represented by collections of atomic propositions.
 
 Abstract machine rules
 
