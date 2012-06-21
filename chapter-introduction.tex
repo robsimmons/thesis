@@ -1,14 +1,159 @@
 \chapter{Introduction}
 \label{chapter-introduction}
 
-The {\it lingua franca} of programming languages research is the {\it
-  inductive definition}. Our type systems are inductive definitions
-like $\Gamma \vdash e : \tau$ (within the typing context $\Gamma$, 
-the term $e$ has type $\tau$), and our 
+% The topic of this thesis is the specification of {\it evolving systems}
 
-\section{Substructural logical specifications}
+% The {\it lingua franca} of research in programming languages and
+% logics is the {\it inductive definition}. Type systems are defined in
+% terms of inductive definitions like $\Gamma \vdash e : \tau$
+% (within the typing context $\Gamma$, the term $e$ has type $\tau$).
+% % \[
+% % \infer
+% % {\Gamma \vdash x : \tau \mathstrut}
+% % {x{:}\tau \in \Gamma \mathstrut}
+% % \quad
+% % \infer
+% % {\Gamma \vdash {\sf z} : {\sf nat} \mathstrut}
+% % {}
+% % \quad
+% % \infer
+% % {\Gamma \vdash {\sf s}\,e : {\sf nat} \mathstrut}
+% % {\Gamma \vdash e_1 : {\sf nat}
+% %  &
+% %  \Gamma \vdash e_2 : {\sf nat}}
+% % \]
+% Operational semantics are also defined in terms of inductive
+% definitions: a {\it small-step} semantics has the form $e \mapsto e'$
+% (the expression or machine state $e$ can transition to $e'$), and a
+% {\it big-step} semantics has the form $e \Downarrow v$ (the expression
+% or machine state $e$ can ultimately produce the terminal machine state
+% $v$). 
+
+% Proof assistants -- computer programs that help programming language
+% researchers specify systems, explore their behavior, and prove
+% properties of their behavior -- obviously must therefore be able to
+% talk about inductive definitions. The most common way proof assistants
+% do this is by directly incorporating a notion of inductive definition
+% into their framework. Coq \cite{}, Agda \cite{}, ATS \cite{},
+% Isabelle/HOL \cite{}, Matita \cite{}, and Abella \cite{} all work this
+% way; inductive types are introduced
+
+%  which covers all the theorem provers used to prove the POPLMark
+% challenge except for Twelf.
 
 
+% used in these domains therefore universally
+% include a notion of {\it inductive definition} as the primary form of
+
+A central goal of logical frameworks is to specify the operational
+semantics of evolving systems (in particular, the operational
+semantics of programming languages) in a framework that is logically
+motivated and that allows specifications to be as simple as possible.
+This thesis considers an approach to the specification of evolving
+systems that is based on a family of logics called {\it substructural
+  logics}.
+
+Many interesting stateful systems have a natural notion of {\it
+  ordering} that is fundamental to their behavior. Consider a
+push-down automaton (PDA) that reads a string of symbols left-to-right
+while maintaining and manipulating a separate stack of symbols. We can
+represent any configuration of the PDA as a sequence 
+with three regions:
+\[
+[~\mbox{the stack}~]
+~
+[~\mbox{the head}~]
+~
+[~\mbox{the string being read}~]
+\]
+where the symbols closest to the head are the top of the stack and the
+symbol waiting to be read from the string. If we represent the head as
+a token ${\sf hd}$, we can describe the behavior of a single-state
+push-down automataton for checking that a string has only matching 
+angle braces by using two rewriting rules:
+\begin{align}
+\tag{push} {\sf hd}~{<} ~&\rightsquigarrow~ {<}~{\sf hd}
+\\
+\tag{pop} {<}~{\sf hd}~{>} ~&\rightsquigarrow~ {\sf hd}
+\end{align}
+The distinguishing feature of these rewriting rules is that they are
+{\it local} -- they do not mention the entire stack or the entire
+string, just the relevant fragment at the beginning of the string and
+the top of the stack. Execution of the PDA on a particular string of
+tokens then consists of (1) appending the token ${\sf hd}$ to the
+beginning of the string, (2) repeatedly performing rewritings until no
+more rewrites are possible, and (3) checking to see if only a single
+token ${\sf hd}$ remains. One possible series of transitions that this
+rewriting system can take is shown in Figure~\ref{fig:pda-transitions}
+
+\begin{figure}
+\begin{align*}
+{\sf hd}~~{<}~~{<}~~{>}~~{<}~~{<}~~{>}~~{>}~~{>}
+& ~~~\rightsquigarrow~~\\
+{<}~~{\sf hd}~~{<}~~{>}~~{<}~~{<}~~{>}~~{>}~~{>}
+& ~~~\rightsquigarrow~~\\
+{<}~~{<}~~{\sf hd}~~{>}~~{<}~~{<}~~{>}~~{>}~~{>}
+& ~~~\rightsquigarrow~~\\
+{<}~~{\sf hd}~~{<}~~{<}~~{>}~~{>}~~{>}
+& ~~~\rightsquigarrow~~\\
+{<}~~{<}~~{\sf hd}~~{<}~~{>}~~{>}~~{>}
+& ~~~\rightsquigarrow~~\\
+{<}~~{<}~~{<}~~{\sf hd}~~{>}~~{>}~~{>}
+& ~~~\rightsquigarrow~~\\
+{<}~~{<}~~{\sf hd}~~{>}~~{>}
+& ~~~\rightsquigarrow~~\\
+{<}~~{\sf hd}~~{>}
+& ~~~\rightsquigarrow~~\\
+{\sf hd} &
+\end{align*}
+\caption{Series of PDA transitions.}
+\label{fig:pda-transitions}
+\end{figure}
+
+Because our goal is to use a framework that is both simple and
+logically motivated, we turn to {\it ordered logic} (originally
+presented by Lambek~\cite{lambek58mathematics}), a logic where
+hypotheses have an intrinsic notion of order. The rewriting rules
+we considered above can be explained as propositions in ordered
+logic, where the tokens ${\sf hd}$, $>$, and $<$ are all treated as
+{\it atomic propositions}:
+\begin{align*}
+{\sf push} &: ~~ {\sf hd} \fuse {<} ~\lefti~ \{ {<} \fuse {\sf hd} \}
+\\ 
+{\sf pop} &: ~~ {<} \fuse {\sf hd} \fuse {>} ~\lefti~ \{ {\sf hd} \}
+\end{align*}
+The symbol $\fuse$ (pronounced ``fuse'') is the binary connective for
+ordered conjunction (i.e. concatenation); it binds more tightly than
+$\lefti$, a binary connective for ordered implication. The curly
+braces $\{ \ldots \}$ can be ignored for now.
+
+Our logic has first-order quantification, so we can describe a more
+general push-down automata that uses ${\sf left}(X)$ and ${\sf
+  right}(X)$ to describe left and right angle braces ($X = {\sf an}$),
+square braces ($X = {\sf sq}$), or parentheses ($X = {\sf pa}$). The
+string {\sf [ \textless~\textgreater~( [ ] ) ]} could be represented by the following
+sequence of ordered atomic propositions:
+\[
+{\sf 
+  left(sq) ~~
+  left(an) ~~
+  right(an) ~~
+  left(pa) ~~
+  left(sq) ~~
+  right(sq) ~~
+  right(pa) ~~
+  right(sq)
+}
+\]
+The following rules describe the more general push-down automaton:
+\begin{align*}
+{\sf push} &: ~~ \forall x.\, 
+  {\sf hd} \fuse {\sf left}(x) ~\lefti~ \{ {\sf stack}(x) \fuse {\sf hd} \}
+\\ 
+{\sf pop} &: ~~ \forall x.\, 
+  {\sf stack}(x) \fuse {\sf hd} \fuse {\sf right}(x) ~\lefti~ \{ {\sf hd} \}
+\end{align*}
+Actually showing
 
 \section{Substructural operational semantics}
 \label{sec:intro-ssos}
