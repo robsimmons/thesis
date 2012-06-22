@@ -183,18 +183,119 @@ framework of \underline{\bf s}ubstructural \underline{\bf l}ogical
 \label{sec:intro-ssos}
 
 We are not primarily interested in representing systems like PDAs;
-rather, our main empahsis is in the represetnation of the operational
+rather, our main empahsis is in the representing the operational
 semantics of programming languages. We can represent operational
-semantics in \sls~in many ways, most of are in a broad specification
-style called {\it substructural operational semantics}, or
-SSOS.\footnote{The term {\it substructural operational semantics} is a
-  bit of a portmanteau, merging structural operational semantics
+semantics in \sls~in many ways, but we are particulary interested in a
+broad specification style called {\it substructural operational
+  semantics}, or SSOS.\footnote{The term {\it substructural
+    operational semantics} merges structural operational semantics
   \cite{plotkin04structural}, which we seek to generalize, and
   substructural logic, which forms the basis of our specificaiton
   framework.} SSOS is a synthesis of structural operational semantics,
-abstract machines, and logical specifications where machine states are
-represented by collections of atomic propositions.
+abstract machines, and logical specifications.
 
+One of our running
+examples will be a call-by-value operational semantics for the untyped
+lambda calculus, defined by the BNF grammar:
+\[
+e ::= x \mid \lambda x.e \mid e_1\,e_2
+\]
+Taking some slight liberties with our representation of terms, we can
+describe call-by-value evaluation for this language with the same
+rewriting rules we used to describe the PDA. Instead of a head ${\sf
+  hd}$, our specification uses two atomic propositions: ${\sf
+  eval}(e)$ for an unevaluated expression $e$, and ${\sf retn}(v)$
+for an evaluated value $v$.
+
+
+The evaluation of a lambda expression
+is simple, as it is already a fully evaluated value, so we replace
+${\sf eval}(\lambda x.e)$ in-place with ${\sf retn}(\lambda x.e)$:
+\begin{align*}
+{\sf ev/lam}&: ~~ 
+  {\sf eval}\,(\lambda x.e) \lefti \{ {\sf retn}\,(\lambda x.e) \}
+%
+  \intertext{The evaluation an application $e_1\,e_2$, on the other
+    hand, requires us to push a new element onto the stack. In place
+    of the PDA's stack of propositions ${\sf stack}(x)$ growing off to
+    the left, we maintain a stack of ${\sf cont}(f)$ propositions
+    growing off to the right, where $f$ is called a {\it frame}. We
+    evaluate $e_1\,e_2$ by evaluating $e_1$ and leaving behind a frame
+    $\Box\,e_2$ that suspends the argument $e_2$ while $e_1$ is being
+    evaluated to a value.}
+%
+{\sf ev/app}&: ~~ 
+  {\sf eval}\,(e_1\,e_2) \lefti \{ {\sf eval}\,(e_1) 
+     \fuse {\sf cont}\,(\Box\,e_2) \}
+%
+     \intertext{When a function is returned to a waiting $(\Box\,e_2)$
+       frame, we switch to evaluating the function argument while
+       storing the returned function in a frame $((\lambda
+       x.e)\,\Box)$.}
+%
+{\sf ev/app1}&: ~~
+  {\sf retn}\,(\lambda x.e) \fuse {\sf cont}\,(\Box\,e_2)
+    \lefti \{ {\sf eval}\,(e_2) \fuse {\sf cont}\,((\lambda x.e)\,\Box) \}
+%
+    \intertext{Finally, when an evaluated function argument is
+      returned to the waiting $((\lambda x.e)\,\Box)$ frame, we
+      substitute the value into the body of the lambda expression and
+      evaluate the result.}
+%
+{\sf ev/app2}&: ~~
+  {\sf retn}\,(v_2) \fuse {\sf cont}\,((\lambda x.e)\,\Box)
+    \lefti \{ {\sf eval}\,([v_2/x]e) \}
+%
+\end{align*}
+
+\begin{figure}
+\begin{align*}
+{\sf eval}\,((\lambda x.x)\,((\lambda y.y)\,(\lambda z.e))) 
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app}$}\\
+{\sf eval}\,(\lambda x.x) \quad
+{\sf cont}\,(\Box\,((\lambda y.y)\,(\lambda z.e)))
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/lam}$}\\
+{\sf retn}\,(\lambda x.x) \quad
+{\sf cont}\,(\Box\,((\lambda y.y)\,(\lambda z.e)))
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app1}$}\\
+{\sf eval}\,((\lambda y.y)\,(\lambda z.e)) \quad
+{\sf cont}\,((\lambda x.x)\,\Box)
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app}$}\\
+{\sf eval}\,(\lambda y.y) \quad
+{\sf cont}\,(\Box\,(\lambda z.e)) \quad
+{\sf cont}\,((\lambda x.x)\,\Box)
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/lam}$}\\
+{\sf retn}\,(\lambda y.y) \quad
+{\sf cont}\,(\Box\,(\lambda z.e)) \quad
+{\sf cont}\,((\lambda x.x)\,\Box)
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app1}$}\\
+{\sf eval}\,(\lambda z.e) \quad
+{\sf cont}\,((\lambda y.y)\,\Box) \quad
+{\sf cont}\,((\lambda x.x)\,\Box)
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/lam}$}\\
+{\sf retn}\,(\lambda z.e) \quad
+{\sf cont}\,((\lambda y.y)\,\Box) \quad
+{\sf cont}\,((\lambda x.x)\,\Box)
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app2}$}\\
+{\sf eval}\,(\lambda z.e) \quad
+{\sf cont}\,((\lambda x.x)\,\Box)
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/lam}$}\\
+{\sf retn}\,(\lambda z.e) \quad
+{\sf cont}\,((\lambda x.x)\,\Box)
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app2}$}\\
+{\sf eval}\,(\lambda z.e) 
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/lam}$}\\
+{\sf retn}\,(\lambda z.e) 
+& ~~~\not\rightsquigarrow~~ 
+\end{align*}
+\caption{SSOS evaluation of an expression to a value.}
+\label{fig:ssos-example}
+\end{figure}
+
+These four rules constitute a substructural operational semantics 
+specification of call-by-value evaluation; an example of an evaluating
+the expression $(\lambda x.x)\,((\lambda y.y)\,(\lambda z.e))$ to a value
+is given in Figure~\ref{fig:ssos-example}
 Abstract machine rules
 
 \subsection{Modular and non-modular specification}
