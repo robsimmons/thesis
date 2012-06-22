@@ -128,11 +128,11 @@ $\lefti$, a binary connective for ordered implication. The curly
 braces $\{ \ldots \}$ can be ignored for now.
 
 Our logic has first-order quantification, so we can describe a more
-general push-down automata that uses ${\sf left}(X)$ and ${\sf
+general push-down automaton that uses ${\sf left}(X)$ and ${\sf
   right}(X)$ to describe left and right angle braces ($X = {\sf an}$),
-square braces ($X = {\sf sq}$), or parentheses ($X = {\sf pa}$). The
-string {\sf [ \textless~\textgreater~( [ ] ) ]} could be represented
-by the following sequence of ordered atomic propositions:
+square braces ($X = {\sf sq}$), and parentheses ($X = {\sf pa}$). The
+string {\sf [ \textless~\textgreater~( [ ] ) ]} is then represented by
+the following sequence of ordered atomic propositions:
 \[
 {\sf 
   left(sq) ~~
@@ -159,40 +159,46 @@ Figure~\ref{fig:pda-transitions}. That is because the intermediate
 states are not propositions in the same way rules are
 propositions. Rather, the intermediate states in
 Figure~\ref{fig:pda-transitions} are {\it contexts} in ordered logic,
-which we will call {\it process states}. 
+which we will refer to as {\it process states}. 
 
-Part~1 of this thesis is concerned with the design of a logical
-framework for specifying transition systems. The most distinctive
-characteristic of these transition systems is that the intermediate
-states of computation are entirely encoded in the structure of a
-contexts. In this respect, the work follows in the footsteps of
-Miller's Forum \cite{miller96forum}, Cervesato and Scedrov's multiset
-rewriting language $\omega$ \cite{cervesato09relating}, and Watkins et
-al.'s CLF \cite{watkins02concurrent}. The major contribution of this
-part is the development of {\it structural focalization}, which
-unifies Andreoli's work on focused logics \cite{andreoli92logic} with
-the {\it hereditary substitution} technique that Watkins developed in
-the context of CLF \cite{watkins02concurrent}. Chapter~2 explains
-structural focalization in the context of linear logic, Chapter~3
-establishes focalization for a richer substructural logic \ollll, and
-Chapter~4 takes focused \ollll~and carves out \sls, a CLF-like
-framework of \underline{\bf s}ubstructural \underline{\bf l}ogical
-\underline{\bf s}pecifications.
+The most distinctive characteristic of these transition systems is
+that the intermediate stages of computation are encoded in the
+structure of a substructural context (a process state). This general
+idea dates back to Miller \cite{miller92pi} and his Ph.D. student
+Chirimar \cite{chirimar95proof}, who encoded the intermediate states
+of a $\pi$-calculus and of a low-level RISC machine (respectively) as
+contexts in focused classical linear logic.  Part~1 of this thesis is
+concerned with the design of logical frameworks for specifying
+transition systems.  In this respect, this part of the thesis follows
+in the footsteps of Miller's Forum \cite{miller96forum}, Cervesato and
+Scedrov's multiset rewriting language $\omega$
+\cite{cervesato09relating}, and Watkins et al.'s CLF
+\cite{watkins02concurrent}. The major contribution of this part of the
+thesis is the development of {\it structural focalization}
+\cite{simmons11structural}, which unifies Andreoli's work on focused
+logics \cite{andreoli92logic} with the {\it hereditary substitution}
+technique that Watkins developed in the context of CLF
+\cite{watkins02concurrent}. Chapter~2 explains structural focalization
+in the context of linear logic, Chapter~3 establishes focalization for
+a richer substructural logic \ollll, and Chapter~4 takes focused
+\ollll~and carves out \sls, a CLF-like framework of \underline{\bf
+  s}ubstructural \underline{\bf l}ogical \underline{\bf
+  s}pecifications.
 
 \section{Substructural operational semantics}
 \label{sec:intro-ssos}
 
 We are not primarily interested in representing systems like PDAs;
-rather, our main emphasis is in the representing the operational
-semantics of programming languages. We can represent operational
-semantics in \sls~in many ways, but we are particularly interested in a
-broad specification style called {\it substructural operational
-  semantics}, or SSOS.\footnote{The term {\it substructural
-    operational semantics} merges structural operational semantics
-  \cite{plotkin04structural}, which we seek to generalize, and
-  substructural logic, which forms the basis of our specification
-  framework.} SSOS is a synthesis of structural operational semantics,
-abstract machines, and logical specifications.
+rather, our goal is to represent the operational semantics of
+programming languages. We can represent operational semantics in
+\sls~in many ways, but we are particularly interested in a broad
+specification style called {\it substructural operational semantics},
+or SSOS.\footnote{The term {\it substructural operational semantics}
+  merges structural operational semantics \cite{plotkin04structural},
+  which we seek to generalize, and substructural logic, which forms
+  the basis of our specification framework.} SSOS is a synthesis of
+structural operational semantics, abstract machines, and logical
+specifications.
 
 One of our running
 examples will be a call-by-value operational semantics for the untyped
@@ -200,7 +206,7 @@ lambda calculus, defined by the BNF grammar:
 \[
 e ::= x \mid \lambda x.e \mid e_1\,e_2
 \]
-Taking some slight liberties with our representation of terms, we can
+Taking some liberties with our representation of terms, we can
 describe call-by-value evaluation for this language with the same
 rewriting rules we used to describe the PDA. Instead of a head ${\sf
   hd}$, our specification uses two atomic propositions: ${\sf
@@ -208,19 +214,19 @@ rewriting rules we used to describe the PDA. Instead of a head ${\sf
 for an evaluated value $v$.
 
 
-The evaluation of a lambda expression
-is simple, as it is already a fully evaluated value, so we replace
-${\sf eval}(\lambda x.e)$ in-place with ${\sf retn}(\lambda x.e)$:
+The evaluation of a function is simple, as a function is already a
+fully evaluated value, so we replace ${\sf eval}(\lambda x.e)$
+in-place with ${\sf retn}(\lambda x.e)$:
 \begin{align*}
 {\sf ev/lam}&: ~~ 
   {\sf eval}\,(\lambda x.e) \lefti \{ {\sf retn}\,(\lambda x.e) \}
 %
-  \intertext{The evaluation an application $e_1\,e_2$, on the other
+  \intertext{The evaluation of an application $e_1\,e_2$, on the other
     hand, requires us to push a new element onto the stack. In place
     of the PDA's stack of propositions ${\sf stack}(x)$ growing off to
     the left, we maintain a stack of ${\sf cont}(f)$ propositions
-    growing off to the right, where $f$ is called a {\it frame}. We
-    evaluate $e_1\,e_2$ by evaluating $e_1$ and leaving behind a frame
+    growing off to the right; $f$ is called a {\it frame}. We evaluate
+    $e_1\,e_2$ by evaluating $e_1$ and leaving behind a frame
     $\Box\,e_2$ that suspends the argument $e_2$ while $e_1$ is being
     evaluated to a value.}
 %
@@ -239,8 +245,8 @@ ${\sf eval}(\lambda x.e)$ in-place with ${\sf retn}(\lambda x.e)$:
 %
     \intertext{Finally, when an evaluated function argument is
       returned to the waiting $((\lambda x.e)\,\Box)$ frame, we
-      substitute the value into the body of the lambda expression and
-      evaluate the result.}
+      substitute the value into the body of the function and evaluate
+      the result.}
 %
 {\sf ev/app2}&: ~~
   {\sf retn}\,(v_2) \fuse {\sf cont}\,((\lambda x.e)\,\Box)
@@ -293,32 +299,28 @@ ${\sf eval}(\lambda x.e)$ in-place with ${\sf retn}(\lambda x.e)$:
 \end{figure}
 
 These four rules constitute an SSOS specification of call-by-value
-evaluation; an example of an evaluating the expression $(\lambda
+evaluation; an example of evaluating the expression $(\lambda
 x.x)\,((\lambda y.y)\,(\lambda z.e))$ to a value under this
-specification is given in Figure~\ref{fig:ssos-example}.  As before,
-each machine state is represented by a process state or ordered
+specification is given in Figure~\ref{fig:ssos-example}.  Again, each
+intermediate state is represented by a process state or ordered
 context.
 
-The general idea of representing the intermediate states of
-computation in a programming language specification as a context in
-substructural logic dates back to Miller \cite{miller92pi} and his
-Ph.D. student Chirimar \cite{chirimar95proof}, who encoded the
-intermediate states of a $\pi$-calculus and of a low-level RISC
-machine (respectively) as contexts in focused classical linear logic.
+The \sls~framework admits many styles of specification. The SSOS
+specification above resides in the {\it concurrent} fragment of
+\sls. (This rewriting-like fragment is called concurrent in part
+because we can just as easily seed the process state with two
+propositions ${\sf eval}(e)$ and ${\sf eval}(e')$ that will evaluate
+to values concurrently, side-by-side in the process state.)  Even
+within purely-concurrent specifications, there is a large design space
+of potential SSOS specifications, a point that will be explained
+further in Chapter~5.
 
-The \sls~framework admits many styles of specification. The
-SSOS specification above resides in the {\it
-  concurrent} fragment of \sls. This rewriting-like fragment is called
-concurrent because we can just as easily seed the process state with
-two propositions ${\sf eval}(e)$ and ${\sf eval}(e')$ that will
-evaluate to values concurrently, side-by-side in the process state.
 On the other end of the spectrum, the {\it deductive} fragment of
 \sls~supports the specification of inductive definitions by the same
-methodology of adequate encoding used to represent inductive
-definitions in the LF logical framework \cite{harper93framework}. 
-
-We can therefore use the deductive fragment of \sls~to specify a
-big-step operational semantics (also called a {\it natural semantics}
+methodology used to represent inductive
+definitions in the LF logical framework \cite{harper93framework}.  We
+can therefore use the deductive fragment of \sls~to specify a big-step
+operational semantics (also called a {\it natural semantics}
 \cite{milner97definition}) for call-by-value evaluation by inductively
 defining the judgment $e \Downarrow v$, which expresses that the
 expression $e$ evaluates to the value $v$. On paper, this natural
@@ -372,16 +374,15 @@ the running counter:
  ([v_2/x]e_2, \underline n_2 ) \Downarrow (v, \underline{n'}) \mathstrut}
 \]
 The simple elegance of our natural semantics has been tarnished by the
-need to deal with state.  
-
-In contrast, our SSOS specification can tolerate the
-addition of a counter without revision to the existing rules; we can
+need to deal with state, and each new stateful feature requires a
+similar revision.  In contrast, our SSOS specification can tolerate
+the addition of a counter without revision to the existing rules; we
 just store the counter's value in an atomic proposition ${\sf
   store}(\underline{n})$ to the left of the ${\sf eval}(e)$ or ${\sf
   retn}(v)$ proposition in the ordered context. Because the rules
 ${\sf ev/lam}$, ${\sf ev/app}$, ${\sf ev/app1}$, and ${\sf ev/app2}$
-are local, they will ignore this extra proposition, which only
-needs to be accessed by the rule ${\sf ev/count}$:
+are local, they will ignore this extra proposition, which only needs
+to be accessed by the rule ${\sf ev/count}$.
 \begin{align*}
 {\sf ev/count} &:~~
   {\sf store}\,\underline n \fuse {\sf eval}\,{\sf count}
@@ -393,10 +394,10 @@ $(((\lambda x.\lambda y.y)\,{\sf count})\,{\sf count})$ to a value
 (with a starting counter value of $\underline 5$). This solution is
 even more contrived than the problem was: where do we put the {\it
   second} counter? Nevertheless, the example does foreshadow how, in
-Part~2 of this thesis, we will show more generally how SSOS
-specifications in \sls~allow for the the modular specification of many
+Part~2 of this thesis, we will show that SSOS
+specifications in \sls~allow for the modular specification of many
 programming language features, extending work done jointly with
-Pfenning \cite{pfenning09substructural}.
+Frank Pfenning in \cite{pfenning09substructural}.
 
 \begin{figure}
 \begin{align*}
@@ -455,19 +456,19 @@ Pfenning \cite{pfenning09substructural}.
 \end{figure}
 
 An overarching theme of Part~2 is that we can have our cake and eat it
-too by deploying the {\it logical correspondence}, which was developed
-jointly with Ian Zerny in unpublished work and is explained in
-Chapter~5. As explained in Chapter~6, we can use logical
+too by deploying the {\it logical correspondence}, an idea that was
+developed jointly with Ian Zerny in unpublished work and is explained
+in Chapter~5. As explained in Chapter~6, we can use logical
 correspondence to directly connect the natural semantics and SSOS
 specifications above; in fact, we can automatically and mechanically
 derive the latter from the former. Therefore, we can specify
 call-by-value evaluation as a natural semantics, and then transform it
 for the purpose of modular extension. Further transformations,
 developed in joint work with Pfenning \cite{simmons11logical}, create
-new opportunities modular extension as discussed in Chapter~7. These
-transformations also allow for the derivation of abstract analyses
-(such as control flow and alias analysis) from SSOS specifications,
-which is the focus of Chapter~8.
+new opportunities for modular extension; this is the topic of
+Chapter~7. These transformations also allow for the derivation of
+abstract analyses (such as control flow and alias analysis) from SSOS
+specifications, which is the focus of Chapter~8.
 
 \section{Invariants in substructural logic}
 
@@ -488,9 +489,10 @@ This document aims to support the following
 
 \noindent
 Part~1 concerns the design of logical frameworks based on concurrent
-reasoning in substructural logics and the design of \sls. Part~2
-concerns the modular specification of programming language features in
-\sls~and the organization of various styles of specification through
-the logical correspondence. Part~3 discusses formal reasoning about
-properties of concurrent \sls~specifications, with an emphasis on
-establishing well-formedness invariants.
+reasoning in substructural logics in general and the design of the
+logical framework \sls~in particular. Part~2 concerns the modular
+specification of programming language features in \sls~and the
+organization of various styles of specification through the logical
+correspondence. Part~3 discusses formal reasoning about properties of
+concurrent \sls~specifications, with an emphasis on establishing
+well-formedness invariants.
