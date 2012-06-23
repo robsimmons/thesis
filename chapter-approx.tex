@@ -81,7 +81,7 @@ First, we define what it means for a specification to be an approximate
 version of another specification:
 
 \bigskip
-\begin{definition}
+\begin{definition}\label{def:approxversion}
   A flat, concurrent, and persistent specification $\Sigma_a$ is an
   {\em approximate version} of another specification $\Sigma$ if every
   predicate ${\sf a} : \Pi x_1{:}\tau_1 \ldots \Pi x_n{:}\tau_n.\,
@@ -97,14 +97,57 @@ version of another specification:
     (respectively),
   \item For each premise ($p^+_\mpers$ or $t \doteq s$) in $B^+_1$,
     the same premise appears in $A^+_1$, and 
-  \item For each conclusion ($p^+$, $p^+_\meph$, $p^+_\mpers$, or $t
+  \item For each conclusion ($p^+_\mlvl$ or $t
     \doteq s$) in $A^+_2$, the same premise appears in $B^+_2$.
   \end{itemize}
 \end{definition}
 \bigskip
 
 Next, we give a definition of what it means for a state to be an 
-approximate version (we use the word ``abstraction'') 
+approximate version (we use the word ``generalization'') of another state
+or a family of states. 
+
+\bigskip
+\begin{definition}
+  If $\Sigma_a$ is an approximate version of $\Sigma$, then the
+  persistent process state state $(\Psi_g; \Delta_g)$ is a {\em
+    generalization} of the process state $(\Psi; \Delta)$ if there is
+  a substitution $\Psi_g \vdash \sigma : \Psi$ such that, for all
+  suspended atomic propositions $p^+_\mlvl = {\sf a}\,t_1\ldots t_n$
+  in $\Delta$, there exists a suspended persistent proposition
+  $p^+_\mpers = {\sf a}\,(\sigma t_1)\ldots(\sigma t_n)$ in
+  $\Delta_g$.
+\end{definition}
+\bigskip
+
+One thing we might prove about the relationship between process states
+and their generalizations is that generalizations can {\it simulate}
+the process states they generalize: that is, that if $(\Psi_g;
+\Delta_g)$ is a generalization of $(\Psi; \Delta)$ and $(\Psi; \Delta)
+\leadsto_\Sigma (\Psi'; \Delta')$ then $(\Psi_g; \Delta_g)
+\leadsto_{\Sigma_g} (\Psi'_g; \Delta'_g)$ where $(\Psi'_g; \Delta'_g)$
+is a generalization of $(\Psi'; \Delta')$. The property we will
+actually stablish is quite a bit stronger, and is expressed by the
+following definition:
+
+\bigskip
+\begin{definition}
+A process state $(\Psi_a; \Delta_a)$ is an {\em abstraction} of 
+$(\Psi_0; \Delta_0)$ under the signature $\Sigma$ if, for any trace
+$(\Psi_0; \Delta_0) \leadsto^*_\Sigma (\Psi_n; \Delta_n)$, 
+$(\Psi_a; \Delta_a)$ is a generalization of $(\Psi_n; \Delta_n)$. 
+\end{definition}
+\bigskip
+
+An abstraction of the process state $(\Psi_0; \Delta_0)$ is therefore
+a single process state that captures {\it all possible future
+  behaviors} of the state $(\Psi_0; \Delta_0)$ because, for any atomic
+proposition $p^+_\mlvl = {\sf a}\,t_1\ldots t_n$ that may be derived
+by evolving $(\Psi_0; \Delta_0)$, there is a substitution $\sigma$
+such that ${\sf a}\,(\sigma t_1)\ldots(\sigma t_n)$ is already present
+in the abstraction. The meta-approximation theorem relates this definition
+of abstraction to the concept of approximate versions of programs as
+specified by Definition~\ref{def:approxversion}.  
 
 \section{Control flow analysis}
 
