@@ -1,8 +1,110 @@
 \chapter{Linear logical approximation}
 \label{chapter-approx}
 
-\section{Logical transformation: abstraction}
+In this chapter, we will explore an approximation strategy based on
+approximating ordered and linear logical specifications as persistent
+logical specifications. 
+
+Concurrent \sls~specifications where all positive atomic propositions
+are persistent (and where all inclusions of negative propositions in
+positive propositions -- if there are any -- have the form ${!}A$, not
+${\downarrow}A^-$ or ${\gnab}A^-$) have a distinct logical and
+operational character. Logically, by the discussion in
+Section~\ref{sec:perm-fragments} we are justified in reading such
+specifications as specifications in persistent intuitionstic logic or
+persistent lax logic. Operationally, while persistent specifications
+have an interpretation as transition systems, that interpretation is
+not very useful. This is because if we can take a transition once --
+for instance, using the rule ${\sf a} \lefti \{ {\sf b} \}$ to derive
+the persistent atomic proposition ${\sf b}$ from the persistent atomic
+proposition ${\sf a}$ -- none of the facts that enabled that
+transition can be consumed, as all facts are presistent. Therefore, we
+can continue to make the same transition indefinitely; in the
+above-mentioned example, such transitions will derive multiple
+redundant copies of ${\sf b}$.
+
+The way we will understand the meaning of some persistent and
+concurrent \sls~specifications is in terms of {\it saturation}. A
+process state $(\Psi; \Delta)$ is saturated relative to the signature
+$\Sigma$ if, for any step $(\Psi; \Delta) \leadsto_\Sigma (\Psi';
+\Delta')$, it is the case that $\Psi = \Psi'$, $x{:}\susp{p^+_\mpers}
+\in \Delta'$ implies $x{:}\susp{p^+_\mpers} \in \Delta$, and
+$x{:}\ispers{A^-} \in \Delta'$ implies $x{:}\ispers{A^-} \in
+\Delta$.\footnote{This means that a signatures with a rule that
+  produces new variables by existential quantification, like ${\sf a}
+  \lefti \{ \exists x. {\sf b}(x) \}$, can only have saturated process
+  states in which that rule cannot fire at all. Notions of equality
+  that can cope with some amount of existentially generated parameters
+  are interesting, but are beyond the scope of this thesis.} A {\it
+  minimal} saturated process state is one with no duplicated
+propositions; we can compute a process state from any saturated
+process state by removing duplicates. For purely persistent
+specifications and process sates, minimal saturated process states are
+unique when they exist: if $(\Psi; \Delta) \leadsto^*_\Sigma (\Psi_1;
+\Delta_1)$ and $(\Psi; \Delta) \leadsto^*_\Sigma (\Psi_2; \Delta_2)$,
+then the process states $(\Psi_1; \Delta_1)$ and $(\Psi_2; \Delta_2)$
+may not be identitical, but they correspond to the same minimal process
+states.
+
+Furthermore, if a saturated process state exists for a given initial
+process state, the minimal saturated process state can be computed by
+the usual forward-chaining semantics where only transitions that
+derive ${\it new}$ persistent atomic propositions or equalities $t
+\doteq s$ are allowed. This forward-chaining logic programming
+interpretation of persistent logic is extremely common; in fact, it is
+what is commonly meant by ``foward-chaining logic programming.'' Just
+as the term {\it persistent logic} was introduced in Chapter 2 to
+distinguish what is traditionally referred to as intuitionstic logic
+from the intuitionstic ordered and linear logic, we will use the term
+{\it saturating logic programming} to distinguish what is
+tranditionally referred to as foward-chaining logic programming from
+the forward-chaining logic programming interpretation that makes sense
+for for ordered and linear logical specifications.\robnote{If I want
+  to talk a bit more about Linear Logical Algorithms in Chapter 5, I
+  could say some more.}
+
+\section{Logical transformation: approximation}
 \label{sec:abstraction}
+
+Our approximation strategy is simple: a signature in an ordered or
+linear logical specification can be approximated by making all atomic
+propositions persistent, and a flat, persistent rule $\forall
+\overline{x}. A^+ \lefti \{ B^+ \}$ can be further approximated by
+removing premises from $A^+$ and adding conclusions to $B^+$. Of
+particular practical importance are added conclusions that equate the
+parameters introduced by existential quantificaiton with terms: all
+parameters introduced by existential quantification must be dealt with
+as a necessary condition for interpreting a persistent signature as a
+saturating logic program.
+
+First, we define what it means for a specification to be an approximate
+version of another specification:
+
+\bigskip
+\begin{definition}
+  A flat, concurrent, and persistent specification $\Sigma_a$ is an
+  {\em approximate version} of another specification $\Sigma$ if every
+  predicate ${\sf a} : \Pi x_1{:}\tau_1 \ldots \Pi x_n{:}\tau_n.\,
+  {\sf prop}\,{\sf lvl}$ deciared in $\Sigma$ has a corresponding
+  predicate ${\sf a} : \Pi x_1{:}\tau_1 \ldots \Pi x_n{:}\tau_n.\,
+  {\sf prop}\,{\sf pers}$ in $\Sigma_a$ and if, for every rule ${\sf
+    r} : \forall \overline{x}.\,A_1^+ \lefti \{ A_2^+ \}$ in $\Sigma$ there
+  is a corresponding rule ${\sf r} : \forall \overline{x}.\,B_1^+ \lefti
+  \{ B_2^+ \}$ in $\Sigma_a$ such that:
+  \begin{itemize}
+  \item The existential quantifiers in $A_1^+$ and $A_2^+$ are
+    identital to the existential quantifiers in $B_1^+$ and $B_2^+$
+    (respectively),
+  \item For each premise ($p^+_\mpers$ or $t \doteq s$) in $B^+_1$,
+    the same premise appears in $A^+_1$, and 
+  \item For each conclusion ($p^+$, $p^+_\meph$, $p^+_\mpers$, or $t
+    \doteq s$) in $A^+_2$, the same premise appears in $B^+_2$.
+  \end{itemize}
+\end{definition}
+\bigskip
+
+Next, we give a definition of what it means for a state to be an 
+approximate version (we use the word ``abstraction'') 
 
 \section{Control flow analysis}
 
