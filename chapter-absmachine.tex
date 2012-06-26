@@ -2755,9 +2755,11 @@ like call-by-need, and so it creates the free variable $x$ early, in
 rule ${\sf ev/appev1}$.  It would be equally reasonable to create the
 free variable $x$ later, in rule ${\sf ev/appev2}$, which would result
 in a specification that resembles
-Figure~\ref{fig:cbv-ev-ssos-fun} more closely; this is what
+Figure~\ref{fig:cbv-ev-ssos-fun} more closely. This is what
 was done in \cite{pfenning09substructural} and
-\cite{simmons11logical}.
+\cite{simmons11logical}, and we will use a similar specification 
+(Figure~\ref{fig:dest-env}) as the 
+basis for deriving a control flow analysis in Section~\ref{sec:0cfa}.
 
 
 

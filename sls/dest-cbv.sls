@@ -2,7 +2,7 @@ eval: exp -> dest -> prop lin.
 retn: exp -> dest -> prop lin.
 cont: frame -> dest -> dest -> prop lin.
 
-ev/lam:  eval (lam \x. E x) D >-> {retn (lam \x. E x)}.
+ev/lam:  eval (lam \x. E x) D >-> {retn (lam \x. E x) D}.
 
 ev/app:  eval (app E1 E2) D 
           >-> {Exists d1. eval E1 d1 * cont (app1 E2) d1 D}.

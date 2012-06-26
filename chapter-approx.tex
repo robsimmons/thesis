@@ -103,14 +103,27 @@ version of another specification:
 \end{definition}
 \bigskip
 
+\noindent
+While approximation is a program transformation, it is not a
+determinstic one. Even the nondeterminstic operationalization
+transformation was just a bit nondeterminstic, giving several options
+for operationalizing any given deductive rule. The approximation
+transformation expects explict information from the user: which
+premises should be removed, and what new conclusions should be
+introduced? While there is value in actually implementing the
+operationalization, defunctionalization, and destination-adding
+transformations, applying approximation requires applying one's
+intelligence. Borrowing a phrase from Danvy, approximation is a
+candidate for ``mechanization by graduate student'' rather than
+mechanization by computer.
+
 Next, we give a definition of what it means for a state to be an 
 approximate version (we use the word ``generalization'') of another state
 or a family of states. 
 
 \bigskip
 \begin{definition}
-  If $\Sigma_a$ is an approximate version of $\Sigma$, then the
-  persistent process state state $(\Psi_g; \Delta_g)$ is a {\em
+  The persistent process state state $(\Psi_g; \Delta_g)$ is a {\em
     generalization} of the process state $(\Psi; \Delta)$ if there is
   a substitution $\Psi_g \vdash \sigma : \Psi$ such that, for all
   suspended atomic propositions $p^+_\mlvl = {\sf a}\,t_1\ldots t_n$
@@ -149,6 +162,242 @@ in the abstraction. The meta-approximation theorem relates this definition
 of abstraction to the concept of approximate versions of programs as
 specified by Definition~\ref{def:approxversion}.  
 
+\bigskip
+\begin{theorem}[Meta-approximation]\label{thm:metapprox}
+  If $\Sigma_a$ is an approximate version of $\Sigma$, if there is a
+  state $(\Psi_0; \Delta_0)$ well-formed according to $\Sigma$, and if
+  for some $\Psi_0' \vdash \sigma : \Psi_0$ there is a trace
+  $(\Psi_0'; \sigma\Delta_0) \leadsto^*_{\Sigma_a} (\Psi_a; \Delta_a)$
+  such that $(\Psi_a; \Delta_a)$ is a saturated process state, then
+  $(\Psi_a; \Delta_a)$ is an abstraction of $(\Psi_0; \Delta_0)$.
+\end{theorem}
+
+\begin{proof}
+As in \cite[Theorem 3]{simmons11logical}.
+\end{proof}
+
+The meaning of the meta-approximation theorem is that if (1) we can
+approximate a specification and an initial state and (2) we can obtain
+a saturated process state from that approximate specification
+and approximate initial state, then the saturated process state captures
+all possible future behaviors of the (non-approximate) initial state. 
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/pda-pers.sls}
+\caption{Skolemized approximate version of Figure~\ref{fig:pda-lin}.}
+\label{fig:pda-pers}
+\end{figure}
+
+
+
+\section{Using approximation}
+
+The meta-approximation theorem gives us a way of building abstractions
+from specifications and initial process states: we interpret the
+approximate version of the program as a saturating logic program over
+that initial state. If we can obtain a saturated process state using
+the logic programming interpretation, it is an abstraction of the
+initial process state. It is not always possible to obtain a saturated
+process state using the logic programming interpretation, however:
+rules like ${\sf a}(x) \lefti \{ {\sf a}({\sf s}(x)) \}$ and ${\sf
+  a}(x) \lefti \{ \exists y. {\sf a}(y) \}$ lead to nontermination
+when interpreted as saturating logic programs. Important classes 
+of programs are known to terminate in all cases, such as those in the
+so-called ``Datalog fragment'' where the only terms in the program
+are variables and constants. However, we want to consider programs
+that fall outside of this fragment, which means that we must 
+reason explicitly about termination.
+
+Consider the destination-passing PDA specification from
+Figure~\ref{fig:pda-lin}. If we simply turn all linear predicates
+persistent, then the ${\sf push}$ rule will lead to non-termination
+because the head $\exists m. {\sf stack}\,x\,l\,m \fuse {\sf
+  hd}\,m\,r$ introduces a new existential parameter $m$. We can cope
+by adding a new conclusion $m \doteq t$, but we have to pick a $t$.
+The most general starting point for selecting a $t$ is to apply
+Skolemization to the rule. By moving the existential quantifier for
+$m$ in front of the implicitly quantified $x$, $l$, $m$, and $r$, we
+get a Skolem function ${\sf fm}\,x\,l\,m\,r$ that takes four
+arguments. Letting $t = {\sf fm}\,x\,l\,m\,r$ results in the
+\sls~specification/logic program shown in
+Figure~\ref{fig:pda-pers}.
+
+Skolem functions provide a natural starting point for approximations,
+even though the Skolem constant that arises directly from
+Skolemization is usually more precise than we want. From the starting
+point in Figure~\ref{fig:pda-pers}, however, we can define
+approximations simply by approximating the Skolem function.  For
+instance, we can equate the existentially generated destination in the
+conclusion with the one given in the premise (letting ${\sf fm} =
+\lambda x. \lambda l. \lambda m. \lambda r. m$), the result is
+equivalent to this specification:
+
+\smallskip
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/pda-pers-precise.sls}
+\smallskip
+
+\noindent This substitution actually yields a precise approximation
+that exactly captures the behavior of the original PDA as a saturating
+logic program. On the other hand, if we set $m$ equal to $l$ 
+(letting ${\sf fm} = \lambda x. \lambda l. \lambda m. \lambda r. l$), 
+the result is equivalent to this specification:
+
+\smallskip
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/pda-pers-approx.sls}
+\smallskip
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/pda-pers-approx2.sls}
+\caption{Approximated push-down automataon.}
+\label{fig:pda-pers-approx2}
+\end{figure}
+
+If the initial process state contains a single atomic proposition
+${\sf hd}\,d_0\,d_1$ in addition to all the ${\sf left}$ and ${\sf
+  right}$ facts, then the two rules above maintain the invariant that,
+as new facts are derived, the first argument of ${\sf hd}$ and the
+second and third arguments of ${\sf stack}$ will {\it always} be equal
+to $d_0$. These arguments are therefore vestigial, like the extra
+arguments to ${\sf eval}$ and ${\sf retn}$ discussed in
+Section~\ref{sec:vestigial}, and we can just remove them from the
+approximate specification, resulting in the specification in
+Figure~\ref{fig:pda-pers-approx2}. This logical approximation of the
+original PDA accepts every string where, for every form of bracket
+$x$, at least one left $x$ appears before any of the right $x$. The
+string {\sf [ ] ] ] ( ( )} would be accepted by this approximated PDA,
+but the string {\sf ( ) ] [ [ ]} would not, as the first right square
+bracket appears before any left square bracket.
+
+
 \section{Control flow analysis}
+\label{sec:0cfa}
+
+The initial process state for destination-passing SSOS specifications
+generally has the form $(d{:}{\sf dest}; x{:}\susp{{\sf eval}\,e\,d})$
+for some program represented by the expression $e$. This means that we
+can use the meta-approximation result to derive abstractions from
+initial expressions $e$ using the saturating logic programming
+interpretation of persistent SSOS specifications.
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/dest-env.sls}
+\caption{Alternate environment semantics for call-by-value.}
+\label{fig:dest-env}
+\end{figure}
+
+The starting point deriving a control flow analysis is the environment
+semantics for call-by-value shown in Figure~\ref{fig:dest-env}. It
+differs from the environment semantics shown in
+Figure~\ref{fig:ssos-by-env} in several ways. Most obviously, it is a
+destination-passing specification, but that difference is accounted
+for by the destination-adding transformation in Chapter~7.  An
+inessential difference is that the existentially generated parameter
+$x$ associated with the persistent proposition ${\sf bind}\,x\,v$ is
+introduced as late as possible (rule ${\sf ev/app2}$ in
+Figure~\ref{fig:dest-env}), not as early as possible (rule ${\sf
+  ev/app1}$ in Figure~\ref{fig:ssos-by-env}). And finally, there is an
+extra frame ${\sf app3}$ and an extra rule ${\sf ev/app3}$ that
+consumes these frames. The ${\sf ev/call}$ frames are an important
+part of the control flow analysis we derive, but in
+\cite{simmons11logical} the addition of these frames had to be
+motivated on an ad-hoc basis. Based on our discusson of the logical
+approximation in Chapter~6, we now have a principled account for this
+extra frame and rule: it is precisely the pattern we get from
+operationalizing a natural semantics {\it without} tail-recursion
+optimization and then applying defunctionalization. 
+
+In order for us to approximate Figure~\ref{fig:dest-env} to derive a
+finite control flow analysis, our first step is to deal with the
+variables introduced by existential quantification. The parameter $x$
+introduced in ${\sf ev/app2}$ will be equated with ${\sf var}(\lambda
+x.e\,x)$. The new constructor ${\sf var}$ is a greatly simplified
+Skolem function for $x$ that only mentions the term $e$ with LF type
+${\sf exp} \rightarrow {\sf exp}$ -- the most general Skolem function
+in this setting would have also been dependent on $v$, $d$, and
+$d_2$. Adding $x \doteq {\sf var}(\lambda x.e\,x)$ effectively causes
+us to associate all paramenters ever passed into a function with the
+{\it function into which that parameter was passed}. 
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/dest-cfa-1.sls}
+\caption{A control-flow analysis derived from Figure~\ref{fig:dest-env}.}
+\label{fig:dest-cfa-1}
+\end{figure}
+
+The pattern above is an important one in the design of saturating
+forward-chaining logic programs that use higher-order abstract syntax,
+because it is a simple way of getting a notion of the subterms of a
+higher-order term. When given a term ${\sf a}\,({\sf b}\,{\sf c}\,{\sf
+  c})$, it is clear that there are three distinct subterms: the entire
+term, ${\sf b}\,{\sf c}\,{\sf c}$, and ${\sf c}$. Therefore, it is
+meaningful to bound the size of a database using some function that
+depends on the number of subterms of the original term. But what are
+the subterms of ${\sf lam}\,(\lambda x.\,{\sf app}\,x\,x)$?  Because
+we ensure that we {\it only} substitute terms of the form ${\sf
+  var}(\lambda x.e\,x)$ into functions of the form $\lambda x.e\,x$ we
+can actaully answer this question: there are three distinct subterms
+of ${\sf lam}\,(\lambda x.\,{\sf app}\,x\,x)$: the entire term, ${\sf
+  app}\,({\sf var}(\lambda x.\,{\sf app}\,x\,x))\,({\sf var}(\lambda
+x.\,{\sf app}\,x\,x))$, and ${\sf var}(\lambda x.\,{\sf app}\,x\,x)$.
+The subterms of any closed term $e$ of LF type ${\sf exp}$ can be enumerated
+by running this saturating logic program starting with the fact 
+${\sf subterms}(e)$, where ${\sf subterms}$ is a persistent positive 
+proposition.
+\begin{align*}
+{\sf sub/lam} &: ~~
+  \forall e{:}{\sf exp} \rightarrow {\sf exp}.\,
+    {\sf subterms}({\sf lam}(\lambda x.e\,x)) \lefti
+      \{ {\sf subterms}(e({\sf var}(\lambda x.e\,x))) \}
+\\
+{\sf sub/app} &: ~~
+  \forall e_1{:}{\sf exp}.\, \forall e_2{:}{\sf exp}.\,
+    {\sf subterms}({\sf app}\,e_1\,e_2) \lefti
+      \{ {\sf subterms}\,e_1 \fuse {\sf subterms}\,e_2 \}
+\\
+{\sf sub/var} &: ~~ 
+  \forall e{:}{\sf exp} \rightarrow {\sf exp}.\,
+    {\sf subterms}({\sf var}(\lambda x.e\,x)) \lefti
+      \{ {\sf subterms}(e({\sf var}(\lambda x.e\,x))) \}
+\end{align*}
+The last rule, ${\sf sub/var}$, is redundant: if we ever derive a fact
+of the form ${\sf subterms}({\sf var}(\lambda x.e\,x))$, we know that
+we previously derived ${\sf subterms}({\sf lam}(\lambda x.e\,x))$ and
+therefore, by the first rule, we have already derived ${\sf
+  subterms}({\sf }(\lambda x.e\,x))$.
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/dest-cfa-2.sls}
+\caption{A simplified version of Figure~\ref{fig:dest-cfa-1} that
+  eliminates the now-redundant argument to ${\sf eval}$.}
+\label{fig:dest-cfa-2}
+\end{figure}
+
+
+The discussion above pertains to the existentially generated parameter
+$x$ in rule ${\sf ev/app2}$, but we still need some method for
+handling destinations $d_1$, $d_2$, and $d_3$ in ${\sf ev/app1}$,
+${\sf ev/app2}$, and ${\sf ev/app3}$ (respectively). To this end, we
+need to have in mind the question that we intend to answer with
+control flow analysis. The primary question that such a flow analysis
+is intended to answer is, ``for any given call site in the source
+program, what are the functions that may be invoked at that
+location?''\footnote{This kind of ``{\it may}-'' analysis, where the
+  intention is to over-approximate the events that might happen, is
+  the kind of analysis (as opposed to a ``{\it must}-'' analysis) that
+  maps easily onto the meta-approximation theorem.} Call sites
+correspond to expressions of the form ${\sf app}\,e_1\,e_2$, and
+functions are expressions of the form ${\sf lam}(\lambda x.\,e\,x)$;
+therefore, our next step is to equate the destinations introduced
+in the ${\sf app}$ rules with the expressions we are evaluating 
+at this point. One way to do this would be to introduce a new constructor
+${\sf d}: {\sf exp} \rightarrow {\sf dest}$,  The resulting specification 
+
 
 \section{Alias analysis}
