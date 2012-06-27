@@ -30,13 +30,13 @@ alternatives we present, the introduction of {\it permeable atomic
   propositions}, will be generalized and incorporated into the focused
 presentation of ordered linear lax logic that we discuss in Chapter 3.
 
-In Section~\ref{sec:linconcurrenteq}, we describe {\it concurrent
-  equality}, an equivalence relation on focused derivations introduced
-by Watkins et al.~that is motivated by the desire to capture
-independent concurrent transitions. We also discuss the limitations of
-concurrent equality in a fully focused setting.  In Chapter 4, when we
-select a fragment of ordered linear lax logic to form \sls, we will
-incorporate a similar notion of concurrent equality.
+% In Section~\ref{sec:linconcurrenteq}, we describe {\it concurrent
+%   equality}, an equivalence relation on focused derivations introduced
+% by Watkins et al.~that is motivated by the desire to capture
+% independent concurrent transitions. We also discuss the limitations of
+% concurrent equality in a fully focused setting.  In Chapter 4, when we
+% select a fragment of ordered linear lax logic to form \sls, we will
+% incorporate a similar notion of concurrent equality.
 
 
 \section{Introduction to linear logic}
@@ -1222,8 +1222,8 @@ then $\mildseq{\Gamma}{\Delta}{U}$.
   {\downarrow}{\uparrow}\ldots{\downarrow}{\uparrow}{!}A^-$ 
   and $A = (A^-)^\circ$. Depending on the case, we then repeatedly
   apply either the ${\uparrow}{\downarrow}_R$ or the
-  ${\downarrow}{\uparrow}_L$, both of which are derived below, to get
-  rid of all the extra shifts.  (Zero or more instances of a rule are
+  ${\downarrow}{\uparrow}_L$, both of which are derived below, to 
+  eliminate all the extra shifts.  (Zero or more instances of a rule are
   indicated by a double-ruled inference rule.)
 
 \vspace{-7pt}
@@ -1345,7 +1345,7 @@ lemmas work.
   \[
   \infer=[{\uparrow}{\downarrow}_L]
   {\mildseq{\Gamma}
-   {\Delta, {\uparrow}{\downarrow}\ldots{\downarrow}{\uparrow}{!}A}{U}}
+   {\Delta, {\uparrow}{\downarrow}\ldots{\downarrow}{\uparrow}{!}A^-}{U}}
   {\infer[{\it focus}_L]
    {\mildseq{\Gamma}{\Delta, {\uparrow}{!}A^-}{U}}
    {\infer[{\uparrow}_L]
@@ -1554,54 +1554,52 @@ Miller's LJF \cite{liang09focusing}, and the confluent presentation in
 this chapter is closely faithful to Pfenning's course notes on linear
 logic \cite{pfenning12chaining}.
 
-Allowing for this inessential
-nondeterminism simplifies the presentation a bit, but it also gets in
-the way of effective proof search and canonical derivations if we do
-not address it in some way. 
-The different possibilities for addressing this nondeterminism within an
-inversion phase echo the discussion of nondeterminism in 
-LF from the beginning of the chapter.
-We can, as suggested in that introduction, declare that all
-proofs which differ only by the order of their invertible, non-focused
-rules be treated as equivalent. It is possible to establish that all
-possible inversion orderings will lead to the same set of stable
-sequents, which lets us know that all of these reorderings do not
-fundamentally change the structure of the rest of the proof. This 
-property is already required to prove {\it unfocused cut} as
-expressed by this admissible rule:
-\[
-\infer-[{\it cut}]
-{\mildseq{\Gamma}{\Delta', \Delta}{U}}
-{\mildseq{\Gamma}{\Delta}{A}
- &
- \mildseq{\Gamma}{\Delta', A}{U}}
+Allowing for this inessential nondeterminism simplifies the
+presentation a bit, but it also gets in the way of effective proof
+search and canonical derivations if we do not address it in some way.
+The different possibilities for addressing this nondeterminism within
+an inversion phase echo the discussion of nondeterminism in LF from
+the beginning of the chapter.  We can, as suggested in that
+introduction, declare that all proofs which differ only by the order
+of their invertible, non-focused rules be treated as equivalent. It is
+possible to establish that all possible inversion orderings will lead
+to the same set of stable sequents, which lets us know that all of
+these reorderings do not fundamentally change the structure of the
+rest of the proof.  This property is already seems necessary to prove
+{\it unfocused cut} as expressed by this admissible rule:
+ \[
+ \infer-[{\it cut}]
+ {\mildseq{\Gamma}{\Delta', \Delta}{U}}
+ {\mildseq{\Gamma}{\Delta}{A}
+  &
+  \mildseq{\Gamma}{\Delta', A}{U}}
 \]
-(where $A$ is $A^+$
-or $A^-$ and ${\Delta}$, ${\Delta'}$, and $U$ contain no focus
-but may not be stable).
-If $A$ is $A^+$, proving the admissibility of this rule involves
-permuting invertible rules in the second given derivation,
-$\mildseq{\Gamma}{\Delta', A^+}{U}$, until $A^+$ is the only unstable
-part of the second sequent, at which point part 3 of
-Theorem~\ref{thm:lincut} applies.  Similarly, if $A$ is $A^-$, we must
-permute invertible rules in the first given derivation until $A^-$ is
-the only unstable part of the first sequent, at which point part 4 of
-Theorem~\ref{thm:lincut} applies. 
+(where $A$ is $A^+$ or $A^-$ and ${\Delta}$, ${\Delta'}$, and $U$
+contain no focus but may not be stable).  If $A$ is $A^+$, proving the
+admissibility of this rule involves permuting invertible rules in the
+second given derivation, $\mildseq{\Gamma}{\Delta', A^+}{U}$, until
+$A^+$ is the only unstable part of the second sequent, at which point
+part 3 of Theorem~\ref{thm:lincut} applies.  Similarly, if $A$ is
+$A^-$, we must permute invertible rules in the first given derivation
+until $A^-$ is the only unstable part of the first sequent, at which
+point part 4 of Theorem~\ref{thm:lincut} applies. 
 
-This unfocused cut rule is independently interesting, and in any case
-we should expect it to hold. Pfenning has noted\footnote{Personal
-  communication.} that by proving this simpler cut property, we can
-prove a simpler class of unfocused admissibility lemmas on unstable
-inversion sequents. The unfocused admissibility of rules like ${!}_R$,
+By proving and using this more general cut property, it would be
+possible to prove a more general completeness theorem --
+Theorem~\ref{thm:linfoccomplete} as presented only applies to stable
+sequents. The cases of this theorem dealing with the rules ${!}_R$,
 ${\lolli}_R$, and ${\otimes}_L$, which required the use of
-doubly-shifted side proofs in our proof, is trivial in this alternate
-presentation.  Unfortunately, the proof of unfocused cut is tedious
-and long. The size of all known proofs of the admissibility of
-unfocused cut grows quadratically with the number of connectives and
-rules included in the logic. The proofs of identity expansion, cut
+doubly-shifted side derivations in our proof, is trivial in this
+alternate presentation.  Unfortunately, the proof of unfocused cut,
+while simple, is tedious and long. Gentzen's original proof of cut
+admissibility \cite{gentzen35untersuchungen}, Pfenning's mechanization
+\cite{pfenning00structural}, and the proofs of identity expansion, cut
 admissibility, soundness of focusing, and completeness of focusing
-presented here, on the other hand, all scale linearly with the number
-of connectives and rules in the logic.
+presented in this chapter, all scale linearly with the number of
+connectives and rules in the logic. There is no known proof of the
+unfocused admissibly of the rule ${\it cut}$ above that scales
+lineraly in this way: all known proofs grow quadratically with the
+number of connectives and rules in the logic.
 
 %; one of them
 %is Proposition~\ref{prop:confluence-lin}:
@@ -1617,7 +1615,6 @@ of connectives and rules in the logic.
 %from $\Xi$ using only non-focused rules.
 %\end{proposition}
 %\bigskip
-
 Once we equate all proofs that differ only on the order
 in which inference rules are applied within an inversion phase, 
 we can pick some member of
@@ -1648,7 +1645,9 @@ of the same logic along with the appropriate confluence property for
 that logic, whereas the reverse is not true. In this sense, the
 confluent presentation allows us to prove a stronger theorem than the
 fixed presentation does, though the fixed presentation will be
-sufficient for our purposes here and in later chapters.
+sufficient for our purposes here and in later chapters. As such, we
+will not prove confluence, though doing so is a straightforward
+exercise.
 
 \subsection{Running example}
 
@@ -1660,7 +1659,7 @@ process and then running the result through
 Theorem~\ref{thm:linfoccomplete}. There is indeed only one proof of
 this focused proposition up to the reordering of invertible rules, and
 only one proof period if we always decompose invertible propositions
-in a left-most (i.e. depth-first) ordering as we do in
+in a left-most (i.e., depth-first) ordering as we do in
 Figure~\ref{fig:focused-robot}.
 
 We have therefore successfully used focusing to get a canonical
@@ -1702,28 +1701,29 @@ following Chaudhuri, call {\it synthetic inference rules}
 
 Synthetic inference rules were introduced by Andreoli as the
 derivation fragments associated with a positive propositions {\it
-  bipoles}. In our setting, bipoles capture the outermost structure of
-a proposition up to the second occurrence of a shift or an exponential.
-XXX fix
+  bipoles}. A monopole is the outermost negative (or positive)
+structure of a proposition, and a bipole is a monopole surrounded by
+positive (or, respectively, negative) propositions. In a polarized
+setting, bipoles capture the outermost structure of a proposition up
+to the second occurrence of a shift or an exponential
+\cite{andreoli01focussing}. 
 
-{\it bipoles}
-for the purpose of giving a more abstract way of looking at focused
-logics and focused derivations \cite{andreoli01focussing}. The first
-idea behind synthetic inference rules is that the stable
-sequents are the ones that are most clearly endowed with meaning in a
-focused sequent calculus; this was reflected by our proof of the
-completeness of focusing
-(Theorem~\ref{thm:linfoccomplete}), which only dealt with
-stable focused sequents. The second idea is that the proof of
-a stable sequent must end with one of three rules. Once we know 
-whether the last rule is
+The first idea behind synthetic inference rules is that the most
+important sequents in a polarized sequent calculus are stable sequents
+where all suspended propositions are atomic.  This was reflected by
+our proof of the completeness of focusing
+(Theorem~\ref{thm:linfoccomplete}); we discussed but did not mention
+the unfocused cut admissibility rule. The second idea is that the
+proof of a stable sequent must end with one of three rules. Once we
+know whether the last rule is
 \begin{itemize}
 \item ${\it copy}$ on some proposition $A^-$ from $\Gamma$, 
 \item ${\it focus}_L$ on some proposition $A^-$ in $\Delta$, or
 \item ${\it focus}_R$ on the succedent $A^+$
-\end{itemize} (it must be one of these
-three), then the structure of the proof is completely determined
-up to the next occurrences of stable sequents. 
+\end{itemize} (it must be one of these three), then the bipole
+structure of the proposition we focus on is all we need to know in
+order to understand the structure of the proof up to the next
+occurrences of stable sequents.
 
 For example, consider the act of focusing on the proposition $a^+
 \lolli {\uparrow}b^+$ in $\Gamma$ using the ${\it copy}$ rule, where
@@ -1757,15 +1757,12 @@ into a single synthetic rule:
 {\mildseq{\Gamma, a^+ \lolli {\uparrow}b^+}{\Delta, \langle a^+ \rangle}{U}}
 {\mildseq{\Gamma, a^+ \lolli {\uparrow}b^+}{\Delta, \langle b^+ \rangle}{U}}
 \]
-Similar rules can be given for focusing phases associated with the
-${\it focus}_L$ and ${\it focus}_R$ rules. Any positive atomic
-proposition has an associated ${\sf RF}$ rule, and every negative atomic
-proposition has associated ${\sf CP}$ and ${\sf LF}$ rules, though
-as Andreoli noted, the structure of the
-proposition doesn't affect the structure of the associated synthetic
-inference rule beyond the outermost two polarity shifts. Here are
-three examples relevant to our running example out of the countably
-infinite space of possible rules.
+For the MELL fragment of linear logic, we can associate exactly one
+rule with every positive proposition (corresponding to a right-focus 
+on that proposition) and two rules with every negative proposition
+(corresponding to left focus on a negative proposition in the persistent
+context and left focus on that negative proposition in the positive
+context). Here are three examples:
 \[
 \infer[{\sf LP}_{a^+ \lolli {\uparrow}b^+}]
 {\mildseq{\Gamma}{\Delta, \langle a^+ \rangle, a^+ \lolli {\uparrow}b^+}{U}}
@@ -1783,6 +1780,15 @@ infinite space of possible rules.
 {\mildseq{\Gamma}{\langle a^+ \rangle}{a^+}}
 {}
 \]
+This doesn't mean that there are no choices to be made within focused
+phases, just that, in MELL, those choices are limited to the way the
+resources are distributed between different branches of the context.
+If we also consider additive connectives, we can identify some number
+of synthetic rules for each right focus, left focus, or copy. This may be 
+zero, as there's no way to successfully right focus on a proposition like
+$\zero \otimes {\uparrow}{\downarrow}A^+$, or it may be more than one:
+there are three ways to successfully right focus on the proposition
+$a^+ \oplus b^+ \oplus c^+$.
 
 \begin{figure}
 \small\[
@@ -1822,14 +1828,6 @@ system takes four steps. The last three steps, furthermore, correspond
 precisely to the three steps in our informal description of the
 robot-battery-store system.
 
-In important side note: the fact that every positive proposition is
-associated with {\it exactly one} {\sf RF} rule and that every
-negative proposition is associated with one {\sf LF} and one {\sf CP}
-rule is an artifact of our restriction to propositional MELL. If we
-also consider additive connectives, we can identify some number of
-synthetic rules for each right focus, left focus, or copy (possibly
-zero; there's no way to successfully right focus on a proposition like
-$\zero \otimes {\uparrow}{\downarrow}A^+$).
 
 
 \section{Hacking the focusing system}
@@ -1837,7 +1835,7 @@ $\zero \otimes {\uparrow}{\downarrow}A^+$).
 
 Despite the novel treatment of suspended propositions in
 Section~\ref{sec:foclinlog}, the presentation of linear logic given
-there is essentially the same as the presentation in Chaudhuri's
+there is equivalent to the presentation in Chaudhuri's
 thesis \cite{chaudhuri06focused}, in the sense that the logic gives
 rise to the same synthetic inference rules. It is {\it not} a faithful
 intuitionistic analogue to Andreoli's original presentation of focusing
@@ -1865,7 +1863,7 @@ ${!}A$, and the interaction between them.
 \item Andreoli's original system, which I name the {\it atom
     optimization}, complicates the interpretation of atomic
   propositions as stand-ins for arbitrary propositions.
-\item A further change to the atom optimization, the {\it bang
+\item A further change to the atom optimization, the {\it exponential
     optimization}, complicates the relationship between the focused
   logic and the unfocused logic.
 \item The {\it adjoint logic} of Benton and Wadler
@@ -1921,7 +1919,40 @@ calculi for linear logic. However, I suggest in
 Section~\ref{sec:permeable} that the last option, the incorporation of
 permeable atomic propositions, provides the most natural mechanism for
 incorporating the structure that we are interested in into a focused
-presentation of linear logic.
+presentation of linear logic. 
+
+All of the options discussed in this section are compatible with a
+fifth option, discussed in Section~\ref{sec:pseudopositive}, of
+avoiding positive propositions altogether and instead changing our
+view of stable sequents. The proposition ${\downarrow}a^- \lolli
+{\downarrow}b^- \lolli c^-$ is associated with this synthetic
+inference rule:
+\[
+\infer {\mildseq{\Gamma}{\Delta, \Delta', {\downarrow}a^- \lolli
+    {\downarrow}b^- \lolli c^-}{\susp{c^-}}}
+{\mildseq{\Gamma}{\Delta}{\susp{a^-}} &
+  \mildseq{\Gamma}{\Delta'}{\susp{b^-}}}
+\]
+However, if we can prove a general theorem that the sequent
+$\mildseq{\Gamma}{\Delta}{\susp{a^-}}$ can only be proven if $\Delta =
+a^-$ or if $\Delta = \cdot$ and $a^- \in \Gamma$, then the persistent
+proposition ${\downarrow}a^- \lolli {\downarrow}b^- \lolli c^-$ can be
+associated with these two synthetic inference rule-like rules:
+\[
+\infer
+{\mildseq{\Gamma}{\Delta, {\downarrow}a^- \lolli
+    {\downarrow}b^- \lolli c^-, a^-}{\susp{c^-}}}
+{\mildseq{\Gamma}{\Delta}{\susp{b^-}}}
+\quad
+\infer
+{\mildseq{\Gamma, a^-}{\Delta, {\downarrow}a^- \lolli
+    {\downarrow}b^- \lolli c^-}{\susp{c^-}}}
+{\mildseq{\Gamma, a^-}{\Delta}{\susp{b^-}}}
+\]
+The machinery of lax logic introduced in Chapter~3, along with the
+separation of concurrent and deductive proofs introduced in Chapter~4,
+are what make it possible to reason about negative propositions like
+$a^-$ that act like positive propositions in practice. 
 
 \subsection{Atom optimization}
 
@@ -2061,7 +2092,7 @@ according to the second approach above:
 {}
 \]
 
-All three of these options are essentially similar; we will go with the
+All three of these options are similar; we will go with the
 last, as it allows us to preserve the original meaning of ${!}{\uparrow}p^+$
 if that is our actual intent. 
 Introducing the atom optimization as a
@@ -2357,8 +2388,8 @@ established with ${\it copy}$ and ${\it id}$ in the unfocused system:
  {}}
 \]
 
-Completeness requires that we prove two new unfocused admissibility rules
-dealing with ${\pbang}$,
+The extension to the proof of completeness requires two additional cases
+to deal with ${\pbang}$,
 both of which are derivable\ldots
 \[
 \infer-[{\pbang}_{uR}]
@@ -2372,8 +2403,8 @@ both of which are derivable\ldots
   {U}}
 {\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}}
 \]
-\ldots as well as an unfocused admissibility rule dealing with the
-additional case where we apply ${\it copy}$ to the erasure
+\ldots as well as a case dealing with the
+situation where we apply ${\it copy}$ to the erasure
 of a persistent suspended proposition. This case reduces to
 a case of ordinary focal substitution:
 \[
@@ -2395,7 +2426,7 @@ a case of ordinary focal substitution:
  }
 \]
 
-\subsection{Bang optimization}
+\subsection{Exponential optimization}
 \label{sec:bangopt}
 
 For such a seemingly simple change, the atom optimization adds a
@@ -2411,8 +2442,8 @@ of defining it as ${!}{\uparrow}p^+$ paves the way for us to modify
 its meaning further. For instance, there turns out to be no internal
 reason for the ${\pbang}_R$ rule to lose focus in its premise, even
 though it is critical that ${!}_R$ lose focus on its
-premise; if we fail to do so propositions like ${!}(A \otimes
-  B) \lolli {!}(B \otimes A)$ will have no proof. We can revise
+premise; if we fail to do so propositions like ${!}(p^+ \otimes
+  q^+) \lolli {!}(q^+ \otimes p^+)$ will have no proof. We can revise
 ${\pbang}_R$ accordingly.
 \[
 \infer[{\pbang}_R]
@@ -2432,7 +2463,7 @@ ${\pbang}_R$ accordingly.
 {}
 \]
 This further optimization
-can be called the {\it bang optimization}, as it, like the atom 
+can be called the {\it exponential optimization}, as it, like the atom 
 optimization, potentially reduces the number of focusing phases
 in a proof. Identity expansion is trivial to modify, and cut 
 admissibility is significantly simpler. 
@@ -2468,10 +2499,10 @@ the cut reduces to an admissible instance of contraction.
 \]
 Thus, we no longer need the complicated extra parts {\it 6a - 6c} of cut 
 admissibility in order to prove cut admissibility for a focused system
-with the bang optimization. 
+with the exponential optimization. 
 
 Because cut and identity hold, we can think of a 
-focused logic with the bang optimization as being 
+focused logic with the exponential optimization as being 
 internally sensible. The problem is that this logic is no longer
 {\it externally} sensible relative to normal linear logic, because
 we cannot erase ${\pbang}p^+$ into regular
@@ -2482,9 +2513,9 @@ ${!}p^+$, then ${\pbang}q^+ \lolli {!}(q^+
 focused linear logic, whereas its erasure, ${!}q^+ \lolli {!}(q^+
 \lolli p^+) \lolli {!}p^+$, does have an unfocused proof. In other
 words, the completeness of focusing (Theorem~\ref{thm:linfoccomplete})
-no longer holds under the bang optimization!
+no longer holds under the exponential optimization!
 
-Our focused logic with the bang optimization has some resemblance to
+Our focused logic with the exponential optimization has some resemblance to
 tensor logic \cite{mellies10resource}, as well the polarized logic
 that Girard presented in a note, ``On the sex of angels,'' which first
 introduced the ${\uparrow}A^+$ and ${\downarrow}A^-$ notation to the
@@ -2527,9 +2558,9 @@ our completeness result in \cite{pfenning09substructural}.  However,
 separation is a meta-logical property, something that we observe about
 a fragment of the logic and not an inherent property of the logic
 itself. There are many propositions $A^+$ and $A^-$ that we cannot
-prove in focused linear logic with the bang optimization even though
+prove in focused linear logic with the exponential optimization even though
 $(A^+)^\circ$ and $(A^-)^\circ$ are provable in linear logic, and that
-makes the bang optimization unsatisfactory.
+makes the exponential optimization unsatisfactory.
 
 The remaining two approaches, adjoint logic and the introduction of
 permeable atomic propositions, can both be seen as attempts to turn
@@ -2540,11 +2571,10 @@ separation into a logical property instead of a meta-logical property.
 
 We introduced ${\pbang}p^+$ as a connective defined as
 ${!}{\downarrow}p^+$ -- that is, the regular ${!}A^-$ connective plus
-a little something extra, the shift. After our experience
-with modifying the rules of 
-${\pbang}$, we can motivate adjoint logic by taking a crack at viewing
-${\pbang}$ as a more primitive connective -- that is, we will try 
-to view ${!}$ as ${\pbang}$ plus a little something extra.
+a little something extra, the shift. After our experience with
+modifying the rules of ${\pbang}$, we can motivate adjoint logic by
+trying to view ${\pbang}$ as a more primitive connective -- that is,
+we will try to view ${!}$ as ${\pbang}$ plus a little something extra.
 
 It is frequently observed that the exponential ${!}A$ of linear logic
 appears to have two or more parts; the general idea is that ${\pbang}$
@@ -2594,7 +2624,7 @@ positive and negative actions explains why ${!}A^-$ is a positive
 proposition with a negative subformula, and similarly explains why we
 must break focus when we reach ${!}A$ on the right and why we must
 stop decomposing the proposition when we reach ${!}A$ on the left.
-The salient feature of the bang optimization's rules for ${\pbang}p^+$, of
+The salient feature of the exponential optimization's rules for ${\pbang}p^+$, of
 course, is that they do {\it not} break focus on the right and that
 they continue to decompose the proposition on the left (into a
 suspended proposition $\langle p^+ \rangle$ in the persistent
@@ -2673,20 +2703,20 @@ translated as $F x^+$, where $x^+$ is the translation of $p^+$ as a
 persistent positive atomic proposition.
 
 In this way, adjoint logic gives one answer to why, in Andreoli-style
-presentations of linear logic,
-we can't naturally substitute positive propositions for positive
-atomic propositions when those positive atomic propositions appear
-suspended in the persistent linear context: because these propositions
-are actually stand-ins for {\it persistent} propositions, not for
-linear propositions, and we are working in a fragment of the logic
-that has no interesting persistent propositions other than atomic
-propositions $x$ and the negative inclusion $G A$ back into linear
-propositions. 
-This effectively captures the structure of the separation requirement
-in a logical way, but it makes the structure of persistent atomic
-propositions rather barren and degenerate, and it places an extra
-logic, adjoint logic, between the focused system and our original 
-presentation of intuitionistic linear logic.
+presentations of linear logic, we can't naturally substitute positive
+propositions for positive atomic propositions when those positive
+atomic propositions appear suspended in the persistent linear context:
+because these propositions are actually stand-ins for {\it persistent}
+propositions, not for linear propositions, and we are working in a
+fragment of the logic that has no interesting persistent propositions
+other than atomic propositions $x$ and the negative inclusion $G A$
+back into linear propositions.  This effectively captures the
+structure of the separation requirement (as defined at the end of
+Section~\ref{sec:bangopt} above) in a logical way, but it makes the
+structure of persistent atomic propositions rather barren and
+degenerate, and it places an extra logic, adjoint logic, between the
+focused system and our original presentation of intuitionistic linear
+logic.
 
 % Adjoint logic, because it requires a syntactic differentiation of
 % persistent and linear atomic propositions, still does not allow us to
@@ -2719,7 +2749,7 @@ presentation of intuitionistic linear logic.
 
 In our attempts to motivate a notion of persistent positive
 propositions, we have now surveyed Andreoli's atom optimization that
-interferes with the structure of cut admissibility, the bang
+interferes with the structure of cut admissibility, the exponential
 optimization that lacks a good interpretation in unfocused linear
 logic, and an adjoint formulation of linear logic that introduces
 persistent positive propositions as members of a syntactic class $X$
@@ -2740,59 +2770,39 @@ positive propositions.\footnote{Permeable {\it negative} propositions
   propositions. We will consider a certain kind of right-permeable
   propositions in Chapter 3.}
 
-The admissible identity expansion rule can be very helpful as a way
-of writing down proofs that avoid doing unnecessary work which
-focusing would otherwise require. For instance, if we are trying to
-prove the sequent $\mildseq{\Gamma}{\Delta}{{\downarrow}\top}$, where
-$\Delta$ has lots of inversion to do, we can suspend
-that work with the admissible identity expansion rule and then 
-focus on the right to finish with ${\top}$. The following derivation 
-is an instance of this pattern:
+The admissible identity expansion rules, like the admissible identity
+rule present in most unfocused sequent calculus systems, can help us
+write dowm compact proofs. If $F(n) = p_1^+ \otimes \ldots \otimes
+p_n^+$, then the size of the smallest proof of
+$\mildseq{\Gamma}{F(n)}{F(n)}$ is in $\Omega(n)$. However, by using
+the admissible identity expansion rule $\eta^+$, we can represent the
+proof in a compact way:
 \[
-\infer-[\eta^+]
-{\mildseq{\Gamma}
-  {{\downarrow}A 
-   \otimes {\downarrow}B 
-   \otimes {\downarrow}C 
-   \otimes {\downarrow}D}
-  {{\downarrow}\top}}
-{\infer[{\it focus}_R]
- {\mildseq{\Gamma}
-   {\langle {\downarrow}A 
-    \otimes {\downarrow}B 
-    \otimes {\downarrow}C 
-    \otimes {\downarrow}D \rangle}
-   {{\downarrow}\top}}
- {\infer[{\downarrow}_R]
-  {\mildseq{\Gamma}
-    {\langle {\downarrow}A 
-     \otimes {\downarrow}B 
-     \otimes {\downarrow}C 
-     \otimes {\downarrow}D \rangle}
-    {[ {\downarrow}\top ]}}
-  {\infer[{\top}_R]
-   {\mildseq{\Gamma}
-    {\langle {\downarrow}A 
-     \otimes {\downarrow}B 
-     \otimes {\downarrow}C 
-     \otimes {\downarrow}D \rangle}
-    {\top}}
-   {}}}}
+{\infer-[\eta^+]
+{\mildseq{\Gamma}{F(n)}{F(n)}}
+{{\infer[{\it focus}_R]
+  {\mildseq{\Gamma}{\susp{F(n)}}{F(n)}}
+  {\infer[{\it id}^+]
+   {\mildseq{\Gamma}{\susp{F(n)}}{[ F(n) ]}}
+   {}}}}}
 \]
-The use of identity expansion lets us omit irrelevant decomposition
-steps that would otherwise be required by focusing. 
+The use of identity expansion lets write down potentially large proofs 
+quite consisely.
 
 \subsubsection{Permeability as a property of identity expansion}
 
 The pattern we want to capture with our new version of identity
-expansion is the situation where we are trying to prove the sequent
-$\mildseq{\Gamma}{\Delta}{\one}$ and we know, by the syntactic
-structure of $\Delta$, that inversion will empty the linear context;
-one instance of this pattern is the sequent $\mildseq{\Gamma} {{!}A
-  \otimes {!}B \otimes {!}C \otimes {!}D} {\one}$. We will do this by
-suspending propositions directly in the persistent context. To use
-these suspended propositions, we introduce a hypothesis rule for
-positive propositions suspended in the persistent context. 
+expansion is the situation where we are trying to prove a sequent like
+$\mildseq{\Gamma}{\Delta}{\one}$ or $\mildseq{\Gamma}{\Delta}{{!}A^-}$
+and we know, by the syntactic structure of $\Delta$, that inversion
+will empty the linear context. One instance of this pattern is the 
+sequent
+$\mildseq{\Gamma}{G(n)}{{!}G(n)}$ where $G(n) = {!}p_1^+ \otimes
+\ldots \otimes {!}p_n^+$. We will can prove such a sequent succinctly 
+by suspending the proposition $G(n)$
+directly in the persistent context. To use these suspended
+propositions, we introduce a hypothesis rule for positive propositions
+suspended in the persistent context.
 \[
 \infer[{\it id}^+_p]
 {\mildseq{\Gamma, \langle A^+ \rangle}{\cdot}{[A^+]}}
@@ -2881,33 +2891,45 @@ are written ${\it subst}^+_p$ and ${\eta}^+_p$:
 We can use this persistent identity expansion property to
 give a compressed proof of our motivating example:
 \[
-\infer-[\eta^+_p]
-{\mildseq{\Gamma}
-  {{!}A 
-   \otimes {!}B 
-   \otimes {!}C 
-   \otimes {!}D}
-  {\one}}
-{\infer[{\it focus}_R]
- {\mildseq
-   {\Gamma, 
-    \langle {!}A 
-    \otimes {!}B 
-    \otimes {!}C 
-    \otimes {!}D \rangle}
-   {\cdot}
-   {\one}}
- {\infer[{\one}_R]
-  {\mildseq
-    {\Gamma,
-     \langle {!}A 
-     \otimes {!}B 
-     \otimes {!}C 
-     \otimes {!}D \rangle}
-    {\cdot}
-    {[\one]}}
-  {}}}
+{\infer-[\eta^+_p]
+{\mildseq{\Gamma}{G(n)}{{!}G(n)}}
+{{\infer[{\it focus}_R]
+  {\mildseq{\Gamma, \susp{G(n)}}{\cdot}{{!}G(n)}}
+  {\infer[{!}_R]
+   {\mildseq{\Gamma, \susp{G(n)}}{\cdot}{[{!}G(n)]}}
+   {\infer[{\it id}^+]
+   {\mildseq{\Gamma}{\susp{G(n)}}{[ G(n) ]}}
+   {}}}}}}
 \]
+
+% \[
+% \infer-[\eta^+_p]
+% {\mildseq{\Gamma}
+%   {{!}A 
+%    \otimes {!}B 
+%    \otimes {!}C 
+%    \otimes {!}D}
+%   {\one}}
+% {\infer[{\it focus}_R]
+%  {\mildseq
+%    {\Gamma, 
+%     \langle {!}A 
+%     \otimes {!}B 
+%     \otimes {!}C 
+%     \otimes {!}D \rangle}
+%    {\cdot}
+%    {\one}}
+%  {\infer[{\one}_R]
+%   {\mildseq
+%     {\Gamma,
+%      \langle {!}A 
+%      \otimes {!}B 
+%      \otimes {!}C 
+%      \otimes {!}D \rangle}
+%     {\cdot}
+%     {[\one]}}
+%   {}}}
+% \]
 
 \subsubsection{Permeable atomic propositions}
 \label{sec:permable-atomic}
@@ -2972,7 +2994,7 @@ cut admissibility, we need to further require that all suspensions in
 the persistent context $\Gamma$ be permeable and atomic and that all
 suspensions in the linear context $\Delta$ be non-permeable and
 atomic.  Under this restriction, the proof proceeds much as it did for
-the system with the bang optimization.
+the system with the exponential optimization.
 
 \paragraph{Correctness of focusing} There are two ways we can
 understand the soundness and completeness of focusing for linear logic
@@ -3072,7 +3094,7 @@ previously:
 
 This modified notation need not only be used in synthetic connectives;
 we can also use it to combine the two positive identity rules ${\it
-  id}^+_1$ and ${\it id}^+_2$ (in the bang-optimized system) or,
+  id}^+_1$ and ${\it id}^+_2$ (in the exponential-optimized system) or,
 equivalently, ${\it id}^+$ and ${\it id}^+_p$ (in the system
 incorporating permeability).  Furthermore, by giving $\Gamma; \Delta /
 A^-$ the obviously analogous meaning, we can fuse the ${\it
@@ -3121,253 +3143,3 @@ induction on derivations, applying the admissible rule whenever the
 
 
 
-\section{Concurrent equality}
-\label{sec:linconcurrenteq}
-
-Concurrent equality is a notion of equivalence that operates on
-synthetic derivations.  It represents an intermediate point between
-focusing and multifocusing \cite{chaudhuri08canonical}.  Consider the
-sequent in focused linear logic:
-\[
-\mildseq{a^+ \lolli {\uparrow}(b^+ \otimes c^+), ~
-  b^+ \lolli {\uparrow}d^+, ~
-  c^+ \lolli {\uparrow}e^+, ~
-  d^+ \otimes e^+ \lolli {\uparrow}f^+ ~~}
-  {~~
-  \langle a^+ \rangle
-  ~~}
-  {~~f^+}
-\]
-Let $\Gamma = \left(a^+ \lolli {\uparrow}(b^+ \otimes c^+), ~
-  b^+ \lolli {\uparrow}d^+, ~
-  c^+ \lolli {\uparrow}e^+, ~
-  d^+ \otimes e^+ \lolli {\uparrow}f^+ \right)$.
-There are two different focused derivations of this
-sequent: the one that transitions $\langle b^+ \rangle$ to $\langle
-d^+ \rangle$ first, and the one that transitions 
-$\langle c^+ \rangle$ to $\langle e^+ \rangle$ first:
-\[
-\infer
-{\mildseq{\Gamma}{\langle a^+ \rangle}{f^+}}
-{\infer
-{\mildseq{\Gamma}{\langle b^+ \rangle, \langle c^+ \rangle}{f^+}}
-{\infer
-{\mildseq{\Gamma}{\langle d^+ \rangle, \langle c^+ \rangle}{f^+}}
-{\infer
-{\mildseq{\Gamma}{\langle d^+ \rangle, \langle e^+ \rangle}{f^+}}
-{\infer
-{\mildseq{\Gamma}{\langle f^+ \rangle}{f^+}}
-{}}}}}
-\qquad
-\deduce
-{\mathstrut}
-{\deduce
-{\mathstrut}
-{\deduce
-{\mathstrut}
-{\mbox{\it vs.}}}}
-\qquad
-\infer
-{\mildseq{\Gamma}{\langle a^+ \rangle}{f^+}}
-{\infer
-{\mildseq{\Gamma}{\langle b^+ \rangle, \langle c^+ \rangle}{f^+}}
-{\infer
-{\mildseq{\Gamma}{\langle b^+ \rangle, \langle e^+ \rangle}{f^+}}
-{\infer
-{\mildseq{\Gamma}{\langle d^+ \rangle, \langle e^+ \rangle}{f^+}}
-{\infer
-{\mildseq{\Gamma}{\langle f^+ \rangle}{f^+}}
-{}}}}}
-\]
-If we think about these two proofs in terms of the series of
-transitions they embody, it's not so clear we want to think of them as
-different. In both cases, there is an $a^+$ resource that transitions
-to a $b^+$ resource and a $c^+$ resource, and then $b^+$ transitions
-to $d^+$ while, independently, the $c^+$ transitions to $e^+$. Then,
-finally, the $d^+$ and $e^+$ combine to transition to $f^+$, which
-completes the trace. The independence here is key: if two focusing
-phases consume different resources and both end focus with
-${\uparrow}_L$ (as opposed to ${\it id}^-$), then we can treat them as
-independent and concurrent steps in the process of proving the same
-right-hand side. {\it Concurrent equality} is the equivalence relation
-on focused proofs that treats all proofs that differ only in the
-interleaving of independent and concurrent steps as equal.  This
-equivalence relation was used in the definition of CLF
-\cite{watkins02concurrent}, but in a greatly restricted way that will
-be reflected in Chapter 4.
-
-Concurrent equality gives rise to an equivalence relation on focused
-derivations. This equivalence relation is related to the equivalence
-relation induced by {\it multifocusing}
-\cite{chaudhuri08canonical}. Multifocusing is a concept that has only
-been carefully explored in classical linear logic; the central change
-is that the rules which begins a focusing phase (in our presentation
-of MELL there were three: ${\it focus_L}$, ${\it focus_R}$, and ${\it
-  copy}$) are allowed to simultaneously pull other propositions into
-focus.  As an illustration, if we reuse our notation from
-Section~\ref{sec:linnote} we can present the following plausible
-candidates for the multifocus rules in an intuitionistic system:
-\[
-\infer[{\it focus}_L]
-{\mildseq{\Gamma}{\Delta / A_1^-, \ldots, A_n^- }{U}}
-{n > 1
- &
- \mildseq{\Gamma}{\Delta, [A_1^-], \ldots, [A_n^-]}{U}}
-\quad
-\infer[{\it focus}_R]
-{\mildseq{\Gamma}{\Delta / A_1^-, \ldots, A_n^-}{C^+}}
-{n \geq 1
- &
- \mildseq{\Gamma}{\Delta, [A_1^-], \ldots, [A_n^-]}{[C^+]}}
-\]
-Multifocusing, however,
-appears to provide an even coarser notion of equivalence on focused
-proofs than concurrent equality does. In particular, the two
-distinct focusing proofs below are not concurrently equal: the proof
-on the right succeeds at proving $\langle c^- \rangle$ in one step,
-but leaves a subgoal in which $b^+$ is proved indirectly, whereas the
-proof at the right first transitions from having $\langle a^+ \rangle$
-and $a^+ \lolli {\uparrow} b^+$ resources to having a $\langle b^+
-\rangle$ resource, and only then proves $\langle c^- \rangle$, leaving
-a subgoal in which $b^+$ is proved directly.
-\[
-\infer
-{\mildseq{\cdot}
-  {~~
-   \langle a^+ \rangle, ~
-   a^+ \lolli {\uparrow}b^+, ~
-   {\downarrow}{\uparrow}b^+ \lolli c^-
-   ~~}
-  {~~\langle c^- \rangle}}
-{\infer
-{\mildseq{\cdot}
-  {~~
-   \langle a^+ \rangle, ~
-   a^+ \lolli {\uparrow}b^+
-   ~~}
-  {b^+}}
-{\infer
-{\mildseq{\cdot}
-  {~~
-   \langle b^+ \rangle
-   ~~}
-  {b^+}}
-{}}}
-\deduce{\mathstrut}
-{\deduce{\mathstrut}
-{\mbox{\it vs.}\mathstrut}}
-\infer
-{\mildseq{\cdot}
-  {~~
-   \langle a^+ \rangle, ~
-   a^+ \lolli {\uparrow}b^+, ~
-   {\downarrow}{\uparrow}b^+ \lolli c^-
-   ~~}
-  {~~\langle c^- \rangle}}
-{\infer
-{\mildseq{\cdot}
-  {~~
-   \langle b^+ \rangle, ~
-   {\downarrow}{\uparrow}b^+ \lolli c^-
-   ~~}
-  {~~\langle c^- \rangle}}
-{\infer
-{\mildseq{\cdot}
-  {~~
-   \langle b^+ \rangle
-   ~~}
-  {~~b^+}}
-{}}}
-\]
-Despite the lack of a full account of intuitionistic multifocusing, we
-can observe that the analogue of this sequent in classical linear
-logic has only one multifocused proof, and it is reasonable to
-conjecture that an account of multifocusing for intuitionistic logic
-would also relate these proofs. In classical linear logic,
-multifocusing offers a very fundamental normal form: any two proofs
-that can be made equal by locally permuting inference rules have the
-same multifocused proof.
-
-CLF's restricted form of concurrent equality will be sufficient for
-the logical framework in Chapter 4. In fact, for the fragment of the
-the logic in Chapter 3 that comprises our logical framework in Chapter
-4, I conjecture that concurrent equality and the equality given by
-multifocusing coincide.\footnote{This obviously means that the example
-  above will be outside the logical fragment that comprises the logical
-  framework.}  This conjecture is obviously difficult to make precise,
-much less prove, without a general theory of multifocusing in
-intuitionistic logic.
-
-
-\subsection{A warning about normalization}
-\label{sec:warning}
-
-In our earlier discussion of hereditary substitution and canonical
-forms in Section~\ref{sec:linlogicalframeworks}, we mentioned that the
-normalization theorem provided by hereditary substitution was weaker
-than the so-called weak normalization theorem for LF. That is because
-the weak normalization theorem says that any well-typed term can be
-converted into a canonical ($\beta$-normal and $\eta$-long) term by a
-particular series of $\beta$ and $\eta$ conversions. It is
-self-evident, by this statement of the theorem, that the resulting
-canonical term is equivalent to the original term.
-
-On the other hand, when we use hereditary substitution in the obvious
-way to obtain a Canonical LF term from an arbitrary non-canonical LF
-term, we gain {\it no guarantees} about the relationship between the
-non-canonical LF term and the Canonical LF term. The statement of the
-theorem does not preclude taking a $\beta$-normal, $\eta$-long LF term
-(like $\lambda x. \lambda y. x$ of type $p \rightarrow p \rightarrow
-p$ for some atomic type $p$) into a structurally different Canonical
-LF term (like $\lambda x. \lambda y. y$, which also has type $p
-\rightarrow p \rightarrow p$). It is possible to gain such a guarantee
-for LF, as Martens and Crary have shown in unpublished work
-\cite{martens11mechanizing}, but this result is a non-trivial statement
-about the constructive content of the normalization theorem. 
-
-In our setting, we should be concerned that we might take a focused
-proof, turn it into an unfocused proof by the obvious de-focalization
-procedure (the constructive content of
-Theorem~\ref{thm:linfocsound}), and then turn it back into a focused
-proof by focalization (the constructive content of
-Theorem~\ref{thm:linfoccomplete}) only to obtain a proof that was not
-identical or even related. This is not at all a merely hypothetical
-concern. We can run the mechanized structural focalization result from
-\cite{simmons11structural} on a persistent proposition,
-%
-   $a^+ \supset 
-   {\downarrow}(a^+ \supset {\uparrow}b^+) \supset
-   {\downarrow}({\downarrow}{\uparrow}b^+ \supset c^-) \supset
-   c^-$, 
-%
-which is similar to the example from
-Section~\ref{sec:linconcurrenteq}.  In persistent logic (as in
-linear logic) that proposition has two focused propositions that
-are probably multifocusing equivalent (given a reasonable intuitionistic
-notion of multifocusing) but that are not concurrently equivalent
-under the proposed definition of concurrent equality. 
-However, if we take the focused proof that focuses 
-first on $a^+ \supset {\uparrow}b^+$, transform it into an unfocused 
-proof, and then re-focus it, we will get the proof that focuses 
-first on ${\downarrow}{\uparrow}b^+ \supset c^-$. Focalization,
-in other words, is not a partial inverse of de-focalization in the structural
-focalization development, except maybe modulo the (as yet undefined)
-equivalence relation established by multifocusing. 
-
-This example illustrates why we must be careful, but it is not a fatal
-flaw for two reasons. The first reason is the aforementioned
-conjecture that, for the restricted logical fragment defined in
-Chapter 4 as the basis of our logical framework, the focalizations of
-two proofs are concurrently equal if and only if the original proofs
-are convertible by local permutations of rules, the same condition
-that multifocusing satisfies. If this conjecture holds, it ought to be
-the case that, modulo this coarser equivalence, focalization {\it is}
-a partial inverse of de-focalization. Second, what is really at stake
-here is our ability to write down non-normal proofs in a logical
-framework that then normalizes them -- which is what the Twelf
-implementation of LF and the Celf implementation of CLF do -- with the
-confidence that we can look at a non-normal proof and know its
-corresponding canonical form. In this thesis, we will be content to
-work throughout with focused proofs and their analogues, so we can
-afford to leave questions about convertability and weak normalization
-to future work.

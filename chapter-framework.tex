@@ -41,6 +41,260 @@ reference to this section)
 
 \subsection{Concurrent equality}
 
+\subsection{Concurrent equality}
+\label{sec:linconcurrenteq}
+
+Concurrent equality is a notion of equivalence that operates on
+synthetic derivations.  It represents an intermediate point between
+focusing and multifocusing \cite{chaudhuri08canonical}.  Consider the
+sequent in focused linear logic:
+\[
+\mildseq{a^+ \lolli {\uparrow}(b^+ \otimes c^+), ~
+  b^+ \lolli {\uparrow}d^+, ~
+  c^+ \lolli {\uparrow}e^+, ~
+  d^+ \otimes e^+ \lolli {\uparrow}f^+ ~~}
+  {~~
+  \langle a^+ \rangle
+  ~~}
+  {~~f^+}
+\]
+Let $\Gamma = \left(a^+ \lolli {\uparrow}(b^+ \otimes c^+), ~
+  b^+ \lolli {\uparrow}d^+, ~
+  c^+ \lolli {\uparrow}e^+, ~
+  d^+ \otimes e^+ \lolli {\uparrow}f^+ \right)$.
+There are two different focused derivations of this
+sequent: the one that transitions $\langle b^+ \rangle$ to $\langle
+d^+ \rangle$ first, and the one that transitions 
+$\langle c^+ \rangle$ to $\langle e^+ \rangle$ first:
+\[
+\infer
+{\mildseq{\Gamma}{\langle a^+ \rangle}{f^+}}
+{\infer
+{\mildseq{\Gamma}{\langle b^+ \rangle, \langle c^+ \rangle}{f^+}}
+{\infer
+{\mildseq{\Gamma}{\langle d^+ \rangle, \langle c^+ \rangle}{f^+}}
+{\infer
+{\mildseq{\Gamma}{\langle d^+ \rangle, \langle e^+ \rangle}{f^+}}
+{\infer
+{\mildseq{\Gamma}{\langle f^+ \rangle}{f^+}}
+{}}}}}
+\qquad
+\deduce
+{\mathstrut}
+{\deduce
+{\mathstrut}
+{\deduce
+{\mathstrut}
+{\mbox{\it vs.}}}}
+\qquad
+\infer
+{\mildseq{\Gamma}{\langle a^+ \rangle}{f^+}}
+{\infer
+{\mildseq{\Gamma}{\langle b^+ \rangle, \langle c^+ \rangle}{f^+}}
+{\infer
+{\mildseq{\Gamma}{\langle b^+ \rangle, \langle e^+ \rangle}{f^+}}
+{\infer
+{\mildseq{\Gamma}{\langle d^+ \rangle, \langle e^+ \rangle}{f^+}}
+{\infer
+{\mildseq{\Gamma}{\langle f^+ \rangle}{f^+}}
+{}}}}}
+\]
+If we think about these two proofs in terms of the series of
+transitions they embody, it's not so clear we want to think of them as
+different. In both cases, there is an $a^+$ resource that transitions
+to a $b^+$ resource and a $c^+$ resource, and then $b^+$ transitions
+to $d^+$ while, independently, the $c^+$ transitions to $e^+$. Then,
+finally, the $d^+$ and $e^+$ combine to transition to $f^+$, which
+completes the trace. The independence here is key: if two focusing
+phases consume different resources and both end focus with
+${\uparrow}_L$ (as opposed to ${\it id}^-$), then we can treat them as
+independent and concurrent steps in the process of proving the same
+right-hand side. {\it Concurrent equality} is the equivalence relation
+on focused proofs that treats all proofs that differ only in the
+interleaving of independent and concurrent steps as equal.  This
+equivalence relation was used in the definition of CLF
+\cite{watkins02concurrent}, but in a greatly restricted way that will
+be reflected in Chapter 4.
+
+Concurrent equality gives rise to an equivalence relation on focused
+derivations. This equivalence relation is related to the equivalence
+relation induced by {\it multifocusing}
+\cite{chaudhuri08canonical}. Multifocusing is a concept that has only
+been carefully explored in classical linear logic; the central change
+is that the rules which begins a focusing phase (in our presentation
+of MELL there were three: ${\it focus_L}$, ${\it focus_R}$, and ${\it
+  copy}$) are allowed to simultaneously pull other propositions into
+focus.  As an illustration, if we reuse our notation from
+Section~\ref{sec:linnote} we can present the following plausible
+candidates for the multifocus rules in an intuitionistic system:
+\[
+\infer[{\it focus}_L]
+{\mildseq{\Gamma}{\Delta / A_1^-, \ldots, A_n^- }{U}}
+{n > 1
+ &
+ \mildseq{\Gamma}{\Delta, [A_1^-], \ldots, [A_n^-]}{U}}
+\quad
+\infer[{\it focus}_R]
+{\mildseq{\Gamma}{\Delta / A_1^-, \ldots, A_n^-}{C^+}}
+{n \geq 1
+ &
+ \mildseq{\Gamma}{\Delta, [A_1^-], \ldots, [A_n^-]}{[C^+]}}
+\]
+Multifocusing, however,
+appears to provide an even coarser notion of equivalence on focused
+proofs than concurrent equality does. In particular, the two
+distinct focusing proofs below are not concurrently equal: the proof
+on the right succeeds at proving $\langle c^- \rangle$ in one step,
+but leaves a subgoal in which $b^+$ is proved indirectly, whereas the
+proof at the right first transitions from having $\langle a^+ \rangle$
+and $a^+ \lolli {\uparrow} b^+$ resources to having a $\langle b^+
+\rangle$ resource, and only then proves $\langle c^- \rangle$, leaving
+a subgoal in which $b^+$ is proved directly.
+\[
+\infer
+{\mildseq{\cdot}
+  {~~
+   \langle a^+ \rangle, ~
+   a^+ \lolli {\uparrow}b^+, ~
+   {\downarrow}{\uparrow}b^+ \lolli c^-
+   ~~}
+  {~~\langle c^- \rangle}}
+{\infer
+{\mildseq{\cdot}
+  {~~
+   \langle a^+ \rangle, ~
+   a^+ \lolli {\uparrow}b^+
+   ~~}
+  {b^+}}
+{\infer
+{\mildseq{\cdot}
+  {~~
+   \langle b^+ \rangle
+   ~~}
+  {b^+}}
+{}}}
+\deduce{\mathstrut}
+{\deduce{\mathstrut}
+{\mbox{\it vs.}\mathstrut}}
+\infer
+{\mildseq{\cdot}
+  {~~
+   \langle a^+ \rangle, ~
+   a^+ \lolli {\uparrow}b^+, ~
+   {\downarrow}{\uparrow}b^+ \lolli c^-
+   ~~}
+  {~~\langle c^- \rangle}}
+{\infer
+{\mildseq{\cdot}
+  {~~
+   \langle b^+ \rangle, ~
+   {\downarrow}{\uparrow}b^+ \lolli c^-
+   ~~}
+  {~~\langle c^- \rangle}}
+{\infer
+{\mildseq{\cdot}
+  {~~
+   \langle b^+ \rangle
+   ~~}
+  {~~b^+}}
+{}}}
+\]
+Despite the lack of a full account of intuitionistic multifocusing, we
+can observe that the analogue of this sequent in classical linear
+logic has only one multifocused proof, and it is reasonable to
+conjecture that an account of multifocusing for intuitionistic logic
+would also relate these proofs. In classical linear logic,
+multifocusing offers a very fundamental normal form: any two proofs
+that can be made equal by locally permuting inference rules have the
+same multifocused proof.
+
+CLF's restricted form of concurrent equality will be sufficient for
+the logical framework in Chapter 4. In fact, for the fragment of the
+the logic in Chapter 3 that comprises our logical framework in Chapter
+4, I conjecture that concurrent equality and the equality given by
+multifocusing coincide.\footnote{This obviously means that the example
+  above will be outside the logical fragment that comprises the logical
+  framework.}  This conjecture is obviously difficult to make precise,
+much less prove, without a general theory of multifocusing in
+intuitionistic logic.
+
+
+\subsection{A warning about normalization}
+\label{sec:warning}
+
+In our earlier discussion of hereditary substitution and canonical
+forms in Section~\ref{sec:linlogicalframeworks}, we mentioned that the
+normalization theorem provided by hereditary substitution was weaker
+than the so-called weak normalization theorem for LF. That is because
+the weak normalization theorem says that any well-typed term can be
+converted into a canonical ($\beta$-normal and $\eta$-long) term by a
+particular series of $\beta$ and $\eta$ conversions. It is
+self-evident, by this statement of the theorem, that the resulting
+canonical term is equivalent to the original term.
+
+On the other hand, when we use hereditary substitution in the obvious
+way to obtain a Canonical LF term from an arbitrary non-canonical LF
+term, we gain {\it no guarantees} about the relationship between the
+non-canonical LF term and the Canonical LF term. The statement of the
+theorem does not preclude taking a $\beta$-normal, $\eta$-long LF term
+(like $\lambda x. \lambda y. x$ of type $p \rightarrow p \rightarrow
+p$ for some atomic type $p$) into a structurally different Canonical
+LF term (like $\lambda x. \lambda y. y$, which also has type $p
+\rightarrow p \rightarrow p$). It is possible to gain such a guarantee
+for LF, as Martens and Crary have shown in unpublished work
+\cite{martens11mechanizing}, but this result is a non-trivial statement
+about the constructive content of the normalization theorem. 
+
+In our setting, we should be concerned that we might take a focused
+proof, turn it into an unfocused proof by the obvious de-focalization
+procedure (the constructive content of
+Theorem~\ref{thm:linfocsound}), and then turn it back into a focused
+proof by focalization (the constructive content of
+Theorem~\ref{thm:linfoccomplete}) only to obtain a proof that was not
+identical or even related. This is not at all a merely hypothetical
+concern. We can run the mechanized structural focalization result from
+\cite{simmons11structural} on a persistent proposition,
+%
+   $a^+ \supset 
+   {\downarrow}(a^+ \supset {\uparrow}b^+) \supset
+   {\downarrow}({\downarrow}{\uparrow}b^+ \supset c^-) \supset
+   c^-$, 
+%
+which is similar to the example from
+Section~\ref{sec:linconcurrenteq}.  In persistent logic (as in
+linear logic) that proposition has two focused propositions that
+are probably multifocusing equivalent (given a reasonable intuitionistic
+notion of multifocusing) but that are not concurrently equivalent
+under the proposed definition of concurrent equality. 
+However, if we take the focused proof that focuses 
+first on $a^+ \supset {\uparrow}b^+$, transform it into an unfocused 
+proof, and then re-focus it, we will get the proof that focuses 
+first on ${\downarrow}{\uparrow}b^+ \supset c^-$. Focalization,
+in other words, is not a partial inverse of de-focalization in the structural
+focalization development, except maybe modulo the (as yet undefined)
+equivalence relation established by multifocusing. 
+
+This example illustrates why we must be careful, but it is not a fatal
+flaw for two reasons. The first reason is the aforementioned
+conjecture that, for the restricted logical fragment defined in
+Chapter 4 as the basis of our logical framework, the focalizations of
+two proofs are concurrently equal if and only if the original proofs
+are convertible by local permutations of rules, the same condition
+that multifocusing satisfies. If this conjecture holds, it ought to be
+the case that, modulo this coarser equivalence, focalization {\it is}
+a partial inverse of de-focalization. Second, what is really at stake
+here is our ability to write down non-normal proofs in a logical
+framework that then normalizes them -- which is what the Twelf
+implementation of LF and the Celf implementation of CLF do -- with the
+confidence that we can look at a non-normal proof and know its
+corresponding canonical form. In this thesis, we will be content to
+work throughout with focused proofs and their analogues, so we can
+afford to leave questions about convertability and weak normalization
+to future work.
+
+
+\subsection{Pseudo-positive atoms}
+\label{sec:pseudopositive}
 
 \section{Logic programming interpretation}
 \label{sec:framework-logicprog}
