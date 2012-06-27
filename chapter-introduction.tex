@@ -41,9 +41,77 @@
 %  which covers all the theorem provers used to prove the POPLMark
 % challenge except for Twelf.
 
-
 % used in these domains therefore universally
 % include a notion of {\it inductive definition} as the primary form of
+
+Suppose you find yourself in possession of
+\smallskip
+\begin{itemize}
+\item a calculator of unfamiliar design, or 
+\item a new board game, or
+\item the control system for an army of robots, or
+\item an implementation of a security protocol, or
+\item the interface to a high-frequency trading system.
+\end{itemize}
+\smallskip The fundamental questions are the same: {\it What does it
+  do? What are the rules of the game?} The answer to this question,
+whether it comes in the form of an instruction manual, a legal
+document, or an ISO standard, is a {\it specification}.
+
+Specifications must be {\it formal}, because any room for
+misinterpretation could (respectively) lead to incorrect calculations,
+accusations of cheating, a robot uprising, a security breach, or
+bankruptcy. At the same time, specifications must be {\it clear}: in
+practice, a hopelessly confusing or complex specification language is
+no more useful than one that is hopelessly vague. Clarity is what
+allows us to communicate with each other, to use specifications to
+gain a common understanding of what some system does and to think
+about how that system might be changed. Formality is what allows
+specifications to interact with the world of computers, to say with
+confidence that the {\it implementation} of the calculator or
+high-frequency trading system obeys the specification. Formality also
+allows specifications to interact with the world of mathematics, and
+this, in turn, enables us to make precise and accurate statements
+about what may or may not happen to a given system.
+
+The specification of many (too many!)~critical systems still remains
+in the realm of English text, and the inevitable lack of formality can
+and does make formal reasoning about these specifications difficult.
+Notably, this is true about most of the programming languages used to
+implement our calculators, program our robot army control systems,
+enforce our security protocols, and interact with our high-frequency
+trading systems. In recent years, however, we have finally begun to
+seen the emergence of operational semantics specifications (the
+``rules of the game'' for a programming language) that are truly
+formal. A notable aspect of this recent work is that the formalization
+effort is not done simply for formalization's sake. Ellison and Ro{\c
+  s}u's formal semantics of C can be used to check individual programs
+for undefined behavior, unsafe situations where the rules of the game
+no longer apply and the compiler is free to do anything, including
+unleashing the robot army \cite{ellison12executable}. Lee, Crary, and
+Harper's formalization of Standard ML has been used to formally prove
+-- using a computer to check all the proof's formal details -- a much
+stronger safety property: that {\it every} program accepted by the
+compiler is free of undefined behavior \cite{lee07towards}.
+
+Mathematics, by contrast, has a century-long tradition of insisting on
+absolute formality, at least in principle. Over time, this tradition
+has become a collaboration between practicing mathematicians and
+practicing computer scientists, because while humans are reasonable
+judges of clarity, computers have an absolutely superhuman patience
+for checking all the formal details of an argument. One aspect of this
+collaboration has been the development of {\it logical frameworks}. In
+a logical framework, the language of specifications is derived from
+the language of logic. Specifications in a logical framework therefore
+have an independent meaning and existence given by the logic from
+which the logical framework was derived. For example, Coq is based on
+the Calculus of Inductive Constructions \cite{coq10coq}, Agda is based
+on a variant of Martin-L\"of's type theory called ${\sf UTT}_\Sigma$
+\cite{norell08towards}, and Twelf is based off of the dependent type
+theory $\lambda^\Pi$ \cite{pfenning99system}. (Twelf was the basis of
+Lee, Crary, and Harper's formalization of Standard ML.)
+
+
 
 A central goal of logical frameworks is to specify the operational
 semantics of evolving systems (in particular, the operational
@@ -52,6 +120,8 @@ motivated and that allows specifications to be as simple as possible.
 This thesis considers an approach to the specification of evolving
 systems that is based on a family of logics called {\it substructural
   logics}.
+
+\section{Logical frameworks}
 
 Many interesting stateful systems have a natural notion of {\it
   ordering} that is fundamental to their behavior. Consider a
