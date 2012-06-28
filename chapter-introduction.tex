@@ -102,53 +102,59 @@ judges of clarity, computers have an absolutely superhuman patience
 for checking all the formal details of an argument.  One aspect of
 this collaboration has been the development of {\it logical
   frameworks}. In a logical framework, the language of specifications
-is derived from the language of logic. Specifications in a logical
+is derived from the language of a logic. Specifications in a logical
 framework therefore have an independent meaning and existence given by
-the logic from which the logical framework was derived. For example,
-Coq is based on the Calculus of Inductive Constructions
-\cite{coq10coq}, Agda is based on a variant of Martin-L\"of's type
-theory called ${\sf UTT}_\Sigma$ \cite{norell08towards}, and Twelf is
-based off of the dependent type theory $\lambda^\Pi$, also known as LF
-\cite{pfenning99system}. (Twelf was the basis of Lee, Crary, and
-Harper's formalization of Standard ML.)  Specifications evolve
-gradually from half-baked ideas scrawled on coffee-stained napkins to
-formal specifications encoded in a logical framework. Another critical
-component of a logical framework is a methodology or philosophy that
-guides this process. LF and Twelf, in particular, have a formal theory
-of {\it adequacy} that addresses the relationship between the on-paper
-artifacts the people use to communicate with each other and the
-encoding of those artifacts in LF \cite{harper93framework}.
+the logic from which the logical framework was derived. To be clear,
+the language of logic is not a single, unified entity: logics are
+formal systems that satisfy certain internal coherence properties, and
+we study many of them. For example, the logical framework Coq is based
+on the Calculus of Inductive Constructions \cite{coq10coq}, the
+logical framework Agda is based on a variant of Martin-L\"of's type
+theory called ${\sf UTT}_\Sigma$ \cite{norell08towards}, and the
+logical Twelf is based off of the dependent type theory $\lambda^\Pi$,
+also known as LF \cite{pfenning99system}. (Twelf was the basis of Lee,
+Crary, and Harper's formalization of Standard
+ML.)  % Specifications evolve
+% gradually from half-baked ideas scrawled on coffee-stained napkins to
+% formal specifications encoded in a logical framework. Another critical
+% component of a logical framework is a methodology or philosophy that
+% guides this process. LF and Twelf, in particular, have a formal theory
+% of {\it adequacy} that addresses the relationship between the on-paper
+% artifacts the people use to communicate with each other and the
+% encoding of those artifacts in LF \cite{harper93framework}.
 
 Why is there not a larger tradition of formally specifying the
 programming languages that people actually use? Part of the answer is
 that most languages that people actually use have lots of features --
 like mutable state, or exception handling, or synchronization and
-communication, or lazy evaluation -- that are not particularly pleasant
-to specify using existing logical frameworks. Dealing with a few
-unpleasant features at a time might not be much trouble. However, the
-combinations that appear in actual programming languages result in
-formal specifications that are neither clear for humans nor convenient
-for formal tools to reason about. A more precise statement is that the
+communication, or lazy evaluation -- that are not particularly
+pleasant to specify using existing logical frameworks. Dealing with a
+few unpleasant features at a time might not be much trouble. However,
+the combinations that appear in actual programming languages cause
+language specifications to be both unclear for humans to read and
+inconvinenet for formal tools to manipulate, so that there is less
+advantage to be had from the truly rigorous formalization that logical
+frameworks make possible. A more precise statement is that the
 addition of the aforementioned features is {\it non-modular}, because
 handling a new feature requires reconsidering and revising all the
-other rules.
-
-Some headway on this problem has been made by frameworks like the K
-semantic framework that are formal but not logically derived; the K
-semantic framework is based on a notion of rewriting rules
-\cite{rosu10overview}.  (Ellison and Ro\c{s}u's formalization of C was
-done in the K semantic framework.)
+entirety of the rest of the specification.  Some headway on this
+problem has been made by frameworks like the K semantic framework that
+are formal but not logically derived; the K semantic framework is
+based on a notion of rewriting rules \cite{rosu10overview}. Ellison
+and Ro\c{s}u's formalization of C was done in the K semantic
+framework.
 
 This thesis considers the specification of systems, particularly
 programming languages, in logical frameworks. In particular, we
 consider a particular family of logics, called {\it substructural
   logics}, in which logical propositions can be given an
-interpretation as rewriting rules (as observed by Cervesato and
-Scedrov \cite{cervesato09relating}). Deriving a framework from
-substructural logics can allow us to combine the formality and
-generality of logical frameworks with the modular specification that
-is possible in rewriting frameworks. With this synthesis, we aim to
-support the following
+interpretation as rewriting rules as detailed by Cervesato and Scedrov
+\cite{cervesato09relating}. % Deriving a framework from substructural
+% logics allows us to combine the formality and generality of logical
+% frameworks with the modular specification that is possible in
+% rewriting frameworks. With this synthesis, 
+We seek to support the
+following
 \begin{quote} {\bf Thesis Statement:} {\it Logical frameworks based on
     a rewriting interpretation of substructural logics are suitable
     for modular specification of programming languages and formal
@@ -314,12 +320,13 @@ rather, our goal is to represent the operational semantics of
 programming languages. We can represent operational semantics in
 \sls~in many ways, but we are particularly interested in a broad
 specification style called {\it substructural operational semantics},
-or SSOS.\footnote{The term {\it substructural operational semantics}
-  merges structural operational semantics \cite{plotkin04structural},
-  which we seek to generalize, and substructural logic, which forms
-  the basis of our specification framework.} SSOS is a synthesis of
-structural operational semantics, abstract machines, and logical
-specifications.
+or SSOS
+\cite{pfenning04substructural,pfenning09substructural}.\footnote{The
+  term {\it substructural operational semantics} merges structural
+  operational semantics \cite{plotkin04structural}, which we seek to
+  generalize, and substructural logic, which forms the basis of our
+  specification framework.} SSOS is a synthesis of structural
+operational semantics, abstract machines, and logical specifications.
 
 One of our running
 examples will be a call-by-value operational semantics for the untyped
@@ -513,12 +520,11 @@ to be accessed by the rule ${\sf ev/count}$.
 In Figure~\ref{fig:eval-ssos-ctr}, we give an example of evaluating
 $(((\lambda x.\lambda y.y)\,{\sf count})\,{\sf count})$ to a value
 (with a starting counter value of $\underline 5$). This solution is
-even more contrived than the problem was: where do we put the {\it
-  second} counter? Nevertheless, the example does foreshadow how, in
-Part~2 of this thesis, we will show that SSOS
+even more contrived than the problem was: if we wanted to introduce a
+{\it second} counter, where would it go? Nevertheless, the example
+does foreshadow how, in Part~2 of this thesis, we will show that SSOS
 specifications in \sls~allow for the modular specification of many
-programming language features, extending work done jointly with
-Frank Pfenning in \cite{pfenning09substructural}.
+programming language features.
 
 \begin{figure}
 \begin{align*}
