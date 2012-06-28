@@ -99,35 +99,83 @@ absolute formality, at least in principle. Over time, this tradition
 has become a collaboration between practicing mathematicians and
 practicing computer scientists, because while humans are reasonable
 judges of clarity, computers have an absolutely superhuman patience
-for checking all the formal details of an argument. One aspect of this
-collaboration has been the development of {\it logical frameworks}. In
-a logical framework, the language of specifications is derived from
-the language of logic. Specifications in a logical framework therefore
-have an independent meaning and existence given by the logic from
-which the logical framework was derived. For example, Coq is based on
-the Calculus of Inductive Constructions \cite{coq10coq}, Agda is based
-on a variant of Martin-L\"of's type theory called ${\sf UTT}_\Sigma$
-\cite{norell08towards}, and Twelf is based off of the dependent type
-theory $\lambda^\Pi$ \cite{pfenning99system}. (Twelf was the basis of
-Lee, Crary, and Harper's formalization of Standard ML.)
+for checking all the formal details of an argument.  One aspect of
+this collaboration has been the development of {\it logical
+  frameworks}. In a logical framework, the language of specifications
+is derived from the language of logic. Specifications in a logical
+framework therefore have an independent meaning and existence given by
+the logic from which the logical framework was derived. For example,
+Coq is based on the Calculus of Inductive Constructions
+\cite{coq10coq}, Agda is based on a variant of Martin-L\"of's type
+theory called ${\sf UTT}_\Sigma$ \cite{norell08towards}, and Twelf is
+based off of the dependent type theory $\lambda^\Pi$, also known as LF
+\cite{pfenning99system}. (Twelf was the basis of Lee, Crary, and
+Harper's formalization of Standard ML.)  Specifications evolve
+gradually from half-baked ideas scrawled on coffee-stained napkins to
+formal specifications encoded in a logical framework. Another critical
+component of a logical framework is a methodology or philosophy that
+guides this process. LF and Twelf, in particular, have a formal theory
+of {\it adequacy} that addresses the relationship between the on-paper
+artifacts the people use to communicate with each other and the
+encoding of those artifacts in LF \cite{harper93framework}.
 
+Why is there not a larger tradition of formally specifying the
+programming languages that people actually use? Part of the answer is
+that most languages that people actually use have lots of features --
+like mutable state, or exception handling, or synchronization and
+communication, or lazy evaluation -- that are not particularly pleasant
+to specify using existing logical frameworks. Dealing with a few
+unpleasant features at a time might not be much trouble. However, the
+combinations that appear in actual programming languages result in
+formal specifications that are neither clear for humans nor convenient
+for formal tools to reason about. A more precise statement is that the
+addition of the aforementioned features is {\it non-modular}, because
+handling a new feature requires reconsidering and revising all the
+other rules.
 
+Some headway on this problem has been made by frameworks like the K
+semantic framework that are formal but not logically derived; the K
+semantic framework is based on a notion of rewriting rules
+\cite{rosu10overview}.  (Ellison and Ro\c{s}u's formalization of C was
+done in the K semantic framework.)
 
-A central goal of logical frameworks is to specify the operational
-semantics of evolving systems (in particular, the operational
-semantics of programming languages) in a framework that is logically
-motivated and that allows specifications to be as simple as possible.
-This thesis considers an approach to the specification of evolving
-systems that is based on a family of logics called {\it substructural
-  logics}.
+This thesis considers the specification of systems, particularly
+programming languages, in logical frameworks. In particular, we
+consider a particular family of logics, called {\it substructural
+  logics}, in which logical propositions can be given an
+interpretation as rewriting rules (as observed by Cervesato and
+Scedrov \cite{cervesato09relating}). Deriving a framework from
+substructural logics can allow us to combine the formality and
+generality of logical frameworks with the modular specification that
+is possible in rewriting frameworks. With this synthesis, we aim to
+support the following
+\begin{quote} {\bf Thesis Statement:} {\it Logical frameworks based on
+    a rewriting interpretation of substructural logics are suitable
+    for modular specification of programming languages and formal
+    reasoning about their properties}.\footnote{The original thesis
+    proposal used the phrase ``forward reasoning in substructural
+    logics'' instead of the phrase ``a rewriting interpretation of
+    substructural logics,'' but these are synonymous, as discussed in
+    Section~\ref{sec:framework-logicprog}.}
+\end{quote}
+
+\noindent
+Part~1 of the thesis concerns the design of logical frameworks that
+support this rewriting interpretation and the design of the logical
+framework \sls~in particular. Part~2 concerns the modular
+specification of programming language features in \sls~and the
+methodology by which we organize various styles of specification
+through the logical correspondence. Part~3 discusses formal reasoning
+about properties of \sls~specifications, with an emphasis
+on establishing invariants.
 
 \section{Logical frameworks}
 
 Many interesting stateful systems have a natural notion of {\it
-  ordering} that is fundamental to their behavior. Consider a
-push-down automaton (PDA) that reads a string of symbols left-to-right
-while maintaining and manipulating a separate stack of symbols. We can
-represent any configuration of the PDA as a sequence 
+  ordering} that is fundamental to their behavior. A very simple
+example is a push-down automaton (PDA) that reads a string of symbols
+left-to-right while maintaining and manipulating a separate stack of
+symbols. We can represent any configuration of the PDA as a sequence
 with three regions:
 \[
 [~\mbox{the stack}~]
@@ -138,9 +186,9 @@ with three regions:
 \]
 where the symbols closest to the head are the top of the stack and the
 symbol waiting to be read from the string. If we represent the head as
-a token ${\sf hd}$, we can describe the behavior of a single-state
-push-down automaton for checking that a string has only matching 
-angle braces by using two rewriting rules:
+a token ${\sf hd}$, we can describe the behavior (the rules of the
+game) for a single-state push-down automaton for checking that a
+string has only matching angle braces by using two rewriting rules:
 \begin{align}
 \tag{push} {\sf hd}~{<} ~&\rightsquigarrow~ {<}~{\sf hd}
 \\
@@ -181,12 +229,12 @@ rewriting system can take is shown in Figure~\ref{fig:pda-transitions}
 \end{figure}
 
 Because our goal is to use a framework that is both simple and
-logically motivated, we turn to {\it ordered logic} (originally
-presented by Lambek~\cite{lambek58mathematics}), a logic where
-hypotheses have an intrinsic notion of order. The rewriting rules
-we considered above can be explained as propositions in ordered
-logic, where the tokens ${\sf hd}$, $>$, and $<$ are all treated as
-{\it atomic propositions}:
+logically motivated, we turn to a substructural logic called {\it
+  ordered logic} (originally presented by
+Lambek~\cite{lambek58mathematics}) where hypotheses have an
+intrinsic notion of order. The rewriting rules we considered above can
+be explained as propositions in ordered logic, where the tokens ${\sf
+  hd}$, $>$, and $<$ are all treated as {\it atomic propositions}:
 \begin{align*}
 {\sf push} &: ~~ {\sf hd} \fuse {<} ~\lefti~ \{ {<} \fuse {\sf hd} \}
 \\ 
@@ -197,12 +245,12 @@ ordered conjunction (i.e. concatenation); it binds more tightly than
 $\lefti$, a binary connective for ordered implication. The curly
 braces $\{ \ldots \}$ can be ignored for now.
 
-Our logic has first-order quantification, so we can describe a more
-general push-down automaton that uses ${\sf left}(X)$ and ${\sf
-  right}(X)$ to describe left and right angle braces ($X = {\sf an}$),
-square braces ($X = {\sf sq}$), and parentheses ($X = {\sf pa}$). The
-string {\sf [ \textless~\textgreater~( [ ] ) ]} is then represented by
-the following sequence of ordered atomic propositions:
+Our logic has first-order quantification, so we can generically
+describe a more general push-down automaton that uses ${\sf left}(X)$
+and ${\sf right}(X)$ to describe left and right angle braces ($X =
+{\sf an}$), square braces ($X = {\sf sq}$), and parentheses ($X = {\sf
+  pa}$). The string {\sf [ \textless~\textgreater~( [ ] ) ]} is then
+represented by the following sequence of ordered atomic propositions:
 \[
 {\sf 
   left(sq) ~~
@@ -223,6 +271,9 @@ The following rules describe the more general push-down automaton:
 {\sf pop} &: ~~ \forall x.\, 
   {\sf stack}(x) \fuse {\sf hd} \fuse {\sf right}(x) ~\lefti~ \{ {\sf hd} \}
 \end{align*}
+(This specification would still be possible in propositional ordered 
+logic; we would just need one copy of the ${\sf push}$ rule and one copy
+of the ${\sf pop}$ rule for each pair of braces.)
 Note that while we use the fuse connective to indicate adjacent tokens
 in the rules above, no fuses appear in
 Figure~\ref{fig:pda-transitions}. That is because the intermediate
@@ -544,25 +595,3 @@ specifications, which is the focus of Chapter~8.
 
 (XXX Come back and write this part)
 
-\section{Thesis}
-
-This document aims to support the following
-
-\begin{quote} {\bf Thesis Statement:} {\it Logical frameworks based on
-    concurrent reasoning in substructural logics are suitable for
-    modular specification of programming languages and formal
-    reasoning about their properties}.\footnote{The original thesis
-    proposal used the phrase ``forward reasoning,'' which is a synonym
-    of concurrent reasoning based on the operational intuitions
-    discussed in Section~\ref{sec:framework-logicprog}.}
-\end{quote}
-
-\noindent
-Part~1 concerns the design of logical frameworks based on concurrent
-reasoning in substructural logics in general and the design of the
-logical framework \sls~in particular. Part~2 concerns the modular
-specification of programming language features in \sls~and the
-organization of various styles of specification through the logical
-correspondence. Part~3 discusses formal reasoning about properties of
-concurrent \sls~specifications, with an emphasis on establishing
-well-formedness invariants.
