@@ -23,7 +23,7 @@ can continue to make the same transition indefinitely; in the
 above-mentioned example, such transitions will derive multiple
 redundant copies of ${\sf b}$.
 
-The way we will understand the meaning of some persistent and
+The way we will understand the meaning of persistent and
 concurrent \sls~specifications is in terms of {\it saturation}. A
 process state $(\Psi; \Delta)$ is saturated relative to the signature
 $\Sigma$ if, for any step $(\Psi; \Delta) \leadsto_\Sigma (\Psi';
@@ -41,10 +41,10 @@ propositions; we can compute a process state from any saturated
 process state by removing duplicates. For purely persistent
 specifications and process sates, minimal saturated process states are
 unique when they exist: if $(\Psi; \Delta) \leadsto^*_\Sigma (\Psi_1;
-\Delta_1)$ and $(\Psi; \Delta) \leadsto^*_\Sigma (\Psi_2; \Delta_2)$,
-then the process states $(\Psi_1; \Delta_1)$ and $(\Psi_2; \Delta_2)$
-may not be identitical, but they correspond to the same minimal process
-states.
+\Delta_1)$ and $(\Psi; \Delta) \leadsto^*_\Sigma (\Psi_2; \Delta_2)$
+and both $(\Psi_1; \Delta_1)$ and $(\Psi_2; \Delta_2)$ are saturated
+then both $(\Psi_1; \Delta_1)$ and $(\Psi_2; \Delta_2)$ correspond to 
+the same minimal process state (they may not be identical).
 
 Furthermore, if a saturated process state exists for a given initial
 process state, the minimal saturated process state can be computed by
@@ -55,11 +55,11 @@ interpretation of persistent logic is extremely common; in fact, it is
 what is commonly meant by ``foward-chaining logic programming.'' Just
 as the term {\it persistent logic} was introduced in Chapter 2 to
 distinguish what is traditionally referred to as intuitionstic logic
-from the intuitionstic ordered and linear logic, we will use the term
+from intuitionstic ordered and linear logic, we will use the term
 {\it saturating logic programming} to distinguish what is
 tranditionally referred to as foward-chaining logic programming from
 the forward-chaining logic programming interpretation that makes sense
-for for ordered and linear logical specifications.\robnote{If I want
+for ordered and linear logical specifications.\robnote{If I want
   to talk a bit more about Linear Logical Algorithms in Chapter 5, I
   could say some more.}
 
@@ -112,7 +112,7 @@ transformation expects explict information from the user: which
 premises should be removed, and what new conclusions should be
 introduced? While there is value in actually implementing the
 operationalization, defunctionalization, and destination-adding
-transformations, applying approximation requires applying one's
+transformations, applying approximation requires
 intelligence. Borrowing a phrase from Danvy, approximation is a
 candidate for ``mechanization by graduate student'' rather than
 mechanization by computer.
@@ -138,7 +138,7 @@ and their generalizations is that generalizations can {\it simulate}
 the process states they generalize: that is, that if $(\Psi_g;
 \Delta_g)$ is a generalization of $(\Psi; \Delta)$ and $(\Psi; \Delta)
 \leadsto_\Sigma (\Psi'; \Delta')$ then $(\Psi_g; \Delta_g)
-\leadsto_{\Sigma_g} (\Psi'_g; \Delta'_g)$ where $(\Psi'_g; \Delta'_g)$
+\leadsto_{\Sigma_a} (\Psi'_g; \Delta'_g)$ where $(\Psi'_g; \Delta'_g)$
 is a generalization of $(\Psi'; \Delta')$. The property we will
 actually stablish is quite a bit stronger, and is expressed by the
 following definition:
@@ -230,7 +230,7 @@ point in Figure~\ref{fig:pda-pers}, however, we can define
 approximations simply by approximating the Skolem function.  For
 instance, we can equate the existentially generated destination in the
 conclusion with the one given in the premise (letting ${\sf fm} =
-\lambda x. \lambda l. \lambda m. \lambda r. m$), the result is
+\lambda x. \lambda l. \lambda m. \lambda r. m$). The result is
 equivalent to this specification:
 
 \smallskip
@@ -260,10 +260,10 @@ If the initial process state contains a single atomic proposition
 ${\sf hd}\,d_0\,d_1$ in addition to all the ${\sf left}$ and ${\sf
   right}$ facts, then the two rules above maintain the invariant that,
 as new facts are derived, the first argument of ${\sf hd}$ and the
-second and third arguments of ${\sf stack}$ will {\it always} be equal
-to $d_0$. These arguments are therefore vestigial, like the extra
+second and third arguments of ${\sf stack}$ will {\it always} be
+$d_0$.  These arguments are therefore vestigial, like the extra
 arguments to ${\sf eval}$ and ${\sf retn}$ discussed in
-Section~\ref{sec:vestigial}, and we can just remove them from the
+Section~\ref{sec:vestigial}, and we can remove them from the
 approximate specification, resulting in the specification in
 Figure~\ref{fig:pda-pers-approx2}. This logical approximation of the
 original PDA accepts every string where, for every form of bracket
@@ -304,8 +304,8 @@ Figure~\ref{fig:dest-env}), not as early as possible (rule ${\sf
 extra frame ${\sf app3}$ and an extra rule ${\sf ev/app3}$ that
 consumes these frames. The ${\sf ev/call}$ frames are an important
 part of the control flow analysis we derive, but in
-\cite{simmons11logical} the addition of these frames had to be
-motivated on an ad-hoc basis. Based on our discusson of the logical
+\cite{simmons11logical} the addition of these frames was otherwise
+unmotivated. Based on our discusson of the logical
 approximation in Chapter~6, we now have a principled account for this
 extra frame and rule: it is precisely the pattern we get from
 operationalizing a natural semantics {\it without} tail-recursion
@@ -393,11 +393,15 @@ location?''\footnote{This kind of ``{\it may}-'' analysis, where the
   the kind of analysis (as opposed to a ``{\it must}-'' analysis) that
   maps easily onto the meta-approximation theorem.} Call sites
 correspond to expressions of the form ${\sf app}\,e_1\,e_2$, and
-functions are expressions of the form ${\sf lam}(\lambda x.\,e\,x)$;
-therefore, our next step is to equate the destinations introduced
-in the ${\sf app}$ rules with the expressions we are evaluating 
-at this point. One way to do this would be to introduce a new constructor
-${\sf d}: {\sf exp} \rightarrow {\sf dest}$,  The resulting specification 
+functions are expressions of the form ${\sf lam}(\lambda x.e\,x)$;
+therefore, our next step is to equate the destinations introduced in
+the ${\sf app}$ rules with the expressions we are evaluating at this
+point. One way to do this would be to introduce a new constructor
+${\sf d}: {\sf exp} \rightarrow {\sf dest}$, but we can equivalently
+conflate the two types to get the specification in
+Figure~\ref{fig:dest-cfa-1} where we directly equate expressions and
+``destinations'' (which are now also expressions). This specification
+
 
 
 \section{Alias analysis}

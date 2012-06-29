@@ -146,7 +146,7 @@ languages. Natural semantics is a high-level, declarative style of
 specification inspired by Plotkin's structural operational semantics
 (SOS) \cite{plotkin04structural,kahn87natural}. While Kahn et
 al.~defined the term broadly, natural semantics has been consistently
-operated with the big-step operational semantics style discussed in
+connected with the big-step operational semantics style discussed in
 the introduction, where the judgment $e \Downarrow v$ expresses that
 the $e$ evaluates to the value $v$:
 \[
@@ -365,43 +365,44 @@ existing work.
 The genesis of the operationalization transformation discussed in
 Chapter~6 can be found in the treatment of the operational semantics
 of LF in Tom Murphy VII's thesis~\cite{murphy08modal}; this treatment
-can, be seen as a synthesis of the operational interpretation of
-natural semantics explored in Cl\'ement's early TYPOL work and the
-approach to theorem proving approach pioneered by
-Twelf~\cite{pfenning99system}.
+can be seen as a synthesis of the operational interpretation of
+natural semantics explored in Cl\'ement's et al.'s early work on
+natural semantics in TYPOL work and the approach to theorem proving
+pioneered by Twelf~\cite{pfenning99system}.
 
-In his thesis, Murphy describes a natural semantics for Lambda 5, a
-distributed programming language. He then wanted to interpret that
-natural semantics as an {\it operational} semantics for Lambda 5 in
-the style of Cl\'ement et al., which is a natural application of
-Twelf's logic program interpretation \cite{michaylov91natural}.
-However, Murphy also wished to prove a safety property for his
-language in Twelf, and the usual approach to theorem proving in Twelf
-involves treating specifications as inductive definitions. As discussed
-above, natural semantics do not distinguish non-termination (which is
-safe) from failure (which indicates underspecification and is
-therefore unsafe).
+In his thesis, Murphy described a natural semantics for Lambda 5, a
+distributed programming language, and encoded that specification in
+Twelf. He then wanted to interpret that natural semantics as an {\it
+  operational} semantics for Lambda 5 in the style of Cl\'ement et
+al., which is a natural application of Twelf's logic program
+interpretation \cite{michaylov91natural}.  However, Murphy also wanted
+to prove a safety property for his language in Twelf, and the usual
+approach to theorem proving in Twelf involves treating specifications
+as inductive definitions. As discussed above, natural semantics do not
+distinguish non-termination (which is safe) from failure (which
+indicates underspecification and is therefore unsafe).
 
-Because the usual approach to theorem proving in Twelf involves
-interpreting proofs as logic programs, Murphy was able to introduce a
-special purpose partiality directive, Murphy was therefore able to
-check that moded proof search would never fail and never backtrack,
-though it might diverge. This check amounted to a proof of safety
-(progress and preservation) for the TYPOL-derived operational
-interpretation of a natural semantics. I believe that every other
-existing proof of safety\footnote{Progress in particular is the
-  theorem of concern: proving preservation for a big-step operational
-  semantics is straightforward.} for a big-step operational semantics
-is either classical (like Leroy and Grall's approach, described below)
-or else depends on a separate proof of equivalence with a small-step
+Theorem proving in Twelf involves interpreting proofs as logic
+programs, and Murphy was able to use the checks Twelf performs on
+proofs to describe a special purpose partiality directive. If a logic
+program passed this special directive, Murphy could conclude that
+moded proof search would never fail and never backtrack, though it
+might diverge. This check amounted to a proof of safety (progress and
+preservation) for the operational interpretation of his natural
+semantics. I believe that every other existing proof of
+safety\footnote{Progress in particular is the theorem of concern:
+  proving preservation for a big-step operational semantics is
+  straightforward.} for a big-step operational semantics is either
+classical (like Leroy and Grall's approach, described below) or else
+depends on a separate proof of equivalence with a small-step
 operational semantics.
 
 Murphy's proof only works because his formulation of Lambda 5 was {\it
   intrinsically typed}, meaning that, using the facilities provided by
 LF's dependent types, he enforced that only well-typed terms could
-possibly be evaluated. The proof technique itself should apply more
+possibly be evaluated. (His general proof technique should apply more
 generally, but it would take much more work to express the check in
-Twelf.  The operationalization transformation is a way to
+Twelf.)  The operationalization transformation is a way to
 automatically derive a correct small-step semantics from the big-step
 semantics by making the internal structure of a deductive computation
 explicit as a concurrent computation. Having made this structure
