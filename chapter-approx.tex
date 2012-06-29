@@ -400,8 +400,101 @@ point. One way to do this would be to introduce a new constructor
 ${\sf d}: {\sf exp} \rightarrow {\sf dest}$, but we can equivalently
 conflate the two types to get the specification in
 Figure~\ref{fig:dest-cfa-1} where we directly equate expressions and
-``destinations'' (which are now also expressions). This specification
+destinations (which are now also expressions). 
+
+The specification in Figure~\ref{fig:dest-cfa-1} has a point of
+redundancy along the lines of the reundancy in our second PDA
+approximation: the rules maintain the invariants that the two
+arguments to ${\sf eval}\,e\,d$ are always the same. Therefore, the
+second argument to ${\sf eval}$ can be treated as vestigal; by
+removing that argument, we get a specification equivalent to
+Figure~\ref{fig:dest-cfa-2}. That figure includes another
+simplificaitons as well: instead of introducing expressions $d_1$,
+$d_2$, and $d_3$ by existential quantification just to equate them
+with expressions $e_1$, $e_2$, and $e$, we substitue in the equated
+expressions where the respective destinations appeared in
+Figure~\ref{fig:dest-cfa-1}. 
+
+This specification in Figure~\ref{fig:dest-cfa-2} is terminating when
+interpreted as a saturating logic program because the rules only break
+expressions $e$ and values $v$ into their subexpressions in the sense
+we have described above. If the expressions in the original state of a
+program have $n$ subterms, the program can derive no more than $n$ new
+${\sf eval}$ facts, $n^2$ new ${\sf retn}$ facts, and $2n^2 + n$ ${\sf
+  cont}$ facts. This analysis combined with the meta-approximation
+theorem ensures that we have derived some sort of program analysis. To
+that this program analysis is a control flow analysis, note that the
+third argument $e$ to ${\sf comp}\,f\,e'\,e$ is always a term ${\sf
+  app}\,e_1\,e_2$ -- that is, a call site. The rule ${\sf ev/app2}$
+starts evaluating the function ${\sf lam}(\lambda x.e\,x)$ and
+generates the fact ${\sf comp}\,({\sf app3}(e({\sf var}(\lambda
+x.e\,x))))\,e$. This means that the function ${\sf lam}(\lambda
+x.e\,x)$ may be called from the call site $e$ only if ${\sf
+  comp}\,{\sf app3}\,(e({\sf var}(\lambda x.e\,x)))\,e$ appears in the
+saturated database.
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/ssos-monadic.sls}
+\caption{Functions in the simple alias analysis language.}
+\label{fig:ssos-monadic}
+\end{figure}
+
+There is one important caveat to this analysis. If for some value $v$
+we consider the program $\interp{((\lambda x.x)\,(\lambda y.y))\,v}$,
+we might expect a reasonable control flow analysis to notice that only
+$\interp{\lambda y.y}$ is passed to the function $\interp{\lambda
+  x.x}$ and that only $v$ is passed to the function $\interp{\lambda
+  y.y}$. Because of our use of higher-order abstract syntax, however,
+$\interp{\lambda y.y}$ and $\interp{\lambda x.x}$ are alpha-equivalent
+and therefore equal in the eyes of the logic programming
+interpreter. This is not a problem with correctness, but it means that
+our analysis may be less precise than expected. One solution would be
+to add distinct labels to terms. Adding a label on the inside of every
+lambda-abstraction would seem to suffice, and in any real example
+labels would already be present in the form of source-code positions
+or line numbers. The alias analysis presented next disusses the use of
+these labels.
 
 
 
 \section{Alias analysis}
+
+In this section, we will take a destination-passing style SSOS
+specification of a monadic functional language with Lisp-like mutable cons
+cells and derive an interprocedural alias analysis. The resulting approximation
+bears a strong resemblance to the object-oriented alias analysis presented
+as a logic program in \cite[Chapter 12.4]{aho07compilers}.
+
+Our monadic language distinguishes variables $x$ of type ${\sf
+  variable}$ from monadic expressions $x$ of type ${\sf exp}$ and
+commands $m$. The expression $\interp{{\sf return}\,x} = {\sf
+  return}\,l\,x$ evaluates to the value associated with $x$, and the
+expression $\interp{{\sf let}\,x = m\,{\sf in}\,e} = {\sf
+  letcmd}\,l\,\interp{m}\,\lambda x.\interp{e}$ runs the command $m$
+to generate a value that is then associated with $x$ in the evaluation
+of $e$. Note our slight abuse of the encoding function $\interp{e}$ to
+create labels $l$ out of nowhere: we can think of as a line number
+from the original program. 
+
+There are five commands in our example language: the command
+$\interp{\lambda x.e} = {\sf fun}(\lambda x.\interp{e})$ generates the
+function value $\interp{\lambda x.e} = {\sf lam}(\lambda
+x.\interp{e})$, and the commenad $\interp{f\,x} = {\sf call}\,f\,x$
+expects a function value to be bound to the variable $f$ and calls it
+with the value bound to variable $x$. The ordered abstract machine for
+this specificaiton is given in Figure~\ref{fig:ssos-monadic}; note
+that the fact that ${\sf variable}$ and ${\sf exp}$ are distinct types
+makes the environment semantics quite natural: the predicate ${\sf
+  bind}$ has kind ${\sf variable} \rightarrow {\sf value} \rightarrow
+{\sf prop}\,{\sf pers}$.
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/ssos-monadic2.sls}
+\caption{Mutable pairs in the simple alias analysis language.}
+\label{fig:ssos-monadic2}
+\end{figure}
+
+
+\section{Related work}
