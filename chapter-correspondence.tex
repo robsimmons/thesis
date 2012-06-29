@@ -35,7 +35,7 @@ styles.  Each of these styles is more expressive than the last.
 \item The {\it destination-passing semantics} is the style of
   substructural operational semantics first explored in CLF by
   Cervesato et al.~\cite{cervesato02concurrent}. It allows for the
-  natural specification of features that incorporate synchronous
+  natural specification of features that incorporate 
   communication and non-local transfer of control. Destination-passing
   semantics are classified into two subspecies: those with linear
   continuations and those with persistent continuations. Persistent
@@ -64,11 +64,9 @@ styles.  Each of these styles is more expressive than the last.
 \draw[dotted] (0,1.5) -- (13.5,1.5);
 \draw[thick](0,3) -- (13.5,3);
 %
-\draw (-.8,2.45) node{\it (higher-};
-\draw (-.8,2.05) node{\it order)};
+\draw (-.8,2.3) node{\it (nested)};
 %
-\draw (-.8,0.95) node{\it (first-};
-\draw (-.8,0.55) node{\it order)};
+\draw (-.8,0.8) node{\it (flat)};
 %
 \draw (3,1.2) node{\cite{pfenning04substructural}};
 \draw (3,.75) node{\cite{pfenning09substructural}};
@@ -118,8 +116,8 @@ provably-correct transformations from the less expressive styles
 expressive styles (ordered abstract machines and destination-passing,
 respectively).  Our investigation of provably-correct transformations
 on \sls~specifications therefore justifies our classification scheme
-for SSOS. We call this idea the {\it logical correspondence}, and it
-is the focus of this part of the thesis:
+for SSOS specifications. We call this idea the {\it logical
+  correspondence}, and it is the focus of this part of the thesis:
 
 \begin{quote} 
   {\bf Thesis (part II):} A logical framework based on forward
@@ -145,10 +143,12 @@ in the next chapter, represent joint work with Ian Zerny.
 As stated above, we will primarily discuss and connect three different
 styles that are used for specifying the semantics of programming
 languages. Natural semantics is a high-level, declarative style of
-specification. Recall our running example, the call-by-value natural
-semantics for the untyped lambda calculus. The judgment $e \Downarrow
-v$, which expresses that the $e$ evaluates to the value $v$, is
-defined by two rules:
+specification inspired by Plotkin's structural operational semantics
+(SOS) \cite{plotkin04structural,kahn87natural}. While Kahn et
+al.~defined the term broadly, natural semantics has been consistently
+operated with the big-step operational semantics style discussed in
+the introduction, where the judgment $e \Downarrow v$ expresses that
+the $e$ evaluates to the value $v$:
 \[
 \infer[{\sf ev/lam}]
 {\lambda x. e \Downarrow \lambda x. e \mathstrut}
@@ -162,27 +162,67 @@ defined by two rules:
  &
  [v_2/x]e \Downarrow v \mathstrut}
 \]
-This inductive definition assigns meaning to all the terminating
-expressions in the lambda calculus. Natural semantics specifications
-are (obviously) semantics, but they are not, in general, operational
-enough for our purposes. Because the definition of $e \Downarrow v$
-above can be {\it moded} in the sense of
-Section~\ref{sec:framework-modes}, it does admit an operational
-interpretation that sees $e$ is an input and $v$ is an output. The
-order of evaluation is not fully specified by this reading, however:
-in rule ${\sf ev/app}$ we have no information as to
-whether $e_1$ or $e_2$ should be evaluated in some particular order or
-in parallel.
+% Plotkin's SOS, in contrast, has been consistently identified with a
+% small-step operational semantics style in which a judgment $e \mapsto
+% e'$ expresses that the expression $e$ makes a single transition to the
+% expression $e'$, and an auxilary judgment $e\,{\sf value}$ expresses
+% that the expression $e$ is a value and not expected to make any
+% further transitions. The usual SOS specification for call-by-value
+% evaluation of the lambda calculus looks like this:
+% \[
+% \infer%[{\sf value/lam}]
+% {\lambda x.e\,{\sf value} \mathstrut}
+% {}
+% \quad
+% \infer%[{\sf step/app1}]
+% {e_1\,e_2 \mapsto e_1'\,e_2 \mathstrut}
+% {e_1 \mapsto e_1' \mathstrut}
+% \quad
+% \infer%[{\sf step/app2}]
+% {v_1\,e_2 \mapsto v_1\,e_2' \mathstrut}
+% {v_1\,{\sf value}
+%  &
+%  e_2 \mapsto e_2' \mathstrut}
+% \quad
+% \infer%[{\sf step/appred}]
+% {(\lambda x.e)\,v_2 \mapsto [v_2/x]e \mathstrut}
+% {v_2\,{\sf value}}
+% \]
 
-We transform natural semantics into ordered abstract machines by a
-transformation called {\it operationalization} that fixes the
-evaluation order. In turn, ordered abstract machine specifications can
-be transformed into destination-passing specifications by a
-transformation called {\it destination-adding}.  Destination-passing
-specifications can then be transformed into a collecting semantics by
-the {\it abstraction} transformation, which lets us obtain program
-analyses like control flow analysis. These major transformations are
-presented graphically in Figure~\ref{fig:class-transform}.
+Early work on natural semantics emphasized a dual interpretation of
+specifications. The primary interpretation of natural semantics
+specifications was {\it operational}: natural semantics were
+implemented in the (non-logical) specification framework TYPOL that
+compiled natural semantics specifications into executable Prolog
+programs \cite{clement85natural}. It is also possible to natural
+semantics specifications as inductive definitions; this interpretation
+allows proofs to be performed by induction over the structure of a
+natural semantics derivation \cite{clement86simple}.
+
+The operational interpretation of natural semantics assigns a more
+specific meaning to expressions than the inductive definition does.
+For example, the rule ${\sf ev/app}$, the natural semantics does not
+specify whether $e_1$ or $e_2$ should be evaluated in some particular
+order or in parallel; the TYPOL-to-Prolog compiler could have
+reasonably made several choices in such a situation. More critically,
+interpreting the natural semantics as an inductive definition does not
+allow us to distinguish non-termination (searching forever for a $v$
+such that $e \Downarrow v$) from failure (concluding finitely that
+there is no $v$ such that $e \Downarrow v$).
+
+We will present a transformation from \sls-encoded natural semantics
+specifications into ordered abstract machines by a transformation
+called {\it operationalization}; operationalization is an
+interpretation of natural semantics specifications that makes
+evaluation order and parallelism explicit and that enables reasoning
+about the difference between non-termination and failure. In turn,
+ordered abstract machine specifications can be transformed into
+destination-passing specifications by a transformation called {\it
+  destination-adding}.  Destination-passing specifications can then be
+transformed into a collecting semantics by {\it approximation}, which
+lets us obtain program analyses like control flow analysis. These
+major transformations are presented graphically in
+Figure~\ref{fig:class-transform}.
 
 \begin{figure}
 \begin{center}
@@ -212,11 +252,9 @@ presented graphically in Figure~\ref{fig:class-transform}.
 \draw[dotted] (0,1.5) -- (13.5,1.5);
 \draw[thick](0,3) -- (13.5,3);
 %
-\draw (-.8,2.45) node{\it (higher-};
-\draw (-.8,2.05) node{\it order)};
+\draw (-.8,2.3) node{\it (nested)};
 %
-\draw (-.8,0.95) node{\it (first-};
-\draw (-.8,0.55) node{\it order)};
+\draw (-.8,0.8) node{\it (flat)};
 %
 \draw[double,->] (3.9,2) -- (3.9,1);
 \draw[double,->] (6.75,2) -- (6.75,1);
@@ -234,7 +272,7 @@ presented graphically in Figure~\ref{fig:class-transform}.
 %
 \draw[double,->,rounded corners=2cm] (9.5,.3) -- (7.5,-1) -- (11.1,-1.6);
 \draw[double,->,rounded corners=2.5cm] (7.5,.3) -- (5.1,-.6) -- (11.1,-1.6);
-\draw (7,-1.2) node {\fboxsep=0pt\fbox{\colorbox{white}{\rule[-0.5ex]{0em}{2.5ex}\bf ~Abstraction~(Sec.~\ref{sec:abstraction})~}}};
+\draw (7,-1.2) node {\fboxsep=0pt\fbox{\colorbox{white}{\rule[-0.5ex]{0em}{2.5ex}\bf ~Approximation~(Sec.~\ref{sec:abstraction})~}}};
 \end{tikzpicture} 
 \end{center}
 \caption{Major transformations on \sls~specifications.}
@@ -245,25 +283,27 @@ There are many other smaller design decisions that can be made in the
 creation of a substructural operational semantics. Only one is
 graphically represented in
 Figures~\ref{fig:class-prevwork}~and~\ref{fig:class-transform}, the
-distinction between {\it higher-order} and {\it first-order}
+distinction between {\it nested} and {\it flat}
 specifications. This distinction applies to all concurrent
 \sls~specifications, not just those that specify substructural
-operational semantics. First-order
+operational semantics. Flat
 specifications include rewriting rules $\left( p_1 \fuse \ldots \fuse
   p_n \lefti \{ q_1 \fuse \ldots \fuse q_m \} \right)$ where the head
 of the rule $\{ q_1 \fuse \ldots \fuse q_m \}$ contains only atomic
-propositions. Higher-order \sls~specifications, on the other hand,
+propositions. Nested \sls~specifications, on the other hand,
 contain {\it rules} in the conclusions of rules; when the rule fires,
 the resulting process state contains the rule. An example is given 
 in Figure~\ref{fig:ho-evo-ex}.
-Order matters in higher-order process states: $\left(x{:}\susp{\sf p1(c)}, ~
+A rule $A^+ \lefti \{ B^+ \}$ in the context can only fire if a piece 
+of the context
+matching $A^+$ appears to its right, so  $\left(x{:}\susp{\sf p1(c)}, ~
 y{:}\istrue{\left( {\sf p1(c)} \lefti \{ {\sf p2(c)} \} \right)}\right)
 \leadsto \left(z{:}\susp{\sf p2(c)}\right)$, whereas 
 $\left(y{:}\istrue{\left( {\sf p1(c)} \lefti \{ {\sf p2(c)} \} \right)},~
 x{:}\susp{\sf p1(c)}\right)
 \not \leadsto$. 
 %
-The choice of higher-order versus first-order specification does not
+The choice of nested versus flat specification does not
 impact expressiveness, but it does influence our ability to read
 specifications (opinions differ as to which style is clearer) and 
 the ways we reason about them.
@@ -285,7 +325,7 @@ x_4{:}\istrue{({\sf p3}({\sf c}) \lefti \{ {\sf p_4} \})} & \\
 \leadsto ~~~ 
 x_7{:}\susp{{\sf p_4}} & 
 \end{align*}
-\caption{Evolution of a higher-order \sls~process state (${\sf p1}$, ${\sf
+\caption{Evolution of a nested \sls~process state (${\sf p1}$, ${\sf
   p2}$ and ${\sf p3}$ are all ordered atomic propositions).}
 \label{fig:ho-evo-ex}
 \end{figure}
@@ -305,8 +345,8 @@ several target specifications.
 
 The nondeterministic choices that transformations can make give us a
 rigorous vocabulary for describing choices that otherwise seem
-ad-hoc. An example of this can be found in the paper that introduced
-the destination-adding and abstraction transformations
+ad hoc. An example of this can be found in the paper that introduced
+the destination-adding and approximation transformations
 \cite{simmons11logical}. In that article, we had to motivate an ad-hoc
 change to the usual abstract machine semantics. In this thesis, by the
 time we encounter a similar specification in Chapter 8, we will be
@@ -324,53 +364,60 @@ existing work.
 
 The genesis of the operationalization transformation discussed in
 Chapter~6 can be found in the treatment of the operational semantics
-of LF in Tom Murphy VII's thesis \cite{murphy08modal}. In his thesis,
-Murphy describes a natural semantics for Lambda 5, a distributed
-programming language, and then wanted to interpret that natural
-semantics as an {\it operational} semantics for Lambda 5. As discussed
-above, natural semantics are not operational. However, by interpreting
-the natural semantics as a moded logic program, Murphy stipulated that
-the operational semantics were precisely those given by moded, {\it
-  non-backtracking} deductive proof search. By modifying the checks
-that Twelf performs with a special purpose partiality directive,
-Murphy was therefore able to check that moded proof search would never
-fail and never backtrack, though it might diverge. This check amounted
-to a proof of safety (progress and preservation) for his natural
-semantics. I believe that every other existing proof of
-safety\footnote{Progress in particular is the theorem of concern:
-  proving preservation for a big-step operational semantics is
-  straightforward.} for a big-step operational semantics is either
-classical (like Leroy and Grall's approach, described
-below) or else depends on a
-separate proof of equivalence with a small-step operational semantics.
+of LF in Tom Murphy VII's thesis~\cite{murphy08modal}; this treatment
+can, be seen as a synthesis of the operational interpretation of
+natural semantics explored in Cl\'ement's early TYPOL work and the
+approach to theorem proving approach pioneered by
+Twelf~\cite{pfenning99system}.
+
+In his thesis, Murphy describes a natural semantics for Lambda 5, a
+distributed programming language. He then wanted to interpret that
+natural semantics as an {\it operational} semantics for Lambda 5 in
+the style of Cl\'ement et al., which is a natural application of
+Twelf's logic program interpretation \cite{michaylov91natural}.
+However, Murphy also wished to prove a safety property for his
+language in Twelf, and the usual approach to theorem proving in Twelf
+involves treating specifications as inductive definitions. As discussed
+above, natural semantics do not distinguish non-termination (which is
+safe) from failure (which indicates underspecification and is
+therefore unsafe).
+
+Because the usual approach to theorem proving in Twelf involves
+interpreting proofs as logic programs, Murphy was able to introduce a
+special purpose partiality directive, Murphy was therefore able to
+check that moded proof search would never fail and never backtrack,
+though it might diverge. This check amounted to a proof of safety
+(progress and preservation) for the TYPOL-derived operational
+interpretation of a natural semantics. I believe that every other
+existing proof of safety\footnote{Progress in particular is the
+  theorem of concern: proving preservation for a big-step operational
+  semantics is straightforward.} for a big-step operational semantics
+is either classical (like Leroy and Grall's approach, described below)
+or else depends on a separate proof of equivalence with a small-step
+operational semantics.
 
 Murphy's proof only works because his formulation of Lambda 5 was {\it
   intrinsically typed}, meaning that, using the facilities provided by
 LF's dependent types, he enforced that only well-typed terms could
-possibly be evaluated. His approach would also work for our untyped
-lambda calculus above, as closed terms in the untyped lambda calculus
-can never get stuck. However, as soon as we extend the untyped lambda
-calculus with some other values (numbers, Booleans, pairs, etc\ldots),
-then progress and preservation apply only to well-typed terms and not
-to arbitrary terms. In this case, Murphy's partiality checks no longer
-hold, so we cannot use his methodology to reason about safety.
-
-The operationalization transformation is a way to automatically derive
-a correct small-step semantics from the big-step semantics by making
-the internal structure of a deductive computation explicit as a
-concurrent computation. Having made this structure accessible, we
-can explicitly represent complete, unfinished, and stuck (or failing)
-computations as concurrent traces and reason about these traces with a
-richer set of tools than the limited set Murphy successfully utilized.
+possibly be evaluated. The proof technique itself should apply more
+generally, but it would take much more work to express the check in
+Twelf.  The operationalization transformation is a way to
+automatically derive a correct small-step semantics from the big-step
+semantics by making the internal structure of a deductive computation
+explicit as a concurrent computation. Having made this structure
+accessible, we can explicitly represent complete, unfinished, and
+stuck (or failing) computations as concurrent traces and reason about
+these traces with a richer set of tools than the limited set Murphy
+successfully utilized.
 
 \subsection*{A coinductive interpretation}
 
 Murphy proved safety for a natural semantics specification by
-reinterpreting the inductive definition of the natural semantics as a
-logic program and then reasoning about the logic program. Leroy and
-Grall, in \cite{leroy09coinductive}, suggest a different
-reinterpretation: they reinterpret the inductive definition of natural
-semantics as a {\it coinductive} specification. Coevaluation $e
+recovering the original operational interpretation of natural semantics
+specifications as logic programs and using Twelf's facilities for
+reasoning about logic programs.  Leroy and Grall, in
+\cite{leroy09coinductive}, suggest a novel {\it coinductive}
+interpretation of natural semantics specifications. Coevaluation $e
 \Downarrow^{\sf co} v$ is defined as the {\it greatest} fixed point of
 the following rules:
 \[
@@ -386,9 +433,9 @@ the following rules:
  &
  [v_2/x]e \Downarrow^{\sf co} v \mathstrut}
 \]
-Aside from the ${\sf co}$ annotation and the different
-interpretation, these rules are syntactically identical to the inductively
-defined natural semantics above.
+Aside from the ${\sf co}$ annotation and the different interpretation,
+these rules are syntactically identical to the natural semantics above
+that were implicitly given an inductive interpretation.
 
 Directly reinterpreting the inductive specification as a coinductive
 specification doesn't quite produce the right result in the end. For
@@ -405,7 +452,7 @@ are diverging terms ${\it Div}$ such that ${\it Div} \Downarrow^{\sf
   x.\,(\lambda g.\,\lambda y.\,g\,y)\,(f\,x)$
   \cite{leroy09coinductive}.} As a result, Leroy and Grall also give a
 coinductive definition of diverging terms $e \Downarrow^\infty$ that
-uses the inductively-defined evaluation judgment $e \Downarrow v$:
+uses references inductively-defined evaluation judgment $e \Downarrow v$:
 \[
 \infer%[{\sf div/app1}]
 {e_1\,e_2 \Downarrow^\infty}
@@ -493,8 +540,8 @@ Two papers by Hannan and Miller \cite{hannan92operational} and Ager
 portion of the thesis. Both papers propose operationalizing natural
 semantics specifications as abstract machines by provably correct and
 general transformations on logical specifications (in the case of
-Hannan and Miller) or on the special-purpose framework of L-attributed
-natural semantics (in the case of Ager).
+Hannan and Miller) or on specifications in the special-purpose
+framework of L-attributed natural semantics (in the case of Ager).
 
 A major difference in this case is that both lines of
 work result in {\it deductive} specifications of abstract
@@ -596,18 +643,18 @@ flow analysis in Chapter 8.
 % semantics are not amenable to modular extension and abstract
 % interpretation.
 
-In this part, we will present natural semantics specifications and
-substructural operational semantics specifications in a number of
+In this part of the, we will present natural semantics specifications
+and substructural operational semantics specifications in a number of
 styles. We do so with the confidence that these specifications can be
 automatically transformed into the ``lowest common denominator'' of
-first-order destination-passing specifications with persistent
-continuations, which in turn allows them to be composed with any other
-specifications we consider. Certainly, this means that we should be
-unconcerned about using a higher-level style such as the ordered
-abstract machine semantics when that seems appropriate. If we need the
-richer structure of destination-passing semantics later on, the
-specification can be automatically transformed. In the limit, we can
-even imagine a hybrid development like the one sketched out in
+flat destination-passing specifications with persistent continuations,
+which in turn allows them to be composed with any other specifications
+we consider. Certainly, this means that we should be unconcerned about
+using a higher-level style such as the ordered abstract machine
+semantics when that seems appropriate. If we need the richer structure
+of destination-passing semantics later on, the specification can be
+automatically transformed. In the limit, we can even imagine a hybrid
+development like the one sketched out in
 Figure~\ref{fig:modularcompose}. In such a development, individual
 language features can be specified at the highest-level specification
 style that is reasonable and then automatically transformed into a

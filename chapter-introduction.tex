@@ -62,17 +62,17 @@ Specifications must be {\it formal}, because any room for
 misinterpretation could (respectively) lead to incorrect calculations,
 accusations of cheating, a robot uprising, a security breach, or
 bankruptcy. At the same time, specifications must be {\it clear}: in
-practice, a hopelessly confusing or complex specification language is
-no more useful than one that is hopelessly vague. Clarity is what
-allows us to communicate with each other, to use specifications to
-gain a common understanding of what some system does and to think
-about how that system might be changed. Formality is what allows
-specifications to interact with the world of computers, to say with
-confidence that the {\it implementation} of the calculator or
-high-frequency trading system obeys the specification. Formality also
-allows specifications to interact with the world of mathematics, and
-this, in turn, enables us to make precise and accurate statements
-about what may or may not happen to a given system.
+practice, a hopelessly confusing or complex specification is no more
+useful than one that is hopelessly vague. Clarity is what allows us to
+communicate with each other, to use specifications to gain a common
+understanding of what some system does and to think about how that
+system might be changed. Formality is what allows specifications to
+interact with the world of computers, to say with confidence that the
+{\it implementation} of the calculator or high-frequency trading
+system obeys the specification. Formality also allows specifications
+to interact with the world of mathematics, and this, in turn, enables
+us to make precise and accurate statements about what may or may not
+happen to a given system.
 
 The specification of many (too many!)~critical systems still remains
 in the realm of English text, and the inevitable lack of formality can
@@ -102,19 +102,18 @@ judges of clarity, computers have an absolutely superhuman patience
 for checking all the formal details of an argument.  One aspect of
 this collaboration has been the development of {\it logical
   frameworks}. In a logical framework, the language of specifications
-is derived from the language of a logic. Specifications in a logical
-framework therefore have an independent meaning and existence given by
-the logic from which the logical framework was derived. To be clear,
-the language of logic is not a single, unified entity: logics are
-formal systems that satisfy certain internal coherence properties, and
-we study many of them. For example, the logical framework Coq is based
-on the Calculus of Inductive Constructions \cite{coq10coq}, the
-logical framework Agda is based on a variant of Martin-L\"of's type
-theory called ${\sf UTT}_\Sigma$ \cite{norell08towards}, and the
-logical Twelf is based off of the dependent type theory $\lambda^\Pi$,
-also known as LF \cite{pfenning99system}. (Twelf was the basis of Lee,
-Crary, and Harper's formalization of Standard
-ML.)  % Specifications evolve
+is derived from the language of logic, whigh gives specifications in a
+logical framework an independent meaning based on the logic from which
+the logical framework was derived. To be clear, the language of logic
+is not a single, unified entity: logics are formal systems that
+satisfy certain internal coherence properties, and we study many of
+them. For example, the logical framework Coq is based on the Calculus
+of Inductive Constructions \cite{coq10coq}, the logical framework Agda
+is based on a variant of Martin-L\"of's type theory called ${\sf
+  UTT}_\Sigma$ \cite{norell08towards}, and the logical Twelf is based
+off of the dependent type theory $\lambda^\Pi$, also known as LF
+\cite{pfenning99system}. Twelf was the basis of Lee, Crary, and
+Harper's formalization of Standard ML.  % Specifications evolve
 % gradually from half-baked ideas scrawled on coffee-stained napkins to
 % formal specifications encoded in a logical framework. Another critical
 % component of a logical framework is a methodology or philosophy that
@@ -129,15 +128,13 @@ that most languages that people actually use have lots of features --
 like mutable state, or exception handling, or synchronization and
 communication, or lazy evaluation -- that are not particularly
 pleasant to specify using existing logical frameworks. Dealing with a
-few unpleasant features at a time might not be much trouble. However,
-the combinations that appear in actual programming languages cause
-language specifications to be both unclear for humans to read and
-inconvinenet for formal tools to manipulate, so that there is less
-advantage to be had from the truly rigorous formalization that logical
-frameworks make possible. A more precise statement is that the
-addition of the aforementioned features is {\it non-modular}, because
-handling a new feature requires reconsidering and revising all the
-entirety of the rest of the specification.  Some headway on this
+few unpleasant features at a time might not be much trouble, but the
+combinations that appear in actual programming languages cause formal
+programming language specifications to be both unclear for humans to
+read and inconvinenet for formal tools to manipulate. A more precise
+statement is that the addition of the aforementioned features is {\it
+  non-modular}, because handling a new feature requires reconsidering
+and revising the rest of the specification.  Some headway on this
 problem has been made by frameworks like the K semantic framework that
 are formal but not logically derived; the K semantic framework is
 based on a notion of rewriting rules \cite{rosu10overview}. Ellison
@@ -170,10 +167,9 @@ Part~1 of the thesis concerns the design of logical frameworks that
 support this rewriting interpretation and the design of the logical
 framework \sls~in particular. Part~2 concerns the modular
 specification of programming language features in \sls~and the
-methodology by which we organize various styles of specification
-through the logical correspondence. Part~3 discusses formal reasoning
-about properties of \sls~specifications, with an emphasis
-on establishing invariants.
+methodology by which we organize and relate styles of
+specification. Part~3 discusses formal reasoning about properties of
+\sls~specifications, with an emphasis on establishing invariants.
 
 \section{Logical frameworks}
 
@@ -193,8 +189,8 @@ with three regions:
 where the symbols closest to the head are the top of the stack and the
 symbol waiting to be read from the string. If we represent the head as
 a token ${\sf hd}$, we can describe the behavior (the rules of the
-game) for a single-state push-down automaton for checking that a
-string has only matching angle braces by using two rewriting rules:
+game) for a push-down automaton for checking a string for correct
+nesting of angle braces by using two rewriting rules:
 \begin{align}
 \tag{push} {\sf hd}~{<} ~&\rightsquigarrow~ {<}~{\sf hd}
 \\
@@ -316,7 +312,7 @@ a richer substructural logic \ollll, and Chapter~4 takes focused
 \label{sec:intro-ssos}
 
 We are not primarily interested in representing systems like PDAs;
-rather, our goal is to represent the operational semantics of
+rather, our goal is to specify the operational semantics of
 programming languages. We can represent operational semantics in
 \sls~in many ways, but we are particularly interested in a broad
 specification style called {\it substructural operational semantics},
@@ -445,14 +441,13 @@ further in Chapter~5.
 
 On the other end of the spectrum, the {\it deductive} fragment of
 \sls~supports the specification of inductive definitions by the same
-methodology used to represent inductive
-definitions in the LF logical framework \cite{harper93framework}.  We
-can therefore use the deductive fragment of \sls~to specify a big-step
-operational semantics (also called a {\it natural semantics}
-\cite{milner97definition}) for call-by-value evaluation by inductively
-defining the judgment $e \Downarrow v$, which expresses that the
-expression $e$ evaluates to the value $v$. On paper, this natural
-semantics is expressed with two inference rules:
+methodology used to represent inductive definitions in the LF logical
+framework \cite{harper93framework}.  We can therefore use the
+deductive fragment of \sls~to specify a big-step operational semantics
+for call-by-value evaluation by inductively defining the judgment $e
+\Downarrow v$, which expresses that the expression $e$ evaluates to
+the value $v$. On paper, this big-step operational semantics is
+expressed with two inference rules:
 \[
 \infer
 {\lambda x.e \Downarrow \lambda x.e \mathstrut}
@@ -466,10 +461,10 @@ semantics is expressed with two inference rules:
  &
  [v_2/x]e_2 \Downarrow v \mathstrut}
 \]
-Natural semantics specifications are compact and elegant, but they is
-not particularly {\it modular}. As a (rather contrived) example,
-consider the addition of a incrementing counter ${\sf count}$ to the
-language of expressions $e$. The language keeps a numeral as a
+Big-step operational semantics specifications are compact and elegant,
+but they is not particularly {\it modular}. As a (rather contrived)
+example, consider the addition of a incrementing counter ${\sf count}$
+to the language of expressions $e$. The language keeps a numeral as a
 counter, and every time ${\sf count}$ is evaluated, it returns the
 value of the counter and then increments the counter.\footnote{To keep
   the language small, we can represent numerals $\underline{n}$ as
@@ -477,9 +472,9 @@ value of the counter and then increments the counter.\footnote{To keep
   $\underline{1} = (\lambda f. \lambda x. f x)$, $\underline{2} =
   (\lambda f. \lambda x. f (f x))$, and so on.  Then, $\underline{n} +
   1 = \lambda f. \lambda x. f e$ if $\underline{n} = \lambda
-  f. \lambda x. e$.}  To extend the natural semantics with this new
-feature, we have to revise all the existing rules so that they mention
-the running counter:
+  f. \lambda x. e$.}  To extend the big-step operational semantics
+with this new feature, we have to revise all the existing rules so
+that they mention the running counter:
 %
 \[
 \infer
@@ -501,16 +496,17 @@ the running counter:
  &
  ([v_2/x]e_2, \underline n_2 ) \Downarrow (v, \underline{n'}) \mathstrut}
 \]
-The simple elegance of our natural semantics has been tarnished by the
-need to deal with state, and each new stateful feature requires a
-similar revision.  In contrast, our SSOS specification can tolerate
-the addition of a counter without revision to the existing rules; we
-just store the counter's value in an atomic proposition ${\sf
-  store}(\underline{n})$ to the left of the ${\sf eval}(e)$ or ${\sf
-  retn}(v)$ proposition in the ordered context. Because the rules
-${\sf ev/lam}$, ${\sf ev/app}$, ${\sf ev/app1}$, and ${\sf ev/app2}$
-are local, they will ignore this extra proposition, which only needs
-to be accessed by the rule ${\sf ev/count}$.
+The simple elegance of our big-step operational semantics has been
+tarnished by the need to deal with state, and each new stateful
+feature requires a similar revision.  In contrast, our SSOS
+specification can tolerate the addition of a counter without revision
+to the existing rules; we just store the counter's value in an atomic
+proposition ${\sf store}(\underline{n})$ to the left of the ${\sf
+  eval}(e)$ or ${\sf retn}(v)$ proposition in the ordered
+context. Because the rules ${\sf ev/lam}$, ${\sf ev/app}$, ${\sf
+  ev/app1}$, and ${\sf ev/app2}$ are local, they will ignore this
+extra proposition, which only needs to be accessed by the rule ${\sf
+  ev/count}$.
 \begin{align*}
 {\sf ev/count} &:~~
   {\sf store}\,\underline n \fuse {\sf eval}\,{\sf count}
@@ -586,11 +582,11 @@ An overarching theme of Part~2 is that we can have our cake and eat it
 too by deploying the {\it logical correspondence}, an idea that was
 developed jointly with Ian Zerny in unpublished work and is explained
 in Chapter~5. As explained in Chapter~6, we can use logical
-correspondence to directly connect the natural semantics and SSOS
+correspondence to directly connect the big-step semantics and SSOS
 specifications above; in fact, we can automatically and mechanically
 derive the latter from the former. Therefore, we can specify
-call-by-value evaluation as a natural semantics, and then transform it
-for the purpose of modular extension. Further transformations,
+call-by-value evaluation as a big-step semantics, and then transform
+it for the purpose of modular extension. Further transformations,
 developed in joint work with Pfenning \cite{simmons11logical}, create
 new opportunities for modular extension; this is the topic of
 Chapter~7. These transformations also allow for the derivation of
