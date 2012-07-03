@@ -1,20 +1,34 @@
 CM.make "../../r/sls/sources.cm";
 Frontend.init ();
+fun HEADING s = print ("\n\n== "^s^" ==\n\n");
 
 (* Introduction *)
 
-(* Ordered PDA from the intro (now with actual code!) *)
+HEADING "Figure 7.1, Ordered SLS spec";
 Frontend.reset ();
 Frontend.load "pda-exp.sls";
 Frontend.load "pda-ord.sls";
 
-(* Linear PDA (now with actual code!) *)
+HEADING "Figure 7.2, Linear SLS spec";
 Frontend.reset ();
 Frontend.load "pda-exp.sls";
 Frontend.load "pda-lin.sls";
 
-(* Linear/persistent PDA (woah) *)
+HEADING "Linear/persistent SLS spec (unused)";
 Frontend.reset ();
 Frontend.load "pda-exp.sls";
 Frontend.load "pda-pers.sls";
 
+HEADING "Figure 7.4, translation with vestage";
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.read "app1: exp -> frame.app2:(exp -> exp)-> frame.";
+Frontend.load "dest-vestige.sls";
+
+HEADING "Figure 7.5-7.7, cbv, parallelism, failure";
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.read "app1: exp -> frame.app2:(exp -> exp)-> frame.";
+Frontend.load "dest-cbv.sls";
+Frontend.load "dest-pair.sls";
+Frontend.load "dest-fail-paror.sls";

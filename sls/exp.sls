@@ -68,3 +68,5 @@ fst1: frame.
 snd1: frame.
 succ1: frame.
 app2': exp -> exp -> frame.
+
+dest: type.

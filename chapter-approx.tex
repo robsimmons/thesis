@@ -461,10 +461,12 @@ these labels.
 \section{Alias analysis}
 
 In this section, we will take a destination-passing style SSOS
-specification of a monadic functional language with Lisp-like mutable cons
-cells and derive an interprocedural alias analysis. The resulting approximation
-bears a strong resemblance to the object-oriented alias analysis presented
-as a logic program in \cite[Chapter 12.4]{aho07compilers}.
+specification of a monadic functional language with Lisp-like mutable
+cons cells and derive an interprocedural alias analysis. The SSOS
+semantics we start with and the choices we make during approximation
+are aimed at producing an approximation that closely follows the
+object-oriented alias analysis presented as a logic program in
+\cite[Chapter 12.4]{aho07compilers}.
 
 Our monadic language distinguishes variables $x$ of type ${\sf
   variable}$ from monadic expressions $x$ of type ${\sf exp}$ and
@@ -477,24 +479,47 @@ of $e$. Note our slight abuse of the encoding function $\interp{e}$ to
 create labels $l$ out of nowhere: we can think of as a line number
 from the original program. 
 
-There are five commands in our example language: the command
-$\interp{\lambda x.e} = {\sf fun}(\lambda x.\interp{e})$ generates the
-function value $\interp{\lambda x.e} = {\sf lam}(\lambda
-x.\interp{e})$, and the commenad $\interp{f\,x} = {\sf call}\,f\,x$
-expects a function value to be bound to the variable $f$ and calls it
-with the value bound to variable $x$. The ordered abstract machine for
-this specificaiton is given in Figure~\ref{fig:ssos-monadic}; note
-that the fact that ${\sf variable}$ and ${\sf exp}$ are distinct types
-makes the environment semantics quite natural: the predicate ${\sf
-  bind}$ has kind ${\sf variable} \rightarrow {\sf value} \rightarrow
-{\sf prop}\,{\sf pers}$.
-
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-monadic2.sls}
 \caption{Mutable pairs in the simple alias analysis language.}
 \label{fig:ssos-monadic2}
 \end{figure}
+
+There are five commands in our example language, two that deal with
+functions and three that deal with mutable state. The ordered abstract
+machine for the two functional commands is given in
+Figure~\ref{fig:ssos-monadic}. The command $\interp{\lambda x.e} =
+{\sf fun}(\lambda x.\interp{e})$ generates the function value
+$\interp{\lambda x.e} = {\sf lam}(\lambda x.\interp{e})$ (rule ${\sf
+  ev/fun}$). The commenad $\interp{f\,x} = {\sf call}\,f\,x$ expects a
+function value to be bound to the variable $f$ and calls it with the
+value bound to variable $x$ (rule ${\sf ev/call}$), and generates
+whatever value is returned from that function (rule ${\sf ev/retn}$).
+Note that, in this specification, the fact that ${\sf variable}$ and
+${\sf exp}$ are distinct types makes the environment semantics quite
+natural: the predicate ${\sf bind}$ has kind ${\sf variable}
+\rightarrow {\sf value} \rightarrow {\sf prop}\,{\sf pers}$, binding
+variables to values. Our only use of frames will be for function
+calls, which is why we write ${\sf cont}(\lambda x.e\,x)$ instead of
+${\sf cont}({\sf call1}\,\lambda x.e\,x)$.
+
+
+The rules for mutable records are given in
+Figure~\ref{fig:ssos-monadic2}.  The command ${\sf newpair}$ allocates
+a tuple with two fields ${\sf fst}$ and ${\sf snd}$; both fields are
+initialized to ${\sf null}$, and each field is represented by a
+separate linear ${\sf cell}$ resource (rule ${\sf ev/new}$). The
+commands $\interp{x.{\sf fst}} = {\sf proj}\,x\,{\sf fst}$ and
+$\interp{x.{\sf snd}} = {\sf proj}\,x\,{\sf snd}$ expect a pair
+location to be bound to $x$, and bind the value stored in the
+appropriate field of the mutable pair (rule ${\sf ev/proj}$). The
+commands $\interp{x.{\sf fst} := y} = {\sf set}\,x\,{\sf fst}\,y$ and
+$\interp{x.{\sf snd} := y} = {\sf set}\,x\,{\sf snd}\,y$ work much the
+same way. The difference is that the former commands do not change the
+accessed field's contents, whereas the latter commands replace the
+accessed field's contents with the value bound to $y$ (rule ${\sf ev/set}$). 
+
 
 
 \section{Related work}
