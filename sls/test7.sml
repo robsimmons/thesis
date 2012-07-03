@@ -25,7 +25,7 @@ Frontend.load "exp.sls";
 Frontend.read "app1: exp -> frame.app2:(exp -> exp)-> frame.";
 Frontend.load "dest-vestige.sls";
 
-HEADING "Figure 7.5-7.7, cbv, parallelism, failure, synchronization";
+HEADING "Figure 7.5-7.8, cbv, parallelism, failure, synchronization";
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.read "app1: exp -> frame.app2:(exp -> exp)-> frame.";
@@ -33,3 +33,14 @@ Frontend.load "dest-cbv.sls";
 Frontend.load "dest-pair.sls";
 Frontend.load "dest-fail-paror.sls";
 Frontend.load "dest-synch.sls";
+
+HEADING "Figure 7.9, futures";
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.read "app1: exp -> frame.app2:(exp -> exp)-> frame.";
+Frontend.load "dest-cbv.sls";
+Frontend.load "dest-futures.sls";
+
+HEADING "Figure 7.10, letcc";
+Frontend.load "exp.sls";
+Frontend.load "dest-letcc.sls";

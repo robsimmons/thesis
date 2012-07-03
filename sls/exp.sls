@@ -45,11 +45,14 @@ prev: exp -> exp.
 next: exp -> exp.
 lazylam: (exp -> exp) -> exp.
 envlam: (exp -> exp) -> exp.
+flam: (exp -> exp) -> exp.
 fail: exp.
 catch: exp -> exp -> exp.
 chan: (channel -> exp) -> exp.
 send: channel -> exp -> exp.
 recv: channel -> exp.
+letcc: (exp -> exp) -> exp.
+throw: exp -> exp -> exp.
 
 ref1: frame.
 get1: frame.
@@ -74,5 +77,8 @@ snd1: frame.
 succ1: frame.
 app2': exp -> exp -> frame.
 send1: channel -> frame.
+throw1: exp -> frame.
+throw2: exp -> frame.
 
 dest: type.
+contn: dest -> exp.
