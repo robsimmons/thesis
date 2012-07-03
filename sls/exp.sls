@@ -53,6 +53,7 @@ send: channel -> exp -> exp.
 recv: channel -> exp.
 letcc: (exp -> exp) -> exp.
 throw: exp -> exp -> exp.
+var: (exp -> exp) -> exp.
 
 ref1: frame.
 get1: frame.

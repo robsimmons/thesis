@@ -14,11 +14,6 @@ Frontend.reset ();
 Frontend.load "pda-exp.sls";
 Frontend.load "pda-lin.sls";
 
-HEADING "Linear/persistent SLS spec (unused)";
-Frontend.reset ();
-Frontend.load "pda-exp.sls";
-Frontend.load "pda-pers.sls";
-
 HEADING "Figure 7.4, translation with vestage";
 Frontend.reset ();
 Frontend.load "exp.sls";

@@ -1,8 +1,8 @@
-cell: loc -> field -> value -> prop lin.
+cell: locvar -> field -> value -> prop lin.
 
 ev/new:  eval (letcmd L newpair \x. E x)
           >-> {Exists y. Exists l'. eval (E y) * 
-               cell l' fst null * cell l snd null *
+               cell l' fst null * cell l' snd null *
                bind y (loc l')}.
 
 ev/proj: eval (letcmd L (proj X Fld) \x. E x) *
