@@ -16,6 +16,8 @@ bind_loc: type.
 
 frame: type.
 
+channel:type.
+
 exp: type.
 lam: (exp -> exp) -> exp.
 app: exp -> exp -> exp.
@@ -45,6 +47,9 @@ lazylam: (exp -> exp) -> exp.
 envlam: (exp -> exp) -> exp.
 fail: exp.
 catch: exp -> exp -> exp.
+chan: (channel -> exp) -> exp.
+send: channel -> exp -> exp.
+recv: channel -> exp.
 
 ref1: frame.
 get1: frame.
@@ -68,5 +73,6 @@ fst1: frame.
 snd1: frame.
 succ1: frame.
 app2': exp -> exp -> frame.
+send1: channel -> frame.
 
 dest: type.
