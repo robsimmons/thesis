@@ -546,7 +546,7 @@ expressions ${\sf newpair}$, $x.{\sf fst}$, $x.{\sf snd}$, $x.{\sf
 expressions; having them as expressions resulted in a more regular
 presentation.
 
-\begin{figure}[t]
+\begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-monadic-approx.sls}
 \caption{Alias analysis.}
@@ -622,3 +622,64 @@ asked of an alias analysis quite concise. For instance:
 \end{itemize}
 
 \section{Related work}
+
+The technical aspects of this work are similar to work done by Bozzano
+et al.~\cite{cite,cite} in both its goals and its setting (logical
+specifications in linear logic). They encode distributed systems and
+communication protocols in a framework that is similar to the linear
+fragment of \sls~without equality. Abstractions of those programs are
+then used to verify properties of concurrent protocols that were
+encoded in the logic \cite{cite}. However, the style they use to
+encode protocols is significantly different from any of the SSOS
+styles presented in this thesis. Furthermore, whereas we describe a
+whole class of approximations, which means that the process cannot be
+fully mechanized, they use a general purpose approximation that
+possibly could be fully mechanized in the same way we mechanized
+transformations like operationalization. Furthermore, Bozzano et
+al.'s methods are designed to consider properties of a system as a
+whole, not static analyses of individual inputs as is the case in our
+work.
+
+
+Work by Might and Van Horn on abstracting abstract machines can be
+viewed as a parallel approach to our methodology in a very different
+setting \cite{cite,cite,cite}. Their emphasis is on deriving a program
+approximation by approximating a {\it functional} abstract interpreter
+for a programming language's operational semantics. Their methodology
+is similar to ours in large part because we are doing the same thing in
+a different setting, deriving a program approximation by approximating
+a destination-passing SSOS specification (which we could, in turn, have
+derived from an ordered abstract machine by destination-adding).
+
+Many of the steps that they suggest for approximating programs have
+close analogues in our setting. For instance, their {\it
+  store-allocated bindings} are analogous to the SSOS environment
+semantics, and their {\it store-allocated continuations} -- which they
+motivate by analogy to implementation techniques for functional
+languages like SML/NJ -- are precisely the destinations that arise
+naturally from the destination-adding transformation. The first
+approximation step we take is forgetting about linearity in order to
+obtain a (non-terminating) persistent logical specification. This step
+is comparable to Might's first approximation step of ``throwing hats
+on everything'' (named after the convention in abstract interpretation
+of denoting the abstract version of a state space $\Sigma$ as
+$\hat{\Sigma}$. The ``mysterious'' introduction of power domains that
+this entails is, in our setting, a perfectly natural result of
+relaxing the requirement that there be at most one persistent
+proposition ${\sf bind}\,x\,v$ for every $x$. As a final point of
+comparison, the ``abstract allocation strategy'' discussed in
+\cite{cite} is quite similar to our strategy of introducing and then
+approximating Skolem functions as a means of deriving a finite
+approximation. Our current discussion of Skolem functions in
+Section~\ref{sec:0cfa} is partially inspired by the relationship
+between our use of Skolemization and the discussion of abstract
+allocation in \cite{cite}.
+
+The independent discovery of a similar set of techniques for achieving
+similar goals in such different settings (though both approaches were
+to some degree inspired by Van Horn and Mairson's investigations of
+the complexity of $k$-CFA \cite{cite}) is another indication of the
+generality of both techniques, and the similarity also suggests that
+the wide variety of approximations considered in \cite{cite}, as well
+as the approximations of object-oriented programming languages in
+\cite{cite}, can be adapted to this setting.
