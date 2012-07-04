@@ -11,14 +11,14 @@ positive propositions -- if there are any -- have the form ${!}A$, not
 ${\downarrow}A^-$ or ${\gnab}A^-$) have a distinct logical and
 operational character. Logically, by the discussion in
 Section~\ref{sec:perm-fragments} we are justified in reading such
-specifications as specifications in persistent intuitionstic logic or
+specifications as specifications in persistent intuitionistic logic or
 persistent lax logic. Operationally, while persistent specifications
 have an interpretation as transition systems, that interpretation is
 not very useful. This is because if we can take a transition once --
 for instance, using the rule ${\sf a} \lefti \{ {\sf b} \}$ to derive
 the persistent atomic proposition ${\sf b}$ from the persistent atomic
 proposition ${\sf a}$ -- none of the facts that enabled that
-transition can be consumed, as all facts are presistent. Therefore, we
+transition can be consumed, as all facts are persistent. Therefore, we
 can continue to make the same transition indefinitely; in the
 above-mentioned example, such transitions will derive multiple
 redundant copies of ${\sf b}$.
@@ -52,12 +52,12 @@ the usual forward-chaining semantics where only transitions that
 derive ${\it new}$ persistent atomic propositions or equalities $t
 \doteq s$ are allowed. This forward-chaining logic programming
 interpretation of persistent logic is extremely common; in fact, it is
-what is commonly meant by ``foward-chaining logic programming.'' Just
+what is commonly meant by ``forward-chaining logic programming.'' Just
 as the term {\it persistent logic} was introduced in Chapter 2 to
-distinguish what is traditionally referred to as intuitionstic logic
-from intuitionstic ordered and linear logic, we will use the term
+distinguish what is traditionally referred to as intuitionistic logic
+from intuitionistic ordered and linear logic, we will use the term
 {\it saturating logic programming} to distinguish what is
-tranditionally referred to as foward-chaining logic programming from
+traditionally referred to as forward-chaining logic programming from
 the forward-chaining logic programming interpretation that makes sense
 for ordered and linear logical specifications.\robnote{If I want
   to talk a bit more about Linear Logical Algorithms in Chapter 5, I
@@ -72,7 +72,7 @@ propositions persistent, and a flat, persistent rule $\forall
 \overline{x}. A^+ \lefti \{ B^+ \}$ can be further approximated by
 removing premises from $A^+$ and adding conclusions to $B^+$. Of
 particular practical importance are added conclusions that equate the
-parameters introduced by existential quantificaiton with terms: all
+parameters introduced by existential quantification with terms: all
 parameters introduced by existential quantification must be dealt with
 as a necessary condition for interpreting a persistent signature as a
 saturating logic program.
@@ -85,7 +85,7 @@ version of another specification:
   A flat, concurrent, and persistent specification $\Sigma_a$ is an
   {\em approximate version} of another specification $\Sigma$ if every
   predicate ${\sf a} : \Pi x_1{:}\tau_1 \ldots \Pi x_n{:}\tau_n.\,
-  {\sf prop}\,{\sf lvl}$ deciared in $\Sigma$ has a corresponding
+  {\sf prop}\,{\sf lvl}$ declared in $\Sigma$ has a corresponding
   predicate ${\sf a} : \Pi x_1{:}\tau_1 \ldots \Pi x_n{:}\tau_n.\,
   {\sf prop}\,{\sf pers}$ in $\Sigma_a$ and if, for every rule ${\sf
     r} : \forall \overline{x}.\,A_1^+ \lefti \{ A_2^+ \}$ in $\Sigma$ there
@@ -93,7 +93,7 @@ version of another specification:
   \{ B_2^+ \}$ in $\Sigma_a$ such that:
   \begin{itemize}
   \item The existential quantifiers in $A_1^+$ and $A_2^+$ are
-    identital to the existential quantifiers in $B_1^+$ and $B_2^+$
+    identical to the existential quantifiers in $B_1^+$ and $B_2^+$
     (respectively),
   \item For each premise ($p^+_\mpers$ or $t \doteq s$) in $B^+_1$,
     the same premise appears in $A^+_1$, and 
@@ -105,10 +105,10 @@ version of another specification:
 
 \noindent
 While approximation is a program transformation, it is not a
-determinstic one. Even the nondeterminstic operationalization
-transformation was just a bit nondeterminstic, giving several options
+deterministic one. Even the nondeterministic operationalization
+transformation was just a bit nondeterministic, giving several options
 for operationalizing any given deductive rule. The approximation
-transformation expects explict information from the user: which
+transformation expects explicit information from the user: which
 premises should be removed, and what new conclusions should be
 introduced? While there is value in actually implementing the
 operationalization, defunctionalization, and destination-adding
@@ -140,7 +140,7 @@ the process states they generalize: that is, that if $(\Psi_g;
 \leadsto_\Sigma (\Psi'; \Delta')$ then $(\Psi_g; \Delta_g)
 \leadsto_{\Sigma_a} (\Psi'_g; \Delta'_g)$ where $(\Psi'_g; \Delta'_g)$
 is a generalization of $(\Psi'; \Delta')$. The property we will
-actually stablish is quite a bit stronger, and is expressed by the
+actually establish is quite a bit stronger, and is expressed by the
 following definition:
 
 \bigskip
@@ -201,7 +201,7 @@ the logic programming interpretation, it is an abstraction of the
 initial process state. It is not always possible to obtain a saturated
 process state using the logic programming interpretation, however:
 rules like ${\sf a}(x) \lefti \{ {\sf a}({\sf s}(x)) \}$ and ${\sf
-  a}(x) \lefti \{ \exists y. {\sf a}(y) \}$ lead to nontermination
+  a}(x) \lefti \{ \exists y. {\sf a}(y) \}$ lead to non-termination
 when interpreted as saturating logic programs. Important classes 
 of programs are known to terminate in all cases, such as those in the
 so-called ``Datalog fragment'' where the only terms in the program
@@ -252,7 +252,7 @@ the result is equivalent to this specification:
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/pda-pers-approx2.sls}
-\caption{Approximated push-down automataon.}
+\caption{Approximated push-down automaton.}
 \label{fig:pda-pers-approx2}
 \end{figure}
 
@@ -305,7 +305,7 @@ extra frame ${\sf app3}$ and an extra rule ${\sf ev/app3}$ that
 consumes these frames. The ${\sf ev/call}$ frames are an important
 part of the control flow analysis we derive, but in
 \cite{simmons11logical} the addition of these frames was otherwise
-unmotivated. Based on our discusson of the logical
+unmotivated. Based on our discussion of the logical
 approximation in Chapter~6, we now have a principled account for this
 extra frame and rule: it is precisely the pattern we get from
 operationalizing a natural semantics {\it without} tail-recursion
@@ -320,7 +320,7 @@ Skolem function for $x$ that only mentions the term $e$ with LF type
 ${\sf exp} \rightarrow {\sf exp}$ -- the most general Skolem function
 in this setting would have also been dependent on $v$, $d$, and
 $d_2$. Adding $x \doteq {\sf var}(\lambda x.e\,x)$ effectively causes
-us to associate all paramenters ever passed into a function with the
+us to associate all parameters ever passed into a function with the
 {\it function into which that parameter was passed}. 
 
 \begin{figure}
@@ -341,7 +341,7 @@ depends on the number of subterms of the original term. But what are
 the subterms of ${\sf lam}\,(\lambda x.\,{\sf app}\,x\,x)$?  Because
 we ensure that we {\it only} substitute terms of the form ${\sf
   var}(\lambda x.e\,x)$ into functions of the form $\lambda x.e\,x$ we
-can actaully answer this question: there are three distinct subterms
+can actually answer this question: there are three distinct subterms
 of ${\sf lam}\,(\lambda x.\,{\sf app}\,x\,x)$: the entire term, ${\sf
   app}\,({\sf var}(\lambda x.\,{\sf app}\,x\,x))\,({\sf var}(\lambda
 x.\,{\sf app}\,x\,x))$, and ${\sf var}(\lambda x.\,{\sf app}\,x\,x)$.
@@ -403,15 +403,15 @@ Figure~\ref{fig:dest-cfa-1} where we directly equate expressions and
 destinations (which are now also expressions). 
 
 The specification in Figure~\ref{fig:dest-cfa-1} has a point of
-redundancy along the lines of the reundancy in our second PDA
+redundancy along the lines of the redundancy in our second PDA
 approximation: the rules maintain the invariants that the two
 arguments to ${\sf eval}\,e\,d$ are always the same. Therefore, the
-second argument to ${\sf eval}$ can be treated as vestigal; by
+second argument to ${\sf eval}$ can be treated as vestigial; by
 removing that argument, we get a specification equivalent to
 Figure~\ref{fig:dest-cfa-2}. That figure includes another
-simplificaitons as well: instead of introducing expressions $d_1$,
+simplifications as well: instead of introducing expressions $d_1$,
 $d_2$, and $d_3$ by existential quantification just to equate them
-with expressions $e_1$, $e_2$, and $e$, we substitue in the equated
+with expressions $e_1$, $e_2$, and $e$, we substitute in the equated
 expressions where the respective destinations appeared in
 Figure~\ref{fig:dest-cfa-1}. 
 
@@ -446,7 +446,7 @@ our analysis may be less precise than expected. One solution would be
 to add distinct labels to terms. Adding a label on the inside of every
 lambda-abstraction would seem to suffice, and in any real example
 labels would already be present in the form of source-code positions
-or line numbers. The alias analysis presented next disusses the use of
+or line numbers. The alias analysis presented next discusses the use of
 these labels.
 
 \begin{figure}
@@ -461,7 +461,7 @@ these labels.
 Control flow analysis can be derived from SSOS specifications that
 look much like the specifications considered in Chapters~6~and~7.  In
 this section, we try to derive an alias analysis that matches the
-interprocedural object-oriented alias analysis presented as a logic
+inter-procedural object-oriented alias analysis presented as a logic
 program in \cite[Chapter 12.4]{aho07compilers}. The language whose
 SSOS semantics allows us to derive this alias analysis is a bit
 different than the Mini-ML-like languages we have considered thus far.
@@ -546,9 +546,6 @@ expressions ${\sf newpair}$, $x.{\sf fst}$, $x.{\sf snd}$, $x.{\sf
 expressions; having them as expressions resulted in a more regular
 presentation.
 
-\subsection{Approximation and alias analysis}
-
-
 \begin{figure}[t]
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-monadic-approx.sls}
@@ -557,33 +554,71 @@ presentation.
 \end{figure}
 
 
-To approxiate the semantics of our monadic language, we can follow the
-methodology from before: apply the destination-adding transformation
-(and remove the vestigal destinations from ${\sf eval}$ and ${\sf
-  retn}$) and turn the program persistent. A further approximation is
-to remove the last premise from ${\sf ev/set}$, as the
-meta-approximation theorem allows -- the only purpose of this premise
-in Figure~\ref{fig:ssos-monadic2} was to consume the ephemeral
-proposition ${\sf cell}\,l'\,{\it fld}\,v$, and this is unnecessary now
-that ${\sf cell}$ is no longer an ephemeral predicate.
 
-Having made these three moves (destination-adding, turing all
-propositions persistent, and removing a premise from ${\sf ev/set}$),
-we are left with three types of existentially-generated variables
-that must be equated with concrete terms in order for our semantics
-to be interpreted as a saturating logic program:
+\subsection{Approximation and alias analysis}
+
+
+To approximate the semantics of our monadic language, we can follow the
+methodology from before and turn the program persistent. A further
+approximation is to remove the last premise from ${\sf ev/set}$, as
+the meta-approximation theorem allows -- the only purpose of this
+premise in Figure~\ref{fig:ssos-monadic2} was to consume the ephemeral
+proposition ${\sf cell}\,l'\,{\it fld}\,v$, and this is unnecessary
+now that ${\sf cell}$ is no longer an ephemeral predicate.  Having
+made these two moves (turning all propositions persistent, and removing
+a premise from ${\sf ev/set}$), we are left with three types of
+existentially-generated variables that must be equated with concrete
+terms in order for our semantics to be interpreted as a saturating
+logic program:
 
 \smallskip
 \begin{itemize}
-\item Variables $y$, introduced by every rule except for ${\sf ev/ret}$.
+\item Variables $y$, introduced by every rule except for ${\sf ev/ret}$,
+\item Mutable locations $l$, introduced by rule ${\sf ev/new}$, and 
 \item Destinations $d$; the only place where a destination is created
-by the destination-adding transformation is in rule ${\sf ev/call}$. 
-\item Mutable locations $l$, introduced by rule ${\sf ev/new}$. 
+by the destination-adding transformation is in rule ${\sf ev/call}$.
 \end{itemize}
+\smallskip
 
-All of these 
+Variables $y$ are generated to be substituted into the body of some
+command, so we could equate them with the Skolemized function body as
+we did when deriving a control flow analysis example. Another option
+comes from noting that, for any initial source program, every command
+is associated with a particular source code location, so a simpler
+alternative is just to equate the variable with that source code
+location. This is why we stored labels on the stack: if we had not
+done so, then the label $l$ associated with $m$ in the command
+$\interp{{\sf bnd}^l\, x \leftarrow \lambda x.m0 \,{\sf in}\,m}$ would
+no longer be available when we needed it in rule ${\sf ev/call1}$.
+The obvious move for mutable locations $l$ is similar: we equate them
+with the label $l$ representing the line where that cell was
+generated.
 
-We still have to equate the
-variables generated in every rule
+There are multiple ways to deal with the destination $d_0$ generated
+in rule ${\sf ev/call}$. The option represented in
+Figure~\ref{fig:ssos-monadic-approx} is equating it with the label
+$l_0$ associated with the function we are calling. This leads to an
+alias analysis that is mostly insensitive to control flow. If we
+instead equated $d_0$ with the label $l$ associated with the call-site
+or with the pair of the call site and the called function, the result
+would be an analysis that is variously sensitive to control flow
+as well.
+
+Using labels makes the answers to some of the primary questions
+asked of an alias analysis quite concise. For instance:
+
+\smallskip
+\begin{itemize}
+\item {\it Might the first component of a pair created at label $l_1$
+    ever reference a pair created at label $l_2$?} Only if ${\sf
+    cell}\,l_1\,{\sf fst}\,({\sf loc}\,l_2)$ appears in the saturated
+    database (and likewise for the second component).
+  \item {\it Might the first component of a pair created at label
+      $l_1$ ever reference the same object as the first component of a
+      pair created at label $l_2$?} Only if there is some $l'$ such
+    that ${\sf cell}\,l_1\,{\sf fst}\,({\sf loc}\,l')$ and ${\sf
+      cell}\,l_1\,{\sf fst}\,({\sf loc}\,l')$ both appear in the
+    saturated database.
+\end{itemize}
 
 \section{Related work}
