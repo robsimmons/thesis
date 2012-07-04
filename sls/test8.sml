@@ -34,8 +34,15 @@ Frontend.load "exp.sls";
 Frontend.read "app1: exp -> frame.app2:(exp -> exp)-> frame.app3:frame.";
 Frontend.load "dest-cfa-2.sls";
 
-HEADING "Figure 8.6, Monadic stateful language";
+HEADING "Figure 8.6-8.7, Monadic stateful language";
 Frontend.reset ();
 Frontend.load "exp-alias.sls";
+Frontend.read "call1: variable -> (variable -> cmd) -> frame.";
 Frontend.load "ssos-monadic.sls";
 Frontend.load "ssos-monadic2.sls";
+
+HEADING "Figure 8.8, Alias analysis";
+Frontend.reset ();
+Frontend.load "exp-alias-approx.sls";
+Frontend.read "call1: label -> (label -> cmd) -> frame.";
+Frontend.load "ssos-monadic-approx.sls";

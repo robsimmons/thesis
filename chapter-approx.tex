@@ -433,13 +433,6 @@ x.e\,x)$ may be called from the call site $e$ only if ${\sf
   comp}\,{\sf app3}\,(e({\sf var}(\lambda x.e\,x)))\,e$ appears in the
 saturated database.
 
-\begin{figure}
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/ssos-monadic.sls}
-\caption{Functions in the simple alias analysis language.}
-\label{fig:ssos-monadic}
-\end{figure}
-
 There is one important caveat to this analysis. If for some value $v$
 we consider the program $\interp{((\lambda x.x)\,(\lambda y.y))\,v}$,
 we might expect a reasonable control flow analysis to notice that only
@@ -456,28 +449,66 @@ labels would already be present in the form of source-code positions
 or line numbers. The alias analysis presented next disusses the use of
 these labels.
 
-
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/ssos-monadic.sls}
+\caption{Functions in the simple alias analysis language.}
+\label{fig:ssos-monadic}
+\end{figure}
 
 \section{Alias analysis}
 
-In this section, we will take a destination-passing style SSOS
-specification of a monadic functional language with Lisp-like mutable
-cons cells and derive an interprocedural alias analysis. The SSOS
-semantics we start with and the choices we make during approximation
-are aimed at producing an approximation that closely follows the
-object-oriented alias analysis presented as a logic program in
-\cite[Chapter 12.4]{aho07compilers}.
+Control flow analysis can be derived from SSOS specifications that
+look much like the specifications considered in Chapters~6~and~7.  In
+this section, we try to derive an alias analysis that matches the
+interprocedural object-oriented alias analysis presented as a logic
+program in \cite[Chapter 12.4]{aho07compilers}. The language whose
+SSOS semantics allows us to derive this alias analysis is a bit
+different than the Mini-ML-like languages we have considered thus far.
 
-Our monadic language distinguishes variables $x$ of type ${\sf
-  variable}$ from monadic expressions $x$ of type ${\sf exp}$ and
-commands $m$. The expression $\interp{{\sf return}\,x} = {\sf
-  return}\,l\,x$ evaluates to the value associated with $x$, and the
-expression $\interp{{\sf let}\,x = m\,{\sf in}\,e} = {\sf
-  letcmd}\,l\,\interp{m}\,\lambda x.\interp{e}$ runs the command $m$
-to generate a value that is then associated with $x$ in the evaluation
-of $e$. Note our slight abuse of the encoding function $\interp{e}$ to
-create labels $l$ out of nowhere: we can think of as a line number
-from the original program. 
+\subsection{Monadic language}
+
+The language we consider differentiates atomic actions, which we will
+call {\it expressions} (and encode in the LF type ${\sf exp}$) and
+procedures or {\it commands} (which we encode in the LF type ${\sf
+  cmd}$). There are only two commands $m$ in our monadic language. The
+first command, ${\sf ret}\,x$, is a command that returns the value
+bound to the variable $x$ (rule ${\sf ev/ret}$ in
+Figure~\ref{fig:ssos-monadic}). The second command, $\interp{{\sf
+    bnd}^l\, x \leftarrow e \,{\sf in}\,m} = {\sf
+  bnd}\,l\,\interp{e}\,\lambda x.\interp{m}$, evaluates $e$ to a
+value, binds that value to the variable $x$, and then evaluates
+$m$. Note the presence of $l$ in the bind syntax; we will call it a
+{\it label}, and we can think of it as a line number or source
+position from the original program.
+
+In the previous languages we have considered, values $v$ were a
+syntactic refinement of the expressions $e$. In contrast, our monadic
+language will syntactically differentiate the two: there are five
+expression forms and three values that we will consider. An expression
+$\interp{\lambda x.e} = {\sf fun}\,\lambda x.\interp{e}$ evaluates to
+a value $\interp{\lambda^l x.e} = {\sf lam}\,l\,\lambda x.\interp{e}$,
+where the label $l$ represents the source code position where the
+function was bound. For example, when we evaluate the command
+$\interp{{\sf bnd}^l \, y \leftarrow \lambda x.e \,{\sf in}\,m}$ the
+value $\lambda^l x.e$ gets bound to $y$ in the body of the command $m$
+(rule ${\sf ev/fun}$ in Figure~\ref{fig:ssos-monadic}).
+
+The second expression form is a function call $\interp{f\,x} = {\sf
+  app}\,f\,x$. To evaluate a function call, we expect a function value
+(which is a command $m0$ with one free variable) to be bound to the
+variable $f$; we then store the rest of the current command on the
+stack and evaluate the command $m0$ to a value, binding its free
+variable to the same value that $x$ was bound to. Note that the rule
+${\sf ev/call}$ in Figure~\ref{fig:ssos-monadic} also stores the call
+site's source code location $l$ on the stack frame. The reason for
+storing a label here is that we need it for the alias
+analysis. However, it's possible to independently motivate adding
+these call-site labels to the operational semantics: for instance, it
+would allow us to model the process of giving a stack trace when an
+exception is raised. When the function we have called returns, we
+continue evaluating the command that was stored on the control stack
+(rule ${\sf ev/call1}$ in Figure~\ref{fig:ssos-monadic}).
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -486,40 +517,73 @@ from the original program.
 \label{fig:ssos-monadic2}
 \end{figure}
 
-There are five commands in our example language, two that deal with
-functions and three that deal with mutable state. The ordered abstract
-machine for the two functional commands is given in
-Figure~\ref{fig:ssos-monadic}. The command $\interp{\lambda x.e} =
-{\sf fun}(\lambda x.\interp{e})$ generates the function value
-$\interp{\lambda x.e} = {\sf lam}(\lambda x.\interp{e})$ (rule ${\sf
-  ev/fun}$). The commenad $\interp{f\,x} = {\sf call}\,f\,x$ expects a
-function value to be bound to the variable $f$ and calls it with the
-value bound to variable $x$ (rule ${\sf ev/call}$), and generates
-whatever value is returned from that function (rule ${\sf ev/retn}$).
-Note that, in this specification, the fact that ${\sf variable}$ and
-${\sf exp}$ are distinct types makes the environment semantics quite
-natural: the predicate ${\sf bind}$ has kind ${\sf variable}
-\rightarrow {\sf value} \rightarrow {\sf prop}\,{\sf pers}$, binding
-variables to values. Our only use of frames will be for function
-calls, which is why we write ${\sf cont}(\lambda x.e\,x)$ instead of
-${\sf cont}({\sf call1}\,\lambda x.e\,x)$.
-
-
 The rules for mutable records are given in
-Figure~\ref{fig:ssos-monadic2}.  The command ${\sf newpair}$ allocates
-a tuple with two fields ${\sf fst}$ and ${\sf snd}$; both fields are
-initialized to ${\sf null}$, and each field is represented by a
-separate linear ${\sf cell}$ resource (rule ${\sf ev/new}$). The
-commands $\interp{x.{\sf fst}} = {\sf proj}\,x\,{\sf fst}$ and
-$\interp{x.{\sf snd}} = {\sf proj}\,x\,{\sf snd}$ expect a pair
-location to be bound to $x$, and bind the value stored in the
-appropriate field of the mutable pair (rule ${\sf ev/proj}$). The
-commands $\interp{x.{\sf fst} := y} = {\sf set}\,x\,{\sf fst}\,y$ and
-$\interp{x.{\sf snd} := y} = {\sf set}\,x\,{\sf snd}\,y$ work much the
-same way. The difference is that the former commands do not change the
-accessed field's contents, whereas the latter commands replace the
-accessed field's contents with the value bound to $y$ (rule ${\sf ev/set}$). 
+Figure~\ref{fig:ssos-monadic2}. Evaluating the expression ${\sf
+  newpair}$ allocates a tuple with two fields ${\sf fst}$ and ${\sf
+  snd}$ and yields a value ${\sf loc}\,l$ referring to the tuple; both
+fields in the tuple are initialized to the value ${\sf null}$, and
+each field is represented by a separate linear ${\sf cell}$ resource
+(rule ${\sf ev/new}$). The expressions $\interp{x.{\sf fst}} = {\sf
+  proj}\,x\,{\sf fst}$ and $\interp{x.{\sf snd}} = {\sf proj}\,x\,{\sf
+  snd}$ expect a pair location to be bound to $x$, and yield the value
+stored in the appropriate field of the mutable pair (rule ${\sf
+  ev/proj}$). The expressions $\interp{x.{\sf fst} := y} = {\sf
+  set}\,x\,{\sf fst}\,y$ and $\interp{x.{\sf snd} := y} = {\sf
+  set}\,x\,{\sf snd}\,y$ work much the same way. The difference is
+that the former expressions do not change the accessed field's
+contents, whereas the latter expressions replace the accessed field's
+contents with the value bound to $y$ (rule ${\sf ev/set}$).
+
+This language specification bears some superficial similarities to
+Harper's Modernized Algol with free assignables \cite[Chapter
+36]{harper12practical}. The {\it free assignables} addendum is
+critical: SSOS specifications do not have a mechanism for enforcing
+the stack discipline of Algol-like languages. The other major
+difference is that Harper's language does not allow expressions to
+access the state.  For our language to behave similarly, the
+expressions ${\sf newpair}$, $x.{\sf fst}$, $x.{\sf snd}$, $x.{\sf
+  fst} := y$, and $x.{\sf snd} := y$ would need to be commands and not
+expressions; having them as expressions resulted in a more regular
+presentation.
+
+\subsection{Approximation and alias analysis}
 
 
+\begin{figure}[t]
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/ssos-monadic-approx.sls}
+\caption{Alias analysis.}
+\label{fig:ssos-monadic-approx}
+\end{figure}
+
+
+To approxiate the semantics of our monadic language, we can follow the
+methodology from before: apply the destination-adding transformation
+(and remove the vestigal destinations from ${\sf eval}$ and ${\sf
+  retn}$) and turn the program persistent. A further approximation is
+to remove the last premise from ${\sf ev/set}$, as the
+meta-approximation theorem allows -- the only purpose of this premise
+in Figure~\ref{fig:ssos-monadic2} was to consume the ephemeral
+proposition ${\sf cell}\,l'\,{\it fld}\,v$, and this is unnecessary now
+that ${\sf cell}$ is no longer an ephemeral predicate.
+
+Having made these three moves (destination-adding, turing all
+propositions persistent, and removing a premise from ${\sf ev/set}$),
+we are left with three types of existentially-generated variables
+that must be equated with concrete terms in order for our semantics
+to be interpreted as a saturating logic program:
+
+\smallskip
+\begin{itemize}
+\item Variables $y$, introduced by every rule except for ${\sf ev/ret}$.
+\item Destinations $d$; the only place where a destination is created
+by the destination-adding transformation is in rule ${\sf ev/call}$. 
+\item Mutable locations $l$, introduced by rule ${\sf ev/new}$. 
+\end{itemize}
+
+All of these 
+
+We still have to equate the
+variables generated in every rule
 
 \section{Related work}

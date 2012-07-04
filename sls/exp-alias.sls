@@ -9,15 +9,17 @@ field: type.
 fst: field.
 snd: field.
 
-letcmd: variable -> cmd -> (variable -> exp) -> exp.
-return: variable -> variable -> exp.
+ret: variable -> cmd.
+bnd: variable -> exp -> (variable -> cmd) -> cmd.
 
-lam: (variable -> exp) -> value.
+fun: (variable -> cmd) -> exp.
+call: variable -> variable -> exp.
+newpair: exp.
+proj: variable -> field -> exp.
+set: variable -> field -> variable -> exp.
+
+lam: variable -> (variable -> cmd) -> value.
 loc: locvar -> value.
 null: value.
 
-fun: (variable -> exp) -> cmd.
-call: variable -> variable -> cmd.
-newpair: cmd.
-proj: variable -> field -> cmd.
-set: variable -> field -> variable -> cmd.
+frame: type.
