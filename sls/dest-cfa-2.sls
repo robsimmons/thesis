@@ -14,7 +14,8 @@ ev/app1: retn (lam \x. E0 x) E1 * cont (app1 E2) E1 E
           >-> {eval E2 * cont (app2 \x. E0 x) E2 E}.
 
 ev/app2: retn V2 E2 * cont (app2 \x. E0 x) E2 E
-          >-> {Exists x. bind x V * x == var (\x. E0 x) *
-               eval (E0 x) * cont app3 (E0 x) E}.
+          >-> {Exists x. bind x V *
+               eval (E0 x) * cont app3 (E0 x) E *
+               x == var (\x. E0 x)}.
 
 ev/app3: retn V E3 * cont app3 E3 E >-> {retn V E}.
