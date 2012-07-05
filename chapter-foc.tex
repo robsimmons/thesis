@@ -3,12 +3,25 @@
 
 In this chapter, we present linear logic as a logic with the ability
 to express aspects of state and state transition in a natural way.  In
-Chapter 3, we will repeat the development in this chapter in a much
-richer and more expressive setting, and in Chapter 4 we will carve out
+Chapter~3, we will repeat the development in this chapter in a much
+richer and more expressive setting, and in Chapter~4 we will carve out
 a fragment of this logic to use as the basis of \sls, our logical
-framework of substructural logical specifications. The purpose of this
-chapter is to consider the issues that will arise in our richer
-substructural setting within a comparatively simple setting.
+framework of substructural logical specifications. This part of the
+document contributes to the overall thesis by focusing on the design
+of logical frameworks:
+
+\begin{quote} {\bf Thesis Statement (Part I):} {\it The methodology of
+    structural focalization facilitates the derivation of logical
+    frameworks as fragments of focused logics.}
+\end{quote}
+
+\noindent
+The purpose of this chapter is to introduce the methodology of
+structural focalization as developed in \cite{simmons11structural};
+this development is one of the major contributions of this thesis.
+Linear logic is a fairly simple logic that nevertheless allows us to
+consider many of the issues that will arise in richer substructural
+logics like the one considered in Chapter~3.
 
 In Section~\ref{sec:introlinlog} we motivate and discuss a traditional
 account of linear logic, and in
@@ -1598,7 +1611,7 @@ admissibility, soundness of focusing, and completeness of focusing
 presented in this chapter, all scale linearly with the number of
 connectives and rules in the logic. There is no known proof of the
 unfocused admissibly of the rule ${\it cut}$ above that scales
-lineraly in this way: all known proofs grow quadratically with the
+linearly in this way: all known proofs grow quadratically with the
 number of connectives and rules in the logic.
 
 %; one of them
@@ -1854,7 +1867,7 @@ presented in \cite{pfenning09substructural}.
 % logics as a logical framework for encoding systems we are interested
 % in.
 
-In this section, I will discuss four different presentations of 
+In this section, we will discuss four different presentations of 
 focused sequent calculi that are closely connected to the logic we
 have just presented. Each system differs most dramatically in its
 treatment of positive atomic propositions, the exponential 
@@ -2772,7 +2785,7 @@ positive propositions.\footnote{Permeable {\it negative} propositions
 
 The admissible identity expansion rules, like the admissible identity
 rule present in most unfocused sequent calculus systems, can help us
-write dowm compact proofs. If $F(n) = p_1^+ \otimes \ldots \otimes
+write down compact proofs. If $F(n) = p_1^+ \otimes \ldots \otimes
 p_n^+$, then the size of the smallest proof of
 $\mildseq{\Gamma}{F(n)}{F(n)}$ is in $\Omega(n)$. However, by using
 the admissible identity expansion rule $\eta^+$, we can represent the
@@ -2787,7 +2800,7 @@ proof in a compact way:
    {}}}}}
 \]
 The use of identity expansion lets write down potentially large proofs 
-quite consisely.
+quite concisely.
 
 \subsubsection{Permeability as a property of identity expansion}
 
@@ -3072,6 +3085,8 @@ shape of the context $\Delta$.\footnote{More than anything else I have
   proof construction, is bound to look very different (see, for
   example, \cite{chaudhuri06focused}).}
 
+\input{figs/fig-linear-alt}
+
 I propose to deal with the apparent proliferation of synthetic rules
 in a system with the atom optimization by adding a new matching
 construct for the conclusion of rules. We can say that $\Gamma;
@@ -3110,8 +3125,6 @@ persistent or linear contexts:
 {\mildseq{\Gamma}{\Delta/A^-}{U}}
 {\mildseq{\Gamma}{\Delta, [A^-]}{U}}
 \]
-
-\input{figs/fig-linear-alt}
 
 Going yet one more step, we could use this notation to revise
 the original definition of linear logic in Figure~\ref{fig:linear}.
