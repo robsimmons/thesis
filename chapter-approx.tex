@@ -3,18 +3,18 @@
 
 The abstract interpretation of programs relates the exact semantics of
 a programming language to a finite approximation of those semantics. A
-general recepie for constructing a sound program analysis is to (1)
+general recipe for constructing a sound program analysis is to (1)
 specify the operational semantics of the underlying programming
-langauge via an interpreter, and (2) specify a terminating
+language via an interpreter, and (2) specify a terminating
 approximation of the interpreter itself. This is the basic idea behind
 {\it abstract interpretation} \cite{cousot77abstract}, which provides
 techniques for constructing approximations (for example, by exhibiting
 a Galois connection between concrete and abstract domains). The
-correctness proof must establish the approriate relationship between
+correctness proof must establish the appropriate relationship between
 the concrete and abstract computations and show that the abstract
 computation terminations. We need to vary both the specification of
 the operational semantics and the form of the approximation in order
-to obtain various kinds of progrm analyses, sometimes with
+to obtain various kinds of program analyses, sometimes with
 considerable ingenuity.
 
 In this chapter, we consider a new class of instances in the general
@@ -163,7 +163,7 @@ the process states they generalize: that is, that if $(\Psi_g;
 \leadsto_{\Sigma_a} (\Psi'_g; \Delta'_g)$ where $(\Psi'_g; \Delta'_g)$
 is a generalization of $(\Psi'; \Delta')$. This is true, but we're not
 interested in generalization per se; rather, we're interested in a
-stronger property, {\em abstaction}, that is defined in terms of
+stronger property, {\em abstraction}, that is defined in terms of
 generalization:
 
 \bigskip
@@ -571,7 +571,7 @@ expressions to access the state.  For our language to behave
 similarly, the expressions ${\sf newpair}$, $x.{\sf fst}$, $x.{\sf
   snd}$, $x.{\sf fst} := y$, and $x.{\sf snd} := y$ would need to be
 commands and not expressions; we make them expressions only for the
-convienence of a more regular presentation.
+convenience of a more regular presentation.
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -671,14 +671,14 @@ Bozzano et al.'s, however. The style they use to encode protocols is
 significantly different from any of the SSOS specification styles
 presented in this thesis. They used a general purpose approximation,
 which could therefore potentially be mechanized in the same way we
-mechanized transformations like operationalzation; in contrast, the
+mechanized transformations like operationalization; in contrast, the
 meta-approximation result described here captures a whole class of
 approximations. Furthermore, Bozzano et al.'s methods are designed to
 consider properties of a system as a whole, not static analyses of
 individual inputs as is the case in our work.
 
 Work by Might and Van Horn on abstracting abstract machines can be
-seeb as a parallel approach to our methodology in a very different
+seen as a parallel approach to our methodology in a very different
 setting
 \cite{might10resolving,might10abstract,might10abstracting}. Their
 emphasis is on deriving a program approximation by approximating a
