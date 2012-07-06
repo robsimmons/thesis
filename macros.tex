@@ -5,6 +5,7 @@
 \usepackage[show]{ed}
 \usepackage{fullpage}
 \usepackage{graphicx}
+\usepackage{xcolor}
 \usepackage{tikz}
 \usetikzlibrary{arrows}
 \usepackage{amsthm}
@@ -26,6 +27,15 @@
 \usepackage[letterpaper,twoside,vscale=.8,hscale=.75,nomarginpar,hmarginratio=1:1]{geometry}
 
 % Provides a draft mark at the top of the document. 
+
+\definecolor{lfblue}{rgb}{.5,.2,0}
+\newcommand{\lf}[1]{\textcolor{lfblue}{\ensuremath{{#1}}}}
+
+\definecolor{justblack}{rgb}{0,0,0}
+\newcommand{\no}[1]{\textcolor{justblack}{\ensuremath{{#1}}}}
+
+\definecolor{objgreen}{rgb}{0,.3,.5}
+\newcommand{\obj}[1]{\textcolor{objgreen}{\ensuremath{{#1}}}}
 
 \hypersetup{colorlinks=true,citecolor=blue,urlcolor=blue,linkcolor=black}
 
@@ -145,6 +155,13 @@
 \newcommand{\tforalll}[2]{[{#1}]; {#2}}
 \newcommand{\tunifr}{\textsc{refl}}
 
+\newcommand{\spi}{{\it sp}}
+\newcommand{\lfnil}{\lf()}
+\newcommand{\lflam}[2]{\lf{\lambda {#1}.{#2}}}
+\newcommand{\lfapp}[2]{\lf{{#1};{#2}}}
+\newcommand{\lfroot}[2]{{{#1} \cdot \lf{#2}}}
+\newcommand{\lfpi}[3]{\Pi{\lf{{#1}}{:}{#2}.{#3}}}
+
 \newcommand{\susp}[1]{\langle {#1} \rangle}
 
 \newcommand{\ofirstseq}[5]{{#1};{#2};{#3};{#4} \altv {#5} \mathstrut}
@@ -189,7 +206,7 @@
 \newcommand{\lsubst}[2]{\lsubsta{#1}{#2}{}}
 
 \newcommand{\arb}{\mathbin{\mbox{$\ocircle$\hspace{-7pt}{\footnotesize ?}\hspace{3pt}}}}
-\newcommand{\interp}[1]{{\ulcorner{#1}\urcorner}}
+\newcommand{\interp}[1]{{\no{\ulcorner\obj{{#1}}\urcorner}}}
 
 \newcommand{\transop}[1]{{\it Op}({#1})}
 

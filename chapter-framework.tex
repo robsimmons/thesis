@@ -3,29 +3,154 @@
 
 Logical framework time!
 
-Example of active (or higher-order) rewriting rules
+The proof term interpretation of focused sequent calculi is a term
+representation called {\it spine form}. 
+a
+
+\section{Spine Form LF as a term language}
+
+Other substructural logical frameworks, like Cervesato and Pfenning's
+LLF \cite{cervesato02linear}, Polakow's OLF \cite{polakow01ordered},
+and Watkins et al.'s CLF \cite{watkins02concurrent} are {\it
+  fully-dependent type theories}: the language of terms, the domain of
+first-order quantification, is the same as the language of proof
+terms, the representatives of logical derivations (we will call the
+domain of quantification the {\it object terms} when ``terms'' would
+be ambiguous). The logical framework \sls~presented in this chapter
+breaks from this tradition. The language of first-order
+quantification, which was left unspecified in Chapter 3, will be
+presently described as Spine Form LF, a well-understood logical
+framework derived from the normal forms of the purely persistent type
+theory LF \cite{harper93framework}.
+
+After addressing our reasons for this non-standard decision in
+Section~\ref{sec:why-not-fully-dependent}, we will give a very basic
+crash course on LF and its metatheory. All the information here is
+standard and adequately presented between Harper, Honsell, and
+Plotkin's original presentation of LF \cite{harper93framework},
+Cervesato and Pfenning's discussion of spine form terms
+\cite{cervesato02linear}, Watkins et al.'s presentation of the
+canonical forms of CLF \cite{watkins02concurrent}, Harper and Licata's
+discussion of Canonical LF \cite{harper07mechanizing}, and Reed's
+spine form presentation of HLF \cite{reed09hybrid}. In particular, our
+presentation attempts to mimics Harper and Licata's presentation from
+\cite{harper07mechanizing}, except that we use a spine form
+representation of terms. Canonical term languages correspond to normal
+natural deduction proofs, whereas spine form term languages correspond
+to focused sequent calculus proofs.
+
+It would be entirely consistent for us to appropriate Harper and
+Licata's Canonical LF presentation insetad of presenting Spine Form
+LF. Nevertheless, a spine-form presentation of canonical LF serves to
+make our presentation more uniform, as spines are used in the proof
+term language of \sls.
+
+\subsection{Why LF as a term language?}
+\label{sec:why-not-fully-dependent}
+
+The decision to use LF as a first-order domain of quantification
+rather than using a fully-dependent system is based on several
+considerations. First and foremost, this choice was sufficent for our
+purposes in this thesis. In fact, for the purposes of this thesis, we
+could used an even simpler term language of simply-typed LF
+\cite{pfenning08church}. Two other logic programming interpretations
+of \sls-like frameworks, Lollimon \cite{lopez05monadic} and Ollibot
+\cite{pfenning09substructural}, were based on simply-typed term
+langauges. Canonical LF and Spine Form LF are, at this point,
+well-understood enough that the additional overhead of fully
+dependently-typed terms is not a significant burden, and there are
+examples beyond the scope of this thesis where term dependency is
+useful.
+
+On a theoretical level, it is a significant simplification when we
+restrict ourselves to {\it any} typed term language with a reasonable
+notion of equality and substitution. Spine Form LF and Canonical LF
+are two examples; most concievable simply-typed term languages would
+also suffice. It is the thesis of this and the previous two chapters
+that we can productively derive logical frameworks from focused
+presentations of logic, but there is a wrinkle in this account if we
+try to apply this story to a dependently type theory like CLF that
+does not distinguise object terms and proof terms. CLF terms have a
+notion of {\it concurrent equivalence} which is coarser the
+equivalence relation described by focusing, and we want \sls~proof
+terms to have a similar notion of equivalence. In \sls, we can
+characterize concurrent equivalence in Section~\ref{XXX}, after
+completing our discussion of the framework and describing the proof
+term language.  In CLF, because the framework's definition discusses
+term equality, and equality of terms must take concurrent equivalence
+into account, so concurrent equivalence of (proof) terms is
+conceptually prior to the logic itself. We conjecture that this
+complication is no great obstacle, but this thesis avoids the issue.
+
+On a practical level, 
+
+The restriction to a dependent type theory therefore has low overhead,
+and there is additionally reason to suspect that . A first-order
+version of LF would be able to {\it represent} many of the systems we
+are interested in, and in fact such a system is sufficient for
+settings such as Harper's comprehensive survey of programming language
+design \cite{harper12practical}.\footnote{Harper's metatheory also
+  extends LF by drawing a distinction between standard variables and
+  nominal parameters, but this is an orthogonal point.} 
+
+
+In addition to . 
+
+The type system for \sls~requires that we be able to decide equality
+of terms in our domain of first-order quantification; this is simple,
+because equality of 
+
+presentation of
+\sls~given in this chapter requires
+
+as a term language originated with the idea
+
+\subsection{Core syntax}
+
+The substructural portion of \sls~imposes on our definition of LF at
+two points: first, signatures $\Sigma$ contain not only 
+
+
+declare not only LF term
+constants $\lf{\sf c}$ and LF type family constants ${\sf a}$ but
+predicates (which have the same metavariable -- ${\sf a}$ -- as type
+constants) and rules ${\sf r}$, which are classified by negative types
+$A^-$.  The kind ${\sf type}$ classifies types, so the declaration
+${\sf a} : \lfpi{x_1}{\tau_1}{\ldots \lfpi{x_n}{\tau_n}{\sf type}}$
+declares an atomic type. 
+
+
 \begin{align*}
-x_1{:}\susp{{\sf p2}({\sf c})}, ~~
-x_2{:}\susp{{\sf p1}({\sf c})}, ~~
-x_3{:}\istrue{(\forall x.\,{\sf p_1}(x) 
-                \lefti \{ {\sf p_2}(x) \lefti \{ {\sf p_3}(x) \} \})}, ~~
-x_4{:}\istrue{({\sf p3}({\sf c}) \lefti \{ {\sf p_4} \})} & \\
-\leadsto ~~~ 
-x_1{:}\susp{{\sf p2}({\sf c})}, ~~
-x_5{:}\istrue{({\sf p_2}({\sf c}) \lefti \{ {\sf p_3}({\sf c}) \})}, ~~
-x_4{:}\istrue{({\sf p3}({\sf c}) \lefti \{ {\sf p_4} \})} & \\
-\leadsto ~~~ 
-x_6{:}\susp{{\sf p3}({\sf c})}, ~~
-x_4{:}\istrue{({\sf p3}({\sf c}) \lefti \{ {\sf p_4} \})} & \\
-\leadsto ~~~ 
-x_7{:}\susp{{\sf p_4}} & \\
+& \mbox{Signatures} & \Sigma & ::= \cdot 
+  \mid \Sigma, \lf{\sf c} : \tau
+  \mid \Sigma, {\sf a} : \kappa
+  \mid \Sigma, {\sf r} : A^-
+\\
+& \mbox{Variable contexts} & \Psi & ::= \cdot
+  \mid \Psi, \lf{x} {:} \tau 
+\\
+& \mbox{Kinds} & \kappa & ::= \lfpi{x}{\tau}{\kappa} \mid {\sf type}
+  \mid {\sf prop}
+  \mid {\sf prop}\,{\sf ord}
+  \mid {\sf prop}\,{\sf lin}
+  \mid {\sf prop}\,{\sf pers}
+\\
+& \mbox{Types} & \tau & ::= \lfpi{x}{\tau}{\tau'} \mid \lfroot{\sf a}{\spi}
+\\
+& \mbox{Heads} & \lf{h} & ::= \lf{x} \mid \lf{\sf c}
+\\
+& \mbox{Normal terms} & \lf{t} & ::= \lf{\lambda x.t}
+  \mid \lf{\lfroot{h}{\spi}}
+\\
+& \mbox{Spines} & \lf{\spi} & ::= \lf{t; \spi} \mid \lf{\lfnil}
 \end{align*}
 
+\subsection{Adequacy}
+
+$\interp{\obj{\lambda x.e}} = \lf{{\sf lam}\,\lambda x. \interp{\obj{e}}}$
 
 \section{Carving out a logical framework}
 
-\subsection{Canonical LF as a term language}
-\label{sec:why-not-fully-dependent}
 
 Talk about Jason's thesis \cite{}. Talk about the pain of concurrent 
 equality \cite{}.
@@ -296,6 +421,37 @@ to future work.
 \subsection{Pseudo-positive atoms}
 \label{sec:pseudopositive}
 
+\section{Adequate encoding}
+
+The lambda
+cacluslus usually has application $e_1\,e_2$ (encoded in LF as ${\sf
+  app}\,\interp{e_1}\,\interp{e_2}$) and abstraction $\lambda x.e$
+(encoded in LF as ${\sf lam}\,\lambda x. \interp{e}$). 
+
+\subsection{Adequacy for LF and deductive terms}
+
+\subsection{Adequacy for concurrent traces}
+
+
+\section{The \sls~implementation}
+
+The prototype implementation of \sls~contains 
+Following CLF and the Celf implementation, we write ${\ocircle}A$ in
+Celf as \verb|{A}|. The mobile modality ${\gnab}A$ dowsn't have an
+ASCII representation, so write \verb|$A| when $A$ is
+mobile. Upshifts and downshifts are always inferred: this means that
+we can't write down ${\uparrow}{\downarrow}A$ or
+${\downarrow}{\uparrow}A$, but neither of these \ollll~propositions
+are part of the \sls~fragment anyway.
+
+Another change is for the sake of readability: if \verb|P| is a
+positive atomic proposition, we can write \verb|!P| wherever \verb|P|
+is expected. This allows us to write either \verb|a * b * c| or
+\verb|a * $b * !c| in SLS to express the positive proposition ${\sf a}
+\fuse {\sf b} \fuse {\sf c}$ where ${\sf a}$, ${\sf b}$, and ${\sf c}$
+are ordered, linear, and persistent positive atomic propositions
+(respectively).
+
 \section{Logic programming interpretation}
 \label{sec:framework-logicprog}
 
@@ -318,15 +474,4 @@ forward-reference Chapter 8.
 
 \subsection{Modes and well-moded specifications}
 \label{sec:framework-modes}
-
-\section{Adequate encoding}
-
-The lambda
-cacluslus usually has application $e_1\,e_2$ (encoded in LF as ${\sf
-  app}\,\interp{e_1}\,\interp{e_2}$) and abstraction $\lambda x.e$
-(encoded in LF as ${\sf lam}\,\lambda x. \interp{e}$). 
-
-\subsection{Adequacy for LF and deductive terms}
-
-\subsection{Adequacy for concurrent traces}
 
