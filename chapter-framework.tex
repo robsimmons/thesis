@@ -40,7 +40,7 @@ natural deduction proofs, whereas spine form term languages correspond
 to focused sequent calculus proofs.
 
 It would be entirely consistent for us to appropriate Harper and
-Licata's Canonical LF presentation insetad of presenting Spine Form
+Licata's Canonical LF presentation instead of presenting Spine Form
 LF. Nevertheless, a spine-form presentation of canonical LF serves to
 make our presentation more uniform, as spines are used in the proof
 term language of \sls.
@@ -50,13 +50,13 @@ term language of \sls.
 
 The decision to use LF as a first-order domain of quantification
 rather than using a fully-dependent system is based on several
-considerations. First and foremost, this choice was sufficent for our
-purposes in this thesis. In fact, for the purposes of this thesis, we
+considerations. First and foremost, this choice was sufficient for the
+purposes of this thesis. In fact, for the purposes of this thesis, we
 could used an even simpler term language of simply-typed LF
-\cite{pfenning08church}. Two other logic programming interpretations
+\cite{pfenning08church}; two other logic programming interpretations
 of \sls-like frameworks, Lollimon \cite{lopez05monadic} and Ollibot
 \cite{pfenning09substructural}, were based on simply-typed term
-langauges. Canonical LF and Spine Form LF are, at this point,
+languages. Canonical LF and Spine Form LF are, at this point,
 well-understood enough that the additional overhead of fully
 dependently-typed terms is not a significant burden, and there are
 examples beyond the scope of this thesis where term dependency is
@@ -65,61 +65,78 @@ useful.
 On a theoretical level, it is a significant simplification when we
 restrict ourselves to {\it any} typed term language with a reasonable
 notion of equality and substitution. Spine Form LF and Canonical LF
-are two examples; most concievable simply-typed term languages would
+are two examples; most conceivable simply-typed term languages would
 also suffice. It is the thesis of this and the previous two chapters
 that we can productively derive logical frameworks from focused
-presentations of logic, but there is a wrinkle in this account if we
-try to apply this story to a dependently type theory like CLF that
-does not distinguise object terms and proof terms. CLF terms have a
-notion of {\it concurrent equivalence} which is coarser the
-equivalence relation described by focusing, and we want \sls~proof
-terms to have a similar notion of equivalence. In \sls, we can
-characterize concurrent equivalence in Section~\ref{XXX}, after
-completing our discussion of the framework and describing the proof
-term language.  In CLF, because the framework's definition discusses
-term equality, and equality of terms must take concurrent equivalence
-into account, so concurrent equivalence of (proof) terms is
-conceptually prior to the logic itself. We conjecture that this
-complication is no great obstacle, but this thesis avoids the issue.
+presentations of logic, but this simple is complicated when we apply it
+to a dependent type theory like CLF that does not distinguish object
+terms and proof terms. CLF terms have a notion of {\it concurrent
+  equivalence} which is coarser the equivalence relation described by
+focusing alone, and we want \sls~proof terms to have a similar notion
+of equivalence. In this chapter we characterize concurrent equivalence
+in Section~\ref{XXX}, after completing our discussion of the framework
+and describing the proof term language.  In CLF, the framework's
+definition relies on term equality, and equality of terms must take
+concurrent equivalence into account, so concurrent equivalence of
+(proof) terms is conceptually prior to the logic itself. We conjecture
+that this complication is no great obstacle, but this thesis avoids
+the issue.
 
-On a practical level, 
+On a practical level, there are advantages to using a well-understood
+term language. The \sls~prototype implementation
+(Section~\ref{sec:prototype}) uses the mature type reconstruction
+engine of Twelf. Schack-Nielsen's implementation of type
+reconstruction for Celf is complicated by the requirements of dealing
+with a substructural term language, and the user is required to add
+extra annotations to indicate persistent application and abstraction
+\cite{schacknielsen08celf}. In \sls~(and in many CLF encodings) the
+term language is intended to be persistent, so these extra annotations
+just clutter specifications.
 
-The restriction to a dependent type theory therefore has low overhead,
-and there is additionally reason to suspect that . A first-order
-version of LF would be able to {\it represent} many of the systems we
-are interested in, and in fact such a system is sufficient for
-settings such as Harper's comprehensive survey of programming language
-design \cite{harper12practical}.\footnote{Harper's metatheory also
-  extends LF by drawing a distinction between standard variables and
-  nominal parameters, but this is an orthogonal point.} 
-
-
-In addition to . 
-
-The type system for \sls~requires that we be able to decide equality
-of terms in our domain of first-order quantification; this is simple,
-because equality of 
-
-presentation of
-\sls~given in this chapter requires
-
-as a term language originated with the idea
+The restriction to a dependent type theory therefore does not come at
+the cost of great expressive power. Conversely, it is by no means
+clear that the addition of full CLF-like dependency comes with great
+expressive benefit. Even in LF and Twelf, many interesting
+specifications could be encoded in a two-level version of the
+language: a simply-typed object term language and a dependently-typed
+proof term language with first-order quantification over object
+terms. This restriction is sufficient for settings such as Harper's
+comprehensive survey of programming language design
+\cite{harper12practical},\footnote{Harper's metatheory also extends LF
+  by drawing a distinction between standard variables and nominal
+  parameters, but this is an orthogonal point.} and it is built in to
+the educational proof assistant SASyLF \cite{aldrich08sasylf}. In LF
+and Twelf, the ability to use full dependent types is critical in part
+because it allows us to express {\it metatheorems} -- theorems about
+the programming languages and logics we have encoded, like progress
+and preservation for a programming language or cut admissibility for a
+logic. But in substructural logical frameworks like Linear LF, full
+dependency has been found to be {\it insufficient} for expressing
+metatheorems, which motivated the development of Hybrid LF as a
+framework for writing metatheorems about LF \cite{reed09hybrid}. The
+implementation of Hybrid LF effectively creates a stratification like
+\sls's -- full LF as an object term language, a linear logical
+framework with first-order quantification over object language terms,
+and a hybrid language that can inspect both LF object terms and linear
+proof terms.
 
 \subsection{Core syntax}
 
-The substructural portion of \sls~imposes on our definition of LF at
-two points: first, signatures $\Sigma$ contain not only 
+The syntax of Spine Form LF is extended in two places to handle \sls:
+rules ${\sf r} : A^-$ in the signature contain negative \sls~types
+$A^-$ (though it would be possible to separate out the LF portion of
+signatures from the \sls~rules). We also add four additional kinds,
+${\sf prop}$, which classifies negative ordered atomic types $p^-$,
+${\sf prop}\,{\sf ord}$, which classifies positive ordered atomic
+types $p^+$, ${\sf prop}\,{\sf lin}$, which classifies positive
+linear/mobile/ephemeral atomic types $p^+_\meph$, and ${\sf
+  prop}\,{\sf ord}$, which classifies positive persistent atomic types
+$p^+_\mpers$. 
 
-
-declare not only LF term
-constants $\lf{\sf c}$ and LF type family constants ${\sf a}$ but
-predicates (which have the same metavariable -- ${\sf a}$ -- as type
-constants) and rules ${\sf r}$, which are classified by negative types
-$A^-$.  The kind ${\sf type}$ classifies types, so the declaration
-${\sf a} : \lfpi{x_1}{\tau_1}{\ldots \lfpi{x_n}{\tau_n}{\sf type}}$
-declares an atomic type. 
-
-
+Other than the extra kinds classifying atomic \sls~propositions, kinds
+$\kappa$ are otherwise exactly as they are in other presentations of
+LF; kinds classify types $\tau$, and types $\tau$ classify normal
+terms $\lf{t}$ and spines $\lf{\spi}$.
 \begin{align*}
 & \mbox{Signatures} & \Sigma & ::= \cdot 
   \mid \Sigma, \lf{\sf c} : \tau
@@ -144,6 +161,17 @@ declares an atomic type.
 \\
 & \mbox{Spines} & \lf{\spi} & ::= \lf{t; \spi} \mid \lf{\lfnil}
 \end{align*}
+
+According to the typing rules, a lambda $\lf{\lambda x.t}$ is
+classified by a dependent type $\lfpi{x}{\tau}{\tau'}$, whereas an
+atomic term $\lf{\lfroot{h}{\spi}}$ is classified by an atomic type
+$\lfroot{\sf a}{\spi'}$. LF spines $\lf\spi$ are just sequences of
+terms $\lf{(t_1; (\ldots; (t_n;())\ldots))}$; we will follow common
+convention and write $\lf{h\,t_1\ldots t_n}$ as a convenient shorthand
+for the atomic term $\lf{\lfroot{h}{(t_1; \ldots; (t_n;())\ldots)}}$;
+similarly, we will write ${\sf a}\,\lf{t_1\ldots t_n}$ as a shorthand
+for both atomic types and propositions $\lfroot{\sf
+  a}{(t_1; (\ldots; (t_n;())\ldots))}$.
 
 \subsection{Adequacy}
 
@@ -424,7 +452,7 @@ to future work.
 \section{Adequate encoding}
 
 The lambda
-cacluslus usually has application $e_1\,e_2$ (encoded in LF as ${\sf
+calculus usually has application $e_1\,e_2$ (encoded in LF as ${\sf
   app}\,\interp{e_1}\,\interp{e_2}$) and abstraction $\lambda x.e$
 (encoded in LF as ${\sf lam}\,\lambda x. \interp{e}$). 
 
@@ -434,6 +462,7 @@ cacluslus usually has application $e_1\,e_2$ (encoded in LF as ${\sf
 
 
 \section{The \sls~implementation}
+\label{sec:prototype}
 
 The prototype implementation of \sls~contains 
 Following CLF and the Celf implementation, we write ${\ocircle}A$ in
