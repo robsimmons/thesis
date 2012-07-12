@@ -738,13 +738,13 @@ and persistent propositions, respectively, omitting ``positive.''
 \end{figure}
 
 The atomic propositions $\zero$ and $A^+ \oplus B^+$ were excluded
-from \sls~because our development of steps and traces requires that
-all left rules for positive propositions have exactly one premise:
-${\zero}_L$ has zero premises and ${\oplus}_L$ has two. With the
-elimination of these propositions, the only rule that does not always
-have one premise is the left rule for unification, where the
-higher-order premise represents a potentially infinite number of
-premises:
+from \sls~because our development of patterns, steps, and traces
+requires that all left rules for positive propositions have exactly
+one premise: ${\zero}_L$ has zero premises and ${\oplus}_L$ has
+two. With the elimination of these propositions, the only rule that
+does not always have one premise is the left rule for unification,
+where the higher-order premise represents a potentially infinite
+number of premises:
 \[
 \infer[{\doteq}_L]
 {\foc{\Psi}{\frameoff{\Theta}{\lf{t} \doteq \lf{s}}}{U}}
@@ -796,23 +796,33 @@ general unifiers.
 \item Every variable bound by an existential quantifier 
 $\exists \lf{x}{:}p.\,A^+$ or a universal quantifier 
 $\forall \lf{x}{:}p.\,A^-$ can be associated with at most one 
-unification proposition $\lf{x} \doteq \lf{t}$, where $\lf{t}$ is an arbitrary 
-term, that appears in the same focusing
-phase as the quantifier. This means that 
+proposition $\lf{x} \doteq \lf{t}$, where $\lf{t}$ is an arbitrary 
+term that appears in the same focusing
+phase\footnote{This is what Andreoli calls a {\it monopole}.} 
+as the quantifier. 
+The proposition 
 $\forall \lf{x}.\, 
  \forall \lf{y}.\, {\downarrow}({\sf p}\,\lf{x}) 
    \lefti \lf{x} \doteq \lf{y} 
-   \lefti {\sf p}\,\lf{y}$ is allowed but
-$\forall \lf{x}.\,\forall \lf{y}.\,{\ocircle}(\lf{x} \doteq \lf{y})$ is not 
-($\ocircle$ breaks focus) and that 
-${\ocircle}(\exists \lf{x}. \lf{x} \doteq \lf{t})$ is allowed but
+   \lefti {\sf p}\,\lf{y}$ satisfies this condition but
+$\forall \lf{x}.\,\forall \lf{y}.\,{\ocircle}(\lf{x} \doteq \lf{y})$ does not 
+($\ocircle$ breaks focus), and the proposition 
+${\ocircle}(\exists \lf{x}. \lf{x} \doteq \lf{t})$ satisfies this condition
+but
 ${\ocircle}(\exists \lf{x}. 
   {\uparrow}(\lf{x} \doteq \lf{t} \lefti {\sf p}\,\lf{x}))$
-is not (${\uparrow}$ breaks focus). This restriction ensures that, if
+does not (${\uparrow}$ breaks focus).
+The proposition
+${\ocircle}(\exists \lf{x}.\, 
+\lf{x} \doteq \lf{t} \fuse \lf{x} \doteq \lf{t})$ 
+does not satisfy this condition because the introduced variable $\lf{x}$ is 
+associated with two different unifications. 
+
+This restriction ensures that, if
 the unification appears on the left, the left-hand side of the unification
 will always be a variable
 $\lf{x}$, meaning that $\lf{[t/x]}$ is always a most general unifier.
-This usage of unification amounts to little more than declaring a notational
+This usage of unification is essentially just a notational
 definition \cite{pfenning99algorithms}.
 \end{enumerate}
 \smallskip
