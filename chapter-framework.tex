@@ -23,21 +23,18 @@ presently described as Spine Form LF, a well-understood logical
 framework derived from the normal forms of the purely persistent type
 theory LF \cite{harper93framework}.
 
-After addressing our reasons for this non-standard decision in
-Section~\ref{sec:why-not-fully-dependent}, we will give a very basic
-crash course on LF and its metatheory. All the information here is
-standard and adequately presented between Harper, Honsell, and
-Plotkin's original presentation of LF \cite{harper93framework},
-Cervesato and Pfenning's discussion of spine form terms
-\cite{cervesato02linear}, Watkins et al.'s presentation of the
-canonical forms of CLF \cite{watkins02concurrent}, Harper and Licata's
-discussion of Canonical LF \cite{harper07mechanizing}, and Reed's
-spine form presentation of HLF \cite{reed09hybrid}. In particular, our
-presentation attempts to mimics Harper and Licata's presentation from
-\cite{harper07mechanizing}, except that we use a spine form
-representation of terms. Canonical term languages correspond to normal
-natural deduction proofs, whereas spine form term languages correspond
-to focused sequent calculus proofs.
+All the information here is standard and adequately presented between
+Harper, Honsell, and Plotkin's original presentation of LF
+\cite{harper93framework}, Cervesato and Pfenning's discussion of spine
+form terms \cite{cervesato02linear}, Watkins et al.'s presentation of
+the canonical forms of CLF \cite{watkins02concurrent}, Harper and
+Licata's discussion of Canonical LF \cite{harper07mechanizing}, and
+Reed's spine form presentation of HLF \cite{reed09hybrid}. In
+particular, our presentation attempts to mimics Harper and Licata's
+presentation from \cite{harper07mechanizing}, except that we use a
+spine form representation of terms. Canonical term languages
+correspond to normal natural deduction proofs, whereas spine form term
+languages correspond to focused sequent calculus proofs.
 
 It would be entirely consistent for us to appropriate Harper and
 Licata's Canonical LF presentation instead of presenting Spine Form
@@ -45,98 +42,24 @@ LF. Nevertheless, a spine-form presentation of canonical LF serves to
 make our presentation more uniform, as spines are used in the proof
 term language of \sls.
 
-\subsection{Why LF as a term language?}
-\label{sec:why-not-fully-dependent}
-
-The decision to use LF as a first-order domain of quantification
-rather than using a fully-dependent system is based on several
-considerations. First and foremost, this choice was sufficient for the
-purposes of this thesis. In fact, for the purposes of this thesis, we
-could used an even simpler term language of simply-typed LF
-\cite{pfenning08church}; two other logic programming interpretations
-of \sls-like frameworks, Lollimon \cite{lopez05monadic} and Ollibot
-\cite{pfenning09substructural}, were based on simply-typed term
-languages. Canonical LF and Spine Form LF are, at this point,
-well-understood enough that the additional overhead of fully
-dependently-typed terms is not a significant burden, and there are
-examples beyond the scope of this thesis where term dependency is
-useful.
-
-On a theoretical level, it is a significant simplification when we
-restrict ourselves to {\it any} typed term language with a reasonable
-notion of equality and substitution. Spine Form LF and Canonical LF
-are two examples; most conceivable simply-typed term languages would
-also suffice. It is the thesis of this and the previous two chapters
-that we can productively derive logical frameworks from focused
-presentations of logic, but this simple is complicated when we apply it
-to a dependent type theory like CLF that does not distinguish object
-terms and proof terms. CLF terms have a notion of {\it concurrent
-  equivalence} which is coarser the equivalence relation described by
-focusing alone, and we want \sls~proof terms to have a similar notion
-of equivalence. In this chapter we characterize concurrent equivalence
-in Section~\ref{XXX}, after completing our discussion of the framework
-and describing the proof term language.  In CLF, the framework's
-definition relies on term equality, and equality of terms must take
-concurrent equivalence into account, so concurrent equivalence of
-(proof) terms is conceptually prior to the logic itself. We conjecture
-that this complication is no great obstacle, but this thesis avoids
-the issue.
-
-On a practical level, there are advantages to using a well-understood
-term language. The \sls~prototype implementation
-(Section~\ref{sec:prototype}) uses the mature type reconstruction
-engine of Twelf. Schack-Nielsen's implementation of type
-reconstruction for Celf is complicated by the requirements of dealing
-with a substructural term language, and the user is required to add
-extra annotations to indicate persistent application and abstraction
-\cite{schacknielsen08celf}. In \sls~(and in many CLF encodings) the
-term language is intended to be persistent, so these extra annotations
-just clutter specifications.
-
-The restriction to a dependent type theory therefore does not come at
-the cost of great expressive power. Conversely, it is by no means
-clear that the addition of full CLF-like dependency comes with great
-expressive benefit. Even in LF and Twelf, many interesting
-specifications could be encoded in a two-level version of the
-language: a simply-typed object term language and a dependently-typed
-proof term language with first-order quantification over object
-terms. This restriction is sufficient for settings such as Harper's
-comprehensive survey of programming language design
-\cite{harper12practical},\footnote{Harper's metatheory also extends LF
-  by drawing a distinction between standard variables and nominal
-  parameters, but this is an orthogonal point.} and it is built in to
-the educational proof assistant SASyLF \cite{aldrich08sasylf}. In LF
-and Twelf, the ability to use full dependent types is critical in part
-because it allows us to express {\it metatheorems} -- theorems about
-the programming languages and logics we have encoded, like progress
-and preservation for a programming language or cut admissibility for a
-logic. But in substructural logical frameworks like Linear LF, full
-dependency has been found to be {\it insufficient} for expressing
-metatheorems, which motivated the development of Hybrid LF as a
-framework for writing metatheorems about LF \cite{reed09hybrid}. The
-implementation of Hybrid LF effectively creates a stratification like
-\sls's -- full LF as an object term language, a linear logical
-framework with first-order quantification over object language terms,
-and a hybrid language that can inspect both LF object terms and linear
-proof terms.
 
 \subsection{Core syntax}
 
 The syntax of Spine Form LF is extended in two places to handle \sls:
 rules ${\sf r} : A^-$ in the signature contain negative \sls~types
 $A^-$ (though it would be possible to separate out the LF portion of
-signatures from the \sls~rules). We also add four additional kinds,
-${\sf prop}$, which classifies negative ordered atomic types $p^-$,
-${\sf prop}\,{\sf ord}$, which classifies positive ordered atomic
-types $p^+$, ${\sf prop}\,{\sf lin}$, which classifies positive
-linear/mobile/ephemeral atomic types $p^+_\meph$, and ${\sf
-  prop}\,{\sf ord}$, which classifies positive persistent atomic types
-$p^+_\mpers$. 
-
-Other than the extra kinds classifying atomic \sls~propositions, kinds
-$\kappa$ are otherwise exactly as they are in other presentations of
-LF; kinds classify types $\tau$, and types $\tau$ classify normal
-terms $\lf{t}$ and spines $\lf{\spi}$.
+signatures from the \sls~rules). % We also add four additional kinds,
+% ${\sf prop}$, which classifies negative ordered atomic types $p^-$,
+% ${\sf prop}\,{\sf ord}$, which classifies positive ordered atomic
+% types $p^+$, ${\sf prop}\,{\sf lin}$, which classifies positive
+% linear/mobile/ephemeral atomic types $p^+_\meph$, and ${\sf
+%   prop}\,{\sf ord}$, which classifies positive persistent atomic types
+% $p^+_\mpers$. 
+% Other than the extra kinds classifying atomic \sls~propositions, kinds
+% $\kappa$ are otherwise exactly as they are in other presentations of
+% LF; kinds classify types $\tau$, and types $\tau$ classify normal
+% terms $\lf{t}$ and spines $\lf{\spi}$. Kinds $\kappa$ and types $\tau$
+% are both treated as syntactic refinements of {\it classifiers} $\nu$. 
 \begin{align*}
 & \mbox{Signatures} & \Sigma & ::= \cdot 
   \mid \Sigma, \lf{\sf c} : \tau
@@ -146,13 +69,12 @@ terms $\lf{t}$ and spines $\lf{\spi}$.
 & \mbox{Variable contexts} & \Psi & ::= \cdot
   \mid \Psi, \lf{x} {:} \tau 
 \\
-& \mbox{Kinds} & \kappa & ::= \lfpi{x}{\tau}{\kappa} \mid {\sf type}
+& \mbox{Classifiers} & \nu & ::= \lfpi{x}{\nu}{\nu'} \mid {\sf type}
   \mid {\sf prop}
   \mid {\sf prop}\,{\sf ord}
   \mid {\sf prop}\,{\sf lin}
   \mid {\sf prop}\,{\sf pers}
-\\
-& \mbox{Types} & \tau & ::= \lfpi{x}{\tau}{\tau'} \mid \lfroot{\sf a}{\spi}
+  \mid \lfroot{\sf a}{\spi}
 \\
 & \mbox{Heads} & \lf{h} & ::= \lf{x} \mid \lf{\sf c}
 \\
@@ -160,42 +82,1024 @@ terms $\lf{t}$ and spines $\lf{\spi}$.
   \mid \lf{\lfroot{h}{\spi}}
 \\
 & \mbox{Spines} & \lf{\spi} & ::= \lf{t; \spi} \mid \lf{\lfnil}
+\\
+& \mbox{Substitutions} & \lf{\sigma} & ::= \lf{\cdot}
+  \mid \lf{t/x, \sigma}
+  \mid \lf{y/\!\!/x, \sigma}
 \end{align*}
 
-According to the typing rules, a lambda $\lf{\lambda x.t}$ is
-classified by a dependent type $\lfpi{x}{\tau}{\tau'}$, whereas an
-atomic term $\lf{\lfroot{h}{\spi}}$ is classified by an atomic type
-$\lfroot{\sf a}{\spi'}$. LF spines $\lf\spi$ are just sequences of
-terms $\lf{(t_1; (\ldots; (t_n;())\ldots))}$; we will follow common
-convention and write $\lf{h\,t_1\ldots t_n}$ as a convenient shorthand
-for the atomic term $\lf{\lfroot{h}{(t_1; \ldots; (t_n;())\ldots)}}$;
-similarly, we will write ${\sf a}\,\lf{t_1\ldots t_n}$ as a shorthand
-for both atomic types and propositions $\lfroot{\sf
-  a}{(t_1; (\ldots; (t_n;())\ldots))}$.
+\noindent
+Classifiers $\nu$ can be divided into three refinements.  Types $\tau$
+are either function types $\lfpi{x}{\tau}{\tau'}$ or base types
+$\lfroot{\sf a}{\spi}$.  Kinds $\kappa$ are either families
+$\lfpi{x}{\tau}{\kappa}$ or one of the base kinds: ${\sf prop}$, ${\sf
+  prop}\,{\sf ord}$, ${\sf prop}\,{\sf lin}$, or ${\sf prop}\,{\sf
+  pers}$. Atomic classifiers $p$ have the form $\lfroot{\sf a}{\spi}$;
+they can be atomic types of LF or atomic propositions of \sls.
+
+LF spines $\lf\spi$ are just sequences of terms $\lf{(t_1; (\ldots;
+  (t_n;())\ldots))}$; we will follow common convention and write
+$\lf{h\,t_1\ldots t_n}$ as a convenient shorthand for the atomic term
+$\lf{\lfroot{h}{(t_1; \ldots; (t_n;())\ldots)}}$; similarly, we will
+write ${\sf a}\,\lf{t_1\ldots t_n}$ as a shorthand for atomic
+classifiers $\lfroot{\sf a}{(t_1;
+  (\ldots; (t_n;())\ldots))}$. % This shorthand evokes a canonical-forms
+% presentation, as an atomic term, type, or proposition is a head
+% $\lf{h}$ or ${\sf a}$ with the terms $\lf{t_1\ldots t_n}$ applied to
+% it.
+
+\subsection{Simple types and hereditary substitution}
+
+In addition to LF types like $\lfpi{x}{(\lfpi{z}{(\lfroot{\sf
+      a1}{\spi_1})}{\,(\lfroot{\sf
+      a2}{\spi_2})})}{\,\lfpi{y}{(\lfroot{\sf
+      a3}{\spi_3})}{\,(\lfroot{\sf a4}{\spi_4})}}$, both Canonical LF
+and Spine Form LF take {\it simple types} into consideration. The
+simple type corresponding to the type above is $({\sf a1} \supset {\sf
+  a2}) \supset {\sf a3} \supset {\sf a4}$, where ${\supset}$
+associates to the right. The simple type associated with
+$\tau$ can is given by the function ${\mid}\tau{\mid}^- = \tau_s$, where
+${\mid}\lfroot{\sf a}{\spi}{\mid}^- = {\sf a}$ and
+${\mid}\lfpi{x}{\tau}{\tau'}{\mid}^- = {\mid}\tau{\mid}^- \supset
+{\mid}\tau'{\mid}^-$. 
+
+
+\begin{figure}
+\begin{align*}
+\fbox{$\lf{\sigma}(\lf{\spi})$}&
+&
+\fbox{$\lf{\sigma}(\lf{t'})$}
+\\
+\lf{\sigma}(\lf{t'; \spi}) 
+ & = \lf{\no{\lf{\sigma}(\lf{t'})}; \no{\lf{\sigma}(\lf{\spi})}} &
+\lf{\sigma}(\lf{\lambda y.t'}) 
+ & = \lf{\lambda y.\,\no{\lf{(\sigma, y/\!\!/y)}(\lf{t'})}}
+ & (\lf{y} \# \lf{\sigma})
+\\
+\lf{\sigma}\lfnil 
+ & = \lfnil &
+\lf{\sigma}(\lf{\lfroot{x}{\spi}}) 
+ & = \subst{\lf t}{\no{\lf{\sigma}(\lf{\spi})}}
+      & \lf{t/x} \in \lf{\sigma} 
+\\
+& &
+\lf{\sigma}(\lf{\lfroot{x}{\spi}}) 
+ & = \lf{\lfroot{y}{\no{\lf{\sigma}(\lf{\spi})}}} 
+      & \lf{y/\!\!/x} \in \lf{\sigma} 
+\\
+& &
+\lf{\sigma}(\lf{\lfroot{\sf c}{\spi}}) 
+ & = \lf{\lfroot{\sf c}{\no{\lf{\sigma}(\lf{\spi})}}} 
+\end{align*}\begin{align*}
+\fbox{$[{\lf{t}}/{\lf{x}}]{\nu}$} &
+\\
+[\lf{t}/\lf{x}](\lfpi{y}{\nu}{\nu'})
+ & = \lfpi{y}{[\lf{t}/\lf{x}]\nu}{[\lf{t}/\lf{x}]\nu'}
+     \qquad (\lf x \neq \lf y) 
+\\
+[\lf{t}/\lf{x}]({\sf type})
+  & = {\sf type}
+\\ 
+[\lf{t}/\lf{x}]({\sf prop}) 
+ & = {\sf prop} 
+\\
+[\lf{t}/\lf{x}]({\sf prop}\,{\sf ord}) 
+ & = {\sf prop}\,{\sf ord} 
+\\
+[\lf{t}/\lf{x}]({\sf prop}\,{\sf lin}) 
+ & = {\sf prop}\,{\sf lin} 
+\\
+[\lf{t}/\lf{x}]({\sf prop}\,{\sf pers}) 
+ & = {\sf prop}\,{\sf pers} 
+\\
+[\lf{t}/\lf{x}](\lfroot{\sf a}{\spi}) 
+ & = \lfroot{\sf a}{\no{\rsubst{\lf{t}}{\lf{x}}{\lf{\spi}}}} 
+\end{align*}
+\caption{Simultaneous substitution on terms, spines, and classifiers}
+\label{fig:simsubst}
+\end{figure}
+
+Variables and constants can be treated as having an intrinsic simple
+type; these intrinsic simple types are sometimes written explicitly as
+annotations $\lf{x}^{\tau_s}$ or $\lf{\sf c}^{\tau_s}$ (see, for
+example, \cite{pfenning08church}), but we will leave them implicit.
+An atomic term $\lf{h\,t_1\ldots t_n}$ must have an an simple atomic
+type ${\sf a}$. This means that the head $\lf h$ must have simple type
+$\tau_{s1} \supset \ldots \supset \tau_{sn} \supset {\sf a}$ and each
+$\lf{t_i}$ much have simple type $\tau_{si}$. Similarly, a lambda term
+$\lf{\lambda x. t}$ must have simple type $\tau_s \supset \tau_s'$
+where $\lf x$ is a variable with simple type $\tau_s$ and $\lf t$ has
+simple type $\tau_s'$.  
+
+Simple types, which are treated with more care elsewhere care
+elsewhere \cite{harper07mechanizing,reed09hybrid}, are critical
+because they allow us to define hereditary substitution in
+Figure~\ref{fig:lf-hsubst}. Spine Form LF terms correspond to the
+proof terms for a focused presentation of minimal logic, and
+hereditary substitution $\rsubst{\lf t}{\lf x}{\lf{t'}}$, which is
+implicitly indexed by the simple type $\tau_s$ of $\lf t$ and $\lf x$,
+is the computational content of cut admissibility on these proof
+terms. 
+
+\subsection{Judgments}
+
+Hereditary substitution is necessary to define simultaneous
+substitution into types and terms in Figure~\ref{fig:simsubst}. We treat
+$[\lf{t}/\lf{x}]$ as a simultaneous substitution that acts as the
+identity on all variables except for $\lf{x}$; this 
+notation is used
+in the definition of LF typing in in Figure~\ref{fig:lf-form}, which
+is adapted to Spine Form LF from the Canonical LF presentation in
+\cite{harper07mechanizing}. The judgments 
+The
+judgments $\lf{x}\#\lf{\sigma}$, $\lf{x}\#\Psi$, $\lf{\sf
+  c}\#\Sigma$, ${\sf a}\#\Sigma$, and ${\sf r}\#\Sigma$ assert that
+the relevant variable and constant does not already appear in the
+context $\Psi$ (as a binding $\lf{x}{:}\tau$), the signature $\Sigma$
+(as a declaration ($\lf{\sf c} : \tau$, ${\sf a} : \nu$, or 
+${\sf r} : A^-$), or the substitution
+$\lf{\sigma}$ (as a binding $\lf{t/x}$ or \mbox{$\lf{y/\!\!/x}$}). 
+
+\begin{figure}
+\fbox{$\vdash_\subord \Sigma\,{\sf sig}$}\vspace{-10pt}
+\[
+\infer
+{\vdash_\subord \cdot\,{\sf sig} \mathstrut}
+{}
+\quad
+\infer
+{\vdash_\subord (\Sigma, \lf{\sf c} : \tau)\,{\sf sig} \mathstrut}
+{\vdash_\subord \Sigma\,{\sf sig} 
+ &
+ \cdot \vdash_{\Sigma,\subord} \tau\,{\sf type}
+ &
+ \tau \prec_\subord \tau
+ &
+ \lf{\sf c} \# \Sigma \mathstrut}
+\]
+\[
+\infer
+{\vdash_\subord (\Sigma, {\sf a} : \kappa)\,{\sf sig} \mathstrut}
+{\vdash_\subord \Sigma\,{\sf sig}
+ &
+ \vdash_{\Sigma, \subord} \kappa \,{\sf kind}
+ &
+ {\sf a} \sqsubset_\subord \kappa 
+ &
+ {\sf a} \# \Sigma\mathstrut}
+\quad
+\infer
+{\vdash_\subord (\Sigma, {\sf r} : A^-)\,{\sf sig} \mathstrut}
+{\vdash_\subord \Sigma\,{\sf sig}
+ &
+ \vdash_{\Sigma, \subord} A^- \,{\sf prop}^-
+ &
+ {\sf r} \# \Sigma \mathstrut}
+\]
+
+\medskip
+\fbox{$\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$} -- presumes
+  $\vdash_{\subord} \Sigma\,{\sf sig}$\vspace{-10pt}
+\[
+\infer
+{\vdash_{\Sigma,\subord} \cdot\,{\sf ctx} \mathstrut}
+{}
+\quad
+\infer
+{\vdash_{\Sigma,\subord} (\Psi, \lf{x}{:}\tau)\,{\sf ctx} \mathstrut}
+{\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}
+ &
+ \Psi \vdash_{\Sigma, \subord} \tau\,{\sf type}
+ &
+ x \# \Psi}
+\]
+
+\medskip
+\fbox{$\Psi \vdash_{\Sigma,\subord} \kappa\,{\sf kind}$} -- presumes
+  $\vdash_{\Sigma, \subord} \Psi\,{\sf ctx}$
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} (\lfpi{x}{\tau}{\kappa})\,{\sf kind} \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} \tau\,{\sf type}
+ &
+ \Psi, \lf{x}{:}\tau \vdash_{\Sigma,\subord} \kappa\,{\sf kind}}
+\quad
+\infer{\Psi \vdash_{\Sigma,\subord} {\sf type}\,{\sf kind} \mathstrut}{}
+\quad
+\infer{\Psi \vdash_{\Sigma,\subord} {\sf prop}\,{\sf kind} \mathstrut}{}
+\]
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} ({\sf prop}\,{\sf ord})\,{\sf kind}\mathstrut}{}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} ({\sf prop}\,{\sf lin})\,{\sf kind}\mathstrut}{}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} ({\sf prop}\,{\sf pers})\,{\sf kind}\mathstrut}{}
+\]
+
+\medskip
+\fbox{$\Psi \vdash_{\Sigma,\subord} \tau\,{\sf type}$} -- presumes
+  $\vdash_{\Sigma, \subord} \Psi\,{\sf ctx}$
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord}(\lfpi{x}{\tau}{\tau'})\,{\sf type} \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} \tau\,{\sf type}
+ &
+ \Psi, \lf{x}{:}\tau \vdash_{\Sigma,\subord} \tau'\,{\sf type}
+ &
+ \tau \preceq_\subord \tau' \mathstrut}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord}(\lfroot{\sf a}{\spi})\,{\sf type} \mathstrut}
+{a{:}\kappa \in \Sigma
+ &
+ \Psi, [\kappa] \vdash_{\Sigma,\subord} \lf{\spi} : {\sf type}
+ \mathstrut}
+\]
+
+\medskip
+\fbox{$\Psi \vdash_{\Sigma,\subord} t : \tau$} -- presumes 
+  $\Psi \vdash_{\Sigma,\subord} \tau\,{\sf type}$
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} \lf{\lambda x.t} : \lfpi{x}{\tau}{\tau'}\mathstrut}
+{\Psi, \lf{x}{:}\tau \vdash_{\Sigma,\subord} \lf{t} : \tau'\mathstrut}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} \lf{\lfroot{\sf c}{\spi}} : \lfroot{\sf a}{\spi'}
+ \mathstrut}
+{\lf{\sf c} : \tau \in {\Sigma}
+ &
+ \Psi; [\tau] \vdash_{\Sigma,\subord} \spi : \tau'
+ &
+ \tau' = \lfroot{\sf a}{\spi'}\mathstrut}
+\]
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} \lf{\lfroot{x}{\spi}} : \lfroot{\sf a}{\spi'}
+ \mathstrut}
+{\lf{x} {:} \tau \in {\Psi}
+ &
+ \Psi; [\tau] \vdash_{\Sigma,\subord} \spi : \tau'
+ &
+ \tau' = \lfroot{\sf a}{\spi'}\mathstrut}
+\]
+
+\medskip
+\fbox{$\Psi, [\nu] \vdash_{\Sigma,\subord} \lf{\spi} : \nu_0$} --
+presumes that either $\Psi \vdash_{\Sigma,\subord} \nu\, {\sf type}$
+or that $\Psi \vdash_{\Sigma,\subord} \nu\, {\sf kind}$
+\[
+\infer
+{\Psi, [\nu] \vdash_{\Sigma,\subord} \lfnil : \nu \mathstrut}
+{}
+\quad
+\infer
+{\Psi, [\lfpi{x}{\tau}{\nu}] \vdash_{\Sigma,\subord} \lf{t; \spi} : \nu_0
+ \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} \lf{t} : \tau
+ &
+ \lf{[t/x]}\nu = \nu'
+ &
+ \Psi, [\nu'] \vdash_{\Sigma,\subord} \lf{\spi} : \nu_0 \mathstrut}
+\]
+
+\medskip
+\fbox{$\Psi \vdash \lf{\sigma} : \Psi'$} -- presumes
+ $\vdash_{\Sigma,\subord} \Psi, \Psi'$ \vspace{-10pt}
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} \cdot : \cdot \mathstrut}
+{}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} (\lf{\sigma, t/x}) : \Psi', \lf{x}{:}\tau
+  \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} \lf{t} : \lf{\sigma}\tau 
+ &
+ \Psi \vdash_{\Sigma,\subord} \lf{\sigma} : \Psi' 
+  \mathstrut}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} (\lf{\sigma, y/\!\!/x}) : \Psi', \lf{x}{:}\tau
+  \mathstrut}
+{\lf{y}{:}\lf{\sigma}\tau \in \Psi
+ &
+ \Psi \vdash_{\Sigma,\subord} \lf{\sigma} : \Psi'}
+\]
+
+\caption{LF formation judgments.}
+\label{fig:lf-form}
+\end{figure}
+
+All the judgments in Figure~\ref{fig:lf-form} are indexed by a
+transitive {\it subordination relation} $\subord$, similar to the one
+introduced by Virga in \cite{virga99higherorder}. We treat $\subord$
+as a binary relation on type family constants.  Let ${\sf head}(\tau)
+= {\sf a}$ if $\tau =
+\lfpi{x_1}{\tau_{1}}{\,.\,.\lfpi{x_{m}}{\tau_{m}}{\,\lfroot{\sf
+      a}{\spi}}}$. The signature formation operations depend on two
+judgments. The first, ${\sf a} \sqsubset_\subord \kappa$, relates type
+family constants to types. It is always the case that $\kappa =
+\lfpi{x_1}{\tau_1}{\ldots\lfpi{x_n}{\tau_n}{\sf type}}$.  The judgment
+${\sf a} \sqsubset_\subord \kappa$ holds if $({\sf head}(\tau_i), {\sf
+  a}) \in \subord$ for $1 \leq i \leq n$. The second judgment used in
+signature formation, $\tau \prec \tau'$, holds if $({\sf head}(\tau),
+{\sf head}(\tau')) \in \subord$, and the judgment $\tau \preceq \tau'$
+used in type formation is the transitive closure of this relation.
+
+There are a number of well-formedness theorems that we need to
+consider, such as the fact that substitutions compose in a
+well-behaved way and that hereditary substitution is always
+well-typed.  However, as these theorems are adequately covered
+elsewhere, we will proceed with using LF as a term language and will 
+treat term-level operations like substitution somewhat informally.
 
 \subsection{Adequacy}
 
-$\interp{\obj{\lambda x.e}} = \lf{{\sf lam}\,\lambda x. \interp{\obj{e}}}$
+{\it Adequacy} was the name given by Harper, Honsell, and Plotkin to the
+methodology of connecting the inductive definitions we write in paper
+to the canonical forms of a particular type family in LF. Consider,
+as a standard example, the untyped lambda calculus, which is generally
+specified by a BNF grammar such as the following:
+\[
+\obj{e} ::= \obj{x} \mid \obj{\lambda x.e} \mid \obj{e_1\,e_2}
+\]
+We can adequately encode this language of terms into LF (with a
+subordination relation $\subord$ such that $({\sf exp}, {\sf
+  exp}) \in \subord$) by giving the following signature:
+\begin{align*}
+\Sigma & = \cdot, 
+\\
+ & ~\quad {\sf exp} : {\sf type}, 
+\\
+ & ~\quad \lf{\sf app} : 
+     \lfpi{x_1}{{\sf exp}}{\,\lfpi{x_2}{\sf exp}{\,\sf exp}},
+\\
+ & ~\quad \lf{\sf lam} : 
+     \lfpi{x_1}{(\lfpi{x_2}{\sf exp}{\,\sf exp})}{\,\sf exp}
+\end{align*}
+Note that the variables $\lf{x_1}$ and $\lf{x_2}$ are bound by
+$\Pi$-binders in the declaration of ${\sf app}$ and ${\sf lam}$ but
+never used. The usual convention is to abbreviate
+$\lfpi{x}{\tau}{\tau'}$ as $\tau \rightarrow \tau'$ when $\lf{x}$ is
+not free in $\tau'$, which would give $\lf{\sf app}$ type ${\sf exp}
+\rightarrow {\sf exp} \rightarrow {\sf exp}$ and $\lf{\sf lam}$ type
+$({\sf exp} \rightarrow {\sf exp}) \rightarrow {\sf exp}$.
 
-\section{Carving out a logical framework}
+\bigskip
+\begin{theorem}[Adequacy for terms]
+  Up to standard $\alpha$-equivalence, there is a bijection between
+  expressions $\obj{e}$ (with free variables in the set
+  $\{\obj{x_1},\ldots,\obj{x_n}\}$) and Spine Form LF terms $\lf{t}$ such
+  that $\lf{x_1}: \mathsf{exp}, \ldots, \lf{x_n}:\mathsf{exp} \vdash
+  \lf{t} : \mathsf{exp}$. 
+\end{theorem}
+
+\begin{proof}
+By induction on the structure of the inductive definition of $\obj{e}$
+in the forward direction and by induction on the structure of 
+terms $\lf{t}$ with type ${\sf exp}$ in the reverse direction.
+\end{proof}
+
+We express the constructive content of this theorem as a bijective
+function $\interp{e} = \lf{t}$ from object language terms $\obj{e}$ to
+representations LF terms $\lf{t}$ of type ${\sf exp}$. If we had also
+defined substitution $\obj{[e/x]e'}$ on terms, it would be necessary
+to show that the bijection is compositional: that is, that
+$[\interp{e}/\lf{x}]\interp{e'} = \interp{[e/x]e'}$.  Note that
+adequacy critically depends on the context having the form
+$\lf{x_1}{:}{\sf exp},\ldots,\lf{x_n}{:}{\sf exp}$. If we had a
+context with a variable $\lf{y}{:}({\sf exp} \rightarrow {\sf exp})$,
+then we could form a term $\lf{y\,({\sf lam}\,\lambda x. x)}$ with
+type ${\sf exp}$ that does {\it not} adequately encode any term
+$\obj{e}$ in the untyped lambda calculus.
+
+One of the reasons subordination is important in practice is that it
+allows us to consider the adequate encoding of expressions in contexts
+$\Psi$ that have other variables $\lf{x}{:}\tau$ as long as $({\sf
+  head}(\tau),{\sf exp}) \notin \subord$. If $\Psi,\lf{x}{:}\tau
+\vdash_{\Sigma,\subord} \lf{t} : {\sf exp}$ and $\tau
+\not\preceq_\subord {\sf exp}$, then $\lf{x}$ cannot be free in
+$\lf{t}$, so $\Psi \vdash_{\Sigma,\subord} \lf{t} : {\sf exp}$ holds as
+well. By iterating this procedure, it may be possible to strengthen a
+context $\Psi$ into one of the form $\lf{x_1}{:}{\sf
+  exp},\ldots,\lf{x_n}{:}{\sf exp}$, in which case we can conclude
+that $\lf t = \interp{e}$ for some untyped lambda calculus term $\obj
+e$.
+
+\begin{figure}[t]
+\fbox{$\Psi \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+$} -- presumes
+  $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} \lfroot{\sf a}{\spi}\,{\sf prop}^+ \mathstrut}
+{{\sf a}{:}\kappa \in \Sigma
+ &
+ \Psi, [\kappa] \vdash_{\Sigma,\subord} \lf{\spi} : {\sf prop}\,{\sf ord} \mathstrut}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} \lfroot{\sf a}{\spi}\,{\sf prop}^+ \mathstrut}
+{{\sf a}{:}\kappa \in \Sigma
+ &
+ \Psi, [\kappa] \vdash_{\Sigma,\subord} \lf{\spi} : {\sf prop}\,{\sf lin} \mathstrut}
+\]
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} \lfroot{\sf a}{\spi}\,{\sf prop}^+ \mathstrut}
+{{\sf a}{:}\kappa \in \Sigma
+ &
+ \Psi, [\kappa] \vdash_{\Sigma,\subord} \lf{\spi} : {\sf prop}\,{\sf pers} \mathstrut}
+\]
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} {\downarrow}A^-\,{\sf prop}^+ \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} A^-\,{\sf prop}^- \mathstrut}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} {\gnab}A^-\,{\sf prop}^+ \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} A^-\,{\sf prop}^- \mathstrut}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} {!}A^-\,{\sf prop}^+ \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} A^-\,{\sf prop}^- \mathstrut}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} \one\,{\sf prop}^+ \mathstrut}
+{}
+\] 
+\[
+\infer[*]
+{\Psi \vdash_{\Sigma,\subord} A^+ \fuse B^+\,{\sf prop}^+ \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+ 
+ &
+ \Psi \vdash_{\Sigma,\subord} B^+\,{\sf prop}^+  \mathstrut}
+\quad
+\infer[*]
+{\Psi \vdash_{\Sigma,\subord} \exists \lf{x}{:}\tau. A^+\,{\sf prop}^+ \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} \tau\,{\sf type}
+ &
+ \Psi, \lf{x}{:}\tau \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+ \mathstrut}
+\] 
+\[
+\infer[*]
+{\Psi \vdash_{\Sigma,\subord} \lf{t} \doteq_\tau \lf{s}\,{\sf type}}
+{\Psi \vdash_{\Sigma,\subord} \tau\,{\sf type}
+ &
+ \Psi \vdash_{\Sigma,\subord} \lf{t} : \tau
+ &
+ \Psi \vdash_{\Sigma,\subord} \lf{s} : \tau}
+\]
+
+\medskip
+\fbox{$\Psi \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-$} -- presumes
+  $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} \lfroot{\sf a}{\spi}\,{\sf prop}^- \mathstrut}
+{{\sf a}{:}\kappa \in \Sigma
+ &
+ \Psi, [\kappa] \vdash_{\Sigma,\subord} \lf{\spi} : {\sf prop} \mathstrut}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} {\ocircle}A^+\,{\sf prop}^- \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} A^+ : {\sf prop}^+ \mathstrut}
+\]
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} A^+ \lefti B^-\,{\sf prop}^- \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+ 
+ &
+ \Psi \vdash_{\Sigma,\subord} B^-\,{\sf prop}^-  \mathstrut}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} A^+ \righti B^-\,{\sf prop}^- \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+ 
+ &
+ \Psi \vdash_{\Sigma,\subord} B^-\,{\sf prop}^-  \mathstrut}
+\] 
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} A^- \with B^-\,{\sf prop}^- \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} A^-\,{\sf prop}^- 
+ &
+ \Psi \vdash_{\Sigma,\subord} B^-\,{\sf prop}^-  \mathstrut}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} \forall \lf{x}{:}\tau. A^-\,{\sf prop}^- \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} \tau\,{\sf type}
+ &
+ \Psi, \lf{x}{:}\tau \vdash_{\Sigma,\subord} A^-\,{\sf prop}^- \mathstrut}
+\] 
+\caption{\sls~proposition formation judgments}
+\label{fig:sls-propform}
+\end{figure}
 
 
-Talk about Jason's thesis \cite{}. Talk about the pain of concurrent 
-equality \cite{}.
+\section{The logical framework \sls}
+
+In this section, we will describe a restricted set of polarized
+\ollll~propositions and focused \ollll~proof terms that make up the
+logical framework \sls. For the remainder of the thesis, we will work
+exclusively with the following positive and negative
+\sls~propositions, which are a syntactic refinement of the positive
+and negative propositions of polarized \ollll:
+\begin{align*}
+A^+, B^+, C^+ & ::= p^+ \mid p^+_\meph \mid p^+_\mpers \mid {\downarrow}A^-
+  \mid {\gnab}A^- \mid {!}A^- \mid \one \mid A^+ \fuse B^+
+  \mid \exists \lf{x}{:}\tau.A^+ \mid \lf{t} \doteq_\tau \lf{s}
+\\
+A^-, B^-, C^- & ::= p^- \mid {\ocircle}A^+ \mid A^+ \lefti B^- 
+  \mid A^+ \righti B^- \mid A^- \with B^-
+  \mid \forall \lf{x}{:}\tau.A^-
+\end{align*}
+%Aside from the type annotation $\tau$ on unification $\lf{t}
+%\doteq_\tau \lf{s}$ and on the quantifiers $\forall \lf{x}{:}\tau. A^-$
+%and $\exists \lf{x}{:}\tau. A^+$, which we will in general leave implicit,
+%this is exactly a refinement of the  
+%Notably missing from this refinement are
+%upshifts ${\uparrow}A^+$ and right-permeable atomic propositions
+%$p^-_\mlax$.
+The formation judgments for \sls~types are given in
+Figure~\ref{fig:sls-propform}, and these are used to specify
+the formation of stable, inverting, and in-focus \sls~contexts
+in Figure~\ref{fig:sls-ctxform}. 
+
+Positive ordered atomic propositions
+$p^+$ are atomic classifiers ${\sf a}\,\lf{t_1}\ldots\lf{t_n}$ with
+kind ${\sf prop}\,{\sf ord}$, positive linear atomic propositions
+$p^+_\meph$ and $p^+_\mpers$ are (respectively) atomic classifiers
+with kind ${\sf prop}\,{\sf lin}$ and ${\sf prop}\,{\sf pers}$, and
+negative ordered atomic propositions $p^-$ are atomic classifiers
+with kind ${\sf prop}$.  From this point on,
+we will unambiguously refer to atomic propositions $p^-$ as negative
+atomic propositions, omitting ``ordered.'' Similarly, we will refer to
+atomic propositions $p^+$, $p^+_\meph$, and $p^+_\mpers$ collectively
+as positive atomic propositions but individually as ordered, linear,
+and persistent propositions, respectively, omitting ``positive.''
+(``Mobile'' and ``ephemeral'' will continue to be used as synonyms for
+``linear.'')
+
+\begin{figure}[t]
+\fbox{$\Psi \vdash_{\Sigma,\subord} T\,{\sf left} \mathstrut$} -- presumes
+  $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} (\islvl{A^-})\,{\sf left} \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} A^-\,{\sf prop}^- \mathstrut}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} 
+   (\istrue{\susp{\lfroot{\sf a}{\spi}}})\,{\sf left} \mathstrut}
+{{\sf a} : \kappa \in \Sigma
+ & 
+ \Psi, [\kappa] \vdash_{\Sigma,\subord} \lf{\spi} : {\sf prop}\,{\sf ord}
+ \mathstrut}
+\]
+\[
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} 
+   (\iseph{\susp{\lfroot{\sf a}{\spi}}})\,{\sf left} \mathstrut}
+{{\sf a} : \kappa \in \Sigma
+ & 
+ \Psi, [\kappa] \vdash_{\Sigma,\subord} \lf{\spi} : {\sf prop}\,{\sf lin}
+ \mathstrut}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} 
+   (\ispers{\susp{\lfroot{\sf a}{\spi}}})\,{\sf left} \mathstrut}
+{{\sf a} : \kappa \in \Sigma
+ & 
+ \Psi, [\kappa] \vdash_{\Sigma,\subord} \lf{\spi} : {\sf prop}\,{\sf pers}
+ \mathstrut}
+\]
+
+\medskip
+\fbox{$\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable} \mathstrut$} -- presumes
+  $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} \cdot\,{\sf stable} \mathstrut}
+{}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} (\Delta, x{:}T)\,{\sf stable} \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}
+ &
+ \Psi \vdash_{\Sigma,\subord} T\,{\sf left}}
+\]
+
+\medskip
+\fbox{$\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf inv} \mathstrut$} -- presumes
+  $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} \cdot\,{\sf inv} \mathstrut}
+{}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} (\Delta, x{:}T)\,{\sf inv} \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf inv}
+ &
+ \Psi \vdash_{\Sigma,\subord} T\,{\sf left}}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} (\Delta, x{:}\istrue{A^+})\,{\sf inv} \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf inv}
+ &
+ \Psi \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+}
+\]
+
+\medskip
+\fbox{$\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf infoc} \mathstrut$} -- presumes
+  $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} \cdot\,{\sf infoc} \mathstrut}
+{}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} (\Delta, x{:}T)\,{\sf infoc} \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf infoc}
+ &
+ \Psi \vdash_{\Sigma,\subord} T\,{\sf left}}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} (\Delta, x{:}[A^-])\,{\sf infoc} \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}
+ &
+ \Psi \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-}
+\]
+\caption{\sls~context formation judgments}
+\label{fig:sls-ctxform}
+\end{figure}
+
+The atomic propositions $\zero$ and $A^+ \oplus B^+$ were excluded
+from \sls~because our development of steps and traces requires that
+all left rules for positive propositions have exactly one premise:
+${\zero}_L$ has zero premises and ${\oplus}_L$ has two. With the
+elimination of these propositions, the only rule that does not always
+have one premise is the left rule for unification, where the
+higher-order premise represents a potentially infinite number of
+premises:
+\[
+\infer[{\doteq}_L]
+{\foc{\Psi}{\frameoff{\Theta}{\lf{t} \doteq \lf{s}}}{U}}
+{\forall(\Psi' \vdash \lf{\sigma} : \Psi).
+ &
+ \lf{\sigma t} = \lf{\sigma s}
+ &
+ \longrightarrow
+ &
+ \foc{\Psi'}{\tackon{\lf{\sigma}\Theta}{\cdot}}{\lf{\sigma} U}
+ }
+\]
+Recall from our discussion of 
+in Section~\ref{sec:firstorderlogic} that, when $\lf{t}$ and
+$\lf{s}$ have a most general unifier, this rule is equivalent to the following
+rule, which we can associate with the proof term $\sigma.N$:
+\[
+\infer[{\doteq}_L]
+{\foc{\Psi}{\frameoff{\Theta}{\lf{t} \doteq \lf{s}}}{U}}
+{\Psi' \vdash \lf{\sigma} : \Psi 
+  ~ \mbox{is a most general unifier of $t$ and $s$}
+ &
+ \foc{\Psi'}{\tackon{\lf{\sigma}\Theta}{\cdot}}{\lf{\sigma} U}}
+\]
+The pattern fragment of higher-order logic defines a syntactic
+criteria under which unification problems either have no solution or a
+single, most general solution \cite{miller91unification}. This is not
+enough for our purposes, because we need ${\doteq}_L$ to always have
+exactly one premise. We therefore must restrict the structure of terms
+so that there is always a one most general unifier.
+
+The requirement that unification always have one most general solution
+is managed by placing an extra restriction on the $\forall$, 
+$\exists$, and $\doteq$ formation rules, indicated by asterisks in
+Figure~\ref{fig:sls-propform}. We will restrict unification to 
+base LF types, and treat unification as well-formed only when one 
+of two conditions hold:
+\smallskip
+\begin{enumerate}
+\item Unification at an atomic type $p$ that is {\it not
+subordinate to itself} ($p \not\prec_\subord p$) is always allowed. 
+Types that are not self-subordinate to themselves can only be inhabited
+by variables: that is, if $p \not\prec_\subord p$ and 
+$\Psi \vdash_{\Sigma,\subord} \lf{t} : p$, then $\lf{t} = \lf{{a}}$
+where $\lf{a}:p \in \Psi$. For any such unification problem 
+$\lf{{a}} \doteq \lf{{b}}$, both 
+$\lf{[{a}/b]}$ and $\lf{[{b}/a]}$ are most
+general unifiers.
+\item Every variable bound by an existential quantifier 
+$\exists \lf{x}{:}p.\,A^+$ or a universal quantifier 
+$\forall \lf{x}{:}p.\,A^-$ can be associated with at most one 
+unification proposition $\lf{x} \doteq \lf{t}$, where $\lf{t}$ is an arbitrary 
+term, that appears in the same focusing
+phase as the quantifier. This means that 
+$\forall \lf{x}.\, 
+ \forall \lf{y}.\, {\downarrow}({\sf p}\,\lf{x}) 
+   \lefti \lf{x} \doteq \lf{y} 
+   \lefti {\sf p}\,\lf{y}$ is allowed but
+$\forall \lf{x}.\,\forall \lf{y}.\,{\ocircle}(\lf{x} \doteq \lf{y})$ is not 
+($\ocircle$ breaks focus) and that 
+${\ocircle}(\exists \lf{x}. \lf{x} \doteq \lf{t})$ is allowed but
+${\ocircle}(\exists \lf{x}. 
+  {\uparrow}(\lf{x} \doteq \lf{t} \lefti {\sf p}\,\lf{x}))$
+is not (${\uparrow}$ breaks focus). This restriction ensures that, if
+the unification appears on the left, the left-hand side of the unification
+will always be a variable
+$\lf{x}$, meaning that $\lf{[t/x]}$ is always a most general unifier.
+This usage of unification amounts to little more than declaring a notational
+definition \cite{pfenning99algorithms}.
+\end{enumerate}
+\smallskip
+
+Notably missing from the \sls~types are the upshift ${\uparrow}A^+$
+and right-permeable negative atomic propositions $p^-_\mlax$. The
+removal of these to propositions effectively means that the succedent
+of a stable \sls~sequent can only be $\istrue{\susp{p^-}}$ or
+$\islax{A^+}$. Sequents that establish the truth of suspended negative
+propositions are the basis of {\it deductive} proof terms, and
+sequents that establish the lax truth of a positive proposition are
+the basis of {\it concurrent} proof terms. 
+
+We could almost stop here and use the refinement of \ollll~proof terms
+that corresponds to our refinement of propositions as the language of
+\sls~proof terms. This would be sufficient for deductive proof terms,
+but for two reasons it would be less than ideal for our discussion of
+concurrent proof terms. First, the proof terms of focused \ollll~make it 
+inconvenient (though not impossible) to talk about concurrent equality
+(Section~\ref{sec:framework-concurrenteq}). Second, one of our primary
+uses of \sls~in this thesis will be to talk about {\it traces}
+$(\Psi; \Delta) \leadsto^* (\Psi'; \Delta')$, which correspond to 
+partial proofs 
+\[
+\deduce
+{\foc{\Psi}{\Delta}{\islax{A^+}}\mathstrut}
+{\deduce{\vdots\mathstrut\vspace{2pt}}{\foc{\Psi'}{\Delta'}{\islax{A^+}}}}
+\]
+in \ollll, where both the top and bottom sequents are stable and where
+$A^+$ is some unspecified, parametric positive proposition. Using
+\ollll-derived proof terms makes it difficult to talk about about and
+manipulate proofs of this form.
+
+In the remainder of this section, we will present a proof term
+assignment for \sls~that facilitates discussing concurrent equality
+and partial proofs. \sls~proof terms are in bijective correspondence
+with \ollll~proof terms when we consider complete (deductive) proofs,
+but the introduction of patterns and traces changes the structure
+of derivations and proof terms.
+
+\begin{figure}
+\fbox{$\focsx{\Psi}{\Delta}{P}{N}{U}$}
+  -- presumes $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf sctx}$
+  and $\Psi \vdash_{\Sigma,\subord} U\,{\sf succedent}$ 
+\[
+\infer[()]
+{\focsx{\Psi}{\Delta}{()}{N}{U}}
+{\foct{\Psi}{\Delta}{N}{U}}
+\]
+\[
+\infer[\eta^+]
+{\focsx{\Psi}{\frameoff{\Theta}{p^+_\mlvl}}{z,P}{N}{U}}
+{\focsx{\Psi}{\tackon{\Theta}{z{:}p^+_\mlvl}}{P}{N}{U}}
+\quad
+\infer[{\downarrow}_L]
+{\focsx{\Psi}{\frameoff{\Theta}{{\downarrow}A^-}}{x,P}{N}{U}}
+{\focsx{\Psi}{\tackon{\Theta}{x{:}\istrue{A^-}}}{P}{N}{U}}
+\]
+\[
+\infer[{\gnab}_L]
+{\focsx{\Psi}{\frameoff{\Theta}{{\gnab}A^-}}{x,P}{N}{U}}
+{\focsx{\Psi}{\tackon{\Theta}{x{:}\iseph{A^-}}}{P}{N}{U}}
+\quad
+\infer[{\bang}_L]
+{\focsx{\Psi}{\frameoff{\Theta}{{!}A^-}}{x,P}{N}{U}}
+{\focsx{\Psi}{\tackon{\Theta}{x{:}\ispers{A^-}}}{P}{N}{U}}
+\]
+\[
+\infer[{\one}_L]
+{\focsx{\Psi}{\frameoff{\Theta}{\one}}{P}{N}{U}}
+{\focsx{\Psi}{\tackon{\Theta}{\cdot}}{P}{N}{U}}
+\quad
+\infer[{\fuse}_L]
+{\focsx{\Psi}{\frameoff{\Theta}{A^+ \fuse B^+}}{P}{N}{U}}
+{\focsx{\Psi}{\tackon{\Theta}{\mkconj{A^+}{B^+}}}{P}{N}{U}}
+\]
+\[
+\infer[{\exists}_L]
+{\focsx{\Psi}{\frameoff{\Theta}{\exists \lf{a}{:}\tau. A^+}}{\lf{a},P}{N}{U}}
+{\focsx{\Psi, \lf{a}{:}\tau}{\tackon{\Theta}{A^+}}{P}{N}{U}}
+\quad
+\infer[{\doteq}_L]
+{\focsx{\Psi}{\frameoff{\Theta}{\lf{a} \doteq \lf{t}}}{\lf{t/a},P}{N}{U}}
+{\focsx{\lf{[t/a]}\Psi}{\tackon{\lf{[t/a]}\Theta}{A^+}}{P}{N}{\lf{[t/a]}U}}
+\]
+\caption{\sls~patterns}
+\label{fig:sls-patterns}
+\end{figure}
+
+\subsection{Patterns}
+\label{sec:framework-patterns}
+
+Our restrictions on \sls~propositions give derivations the property
+that every positive proposition has exactly one premise. A {\it
+  pattern} is a syntactic entity that captures the linear structure of
+left inversion on positive propositions. Instead of having a somewhat
+inscrutable proof term of the form
+${\tlaml{\texistsl{\lf{a}}
+   {\tfusel{\tfusel{\tetap{x}{\tgnabl{y}{\tdownl{z}{N}}}}}}}}$,
+for the proposition 
+%
+$(\exists \lf{a}.\,{\sf p}\,\lf{a} 
+             \fuse {\gnab}A^-
+             \fuse {\downarrow}B^-) \lefti C^-$
+%
+the \sls~proof term associated with this proposition, which uses patterns, is
+$(\lambda \lf{a},x,y,z.\, N)$. The pattern $P = \lf{a}, x,y,z$ captures
+the structure of left inversion on the positive proposition 
+$\exists \lf{a}.\,{\sf p}\,\lf{a} 
+             \fuse {\gnab}A^-
+             \fuse {\downarrow}B^-$.
+
+The grammar of patterns is simple.
+% 
+Inversion on positive propositions
+can only have the effect of introducing new bindings (either LF
+variables $\lf{a}$ or \sls~variables $x$) or handling a unification
+$\lf{a} \doteq \lf{t}$, which by our discussion above can always be
+resolved by the most general unifier $\lf{[t/a]}$, so the pattern associated
+with a proposition $\lf{a} \doteq \lf{t}$ is $\lf{t/a}$. 
+\[
+P ::= () \mid x, P \mid \lf{a}, P \mid \lf{t/a}, P
+\] 
+For sequences with one or more elements, we omit the trailing
+comma and $()$, writing $x, \ldots, z$ 
+instead of $x, \ldots, z, ()$. 
+
+The typing rules \sls~patterns are given in
+Figure~\ref{fig:sls-patterns}. We preserve the side conditions from
+the previous chapter: in unstable sequents, we only permit
+decomposition of the left-most post proposition in the context. There
+is no longer a one-to-one correspondence between proof terms and
+rules: ${\downarrow}_L$, ${\gnab}_L$, and ${!}_L$ appear to have the
+same proof term, and ${\one}_L$ and ${\fuse}_L$ appear to have no
+proof term at all. It is possible to view this as a fundamental
+change, but we will take the simpler view that patterns contain
+implicit annotations that allow them to continue matching the
+structure of proof rules. This is not a major change: our view of the
+more verbose \ollll~proof terms still required that they contain
+significant implicit annotations describing the maintenance of
+contexts, for instance.
+
+
+\begin{figure}
+\fbox{$\foctx{\Psi}{\Delta}{V}{[A^+]}$} -- presumes
+ $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf sctx}$ and 
+ $\Psi \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+$
+\[
+\infer[{\it id}^+]
+{\foctx{\Psi}{z{:}\susp{A^+}}{z}{[A^+]}}
+{}
+\]
+\[
+\infer[{\downarrow}_R]
+{\foctx{\Psi}{\Delta}{\tdownr{N}}{[{\downarrow}A^-]}}
+{\foctx{\Psi}{\Delta}{N}{A^-}}
+\quad
+\infer[{\gnab}_R]
+{\foctx{\Psi}{\restrictto{\Delta}{\meph}}{\tgnabr{N}}{[{\gnab}A^-]}}
+{\foctx{\Psi}{\Delta}{N}{A^-}}
+\quad
+\infer[{!}_R]
+{\foctx{\Psi}{\restrictto{\Delta}{\mpers}}{\tbangr{N}}{[{!}A^-]}}
+{\foctx{\Psi}{\Delta}{N}{A^-}}
+\]
+\[
+\infer[{\one}_R]
+{\foctx{\Psi}{\cdot}{\toner}{[\one]}}
+{}
+\quad
+\infer[{\fuse}_R]
+{\foctx{\Psi}
+  {\matchconj{\Delta_1}{\Delta_2}}{\tfuser{V_1}{V_2}}{[A^+_1 \fuse A^+_2]}}
+{\foctx{\Psi}{\Delta_1}{V_1}{[A^+_1]}
+ &
+ \foctx{\Psi}{\Delta_2}{V_2}{[A^+_2]}}
+\]
+\[
+\infer[{\exists}_R]
+{\foctx{\Psi}{\Delta}{\texistsr{\lf{t}}{V}}{[\exists \lf{a}{:}\tau. A^+]}}
+{\Psi; \Delta \vdash_{\Sigma,\subord} \lf{t} : \tau
+ &
+ \foctx{\Psi}{\Delta}{V}{[A^+]}}
+\quad
+\infer[{\doteq}_R]
+{\foctx{\Psi}{\cdot}{\tunifr}{\lf{t} \doteq \lf{t}}}
+{}
+\]
+
+\medskip
+\fbox{$\foctx{\Psi}{\Delta}{N}{\istrue{A^-}}$} -- presumes
+  $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf sctx}$ and
+  $\Psi \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-$
+\[
+\infer[{\it focus}_L^*]
+{\foctx{\Psi}{\frameoff{\Theta}{x{:}A^-}}{\tfocusl{x}{\Sp}}{U}}
+{\foctx{\Psi}{\tackon{\Theta}{[A^-]}}{\Sp}{U}}
+\]
+\[
+\infer[{\lefti}_R]
+{\foctx{\Psi}{\Delta}{\lambda P.N}{A^+ \lefti B^-}}
+{\focsx{\Psi}{\mkconj{A^+}{\Delta}}{P}{N}{B^-}}
+\quad
+\infer[{\righti}_R]
+{\foctx{\Psi}{\Delta}{\lambda P.N}{A^+ \righti B^-}}
+{\focsx{\Psi}{\mkconj{\Delta}{A^+}}{P}{N}{B^-}}
+\]
+\[
+\infer[{\with}_R]
+{\foctx{\Psi}{\Delta}{\twithr{N_1}{N_2}}{A_1^- \with A_2^-}}
+{\foctx{\Psi}{\Delta}{N_1}{A_1^-}
+ &
+ \foctx{\Psi}{\Delta}{N_2}{A_2^-}}
+\quad
+\infer[{\forall}_R]
+{\foctx{\Psi}{\Delta}{\tforallr{\lf{a}}{N}}{\forall \lf{a}{:}\tau. A^-}}
+{\foctx{\Psi, \lf{a}{:}\tau}{\Delta}{N}{A^-}}
+\]
+\[
+\infer[{\ocircle}_R]
+{\foctx{\Psi}{\Delta}{\tlet{T}{V}}{{\ocircle}A^+}}
+{T :: (\Psi; \Delta) \leadsto^*_{\Sigma,\subord} (\Psi'; \Delta')
+ &
+ \foctx{\Psi}{\Delta}{V}{[A^+]}}
+\]
+
+\medskip
+\fbox{$\foctx{\Psi}{\tackon{\Theta}{[A^-]}}{\Sp}{\istrue{\susp{C^-}}}$} --
+  presumes
+  $\Psi \vdash_{\Sigma,\subord} \tackon{\Theta}{[A^-]}\,{\sf sctx}$ and
+  $\Psi \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-$
+\[
+\infer[{\it id}^-]
+{\foctx{\Psi}{\frameoff{\Theta}{[A^-]}}{\tnil}{\istrue{\susp{A^-}}}}
+{}
+\]
+\[
+\infer[]
+{\foctx{\Psi}{\frameoff{\Theta}{\matchconj{\Delta}{[A^+ \lefti B^-]}}}
+  {V; \Sp}{\istrue{\susp{C^-}}}}
+{}
+\]
+\caption{\sls~deductive terms}
+\label{fig:sls-deductive}
+\end{figure}
 
 \subsection{Deductive terms}
+\label{sec:framework-deductive}
+
+Deductive terms include values $V$, terms $N$, and spines $\Sp$ --
+most of the core of the logic. Terms $N$ are simplified relative
+to \ollll~proof terms primarily because much of their complexity 
+\begin{align*}
+V & ::= z
+   \mid N
+   \mid \tgnabr{N}
+   \mid \tbangr{N}
+   \mid \toner
+   \mid \tfuser{V_1}{V_2}
+   \mid \texistsr{\lf{t}}{V}
+   \mid \tunifr
+\\
+N & ::= \tfocusl{x}{\Sp} 
+   \mid \lambda P.N 
+   \mid N_1 \with N_2
+   \mid \tforallr{\lf{a}}{N}
+   \mid \tlet{T}{V}
+\\
+\Sp & ::= \tnil 
+   \mid V; \Sp
+   \mid \pi_1; \Sp 
+   \mid \pi_2; \Sp
+   \mid \lf{t}; \Sp
+\end{align*}
 
 \subsection{Concurrent traces}
+\label{sec:framework-concurrent}
 \label{sec:framework-substprop}
 
 
 (Talk about the notation $\tackon{\Theta}{C^+}$, there's a backwards
 reference to this section)
 
-\subsection{Concurrent equality}
 
 \subsection{Concurrent equality}
 \label{sec:linconcurrenteq}
+\label{sec:framework-concurrenteq}
 
 Concurrent equality is a notion of equivalence that operates on
 synthetic derivations.  It represents an intermediate point between
@@ -466,7 +1370,7 @@ calculus usually has application $e_1\,e_2$ (encoded in LF as ${\sf
 
 The prototype implementation of \sls~contains 
 Following CLF and the Celf implementation, we write ${\ocircle}A$ in
-Celf as \verb|{A}|. The mobile modality ${\gnab}A$ dowsn't have an
+Celf as \verb|{A}|. The mobile modality ${\gnab}A$ doesn't have an
 ASCII representation, so write \verb|$A| when $A$ is
 mobile. Upshifts and downshifts are always inferred: this means that
 we can't write down ${\uparrow}{\downarrow}A$ or
@@ -504,3 +1408,123 @@ forward-reference Chapter 8.
 \subsection{Modes and well-moded specifications}
 \label{sec:framework-modes}
 
+\section{Design decisions}
+
+\subsection{Why LF as a term language?}
+\label{sec:why-not-fully-dependent}
+
+The decision to use LF as a first-order domain of quantification
+rather than using a fully-dependent system is based on several
+considerations. First and foremost, this choice was sufficient for the
+purposes of this thesis. In fact, for the purposes of this thesis, we
+could used an even simpler term language of simply-typed LF
+\cite{pfenning08church}; two other logic programming interpretations
+of \sls-like frameworks, Lollimon \cite{lopez05monadic} and Ollibot
+\cite{pfenning09substructural}, were based on simply-typed term
+languages. Canonical LF and Spine Form LF are, at this point,
+well-understood enough that the additional overhead of fully
+dependently-typed terms is not a significant burden, and there are
+examples beyond the scope of this thesis where term dependency is
+useful.
+
+On a theoretical level, it is a significant simplification when we
+restrict ourselves to {\it any} typed term language with a reasonable
+notion of equality and substitution. Spine Form LF and Canonical LF
+are two examples; most conceivable simply-typed term languages would
+also suffice. It is the thesis of this and the previous two chapters
+that we can productively derive logical frameworks from focused
+presentations of logic, but this simple is complicated when we apply it
+to a dependent type theory like CLF that does not distinguish object
+terms and proof terms. CLF terms have a notion of {\it concurrent
+  equivalence} which is coarser the equivalence relation described by
+focusing alone, and we want \sls~proof terms to have a similar notion
+of equivalence. In this chapter we characterize concurrent equivalence
+in Section~\ref{XXX}, after completing our discussion of the framework
+and describing the proof term language.  In CLF, the framework's
+definition relies on term equality, and equality of terms must take
+concurrent equivalence into account, so concurrent equivalence of
+(proof) terms is conceptually prior to the logic itself. We conjecture
+that this complication is no great obstacle, but this thesis avoids
+the issue.
+
+On a practical level, there are advantages to using a well-understood
+term language. The \sls~prototype implementation
+(Section~\ref{sec:prototype}) uses the mature type reconstruction
+engine of Twelf. Schack-Nielsen's implementation of type
+reconstruction for Celf is complicated by the requirements of dealing
+with a substructural term language, and the user is required to add
+extra annotations to indicate persistent application and abstraction
+\cite{schacknielsen08celf}. In \sls~(and in many CLF encodings) the
+term language is intended to be persistent, so these extra annotations
+just clutter specifications.
+
+The restriction to a dependent type theory therefore does not come at
+the cost of great expressive power. Conversely, it is by no means
+clear that the addition of full CLF-like dependency comes with great
+expressive benefit. Even in LF and Twelf, many interesting
+specifications could be encoded in a two-level version of the
+language: a simply-typed object term language and a dependently-typed
+proof term language with first-order quantification over object
+terms. This restriction is sufficient for settings such as Harper's
+comprehensive survey of programming language design
+\cite{harper12practical},\footnote{Harper's metatheory also extends LF
+  by drawing a distinction between standard variables and nominal
+  parameters, but this is an orthogonal point.} and it is built in to
+the educational proof assistant SASyLF \cite{aldrich08sasylf}. In LF
+and Twelf, the ability to use full dependent types is critical in part
+because it allows us to express {\it metatheorems} -- theorems about
+the programming languages and logics we have encoded, like progress
+and preservation for a programming language or cut admissibility for a
+logic. But in substructural logical frameworks like Linear LF, full
+dependency has been found to be {\it insufficient} for expressing
+metatheorems, which motivated the development of Hybrid LF as a
+framework for writing metatheorems about LF \cite{reed09hybrid}. The
+implementation of Hybrid LF effectively creates a stratification like
+\sls's -- full LF as an object term language, a linear logical
+framework with first-order quantification over object language terms,
+and a hybrid language that can inspect both LF object terms and linear
+proof terms. 
+
+\begin{figure}[t]
+\begin{align*}
+\fbox{$\subst{\lf{t}}{\lf{\spi}}$}
+\\
+\subst{(\lf{\lambda x. t'})}{(\lf{t; \spi})}
+ & = \subst{\rsubst{\lf{t}}{\lf{x}}{\lf{t'}}}{\lf{\spi}}
+\\
+\subst{\lfroot{\lf h}{\spi}}{\lfnil}
+ & = \lfroot{\lf h}{\spi}
+\end{align*}\begin{align*}
+%\fbox{$[{\lf{t}}/{\lf{x}}]{\nu}$} &
+%&
+\fbox{$\rsubst{\lf{t}}{\lf{x}}{\lf{\spi}}$}&
+&
+\fbox{$\rsubst{\lf{t}}{\lf{x}}{\lf{t'}}$}&
+&
+\\
+%[\lf{t}/\lf{x}](\lfpi{y}{\nu}{\nu'})
+% & = \lfpi{y}{[\lf{t}/\lf{x}]\nu}{[\lf{t}/\lf{x}]\nu'} &
+\rsubst{\lf t}{\lf x}{(\lf{t'; \spi})}
+ & = \lf{\no{\rsubst{\lf t}{\lf x}{\lf{t'}}}; 
+         \no{\rsubst{\lf t}{\lf x}{\lf{\spi}}}} &
+\rsubst{\lf t}{\lf x}(\lf{\lambda y. t'})
+ & = \lf{\lambda y.\, \no{\rsubst{\lf t}{\lf x}{\lf{t'}}}} 
+      & (\lf x \neq \lf y) 
+\\
+\rsubst{\lf t}{\lf x}{\lfnil} 
+ & = \lfnil &
+\rsubst{\lf t}{\lf x}{(\lf{\lfroot{x}{\spi}})}
+ & = \subst{\lf t}{\rsubst{\lf t}{\lf x}{\lf{\spi}}}
+\\
+& & 
+\rsubst{\lf t}{\lf x}{(\lf{\lfroot{h}{\spi}})}
+ & = \lfroot{\lf h}{\no{\rsubst{\lf t}{\lf x}{\lf{\spi}}}}
+      & ({\it if}~ \lf{h} \neq \lf{x})
+\end{align*}
+\caption{Hereditary substitution on terms, spines, and classifiers}
+\label{fig:lf-hsubst}
+\end{figure}
+
+\subsection{A logic of partial proofs}
+
+While traces 

@@ -690,7 +690,7 @@ general case where $i = j$.
    \lefti \opbasic{A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma}) \}$\\
   {\it (where
    $p^-_{ck}$ is ${\sf bkc}\,t^{\it in}_k\,t^{\it out}_k$ 
-   and $FV(t_k^{\it in}) \notin (\overline{x_i} \cup \ldots \cup \overline{x_j})$ 
+   and $\emptyset = FV(t_k^{\it in}) \cap (\overline{x_i} \cup \ldots \cup \overline{x_j})$ 
    for $i \leq k \leq j$)}
 \end{itemize}
 
@@ -2286,7 +2286,8 @@ and fail, a backtracking semantics means that we will apply the other
 rule, {\it re-evaluating} the scrutinee $e$ to a value. 
 
 It is possible to avoid that backtracking by a transformation called
-{\it factoring}. While factoring has been expressed by Polakow as a
+{\it factoring}. While factoring has been expressed by Poswolsky
+and Sch\"urmann as a
 transformation on functional programs in a variant of the Delphin
 programming language \cite{poswolsky03factoring}, I am unaware of any
 treatment of the factoring transformation as a generally-correct {\it
