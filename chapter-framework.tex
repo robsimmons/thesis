@@ -623,9 +623,19 @@ A^-, B^-, C^- & ::= p^- \mid {\ocircle}A^+ \mid A^+ \lefti B^-
 %upshifts ${\uparrow}A^+$ and right-permeable atomic propositions
 %$p^-_\mlax$.
 The formation judgments for \sls~types are given in
-Figure~\ref{fig:sls-propform}, and these are used to specify
-the formation of stable, inverting, and in-focus \sls~contexts
-in Figure~\ref{fig:sls-ctxform}. 
+Figure~\ref{fig:sls-propform}, and these are used to specify the
+formation of stable, inverting, and in-focus \sls~contexts in
+Figure~\ref{fig:sls-ctxform}. This restrictions we make to contexts
+justify our continued practice of omitting the $\mtrue$ annotation
+when talking about inverting positive propostiions $A^+$ or focused
+negative propositions $[A^-]$ in the context. We will also continue to
+avoid using variable names $x$ with inverting positive propostiions
+and focused negative propositions. In the case of focused
+propositions, there is a straightforward justification: the form of
+context ensures there is at most one of them. In the case of positive
+propositions, we are justified by the convention discussed in the last
+chapter that we only ever frame off the leftmost positive proposition
+in the context.
 
 Positive ordered atomic propositions
 $p^+$ are atomic classifiers ${\sf a}\,\lf{t_1}\ldots\lf{t_n}$ with
@@ -728,7 +738,8 @@ and persistent propositions, respectively, omitting ``positive.''
  \Psi \vdash_{\Sigma,\subord} T\,{\sf left}}
 \quad
 \infer
-{\Psi \vdash_{\Sigma,\subord} (\Delta, x{:}[A^-])\,{\sf infoc} \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} (\Delta, x{:}\istrue{[A^-]})\,{\sf infoc} 
+ \mathstrut}
 {\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}
  &
  \Psi \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-}
@@ -836,20 +847,21 @@ propositions are the basis of {\it deductive} proof terms, and
 sequents that establish the lax truth of a positive proposition are
 the basis of {\it concurrent} proof terms. 
 
-We could almost stop here and use the refinement of \ollll~proof terms
-that corresponds to our refinement of propositions as the language of
-\sls~proof terms. This would be sufficient for deductive proof terms,
-but for two reasons it would be less than ideal for our discussion of
-concurrent proof terms. First, the proof terms of focused \ollll~make it 
-inconvenient (though not impossible) to talk about concurrent equality
+We could stop here and use the refinement of \ollll~proof terms that
+corresponds to our refinement of propositions as the language of
+\sls~proof terms. This would be entirely sufficient for the way we
+intend to use deductive proof terms, but for two reasons it would be
+less than ideal for our discussion of concurrent proof terms. First,
+the proof terms of focused \ollll~make it inconvenient (though not
+impossible) to talk about concurrent equality
 (Section~\ref{sec:framework-concurrenteq}). Second, one of our primary
-uses of \sls~in this thesis will be to talk about {\it traces}
-$(\Psi; \Delta) \leadsto^* (\Psi'; \Delta')$, which correspond to 
-partial proofs 
+uses of \sls~in this thesis will be to talk about {\it traces}, which
+correspond roughly to partial proofs
 \[
 \deduce
 {\foc{\Psi}{\Delta}{\islax{A^+}}\mathstrut}
-{\deduce{\vdots\mathstrut\vspace{2pt}}{\foc{\Psi'}{\Delta'}{\islax{A^+}}}}
+{\deduce{\vdots\mathstrut}
+  {\vspace{-4pt}\foc{\Psi'}{\Delta'}{\islax{A^+}}}}
 \]
 in \ollll, where both the top and bottom sequents are stable and where
 $A^+$ is some unspecified, parametric positive proposition. Using
@@ -863,54 +875,148 @@ with \ollll~proof terms when we consider complete (deductive) proofs,
 but the introduction of patterns and traces changes the structure
 of derivations and proof terms.
 
+\subsection{Process states}
+
+A {\it process state} is a disembodied left-hand side of a sequent that
+we use to describe the intermediate states of concurrent systems. The 
+goal of concurrent traces is to capture the structure of partial proofs
+\[
+\deduce
+{\foc{\Psi}{\Delta}{\islax{A^+}}\mathstrut}
+{\deduce{\vdots\mathstrut}
+  {\vspace{-4pt}\foc{\Psi'}{\Delta'}{\islax{A^+}}}}
+\]
+where $A^+$ is a parametric conclusion as the relation between two 
+process states. As a first cut, we can represent the initial state as 
+$(\Psi; \Delta)$ and the final state as $(\Psi'; \Delta')$, and we can
+omit $\Psi$ and just write $\Delta$ when that is sufficiently clear.
+
+The first cut is not quite enough due to the presence of unification
+in \sls~-- in paricular, the first use-case of unification where we
+unify members of a type only inhabited by variables. Consider the
+following partial proof:
+\[
+\deduce
+{\foc{\lf{a}{:}p, \lf{b}{:}p}
+  {x{:}{\ocircle}(\lf{a} \doteq \lf{b}), 
+   z{:}\susp{{\sf foo}\,\lf{a}\,\lf{a}}}
+  {\islax{({\sf foo}\,\lf{a}\,\lf{b})}}\mathstrut}
+{\deduce{\vdots\mathstrut}
+  {\vspace{-4pt}\foc{\lf{b}{:}p}
+   {z{:}\susp{{\sf foo}\,\lf{b}\,\lf{b}}}
+   {\islax{({\sf foo}\,\lf{b}\,\lf{b})}}}}
+\]
+This partial proof can be constructed in one focusing step by left
+focusing on $x$. It is insufficient to capture the first process
+state as 
+$\left({\lf{a}{:}p, \lf{b}{:}p}; 
+ {x{:}{\ocircle}(\lf{a} \doteq \lf{b}), 
+  z{:}\susp{{\sf foo}\,\lf{a}\,\lf{a}}}\right)$
+and the second process state as
+$\left({\lf{b}{:}p};
+ {z{:}\susp{{\sf foo}\,\lf{b}\,\lf{b}}}\right)$, as this would fail to 
+capture that the suceedant $\islax{({\sf foo}\,\lf{b}\,\lf{b})}$
+associated with the second process state is a substitution instance of
+the succeedant
+$\islax{({\sf foo}\,\lf{a}\,\lf{b})}$ associated with the first. In general,
+if the overall proof proves some proposition $\islax{A^+}$, then 
+the missing subproof has a succeedant $\islax{\lf{[b/a]}A^+}$.
+
+A process state is therefore written as $(\Psi; \Delta)_{\lf{\sigma}}$ 
+and is well-formed under
+signature $\Sigma$ and subordination relation $\subord$ if 
+$\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$ (which presumes that
+$\vdash_{\Sigma,\subord} \Psi\,{\sf sctx}$) and if 
+$\Psi \vdash \sigma : \Psi_0$, where $\Psi_0$ is some unspecified third 
+context that represents a starting point. 
+%
+Taking $\Psi_0 = \lf{a}{:}p, \lf{b}{:}p$, the partial proof above can
+thus be represented as a step between these two process states:
+\[
+\left({\lf{a}{:}p, \lf{b}{:}p}; 
+ {x{:}{\ocircle}(\lf{a} \doteq \lf{b}), 
+  z{:}\susp{{\sf foo}\,\lf{a}\,\lf{a}}}\right)_{\lf{(a/a,\,b/b)}}
+\leadsto_{\Sigma,\subord}
+\left({\lf{b}{:}p};
+ {z{:}\susp{{\sf foo}\,\lf{b}\,\lf{b}}}\right)_{\lf{(b/a,\,b/b)}}
+\]
+Steps will be given proof terms in Section~\ref{sec:framework-concurrent}.
+
+In almost all cases, the substitution $\lf\sigma$ associated with a process
+state is the identity and will be omitted, and the LF context $\Psi$
+will frequently be omitted as well. 
+
 \begin{figure}
-\fbox{$\focsx{\Psi}{\Delta}{P}{N}{U}$}
-  -- presumes $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf sctx}$
-  and $\Psi \vdash_{\Sigma,\subord} U\,{\sf succedent}$ 
+\fbox{$P :: (\lf{\sigma}; \Psi; \Delta) 
+         \Longrightarrow_{\Sigma,\subord}
+           (\lf{\sigma'}; \Psi'; \Delta')$}
+ -- presumes
+ $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf inv}$ and
+ $\Psi'' \vdash_{\Sigma,\subord} \lf{\sigma} : \Psi$
 \[
 \infer[()]
-{\focsx{\Psi}{\Delta}{()}{N}{U}}
-{\foct{\Psi}{\Delta}{N}{U}}
+{() :: (\lf{\sigma}\Psi; \Delta) 
+           \Longrightarrow_{\Sigma,\subord} (\lf{\sigma}; \Psi; \Delta)}
+{\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}}
 \]
 \[
 \infer[\eta^+]
-{\focsx{\Psi}{\frameoff{\Theta}{p^+_\mlvl}}{z,P}{N}{U}}
-{\focsx{\Psi}{\tackon{\Theta}{z{:}p^+_\mlvl}}{P}{N}{U}}
+{z,P :: (\Psi; \frameoff{\Theta}{p^+_\mlvl})
+           \Longrightarrow_{\Sigma,\subord} (\lf{\sigma}; \Psi'; \Delta')}
+{P :: (\Psi; \tackon{\Theta}{z{:}\islvl{\susp{p^+_\mlvl}}})
+           \Longrightarrow_{\Sigma,\subord} (\lf{\sigma}; \Psi'; \Delta')}
 \quad
 \infer[{\downarrow}_L]
-{\focsx{\Psi}{\frameoff{\Theta}{{\downarrow}A^-}}{x,P}{N}{U}}
-{\focsx{\Psi}{\tackon{\Theta}{x{:}\istrue{A^-}}}{P}{N}{U}}
+{x,P :: (\Psi; \frameoff{\Theta}{{\downarrow}A^-})
+           \Longrightarrow_{\Sigma,\subord} (\lf{\sigma}; \Psi'; \Delta')}
+{P :: (\Psi; \tackon{\Theta}{x{:}\istrue{A^-}})
+           \Longrightarrow_{\Sigma,\subord} (\lf{\sigma}; \Psi'; \Delta')}
 \]
 \[
 \infer[{\gnab}_L]
-{\focsx{\Psi}{\frameoff{\Theta}{{\gnab}A^-}}{x,P}{N}{U}}
-{\focsx{\Psi}{\tackon{\Theta}{x{:}\iseph{A^-}}}{P}{N}{U}}
+{x,P :: (\Psi; \frameoff{\Theta}{{\gnab}A^-})
+           \Longrightarrow_{\Sigma,\subord} (\lf{\sigma}; \Psi'; \Delta')}
+{P :: (\Psi; \tackon{\Theta}{x{:}\iseph{A^-}})
+           \Longrightarrow_{\Sigma,\subord} (\lf{\sigma}; \Psi'; \Delta')}
 \quad
 \infer[{\bang}_L]
-{\focsx{\Psi}{\frameoff{\Theta}{{!}A^-}}{x,P}{N}{U}}
-{\focsx{\Psi}{\tackon{\Theta}{x{:}\ispers{A^-}}}{P}{N}{U}}
+{x,P :: (\Psi; \frameoff{\Theta}{{!}A^-})
+           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
+{P :: (\Psi; \tackon{\Theta}{x{:}\ispers{A^-}})
+           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
 \]
 \[
 \infer[{\one}_L]
-{\focsx{\Psi}{\frameoff{\Theta}{\one}}{P}{N}{U}}
-{\focsx{\Psi}{\tackon{\Theta}{\cdot}}{P}{N}{U}}
-\quad
+{P :: (\Psi; \frameoff{\Theta}{\one})
+           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
+{P :: (\Psi; \tackon{\Theta}{\cdot})
+           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
+\quad 
 \infer[{\fuse}_L]
-{\focsx{\Psi}{\frameoff{\Theta}{A^+ \fuse B^+}}{P}{N}{U}}
-{\focsx{\Psi}{\tackon{\Theta}{\mkconj{A^+}{B^+}}}{P}{N}{U}}
+{P :: (\Psi; \frameoff{\Theta}{A^+ \fuse B^+})
+           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
+{P :: (\Psi; \tackon{\Theta}{\mkconj{A^+}{B^+}})
+           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
 \]
 \[
 \infer[{\exists}_L]
-{\focsx{\Psi}{\frameoff{\Theta}{\exists \lf{a}{:}\tau. A^+}}{\lf{a},P}{N}{U}}
-{\focsx{\Psi, \lf{a}{:}\tau}{\tackon{\Theta}{A^+}}{P}{N}{U}}
-\quad
+{\lf{a},P :: (\Psi; \frameoff{\Theta}{\exists \lf{a}{:}\tau. A^+})
+           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
+{P :: (\Psi, \lf{a}{:}\tau; \tackon{\Theta}{A^+})
+           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
+\]
+\[
 \infer[{\doteq}_L]
-{\focsx{\Psi}{\frameoff{\Theta}{\lf{a} \doteq \lf{t}}}{\lf{t/a},P}{N}{U}}
-{\focsx{\lf{[t/a]}\Psi}{\tackon{\lf{[t/a]}\Theta}{A^+}}{P}{N}{\lf{[t/a]}U}}
+{\lf{t/a},P :: 
+  (\Psi, \lf{a}{:}\tau, \Psi'; \frameoff{\Theta}{\lf{a} \doteq \lf{t}})
+           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
+{P :: (\Psi, \lf{[t/a]}\Psi'; {\tackon{\lf{[t/a]}\Theta}{\cdot}})
+           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
 \]
 \caption{\sls~patterns}
 \label{fig:sls-patterns}
 \end{figure}
+
 
 \subsection{Patterns}
 \label{sec:framework-patterns}
@@ -950,7 +1056,7 @@ For sequences with one or more elements, we omit the trailing
 comma and $()$, writing $x, \ldots, z$ 
 instead of $x, \ldots, z, ()$. 
 
-The typing rules \sls~patterns are given in
+The typing rules for \sls~patterns are given in
 Figure~\ref{fig:sls-patterns}. We preserve the side conditions from
 the previous chapter: in unstable sequents, we only permit
 decomposition of the left-most post proposition in the context. There
@@ -967,9 +1073,8 @@ contexts, for instance.
 
 
 \begin{figure}
-\fbox{$\foctx{\Psi}{\Delta}{V}{[A^+]}$} -- presumes
- $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf sctx}$ and 
- $\Psi \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+$
+ $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf inv}$ and 
+ $\Psi \vdash_{\Sigma,\subord} \Delta'\,{\sf stable}$
 \[
 \infer[{\it id}^+]
 {\foctx{\Psi}{z{:}\susp{A^+}}{z}{[A^+]}}
