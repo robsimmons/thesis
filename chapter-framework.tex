@@ -368,7 +368,9 @@ or that $\Psi \vdash_{\Sigma,\subord} \nu\, {\sf kind}$
 
 \medskip
 \fbox{$\Psi \vdash \lf{\sigma} : \Psi'$} -- presumes
- $\vdash_{\Sigma,\subord} \Psi, \Psi'$ \vspace{-10pt}
+ $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$
+ and
+ $\vdash_{\Sigma,\subord} \Psi'\,{\sf ctx}$
 \[
 \infer
 {\Psi \vdash_{\Sigma,\subord} \cdot : \cdot \mathstrut}
@@ -927,9 +929,21 @@ and is well-formed under
 signature $\Sigma$ and subordination relation $\subord$ if 
 $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$ (which presumes that
 $\vdash_{\Sigma,\subord} \Psi\,{\sf sctx}$) and if 
-$\Psi \vdash \sigma : \Psi_0$, where $\Psi_0$ is some unspecified third 
+$\Psi \vdash \lf{\sigma} : \Psi_0$, where $\Psi_0$ is some unspecified third 
 context that represents a starting point. 
-%
+\[
+\infer
+{\vdash_{\Sigma,\subord} (\Psi; \Delta)_{\lf{\sigma}}\,{\sf state}
+ \mathstrut}
+{\vdash_{\Sigma,\subord} \Psi : {\sf ctx}
+ &
+ \Psi \vdash_{\Sigma,\subord} \Delta\,{\sf inv}
+ &
+ \vdash_{\Sigma,\subord} \Psi_0 : {\sf ctx}
+ &
+ \Psi \vdash \lf{\sigma} : \Psi_0
+ \mathstrut}
+\]
 Taking $\Psi_0 = \lf{a}{:}p, \lf{b}{:}p$, the partial proof above can
 thus be represented as a step between these two process states:
 \[
@@ -942,76 +956,94 @@ thus be represented as a step between these two process states:
 \]
 Steps will be given proof terms in Section~\ref{sec:framework-concurrent}.
 
-In almost all cases, the substitution $\lf\sigma$ associated with a process
-state is the identity and will be omitted, and the LF context $\Psi$
-will frequently be omitted as well. 
+%In almost all cases, the substitution $\lf\sigma$ associated with a process
+%state is the identity and will be omitted, and the LF context $\Psi$
+%will frequently be omitted as well. 
 
 \begin{figure}
-\fbox{$P :: (\lf{\sigma}; \Psi; \Delta) 
+\fbox{$P :: (\Psi; \Delta)_{\lf{\sigma}}
          \Longrightarrow_{\Sigma,\subord}
-           (\lf{\sigma'}; \Psi'; \Delta')$}
+           (\Psi'; \Delta')_{\lf{\sigma}}$}
  -- presumes
- $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf inv}$ and
- $\Psi'' \vdash_{\Sigma,\subord} \lf{\sigma} : \Psi$
+ $\vdash_{\Sigma,\subord} (\Psi; \Delta)_{\lf{\sigma}}\,{\sf state}$
 \[
 \infer[()]
-{() :: (\lf{\sigma}\Psi; \Delta) 
-           \Longrightarrow_{\Sigma,\subord} (\lf{\sigma}; \Psi; \Delta)}
+{() :: (\Psi; \Delta)_{\lf{\sigma}}
+           \Longrightarrow_{\Sigma,\subord} 
+       (\Psi; \Delta)_{\lf{\sigma}}}
 {\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}}
 \]
 \[
 \infer[\eta^+]
-{z,P :: (\Psi; \frameoff{\Theta}{p^+_\mlvl})
-           \Longrightarrow_{\Sigma,\subord} (\lf{\sigma}; \Psi'; \Delta')}
-{P :: (\Psi; \tackon{\Theta}{z{:}\islvl{\susp{p^+_\mlvl}}})
-           \Longrightarrow_{\Sigma,\subord} (\lf{\sigma}; \Psi'; \Delta')}
+{z,P :: (\Psi; \frameoff{\Theta}{p^+_\mlvl})_{\lf{\sigma}}
+           \Longrightarrow_{\Sigma,\subord} 
+        (\Psi'; \Delta')_{\lf{\sigma'}}}
+{P :: (\Psi; \tackon{\Theta}{z{:}\islvl{\susp{p^+_\mlvl}}})_{\lf{\sigma}}
+           \Longrightarrow_{\Sigma,\subord}
+        (\Psi'; \Delta')_{\lf{\sigma'}}}
 \quad
 \infer[{\downarrow}_L]
-{x,P :: (\Psi; \frameoff{\Theta}{{\downarrow}A^-})
-           \Longrightarrow_{\Sigma,\subord} (\lf{\sigma}; \Psi'; \Delta')}
-{P :: (\Psi; \tackon{\Theta}{x{:}\istrue{A^-}})
-           \Longrightarrow_{\Sigma,\subord} (\lf{\sigma}; \Psi'; \Delta')}
+{x,P :: (\Psi; \frameoff{\Theta}{{\downarrow}A^-})_{\lf{\sigma}}
+           \Longrightarrow_{\Sigma,\subord}
+        (\Psi'; \Delta')_{\lf{\sigma'}}}
+{P :: (\Psi; \tackon{\Theta}{x{:}\istrue{A^-}})_{\lf{\sigma}}
+           \Longrightarrow_{\Sigma,\subord}
+        (\Psi'; \Delta')_{\lf{\sigma'}}}
 \]
 \[
 \infer[{\gnab}_L]
-{x,P :: (\Psi; \frameoff{\Theta}{{\gnab}A^-})
-           \Longrightarrow_{\Sigma,\subord} (\lf{\sigma}; \Psi'; \Delta')}
-{P :: (\Psi; \tackon{\Theta}{x{:}\iseph{A^-}})
-           \Longrightarrow_{\Sigma,\subord} (\lf{\sigma}; \Psi'; \Delta')}
+{x,P :: (\Psi; \frameoff{\Theta}{{\gnab}A^-})_{\lf{\sigma}}
+           \Longrightarrow_{\Sigma,\subord}
+        (\Psi'; \Delta')_{\lf{\sigma'}}}
+{P :: (\Psi; \tackon{\Theta}{x{:}\iseph{A^-}})_{\lf{\sigma}}
+           \Longrightarrow_{\Sigma,\subord}
+        (\Psi'; \Delta')_{\lf{\sigma'}}}
 \quad
 \infer[{\bang}_L]
-{x,P :: (\Psi; \frameoff{\Theta}{{!}A^-})
-           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
-{P :: (\Psi; \tackon{\Theta}{x{:}\ispers{A^-}})
-           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
+{x,P :: (\Psi; \frameoff{\Theta}{{!}A^-})_{\lf{\sigma}}
+           \Longrightarrow_{\Sigma,\subord}
+        (\Psi'; \Delta')_{\lf{\sigma'}}}
+{P :: (\Psi; \tackon{\Theta}{x{:}\ispers{A^-}})_{\lf{\sigma}}
+           \Longrightarrow_{\Sigma,\subord}
+        (\Psi'; \Delta')_{\lf{\sigma'}}}
 \]
 \[
 \infer[{\one}_L]
-{P :: (\Psi; \frameoff{\Theta}{\one})
-           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
-{P :: (\Psi; \tackon{\Theta}{\cdot})
-           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
+{P :: (\Psi; \frameoff{\Theta}{\one})_{\lf{\sigma}}
+           \Longrightarrow_{\Sigma,\subord}
+        (\Psi'; \Delta')_{\lf{\sigma'}}}
+{P :: (\Psi; \tackon{\Theta}{\cdot})_{\lf{\sigma}}
+           \Longrightarrow_{\Sigma,\subord}
+        (\Psi'; \Delta')_{\lf{\sigma'}}}
 \quad 
 \infer[{\fuse}_L]
-{P :: (\Psi; \frameoff{\Theta}{A^+ \fuse B^+})
-           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
-{P :: (\Psi; \tackon{\Theta}{\mkconj{A^+}{B^+}})
-           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
+{P :: (\Psi; \frameoff{\Theta}{A^+ \fuse B^+})_{\lf{\sigma}}
+           \Longrightarrow_{\Sigma,\subord}
+        (\Psi'; \Delta')_{\lf{\sigma'}}}
+{P :: (\Psi; \tackon{\Theta}{\mkconj{A^+}{B^+}})_{\lf{\sigma}}
+           \Longrightarrow_{\Sigma,\subord}
+        (\Psi'; \Delta')_{\lf{\sigma'}}}
 \]
 \[
 \infer[{\exists}_L]
-{\lf{a},P :: (\Psi; \frameoff{\Theta}{\exists \lf{a}{:}\tau. A^+})
-           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
-{P :: (\Psi, \lf{a}{:}\tau; \tackon{\Theta}{A^+})
-           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
+{\lf{a},P :: (\Psi; \frameoff{\Theta}{\exists \lf{a}{:}\tau. A^+})_{\lf{\sigma}}
+           \Longrightarrow_{\Sigma,\subord}
+        (\Psi'; \Delta')_{\lf{\sigma'}}}
+{P :: (\Psi, \lf{a}{:}\tau; \tackon{\Theta}{A^+})_{\lf{\sigma}}
+           \Longrightarrow_{\Sigma,\subord}
+        (\Psi'; \Delta')_{\lf{\sigma'}}}
 \]
 \[
 \infer[{\doteq}_L]
 {\lf{t/a},P :: 
-  (\Psi, \lf{a}{:}\tau, \Psi'; \frameoff{\Theta}{\lf{a} \doteq \lf{t}})
-           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
-{P :: (\Psi, \lf{[t/a]}\Psi'; {\tackon{\lf{[t/a]}\Theta}{\cdot}})
-           \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')}
+  (\Psi, \lf{a}{:}\tau, \Psi'; \frameoff{\Theta}{\lf{a} \doteq \lf{t}}
+   )_{\lf{\sigma}}
+           \Longrightarrow_{\Sigma,\subord}
+        (\Psi'; \Delta')_{\lf{\sigma'}}}
+{P :: (\Psi, \lf{[t/a]}\Psi'; {\tackon{\lf{[t/a]}\Theta}{\cdot}}
+       )_{\lf{[t/a]\sigma}}
+           \Longrightarrow_{\Sigma,\subord}
+        (\Psi'; \Delta')_{\lf{\sigma'}}}
 \]
 \caption{\sls~patterns}
 \label{fig:sls-patterns}
@@ -1056,10 +1088,19 @@ For sequences with one or more elements, we omit the trailing
 comma and $()$, writing $x, \ldots, z$ 
 instead of $x, \ldots, z, ()$. 
 
+\sls~patterns are associated with a decomposition relation on
+\sls~process states: $P :: (\Psi; \Delta)_{\lf{\sigma}}
+\Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')_{\lf{\sigma'}}$.
 The typing rules for \sls~patterns are given in
 Figure~\ref{fig:sls-patterns}. We preserve the side conditions from
-the previous chapter: in unstable sequents, we only permit
-decomposition of the left-most post proposition in the context. There
+the previous chapter: when we frame off a inverting positive
+proposition in the process state, it is required to be the left-most
+one. (The formation of contexts requires that inverting positive
+propositions only appear as $\istrue{A^+}$, so if there are any inverting
+positive propositions the left-most positive proposition is always
+well-defined.)
+
+There
 is no longer a one-to-one correspondence between proof terms and
 rules: ${\downarrow}_L$, ${\gnab}_L$, and ${!}_L$ appear to have the
 same proof term, and ${\one}_L$ and ${\fuse}_L$ appear to have no
@@ -1073,8 +1114,9 @@ contexts, for instance.
 
 
 \begin{figure}
- $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf inv}$ and 
- $\Psi \vdash_{\Sigma,\subord} \Delta'\,{\sf stable}$
+\fbox{$\foctx{\Psi}{\Delta}{V}{[A^+]}$} -- presumes
+  $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$ and
+  $\Psi \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+$
 \[
 \infer[{\it id}^+]
 {\foctx{\Psi}{z{:}\susp{A^+}}{z}{[A^+]}}
@@ -1119,21 +1161,36 @@ contexts, for instance.
 
 \medskip
 \fbox{$\foctx{\Psi}{\Delta}{N}{\istrue{A^-}}$} -- presumes
-  $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf sctx}$ and
+  $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$ and
   $\Psi \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-$
 \[
-\infer[{\it focus}_L^*]
+\infer[{\it focus}_L]
 {\foctx{\Psi}{\frameoff{\Theta}{x{:}A^-}}{\tfocusl{x}{\Sp}}{U}}
 {\foctx{\Psi}{\tackon{\Theta}{[A^-]}}{\Sp}{U}}
+\quad
+\infer[{\it rule}]
+{\foctx{\Psi}{\frameoff{\Theta}{\cdot}}{\tfocusl{\sf r}{\Sp}}{U}}
+{{\sf r} : A^- \in \Sigma 
+ &
+ \foctx{\Psi}{\tackon{\Theta}{[A^-]}}{\Sp}{U}}
 \]
 \[
 \infer[{\lefti}_R]
 {\foctx{\Psi}{\Delta}{\lambda P.N}{A^+ \lefti B^-}}
-{\focsx{\Psi}{\mkconj{A^+}{\Delta}}{P}{N}{B^-}}
-\quad
+{P :: (\Psi; \mkconj{A^+}{\Delta})_{\lf{\sf id}} 
+  \Longrightarrow_{\Sigma,\subord}
+ (\Psi';\Delta')_{\lf{\sigma'}}
+ &
+ \foctx{\Psi'}{\Delta'}{N}{\lf{\sigma'}B^-}}
+\]
+\[
 \infer[{\righti}_R]
 {\foctx{\Psi}{\Delta}{\lambda P.N}{A^+ \righti B^-}}
-{\focsx{\Psi}{\mkconj{\Delta}{A^+}}{P}{N}{B^-}}
+{P :: (\Psi; \mkconj{\Delta}{A^+})_{\lf{\sf id}} 
+  \Longrightarrow_{\Sigma,\subord}
+ (\Psi';\Delta')_{\lf{\sigma'}}
+ &
+ \foctx{\Psi'}{\Delta'}{N}{\lf{\sigma'}B^-}}
 \]
 \[
 \infer[{\with}_R]
@@ -1146,29 +1203,50 @@ contexts, for instance.
 {\foctx{\Psi}{\Delta}{\tforallr{\lf{a}}{N}}{\forall \lf{a}{:}\tau. A^-}}
 {\foctx{\Psi, \lf{a}{:}\tau}{\Delta}{N}{A^-}}
 \]
-\[
-\infer[{\ocircle}_R]
-{\foctx{\Psi}{\Delta}{\tlet{T}{V}}{{\ocircle}A^+}}
-{T :: (\Psi; \Delta) \leadsto^*_{\Sigma,\subord} (\Psi'; \Delta')
- &
- \foctx{\Psi}{\Delta}{V}{[A^+]}}
-\]
 
 \medskip
-\fbox{$\foctx{\Psi}{\tackon{\Theta}{[A^-]}}{\Sp}{\istrue{\susp{C^-}}}$} --
+\fbox{$\foctx{\Psi}{\Delta}{\Sp}{U}$} --
   presumes
-  $\Psi \vdash_{\Sigma,\subord} \tackon{\Theta}{[A^-]}\,{\sf sctx}$ and
-  $\Psi \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-$
+  $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf infoc}$
 \[
 \infer[{\it id}^-]
-{\foctx{\Psi}{\frameoff{\Theta}{[A^-]}}{\tnil}{\istrue{\susp{A^-}}}}
+{\foctx{\Psi}{{[A^-]}}{\tnil}{\istrue{\susp{A^-}}}}
 {}
 \]
 \[
-\infer[]
+\infer[{\lefti}_L]
 {\foctx{\Psi}{\frameoff{\Theta}{\matchconj{\Delta}{[A^+ \lefti B^-]}}}
-  {V; \Sp}{\istrue{\susp{C^-}}}}
-{}
+  {V; \Sp}{U}}
+{\foctx{\Psi}{\Delta}{V}{[A^+]}
+ &
+ \foctx{\Psi}{\tackon{\Theta}{[B^-]}}{\Sp}{U}}
+\]
+\[
+\infer[{\righti}_L]
+{\foctx{\Psi}{\frameoff{\Theta}{\matchconj{[A^+ \righti B^-]}{\Delta}}}
+  {V; \Sp}{U}}
+{\foctx{\Psi}{\Delta}{V}{[A^+]}
+ &
+ \foctx{\Psi}{\tackon{\Theta}{[B^-]}}{\Sp}{U}}
+\]
+\[
+\infer[{\with}_{L1}]
+{\foctx{\Psi}{\frameoff{\Theta}{[A_1^- \with A_2^-]}}
+  {\pi_1; \Sp}{U}}
+{\foctx{\Psi}{\tackon{\Theta}{[A_1^-]}}{\Sp}{U}}
+\quad
+\infer[{\with}_{L2}]
+{\foctx{\Psi}{\frameoff{\Theta}{[A_1^- \with A_2^-]}}
+  {\pi_2; \Sp}{U}}
+{\foctx{\Psi}{\tackon{\Theta}{[A_2^-]}}{\Sp}{U}}
+\]
+\[
+\infer[{\forall}_L]
+{\foctx{\Psi}{\frameoff{\Theta}{[\forall \lf{a}{:}\tau. B^-]}}
+  {\lf{t}; \Sp}{U}}
+{\Psi \vdash_{\Sigma,\subord} \lf{t} : \tau
+ &
+ \foctx{\Psi}{\tackon{\Theta}{[(\lf{[t/a]}B^-)]}}{\Sp}{U}}
 \]
 \caption{\sls~deductive terms}
 \label{fig:sls-deductive}
@@ -1194,7 +1272,7 @@ N & ::= \tfocusl{x}{\Sp}
    \mid \lambda P.N 
    \mid N_1 \with N_2
    \mid \tforallr{\lf{a}}{N}
-   \mid \tlet{T}{V}
+   \ldots
 \\
 \Sp & ::= \tnil 
    \mid V; \Sp
@@ -1202,14 +1280,64 @@ N & ::= \tfocusl{x}{\Sp}
    \mid \pi_2; \Sp
    \mid \lf{t}; \Sp
 \end{align*}
+The use of patterns removes many of the terms $N$ that appeard in
+\ollll~proof terms.  Additionally, we have a single $\lambda P.N$
+constructor and a single $V;\Sp$ spine rather than a term $\tlamr{N}$
+and spine $\tappr{V}{\Sp}$ associated with propositions $A^+ \righti
+B^-$ and another term $\tlaml{N}$ and spine $\tappl{V}{\Sp}$
+associated with propositions $A^+ \lefti B^-$.  As with patterns, it is
+possible to think of these terms as just having extra annotations
+($\lambda^>$ or $\lambda^<$) that we have omitted.
+
+\begin{figure}
+\end{figure}
 
 \subsection{Concurrent traces}
 \label{sec:framework-concurrent}
 \label{sec:framework-substprop}
 
+Deductive traces and patterns handle every 
+\sls~proposition except for the lax modaility ${\ocircle}A^+$. It is in 
+the context of the lax modality that we will present proof terms 
+corresponding to partial proofs. 
+\begin{align*}
+S & ::= \tstep{P}{x}{\Sp}
+\\
+T & ::= \emptytrace \mid T_1; T_2 \mid S
+\end{align*}
+A step $S$ corresponds precisely to the notion of a {\it synthetic inference
+rule} discussed in Section~\ref{sec:linsynthetic}. It captures a 
+focusing phase (contained in the spine $\Sp$ 
+\[
+\infer
+{\tstep{P}{x}{\Sp} :: 
+  (\Psi; \frameoff{\Theta}{\frameoff{\Theta'}{x{:}A^-}})_{\lf{\sigma}} 
+   \leadsto_{\Sigma,\subord}
+  (\Psi'; \Delta')_{\lf{\sigma'}}}
+{\foctx{\Psi}{\tackon{\Theta'}{[A^-]}}{\Sp}{\istrue{\susp{{\ocircle}{B^+}}}}
+ &
+ P :: (\Psi,\tackon{\Theta}{B^+})_{\lf{\sigma}}
+   \Longrightarrow_{\Sigma,\subord}
+      (\Psi'; \Delta')_{\lf{\sigma'}}}
+\]
+Because we understand
+these synthetic inference rules as relations between process states,
+we can also call steps {\it synthetic transitions}. Traces $T$ are monoids
+over steps -- $T$ is an empty trace, $S$ is a trace consisting of a 
+single step, and $T_1; T_2$ is the composition of traces. 
 
-(Talk about the notation $\tackon{\Theta}{C^+}$, there's a backwards
-reference to this section)
+Concurrent traces can be included into deductive terms by the 
+term $N ::= \ldots \mid \tlet{T}{V}$ associated with the right rule
+for equality. 
+\[
+\infer[{\ocircle}_R]
+{\foctx{\Psi}{\Delta}{\tlet{T}{V}}{{\ocircle}A^+}}
+{T :: (\Psi; \Delta)_{\lf{\sf id}}
+  \leadsto^*_{\Sigma,\subord}
+ (\Psi';\Delta')_{\lf{\sigma'}}
+ &
+ \foctx{\Psi'}{\Delta'}{V}{[\lf{\sigma}A^+]}}
+\]
 
 
 \subsection{Concurrent equality}

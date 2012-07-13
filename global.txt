@@ -1,0 +1,12 @@
+Simulaneous substitutions: ALWAYS ALL LF (in the \lf{} color)
+ - Fix this in Figure 4.1, it should be a \sigma anyway.
+Mobile-ephemeral-linear, eph vs. lin. Worry about it?
+
+Springer LNCS not fully consistent. Editors? Location?
+\smallskip before and after {enumerate} or {itemize}
+
+Missing ref: sec:linconcurrenteq
+I need monopole, kinda, when I discuss unification in Chatper 4. 
+Introduce it earlier?
+
+Chatper~\ref{}?
