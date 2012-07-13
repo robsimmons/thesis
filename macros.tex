@@ -10,7 +10,6 @@
 \usetikzlibrary{arrows}
 \usepackage{amsthm}
 \usepackage{amsmath}
-\usepackage{amssymb}
 \usepackage{latexsym}
 \usepackage{amssymb}            % for \multimap (-o)
 \usepackage{stmaryrd}           % for \binampersand (&), \bindnasrepma (\paar)
@@ -103,6 +102,7 @@
 \newcommand{\mildlfoc}[4]{{#1};{#2}, [{#3}] \vdash {#4} \mathstrut}
 
 \newcommand{\foc}[3]{{#1};{#2} \vdash {#3} \mathstrut}
+\newcommand{\focx}[3]{{#1};{#2} \vdash_{\Sigma,\subord} {#3} \mathstrut}
 \newcommand{\rfoc}[3]{{#1};{#2} \vdash [{#3}] \mathstrut}
 \newcommand{\ifoc}[4]{{#1};{#2} {\mid} {#3} \vdash {#4} \mathstrut}
 \newcommand{\lfoc}[4]{{#1};{#2}[{#3}] \vdash {#4} \mathstrut}
@@ -220,7 +220,8 @@
 
 \newcommand{\tlet}[2]{{\sf let}\,{#1}\,{\sf in}\,\{ {#2} \}}
 \newcommand{\tstep}[3]{\{{#1}\} \leftarrow \tfocusl{#2}{#3}}
+\newcommand{\trstep}[2]{\{{#1}\} \leftarrow {#2}}
 \newcommand{\mkpat}[1]{{\it pat}({#1})}
-\newcommand{\emptytrace}{\varepsilon}
+\newcommand{\emptytrace}{\diamond}
 
 \newcommand{\subord}{\mathcal R}

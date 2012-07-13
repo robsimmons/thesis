@@ -1100,18 +1100,14 @@ propositions only appear as $\istrue{A^+}$, so if there are any inverting
 positive propositions the left-most positive proposition is always
 well-defined.)
 
-There
-is no longer a one-to-one correspondence between proof terms and
-rules: ${\downarrow}_L$, ${\gnab}_L$, and ${!}_L$ appear to have the
-same proof term, and ${\one}_L$ and ${\fuse}_L$ appear to have no
-proof term at all. It is possible to view this as a fundamental
-change, but we will take the simpler view that patterns contain
-implicit annotations that allow them to continue matching the
-structure of proof rules. This is not a major change: our view of the
-more verbose \ollll~proof terms still required that they contain
-significant implicit annotations describing the maintenance of
-contexts, for instance.
-
+There no longer appears to be a one-to-one correspondence between
+proof terms and rules: ${\downarrow}_L$, ${\gnab}_L$, and ${!}_L$
+appear to have the same proof term, and ${\one}_L$ and ${\fuse}_L$
+appear to have no proof term at all. To view patterns as being
+intrinsically typed -- that is, to view them as actual representatives
+of derivations -- we must think of patterns as carrying extra
+annotations that allow them to continue matching the structure of
+proof rules.
 
 \begin{figure}
 \fbox{$\foctx{\Psi}{\Delta}{V}{[A^+]}$} -- presumes
@@ -1256,8 +1252,7 @@ contexts, for instance.
 \label{sec:framework-deductive}
 
 Deductive terms include values $V$, terms $N$, and spines $\Sp$ --
-most of the core of the logic. Terms $N$ are simplified relative
-to \ollll~proof terms primarily because much of their complexity 
+most of the core of the logic. 
 \begin{align*}
 V & ::= z
    \mid N
@@ -1269,6 +1264,7 @@ V & ::= z
    \mid \tunifr
 \\
 N & ::= \tfocusl{x}{\Sp} 
+   \mid \tfocusl{\sf r}{\Sp} 
    \mid \lambda P.N 
    \mid N_1 \with N_2
    \mid \tforallr{\lf{a}}{N}
@@ -1281,15 +1277,101 @@ N & ::= \tfocusl{x}{\Sp}
    \mid \lf{t}; \Sp
 \end{align*}
 The use of patterns removes many of the terms $N$ that appeard in
-\ollll~proof terms.  Additionally, we have a single $\lambda P.N$
-constructor and a single $V;\Sp$ spine rather than a term $\tlamr{N}$
-and spine $\tappr{V}{\Sp}$ associated with propositions $A^+ \righti
-B^-$ and another term $\tlaml{N}$ and spine $\tappl{V}{\Sp}$
-associated with propositions $A^+ \lefti B^-$.  As with patterns, it is
-possible to think of these terms as just having extra annotations
-($\lambda^>$ or $\lambda^<$) that we have omitted.
+\ollll~proof terms. As with patterns, we appear to conflate the proof
+terms associated with different proof rules -- we have a single
+$\lambda P.N$ constructor and a single $V;\Sp$ spine rather than a
+term $\tlamr{N}$ and spine $\tappr{V}{\Sp}$ associated with
+propositions $A^+ \righti B^-$ and another term $\tlaml{N}$ and spine
+$\tappl{V}{\Sp}$ associated with propositions $A^+ \lefti B^-$.  As
+with patterns, it is possible to think of these terms as just having
+extra annotations ($\lambda^>$ or $\lambda^<$) that we have omitted.
+Without these annotations, proof terms carry less information than
+derivations, and the rules for values, terms, and spines in
+Figure~\ref{fig:sls-deductive} must be seen as typing rules. With
+these extra implicit annotations, values, terms, and spines can
+continue to be seen as representatives derivations.
+
+The term typing inference rule labeled ${\sf rule}$ in
+Figure~\ref{fig:sls-deductive} is the only typing rule for deductive
+terms that does not have an exact analouge in \ollll. To perserve the
+bijective correspondence between \ollll~and \sls~proof terms, we need
+to either place every rule ${\sf r} : A^-$ in the \sls~signature
+$\Sigma$ into the \ollll~context as a persistent proposition.
+
+As with LF terms, we will write atomic terms $\tfocusl{x}{\Sp}$
+and $\tfocusl{\sf r}{\Sp}$ in
+shorthand, writing $({\sf foo}\,\lf{t}\,\lf{s}\,V\,V')$
+instead of $\tfocusl{\sf foo}{(\lf{t};\lf{s};V;V';\tnil)}$ when we are
+not concerned with the fact that the term is comprised of a variable
+and a spine.
 
 \begin{figure}
+\fbox{$P :: (\Psi; \Delta)_{\lf{\sigma}} 
+   \leadsto_{\Sigma,\subord}
+  (\Psi'; \Delta')_{\lf{\sigma'}}$} -- presumes
+  $\vdash_{\Sigma,\subord} (\Psi; \Delta)_{\lf{\sigma}}\,{\sf state}$
+  and $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$
+\[
+\infer
+{\tstep{P}{x}{\Sp} :: 
+  (\Psi; \frameoff{\Theta}{\frameoff{\Theta'}{x{:}A^-}})_{\lf{\sigma}} 
+   \leadsto_{\Sigma,\subord}
+  (\Psi'; \Delta')_{\lf{\sigma'}}}
+{\foctx{\Psi}{\tackon{\Theta'}{[A^-]}}{\Sp}{\istrue{\susp{{\ocircle}{B^+}}}}
+ &
+ P :: (\Psi,\tackon{\Theta}{B^+})_{\lf{\sigma}}
+   \Longrightarrow_{\Sigma,\subord}
+      (\Psi'; \Delta')_{\lf{\sigma'}}}
+\]
+\[
+\infer
+{\tstep{P}{\sf r}{\Sp} :: 
+  (\Psi; \frameoff{\Theta}{\frameoff{\Theta'}{\cdot}})_{\lf{\sigma}} 
+   \leadsto_{\Sigma,\subord}
+  (\Psi'; \Delta')_{\lf{\sigma'}}}
+{{\sf r} : A^- \in \Sigma
+ &
+ \foctx{\Psi}{\tackon{\Theta'}{[A^-]}}{\Sp}{\istrue{\susp{{\ocircle}{B^+}}}}
+ &
+ P :: (\Psi,\tackon{\Theta}{B^+})_{\lf{\sigma}}
+   \Longrightarrow_{\Sigma,\subord}
+      (\Psi'; \Delta')_{\lf{\sigma'}}}
+\]
+
+\medskip
+\fbox{$T :: (\Psi; \Delta)_{\lf{\sigma}} 
+   \leadsto^*_{\Sigma,\subord}
+  (\Psi'; \Delta')_{\lf{\sigma'}}$} -- presumes
+  $\vdash_{\Sigma,\subord} (\Psi; \Delta)_{\lf{\sigma}}\,{\sf state}$
+  and $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$
+\[
+\infer
+{\emptytrace :: (\Psi; \Delta)_{\lf{\sigma}}}
+{}
+\quad
+\infer
+{S :: (\Psi; \Delta)_{\lf{\sigma}}
+               \leadsto^*_{\Sigma,\subord}
+             (\Psi'; \Delta')_{\lf{\sigma'}}}
+{S :: (\Psi; \Delta)_{\lf{\sigma}}
+               \leadsto_{\Sigma,\subord}
+             (\Psi'; \Delta')_{\lf{\sigma'}}}
+\]
+\[
+\infer
+{T; T' :: (\Psi_1; \Delta_1)_{\lf{\sigma_1}}
+               \leadsto^*_{\Sigma,\subord}
+             (\Psi_3; \Delta_3)_{\lf{\sigma_3}}}
+{T :: (\Psi_1; \Delta_1)_{\lf{\sigma_1}}
+               \leadsto^*_{\Sigma,\subord}
+             (\Psi_2; \Delta_2)_{\lf{\sigma_2}}
+&
+T' :: (\Psi_2; \Delta_2)_{\lf{\sigma_2}}
+               \leadsto^*_{\Sigma,\subord}
+             (\Psi_3; \Delta_3)_{\lf{\sigma_3}}}
+\]
+\caption{\sls~concurrent traces}
+\label{fig:sls-concurrent}
 \end{figure}
 
 \subsection{Concurrent traces}
@@ -1305,30 +1387,61 @@ S & ::= \tstep{P}{x}{\Sp}
 \\
 T & ::= \emptytrace \mid T_1; T_2 \mid S
 \end{align*}
-A step $S$ corresponds precisely to the notion of a {\it synthetic inference
-rule} discussed in Section~\ref{sec:linsynthetic}. It captures a 
-focusing phase (contained in the spine $\Sp$ 
+A step $S = \tstep{P}{x}{\Sp}$ corresponds precisely to the notion of
+a {\it synthetic inference rule} discussed in
+Section~\ref{sec:linsynthetic}.  Whereas each typing rule for a
+pattern, value, term, or spine corresponded to a rule in \ollll, a
+step in \sls~corresponds to a use of left focus, a use of the
+left rule for the lax modality, and a use of the 
+admissible focal substitution lemma in \ollll:
 \[
-\infer
-{\tstep{P}{x}{\Sp} :: 
-  (\Psi; \frameoff{\Theta}{\frameoff{\Theta'}{x{:}A^-}})_{\lf{\sigma}} 
-   \leadsto_{\Sigma,\subord}
-  (\Psi'; \Delta')_{\lf{\sigma'}}}
-{\foctx{\Psi}{\tackon{\Theta'}{[A^-]}}{\Sp}{\istrue{\susp{{\ocircle}{B^+}}}}
+\infer-[{\it subst}^-]
+{\foc{\Psi}{\frameoff{\Theta'}{\Delta}}{\islax{\lf{\sigma}A^+}}}
+{\infer[{\it focus}_L]
+ {\foc{\Psi}{\Delta}{\istrue{\susp{{\ocircle}B^+}}}}
+ {\Delta\,{\it matches}\,\frameoff{\Theta'}{x{:}A^-}
+  &
+  \deduce
+  {\foc{\Psi}{\tackon{\Theta'}{[A^-]}}{\istrue{\susp{{\ocircle}B^+}}}}
+  {\vdots\mathstrut}}
  &
- P :: (\Psi,\tackon{\Theta}{B^+})_{\lf{\sigma}}
-   \Longrightarrow_{\Sigma,\subord}
-      (\Psi'; \Delta')_{\lf{\sigma'}}}
+ \infer[{\ocircle}_L]
+ {\foc{\Psi}{\tackon{\Theta}{[{\ocircle}B^+]}}{\islax{\lf{\sigma}A^+}}}
+ {\deduce
+  {\foc{\Psi}
+    {\tackon{\Theta}{B^+}}
+    {\islax{\lf{\sigma}A^+}}\mathstrut} 
+  {\deduce{\vdots\mathstrut}
+    {\vspace{-4pt}\foc{\Psi'}
+     {\Delta'}
+     {\islax{\lf{\sigma'}A^+}}}}}}
 \]
-Because we understand
-these synthetic inference rules as relations between process states,
-we can also call steps {\it synthetic transitions}. Traces $T$ are monoids
-over steps -- $T$ is an empty trace, $S$ is a trace consisting of a 
-single step, and $T_1; T_2$ is the composition of traces. 
+The spine $\Sp$ corresponds to the complete proof of 
+$\foc{\Psi}{\tackon{\Theta'}{[A^-]}}{\istrue{\susp{{\ocircle}B^+}}}$, and
+the pattern $P$ corresponds to the partial proof of 
+$\foc{\Psi}
+    {\tackon{\Theta}{B^+}}
+    {\islax{\lf{\sigma}A^+}}$. The typing rules for steps 
+are given in Figure~\ref{fig:sls-concurrent}.
 
-Concurrent traces can be included into deductive terms by the 
-term $N ::= \ldots \mid \tlet{T}{V}$ associated with the right rule
-for equality. 
+A step corresponds to a focusing 
+stage (represented by $\Sp$)
+%
+followed by an inversion phase (represented by $P$), making it
+a proof term for the {\it synthetic inference rules}
+discussed in Section~\ref{sec:linsynthetic}. Because 
+Because we understand these synthetic inference rules as relations
+between process states, we can also call steps {\it synthetic
+  transitions}. Traces $T$ are monoids over steps -- $\emptytrace$ is
+an empty trace, $S$ is a trace consisting of a single step, and $T_1;
+T_2$ is the sequential composition of traces. 
+
+Steps incorporate left focus and the left rule for ${\ocircle}$, and
+{\it let-expressions}, which allow concurrent traces can be included
+into deductive terms, incorporate right focus and the right rule for
+${\ocircle}$. Let expressions are an addition form of term, so we
+extend the language of deductive terms with $N ::= \ldots \mid
+\tlet{T}{V}$ associated with the right rule for equality.
 \[
 \infer[{\ocircle}_R]
 {\foctx{\Psi}{\Delta}{\tlet{T}{V}}{{\ocircle}A^+}}
@@ -1345,76 +1458,327 @@ for equality.
 \label{sec:framework-concurrenteq}
 
 Concurrent equality is a notion of equivalence that operates on
-synthetic derivations.  It represents an intermediate point between
-focusing and multifocusing \cite{chaudhuri08canonical}.  Consider the
-sequent in focused linear logic:
+traces, and represents an intermediate point between focusing and
+multifocusing \cite{chaudhuri08canonical}.  Consider the following
+\sls~signature:
+\begin{align*}
+ \Sigma = \cdot, 
+~&{\sf a} : {\sf prop}\,{\sf ord},
+~ {\sf b} : {\sf prop}\,{\sf ord},
+~ {\sf c} : {\sf prop}\,{\sf ord},
+~ {\sf d} : {\sf prop}\,{\sf ord},
+~ {\sf e} : {\sf prop}\,{\sf ord},
+~ {\sf f} : {\sf prop}\,{\sf ord},
+\\ & 
+  {\sf first}  : a^+ \lefti {\ocircle}(b^+ \fuse c^+), 
+\\ &
+  {\sf left}  : b^+ \lefti {\ocircle}d^+, ~
+\\ &
+  {\sf right} : c^+ \lefti {\ocircle}e^+, ~
+\\ &
+  {\sf last} : d^+ \fuse e^+ \lefti {\ocircle}f^+
+\end{align*}
+With the signature $\Sigma$ and a suitable subordination relation $\subord$, 
+we can create two traces with the type
+$x_a{:}\susp{\sf a} \leadsto^*_{\Sigma,\subord} x_f{:}\susp{\sf f}$:
 \[
-\mildseq{a^+ \lolli {\uparrow}(b^+ \otimes c^+), ~
-  b^+ \lolli {\uparrow}d^+, ~
-  c^+ \lolli {\uparrow}e^+, ~
-  d^+ \otimes e^+ \lolli {\uparrow}f^+ ~~}
-  {~~
-  \langle a^+ \rangle
-  ~~}
-  {~~f^+}
+\begin{array}{rcl}
+T_1 & = 
+ & \trstep{x_b, x_c}{\sf first}\,x_a;\\
+&& \trstep{x_d}{\sf left}\,x_b;\\
+&& \trstep{x_e}{\sf right}\,x_c;\\
+&& \trstep{x_f}{\sf last}\,(\tfuser{x_d}{x_e})
+\end{array}
+\quad
+\mbox{versus}
+\quad
+\begin{array}{rcl}
+T_2 & = 
+ & \trstep{x_b, x_c}{\sf first}\,x_a;\\
+&& \trstep{x_e}{\sf right}\,x_c;\\
+&& \trstep{x_d}{\sf left}\,x_b;\\
+&& \trstep{x_f}{\sf last}\,(\tfuser{x_d}{x_e})
+\end{array}
 \]
-Let $\Gamma = \left(a^+ \lolli {\uparrow}(b^+ \otimes c^+), ~
-  b^+ \lolli {\uparrow}d^+, ~
-  c^+ \lolli {\uparrow}e^+, ~
-  d^+ \otimes e^+ \lolli {\uparrow}f^+ \right)$.
-There are two different focused derivations of this
-sequent: the one that transitions $\langle b^+ \rangle$ to $\langle
-d^+ \rangle$ first, and the one that transitions 
-$\langle c^+ \rangle$ to $\langle e^+ \rangle$ first:
-\[
-\infer
-{\mildseq{\Gamma}{\langle a^+ \rangle}{f^+}}
-{\infer
-{\mildseq{\Gamma}{\langle b^+ \rangle, \langle c^+ \rangle}{f^+}}
-{\infer
-{\mildseq{\Gamma}{\langle d^+ \rangle, \langle c^+ \rangle}{f^+}}
-{\infer
-{\mildseq{\Gamma}{\langle d^+ \rangle, \langle e^+ \rangle}{f^+}}
-{\infer
-{\mildseq{\Gamma}{\langle f^+ \rangle}{f^+}}
-{}}}}}
-\qquad
-\deduce
-{\mathstrut}
-{\deduce
-{\mathstrut}
-{\deduce
-{\mathstrut}
-{\mbox{\it vs.}}}}
-\qquad
-\infer
-{\mildseq{\Gamma}{\langle a^+ \rangle}{f^+}}
-{\infer
-{\mildseq{\Gamma}{\langle b^+ \rangle, \langle c^+ \rangle}{f^+}}
-{\infer
-{\mildseq{\Gamma}{\langle b^+ \rangle, \langle e^+ \rangle}{f^+}}
-{\infer
-{\mildseq{\Gamma}{\langle d^+ \rangle, \langle e^+ \rangle}{f^+}}
-{\infer
-{\mildseq{\Gamma}{\langle f^+ \rangle}{f^+}}
-{}}}}}
-\]
-If we think about these two proofs in terms of the series of
-transitions they embody, it's not so clear we want to think of them as
-different. In both cases, there is an $a^+$ resource that transitions
-to a $b^+$ resource and a $c^+$ resource, and then $b^+$ transitions
-to $d^+$ while, independently, the $c^+$ transitions to $e^+$. Then,
-finally, the $d^+$ and $e^+$ combine to transition to $f^+$, which
-completes the trace. The independence here is key: if two focusing
-phases consume different resources and both end focus with
-${\uparrow}_L$ (as opposed to ${\it id}^-$), then we can treat them as
-independent and concurrent steps in the process of proving the same
-right-hand side. {\it Concurrent equality} is the equivalence relation
-on focused proofs that treats all proofs that differ only in the
-interleaving of independent and concurrent steps as equal.  This
-equivalence relation was used in the definition of CLF
-\cite{watkins02concurrent}, but in a greatly restricted way that will
-be reflected in Chapter 4.
+In both cases, there is an $x_a{:}\susp{\sf a}$ resource
+that transitions to a $x_b{:}\susp{\sf b}$ resource and a
+$x_c{:}\susp{\sf c}$ resource, and then $x_b{:}\susp{\sf b}$
+transitions to $x_d{:}\susp{\sf d}$ while, independently,
+$x_c{}\susp{\sf c}$ transitions to $x_d{:}\susp{\sf d}$. Then,
+finally, the $x_d{:}\susp{\sf d}$ and $x_e{:}\susp{\sf e}$ combine to
+transition to $x_f{:}\susp{\sf f}$, which completes the trace. 
+
+The independence here is key: if two steps consume different
+resources, then we want to treat them as independent concurrent steps
+that could have equivalently happened in the other order. However, if
+we define equvalence only in terms of the $\alpha$-equivalence of
+\ollll~derivations, the two traces above are distinct. As a result, we
+can introduce a corser equivalence relation, {\it concurrent
+  equality}, that allows us to treat traces that differ only in the
+interleaving of independent and concurrent steps as being equal.
+Concurrent equality was first was introduced and explored in the
+context of CLF \cite{watkins02concurrent}, but our presentation
+follows the reformulation in \cite{cervesato12trace}, which defines
+concurrent equivalence based on an analysis of the variables that 
+are used, consumed, and introduced by each given step.
+
+The {\it input variables} of a step $S = (\tstep{P}{x}{\Sp})$, denoted
+${\bullet}S$, are intuitively the set of \lf~and \sls~variables free in
+the step. The notion of what it means to be a free variable is fairly
+well understood, but there is one unusual corner case in \sls. Our use
+of unification, and the corresponding pattern $\lf{t/a}, P$, means
+that \sls~patterns can contain free LF variables:
+\begin{align*}
+{\it FV}(()) & = \emptyset
+\\
+{\it FV}(\lf{a}, P) & = {\it FV}(P)/\{\lf{a}\} 
+\\
+{\it FV}(x, P) & = {\it FV}(P)
+\\
+{\it FV}(\lf{t/a}, P) & =  \{ \lf{a} \} \cup {\it FV}(P) \cup {\it FV}(\lf{t}) 
+\end{align*}
+Therefore, the input interface of a step ${\bullet}(\tstep{P}{x}{\Sp})
+= \{ x \} \cup {\it FV}(P) \cup {\it FV}(\Sp)$.
+
+The {\it consumed variables} of a step $S = (\tstep{P}{x}{\Sp})$,
+denoted by ${\ast}S$, are the subset of the input variables that no
+longer appear in the process state after a step. Every \sls~variable
+in ${\bullet}S$ associated with a judgment $\istrue{T}$ or $\iseph{T}$
+is a consumed variable. Any LF variable $\lf{a}$ that is subject to
+unification $\lf{t/a}$ in the pattern $P$ is also a consumed variable
+if $\lf{a}$ is a free variable of the pattern. If $\lf{a}$ is free in
+$P$, then $\lf{t}$ must also be a variable $\lf{b}$, and if $\lf{b}$
+is likewise free in $P$ it is included in the set of consumed
+variables.
+
+Finally, the {\it output variables} of a step $S = (\tstep{P}{x}{\Sp})$,
+denoted by $S{\bullet}$, are all the variables $\lf{a}$ or $x$ bound by
+the pattern $P$ that are not subsequently consumed by a unification
+$\lf{t/a}$ in the same pattern. 
+
+Consider a well-typed trace $S_1; S_2$ with two steps.  By renaming
+bound variables in a trace, it is always possible to ensure that
+variables bound by one step are distinct from variables used by that
+step or any previous step -- that is, to ensure $\emptyset =
+(S_1{\bullet} \cup S_2{\bullet}) \cap {\bullet}S_1 = {S_2}{\bullet}
+\cap {\bullet}S_2$. If $S_1$ outputs some variable that $S_2$ takes as
+input, then $S_2; S_1$ cannot be a well-typed trace. More subtly, if
+$S_2$ consumes variables that $S_1$ uses, which can only happen in the
+case of LF variables ``consumed'' by unification, then $S_2; S_1$ is
+also not a well typed trace, though $S_2; \lf{\sigma}S_1$ could be
+well typed for some substitution $\sigma$ that can be read off of the
+pattern in step $S_1$. Conversely, if $S_1; S_2$ is well-typed,
+$\emptyset = S_1{\bullet} \cap {\bullet}S_2$, and $\emptyset =
+{\bullet}S_1 \cap {\ast}S_2 = {\ast}S_1 \cap {\bullet}S_2$, then $S_2;
+S_1$ is also a well-typed trace.
+
+Given a particular trace $T$, we can observe 
+
+Having done so we can observe that $S_2; S_1$ is a
+well-typed trace if and only if $S_1$ outputs no variables
+that $S_2$ uses -- that is, that $S_1{\bullet} \cap {\bullet}S_2$.
+
+are the same as variable
+names in ${\bullet}S_1$ -- which is always possible by renaming of
+bound variables --
+
+bound by
+a unification $\lf{t/a}$ as a consumed variable
+
+
+ denoted ${\bullet}S$
+are 
+
+, is 
+essentially the free variables of the trace, combined with any any. 
+
+
+To define concurrent equality, we 
+
+It is not obvious that our treatment of the interaction between 
+unification and concurrent eqivalence is the right one. 
+
+\section{Adequate encoding}
+
+The lambda
+calculus usually has application $e_1\,e_2$ (encoded in LF as ${\sf
+  app}\,\interp{e_1}\,\interp{e_2}$) and abstraction $\lambda x.e$
+(encoded in LF as ${\sf lam}\,\lambda x. \interp{e}$). 
+
+\subsection{Adequacy for LF and deductive terms}
+
+\subsection{Adequacy for concurrent traces}
+
+
+\section{The \sls~implementation}
+\label{sec:prototype}
+
+The prototype implementation of \sls~contains 
+Following CLF and the Celf implementation, we write ${\ocircle}A$ in
+Celf as \verb|{A}|. The mobile modality ${\gnab}A$ doesn't have an
+ASCII representation, so write \verb|$A| when $A$ is
+mobile. Upshifts and downshifts are always inferred: this means that
+we can't write down ${\uparrow}{\downarrow}A$ or
+${\downarrow}{\uparrow}A$, but neither of these \ollll~propositions
+are part of the \sls~fragment anyway.
+
+Another change is for the sake of readability: if \verb|P| is a
+positive atomic proposition, we can write \verb|!P| wherever \verb|P|
+is expected. This allows us to write either \verb|a * b * c| or
+\verb|a * $b * !c| in SLS to express the positive proposition ${\sf a}
+\fuse {\sf b} \fuse {\sf c}$ where ${\sf a}$, ${\sf b}$, and ${\sf c}$
+are ordered, linear, and persistent positive atomic propositions
+(respectively).
+
+\section{Logic programming interpretation}
+\label{sec:framework-logicprog}
+
+In Chapter 3 I call this distinction one between ``concurrent and deductive''
+proofs, operationally it's the difference between forward chaining 
+and backward chaining. Maintaining the distinction between these is why
+we don't want the class $p^-_\mlax$ in the logic.
+
+We have talked about {\it concurrent} and {\it deductive} proof
+objects, and also about the intuitive notion of {\it concurrent
+  computation} as the non-backtracking, forward-chaining 
+
+(definitely discuss forward-chaining and backward-chaining as concepts)
+
+Expand on literature review of quiescence from HOSC Section 4
+
+Leave the question of quescense versus eagerly-trying-to-right-focus
+versus saturation ambiguous. If you talk about pure saturation the
+forward-reference Chapter 8. 
+
+\subsection{Modes and well-moded specifications}
+\label{sec:framework-modes}
+
+\section{Design decisions}
+
+\subsection{Pseudo-positive atoms}
+\label{sec:pseudopositive}
+
+
+\subsection{Why LF as a term language?}
+\label{sec:why-not-fully-dependent}
+
+The decision to use LF as a first-order domain of quantification
+rather than using a fully-dependent system is based on several
+considerations. First and foremost, this choice was sufficient for the
+purposes of this thesis. In fact, for the purposes of this thesis, we
+could used an even simpler term language of simply-typed LF
+\cite{pfenning08church}; two other logic programming interpretations
+of \sls-like frameworks, Lollimon \cite{lopez05monadic} and Ollibot
+\cite{pfenning09substructural}, were based on simply-typed term
+languages. Canonical LF and Spine Form LF are, at this point,
+well-understood enough that the additional overhead of fully
+dependently-typed terms is not a significant burden, and there are
+examples beyond the scope of this thesis where term dependency is
+useful.
+
+On a theoretical level, it is a significant simplification when we
+restrict ourselves to {\it any} typed term language with a reasonable
+notion of equality and substitution. Spine Form LF and Canonical LF
+are two examples; most conceivable simply-typed term languages would
+also suffice. It is the thesis of this and the previous two chapters
+that we can productively derive logical frameworks from focused
+presentations of logic, but this simple is complicated when we apply it
+to a dependent type theory like CLF that does not distinguish object
+terms and proof terms. CLF terms have a notion of {\it concurrent
+  equivalence} which is coarser the equivalence relation described by
+focusing alone, and we want \sls~proof terms to have a similar notion
+of equivalence. In this chapter we characterize concurrent equivalence
+in Section~\ref{XXX}, after completing our discussion of the framework
+and describing the proof term language.  In CLF, the framework's
+definition relies on term equality, and equality of terms must take
+concurrent equivalence into account, so concurrent equivalence of
+(proof) terms is conceptually prior to the logic itself. We conjecture
+that this complication is no great obstacle, but this thesis avoids
+the issue.
+
+On a practical level, there are advantages to using a well-understood
+term language. The \sls~prototype implementation
+(Section~\ref{sec:prototype}) uses the mature type reconstruction
+engine of Twelf. Schack-Nielsen's implementation of type
+reconstruction for Celf is complicated by the requirements of dealing
+with a substructural term language, and the user is required to add
+extra annotations to indicate persistent application and abstraction
+\cite{schacknielsen08celf}. In \sls~(and in many CLF encodings) the
+term language is intended to be persistent, so these extra annotations
+just clutter specifications.
+
+The restriction to a dependent type theory therefore does not come at
+the cost of great expressive power. Conversely, it is by no means
+clear that the addition of full CLF-like dependency comes with great
+expressive benefit. Even in LF and Twelf, many interesting
+specifications could be encoded in a two-level version of the
+language: a simply-typed object term language and a dependently-typed
+proof term language with first-order quantification over object
+terms. This restriction is sufficient for settings such as Harper's
+comprehensive survey of programming language design
+\cite{harper12practical},\footnote{Harper's metatheory also extends LF
+  by drawing a distinction between standard variables and nominal
+  parameters, but this is an orthogonal point.} and it is built in to
+the educational proof assistant SASyLF \cite{aldrich08sasylf}. In LF
+and Twelf, the ability to use full dependent types is critical in part
+because it allows us to express {\it metatheorems} -- theorems about
+the programming languages and logics we have encoded, like progress
+and preservation for a programming language or cut admissibility for a
+logic. But in substructural logical frameworks like Linear LF, full
+dependency has been found to be {\it insufficient} for expressing
+metatheorems, which motivated the development of Hybrid LF as a
+framework for writing metatheorems about LF \cite{reed09hybrid}. The
+implementation of Hybrid LF effectively creates a stratification like
+\sls's -- full LF as an object term language, a linear logical
+framework with first-order quantification over object language terms,
+and a hybrid language that can inspect both LF object terms and linear
+proof terms. 
+
+\begin{figure}[t]
+\begin{align*}
+\fbox{$\subst{\lf{t}}{\lf{\spi}}$}
+\\
+\subst{(\lf{\lambda x. t'})}{(\lf{t; \spi})}
+ & = \subst{\rsubst{\lf{t}}{\lf{x}}{\lf{t'}}}{\lf{\spi}}
+\\
+\subst{\lfroot{\lf h}{\spi}}{\lfnil}
+ & = \lfroot{\lf h}{\spi}
+\end{align*}\begin{align*}
+%\fbox{$[{\lf{t}}/{\lf{x}}]{\nu}$} &
+%&
+\fbox{$\rsubst{\lf{t}}{\lf{x}}{\lf{\spi}}$}&
+&
+\fbox{$\rsubst{\lf{t}}{\lf{x}}{\lf{t'}}$}&
+&
+\\
+%[\lf{t}/\lf{x}](\lfpi{y}{\nu}{\nu'})
+% & = \lfpi{y}{[\lf{t}/\lf{x}]\nu}{[\lf{t}/\lf{x}]\nu'} &
+\rsubst{\lf t}{\lf x}{(\lf{t'; \spi})}
+ & = \lf{\no{\rsubst{\lf t}{\lf x}{\lf{t'}}}; 
+         \no{\rsubst{\lf t}{\lf x}{\lf{\spi}}}} &
+\rsubst{\lf t}{\lf x}(\lf{\lambda y. t'})
+ & = \lf{\lambda y.\, \no{\rsubst{\lf t}{\lf x}{\lf{t'}}}} 
+      & (\lf x \neq \lf y) 
+\\
+\rsubst{\lf t}{\lf x}{\lfnil} 
+ & = \lfnil &
+\rsubst{\lf t}{\lf x}{(\lf{\lfroot{x}{\spi}})}
+ & = \subst{\lf t}{\rsubst{\lf t}{\lf x}{\lf{\spi}}}
+\\
+& & 
+\rsubst{\lf t}{\lf x}{(\lf{\lfroot{h}{\spi}})}
+ & = \lfroot{\lf h}{\no{\rsubst{\lf t}{\lf x}{\lf{\spi}}}}
+      & ({\it if}~ \lf{h} \neq \lf{x})
+\end{align*}
+\caption{Hereditary substitution on terms, spines, and classifiers}
+\label{fig:lf-hsubst}
+\end{figure}
+
+\subsection{A logic of partial proofs}
+
+While traces 
+
+\subsection{Concurrent equality and multifocusing}
 
 Concurrent equality gives rise to an equivalence relation on focused
 derivations. This equivalence relation is related to the equivalence
@@ -1592,182 +1956,3 @@ work throughout with focused proofs and their analogues, so we can
 afford to leave questions about convertability and weak normalization
 to future work.
 
-
-\subsection{Pseudo-positive atoms}
-\label{sec:pseudopositive}
-
-\section{Adequate encoding}
-
-The lambda
-calculus usually has application $e_1\,e_2$ (encoded in LF as ${\sf
-  app}\,\interp{e_1}\,\interp{e_2}$) and abstraction $\lambda x.e$
-(encoded in LF as ${\sf lam}\,\lambda x. \interp{e}$). 
-
-\subsection{Adequacy for LF and deductive terms}
-
-\subsection{Adequacy for concurrent traces}
-
-
-\section{The \sls~implementation}
-\label{sec:prototype}
-
-The prototype implementation of \sls~contains 
-Following CLF and the Celf implementation, we write ${\ocircle}A$ in
-Celf as \verb|{A}|. The mobile modality ${\gnab}A$ doesn't have an
-ASCII representation, so write \verb|$A| when $A$ is
-mobile. Upshifts and downshifts are always inferred: this means that
-we can't write down ${\uparrow}{\downarrow}A$ or
-${\downarrow}{\uparrow}A$, but neither of these \ollll~propositions
-are part of the \sls~fragment anyway.
-
-Another change is for the sake of readability: if \verb|P| is a
-positive atomic proposition, we can write \verb|!P| wherever \verb|P|
-is expected. This allows us to write either \verb|a * b * c| or
-\verb|a * $b * !c| in SLS to express the positive proposition ${\sf a}
-\fuse {\sf b} \fuse {\sf c}$ where ${\sf a}$, ${\sf b}$, and ${\sf c}$
-are ordered, linear, and persistent positive atomic propositions
-(respectively).
-
-\section{Logic programming interpretation}
-\label{sec:framework-logicprog}
-
-In Chapter 3 I call this distinction one between ``concurrent and deductive''
-proofs, operationally it's the difference between forward chaining 
-and backward chaining. Maintaining the distinction between these is why
-we don't want the class $p^-_\mlax$ in the logic.
-
-We have talked about {\it concurrent} and {\it deductive} proof
-objects, and also about the intuitive notion of {\it concurrent
-  computation} as the non-backtracking, forward-chaining 
-
-(definitely discuss forward-chaining and backward-chaining as concepts)
-
-Expand on literature review of quiescence from HOSC Section 4
-
-Leave the question of quescense versus eagerly-trying-to-right-focus
-versus saturation ambiguous. If you talk about pure saturation the
-forward-reference Chapter 8. 
-
-\subsection{Modes and well-moded specifications}
-\label{sec:framework-modes}
-
-\section{Design decisions}
-
-\subsection{Why LF as a term language?}
-\label{sec:why-not-fully-dependent}
-
-The decision to use LF as a first-order domain of quantification
-rather than using a fully-dependent system is based on several
-considerations. First and foremost, this choice was sufficient for the
-purposes of this thesis. In fact, for the purposes of this thesis, we
-could used an even simpler term language of simply-typed LF
-\cite{pfenning08church}; two other logic programming interpretations
-of \sls-like frameworks, Lollimon \cite{lopez05monadic} and Ollibot
-\cite{pfenning09substructural}, were based on simply-typed term
-languages. Canonical LF and Spine Form LF are, at this point,
-well-understood enough that the additional overhead of fully
-dependently-typed terms is not a significant burden, and there are
-examples beyond the scope of this thesis where term dependency is
-useful.
-
-On a theoretical level, it is a significant simplification when we
-restrict ourselves to {\it any} typed term language with a reasonable
-notion of equality and substitution. Spine Form LF and Canonical LF
-are two examples; most conceivable simply-typed term languages would
-also suffice. It is the thesis of this and the previous two chapters
-that we can productively derive logical frameworks from focused
-presentations of logic, but this simple is complicated when we apply it
-to a dependent type theory like CLF that does not distinguish object
-terms and proof terms. CLF terms have a notion of {\it concurrent
-  equivalence} which is coarser the equivalence relation described by
-focusing alone, and we want \sls~proof terms to have a similar notion
-of equivalence. In this chapter we characterize concurrent equivalence
-in Section~\ref{XXX}, after completing our discussion of the framework
-and describing the proof term language.  In CLF, the framework's
-definition relies on term equality, and equality of terms must take
-concurrent equivalence into account, so concurrent equivalence of
-(proof) terms is conceptually prior to the logic itself. We conjecture
-that this complication is no great obstacle, but this thesis avoids
-the issue.
-
-On a practical level, there are advantages to using a well-understood
-term language. The \sls~prototype implementation
-(Section~\ref{sec:prototype}) uses the mature type reconstruction
-engine of Twelf. Schack-Nielsen's implementation of type
-reconstruction for Celf is complicated by the requirements of dealing
-with a substructural term language, and the user is required to add
-extra annotations to indicate persistent application and abstraction
-\cite{schacknielsen08celf}. In \sls~(and in many CLF encodings) the
-term language is intended to be persistent, so these extra annotations
-just clutter specifications.
-
-The restriction to a dependent type theory therefore does not come at
-the cost of great expressive power. Conversely, it is by no means
-clear that the addition of full CLF-like dependency comes with great
-expressive benefit. Even in LF and Twelf, many interesting
-specifications could be encoded in a two-level version of the
-language: a simply-typed object term language and a dependently-typed
-proof term language with first-order quantification over object
-terms. This restriction is sufficient for settings such as Harper's
-comprehensive survey of programming language design
-\cite{harper12practical},\footnote{Harper's metatheory also extends LF
-  by drawing a distinction between standard variables and nominal
-  parameters, but this is an orthogonal point.} and it is built in to
-the educational proof assistant SASyLF \cite{aldrich08sasylf}. In LF
-and Twelf, the ability to use full dependent types is critical in part
-because it allows us to express {\it metatheorems} -- theorems about
-the programming languages and logics we have encoded, like progress
-and preservation for a programming language or cut admissibility for a
-logic. But in substructural logical frameworks like Linear LF, full
-dependency has been found to be {\it insufficient} for expressing
-metatheorems, which motivated the development of Hybrid LF as a
-framework for writing metatheorems about LF \cite{reed09hybrid}. The
-implementation of Hybrid LF effectively creates a stratification like
-\sls's -- full LF as an object term language, a linear logical
-framework with first-order quantification over object language terms,
-and a hybrid language that can inspect both LF object terms and linear
-proof terms. 
-
-\begin{figure}[t]
-\begin{align*}
-\fbox{$\subst{\lf{t}}{\lf{\spi}}$}
-\\
-\subst{(\lf{\lambda x. t'})}{(\lf{t; \spi})}
- & = \subst{\rsubst{\lf{t}}{\lf{x}}{\lf{t'}}}{\lf{\spi}}
-\\
-\subst{\lfroot{\lf h}{\spi}}{\lfnil}
- & = \lfroot{\lf h}{\spi}
-\end{align*}\begin{align*}
-%\fbox{$[{\lf{t}}/{\lf{x}}]{\nu}$} &
-%&
-\fbox{$\rsubst{\lf{t}}{\lf{x}}{\lf{\spi}}$}&
-&
-\fbox{$\rsubst{\lf{t}}{\lf{x}}{\lf{t'}}$}&
-&
-\\
-%[\lf{t}/\lf{x}](\lfpi{y}{\nu}{\nu'})
-% & = \lfpi{y}{[\lf{t}/\lf{x}]\nu}{[\lf{t}/\lf{x}]\nu'} &
-\rsubst{\lf t}{\lf x}{(\lf{t'; \spi})}
- & = \lf{\no{\rsubst{\lf t}{\lf x}{\lf{t'}}}; 
-         \no{\rsubst{\lf t}{\lf x}{\lf{\spi}}}} &
-\rsubst{\lf t}{\lf x}(\lf{\lambda y. t'})
- & = \lf{\lambda y.\, \no{\rsubst{\lf t}{\lf x}{\lf{t'}}}} 
-      & (\lf x \neq \lf y) 
-\\
-\rsubst{\lf t}{\lf x}{\lfnil} 
- & = \lfnil &
-\rsubst{\lf t}{\lf x}{(\lf{\lfroot{x}{\spi}})}
- & = \subst{\lf t}{\rsubst{\lf t}{\lf x}{\lf{\spi}}}
-\\
-& & 
-\rsubst{\lf t}{\lf x}{(\lf{\lfroot{h}{\spi}})}
- & = \lfroot{\lf h}{\no{\rsubst{\lf t}{\lf x}{\lf{\spi}}}}
-      & ({\it if}~ \lf{h} \neq \lf{x})
-\end{align*}
-\caption{Hereditary substitution on terms, spines, and classifiers}
-\label{fig:lf-hsubst}
-\end{figure}
-
-\subsection{A logic of partial proofs}
-
-While traces 
