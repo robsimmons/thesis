@@ -1520,7 +1520,7 @@ Concurrent equality was first was introduced and explored in the
 context of CLF \cite{watkins02concurrent}, but our presentation
 follows the reformulation in \cite{cervesato12trace}, which defines
 concurrent equivalence based on an analysis of the variables that 
-are used, consumed, and introduced by each given step.
+are used (inputs) and introduced (outputs) by a given step.
 
 The {\it input variables} of a step $S = (\tstep{P}{x}{\Sp})$, denoted
 ${\bullet}S$, are intuitively the set of \lf~and \sls~variables free in
@@ -1535,34 +1535,74 @@ that \sls~patterns can contain free LF variables:
 \\
 {\it FV}(x, P) & = {\it FV}(P)
 \\
-{\it FV}(\lf{t/a}, P) & =  \{ \lf{a} \} \cup {\it FV}(P) \cup {\it FV}(\lf{t}) 
+{\it FV}(\lf{t/a}, P) & =  {\it FV}(P) \cup {\it FV}(\lf{t}) \cup \{ \lf{a} \}
 \end{align*}
 Therefore, the input interface of a step ${\bullet}(\tstep{P}{x}{\Sp})
 = \{ x \} \cup {\it FV}(P) \cup {\it FV}(\Sp)$.
 
-The {\it consumed variables} of a step $S = (\tstep{P}{x}{\Sp})$,
-denoted by ${\ast}S$, are the subset of the input variables that no
-longer appear in the process state after a step. Every \sls~variable
-in ${\bullet}S$ associated with a judgment $\istrue{T}$ or $\iseph{T}$
-is a consumed variable. Any LF variable $\lf{a}$ that is subject to
-unification $\lf{t/a}$ in the pattern $P$ is also a consumed variable
-if $\lf{a}$ is a free variable of the pattern. If $\lf{a}$ is free in
-$P$, then $\lf{t}$ must also be a variable $\lf{b}$, and if $\lf{b}$
-is likewise free in $P$ it is included in the set of consumed
-variables.
+% The {\it consumed variables} of a step $S = (\tstep{P}{x}{\Sp})$,
+% denoted by ${\ast}S$, are the subset of the input variables that no
+% longer appear in the process state after a step. Every \sls~variable
+% in ${\bullet}S$ associated with a judgment $\istrue{T}$ or $\iseph{T}$
+% is a consumed variable. Any LF variable $\lf{a}$ that is subject to
+% unification $\lf{t/a}$ in the pattern $P$ is also a consumed variable
+% if $\lf{a}$ is a free variable of the pattern. If $\lf{a}$ is free in
+% $P$, then $\lf{t}$ must also be a variable $\lf{b}$, and if $\lf{b}$
+% is likewise free in $P$ it is included in the set of consumed
+% variables.
 
-Finally, the {\it output variables} of a step $S = (\tstep{P}{x}{\Sp})$,
-denoted by $S{\bullet}$, are all the variables $\lf{a}$ or $x$ bound by
-the pattern $P$ that are not subsequently consumed by a unification
-$\lf{t/a}$ in the same pattern. 
+The {\it output variables} of a step $S = (\tstep{P}{x}{\Sp})$,
+denoted by $S{\bullet}$, are all the variables $\lf{a}$ or $x$ bound
+by the pattern $P$ that are not subsequently consumed by a unification
+$\lf{t/a}$ in the same pattern. Additionally, if a substitution
+$\lf{t/a}$ appears in $P$ and $\lf{a}$ is a free variable $P$, then it
+must be the case that $\lf{t} = \lf{b}$ for some parameter $\lf{b}$;
+the variable $\lf{b}$ belongs to $S{\bullet}$ if $\lf{b}$ is a free
+variable of $P$. The justification for counting $\lf{b}$ as an output
+variable is that most general unifiers can introduce new variables.
+When we asymmetrically use $[\lf{b}/\lf{a}]$ as a most general unifier
+for $\lf{a} \doteq \lf{b}$, we could have therefore symmetrically
+introduced a new parameter $\lf{c}$ and substituted that new parameter
+for {\it both} $\lf{a}$ and $\lf{b}$. Treating $\lf{b}$ as an output
+parameter gives it the same character as the freshly generated
+$\lf{c}$.\footnote{The cost is that our ability to rename output
+  variables is constrained. It is not possible to ensure that
+  $S{\bullet}$ and ${\bullet}S$, for instance, though this would be
+  possible if we generated a new LF variables $\lf{c}$ whenever two
+  variable were unified.}
 
-Consider a well-typed trace $S_1; S_2$ with two steps.  By renaming
-bound variables in a trace, it is always possible to ensure that
-variables bound by one step are distinct from variables used by that
-step or any previous step -- that is, to ensure $\emptyset =
-(S_1{\bullet} \cup S_2{\bullet}) \cap {\bullet}S_1 = {S_2}{\bullet}
-\cap {\bullet}S_2$. If $S_1$ outputs some variable that $S_2$ takes as
-input, then $S_2; S_1$ cannot be a well-typed trace. More subtly, if
+Consider a well-typed trace $S_1; S_2$ with two steps. If $\emptyset =
+S_1{\bullet} \cap {\bullet}S_2 = {\bullet}S_1 \cap S_2{\bullet}$, then
+$S_2; S_1$ will be a well-typed trace as well: the two steps do not
+interfere, and any unifications caused by one step affect variables
+that are independent of the variables free in the other trace. (The
+second condition, that $\emptyset = {\bullet}S_1 \cap S_2{\bullet}$,
+is only necessary due to the presence of unification.) Concurrent
+equivalence treats these two contexts as equivalent.
+
+Given a trace, the equivalent {\it trace monoid} 
+
+We can calculate 
+$S_1{\bullet} \cap {\bullet}S_2$ and ${\bullet}S_1 \cap S_2{\bullet}$ 
+for any two steps in the same trace, even if their composition is 
+not well-typed: the set $I$ of all pairs $(S, S')$ where 
+$S{\bullet} \cap {\bullet}S'$ and $S'{\bullet} \cap {\bullet}S$.
+
+Thus, given any well-typed trace, we 
+
+, though we could
+potentially need
+
+If $S_1$
+outputs some variable that $S_2$ takes as input, then $S_2; S_1$ may
+not be a well-typed trace. The only exception would be if $S_1$
+unified $\lf{a}$ and $\lf{b}$ and $\lf{b} \in {\bullet}S_2$, 
+
+The only exception
+is in a trace like $\trstep{\lf{b/a}}{\sf foo}\,x; \trstep{()}{\sf bar}\,y$
+
+
+ More subtly, if
 $S_2$ consumes variables that $S_1$ uses, which can only happen in the
 case of LF variables ``consumed'' by unification, then $S_2; S_1$ is
 also not a well typed trace, though $S_2; \lf{\sigma}S_1$ could be
