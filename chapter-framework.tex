@@ -108,6 +108,46 @@ classifiers $\lfroot{\sf a}{(t_1;
 % $\lf{h}$ or ${\sf a}$ with the terms $\lf{t_1\ldots t_n}$ applied to
 % it.
 
+\begin{figure}[t]
+\begin{align*}
+\fbox{$\subst{\lf{t}}{\lf{\spi}}$}
+\\
+\subst{(\lf{\lambda x. t'})}{(\lf{t; \spi})}
+ & = \subst{\rsubst{\lf{t}}{\lf{x}}{\lf{t'}}}{\lf{\spi}}
+\\
+\subst{\lfroot{\lf h}{\spi}}{\lfnil}
+ & = \lfroot{\lf h}{\spi}
+\end{align*}\begin{align*}
+%\fbox{$[{\lf{t}}/{\lf{x}}]{\nu}$} &
+%&
+\fbox{$\rsubst{\lf{t}}{\lf{x}}{\lf{\spi}}$}&
+&
+\fbox{$\rsubst{\lf{t}}{\lf{x}}{\lf{t'}}$}&
+&
+\\
+%[\lf{t}/\lf{x}](\lfpi{y}{\nu}{\nu'})
+% & = \lfpi{y}{[\lf{t}/\lf{x}]\nu}{[\lf{t}/\lf{x}]\nu'} &
+\rsubst{\lf t}{\lf x}{(\lf{t'; \spi})}
+ & = \lf{\no{\rsubst{\lf t}{\lf x}{\lf{t'}}}; 
+         \no{\rsubst{\lf t}{\lf x}{\lf{\spi}}}} &
+\rsubst{\lf t}{\lf x}(\lf{\lambda y. t'})
+ & = \lf{\lambda y.\, \no{\rsubst{\lf t}{\lf x}{\lf{t'}}}} 
+      & (\lf x \neq \lf y) 
+\\
+\rsubst{\lf t}{\lf x}{\lfnil} 
+ & = \lfnil &
+\rsubst{\lf t}{\lf x}{(\lf{\lfroot{x}{\spi}})}
+ & = \subst{\lf t}{\rsubst{\lf t}{\lf x}{\lf{\spi}}}
+\\
+& & 
+\rsubst{\lf t}{\lf x}{(\lf{\lfroot{h}{\spi}})}
+ & = \lfroot{\lf h}{\no{\rsubst{\lf t}{\lf x}{\lf{\spi}}}}
+      & ({\it if}~ \lf{h} \neq \lf{x})
+\end{align*}
+\caption{Hereditary substitution on terms, spines, and classifiers}
+\label{fig:lf-hsubst}
+\end{figure}
+
 \subsection{Simple types and hereditary substitution}
 
 In addition to LF types like $\lfpi{x}{(\lfpi{z}{(\lfroot{\sf
@@ -151,28 +191,28 @@ ${\mid}\lfpi{x}{\tau}{\tau'}{\mid}^- = {\mid}\tau{\mid}^- \supset
 \lf{\sigma}(\lf{\lfroot{\sf c}{\spi}}) 
  & = \lf{\lfroot{\sf c}{\no{\lf{\sigma}(\lf{\spi})}}} 
 \end{align*}\begin{align*}
-\fbox{$[{\lf{t}}/{\lf{x}}]{\nu}$} &
+\fbox{$\lf{\sigma}{\nu}$} &
 \\
-[\lf{t}/\lf{x}](\lfpi{y}{\nu}{\nu'})
- & = \lfpi{y}{[\lf{t}/\lf{x}]\nu}{[\lf{t}/\lf{x}]\nu'}
+\lf{\sigma}(\lfpi{y}{\nu}{\nu'})
+ & = \lfpi{y}{\lf{\sigma}\nu}{\lf{\sigma}\nu'}
      \qquad (\lf x \neq \lf y) 
 \\
-[\lf{t}/\lf{x}]({\sf type})
+\lf{\sigma}({\sf type})
   & = {\sf type}
 \\ 
-[\lf{t}/\lf{x}]({\sf prop}) 
+\lf{\sigma}({\sf prop}) 
  & = {\sf prop} 
 \\
-[\lf{t}/\lf{x}]({\sf prop}\,{\sf ord}) 
+\lf{\sigma}({\sf prop}\,{\sf ord}) 
  & = {\sf prop}\,{\sf ord} 
 \\
-[\lf{t}/\lf{x}]({\sf prop}\,{\sf lin}) 
+\lf{\sigma}({\sf prop}\,{\sf lin}) 
  & = {\sf prop}\,{\sf lin} 
 \\
-[\lf{t}/\lf{x}]({\sf prop}\,{\sf pers}) 
+\lf{\sigma}({\sf prop}\,{\sf pers}) 
  & = {\sf prop}\,{\sf pers} 
 \\
-[\lf{t}/\lf{x}](\lfroot{\sf a}{\spi}) 
+\lf{\sigma}(\lfroot{\sf a}{\spi}) 
  & = \lfroot{\sf a}{\no{\rsubst{\lf{t}}{\lf{x}}{\lf{\spi}}}} 
 \end{align*}
 \caption{Simultaneous substitution on terms, spines, and classifiers}
@@ -204,21 +244,22 @@ terms.
 \subsection{Judgments}
 
 Hereditary substitution is necessary to define simultaneous
-substitution into types and terms in Figure~\ref{fig:simsubst}. We treat
-$[\lf{t}/\lf{x}]$ as a simultaneous substitution that acts as the
-identity on all variables except for $\lf{x}$; this 
-notation is used
+substitution into types and terms in Figure~\ref{fig:simsubst}.  We
+will treat simultaneous substitutions in a mostly informal way, our
+treatment follows the careful treatment of Nanevski et
+al.~\cite{nanevski08contextual}. In particular, we write
+$[\lf{t}/\lf{x}]$ for a simultaneous substitution that acts as the
+identity on all variables except for $\lf{x}$; this notation is used
 in the definition of LF typing in in Figure~\ref{fig:lf-form}, which
 is adapted to Spine Form LF from the Canonical LF presentation in
-\cite{harper07mechanizing}. The judgments 
-The
-judgments $\lf{x}\#\lf{\sigma}$, $\lf{x}\#\Psi$, $\lf{\sf
-  c}\#\Sigma$, ${\sf a}\#\Sigma$, and ${\sf r}\#\Sigma$ assert that
-the relevant variable and constant does not already appear in the
-context $\Psi$ (as a binding $\lf{x}{:}\tau$), the signature $\Sigma$
-(as a declaration ($\lf{\sf c} : \tau$, ${\sf a} : \nu$, or 
-${\sf r} : A^-$), or the substitution
-$\lf{\sigma}$ (as a binding $\lf{t/x}$ or \mbox{$\lf{y/\!\!/x}$}). 
+\cite{harper07mechanizing}. The judgments The judgments
+$\lf{x}\#\lf{\sigma}$, $\lf{x}\#\Psi$, $\lf{\sf c}\#\Sigma$, ${\sf
+  a}\#\Sigma$, and ${\sf r}\#\Sigma$ assert that the relevant variable
+and constant does not already appear in the context $\Psi$ (as a
+binding $\lf{x}{:}\tau$), the signature $\Sigma$ (as a declaration
+($\lf{\sf c} : \tau$, ${\sf a} : \nu$, or ${\sf r} : A^-$), or the
+substitution $\lf{\sigma}$ (as a binding $\lf{t/x}$ or
+\mbox{$\lf{y/\!\!/x}$}).
 
 \begin{figure}
 \fbox{$\vdash_\subord \Sigma\,{\sf sig}$}\vspace{-10pt}
@@ -379,17 +420,18 @@ or that $\Psi \vdash_{\Sigma,\subord} \nu\, {\sf kind}$
 \infer
 {\Psi \vdash_{\Sigma,\subord} (\lf{\sigma, t/x}) : \Psi', \lf{x}{:}\tau
   \mathstrut}
-{\Psi \vdash_{\Sigma,\subord} \lf{t} : \lf{\sigma}\tau 
+{\Psi \vdash_{\Sigma,\subord} \lf{\sigma} : \Psi' 
  &
- \Psi \vdash_{\Sigma,\subord} \lf{\sigma} : \Psi' 
+ \Psi \vdash_{\Sigma,\subord} \lf{t} : \lf{\sigma}\tau 
   \mathstrut}
 \quad
 \infer
 {\Psi \vdash_{\Sigma,\subord} (\lf{\sigma, y/\!\!/x}) : \Psi', \lf{x}{:}\tau
   \mathstrut}
-{\lf{y}{:}\lf{\sigma}\tau \in \Psi
+{\Psi \vdash_{\Sigma,\subord} \lf{\sigma} : \Psi'
  &
- \Psi \vdash_{\Sigma,\subord} \lf{\sigma} : \Psi'}
+ \lf{y}{:}\lf{\sigma}\tau \in \Psi
+  \mathstrut}
 \]
 
 \caption{LF formation judgments.}
@@ -1871,45 +1913,6 @@ framework with first-order quantification over object language terms,
 and a hybrid language that can inspect both LF object terms and linear
 proof terms. 
 
-\begin{figure}[t]
-\begin{align*}
-\fbox{$\subst{\lf{t}}{\lf{\spi}}$}
-\\
-\subst{(\lf{\lambda x. t'})}{(\lf{t; \spi})}
- & = \subst{\rsubst{\lf{t}}{\lf{x}}{\lf{t'}}}{\lf{\spi}}
-\\
-\subst{\lfroot{\lf h}{\spi}}{\lfnil}
- & = \lfroot{\lf h}{\spi}
-\end{align*}\begin{align*}
-%\fbox{$[{\lf{t}}/{\lf{x}}]{\nu}$} &
-%&
-\fbox{$\rsubst{\lf{t}}{\lf{x}}{\lf{\spi}}$}&
-&
-\fbox{$\rsubst{\lf{t}}{\lf{x}}{\lf{t'}}$}&
-&
-\\
-%[\lf{t}/\lf{x}](\lfpi{y}{\nu}{\nu'})
-% & = \lfpi{y}{[\lf{t}/\lf{x}]\nu}{[\lf{t}/\lf{x}]\nu'} &
-\rsubst{\lf t}{\lf x}{(\lf{t'; \spi})}
- & = \lf{\no{\rsubst{\lf t}{\lf x}{\lf{t'}}}; 
-         \no{\rsubst{\lf t}{\lf x}{\lf{\spi}}}} &
-\rsubst{\lf t}{\lf x}(\lf{\lambda y. t'})
- & = \lf{\lambda y.\, \no{\rsubst{\lf t}{\lf x}{\lf{t'}}}} 
-      & (\lf x \neq \lf y) 
-\\
-\rsubst{\lf t}{\lf x}{\lfnil} 
- & = \lfnil &
-\rsubst{\lf t}{\lf x}{(\lf{\lfroot{x}{\spi}})}
- & = \subst{\lf t}{\rsubst{\lf t}{\lf x}{\lf{\spi}}}
-\\
-& & 
-\rsubst{\lf t}{\lf x}{(\lf{\lfroot{h}{\spi}})}
- & = \lfroot{\lf h}{\no{\rsubst{\lf t}{\lf x}{\lf{\spi}}}}
-      & ({\it if}~ \lf{h} \neq \lf{x})
-\end{align*}
-\caption{Hereditary substitution on terms, spines, and classifiers}
-\label{fig:lf-hsubst}
-\end{figure}
 
 \subsection{A logic of partial proofs}
 
