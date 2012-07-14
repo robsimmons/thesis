@@ -1,0 +1,125 @@
+\begin{figure}
+\fbox{$\Psi; \mathcal S \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+$} -- presumes
+  $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$ and $\mathcal S \subseteq \Psi$
+\[
+\infer
+{\Psi; \mathcal S
+   \vdash_{\Sigma,\subord} \lfroot{\sf a}{\spi}\,{\sf prop}^+ \mathstrut}
+{{\sf a}{:}\kappa \in \Sigma
+ &
+ \Psi, [\kappa] \vdash_{\Sigma,\subord} \lf{\spi} : {\sf prop}\,{\sf ord} \mathstrut}
+\quad
+\infer
+{\Psi; \mathcal S
+   \vdash_{\Sigma,\subord} \lfroot{\sf a}{\spi}\,{\sf prop}^+ \mathstrut}
+{{\sf a}{:}\kappa \in \Sigma
+ &
+ \Psi, [\kappa] \vdash_{\Sigma,\subord} \lf{\spi} : {\sf prop}\,{\sf lin} \mathstrut}
+\]
+\[
+\infer
+{\Psi; \mathcal S
+   \vdash_{\Sigma,\subord} \lfroot{\sf a}{\spi}\,{\sf prop}^+ \mathstrut}
+{{\sf a}{:}\kappa \in \Sigma
+ &
+ \Psi, [\kappa] \vdash_{\Sigma,\subord} \lf{\spi} : {\sf prop}\,{\sf pers} \mathstrut}
+\]
+\[
+\infer
+{\Psi; \mathcal S \vdash_{\Sigma,\subord} {\downarrow}A^-\,{\sf prop}^+ \mathstrut}
+{\Psi; \cdot \vdash_{\Sigma,\subord} A^-\,{\sf prop}^- \mathstrut}
+\quad
+\infer
+{\Psi; \mathcal S \vdash_{\Sigma,\subord} {\gnab}A^-\,{\sf prop}^+ \mathstrut}
+{\Psi; \cdot \vdash_{\Sigma,\subord} A^-\,{\sf prop}^- \mathstrut}
+\quad
+\infer
+{\Psi; \mathcal S \vdash_{\Sigma,\subord} {!}A^-\,{\sf prop}^+ \mathstrut}
+{\Psi; \cdot \vdash_{\Sigma,\subord} A^-\,{\sf prop}^- \mathstrut}
+\quad
+\infer
+{\Psi; \mathcal S \vdash_{\Sigma,\subord} \one\,{\sf prop}^+ \mathstrut}
+{}
+\] 
+\[
+\infer
+{\Psi; \mathcal S_1, \mathcal S_2 \vdash_{\Sigma,\subord} A^+ \fuse B^+\,{\sf prop}^+ \mathstrut}
+{\Psi; \mathcal S_1 \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+ 
+ &
+ \Psi; \mathcal S_2 \vdash_{\Sigma,\subord} B^+\,{\sf prop}^+  \mathstrut}
+\quad
+\infer
+{\Psi; \mathcal S \vdash_{\Sigma,\subord} \exists \lf{a}{:}\tau. A^+\,{\sf prop}^+ \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} \tau\,{\sf type}
+ &
+ \Psi, \lf{a}{:}\tau; \mathcal S, \lf{a}{:}\tau \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+ \mathstrut}
+\] 
+\[
+\infer
+{\Psi; \mathcal S \vdash_{\Sigma,\subord} \lf{t} \doteq_p \lf{s}\,{\sf type}}
+{\Psi \vdash_{\Sigma,\subord} p\,{\sf type}
+ &
+ \Psi \vdash_{\Sigma,\subord} \lf{t} : p
+ &
+ \Psi \vdash_{\Sigma,\subord} \lf{s} : p
+ & 
+ p \not\prec_\subord p}
+\]
+\[
+\infer
+{\Psi; \mathcal S \vdash_{\Sigma,\subord} \lf{t} \doteq_p \lf{s}\,{\sf type}}
+{\Psi \vdash_{\Sigma,\subord} p\,{\sf type}
+ &
+ \Psi \vdash_{\Sigma,\subord} \lf{a} : p
+ &
+ \Psi \vdash_{\Sigma,\subord} \lf{s} : p
+ & 
+ \lf{a}{:}p \in \mathcal S}
+\]
+
+
+\medskip
+\fbox{$\Psi \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-$} -- presumes
+  $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$ and
+  $\mathcal S \subseteq \Psi$
+\[
+\infer
+{\Psi; \mathcal S
+   \vdash_{\Sigma,\subord} \lfroot{\sf a}{\spi}\,{\sf prop}^- \mathstrut}
+{{\sf a}{:}\kappa \in \Sigma
+ &
+ \Psi, [\kappa] \vdash_{\Sigma,\subord} \lf{\spi} : {\sf prop} \mathstrut}
+\quad
+\infer
+{\Psi; \mathcal S \vdash_{\Sigma,\subord} {\ocircle}A^+\,{\sf prop}^- \mathstrut}
+{\Psi; \cdot \vdash_{\Sigma,\subord} A^+ : {\sf prop}^+ \mathstrut}
+\]
+\[
+\infer
+{\Psi; \mathcal S_1, \mathcal S_2 \vdash_{\Sigma,\subord} A^+ \lefti B^-\,{\sf prop}^- \mathstrut}
+{\Psi; \mathcal S_1 \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+ 
+ &
+ \Psi; \mathcal S_2 \vdash_{\Sigma,\subord} B^-\,{\sf prop}^-  \mathstrut}
+\quad
+\infer
+{\Psi; \mathcal S_1, \mathcal S_2 \vdash_{\Sigma,\subord} A^+ \righti B^-\,{\sf prop}^- \mathstrut}
+{\Psi; \mathcal S_1 \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+ 
+ &
+ \Psi; \mathcal S_2 \vdash_{\Sigma,\subord} B^-\,{\sf prop}^-  \mathstrut}
+\] 
+\[
+\infer
+{\Psi; \mathcal S \vdash_{\Sigma,\subord} A^- \with B^-\,{\sf prop}^- \mathstrut}
+{\Psi; \mathcal S \vdash_{\Sigma,\subord} A^-\,{\sf prop}^- 
+ &
+ \Psi; \mathcal S \vdash_{\Sigma,\subord} B^-\,{\sf prop}^-  \mathstrut}
+\quad
+\infer
+{\Psi; \mathcal S \vdash_{\Sigma,\subord} \forall \lf{a}{:}\tau. A^-\,{\sf prop}^- \mathstrut}
+{\Psi; \mathcal S \vdash_{\Sigma,\subord} \tau\,{\sf type}
+ &
+ \Psi, \lf{a}{:}\tau; \mathcal S, \lf{a}{:}\tau \vdash_{\Sigma,\subord} A^-\,{\sf prop}^- \mathstrut}
+\] 
+\caption{\sls~proposition formation judgments}
+\label{fig:sls-propform}
+\end{figure}

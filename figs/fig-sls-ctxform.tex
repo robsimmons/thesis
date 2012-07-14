@@ -1,0 +1,101 @@
+\begin{figure}
+\fbox{$\Psi \vdash_{\Sigma,\subord} T\,{\sf left} \mathstrut$} -- presumes
+  $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} (\islvl{A^-})\,{\sf left} \mathstrut}
+{\Psi; \cdot \vdash_{\Sigma,\subord} A^-\,{\sf prop}^- \mathstrut}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} 
+   (\istrue{\susp{\lfroot{\sf a}{\spi}}})\,{\sf left} \mathstrut}
+{{\sf a} : \kappa \in \Sigma
+ & 
+ \Psi, [\kappa] \vdash_{\Sigma,\subord} \lf{\spi} : {\sf prop}\,{\sf ord}
+ \mathstrut}
+\]
+\[
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} 
+   (\iseph{\susp{\lfroot{\sf a}{\spi}}})\,{\sf left} \mathstrut}
+{{\sf a} : \kappa \in \Sigma
+ & 
+ \Psi, [\kappa] \vdash_{\Sigma,\subord} \lf{\spi} : {\sf prop}\,{\sf lin}
+ \mathstrut}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} 
+   (\ispers{\susp{\lfroot{\sf a}{\spi}}})\,{\sf left} \mathstrut}
+{{\sf a} : \kappa \in \Sigma
+ & 
+ \Psi, [\kappa] \vdash_{\Sigma,\subord} \lf{\spi} : {\sf prop}\,{\sf pers}
+ \mathstrut}
+\]
+
+\medskip
+\fbox{$\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable} \mathstrut$} -- presumes
+  $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} \cdot\,{\sf stable} \mathstrut}
+{}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} (\Delta, x{:}T)\,{\sf stable} \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}
+ &
+ \Psi \vdash_{\Sigma,\subord} T\,{\sf left}}
+\]
+
+\medskip
+\fbox{$\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf inv} \mathstrut$} -- presumes
+  $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} \cdot\,{\sf inv} \mathstrut}
+{}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} (\Delta, x{:}T)\,{\sf inv} \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf inv}
+ &
+ \Psi \vdash_{\Sigma,\subord} T\,{\sf left}}
+\]
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} (\Delta, x{:}\istrue{A^+})\,{\sf inv} \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf inv}
+ &
+ \Psi; \mathcal S \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+
+ &
+ \mathcal S \subseteq \Psi}
+\]
+
+\medskip
+\fbox{$\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf infoc} \mathstrut$} -- presumes
+  $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} \cdot\,{\sf infoc} \mathstrut}
+{}
+\quad
+\infer
+{\Psi \vdash_{\Sigma,\subord} (\Delta, x{:}T)\,{\sf infoc} \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf infoc}
+ &
+ \Psi \vdash_{\Sigma,\subord} T\,{\sf left}}
+\]
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord} (\Delta, x{:}\istrue{[\lf{\sigma}A^-]})\,{\sf infoc} 
+ \mathstrut}
+{\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}
+ &
+ \Psi, \mathcal S; \mathcal S \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-
+ &
+ \Psi \vdash_{\Sigma,\subord} \lf{\sigma} : \Psi, \mathcal S}
+\]
+\caption{\sls~context formation judgments}
+\label{fig:sls-ctxform}
+\end{figure}
