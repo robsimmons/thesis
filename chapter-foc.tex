@@ -113,6 +113,7 @@ closely to Barber's dual intuitionistic linear logic
 intuitionistic linear logic \cite{chang03judgmental}.
 
 \subsection{Transitions in linear logic}
+\label{sec:linlogtrans}
 
 The propositions of intuitionistic linear logic, and linear implication
 in particular, capture a notion of state change: we can {\it
@@ -133,29 +134,7 @@ persistent ability to turn ${\sf 6bucks}$ into a ${\sf battery}$ --
 just like we turned \$6 into a bowl of soup and a salad at Panera --
 then we can ultimately get our working robot as well.
 Written as a series of transitions, the picture looks like this:
-\[
-\begin{array}{ccccc}
-\begin{array}{c}
-\mbox{\it \$6 (1)}\medskip\\ 
-\mbox{\it battery-less robot (1)} \medskip\\ 
-\mbox{\it turn \$6 into a battery}\\
-\mbox{\it (all you want)}
-\end{array}
-& \leadsto &
-\begin{array}{c}
-\mbox{\it battery  (1)}\medskip\\ 
-\mbox{\it battery-less robot (1)} \medskip\\ 
-\mbox{\it turn \$6 into a battery}\\
-\mbox{\it (all you want)}
-\end{array}
-& \leadsto &
-\begin{array}{c}
-\mbox{\it robot (1)} \medskip\\ 
-\mbox{\it turn \$6 into a battery}\\
-\mbox{\it (all you want)}\medskip\\~\\
-\end{array}
-\end{array}
-\]
+\input{figs/test-2trans}
 In linear logic, these transitions correspond to the provability
 of the proposition
 \[{!}({\sf 6bucks} \lolli {\sf battery}) \otimes {\sf 6bucks} \otimes

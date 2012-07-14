@@ -901,22 +901,22 @@ following partial proof:
 \deduce
 {\foc{\lf{a}{:}p, \lf{b}{:}p}
   {x{:}{\ocircle}(\lf{a} \doteq \lf{b}), 
-   z{:}\susp{{\sf foo}\,\lf{a}\,\lf{a}}}
+   z{:}\iseph{\susp{{\sf foo}\,\lf{a}\,\lf{a}}}}
   {\islax{({\sf foo}\,\lf{a}\,\lf{b})}}\mathstrut}
 {\deduce{\vdots\mathstrut}
   {\vspace{-4pt}\foc{\lf{b}{:}p}
-   {z{:}\susp{{\sf foo}\,\lf{b}\,\lf{b}}}
+   {z{:}\iseph{\susp{{\sf foo}\,\lf{b}\,\lf{b}}}}
    {\islax{({\sf foo}\,\lf{b}\,\lf{b})}}}}
 \]
-This partial proof can be constructed in one focusing step by left
+This partial proof can be constructed in one focusing stage by left
 focusing on $x$. It is insufficient to capture the first process
 state as 
-$\left({\lf{a}{:}p, \lf{b}{:}p}; 
- {x{:}{\ocircle}(\lf{a} \doteq \lf{b}), 
-  z{:}\susp{{\sf foo}\,\lf{a}\,\lf{a}}}\right)$
+$\left({\lf{a}{:}p, \lf{b}{:}p}; ~~
+ {x{:}{\ocircle}(\lf{a} \doteq \lf{b}), ~~
+  z{:}\iseph{\susp{{\sf foo}\,\lf{a}\,\lf{a}}}}\right)$
 and the second process state as
-$\left({\lf{b}{:}p};
- {z{:}\susp{{\sf foo}\,\lf{b}\,\lf{b}}}\right)$, as this would fail to 
+$\left({\lf{b}{:}p};~~
+ {z{:}\iseph{\susp{{\sf foo}\,\lf{b}\,\lf{b}}}}\right)$, as this would fail to 
 capture that the suceedant $\islax{({\sf foo}\,\lf{b}\,\lf{b})}$
 associated with the second process state is a substitution instance of
 the succeedant
@@ -945,16 +945,34 @@ context that represents a starting point.
  \mathstrut}
 \]
 Taking $\Psi_0 = \lf{a}{:}p, \lf{b}{:}p$, the partial proof above can
-thus be represented as a step between these two process states:
+thus be represented as a step (Section~\ref{sec:framework-concurrent})
+between these two process states:
 \[
-\left({\lf{a}{:}p, \lf{b}{:}p}; 
- {x{:}{\ocircle}(\lf{a} \doteq \lf{b}), 
-  z{:}\susp{{\sf foo}\,\lf{a}\,\lf{a}}}\right)_{\lf{(a/a,\,b/b)}}
+\left({\lf{a}{:}p, \lf{b}{:}p}; ~~
+ {x{:}{\ocircle}(\lf{a} \doteq \lf{b}),  ~~
+  z{:}\iseph{\susp{{\sf foo}\,\lf{a}\,\lf{a}}}}\right)_{\lf{(a/a,\,b/b)}}
 \leadsto_{\Sigma,\subord}
-\left({\lf{b}{:}p};
- {z{:}\susp{{\sf foo}\,\lf{b}\,\lf{b}}}\right)_{\lf{(b/a,\,b/b)}}
+\left({\lf{b}{:}p}; ~~
+ {z{:}\iseph{\susp{{\sf foo}\,\lf{b}\,\lf{b}}}}\right)_{\lf{(b/a,\,b/b)}}
 \]
-Steps will be given proof terms in Section~\ref{sec:framework-concurrent}.
+
+These substitutions are necessary to describe process states as an
+integral part of the \sls~framework. However, in the common case we
+will take $\Psi_0 = \cdot$ and $\lf{\sigma} = \cdot$, which
+corresponds to the case where the parametric conclusion $A^+$ is a
+closed proposition. When the substitution is not mentioned it can be
+assumed to be empty. Additionally, when the LF context $\Psi$ is empty
+or simply irrelevant, we will omit it as well. One further
+simplification is that we will occasionally omit the judgment $\mlvl$
+associated with a suspended positive atomic proposition
+$\islvl{\susp{p^+_\mlvl}}$, but only when it is unambiguous from the
+current signature that $p^+_\mlvl$ is an ordered, linear, or
+persistent positive atomic proposition. In the examples above, we
+tacitly assumed that ${\sf foo}$ was given kind $p \rightarrow p
+\rightarrow {\sf prop}\,{\sf lin}$ in the signature $\Sigma$ when we
+tagged the suspended atomic propositions with the judgment $\meph$, but if
+it was clear that ${\sf foo}$ was linear this judgment
+could have been omitted. 
 
 %In almost all cases, the substitution $\lf\sigma$ associated with a process
 %state is the identity and will be omitted, and the LF context $\Psi$
@@ -1452,6 +1470,39 @@ extend the language of deductive terms with $N ::= \ldots \mid
  \foctx{\Psi'}{\Delta'}{V}{[\lf{\sigma}A^+]}}
 \]
 
+For presenting traces in a readable way, we can use a notation that
+interleaves process states among the pieces of a trace, a common
+practice in Hoare-style reasoning \cite{hoare71proof}.  As an example,
+recakk series of transitions that our money-store-battery-robot system
+took Section~\ref{sec:linlogtrans}:
+\input{figs/test-2trans} 
+This evolution can now be precisely captured as a trace in \sls:
+\begin{align*}
+&\qquad\qquad
+\left(
+ x{:}\iseph{\susp{\sf 6bucks}}, ~~
+ f{:}\iseph{({\sf battery} \lefti \{ {\sf robot} \})}, ~~
+ g{:}\ispers{({\sf 6bucks} \lefti \{ {\sf battery} \})}
+\right)
+\\
+&\trstep{y}{g\,x};
+\\
+&\qquad\qquad
+\left(
+ y{:}\iseph{\susp{\sf battery}}, ~~
+ f{:}\iseph{({\sf battery} \lefti \{ {\sf robot} \})}, ~~
+ g{:}\ispers{({\sf 6bucks} \lefti \{ {\sf battery} \})}
+\right)
+\\
+&\trstep{z}{f\,y}
+\\
+&\qquad\qquad
+\left(
+ z{:}\iseph{\susp{\sf robot}}, ~~
+ g{:}\ispers{({\sf 6bucks} \lefti \{ {\sf battery} \})}
+\right)
+\end{align*}
+
 
 \subsection{Concurrent equality}
 \label{sec:linconcurrenteq}
@@ -1519,15 +1570,17 @@ interleaving of independent and concurrent steps as being equal.
 Concurrent equality was first was introduced and explored in the
 context of CLF \cite{watkins02concurrent}, but our presentation
 follows the reformulation in \cite{cervesato12trace}, which defines
-concurrent equivalence based on an analysis of the variables that 
-are used (inputs) and introduced (outputs) by a given step.
+concurrent equivalence based on an analysis of the variables that are
+used (inputs) and introduced (outputs) by a given step.  Specifically,
+our strategy will be to take a particular well-typed trace $T$ and
+define a set $I$ of pairs of states $(S_1, S_2)$ with the property
+that, if $S_1; S_2$ is a well-typed trace, then $S_2; S_1$ is a
+concurrently equivalent and well-typed trace.  This {\it independency
+  relation} $I$ allows us to treat the trace $T$ as a {\it trace
+  monoid}, which implies the existence of a decidable equality
+\cite{diekert90combinatorics}.
 
-The {\it input variables} of a step $S = (\tstep{P}{x}{\Sp})$, denoted
-${\bullet}S$, are intuitively the set of \lf~and \sls~variables free in
-the step. The notion of what it means to be a free variable is fairly
-well understood, but there is one unusual corner case in \sls. Our use
-of unification, and the corresponding pattern $\lf{t/a}, P$, means
-that \sls~patterns can contain free LF variables:
+\begin{figure}
 \begin{align*}
 {\it FV}(()) & = \emptyset
 \\
@@ -1537,8 +1590,26 @@ that \sls~patterns can contain free LF variables:
 \\
 {\it FV}(\lf{t/a}, P) & =  {\it FV}(P) \cup {\it FV}(\lf{t}) \cup \{ \lf{a} \}
 \end{align*}
-Therefore, the input interface of a step ${\bullet}(\tstep{P}{x}{\Sp})
-= \{ x \} \cup {\it FV}(P) \cup {\it FV}(\Sp)$.
+\caption{Free variables of a pattern}
+\label{fig:freevarspat}
+\end{figure}
+
+We define the independency relation in terms of three functions on
+steps $S = (\tstep{P}{x}{\Sp})$: the input variables ${\bullet}S$,
+the output variables $S{\bullet}$, and the unified variables
+${\ast}S$. 
+
+\smallskip
+\begin{itemize}
+\item The {\it input variables} of a step, denoted ${\bullet}S$, are
+  intuitively the set of \lf~and \sls~variables free in the step. The
+  notion of what it means to be a free variable is mostly standard,
+  but \sls~has one unusual corner case. Our use of unification, and
+  the corresponding pattern form $\lf{t/a}, P$, means that
+  \sls~patterns can contain free LF variables, as defined in
+  Figure~\ref{fig:freevarspat}.  Therefore, the input interface of a
+  step ${\bullet}(\tstep{P}{x}{\Sp}) = \{ x \} \cup {\it FV}(P) \cup
+  {\it FV}(\Sp)$.
 
 % The {\it consumed variables} of a step $S = (\tstep{P}{x}{\Sp})$,
 % denoted by ${\ast}S$, are the subset of the input variables that no
@@ -1551,29 +1622,55 @@ Therefore, the input interface of a step ${\bullet}(\tstep{P}{x}{\Sp})
 % is likewise free in $P$ it is included in the set of consumed
 % variables.
 
-The {\it output variables} of a step $S = (\tstep{P}{x}{\Sp})$,
-denoted by $S{\bullet}$, are all the variables $\lf{a}$ or $x$ bound
-by the pattern $P$ that are not subsequently consumed by a unification
-$\lf{t/a}$ in the same pattern. Additionally, if a substitution
-$\lf{t/a}$ appears in $P$ and $\lf{a}$ is a free variable $P$, then it
-must be the case that $\lf{t} = \lf{b}$ for some parameter $\lf{b}$;
-the variable $\lf{b}$ belongs to $S{\bullet}$ if $\lf{b}$ is a free
-variable of $P$. The justification for counting $\lf{b}$ as an output
-variable is that most general unifiers can introduce new variables.
-When we asymmetrically use $[\lf{b}/\lf{a}]$ as a most general unifier
-for $\lf{a} \doteq \lf{b}$, we could have therefore symmetrically
-introduced a new parameter $\lf{c}$ and substituted that new parameter
-for {\it both} $\lf{a}$ and $\lf{b}$. Treating $\lf{b}$ as an output
-parameter gives it the same character as the freshly generated
-$\lf{c}$.\footnote{The cost is that our ability to rename output
-  variables is constrained. It is not possible to ensure that
-  $S{\bullet}$ and ${\bullet}S$, for instance, though this would be
-  possible if we generated a new LF variables $\lf{c}$ whenever two
-  variable were unified.}
+\item The {\it output variables} of a step $S = (\tstep{P}{x}{\Sp})$,
+  denoted by $S{\bullet}$, are all the variables $\lf{a}$ or $x$ bound
+  by the pattern $P$ that are not subsequently consumed by a
+  unification $\lf{t/a}$ in the same pattern.
 
-Consider a well-typed trace $S_1; S_2$ with two steps. If $\emptyset =
-S_1{\bullet} \cap {\bullet}S_2 = {\bullet}S_1 \cap S_2{\bullet}$, then
-$S_2; S_1$ will be a well-typed trace as well: the two steps do not
+\item The {\it unified variables} of a step, denoted by ${\ast}S$, are
+  the free variables of a step that are modified by unification. If
+  $\lf{t/a}$ appears in a pattern and $\lf{a}$ is free in the pattern,
+  then $\lf{t} = \lf{b}$ for some other variable $\lf{b}$; both
+  $\lf{a}$ and $\lf{b}$ (if the latter is free in the pattern) are
+  included in the step's unified variables.
+\end{itemize}
+\smallskip
+
+Consider a well-typed trace $S_1; S_2$ with two steps. It is possible,
+by renaming bound variables, to ensure that $\emptyset = {\bullet}S_1
+\cap S_2{\bullet} = {\bullet}S_1 \cap S_1{\bullet} = {\bullet}S_1 \cap
+S_1{\bullet}$, so we will generally assume that this is the case.  The
+order of $S_1$ and $S_2$ is fixed if $S_1$ introduces variables that
+are used by $S_2$ -- that is, if $\emptyset \neq S_1{\bullet} \cap
+{\bullet}S_2$. For example, if $S_1 = (\trstep{x_b, x_c}{\sf
+  first}\,x_a)$ and $S_2 = (\trstep{x_d}{\sf left}\,x_b)$, then
+$\{x_b\} = S_1{\bullet} \cap {\bullet}S_2$, and the two steps cannot
+be reordered relative to one another. A more sublte case is the following
+two-step trace:
+\begin{align*}
+& \qquad\qquad
+(\lf{a}{:}p, \lf{b}{:}p; ~~ x{:}\iseph{\left({\ocircle}(\lf{b} \doteq \lf{a})\right)}, ~~
+ y{:}\iseph{\left({\sf foo}\,\lf{b} 
+                 \lefti {\ocircle}({\sf bar}\, \lf{a})\right)}, ~~
+ z{:}\iseph{\susp{{\sf foo}\,\lf{a}}})
+\\
+& \trstep{\lf{b/a}}{x};
+\\
+& \qquad\qquad
+(\lf{b}{:}p; ~~ x{:}\iseph{\left({\ocircle}(\lf{b} \doteq \lf{b})\right)}, ~~
+ y{:}\iseph{\left({\sf foo}\,\lf{b} 
+                 \lefti {\ocircle}({\sf bar}\, \lf{b})\right)}, ~~
+ z{:}\iseph{\susp{{\sf foo}\,\lf{b}}})
+\\
+& \trstep{w}{y\,z} 
+\\
+& \qquad\qquad
+(\lf{b}{:}p; ~~ w{:}\iseph{\susp{{\sf bar}\,\lf{b}}})
+\end{align*}
+
+ If $\emptyset = S_1{\bullet} \cap {\bullet}S_2 =
+{\bullet}S_1 \cap {\ast}S_2 = {\ast}S_1 \cap {\bullet}S_2$, then $S_2;
+S_1$ will be a well-typed trace as well: the two steps do not
 interfere, and any unifications caused by one step affect variables
 that are independent of the variables free in the other trace. (The
 second condition, that $\emptyset = {\bullet}S_1 \cap S_2{\bullet}$,
