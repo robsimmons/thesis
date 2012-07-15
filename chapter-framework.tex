@@ -475,6 +475,7 @@ elsewhere, we will proceed with using LF as a term language and will
 treat term-level operations like substitution somewhat informally.
 
 \subsection{Adequacy}
+\label{sec:lf-adequacy}
 
 {\it Adequacy} was the name given by Harper, Honsell, and Plotkin to the
 methodology of connecting the inductive definitions we write in paper
@@ -1462,7 +1463,9 @@ concurrently equal to $T$ are well-typed.
 \section{Adequate encoding}
 \label{sec:sls-adequate}
 
-We discussed LF the encoding of $\interp{e}$ 
+In Section~\ref{sec:lf-adequacy} we discussed LF the encoding of
+lambda-calculus terms in to LF terms of type ${\sf exp}$, captured
+by the invertible function $\interp{e}$. 
 
 Outside of 
 This was considerd in Cervesato's thesis \cite{}.  and called an 
@@ -1475,6 +1478,10 @@ as ${\sf app}\,\interp{e_1}\,\interp{e_2}$) and abstraction $\lambda
 x.e$ (encoded in LF as ${\sf lam}\,\lambda x. \interp{e}$).
 
 \subsection{Adequacy for LF and deductive terms}
+
+Adequacy in both Linear LF \cite{cervesato02linear} and Ordered LF 
+\cite{polakow01ordered} requires that we be able to capture contexts
+with 
 
 \subsection{Adequacy for concurrent traces}
 
