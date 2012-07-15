@@ -1,10 +1,10 @@
 \chapter{Substructural logical specifications}
 \label{chapter-framework}
 
-In this chapter, we discuss the derivation of a logial framework
+In this chapter, we discuss the derivation of a logical framework
 \sls. The framework \sls~is justified as a fragment of the
 logic \ollll~from Chapter~3, though we modify the presentation 
-significantly, both to simplfy the appearence of proof terms and to
+significantly, both to simplify the appearance of proof terms and to
 facilitate talking about partial proofs: we explain partial 
 
 The specifics of the typed term language of \ollll~were omitted; in
@@ -14,7 +14,7 @@ Section~\ref{sec:slsframework} we present \sls~as a fragment of
 \ollll, and in Section~\ref{sec:framework-concurrenteq} we discuss
 {\it concurrent equivalence}, a coarser equivalence on \sls~proof
 terms than the one given by focused \ollll. In
-Section~\ref{sec:sls-adequate} we adopt the methadology of adequate
+Section~\ref{sec:sls-adequate} we adopt the methodology of adequate
 encoding to \sls. In Section~\ref{sec:prototype} we cover the SLS
 prototype implementation. Finally, in
 Section~\ref{sec:designdecisions}, we discuss some of the design
@@ -561,11 +561,11 @@ and negative propositions of polarized \ollll:
 \begin{align*}
 A^+, B^+, C^+ & ::= p^+ \mid p^+_\meph \mid p^+_\mpers \mid {\downarrow}A^-
   \mid {\gnab}A^- \mid {!}A^- \mid \one \mid A^+ \fuse B^+
-  \mid \exists \lf{x}{:}\tau.A^+ \mid \lf{t} \doteq_\tau \lf{s}
+  \mid \exists \lf{a}{:}\tau.A^+ \mid \lf{t} \doteq_\tau \lf{s}
 \\
 A^-, B^-, C^- & ::= p^- \mid {\ocircle}A^+ \mid A^+ \lefti B^- 
   \mid A^+ \righti B^- \mid A^- \with B^-
-  \mid \forall \lf{x}{:}\tau.A^-
+  \mid \forall \lf{a}{:}\tau.A^-
 \end{align*}
 %Aside from the type annotation $\tau$ on unification $\lf{t}
 %\doteq_\tau \lf{s}$ and on the quantifiers $\forall \lf{x}{:}\tau. A^-$
@@ -649,29 +649,31 @@ unification problems always have a most general solution.  \smallskip
   it is effectively used as a {\it notational definition}
   \cite{pfenning99algorithms}. Because of the way the subset $\mathcal
   S$ of the LF context is handled as an a multiset, each variable
-  bound by an existential quantifier $\exists \lf{x}{:}p.\,A^+$ or a
-  universal quantifier $\forall \lf{x}{:}p.\,A^-$ can be associated
-  with at most one proposition $\lf{x} \doteq \lf{t}$, where $\lf{t}$
+  bound by an existential quantifier $\exists \lf{a}{:}p.\,A^+$ or a
+  universal quantifier $\forall \lf{a}{:}p.\,A^-$ can be associated
+  with at most one proposition $\lf{a} \doteq \lf{t}$, where $\lf{t}$
   is an arbitrary term that appears in the same focusing phase. This
   condition is handled by the second formation rule for $\lf{t} \doteq
   \lf{s}$ in Figure~\ref{fig:sls-propform}.
 
-  The proposition $\forall \lf{x}.\, \forall \lf{y}.\,
-  {\downarrow}({\sf p}\,\lf{x}) \lefti \lf{x} \doteq \lf{y} \lefti
-  {\sf p}\,\lf{y}$ satisfies this condition but $\forall
-  \lf{x}.\,\forall \lf{y}.\,{\ocircle}(\lf{x} \doteq \lf{y})$ does not
+  The proposition $\forall \lf{a}.\, \forall \lf{b}.\,
+  {\downarrow}({\sf p}\,\lf{a}) \lefti \lf{a} \doteq \lf{b} \lefti
+  {\sf p}\,\lf{b}$ satisfies this condition but $\forall
+  \lf{a}.\,\forall \lf{b}.\,{\ocircle}(\lf{a} \doteq \lf{b})$ does not
   ($\ocircle$ breaks focus), and the proposition ${\ocircle}(\exists
-  \lf{x}. \lf{x} \doteq \lf{t})$ satisfies this condition but
-  ${\ocircle}(\exists \lf{x}.  {\uparrow}(\lf{x} \doteq \lf{t} \lefti
-  {\sf p}\,\lf{x}))$ does not (${\uparrow}$ breaks focus).  The
-  proposition ${\ocircle}(\exists \lf{x}.\, \lf{x} \doteq \lf{t} \fuse
-  \lf{x} \doteq \lf{s})$ does not satisfy this condition because the
-  introduced variable $\lf{x}$ is associated with two different
-  unifications. 
+  \lf{a}. \lf{a} \doteq \lf{t})$ satisfies this condition but
+  ${\ocircle}(\exists \lf{a}.  {\uparrow}(\lf{a} \doteq \lf{t} \lefti
+  {\sf p}\,\lf{a}))$ does not (${\uparrow}$ breaks focus).  The
+  proposition ${\ocircle}(\exists \lf{a}.\, \lf{a} \doteq \lf{t} \fuse
+  \lf{a} \doteq \lf{s})$ does not satisfy this condition because the
+  introduced variable $\lf{a}$ is associated with the left-hand side
+  of two different equalities, $\lf{a} \doteq \lf{t}$ and
+  $\lf{a} \doteq \lf{s}$, that together encode an arbitrary unification
+  problem $\lf{t} \doteq \lf{s}$. 
 
   This restriction ensures that, if the unification appears on the
   left, the left-hand side of the unification will always be a
-  variable $\lf{x}$, meaning that $\lf{[t/x]}$ is always a most
+  variable $\lf{a}$, meaning that $\lf{[t/a]}$ is always a most
   general unifier.  This usage of unification is essentially just a
   notational definition \cite{pfenning99algorithms}.
 \end{enumerate}
@@ -683,7 +685,7 @@ The proposition formation judgments are used to specify the formation
 of stable, inverting, and in-focus \sls~contexts in
 Figure~\ref{fig:sls-ctxform}. This restrictions we make to contexts
 justify our continued practice of omitting the $\mtrue$ annotation
-when talking about inverting positive propostiions $A^+$ or focused
+when talking about inverting positive propositions $A^+$ or focused
 negative propositions $[A^-]$ in the context.
 
 We could stop here and use the refinement of \ollll~proof terms that
@@ -712,23 +714,7 @@ with \ollll~proof terms when we consider complete (deductive) proofs,
 but the introduction of patterns and traces changes the structure
 of derivations and proof terms.
 
-% The atomic propositions $\zero$ and $A^+ \oplus B^+$ were excluded
-% from \sls~because our development of patterns, steps, and traces
-% requires that all left rules for positive propositions have exactly
-% one premise; ${\zero}_L$ has zero premises and ${\oplus}_L$ has
-% two. With the restrictions we have made to unificaiton, we can 
-% treat $\doteq_L$ as always having one premise, so all remaining
-% left rules for positive atomic propositions have exactly one 
-% premise. 
 
-% Notably missing from the \sls~types are the upshift ${\uparrow}A^+$
-% and right-permeable negative atomic propositions $p^-_\mlax$. The
-% removal of these to propositions effectively means that the succedent
-% of a stable \sls~sequent can only be $\istrue{\susp{p^-}}$ or
-% $\islax{A^+}$. Sequents that establish the truth of suspended negative
-% propositions are the basis of {\it deductive} proof terms, and
-% sequents that establish the lax truth of a positive proposition are
-% the basis of {\it concurrent} proof terms. 
 
 
 \subsection{Process states}
@@ -748,18 +734,18 @@ $(\Psi; \Delta)$ and the final state as $(\Psi'; \Delta')$, and we can
 omit $\Psi$ and just write $\Delta$ when that is sufficiently clear.
 
 The first cut is not quite enough due to the presence of unification
-in \sls~-- in paricular, the first use-case of unification where we
+in \sls~-- in particular, the first use-case of unification where we
 unify members of a type only inhabited by variables. Consider the
 following partial proof:
 \[
 \deduce
 {\foc{\lf{a}{:}p, \lf{b}{:}p}
-  {x{:}{\ocircle}(\lf{a} \doteq \lf{b}), 
+  {~~x{:}\iseph{{\ocircle}(\lf{a} \doteq \lf{b})}, ~~
    z{:}\iseph{\susp{{\sf foo}\,\lf{a}\,\lf{a}}}}
   {\islax{({\sf foo}\,\lf{a}\,\lf{b})}}\mathstrut}
 {\deduce{\vdots\mathstrut}
   {\vspace{-4pt}\foc{\lf{b}{:}p}
-   {z{:}\iseph{\susp{{\sf foo}\,\lf{b}\,\lf{b}}}}
+   {~~ z{:}\iseph{\susp{{\sf foo}\,\lf{b}\,\lf{b}}}}
    {\islax{({\sf foo}\,\lf{b}\,\lf{b})}}}}
 \]
 This partial proof can be constructed in one focusing stage by left
@@ -771,12 +757,12 @@ $\left({\lf{a}{:}p, \lf{b}{:}p}; ~~
 and the second process state as
 $\left({\lf{b}{:}p};~~
  {z{:}\iseph{\susp{{\sf foo}\,\lf{b}\,\lf{b}}}}\right)$, as this would fail to 
-capture that the suceedant $\islax{({\sf foo}\,\lf{b}\,\lf{b})}$
+capture that the succedent $\islax{({\sf foo}\,\lf{b}\,\lf{b})}$
 associated with the second process state is a substitution instance of
-the succeedant
+the succedent
 $\islax{({\sf foo}\,\lf{a}\,\lf{b})}$ associated with the first. In general,
 if the overall proof proves some proposition $\islax{A^+}$, then 
-the missing subproof has a succeedant $\islax{\lf{[b/a]}A^+}$.
+the missing subproof has a succedent $\islax{\lf{[b/a]}A^+}$.
 
 A process state is therefore written as $(\Psi; \Delta)_{\lf{\sigma}}$ 
 and is well-formed under
@@ -810,8 +796,8 @@ between these two process states:
  {z{:}\iseph{\susp{{\sf foo}\,\lf{b}\,\lf{b}}}}\right)_{\lf{(b/a,\,b/b)}}
 \]
 
-These substitutions are necessary to describe process states as an
-integral part of the \sls~framework. However, in the common case we
+Substitutions are necessary to describe process states as an
+integral part of the \sls~framework. However, in most cases we
 will take $\Psi_0 = \cdot$ and $\lf{\sigma} = \cdot$, which
 corresponds to the case where the parametric conclusion $A^+$ is a
 closed proposition. When the substitution is not mentioned it can be
@@ -925,9 +911,17 @@ could have been omitted.
 \subsection{Patterns}
 \label{sec:framework-patterns}
 
+ % With the restrictions we have made to unificaiton, we can 
+% treat $\doteq_L$ as always having one premise, so all remaining
+% left rules for positive atomic propositions have exactly one 
+% premise. 
+
 Our restrictions on \sls~propositions give derivations the property
-that every positive proposition has exactly one premise. A {\it
-  pattern} is a syntactic entity that captures the linear structure of
+that every positive proposition has exactly one premise. 
+The connectives $\zero$ and $A^+ \oplus B^+$ were excluded
+from \sls~with this goal in mind, and it is also our reason for
+restricting unification to always have a most general unifier. 
+A {\it pattern} is a syntactic entity that captures the linear structure of
 left inversion on positive propositions. Instead of having a somewhat
 inscrutable proof term of the form
 ${\tlaml{\texistsl{\lf{a}}
@@ -967,165 +961,36 @@ The typing rules for \sls~patterns are given in
 Figure~\ref{fig:sls-patterns}. We preserve the side conditions from
 the previous chapter: when we frame off a inverting positive
 proposition in the process state, it is required to be the left-most
-one. (The formation of contexts requires that inverting positive
-propositions only appear as $\istrue{A^+}$, so if there are any inverting
-positive propositions the left-most positive proposition is always
-well-defined.)
+one. As with focused \ollll, this justifies our omission of the
+variables associated with positive propositions: the positive
+proposition we frame off are uniquely identified not by their
+associated but by their position in the context. 
 
-There no longer appears to be a one-to-one correspondence between
-proof terms and rules: ${\downarrow}_L$, ${\gnab}_L$, and ${!}_L$
-appear to have the same proof term, and ${\one}_L$ and ${\fuse}_L$
-appear to have no proof term at all. To view patterns as being
-intrinsically typed -- that is, to view them as actual representatives
-of derivations -- we must think of patterns as carrying extra
-annotations that allow them to continue matching the structure of
-proof rules.
+Note that, with patterns, there no longer appears to be a one-to-one
+correspondence between proof terms and rules: ${\downarrow}_L$,
+${\gnab}_L$, and ${!}_L$ appear to have the same proof term, and
+${\one}_L$ and ${\fuse}_L$ appear to have no proof term at all. To
+view patterns as being intrinsically typed -- that is, to view them as
+actual representatives of derivations -- we must think of patterns as
+carrying extra annotations that allow them to continue matching the
+structure of proof rules.
 
-\begin{figure}
-\fbox{$\foctx{\Psi}{\Delta}{V}{[A^+]}$} -- presumes
-  $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$ and
-  $\Psi \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+$
-\[
-\infer[{\it id}^+]
-{\foctx{\Psi}{z{:}\susp{A^+}}{z}{[A^+]}}
-{}
-\]
-\[
-\infer[{\downarrow}_R]
-{\foctx{\Psi}{\Delta}{\tdownr{N}}{[{\downarrow}A^-]}}
-{\foctx{\Psi}{\Delta}{N}{A^-}}
-\quad
-\infer[{\gnab}_R]
-{\foctx{\Psi}{\restrictto{\Delta}{\meph}}{\tgnabr{N}}{[{\gnab}A^-]}}
-{\foctx{\Psi}{\Delta}{N}{A^-}}
-\quad
-\infer[{!}_R]
-{\foctx{\Psi}{\restrictto{\Delta}{\mpers}}{\tbangr{N}}{[{!}A^-]}}
-{\foctx{\Psi}{\Delta}{N}{A^-}}
-\]
-\[
-\infer[{\one}_R]
-{\foctx{\Psi}{\cdot}{\toner}{[\one]}}
-{}
-\quad
-\infer[{\fuse}_R]
-{\foctx{\Psi}
-  {\matchconj{\Delta_1}{\Delta_2}}{\tfuser{V_1}{V_2}}{[A^+_1 \fuse A^+_2]}}
-{\foctx{\Psi}{\Delta_1}{V_1}{[A^+_1]}
- &
- \foctx{\Psi}{\Delta_2}{V_2}{[A^+_2]}}
-\]
-\[
-\infer[{\exists}_R]
-{\foctx{\Psi}{\Delta}{\texistsr{\lf{t}}{V}}{[\exists \lf{a}{:}\tau. A^+]}}
-{\Psi; \Delta \vdash_{\Sigma,\subord} \lf{t} : \tau
- &
- \foctx{\Psi}{\Delta}{V}{[A^+]}}
-\quad
-\infer[{\doteq}_R]
-{\foctx{\Psi}{\cdot}{\tunifr}{\lf{t} \doteq \lf{t}}}
-{}
-\]
-
-\medskip
-\fbox{$\foctx{\Psi}{\Delta}{N}{\istrue{A^-}}$} -- presumes
-  $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$ and
-  $\Psi \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-$
-\[
-\infer[{\it focus}_L]
-{\foctx{\Psi}{\frameoff{\Theta}{x{:}A^-}}{\tfocusl{x}{\Sp}}{U}}
-{\foctx{\Psi}{\tackon{\Theta}{[A^-]}}{\Sp}{U}}
-\quad
-\infer[{\it rule}]
-{\foctx{\Psi}{\frameoff{\Theta}{\cdot}}{\tfocusl{\sf r}{\Sp}}{U}}
-{{\sf r} : A^- \in \Sigma 
- &
- \foctx{\Psi}{\tackon{\Theta}{[A^-]}}{\Sp}{U}}
-\]
-\[
-\infer[{\lefti}_R]
-{\foctx{\Psi}{\Delta}{\lambda P.N}{A^+ \lefti B^-}}
-{P :: (\Psi; \mkconj{A^+}{\Delta})_{\lf{\sf id}} 
-  \Longrightarrow_{\Sigma,\subord}
- (\Psi';\Delta')_{\lf{\sigma'}}
- &
- \foctx{\Psi'}{\Delta'}{N}{\lf{\sigma'}B^-}}
-\]
-\[
-\infer[{\righti}_R]
-{\foctx{\Psi}{\Delta}{\lambda P.N}{A^+ \righti B^-}}
-{P :: (\Psi; \mkconj{\Delta}{A^+})_{\lf{\sf id}} 
-  \Longrightarrow_{\Sigma,\subord}
- (\Psi';\Delta')_{\lf{\sigma'}}
- &
- \foctx{\Psi'}{\Delta'}{N}{\lf{\sigma'}B^-}}
-\]
-\[
-\infer[{\with}_R]
-{\foctx{\Psi}{\Delta}{\twithr{N_1}{N_2}}{A_1^- \with A_2^-}}
-{\foctx{\Psi}{\Delta}{N_1}{A_1^-}
- &
- \foctx{\Psi}{\Delta}{N_2}{A_2^-}}
-\quad
-\infer[{\forall}_R]
-{\foctx{\Psi}{\Delta}{\tforallr{\lf{a}}{N}}{\forall \lf{a}{:}\tau. A^-}}
-{\foctx{\Psi, \lf{a}{:}\tau}{\Delta}{N}{A^-}}
-\]
-
-\medskip
-\fbox{$\foctx{\Psi}{\Delta}{\Sp}{U}$} --
-  presumes
-  $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf infoc}$
-\[
-\infer[{\it id}^-]
-{\foctx{\Psi}{{[A^-]}}{\tnil}{\istrue{\susp{A^-}}}}
-{}
-\]
-\[
-\infer[{\lefti}_L]
-{\foctx{\Psi}{\frameoff{\Theta}{\matchconj{\Delta}{[A^+ \lefti B^-]}}}
-  {V; \Sp}{U}}
-{\foctx{\Psi}{\Delta}{V}{[A^+]}
- &
- \foctx{\Psi}{\tackon{\Theta}{[B^-]}}{\Sp}{U}}
-\]
-\[
-\infer[{\righti}_L]
-{\foctx{\Psi}{\frameoff{\Theta}{\matchconj{[A^+ \righti B^-]}{\Delta}}}
-  {V; \Sp}{U}}
-{\foctx{\Psi}{\Delta}{V}{[A^+]}
- &
- \foctx{\Psi}{\tackon{\Theta}{[B^-]}}{\Sp}{U}}
-\]
-\[
-\infer[{\with}_{L1}]
-{\foctx{\Psi}{\frameoff{\Theta}{[A_1^- \with A_2^-]}}
-  {\pi_1; \Sp}{U}}
-{\foctx{\Psi}{\tackon{\Theta}{[A_1^-]}}{\Sp}{U}}
-\quad
-\infer[{\with}_{L2}]
-{\foctx{\Psi}{\frameoff{\Theta}{[A_1^- \with A_2^-]}}
-  {\pi_2; \Sp}{U}}
-{\foctx{\Psi}{\tackon{\Theta}{[A_2^-]}}{\Sp}{U}}
-\]
-\[
-\infer[{\forall}_L]
-{\foctx{\Psi}{\frameoff{\Theta}{[\forall \lf{a}{:}\tau. B^-]}}
-  {\lf{t}; \Sp}{U}}
-{\Psi \vdash_{\Sigma,\subord} \lf{t} : \tau
- &
- \foctx{\Psi}{\tackon{\Theta}{[(\lf{[t/a]}B^-)]}}{\Sp}{U}}
-\]
-\caption{\sls~deductive terms}
-\label{fig:sls-deductive}
-\end{figure}
-
-\subsection{Deductive terms}
+\subsection{Values, Terms, and Spines}
 \label{sec:framework-deductive}
 
-Deductive terms include values $V$, terms $N$, and spines $\Sp$ --
-most of the core of the logic. 
+Notably missing from the \sls~types are the upshifts ${\uparrow}A^+$
+and right-permeable negative atomic propositions $p^-_\mlax$. The
+removal of these to propositions effectively means that the succedent
+of a stable \sls~sequent can only be $\istrue{\susp{p^-}}$ or
+$\islax{A^+}$. The \sls~framework only considers {\it complete} proofs
+of judgments $\istrue{\susp{p^-}}$, whereas traces, associated with
+proofs of $\islax{A^+}$ and introduced below in
+Section~\ref{sec:framework-concurrent}, are a proof term assignment
+for partial proofs. Taken together, the values, terms, and spines that
+stand for complete proofs will be referred to as the {\it deductive
+  fragment} of \sls.
 \begin{align*}
+&\mbox{\sls~values (Figure~\ref{fig:sls-values})}& 
 V & ::= z
    \mid N
    \mid \tgnabr{N}
@@ -1135,47 +1000,80 @@ V & ::= z
    \mid \texistsr{\lf{t}}{V}
    \mid \tunifr
 \\
-N & ::= \tfocusl{x}{\Sp} 
+&\mbox{\sls~atomic terms (Figure~\ref{fig:sls-atomic-terms})}&
+R & ::= \tfocusl{x}{\Sp} 
    \mid \tfocusl{\sf r}{\Sp} 
+\\
+&\mbox{\sls~terms (Figure~\ref{fig:sls-terms})}&
+N & ::= R
    \mid \lambda P.N 
    \mid N_1 \with N_2
    \mid \tforallr{\lf{a}}{N}
-   \ldots
+   \mid 
 \\
+&\mbox{\sls~spines (Figure~\ref{fig:sls-spines})}&
 \Sp & ::= \tnil 
    \mid V; \Sp
    \mid \pi_1; \Sp 
    \mid \pi_2; \Sp
    \mid \lf{t}; \Sp
 \end{align*}
-The use of patterns removes many of the terms $N$ that appeard in
-\ollll~proof terms. As with patterns, we appear to conflate the proof
-terms associated with different proof rules -- we have a single
-$\lambda P.N$ constructor and a single $V;\Sp$ spine rather than a
-term $\tlamr{N}$ and spine $\tappr{V}{\Sp}$ associated with
-propositions $A^+ \righti B^-$ and another term $\tlaml{N}$ and spine
-$\tappl{V}{\Sp}$ associated with propositions $A^+ \lefti B^-$.  As
-with patterns, it is possible to think of these terms as just having
-extra annotations ($\lambda^>$ or $\lambda^<$) that we have omitted.
-Without these annotations, proof terms carry less information than
-derivations, and the rules for values, terms, and spines in
-Figure~\ref{fig:sls-deductive} must be seen as typing rules. With
-these extra implicit annotations, values, terms, and spines can
-continue to be seen as representatives derivations.
 
-The term typing inference rule labeled ${\sf rule}$ in
-Figure~\ref{fig:sls-deductive} is the only typing rule for deductive
-terms that does not have an exact analouge in \ollll. To perserve the
-bijective correspondence between \ollll~and \sls~proof terms, we need
-to either place every rule ${\sf r} : A^-$ in the \sls~signature
-$\Sigma$ into the \ollll~context as a persistent proposition.
+In contrast to \ollll, we distinguish the refinement $R$ of atomic
+terms $R$ that correspond to stable sequents from terms $N$. As with
+patterns, we appear to conflate the proof terms associated with
+different proof rules -- we have a single $\lambda P.N$ constructor
+and a single $V;\Sp$ spine rather than a term $\tlamr{N}$ and spine
+$\tappr{V}{\Sp}$ associated with propositions $A^+ \righti B^-$ and
+another term $\tlaml{N}$ and spine $\tappl{V}{\Sp}$ associated with
+propositions $A^+ \lefti B^-$.  As with patterns, it is possible to
+think of these terms as just having extra annotations ($\lambda^>$ or
+$\lambda^<$) that we have omitted.  Without these annotations, proof
+terms carry less information than derivations, and the rules for
+values, terms, and spines in
+Figures~\ref{fig:sls-values}--\ref{fig:sls-spines} must be seen as
+typing rules. With these extra implicit annotations, values, terms,
+and spines can continue to be seen as representatives of derivations.
 
-As with LF terms, we will write atomic terms $\tfocusl{x}{\Sp}$
-and $\tfocusl{\sf r}{\Sp}$ in
-shorthand, writing $({\sf foo}\,\lf{t}\,\lf{s}\,V\,V')$
-instead of $\tfocusl{\sf foo}{(\lf{t};\lf{s};V;V';\tnil)}$ when we are
-not concerned with the fact that the term is comprised of a variable
-and a spine.
+\input{figs/fig-sls-deductive}
+
+There are two typing rules in
+Figures~\ref{fig:sls-values}--\ref{fig:sls-spines} that do not have
+exact analogues as rules in \ollll, the rule ${\it rule}$
+(Figure~\ref{fig:sls-atomic-terms}) corresponding to an atomic term
+$\tfocusl{\sf r}{\Sp}$ and the rule ${\ocircle}_R$
+(Figure~\ref{fig:sls-terms}) corresponding to the term
+$\tlet{T}{V}$. We will discuss the latter outlier, let-expressions, in
+the next section. The first outlier, the typing rule labeled ${\it
+  rule}$, accounts for the fact that there is an additional source of
+persistent facts in \sls, the signature $\Sigma$, that is not present
+in \ollll.  To preserve the bijective correspondence between
+\ollll~and \sls~proof terms, we need to either place every rule ${\sf
+  r} : A^-$ in the \sls~signature $\Sigma$ into the corresponding
+\ollll~context as a persistent proposition.
+
+As with LF terms, we will use a shorthand for atomic terms
+$\tfocusl{x}{\Sp}$ and $\tfocusl{\sf r}{\Sp}$, writing $({\sf
+  foo}\,\lf{t}\,\lf{s}\,V\,V')$ instead of $\tfocusl{\sf
+  foo}{(\lf{t};\lf{s};V;V';\tnil)}$ when we are not concerned with the
+fact that atomic terms consist of a variable and a spine.
+
+\subsection{Steps and traces}
+\label{sec:framework-concurrent}
+\label{sec:framework-substprop}
+
+The deductive proofs in
+Figures~\ref{fig:sls-values}--\ref{fig:sls-spines} cover the rules of
+every \sls~proposition except for the lax modality
+${\ocircle}A^+$. It is in the context of the lax modality that we will
+present proof terms corresponding to partial proofs.
+\begin{align*}
+&\mbox{Steps}&
+S & ::= \tstep{P}{x}{\Sp}
+\\
+&\mbox{Traces}&
+T & ::= \emptytrace \mid T_1; T_2 \mid S
+\end{align*}
 
 \begin{figure}
 \fbox{$P :: (\Psi; \Delta)_{\lf{\sigma}} 
@@ -1185,32 +1083,21 @@ and a spine.
   and $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$
 \[
 \infer
-{\tstep{P}{x}{\Sp} :: 
-  (\Psi; \frameoff{\Theta}{\frameoff{\Theta'}{x{:}A^-}})_{\lf{\sigma}} 
+{\trstep{P}{R} :: 
+  (\Psi; \frameoff{\Theta}{\Delta})_{\lf{\sigma}} 
    \leadsto_{\Sigma,\subord}
   (\Psi'; \Delta')_{\lf{\sigma'}}}
-{\foctx{\Psi}{\tackon{\Theta'}{[A^-]}}{\Sp}{\istrue{\susp{{\ocircle}{B^+}}}}
+{\foctx{\Psi}{\Delta}{R}{\istrue{\susp{{\ocircle}{B^+}}}}
  &
  P :: (\Psi,\tackon{\Theta}{B^+})_{\lf{\sigma}}
    \Longrightarrow_{\Sigma,\subord}
       (\Psi'; \Delta')_{\lf{\sigma'}}}
 \]
-\[
-\infer
-{\tstep{P}{\sf r}{\Sp} :: 
-  (\Psi; \frameoff{\Theta}{\frameoff{\Theta'}{\cdot}})_{\lf{\sigma}} 
-   \leadsto_{\Sigma,\subord}
-  (\Psi'; \Delta')_{\lf{\sigma'}}}
-{{\sf r} : A^- \in \Sigma
- &
- \foctx{\Psi}{\tackon{\Theta'}{[A^-]}}{\Sp}{\istrue{\susp{{\ocircle}{B^+}}}}
- &
- P :: (\Psi,\tackon{\Theta}{B^+})_{\lf{\sigma}}
-   \Longrightarrow_{\Sigma,\subord}
-      (\Psi'; \Delta')_{\lf{\sigma'}}}
-\]
+\caption{\sls~steps}
+\label{fig:sls-steps}
+\end{figure}
 
-\medskip
+\begin{figure}
 \fbox{$T :: (\Psi; \Delta)_{\lf{\sigma}} 
    \leadsto^*_{\Sigma,\subord}
   (\Psi'; \Delta')_{\lf{\sigma'}}$} -- presumes
@@ -1218,7 +1105,9 @@ and a spine.
   and $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$
 \[
 \infer
-{\emptytrace :: (\Psi; \Delta)_{\lf{\sigma}}}
+{\emptytrace :: (\Psi; \Delta)_{\lf{\sigma}} 
+               \leadsto^*_{\Sigma,\subord}
+             (\Psi; \Delta)_{\lf{\sigma}}}
 {}
 \quad
 \infer
@@ -1242,26 +1131,14 @@ T' :: (\Psi_2; \Delta_2)_{\lf{\sigma_2}}
                \leadsto^*_{\Sigma,\subord}
              (\Psi_3; \Delta_3)_{\lf{\sigma_3}}}
 \]
-\caption{\sls~concurrent traces}
-\label{fig:sls-concurrent}
+\caption{\sls~traces}
+\label{fig:sls-traces}
 \end{figure}
 
-\subsection{Concurrent traces}
-\label{sec:framework-concurrent}
-\label{sec:framework-substprop}
-
-Deductive traces and patterns handle every 
-\sls~proposition except for the lax modaility ${\ocircle}A^+$. It is in 
-the context of the lax modality that we will present proof terms 
-corresponding to partial proofs. 
-\begin{align*}
-S & ::= \tstep{P}{x}{\Sp}
-\\
-T & ::= \emptytrace \mid T_1; T_2 \mid S
-\end{align*}
 A step $S = \tstep{P}{x}{\Sp}$ corresponds precisely to the notion of
 a {\it synthetic inference rule} discussed in
-Section~\ref{sec:linsynthetic}.  Whereas each typing rule for a
+Section~\ref{sec:linsynthetic}. 
+ Whereas each typing rule for a
 pattern, value, term, or spine corresponded to a rule in \ollll, a
 step in \sls~corresponds to a use of left focus, a use of the
 left rule for the lax modality, and a use of the 
@@ -1288,48 +1165,40 @@ admissible focal substitution lemma in \ollll:
      {\Delta'}
      {\islax{\lf{\sigma'}A^+}}}}}}
 \]
-The spine $\Sp$ corresponds to the complete proof of 
-$\foc{\Psi}{\tackon{\Theta'}{[A^-]}}{\istrue{\susp{{\ocircle}B^+}}}$, and
-the pattern $P$ corresponds to the partial proof of 
-$\foc{\Psi}
-    {\tackon{\Theta}{B^+}}
-    {\islax{\lf{\sigma}A^+}}$. The typing rules for steps 
-are given in Figure~\ref{fig:sls-concurrent}.
-
-A step corresponds to a focusing 
-stage (represented by $\Sp$)
-%
-followed by an inversion phase (represented by $P$), making it
-a proof term for the {\it synthetic inference rules}
-discussed in Section~\ref{sec:linsynthetic}. Because 
-Because we understand these synthetic inference rules as relations
-between process states, we can also call steps {\it synthetic
-  transitions}. Traces $T$ are monoids over steps -- $\emptytrace$ is
-an empty trace, $S$ is a trace consisting of a single step, and $T_1;
-T_2$ is the sequential composition of traces. 
+The spine $\Sp$ corresponds to the complete proof of
+$\foc{\Psi}{\tackon{\Theta'}{[A^-]}}{\istrue{\susp{{\ocircle}B^+}}}$,
+and the pattern $P$ corresponds to the partial proof of $\foc{\Psi}
+{\tackon{\Theta}{B^+}} {\islax{\lf{\sigma}A^+}}$. The typing rules for
+steps are given in Figure~\ref{fig:sls-steps}.  Because we understand
+these synthetic inference rules as relations between process states,
+we can also call steps {\it synthetic transitions}. Traces $T$ are
+monoids over steps -- $\emptytrace$ is an empty trace, $S$ is a trace
+consisting of a single step, and $T_1; T_2$ is the sequential
+composition of traces. The typing rules for traces in
+Figure~\ref{fig:sls-traces} straightforwardly reflect this monoid structure.
 
 Steps incorporate left focus and the left rule for ${\ocircle}$, and
-{\it let-expressions}, which allow concurrent traces can be included
-into deductive terms, incorporate right focus and the right rule for
-${\ocircle}$. Let expressions are an addition form of term, so we
-extend the language of deductive terms with $N ::= \ldots \mid
-\tlet{T}{V}$ associated with the right rule for equality.
-\[
-\infer[{\ocircle}_R]
-{\foctx{\Psi}{\Delta}{\tlet{T}{V}}{{\ocircle}A^+}}
-{T :: (\Psi; \Delta)_{\lf{\sf id}}
-  \leadsto^*_{\Sigma,\subord}
- (\Psi';\Delta')_{\lf{\sigma'}}
- &
- \foctx{\Psi'}{\Delta'}{V}{[\lf{\sigma}A^+]}}
-\]
+{\it let-expressions} $\tlet{T}{V}$, which include traces in deductive
+terms, incorporate right focus and the right rule for
+${\ocircle}$. The trace $T$ represents the entirety of the partial
+proof that proceeds by repeated use of synthetic transitions --
+left-focus followed by left-inversion -- and the eventual conclusion
+$V$ represents the right focus that follows the series of synthetic
+transitions. An \ollll~term that is analogous to an
+\sls~let-expression would also be a series of left-focusing phases
+followed by a right focus, but the value $V$ would be buried deep
+within the structure of the term.
 
-For presenting traces in a readable way, we can use a notation that
+\subsection{Presenting traces}
+
+To present traces in a readable way, we can use a notation that
 interleaves process states among the pieces of a trace, a common
 practice in Hoare-style reasoning \cite{hoare71proof}.  As an example,
-recakk series of transitions that our money-store-battery-robot system
-took Section~\ref{sec:linlogtrans}:
-\input{figs/test-2trans} 
+recall the series of transitions that our money-store-battery-robot
+system took Section~\ref{sec:linlogtrans}: 
+%
+\input{figs/test-2trans}
+%
 This evolution can now be precisely captured as a trace in \sls:
 \begin{align*}
 &\qquad\qquad
@@ -1416,11 +1285,19 @@ transition to $x_f{:}\susp{\sf f}$, which completes the trace.
 The independence here is key: if two steps consume different
 resources, then we want to treat them as independent concurrent steps
 that could have equivalently happened in the other order. However, if
-we define equvalence only in terms of the $\alpha$-equivalence of
-\ollll~derivations, the two traces above are distinct. As a result, we
-can introduce a corser equivalence relation, {\it concurrent
+we define equivalence only in terms of the $\alpha$-equivalence of
+\ollll~derivations, the two traces above are distinct. In this
+section, we introduce a coarser equivalence relation, {\it concurrent
   equality}, that allows us to treat traces that differ only in the
-interleaving of independent and concurrent steps as being equal.
+interleaving of independent and concurrent steps as being equal.  The
+previous section considered the proof terms of \sls~as a fragment of
+\ollll~better able to talk about partial proofs.  The introduction of
+concurrent equality takes a step beyond \ollll, because it breaks the
+bijective correspondence between \ollll~proofs and \sls~proofs. As the
+example above indicates, there are simply more \ollll~proofs than
+\sls~proofs when we factor the latter moduo concurrent equality
+and declare $T_1$ and $T_2$ to be (concurrently) equal.
+
 Concurrent equality was first was introduced and explored in the
 context of CLF \cite{watkins02concurrent}, but our presentation
 follows the reformulation in \cite{cervesato12trace}, which defines
@@ -1433,6 +1310,8 @@ concurrently equivalent and well-typed trace.  This {\it independency
   relation} $I$ allows us to treat the trace $T$ as a {\it trace
   monoid}, which implies the existence of a decidable equality
 \cite{diekert90combinatorics}.
+
+\subsection{Interfaces}
 
 \begin{figure}
 \begin{align*}
@@ -1451,7 +1330,8 @@ concurrently equivalent and well-typed trace.  This {\it independency
 We define the independency relation in terms of three functions on
 steps $S = (\tstep{P}{x}{\Sp})$: the input variables ${\bullet}S$,
 the output variables $S{\bullet}$, and the unified variables
-${\ast}S$. 
+${\ast}S$. Together, the input, output, and unified variables make
+up the step's {\it interface}. 
 
 \smallskip
 \begin{itemize}
@@ -1490,6 +1370,8 @@ ${\ast}S$.
 \end{itemize}
 \smallskip
 
+\subsection{Independency}
+
 Consider a well-typed trace $S_1; S_2$ with two steps. It is possible,
 by renaming bound variables, to ensure that $\emptyset = {\bullet}S_1
 \cap S_2{\bullet} = {\bullet}S_1 \cap S_1{\bullet} = {\bullet}S_1 \cap
@@ -1499,8 +1381,12 @@ are used by $S_2$ -- that is, if $\emptyset \neq S_1{\bullet} \cap
 {\bullet}S_2$. For example, if $S_1 = (\trstep{x_b, x_c}{\sf
   first}\,x_a)$ and $S_2 = (\trstep{x_d}{\sf left}\,x_b)$, then
 $\{x_b\} = S_1{\bullet} \cap {\bullet}S_2$, and the two steps cannot
-be reordered relative to one another. A more sublte case is the following
-two-step trace:
+be reordered relative to one another. 
+
+Conversely, the condition that $\emptyset = S_1{\bullet} \cap
+{\bullet}S_2$ is sufficent to allow reordering in a CLF-like framework
+\cite{cervesato12trace}. In \sls, however, unification can have subtle
+effects. Consider the following two-step trace:
 \begin{align*}
 & \qquad\qquad
 (\lf{a}{:}p, \lf{b}{:}p; ~~ x{:}\iseph{\left({\ocircle}(\lf{b} \doteq \lf{a})\right)}, ~~
@@ -1511,7 +1397,7 @@ two-step trace:
 & \trstep{\lf{b/a}}{x};
 \\
 & \qquad\qquad
-(\lf{b}{:}p; ~~ x{:}\iseph{\left({\ocircle}(\lf{b} \doteq \lf{b})\right)}, ~~
+(\lf{b}{:}p; ~~ 
  y{:}\iseph{\left({\sf foo}\,\lf{b} 
                  \lefti {\ocircle}({\sf bar}\, \lf{b})\right)}, ~~
  z{:}\iseph{\susp{{\sf foo}\,\lf{b}}})
@@ -1521,81 +1407,72 @@ two-step trace:
 & \qquad\qquad
 (\lf{b}{:}p; ~~ w{:}\iseph{\susp{{\sf bar}\,\lf{b}}})
 \end{align*}
+This trace cannot be reordered even though $\emptyset = \emptyset \cap
+\{ y, z \} = (\trstep{\lf{b/a}}{x}){\bullet} \cap
+{\bullet}(\trstep{w}{y\,z})$, because the atomic term $y\,z$ is only
+well typed after the LF variables $\lf{a}$ and $\lf{b}$ are unified.
+To avoid this situation, it is sufficient to require
+that $\emptyset = {\ast}S_1 \cap {\bullet}S_2$. In the other direction,
+consider the following very similar trace:
+\begin{align*}
+& \qquad\qquad
+(\lf{a}{:}p, \lf{b}{:}p; ~~ x{:}\iseph{\left({\ocircle}(\lf{a} \doteq \lf{b})\right)}, ~~
+ y{:}\iseph{\left(\forall{\lf{a'}}{:}p.\,
+                {\sf foo}\,\lf{a'} 
+                 \lefti {\ocircle}({\sf bar}\, \lf{a'})\right)}, ~~
+ z{:}\iseph{\susp{{\sf foo}\,\lf{a}}})
+\\
+& \trstep{w}{y\,\lf{a}\,z};
+\\
+& \qquad\qquad
+(\lf{a}{:}p, \lf{b}{:}p; ~~ x{:}\iseph{\left({\ocircle}(\lf{a} \doteq \lf{b})\right)}, ~~
+ w{:}\iseph{\susp{{\sf bar}\,\lf{a}}})
+\\
+& \trstep{\lf{b/a}}{x}
+\\
+& \qquad\qquad
+(\lf{b}{:}p; ~~ w{:}\iseph{\susp{{\sf bar}\,\lf{b}}})
+\end{align*}
+The reordered trace $\trstep{\lf{b/a}}{x}; \trstep{w}{y\,\lf{a}\,z}$
+is not well-typed: the second step has $\lf{a}$ free, and after
+$\lf{a}$ and $\lf{b}$ are unified $\lf{a}$ is no longer free in the
+process state.  We could consider applying the substitution
+$\lf{[b/a]}$ to the second process state to restore its well-typedness
+when the two steps are reordered, but it is much simpler to just
+preclude reordering in this instance by requiring that 
+$\emptyset = {\bullet}S_1 \cap {\ast}S_2$.
 
- If $\emptyset = S_1{\bullet} \cap {\bullet}S_2 =
-{\bullet}S_1 \cap {\ast}S_2 = {\ast}S_1 \cap {\bullet}S_2$, then $S_2;
-S_1$ will be a well-typed trace as well: the two steps do not
-interfere, and any unifications caused by one step affect variables
-that are independent of the variables free in the other trace. (The
-second condition, that $\emptyset = {\bullet}S_1 \cap S_2{\bullet}$,
-is only necessary due to the presence of unification.) Concurrent
-equivalence treats these two contexts as equivalent.
-
-Given a trace, the equivalent {\it trace monoid} 
-
-We can calculate 
-$S_1{\bullet} \cap {\bullet}S_2$ and ${\bullet}S_1 \cap S_2{\bullet}$ 
-for any two steps in the same trace, even if their composition is 
-not well-typed: the set $I$ of all pairs $(S, S')$ where 
-$S{\bullet} \cap {\bullet}S'$ and $S'{\bullet} \cap {\bullet}S$.
-
-Thus, given any well-typed trace, we 
-
-, though we could
-potentially need
-
-If $S_1$
-outputs some variable that $S_2$ takes as input, then $S_2; S_1$ may
-not be a well-typed trace. The only exception would be if $S_1$
-unified $\lf{a}$ and $\lf{b}$ and $\lf{b} \in {\bullet}S_2$, 
-
-The only exception
-is in a trace like $\trstep{\lf{b/a}}{\sf foo}\,x; \trstep{()}{\sf bar}\,y$
-
-
- More subtly, if
-$S_2$ consumes variables that $S_1$ uses, which can only happen in the
-case of LF variables ``consumed'' by unification, then $S_2; S_1$ is
-also not a well typed trace, though $S_2; \lf{\sigma}S_1$ could be
-well typed for some substitution $\sigma$ that can be read off of the
-pattern in step $S_1$. Conversely, if $S_1; S_2$ is well-typed,
-$\emptyset = S_1{\bullet} \cap {\bullet}S_2$, and $\emptyset =
-{\bullet}S_1 \cap {\ast}S_2 = {\ast}S_1 \cap {\bullet}S_2$, then $S_2;
-S_1$ is also a well-typed trace.
-
-Given a particular trace $T$, we can observe 
-
-Having done so we can observe that $S_2; S_1$ is a
-well-typed trace if and only if $S_1$ outputs no variables
-that $S_2$ uses -- that is, that $S_1{\bullet} \cap {\bullet}S_2$.
-
-are the same as variable
-names in ${\bullet}S_1$ -- which is always possible by renaming of
-bound variables --
-
-bound by
-a unification $\lf{t/a}$ as a consumed variable
-
-
- denoted ${\bullet}S$
-are 
-
-, is 
-essentially the free variables of the trace, combined with any any. 
-
-
-To define concurrent equality, we 
-
-It is not obvious that our treatment of the interaction between 
-unification and concurrent eqivalence is the right one. 
+These three conditions establish independency: given a well-typed
+trace $S_1; S_2$ where $\emptyset = {\bullet}S_1 \cap S_2{\bullet} =
+{\bullet}S_1 \cap S_1{\bullet} = {\bullet}S_1 \cap S_1{\bullet}$
+(which is always possible by renaming bound variables), if $\emptyset
+= S_1{\bullet} \cap {\bullet}S_2 = {\bullet}S_1 \cap {\ast}S_2 =
+{\ast}S_1 \cap {\bullet}S_2$, then $S_2; S_1$ is also a well-typed
+trace.  We can calculate $S_1{\bullet} \cap {\bullet}S_2$ and
+${\bullet}S_1 \cap S_2{\bullet}$ for any two steps in the same trace,
+even if their composition is not well-typed. Therefore, given a
+well-typed and sufficiently-renamed trace $T$, we can let the
+independency relation $I$ be the set of pairs of steps $(S, S')$ in
+$T$ where $\emptyset = S_1{\bullet} \cap {\bullet}S_2 = {\bullet}S_1
+\cap {\ast}S_2 = {\ast}S_1 \cap {\bullet}S_2$. Letting $I$ be the
+independency relation of a trace monoid, we get the set of traces that
+are concurrently equal to $T$, and all traces $T'$ that are
+concurrently equal to $T$ are well-typed.
 
 \section{Adequate encoding}
 \label{sec:sls-adequate}
 
-The lambda
-calculus usually has application $e_1\,e_2$ (encoded in LF as ${\sf
-  app}\,\interp{e_1}\,\interp{e_2}$) and abstraction $\lambda x.e$
-(encoded in LF as ${\sf lam}\,\lambda x. \interp{e}$). 
+We discussed LF the encoding of $\interp{e}$ 
+
+Outside of 
+This was considerd in Cervesato's thesis \cite{}.  and called an 
+{\it internal representation} in \cite{cervesato02linear}.
+When Reed formalized the type preservation theorem for the LLF encoding
+of Mini-ML with references 
+
+The lambda calculus usually has application $e_1\,e_2$ (encoded in LF
+as ${\sf app}\,\interp{e_1}\,\interp{e_2}$) and abstraction $\lambda
+x.e$ (encoded in LF as ${\sf lam}\,\lambda x. \interp{e}$).
 
 \subsection{Adequacy for LF and deductive terms}
 
@@ -1731,6 +1608,11 @@ proof terms.
 \subsection{A logic of partial proofs}
 
 While traces 
+
+\subsection{}
+
+It is not obvious that our treatment of the interaction between 
+unification and concurrent equivalence is the right one. 
 
 \subsection{Concurrent equality and multifocusing}
 

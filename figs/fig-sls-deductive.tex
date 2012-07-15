@@ -1,0 +1,169 @@
+\begin{figure}
+\fbox{$\foctx{\Psi}{\Delta}{V}{[A^+]}$} -- presumes
+  $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$ and
+  $\Psi \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+$
+\[
+\infer[{\it id}^+]
+{\foctx{\Psi}{z{:}\susp{A^+}}{z}{[A^+]}}
+{}
+\]
+\[
+\infer[{\downarrow}_R]
+{\foctx{\Psi}{\Delta}{\tdownr{N}}{[{\downarrow}A^-]}}
+{\foctx{\Psi}{\Delta}{N}{A^-}}
+\quad
+\infer[{\gnab}_R]
+{\foctx{\Psi}{\restrictto{\Delta}{\meph}}{\tgnabr{N}}{[{\gnab}A^-]}}
+{\foctx{\Psi}{\Delta}{N}{A^-}}
+\quad
+\infer[{!}_R]
+{\foctx{\Psi}{\restrictto{\Delta}{\mpers}}{\tbangr{N}}{[{!}A^-]}}
+{\foctx{\Psi}{\Delta}{N}{A^-}}
+\]
+\[
+\infer[{\one}_R]
+{\foctx{\Psi}{\cdot}{\toner}{[\one]}}
+{}
+\quad
+\infer[{\fuse}_R]
+{\foctx{\Psi}
+  {\matchconj{\Delta_1}{\Delta_2}}{\tfuser{V_1}{V_2}}{[A^+_1 \fuse A^+_2]}}
+{\foctx{\Psi}{\Delta_1}{V_1}{[A^+_1]}
+ &
+ \foctx{\Psi}{\Delta_2}{V_2}{[A^+_2]}}
+\]
+\[
+\infer[{\exists}_R]
+{\foctx{\Psi}{\Delta}{\texistsr{\lf{t}}{V}}{[\exists \lf{a}{:}\tau. A^+]}}
+{\Psi; \Delta \vdash_{\Sigma,\subord} \lf{t} : \tau
+ &
+ \foctx{\Psi}{\Delta}{V}{[A^+]}}
+\quad
+\infer[{\doteq}_R]
+{\foctx{\Psi}{\cdot}{\tunifr}{\lf{t} \doteq \lf{t}}}
+{}
+\]
+\caption{\sls~values}
+\label{fig:sls-values}
+\end{figure}
+
+\begin{figure}
+\fbox{$\foctx{\Psi}{\Delta}{R}{\istrue{\susp{A^-}}}$} -- presumes
+  $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$ and
+  $\Psi \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-$
+\[
+\infer[{\it focus}_L]
+{\foctx{\Psi}{\frameoff{\Theta}{x{:}A^-}}{\tfocusl{x}{\Sp}}{}}
+{\foctx{\Psi}{\tackon{\Theta}{[A^-]}}{\Sp}{U}}
+\quad
+\infer[{\it rule}]
+{\foctx{\Psi}{\frameoff{\Theta}{\cdot}}{\tfocusl{\sf r}{\Sp}}{U}}
+{{\sf r} : A^- \in \Sigma 
+ &
+ \foctx{\Psi}{\tackon{\Theta}{[A^-]}}{\Sp}{U}}
+\]
+\caption{\sls~atomic terms}
+\label{fig:sls-atomic-terms}
+\end{figure}
+
+\begin{figure}
+\fbox{$\foctx{\Psi}{\Delta}{N}{\istrue{A^-}}$} -- presumes
+  $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$ and
+  $\Psi \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-$
+\[
+\infer[\eta^-]
+{\foctx{\Psi}{\Delta}{R}{\istrue{p^-}}}
+{\foctx{\Psi}{\Delta}{R}{\istrue{\susp{p^-}}}}
+\]
+\[
+\infer[{\lefti}_R]
+{\foctx{\Psi}{\Delta}{\lambda P.N}{\istrue{A^+ \lefti B^-}}}
+{P :: (\Psi; \mkconj{A^+}{\Delta})_{\lf{\sf id}} 
+  \Longrightarrow_{\Sigma,\subord}
+ (\Psi';\Delta')_{\lf{\sigma}}
+ &
+ \foctx{\Psi'}{\Delta'}{N}{\istrue{\lf{\sigma}B^-}}}
+\]
+\[
+\infer[{\righti}_R]
+{\foctx{\Psi}{\Delta}{\lambda P.N}{\istrue{A^+ \righti B^-}}}
+{P :: (\Psi; \mkconj{\Delta}{A^+})_{\lf{\sf id}} 
+  \Longrightarrow_{\Sigma,\subord}
+ (\Psi';\Delta')_{\lf{\sigma}}
+ &
+ \foctx{\Psi'}{\Delta'}{N}{\istrue{\lf{\sigma}B^-}}}
+\]
+\[
+\infer[{\with}_R]
+{\foctx{\Psi}{\Delta}{\twithr{N_1}{N_2}}{\istrue{A_1^- \with A_2^-}}}
+{\foctx{\Psi}{\Delta}{N_1}{\istrue{A_1^-}}
+ &
+ \foctx{\Psi}{\Delta}{N_2}{\istrue{A_2^-}}}
+\]
+\[
+\infer[{\forall}_R]
+{\foctx{\Psi}{\Delta}{\tforallr{\lf{a}}{N}}
+    {\istrue{\forall \lf{a}{:}\tau. A^-}}}
+{\foctx{\Psi, \lf{a}{:}\tau}{\Delta}{N}{\istrue{A^-}}}
+\]
+\[
+\infer[{\ocircle}_R]
+{\foctx{\Psi}{\Delta}{\tlet{T}{V}}{\istrue{{\ocircle}A^+}}}
+{T :: (\Psi; \Delta)_{\lf{\sf id}}
+  \leadsto^*_{\Sigma,\subord}
+ (\Psi';\Delta')_{\lf{\sigma'}}
+ &
+ \foctx{\Psi'}{\Delta'}{V}{[\lf{\sigma}A^+]}}
+\]
+\caption{\sls~terms}
+\label{fig:sls-terms}
+\end{figure}
+
+%Spines
+\begin{figure}
+\fbox{$\foctx{\Psi}{\Delta}{\Sp}{U}$} --
+  presumes
+  $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf infoc}$
+\[
+\infer[{\it id}^-]
+{\foctx{\Psi}{{[A^-]}}{\tnil}{\istrue{\susp{A^-}}}}
+{}
+\]
+\[
+\infer[{\lefti}_L]
+{\foctx{\Psi}{\frameoff{\Theta}{\matchconj{\Delta}{[A^+ \lefti B^-]}}}
+  {V; \Sp}{U}}
+{\foctx{\Psi}{\Delta}{V}{[A^+]}
+ &
+ \foctx{\Psi}{\tackon{\Theta}{[B^-]}}{\Sp}{U}}
+\]
+\[
+\infer[{\righti}_L]
+{\foctx{\Psi}{\frameoff{\Theta}{\matchconj{[A^+ \righti B^-]}{\Delta}}}
+  {V; \Sp}{U}}
+{\foctx{\Psi}{\Delta}{V}{[A^+]}
+ &
+ \foctx{\Psi}{\tackon{\Theta}{[B^-]}}{\Sp}{U}}
+\]
+\[
+\infer[{\with}_{L1}]
+{\foctx{\Psi}{\frameoff{\Theta}{[A_1^- \with A_2^-]}}
+  {\pi_1; \Sp}{U}}
+{\foctx{\Psi}{\tackon{\Theta}{[A_1^-]}}{\Sp}{U}}
+\quad
+\infer[{\with}_{L2}]
+{\foctx{\Psi}{\frameoff{\Theta}{[A_1^- \with A_2^-]}}
+  {\pi_2; \Sp}{U}}
+{\foctx{\Psi}{\tackon{\Theta}{[A_2^-]}}{\Sp}{U}}
+\]
+\[
+\infer[{\forall}_L]
+{\foctx{\Psi}{\frameoff{\Theta}{[\forall \lf{a}{:}\tau. B^-]}}
+  {\lf{t}; \Sp}{U}}
+{\Psi \vdash_{\Sigma,\subord} \lf{t} : \tau
+ &
+ \foctx{\Psi}{\tackon{\Theta}{[(\lf{[t/a]}B^-)]}}{\Sp}{U}}
+\]
+\caption{\sls~spines}
+\label{fig:sls-spines}
+\end{figure}
