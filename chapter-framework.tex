@@ -508,7 +508,7 @@ not free in $\tau'$, which would give $\lf{\sf app}$ type ${\sf exp}
 $({\sf exp} \rightarrow {\sf exp}) \rightarrow {\sf exp}$.
 
 \bigskip
-\begin{theorem}[Adequacy for terms]
+\begin{theorem}[Adequacy for terms]\label{thm:expadequacy}
   Up to standard $\alpha$-equivalence, there is a bijection between
   expressions $\obj{e}$ (with free variables in the set
   $\{\obj{x_1},\ldots,\obj{x_n}\}$) and Spine Form LF terms $\lf{t}$ such
@@ -1297,7 +1297,7 @@ concurrent equality takes a step beyond \ollll, because it breaks the
 bijective correspondence between \ollll~proofs and \sls~proofs. As the
 example above indicates, there are simply more \ollll~proofs than
 \sls~proofs when we factor the latter moduo concurrent equality
-and declare $T_1$ and $T_2$ to be (concurrently) equal.
+and declare $T_1$ and $T_2$ to be (concurrently) equal. 
 
 Concurrent equality was first was introduced and explored in the
 context of CLF \cite{watkins02concurrent}, but our presentation
@@ -1308,9 +1308,9 @@ our strategy will be to take a particular well-typed trace $T$ and
 define a set $I$ of pairs of states $(S_1, S_2)$ with the property
 that, if $S_1; S_2$ is a well-typed trace, then $S_2; S_1$ is a
 concurrently equivalent and well-typed trace.  This {\it independency
-  relation} $I$ allows us to treat the trace $T$ as a {\it trace
-  monoid}, which implies the existence of a decidable equality
-\cite{diekert90combinatorics}.
+  relation} allows us to treat the trace $T$ as a {\it trace
+  monoid}, which implies the existence of a decidable notion of
+equivalence \cite{diekert90combinatorics}.
 
 \subsection{Interfaces}
 
@@ -1407,15 +1407,17 @@ effects. Consider the following two-step trace:
 \\
 & \qquad\qquad
 (\lf{b}{:}p; ~~ w{:}\iseph{\susp{{\sf bar}\,\lf{b}}})
-\end{align*}
-This trace cannot be reordered even though $\emptyset = \emptyset \cap
-\{ y, z \} = (\trstep{\lf{b/a}}{x}){\bullet} \cap
-{\bullet}(\trstep{w}{y\,z})$, because the atomic term $y\,z$ is only
-well typed after the LF variables $\lf{a}$ and $\lf{b}$ are unified.
-To avoid this situation, it is sufficient to require
-that $\emptyset = {\ast}S_1 \cap {\bullet}S_2$. In the other direction,
-consider the following very similar trace:
-\begin{align*}
+\intertext{
+%
+  This trace cannot be reordered even though $\emptyset = \emptyset
+  \cap \{ y, z \} = (\trstep{\lf{b/a}}{x}){\bullet} \cap
+  {\bullet}(\trstep{w}{y\,z})$, because the atomic term $y\,z$ is only
+  well typed after the LF variables $\lf{a}$ and $\lf{b}$ are unified.
+  To avoid this situation, it is sufficient to require that $\emptyset
+  = {\ast}S_1 \cap {\bullet}S_2$. In the other direction, consider the
+  following very similar trace:
+%
+}
 & \qquad\qquad
 (\lf{a}{:}p, \lf{b}{:}p; ~~ x{:}\iseph{\left({\ocircle}(\lf{a} \doteq \lf{b})\right)}, ~~
  y{:}\iseph{\left(\forall{\lf{a'}}{:}p.\,
@@ -1457,25 +1459,34 @@ independency relation $I$ be the set of pairs of steps $(S, S')$ in
 $T$ where $\emptyset = S_1{\bullet} \cap {\bullet}S_2 = {\bullet}S_1
 \cap {\ast}S_2 = {\ast}S_1 \cap {\bullet}S_2$. Letting $I$ be the
 independency relation of a trace monoid, we get the set of traces that
-are concurrently equal to $T$, and all traces $T'$ that are
-concurrently equal to $T$ are well-typed.
+are concurrently equal to $T$: all traces $T'$ that are
+concurrently equal to $T$ are well-typed with the same type as $T$.
 
 \section{Adequate encoding}
 \label{sec:sls-adequate}
 
 In Section~\ref{sec:lf-adequacy} we discussed LF the encoding of
-lambda-calculus terms in to LF terms of type ${\sf exp}$, captured
-by the invertible function $\interp{e}$. 
+$\lambda$-calculus terms in to LF terms of type ${\sf exp}$, captured by
+the invertible function $\interp{e}$. Adequacy was extended to Linear
+LF (LLF) by Cervesato and Pfenning \cite{cervesato02linear} and was
+extended to Ordered LF (OLF) by Polakow \cite{polakow01ordered}. The
+deductive fragment of \sls~approximately extends both LLF and OLF, and
+the adequacy arguments made by Cervesato and Polakow extend
+straightforwardly to \sls.
 
-Outside of 
-This was considerd in Cervesato's thesis \cite{}.  and called an 
-{\it internal representation} in \cite{cervesato02linear}.
-When Reed formalized the type preservation theorem for the LLF encoding
-of Mini-ML with references 
+A critical aspect of any adequacy arguments is an understanding of the
+structure of the LF context. In the statement of adequacy for untyped
+$\lambda$-calculus terms, for instance, it is necessary to require
+that the context $\Psi$ take the form $\lf{a_1}{:}{\sf
+  exp},\ldots,\lf{a_n}{:}{\sf exp}$. In the adequacy theorems that
+have been presented for deductive logical frameworks, the structure
+of the context is {\it regular} -- 
 
-The lambda calculus usually has application $e_1\,e_2$ (encoded in LF
-as ${\sf app}\,\interp{e_1}\,\interp{e_2}$) and abstraction $\lambda
-x.e$ (encoded in LF as ${\sf lam}\,\lambda x. \interp{e}$).
+that Polakow
+and Cervesato discuss, we only need to
+
+ to impose a {\it regular} structure
+on the context. 
 
 \subsection{Adequacy for LF and deductive terms}
 
@@ -1535,6 +1546,73 @@ forward-reference Chapter 8.
 \subsection{Pseudo-positive atoms}
 \label{sec:pseudopositive}
 
+One of main features that \sls~has and CLF does not is a treatment of
+positive atomic propositions, which can be either ordered, linear, and
+persistent. Positive atomic propositions make it easy to characterize
+the synthetic transitions associated with a particular rule. For
+example, if ${\sf foo}$, ${\sf bar}$, and ${\sf baz}$ are all linear
+atomic propositions, then the presence of a rule ${\sf foo} \fuse {\sf
+  bar} \lefti \{ {\sf baz} \}$ in the signature is associated with
+synthetic transitions of the form
+%
+$(\Psi; \matchconj{\Delta}{\matchconj{x{:}\iseph{\susp{\sf
+        foo}}}{y{:}\iseph{\susp{\sf bar}}}})
+ \leadsto
+ (\Psi; \mkconj{\Delta}{z{:}\iseph{\susp{\sf baz}}})$.
+%
+The presence of the
+rule $\sf r$ enables steps of this form, and every step made by
+focusing on the rule has this form.
+
+CLF has no positive propositions, so the closest analogue that we can
+consider is where ${\sf foo}$, ${\sf bar}$, and ${\sf baz}$ are
+negative propositions, and the rule ${\gnab}{\sf foo} \fuse
+{\gnab}{\sf bar} \lefti \{ {\gnab}{\sf baz} \}$ appears in the
+signature. Such a rule is associated with synthetic transitions of the
+form
+%
+$(\Psi; \matchconj{\Delta}{\matchconj{\Delta_1}{\Delta_2}}) \leadsto
+(\Psi; \mkconj{\Delta}{z{:}\istrue{{\sf baz}}})$ such that
+$\foc{\Psi}{\restrictto{\Delta_1}{\meph}}{\istrue{\susp{\sf foo}}}$
+and $\foc{\Psi}{\restrictto{\Delta_2}{\meph}}{\istrue{\susp{\sf
+      bar}}}$. It is a relatively simple syntactic criterion to
+enforce that a sequent like $\foc{\Psi}{\Delta_1}{\istrue{\susp{\sf
+      foo}}}$ can only be derived if $\Delta_1$ matches
+$x{:}\sf{foo}$; we must simply ensure that there are no propositions
+of the form $\ldots \lefti {\sf foo}$ or $\ldots \righti {\sf foo}$ in
+the signature or context. (This is essentially the \sls~version of the
+subordination criteria that allowed us to conclude that an LF type was
+only inhabited by variables Section~\ref{sec:slsframework}.)
+%
+When that is the case, we can
+associate the rule ${\sf foo} \fuse {\sf bar} \lefti \{ {\sf baz} \}$
+with the synthetic transition $(\Psi;
+\matchconj{\Delta}{\matchconj{x{:}{\islvl{\sf foo}}}{y{:}{\islvl{\sf
+        bar}'}}}) \leadsto (\Psi; \mkconj{\Delta}{z{:}\iseph{\susp{\sf
+      baz}}})$ under the condition that neither $\mlvl$ or $\mlvl'$
+are $\mtrue$.
+
+A negative atomic proposition can be called {\it pseudo-positive} if
+it is only possible to prove the proposition when it is the sole
+member of the context. Pseduo-positive atoms can actually be used a
+bit more generally than positive atomic propositions. A positive
+atomic proposition is necessarily associated with one of the three
+judgments $\mtrue$, $\meph$, or $\mpers$, but pseudo-positive
+propositions can associate with any of the contexts. This gives
+pseudo-positive atoms in CLF or \sls~the flavor of positive atomic
+propositions under Andreoli's atom optimization
+(Section~\ref{sec:atomopt}).
+
+It is, of course, possible to consistently associate particular
+pseudo-positive propositions with particular modalities, which means
+that pseduo-positive propositions can subsume the positive
+propositions of \sls. The tradeoff between positive and
+pseudo-positive propositions could be resolved either way. By
+including positive atomic propositions, we made \sls~more complicated,
+but in a local way -- we needed a few more kinds and a few more
+rules. If we used pseudo-positive propositions, the notion of
+synthetic transitions would be intertwined with the subordination-like
+analysis that enforces their correct usage.
 
 \subsection{Why LF as a term language?}
 \label{sec:why-not-fully-dependent}
@@ -1550,18 +1628,63 @@ of \sls-like frameworks, Lollimon \cite{lopez05monadic} and Ollibot
 languages. Canonical LF and Spine Form LF are, at this point,
 well-understood enough that the additional overhead of fully
 dependently-typed terms is not a significant burden, and there are
-examples beyond the scope of this thesis where term dependency is
+many examples beyond the scope of this thesis where term dependency is
 useful.
 
 On a theoretical level, it is a significant simplification when we
 restrict ourselves to {\it any} typed term language with a reasonable
-notion of equality and substitution. Spine Form LF and Canonical LF
-are two examples; most conceivable simply-typed term languages would
-also suffice. It is the thesis of this and the previous two chapters
-that we can productively derive logical frameworks from focused
-presentations of logic, but this simple is complicated when we apply it
+notion of equality and simultaneous substitution. The conceptual
+priority in this chapter is clear: Section~\ref{sec:sls-termlanguage}
+describes LF terms, Section~\ref{sec:slsframework} describes proof
+terms as a fragment of focused \ollll, and
+Section~\ref{sec:framework-concurrenteq} describes a coarser
+equivalence on proof terms, concurrent equality. But if the language
+of quantification was \sls~terms, these three considerations 
+
+The thesis of this
+and the previous two chapters, that we can productively derive logical
+frameworks from focused presentations of logic, is a statement about
+the second step in Section~\ref{sec:slsframework}. 
+
+XXX
+
+
+It is the thesis of
+this and the previous two chapters that we can productively derive
+logical frameworks from focused presentations of logic, but doing so
+implicitly requires that we understand equality on the term language.
+Concurrent equality is {\it not} derived from focused \ollll, 
+
+
+
+, but concurrent
+equality complicates this story.
+
+Spine Form LF and Canonical LF
+are two examples, but most conceivable term languages without
+concurrent equality would also suffice. 
+
+it is not derived from focused \ollll, and applying concurrent
+equality to \sls~terms breaks the bijective correspondence between
+\sls~and the corresponding syntactic fragment of \ollll. The
+presentation in this chapter treats the definiton of \sls~as
+conceptually prior to the presentation of concurrent equality. This
+would no longer be possible if \sls~terms were also our term language:
+the logic's definition relies on knowing equality of proof terms,
+ 
+ but this simple is complicated by the interaction
+of full dependency and 
+
+when we apply it
 to a dependent type theory like CLF that does not distinguish object
-terms and proof terms. CLF terms have a notion of {\it concurrent
+terms and proof terms. Because equality of types depends on equality
+of the term language, CLF 
+
+in CLF depends on
+
+
+
+CLF terms have a notion of {\it concurrent
   equivalence} which is coarser the equivalence relation described by
 focusing alone, and we want \sls~proof terms to have a similar notion
 of equivalence. In this chapter we characterize concurrent equivalence
@@ -1615,6 +1738,12 @@ proof terms.
 \subsection{A logic of partial proofs}
 
 While traces 
+
+\subsection{The need for traces}
+
+In Section~\ref{sec:linlogtrans}, we presented 
+
+\cite{cervesato09relating}
 
 \subsection{}
 
