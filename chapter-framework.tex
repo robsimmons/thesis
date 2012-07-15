@@ -1227,7 +1227,6 @@ This evolution can now be precisely captured as a trace in \sls:
 \right)
 \end{align*}
 
-
 \section{Concurrent equality}
 \label{sec:linconcurrenteq}
 \label{sec:framework-concurrenteq}
@@ -1614,7 +1613,109 @@ rules. If we used pseudo-positive propositions, the notion of
 synthetic transitions would be intertwined with the subordination-like
 analysis that enforces their correct usage.
 
-\subsection{Why LF as a term language?}
+\subsection{The need for traces}
+
+One of the most important differences between \sls~and its
+predecessors, especially CLF, is that traces are treated as
+first-class syntactic objects. This allows us to talk about 
+partial proofs and thereby encode our earlier 
+money-store-battery-robot example as a trace with this type:
+\begin{align*}
+& \left(
+ x{:}\iseph{\susp{\sf 6bucks}}, ~~
+ f{:}\iseph{({\sf battery} \lefti \{ {\sf robot} \})}, ~~
+ g{:}\ispers{({\sf 6bucks} \lefti \{ {\sf battery} \})}
+\right)
+\\
+\leadsto^* &
+\left(
+ z{:}\iseph{\susp{\sf robot}}, ~~
+ g{:}\ispers{({\sf 6bucks} \lefti \{ {\sf battery} \})}
+\right)
+\end{align*}
+It is also possible to translate the example from Chapter~2
+as a {\it complete} proof of the following proposition:
+\[
+  {\sf 6bucks} 
+      \fuse {\gnab}({\sf battery} \lefti \{ {\sf robot} \})
+      \fuse {!}({\sf 6bucks} \lefti \{ {\sf battery} \})
+     \lefti
+     \{ {\sf robot} \}
+\]
+
+Generally speaking, we can try to represent a trace $T :: (\Psi;
+\Delta) \leadsto^* (\Psi'; \Delta')$ as a closed deductive proof
+$\lambda P.\,\tlet{T}{V}$ of the proposition $(\exists
+\Psi.\,{\fuse}\Delta) \lefti \{ \exists \Psi'.\,{\fuse}\Delta \}$,
+where the pattern $P$ re-creates the initial process state $(\Psi;
+\Delta)$ and the all the components of the final state are captured in
+the value $V$.  The problem with this approach is that the final
+proposition is under no particular obligation to capture the structure
+of the final process state. This can be seen in the example above: to
+actually capture the structure of the final process state, we should
+have concluded ${\sf robot} \fuse {!}({\sf 6bucks} \lefti \{ {\sf
+  battery} \})$ insetad of simply ${\sf robot}$. It is also possible
+to conclude any of the following:
+\smallskip
+\begin{itemize}
+\item ${\sf robot} \fuse {!}({\sf 6bucks} \lefti \{ {\sf
+  battery} \}) \fuse {!}({\sf 6bucks} \lefti \{ {\sf
+  battery} \})$, or 
+\item ${\sf robot} \fuse {\downarrow}({\sf 6bucks} \lefti \{ {\sf
+  battery} \}) \fuse {\gnab}({\sf 6bucks} \lefti \{ {\sf
+  battery} \})$, or even
+\item ${\sf robot}  \fuse {\gnab}({\sf 6bucks} \fuse {!}({\sf battery} \lefti \{ {\sf robot} \}) \lefti \{ {\sf robot} \})
+  \fuse {\downarrow}({\sf robot}
+\lefti \{ {\sf robot} \})$.
+\end{itemize}
+\smallskip 
+%
+The problem with encoding traces as complete proofs, then, is that
+values only precisely capture the structure of contexts when there are
+no variables or persistent propositions. Cervesato and Scedrov
+approach this problem by severely restricting the logic and changing
+the interpretation of the existential quantifier so that it acts like
+a nominal quantifier \cite{cervesato09relating}. The introduction of
+traces allows us to avoid similar restrictions in \sls.
+
+Despite traces being proper syntactic objects, they are not
+first-class concepts in the theory: they are derived from focused
+\ollll~terms and interpreted as partial proofs. Because hereditary
+substitution, identity expansion, and focalization are only defined on
+complete \ollll~proofs, these theorems and operations only apply by
+analogy to the deductive fragment \sls; they do not apply to traces.
+In joint work with Deng and Cervesato, we considered a presentation of
+logic that treats process states and traces as first-class concepts
+and refomulates the usual properties of cut and identity in terms of
+coinductive simulation relations on process states
+\cite{deng12relating}. We hope that this work will eventually read to
+a better understanding of traces, but the gap remains quite large.
+
+% In \cite{deng12relating}, we presented the {\it logical preorder} as a
+% relation $\Delta_1 \preceq \Delta_2$ between propositional process states
+% that holds whenever, for all $\Theta$ and $U$, we have that
+% $\tackon{\Theta}{\Delta_1} \vdash U$ implies $\tackon{\Theta}{\Delta_2}
+% \vdash U$. An elegant property, {\it harmony}, relates the logical 
+% preorder to cut admissibility and identity expansion. 
+
+
+% \subsection{A logic of traces}
+
+% Traces in \sls~are syntactic objects. They are not, however,
+% first-class objects in the theory: they are derived from focused
+% \ollll~terms and explained as partial proofs. Because hereditary
+% substitution, identity expansion, and focalization are only defined on
+% complete \ollll~proofs, these theorems and operations only apply by
+% analogy to the deductive fragment \sls; they do not apply to traces.
+
+% In \cite{deng12relating}, we presented the {\it logical preorder} as a
+% relation $\Delta_1 \preceq \Delta_2$ between propositional process states
+% that holds whenever, for all $\Theta$ and $U$, we have that
+% $\tackon{\Theta}{\Delta_1} \vdash U$ implies $\tackon{\Theta}{\Delta_2}
+% \vdash U$. An elegant property, {\it harmony}, relates the logical 
+% preorder to cut admissibility and identity expansion. 
+
+\subsection{LF as a term language}
 \label{sec:why-not-fully-dependent}
 
 The decision to use LF as a first-order domain of quantification
@@ -1639,292 +1740,246 @@ describes LF terms, Section~\ref{sec:slsframework} describes proof
 terms as a fragment of focused \ollll, and
 Section~\ref{sec:framework-concurrenteq} describes a coarser
 equivalence on proof terms, concurrent equality. But if the language
-of quantification was \sls~terms, these three considerations 
-
-The thesis of this
-and the previous two chapters, that we can productively derive logical
-frameworks from focused presentations of logic, is a statement about
-the second step in Section~\ref{sec:slsframework}. 
-
-XXX
-
-
-It is the thesis of
-this and the previous two chapters that we can productively derive
-logical frameworks from focused presentations of logic, but doing so
-implicitly requires that we understand equality on the term language.
-Concurrent equality is {\it not} derived from focused \ollll, 
-
-
-
-, but concurrent
-equality complicates this story.
-
-Spine Form LF and Canonical LF
-are two examples, but most conceivable term languages without
-concurrent equality would also suffice. 
-
-it is not derived from focused \ollll, and applying concurrent
-equality to \sls~terms breaks the bijective correspondence between
-\sls~and the corresponding syntactic fragment of \ollll. The
-presentation in this chapter treats the definiton of \sls~as
-conceptually prior to the presentation of concurrent equality. This
-would no longer be possible if \sls~terms were also our term language:
-the logic's definition relies on knowing equality of proof terms,
- 
- but this simple is complicated by the interaction
-of full dependency and 
-
-when we apply it
-to a dependent type theory like CLF that does not distinguish object
-terms and proof terms. Because equality of types depends on equality
-of the term language, CLF 
-
-in CLF depends on
-
-
-
-CLF terms have a notion of {\it concurrent
-  equivalence} which is coarser the equivalence relation described by
-focusing alone, and we want \sls~proof terms to have a similar notion
-of equivalence. In this chapter we characterize concurrent equivalence
-in Section~\ref{XXX}, after completing our discussion of the framework
-and describing the proof term language.  In CLF, the framework's
-definition relies on term equality, and equality of terms must take
-concurrent equivalence into account, so concurrent equivalence of
-(proof) terms is conceptually prior to the logic itself. We conjecture
-that this complication is no great obstacle, but this thesis avoids
-the issue.
+of quantification was \sls~terms, these three considerations would be
+mutually dependent -- we would need to characterize concurrent
+equality before presenting the logic itself. For the purposes of
+showing that a logical framework can be carved out from a focused
+logic, the central thesis of this and the previous two chapters, it is
+easiest to break this circular dependency. We conjecture that this
+complication is no great obstacle, but this thesis avoids the issue.
 
 On a practical level, there are advantages to using a well-understood
 term language. The \sls~prototype implementation
 (Section~\ref{sec:prototype}) uses the mature type reconstruction
-engine of Twelf. Schack-Nielsen's implementation of type
-reconstruction for Celf is complicated by the requirements of dealing
-with a substructural term language, and the user is required to add
-extra annotations to indicate persistent application and abstraction
-\cite{schacknielsen08celf}. In \sls~(and in many CLF encodings) the
-term language is intended to be persistent, so these extra annotations
-just clutter specifications.
+engine of Twelf to reconstruct LF terms. Schack-Nielsen's
+implementation of type reconstruction for Celf is complicated by the
+requirements of dealing with type reconstruction for a substructural
+term language, a consideration that is completly orthogonal to this
+thesis \cite{schacknielsen08celf}. 
 
-The restriction to a dependent type theory therefore does not come at
-the cost of great expressive power. Conversely, it is by no means
-clear that the addition of full CLF-like dependency comes with great
-expressive benefit. Even in LF and Twelf, many interesting
-specifications could be encoded in a two-level version of the
-language: a simply-typed object term language and a dependently-typed
-proof term language with first-order quantification over object
-terms. This restriction is sufficient for settings such as Harper's
-comprehensive survey of programming language design
-\cite{harper12practical},\footnote{Harper's metatheory also extends LF
-  by drawing a distinction between standard variables and nominal
-  parameters, but this is an orthogonal point.} and it is built in to
-the educational proof assistant SASyLF \cite{aldrich08sasylf}. In LF
-and Twelf, the ability to use full dependent types is critical in part
-because it allows us to express {\it metatheorems} -- theorems about
-the programming languages and logics we have encoded, like progress
-and preservation for a programming language or cut admissibility for a
-logic. But in substructural logical frameworks like Linear LF, full
-dependency has been found to be {\it insufficient} for expressing
-metatheorems, which motivated the development of Hybrid LF as a
-framework for writing metatheorems about LF \cite{reed09hybrid}. The
-implementation of Hybrid LF effectively creates a stratification like
-\sls's -- full LF as an object term language, a linear logical
-framework with first-order quantification over object language terms,
-and a hybrid language that can inspect both LF object terms and linear
-proof terms. 
+Finally, it is not clear that the addition of full CLF-like dependency
+comes with great expressive benefit. 
+% Even in LF and Twelf, many
+% interesting specifications could be encoded in a two-level version of
+% the language: a simply-typed object term language and a
+% dependently-typed proof term language with first-order quantification
+% over object terms. This restriction is sufficient for settings such as
+% Harper's comprehensive survey of programming language design
+% \cite{harper12practical},\footnote{Harper's metatheory also extends LF
+%   by drawing a distinction between standard variables and nominal
+%   parameters, but this is an orthogonal point.} and it is built in to
+% the educational proof assistant SASyLF \cite{aldrich08sasylf}. 
+In LF and Twelf, the ability to use full dependent types is critical
+in part because it allows us to express {\it metatheorems} -- theorems
+about the programming languages and logics we have encoded, like
+progress and preservation for a programming language or cut
+admissibility for a logic. Substructural logical frameworks like LLF
+and CLF, in contrast, have not been successful in capturing
+metatheorems with dependent types. Instead, metatheorems have been
+done by encoding the substructural derivations in LF
+\cite{crary10higher} or in HLF \cite{reed09hybrid}, an extension to LF that uses
+equational theories to capture substructural propreties. 
+
+% But in substructural logical frameworks like Linear LF, full
+% dependency has been found to be {\it insufficient} for expressing
+% metatheorems, which motivated the development of Hybrid LF as a
+% framework for writing metatheorems about LF \cite{reed09hybrid}. The
+% implementation of Hybrid LF effectively creates a stratification like
+% \sls's -- full LF as an object term language, a linear logical
+% framework with first-order quantification over object language terms,
+% and a hybrid language that can inspect both LF object terms and linear
+% proof terms.
 
 
-\subsection{A logic of partial proofs}
 
-While traces 
+\subsection{Variations on concurrent equality}
 
-\subsection{The need for traces}
+Concurrent equality is related to the equivalence relation induced by
+{\it multifocusing} \cite{chaudhuri08canonical}. Multifocusing has
+only been explored carefully in the context of 
 
-In Section~\ref{sec:linlogtrans}, we presented 
-
-\cite{cervesato09relating}
-
-\subsection{}
 
 It is not obvious that our treatment of the interaction between 
 unification and concurrent equivalence is the right one. 
 
-\subsection{Concurrent equality and multifocusing}
+% \subsection{Concurrent equality and multifocusing}
 
-Concurrent equality gives rise to an equivalence relation on focused
-derivations. This equivalence relation is related to the equivalence
-relation induced by {\it multifocusing}
-\cite{chaudhuri08canonical}. Multifocusing is a concept that has only
-been carefully explored in classical linear logic; the central change
-is that the rules which begins a focusing phase (in our presentation
-of MELL there were three: ${\it focus_L}$, ${\it focus_R}$, and ${\it
-  copy}$) are allowed to simultaneously pull other propositions into
-focus.  As an illustration, if we reuse our notation from
-Section~\ref{sec:linnote} we can present the following plausible
-candidates for the multifocus rules in an intuitionistic system:
-\[
-\infer[{\it focus}_L]
-{\mildseq{\Gamma}{\Delta / A_1^-, \ldots, A_n^- }{U}}
-{n > 1
- &
- \mildseq{\Gamma}{\Delta, [A_1^-], \ldots, [A_n^-]}{U}}
-\quad
-\infer[{\it focus}_R]
-{\mildseq{\Gamma}{\Delta / A_1^-, \ldots, A_n^-}{C^+}}
-{n \geq 1
- &
- \mildseq{\Gamma}{\Delta, [A_1^-], \ldots, [A_n^-]}{[C^+]}}
-\]
-Multifocusing, however,
-appears to provide an even coarser notion of equivalence on focused
-proofs than concurrent equality does. In particular, the two
-distinct focusing proofs below are not concurrently equal: the proof
-on the right succeeds at proving $\langle c^- \rangle$ in one step,
-but leaves a subgoal in which $b^+$ is proved indirectly, whereas the
-proof at the right first transitions from having $\langle a^+ \rangle$
-and $a^+ \lolli {\uparrow} b^+$ resources to having a $\langle b^+
-\rangle$ resource, and only then proves $\langle c^- \rangle$, leaving
-a subgoal in which $b^+$ is proved directly.
-\[
-\infer
-{\mildseq{\cdot}
-  {~~
-   \langle a^+ \rangle, ~
-   a^+ \lolli {\uparrow}b^+, ~
-   {\downarrow}{\uparrow}b^+ \lolli c^-
-   ~~}
-  {~~\langle c^- \rangle}}
-{\infer
-{\mildseq{\cdot}
-  {~~
-   \langle a^+ \rangle, ~
-   a^+ \lolli {\uparrow}b^+
-   ~~}
-  {b^+}}
-{\infer
-{\mildseq{\cdot}
-  {~~
-   \langle b^+ \rangle
-   ~~}
-  {b^+}}
-{}}}
-\deduce{\mathstrut}
-{\deduce{\mathstrut}
-{\mbox{\it vs.}\mathstrut}}
-\infer
-{\mildseq{\cdot}
-  {~~
-   \langle a^+ \rangle, ~
-   a^+ \lolli {\uparrow}b^+, ~
-   {\downarrow}{\uparrow}b^+ \lolli c^-
-   ~~}
-  {~~\langle c^- \rangle}}
-{\infer
-{\mildseq{\cdot}
-  {~~
-   \langle b^+ \rangle, ~
-   {\downarrow}{\uparrow}b^+ \lolli c^-
-   ~~}
-  {~~\langle c^- \rangle}}
-{\infer
-{\mildseq{\cdot}
-  {~~
-   \langle b^+ \rangle
-   ~~}
-  {~~b^+}}
-{}}}
-\]
-Despite the lack of a full account of intuitionistic multifocusing, we
-can observe that the analogue of this sequent in classical linear
-logic has only one multifocused proof, and it is reasonable to
-conjecture that an account of multifocusing for intuitionistic logic
-would also relate these proofs. In classical linear logic,
-multifocusing offers a very fundamental normal form: any two proofs
-that can be made equal by locally permuting inference rules have the
-same multifocused proof.
+% Concurrent equality is related to the equivalence relation induced by
+% {\it multifocusing} \cite{chaudhuri08canonical}. Multifocusing is a
+% concept, 
 
-CLF's restricted form of concurrent equality will be sufficient for
-the logical framework in Chapter 4. In fact, for the fragment of the
-the logic in Chapter 3 that comprises our logical framework in Chapter
-4, I conjecture that concurrent equality and the equality given by
-multifocusing coincide.\footnote{This obviously means that the example
-  above will be outside the logical fragment that comprises the logical
-  framework.}  This conjecture is obviously difficult to make precise,
-much less prove, without a general theory of multifocusing in
-intuitionistic logic.
+% One reason multifocusing is 
+
+%  that has only been carefully explored in classical linear
+% logic; the central change is that the rules which begins a focusing
+% phase (in our presentation of MELL there were three: ${\it focus_L}$,
+% ${\it focus_R}$, and ${\it copy}$) are allowed to simultaneously pull
+% other propositions into focus.  As an illustration, if we reuse our
+% notation from Section~\ref{sec:linnote} we can present the following
+% plausible candidates for the multifocus rules in an intuitionistic
+% system:
+% \[
+% \infer[{\it focus}_L]
+% {\mildseq{\Gamma}{\Delta / A_1^-, \ldots, A_n^- }{U}}
+% {n > 1
+%  &
+%  \mildseq{\Gamma}{\Delta, [A_1^-], \ldots, [A_n^-]}{U}}
+% \quad
+% \infer[{\it focus}_R]
+% {\mildseq{\Gamma}{\Delta / A_1^-, \ldots, A_n^-}{C^+}}
+% {n \geq 1
+%  &
+%  \mildseq{\Gamma}{\Delta, [A_1^-], \ldots, [A_n^-]}{[C^+]}}
+% \]
+% Multifocusing, however,
+% appears to provide an even coarser notion of equivalence on focused
+% proofs than concurrent equality does. In particular, the two
+% distinct focusing proofs below are not concurrently equal: the proof
+% on the right succeeds at proving $\langle c^- \rangle$ in one step,
+% but leaves a subgoal in which $b^+$ is proved indirectly, whereas the
+% proof at the right first transitions from having $\langle a^+ \rangle$
+% and $a^+ \lolli {\uparrow} b^+$ resources to having a $\langle b^+
+% \rangle$ resource, and only then proves $\langle c^- \rangle$, leaving
+% a subgoal in which $b^+$ is proved directly.
+% \[
+% \infer
+% {\mildseq{\cdot}
+%   {~~
+%    \langle a^+ \rangle, ~
+%    a^+ \lolli {\uparrow}b^+, ~
+%    {\downarrow}{\uparrow}b^+ \lolli c^-
+%    ~~}
+%   {~~\langle c^- \rangle}}
+% {\infer
+% {\mildseq{\cdot}
+%   {~~
+%    \langle a^+ \rangle, ~
+%    a^+ \lolli {\uparrow}b^+
+%    ~~}
+%   {b^+}}
+% {\infer
+% {\mildseq{\cdot}
+%   {~~
+%    \langle b^+ \rangle
+%    ~~}
+%   {b^+}}
+% {}}}
+% \deduce{\mathstrut}
+% {\deduce{\mathstrut}
+% {\mbox{\it vs.}\mathstrut}}
+% \infer
+% {\mildseq{\cdot}
+%   {~~
+%    \langle a^+ \rangle, ~
+%    a^+ \lolli {\uparrow}b^+, ~
+%    {\downarrow}{\uparrow}b^+ \lolli c^-
+%    ~~}
+%   {~~\langle c^- \rangle}}
+% {\infer
+% {\mildseq{\cdot}
+%   {~~
+%    \langle b^+ \rangle, ~
+%    {\downarrow}{\uparrow}b^+ \lolli c^-
+%    ~~}
+%   {~~\langle c^- \rangle}}
+% {\infer
+% {\mildseq{\cdot}
+%   {~~
+%    \langle b^+ \rangle
+%    ~~}
+%   {~~b^+}}
+% {}}}
+% \]
+% Despite the lack of a full account of intuitionistic multifocusing, we
+% can observe that the analogue of this sequent in classical linear
+% logic has only one multifocused proof, and it is reasonable to
+% conjecture that an account of multifocusing for intuitionistic logic
+% would also relate these proofs. In classical linear logic,
+% multifocusing offers a very fundamental normal form: any two proofs
+% that can be made equal by locally permuting inference rules have the
+% same multifocused proof.
+
+% CLF's restricted form of concurrent equality will be sufficient for
+% the logical framework in Chapter 4. In fact, for the fragment of the
+% the logic in Chapter 3 that comprises our logical framework in Chapter
+% 4, I conjecture that concurrent equality and the equality given by
+% multifocusing coincide.\footnote{This obviously means that the example
+%   above will be outside the logical fragment that comprises the logical
+%   framework.}  This conjecture is obviously difficult to make precise,
+% much less prove, without a general theory of multifocusing in
+% intuitionistic logic.
 
 
-\subsection{A warning about normalization}
-\label{sec:warning}
+% \subsection{A warning about normalization}
+% \label{sec:warning}
 
-In our earlier discussion of hereditary substitution and canonical
-forms in Section~\ref{sec:linlogicalframeworks}, we mentioned that the
-normalization theorem provided by hereditary substitution was weaker
-than the so-called weak normalization theorem for LF. That is because
-the weak normalization theorem says that any well-typed term can be
-converted into a canonical ($\beta$-normal and $\eta$-long) term by a
-particular series of $\beta$ and $\eta$ conversions. It is
-self-evident, by this statement of the theorem, that the resulting
-canonical term is equivalent to the original term.
+% In our earlier discussion of hereditary substitution and canonical
+% forms in Section~\ref{sec:linlogicalframeworks}, we mentioned that the
+% normalization theorem provided by hereditary substitution was weaker
+% than the so-called weak normalization theorem for LF. That is because
+% the weak normalization theorem says that any well-typed term can be
+% converted into a canonical ($\beta$-normal and $\eta$-long) term by a
+% particular series of $\beta$ and $\eta$ conversions. It is
+% self-evident, by this statement of the theorem, that the resulting
+% canonical term is equivalent to the original term.
 
-On the other hand, when we use hereditary substitution in the obvious
-way to obtain a Canonical LF term from an arbitrary non-canonical LF
-term, we gain {\it no guarantees} about the relationship between the
-non-canonical LF term and the Canonical LF term. The statement of the
-theorem does not preclude taking a $\beta$-normal, $\eta$-long LF term
-(like $\lambda x. \lambda y. x$ of type $p \rightarrow p \rightarrow
-p$ for some atomic type $p$) into a structurally different Canonical
-LF term (like $\lambda x. \lambda y. y$, which also has type $p
-\rightarrow p \rightarrow p$). It is possible to gain such a guarantee
-for LF, as Martens and Crary have shown in unpublished work
-\cite{martens11mechanizing}, but this result is a non-trivial statement
-about the constructive content of the normalization theorem. 
+% On the other hand, when we use hereditary substitution in the obvious
+% way to obtain a Canonical LF term from an arbitrary non-canonical LF
+% term, we gain {\it no guarantees} about the relationship between the
+% non-canonical LF term and the Canonical LF term. The statement of the
+% theorem does not preclude taking a $\beta$-normal, $\eta$-long LF term
+% (like $\lambda x. \lambda y. x$ of type $p \rightarrow p \rightarrow
+% p$ for some atomic type $p$) into a structurally different Canonical
+% LF term (like $\lambda x. \lambda y. y$, which also has type $p
+% \rightarrow p \rightarrow p$). It is possible to gain such a guarantee
+% for LF, as Martens and Crary have shown in unpublished work
+% \cite{martens11mechanizing}, but this result is a non-trivial statement
+% about the constructive content of the normalization theorem. 
 
-In our setting, we should be concerned that we might take a focused
-proof, turn it into an unfocused proof by the obvious de-focalization
-procedure (the constructive content of
-Theorem~\ref{thm:linfocsound}), and then turn it back into a focused
-proof by focalization (the constructive content of
-Theorem~\ref{thm:linfoccomplete}) only to obtain a proof that was not
-identical or even related. This is not at all a merely hypothetical
-concern. We can run the mechanized structural focalization result from
-\cite{simmons11structural} on a persistent proposition,
-%
-   $a^+ \supset 
-   {\downarrow}(a^+ \supset {\uparrow}b^+) \supset
-   {\downarrow}({\downarrow}{\uparrow}b^+ \supset c^-) \supset
-   c^-$, 
-%
-which is similar to the example from
-Section~\ref{sec:linconcurrenteq}.  In persistent logic (as in
-linear logic) that proposition has two focused propositions that
-are probably multifocusing equivalent (given a reasonable intuitionistic
-notion of multifocusing) but that are not concurrently equivalent
-under the proposed definition of concurrent equality. 
-However, if we take the focused proof that focuses 
-first on $a^+ \supset {\uparrow}b^+$, transform it into an unfocused 
-proof, and then re-focus it, we will get the proof that focuses 
-first on ${\downarrow}{\uparrow}b^+ \supset c^-$. Focalization,
-in other words, is not a partial inverse of de-focalization in the structural
-focalization development, except maybe modulo the (as yet undefined)
-equivalence relation established by multifocusing. 
+% In our setting, we should be concerned that we might take a focused
+% proof, turn it into an unfocused proof by the obvious de-focalization
+% procedure (the constructive content of
+% Theorem~\ref{thm:linfocsound}), and then turn it back into a focused
+% proof by focalization (the constructive content of
+% Theorem~\ref{thm:linfoccomplete}) only to obtain a proof that was not
+% identical or even related. This is not at all a merely hypothetical
+% concern. We can run the mechanized structural focalization result from
+% \cite{simmons11structural} on a persistent proposition,
+% %
+%    $a^+ \supset 
+%    {\downarrow}(a^+ \supset {\uparrow}b^+) \supset
+%    {\downarrow}({\downarrow}{\uparrow}b^+ \supset c^-) \supset
+%    c^-$, 
+% %
+% which is similar to the example from
+% Section~\ref{sec:linconcurrenteq}.  In persistent logic (as in
+% linear logic) that proposition has two focused propositions that
+% are probably multifocusing equivalent (given a reasonable intuitionistic
+% notion of multifocusing) but that are not concurrently equivalent
+% under the proposed definition of concurrent equality. 
+% However, if we take the focused proof that focuses 
+% first on $a^+ \supset {\uparrow}b^+$, transform it into an unfocused 
+% proof, and then re-focus it, we will get the proof that focuses 
+% first on ${\downarrow}{\uparrow}b^+ \supset c^-$. Focalization,
+% in other words, is not a partial inverse of de-focalization in the structural
+% focalization development, except maybe modulo the (as yet undefined)
+% equivalence relation established by multifocusing. 
 
-This example illustrates why we must be careful, but it is not a fatal
-flaw for two reasons. The first reason is the aforementioned
-conjecture that, for the restricted logical fragment defined in
-Chapter 4 as the basis of our logical framework, the focalizations of
-two proofs are concurrently equal if and only if the original proofs
-are convertible by local permutations of rules, the same condition
-that multifocusing satisfies. If this conjecture holds, it ought to be
-the case that, modulo this coarser equivalence, focalization {\it is}
-a partial inverse of de-focalization. Second, what is really at stake
-here is our ability to write down non-normal proofs in a logical
-framework that then normalizes them -- which is what the Twelf
-implementation of LF and the Celf implementation of CLF do -- with the
-confidence that we can look at a non-normal proof and know its
-corresponding canonical form. In this thesis, we will be content to
-work throughout with focused proofs and their analogues, so we can
-afford to leave questions about convertability and weak normalization
-to future work.
+% This example illustrates why we must be careful, but it is not a fatal
+% flaw for two reasons. The first reason is the aforementioned
+% conjecture that, for the restricted logical fragment defined in
+% Chapter 4 as the basis of our logical framework, the focalizations of
+% two proofs are concurrently equal if and only if the original proofs
+% are convertible by local permutations of rules, the same condition
+% that multifocusing satisfies. If this conjecture holds, it ought to be
+% the case that, modulo this coarser equivalence, focalization {\it is}
+% a partial inverse of de-focalization. Second, what is really at stake
+% here is our ability to write down non-normal proofs in a logical
+% framework that then normalizes them -- which is what the Twelf
+% implementation of LF and the Celf implementation of CLF do -- with the
+% confidence that we can look at a non-normal proof and know its
+% corresponding canonical form. In this thesis, we will be content to
+% work throughout with focused proofs and their analogues, so we can
+% afford to leave questions about convertability and weak normalization
+% to future work.
 
