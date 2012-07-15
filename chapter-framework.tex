@@ -1295,7 +1295,7 @@ previous section considered the proof terms of \sls~as a fragment of
 concurrent equality takes a step beyond \ollll, because it breaks the
 bijective correspondence between \ollll~proofs and \sls~proofs. As the
 example above indicates, there are simply more \ollll~proofs than
-\sls~proofs when we factor the latter moduo concurrent equality
+\sls~proofs when we factor the latter modulo concurrent equality
 and declare $T_1$ and $T_2$ to be (concurrently) equal. 
 
 Concurrent equality was first was introduced and explored in the
@@ -1385,7 +1385,7 @@ $\{x_b\} = S_1{\bullet} \cap {\bullet}S_2$, and the two steps cannot
 be reordered relative to one another. 
 
 Conversely, the condition that $\emptyset = S_1{\bullet} \cap
-{\bullet}S_2$ is sufficent to allow reordering in a CLF-like framework
+{\bullet}S_2$ is sufficient to allow reordering in a CLF-like framework
 \cite{cervesato12trace}. In \sls, however, unification can have subtle
 effects. Consider the following two-step trace:
 \begin{align*}
@@ -1500,22 +1500,59 @@ with
 \section{The \sls~implementation}
 \label{sec:prototype}
 
-The prototype implementation of \sls~contains 
-Following CLF and the Celf implementation, we write ${\ocircle}A$ in
-Celf as \verb|{A}|. The mobile modality ${\gnab}A$ doesn't have an
-ASCII representation, so write \verb|$A| when $A$ is
+The prototype implementation of \sls~contains a parser and typechecker
+for the SLS language; code that is checked by this prototype
+implementation will appear repeatedly in the rest of this thesis,
+always in a \verb|fixed-width font|.
+
+\begin{figure}
+\begin{align*}
+{\downarrow}A^- & \rightarrow \mbox{\Verb|A|} 
+ & {\ocircle}A^+ & \rightarrow \mbox{\Verb|\{A\}|}
+ & \lf{\lambda a.t} & \rightarrow \mbox{{\texttt{\char`\\}}\Verb|a.t|}
+\\
+{\gnab}A^- & \rightarrow \mbox{\Verb|\$A|}
+ & A^+ \lefti B^- & \rightarrow \mbox{\Verb|A >-> B|}
+ & \lf{{\sf foo}\,t_1\ldots t_n} & \rightarrow \mbox{\Verb|foo t1...tn|}
+\\
+{!}A^- & \rightarrow \mbox{\Verb|!A|}
+ & A^+ \righti B^- & \rightarrow \mbox{\Verb|A ->> B|}
+\\
+\one & \rightarrow \mbox{\Verb|one|}
+ & A^- \with B^- & \rightarrow \mbox{\Verb|A \& B|}
+\\
+\exists \lf{a}.\tau. A^+ & \rightarrow \mbox{\Verb|Exists x.A|}
+ & \forall \lf{a}.\tau. A^- & \rightarrow \mbox{\Verb|All x.A|}
+\\
+\lf{t} \doteq \lf{s} & \rightarrow \mbox{\Verb|t == s|}
+\end{align*}
+\caption{Mathematical and ASCII representations of SLS types and LF terms}
+\label{fig:translate-types}
+\end{figure}
+
+The checked \sls~code differs slightly from mathematical \sls code in
+a few ways. Following CLF and the Celf implementation, we write
+${\ocircle}A$ in Celf as \verb|{A}|. The mobile modality ${\gnab}A$
+doesn't have an ASCII representation, so write \verb|$A| when $A$ is
 mobile. Upshifts and downshifts are always inferred: this means that
 we can't write down ${\uparrow}{\downarrow}A$ or
 ${\downarrow}{\uparrow}A$, but neither of these \ollll~propositions
-are part of the \sls~fragment anyway.
+are part of the \sls~fragment anyway. The translation between the
+mathematical notation we use for \sls~propositions and the ASCII
+representation used by the implementation is outlined in
+Figure~\ref{fig:translate-types}.
 
 Another change is for the sake of readability: if \verb|P| is a
-positive atomic proposition, we can write \verb|!P| wherever \verb|P|
-is expected. This allows us to write either \verb|a * b * c| or
+persistent atomic proposition, we can optionally write \verb|!P|
+wherever \verb|P| is expected, and if \verb|P| is a linear atomic
+proposition, we can write \verb|$P| wherever \verb|P| is
+expected. This allows us to write either \verb|a * b * c| or
 \verb|a * $b * !c| in SLS to express the positive proposition ${\sf a}
 \fuse {\sf b} \fuse {\sf c}$ where ${\sf a}$, ${\sf b}$, and ${\sf c}$
 are ordered, linear, and persistent positive atomic propositions
-(respectively).
+(respectively). Without this information, it becomes difficult to tell
+how order, linearity, and persistence interact in specifications that 
+use more than one of them. 
 
 \section{Logic programming interpretation}
 \label{sec:framework-logicprog}
@@ -1533,7 +1570,7 @@ objects, and also about the intuitive notion of {\it concurrent
 
 Expand on literature review of quiescence from HOSC Section 4
 
-Leave the question of quescense versus eagerly-trying-to-right-focus
+Leave the question of quiescence versus eagerly-trying-to-right-focus
 versus saturation ambiguous. If you talk about pure saturation the
 forward-reference Chapter 8. 
 
@@ -1560,7 +1597,7 @@ atomic propositions. Positive atomic propositions make it easy to
 characterize the synthetic transitions associated with a particular
 rule. For example, if ${\sf foo}$, ${\sf bar}$, and ${\sf baz}$ are
 all linear atomic propositions, then the presence of a rule ${\sf foo}
-\fuse {\sf bar} \lefti \{ {\sf baz} \}$ in the signature is associated
+\fuse {\sf bar} \lefti {\ocircle}{\sf baz}$ in the signature is associated
 with synthetic transitions of the form
 %
 $(\Psi; \matchconj{\Delta}{\matchconj{x{:}\iseph{\susp{\sf
@@ -1575,7 +1612,7 @@ focusing on the rule has this form.
 CLF has no positive propositions, so the closest analogue that we can
 consider is where ${\sf foo}$, ${\sf bar}$, and ${\sf baz}$ are
 negative propositions, and the rule ${\gnab}{\sf foo} \fuse
-{\gnab}{\sf bar} \lefti \{ {\gnab}{\sf baz} \}$ appears in the
+{\gnab}{\sf bar} \lefti \ocircle({\downarrow}({\gnab}{\sf baz}))$ appears in the
 signature. Such a rule is associated with synthetic transitions of the
 form
 %
@@ -1593,19 +1630,21 @@ subordination criteria that allowed us to conclude that an LF type was
 only inhabited by variables Section~\ref{sec:slsframework}.)
 %
 When that is the case, we can
-associate the rule ${\sf foo} \fuse {\sf bar} \lefti \{ {\sf baz} \}$
+associate the rule ${\gnab}{\sf foo} \fuse
+{\gnab}{\sf bar} \lefti \ocircle({\downarrow}({\gnab}{\sf baz}))$
 with the synthetic transition $(\Psi;
 \matchconj{\Delta}{\matchconj{x{:}{\islvl{\sf foo}}}{y{:}{\islvl{\sf
         bar}'}}}) \leadsto (\Psi; \mkconj{\Delta}{z{:}\iseph{\susp{\sf
       baz}}})$ under the condition that neither $\mlvl$ or $\mlvl'$
 are $\mtrue$.
 
-A negative atomic proposition can be called {\it pseudo-positive} if
-it is only possible to prove the proposition when it is the sole
-member of the context. Pseduo-positive atoms can actually be used a
-bit more generally than positive atomic propositions. A positive
-atomic proposition is necessarily associated with one of the three
-judgments $\mtrue$, $\meph$, or $\mpers$, but pseudo-positive
+Negative atomic propositions that can only be concluded when they are
+the sole member of the context, like ${\sf foo}$ and ${\sf bar}$ in
+the previous example, can be called {\it
+  pseudo-positive}. Pseudo-positive atoms can actually be used a bit
+more generally than \sls's regular positive atomic propositions. A
+positive atomic proposition is necessarily associated with one of the
+three judgments $\mtrue$, $\meph$, or $\mpers$, but pseudo-positive
 propositions can associate with any of the contexts. This gives
 pseudo-positive atoms in CLF or \sls~the flavor of positive atomic
 propositions under Andreoli's atom optimization
@@ -1613,7 +1652,7 @@ propositions under Andreoli's atom optimization
 
 It is, of course, possible to consistently associate particular
 pseudo-positive propositions with particular modalities, which means
-that pseduo-positive propositions can subsume the positive
+that pseudo-positive propositions can subsume the positive
 propositions of \sls. The tradeoff between positive and
 pseudo-positive propositions could be resolved either way. By
 including positive atomic propositions, we made \sls~more complicated,
@@ -1663,7 +1702,7 @@ proposition is under no particular obligation to capture the structure
 of the final process state. This can be seen in the example above: to
 actually capture the structure of the final process state, we should
 have concluded ${\sf robot} \fuse {!}({\sf 6bucks} \lefti \{ {\sf
-  battery} \})$ insetad of simply ${\sf robot}$. It is also possible
+  battery} \})$ instead of simply ${\sf robot}$. It is also possible
 to conclude any of the following:
 \smallskip
 \begin{enumerate}
@@ -1695,7 +1734,7 @@ complete \ollll~proofs, these theorems and operations only apply by
 analogy to the deductive fragment \sls; they do not apply to traces.
 In joint work with Deng and Cervesato, we considered a presentation of
 logic that treats process states and traces as first-class concepts
-and refomulates the usual properties of cut and identity in terms of
+and reformulates the usual properties of cut and identity in terms of
 coinductive simulation relations on process states
 \cite{deng12relating}. We hope that this work will eventually read to
 a better understanding of traces, but the gap remains quite large.
@@ -1763,7 +1802,7 @@ term language. The \sls~prototype implementation
 engine of Twelf to reconstruct LF terms. Schack-Nielsen's
 implementation of type reconstruction for Celf is complicated by the
 requirements of dealing with type reconstruction for a substructural
-term language, a consideration that is completly orthogonal to this
+term language, a consideration that is completely orthogonal to this
 thesis \cite{schacknielsen08celf}. 
 
 Finally, it is not clear that the addition of full CLF-like dependency
@@ -1788,7 +1827,7 @@ metatheorems with dependent types. Instead, metatheorems have been
 done by encoding the substructural derivations in LF using Crary's
 explicit contexts technique \cite{crary10higher} or they have been in
 HLF, an extension to LF that uses equational theories to capture
-substructural propreties \cite{reed09hybrid}.
+substructural properties \cite{reed09hybrid}.
 
 % But in substructural logical frameworks like Linear LF, full
 % dependency has been found to be {\it insufficient} for expressing
@@ -1807,9 +1846,9 @@ substructural propreties \cite{reed09hybrid}.
 Concurrent equality is related to the equivalence relation induced by
 {\it multifocusing} \cite{chaudhuri08canonical}. Multifocusing has
 only been explored carefully in the context of classical linear
-logic, and while we conjecture that a sutably-defined notion of multifocusing
+logic, and while we conjecture that a suitably-defined notion of multifocusing
 for \ollll~would be in bijective correspondence with \sls~terms modulo
-concurrent equivalence, at least if we omit unificitation. 
+concurrent equivalence, at least if we omit unification. 
 
 The interactions between unification and concurrent equality are quite
 delicate, and we do not claim that the answers we give here are
