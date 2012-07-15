@@ -1371,6 +1371,7 @@ up the step's {\it interface}.
 \smallskip
 
 \subsection{Independency}
+\label{sec:independency}
 
 Consider a well-typed trace $S_1; S_2$ with two steps. It is possible,
 by renaming bound variables, to ensure that $\emptyset = {\bullet}S_1
@@ -1542,17 +1543,25 @@ forward-reference Chapter 8.
 \section{Design decisions}
 \label{sec:designdecisions}
 
+Aside from ordered propositions, the main differences between the
+framework \sls~presented in this chapter the existing logical
+framework CLF are the presence of positive atomic propositions, the
+introduction of traces as an explicit notation for partial proofs, the
+restriction of the term language to LF, and the presence of
+unification. In this section, we will discuss design choices
+that were made in terms of each of these features, their effects, and
+what choices could have been made differently. 
+
 \subsection{Pseudo-positive atoms}
 \label{sec:pseudopositive}
 
-One of main features that \sls~has and CLF does not is a treatment of
-positive atomic propositions, which can be either ordered, linear, and
-persistent. Positive atomic propositions make it easy to characterize
-the synthetic transitions associated with a particular rule. For
-example, if ${\sf foo}$, ${\sf bar}$, and ${\sf baz}$ are all linear
-atomic propositions, then the presence of a rule ${\sf foo} \fuse {\sf
-  bar} \lefti \{ {\sf baz} \}$ in the signature is associated with
-synthetic transitions of the form
+Unlike \sls, existing frameworks like CLF do not include positive
+atomic propositions. Positive atomic propositions make it easy to
+characterize the synthetic transitions associated with a particular
+rule. For example, if ${\sf foo}$, ${\sf bar}$, and ${\sf baz}$ are
+all linear atomic propositions, then the presence of a rule ${\sf foo}
+\fuse {\sf bar} \lefti \{ {\sf baz} \}$ in the signature is associated
+with synthetic transitions of the form
 %
 $(\Psi; \matchconj{\Delta}{\matchconj{x{:}\iseph{\susp{\sf
         foo}}}{y{:}\iseph{\susp{\sf bar}}}})
@@ -1657,7 +1666,7 @@ have concluded ${\sf robot} \fuse {!}({\sf 6bucks} \lefti \{ {\sf
   battery} \})$ insetad of simply ${\sf robot}$. It is also possible
 to conclude any of the following:
 \smallskip
-\begin{itemize}
+\begin{enumerate}
 \item ${\sf robot} \fuse {!}({\sf 6bucks} \lefti \{ {\sf
   battery} \}) \fuse {!}({\sf 6bucks} \lefti \{ {\sf
   battery} \})$, or 
@@ -1667,7 +1676,7 @@ to conclude any of the following:
 \item ${\sf robot}  \fuse {\gnab}({\sf 6bucks} \fuse {!}({\sf battery} \lefti \{ {\sf robot} \}) \lefti \{ {\sf robot} \})
   \fuse {\downarrow}({\sf robot}
 \lefti \{ {\sf robot} \})$.
-\end{itemize}
+\end{enumerate}
 \smallskip 
 %
 The problem with encoding traces as complete proofs, then, is that
@@ -1776,9 +1785,10 @@ progress and preservation for a programming language or cut
 admissibility for a logic. Substructural logical frameworks like LLF
 and CLF, in contrast, have not been successful in capturing
 metatheorems with dependent types. Instead, metatheorems have been
-done by encoding the substructural derivations in LF
-\cite{crary10higher} or in HLF \cite{reed09hybrid}, an extension to LF that uses
-equational theories to capture substructural propreties. 
+done by encoding the substructural derivations in LF using Crary's
+explicit contexts technique \cite{crary10higher} or they have been in
+HLF, an extension to LF that uses equational theories to capture
+substructural propreties \cite{reed09hybrid}.
 
 % But in substructural logical frameworks like Linear LF, full
 % dependency has been found to be {\it insufficient} for expressing
@@ -1796,11 +1806,34 @@ equational theories to capture substructural propreties.
 
 Concurrent equality is related to the equivalence relation induced by
 {\it multifocusing} \cite{chaudhuri08canonical}. Multifocusing has
-only been explored carefully in the context of 
+only been explored carefully in the context of classical linear
+logic, and while we conjecture that a sutably-defined notion of multifocusing
+for \ollll~would be in bijective correspondence with \sls~terms modulo
+concurrent equivalence, at least if we omit unificitation. 
+
+The interactions between unification and concurrent equality are quite
+delicate, and we do not claim that the answers we give here are
+final. In Section~\ref{sec:independency}, we motivated both the
+independency requirement that $\emptyset = {\bullet}S_1 \cap
+{\ast}S_2$ and the requirement that $\emptyset = {\ast}S_1 \cap
+{\bullet}S_2$ by giving ill-typed counterexamples. The violation
+of either condition does not mean that $S_2; S_1$ will be ill-typed
+however, so it might be possible to give a more precise condition
+that admits a coarser notion of concurrent equality. 
+
+% For both
+% conditions, however, there are steps $S_1$ and $S_2$ where the
+% $S_1; S_2$ and $S_2; S_1$ are both well-tyled traces even though
+% one of these independency requirements is not satisfied.
 
 
-It is not obvious that our treatment of the interaction between 
-unification and concurrent equivalence is the right one. 
+% coincide with the equivalence  \sls~
+
+% ${a^+} \supset (a^+ \supset {\uparrow}b^+) \supset 
+%   ({\downarrow}{\uparrow}b^+ \supset c^-) \supset c^-$. 
+
+% It is not obvious that our treatment of the interaction between 
+% unification and concurrent equivalence is the right one. 
 
 % \subsection{Concurrent equality and multifocusing}
 
