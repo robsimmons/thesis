@@ -12,3 +12,5 @@ Introduce it earlier?
 Chatper~\ref{}?
 
 Page number from our LFMTP paper.
+
+Only seems to be a pretty common weasel word for me: global check.

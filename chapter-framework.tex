@@ -1725,7 +1725,7 @@ that holds whenever the partial function is defined.
   Up to variable renaming, there is a bijective correspondence between
   PDA states $\obj{k \rhd s}$ and process states $\Delta$ such that
   $T :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}}
-  \Delta'$ and $\Delta'$ matches $\restrictto{\Delta}{\Sigma_{\it
+  \Delta$ and $\restrictsig{\Delta}{\Sigma_{\it
       PDA}}$.
 \end{theorem}
 
@@ -1742,21 +1742,17 @@ an encoding function from PDA states to process states:
 \item $\ctxinterp{{\sf <}s} = y{:}\istrue{\susp{\sf <}}, ~~ \ctxinterp{s}$
 \item $\ctxinterp{{\sf >}s} = y{:}\istrue{\susp{\sf >}}, ~~ \ctxinterp{s}$
 \end{itemize}
-\smallskip
-If $\obj{k \rhd s} \neq \obj{k' \rhd s'}$ then 
-$\ctxinterp{k \rhd s} \neq \ctxinterp{k' \rhd s'}$, 
-and for all $\obj{k}$ and $\obj{s}$ the 
-process state $\ctxinterp{k \rhd s}$ matches 
-$\restrictto{\ctxinterp{k \rhd s}}{\Sigma_{\it PDA}}$ -- the function we have
-defined only includes terminals. Therefore, to show that the encoding function
-is injective we must show that, for any $\obj{k \rhd s}$,
-there exists a trace $T :: (x{:}\istrue{\susp{\sf gen}})
-\leadsto^*_{\it Gen} \ctxinterp{k \rhd s}$. To show that the encoding
-function is surjective, we must show that if 
-$T :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}}
-  \Delta'$ and $\Delta'$ matches $\restrictto{\Delta}{\Sigma_{\it
-      PDA}}$ then $\Delta = \ctxinterp{k \rhd s}$ for some $\obj{k}$
-and $\obj{s}$. (An injective and surjective function is bijective.)
+\smallskip It is always the case that $\restrictsig{\ctxinterp{k \rhd
+    s}}{\Sigma_{\it PDA}}$ -- the encoding only includes terminals.
+To show that the encoding function is injective we must show that, for
+any $\obj{k \rhd s}$, there exists a trace $T ::
+(x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\it Gen} \ctxinterp{k \rhd
+  s}$. To show that the encoding function is surjective, we must show
+that if $T :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it
+    Gen}} \Delta$ and $\restrictto{\Delta}{\Sigma_{\it PDA}}$ then
+$\Delta = \ctxinterp{k \rhd s}$ for some $\obj{k}$ and $\obj{s}$. This
+will complete the proof: an injective and surjective function is
+bijective.
 
 
 \begin{lemma} For all $\obj{k}$, there exists
@@ -1852,40 +1848,54 @@ $T :: (\ctxinterp{k},
        h{:}\istrue{\susp{\sf hd}},
        y{:}\istrue{\susp{\sf gen\_store}},
        \ctxinterp{s}) 
-  \leadsto^*_{\Sigma_{\it Gen}} \Delta'$ and $\Delta'$ matches
+  \leadsto^*_{\Sigma_{\it Gen}} \Delta$ and
 $\restrictto{\Delta}{\Sigma_{\it
-      PDA}}$ then $\Delta = \ctxinterp{k' \rhd s'}$ for some $\obj{k'}$
+      PDA}}$, then $\Delta = \ctxinterp{k' \rhd s'}$ for some $\obj{k'}$
 and $\obj{s'}$.
 \end{lemma}
 \noindent
-By induction on the trace $T$, taking concurrent equality
-into account. 
-
-If $T = (\trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf state/done}\,y})$
-(or the concurrently equal trace where those two steps are given
-in the other order) then we are in a base case, and we succeed letting
-$\obj{k'} = \obj{k}$ and $\obj{s'} = \obj{s}$. Otherwise, $T$ is concurrently
-equal to one of the following:
+By induction on the structure of $T$ and case analysis on the 
+first steps in $T$. Up to concurrent equality, there
+are four possibilities:
 \smallskip
 \begin{itemize}
-\item $T = \trstep{x_1,x_2}{{\sf stack/left}\,x}; T'$,
-\item $T = \trstep{y_1,y_2}{{\sf string/left}\,y}; T'$, or
-\item $T = \trstep{y_1,y_2}{{\sf string/right}\,y}; T'$.
+\item $T = (\trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
+      state/done}\,y})$ -- this is a base case, and we can finish by
+  letting $\obj{k'} = \obj{k}$ and $\obj{s'} = \obj{s}$.
+\item $T = (\trstep{x_1,x_2}{{\sf stack/left}\,x}; T')$ -- apply 
+  the ind.~hyp.~(letting $x = x_2$, $\obj{k} =
+  \obj{k{\sf <}}$).
+\item $T = (\trstep{y_1,y_2}{{\sf string/left}\,y}; T')$ -- apply
+  the ind.~hyp.~(letting $y = y_1$, $\obj{s} =
+  \obj{{\sf <}s}$).
+\item $T = (\trstep{y_1,y_2}{{\sf string/right}\,y}; T')$ -- apply
+  the ind.~hyp.~(letting $y = y_1$, $\obj{s} =
+  \obj{{\sf >}s}$).
 \end{itemize}
-\smallskip
-In all three cases the result follows directly from the induction
-hypothesis on the smaller trace $T'$. 
+\smallskip In all three cases the result follows directly from the
+induction hypothesis on the smaller trace $T'$.  The proof above takes
+a number of facts about concurrent equality for granted. For example,
+the trace $T = (\trstep{()}{{\sf stack/done}\,x};
+\trstep{y_1,y_2}{{\sf string/right}\,y}; T')$ does not syntatically
+match any of the traces above, but it matches the last case because $T
+= (\trstep{y_1,y_2}{{\sf string/right}\,y}; \trstep{()}{{\sf
+    stack/done}\,x}; T')$ modulo concurrent equality. If we didn't
+implicitly rely on concurrent equality in theis way, the resulting
+proof would have twice as many cases.  We will take these finite uses
+of concurrent equality for granted when we specify that a proof
+proceeds by case analysis on the first steps of $T$ (or, conversely,
+by case analysis on the last steps of $T$).
 
 \begin{lemma} If 
 $T :: (g{:}\istrue{\susp{\sf gen}}) 
-  \leadsto^*_{\Sigma_{\it Gen}} \Delta'$ and $\Delta'$ matches
+  \leadsto^*_{\Sigma_{\it Gen}} \Delta$ and
 $\restrictto{\Delta}{\Sigma_{\it
-      PDA}}$ then $\Delta = \ctxinterp{k' \rhd s'}$ for some $\obj{k'}$
+      PDA}}$, then $\Delta = \ctxinterp{k' \rhd s'}$ for some $\obj{k'}$
 and $\obj{s'}$.
 \end{lemma}
 \noindent
 This is a corollary of the previous lemma, as it can only
-be the case that $T = \trstep{}{}; T'$. We can apply the previous
+be the case that $T = \trstep{x,h,y}{{\sf state}\,g}; T'$. We can apply the previous
 lemma to $T'$, letting $\obj{k} = \obj{s} = \obj{\cdot}$.
 This establishes that encoding is a surjective function, which in turn
 completes the proof. 
@@ -1930,19 +1940,25 @@ world of \sls~process states that are in the image of the encoding
 $\ctxinterp{k \rhd s}$ of PDA states as process states. In order for
 the signature $\Sigma_{\it PDA}$ to encode a reasonable notion of
 transition between PDA states, we need to show that steps in this
-signature only take encoded PDA states to encoded PDA states.
+signature only take encoded PDA states to encoded PDA states. Because 
+the generative signature $\Sigma_{\it Gen}$ precisely captures the 
+process states that represent encoded PDA states, we can describe
+and prove this property without reference to the actual encoding function:
  
 \bigskip
 \begin{theorem}[Preservation]\label{thm:pda-preservation}
-If $T_1 :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} \Delta'_1$,
-the process state
-$\Delta'_1$ matches $\restrictto{\Delta_1}{\Sigma_{\it PDA}}$, and 
-$\Delta_1 \leadsto_{\Sigma_{\it PDA}} \Delta_2$, then 
+If $T_1 :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} \Delta_1$,
+$\restrictsig{\Delta_1}{\Sigma_{\it PDA}}$, and 
+$S :: \Delta_1 \leadsto_{\Sigma_{\it PDA}} \Delta_2$, then 
+$T_2 :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} \Delta_2$
+and $\restrictsig{\Delta_1}{\Sigma_{\it PDA}}$.
 \end{theorem}
 \bigskip
 
 \noindent
-Given 
+If we represent provided elements as solid lines and lines that we have
+to prove as dashed lines, the big picture of the encoding and preservation
+theorems is the following:
 
 \begin{center}
 \begin{tikzpicture} 
@@ -1967,7 +1983,7 @@ decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}]
 \draw (4.3,1.4) node{$\Sigma_{\it Gen}$};
 \draw (4.8,.5) node{$\Delta'$};
 \draw (2.8, 0) node{$\Sigma_{\it PDA}$};
-\draw [thick,dash pattern = on 2.82842842712mm off 2mm,decorate,decoration={saw,amplitude=2mm,segment length=2mm}] 
+\draw [thick,dash pattern = on 0.677mm off .4mm on 0.676142375mm off .4mm on 0.676142375mm off 2mm,decorate,decoration={saw,amplitude=2mm,segment length=2mm}] 
 (4.4,0) -- (5.2,0); 
 \draw (4.8,-.3) node{$\Delta'$};
 \draw (5.1,-.7) node{\begin{turn}{-45}$\Leftrightarrow$\end{turn}};
@@ -1979,11 +1995,98 @@ decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}]
 \end{tikzpicture} 
 \end{center}
 
-
-
-
-
 \begin{proof}
+The proof is by case analysis on the structure of $S$; it relies on four
+lemmas about the structure of $T_1$. 
+
+\begin{lemma}
+  Let $\Delta = \tackon{\Theta}{x{:}\istrue{\susp{\sf gen\_stack}},
+    h{:}\istrue{\susp{\sf hd}}, y{:}\istrue{\susp{\sf gen\_state}}}$.
+  If $T :: \Delta \leadsto^*_{\Sigma_{\it Gen}} \Delta'$ and
+  $\restrictsig{\Delta'}{\Sigma_{\it PDA}}$, then $T = (T';
+  \trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
+      string/done}\,y})$ (modulo concurrent equality), where $T' ::
+  \Delta \leadsto^*_{\Sigma_{\it Gen}}
+  \tackon{\Theta'}{x'{:}\istrue{\susp{\sf gen\_stack}},
+    h{:}\istrue{\susp{\sf hd}}, y'{:}\istrue{\susp{\sf gen\_state}}}$
+  and $\Delta' = \tackon{\Theta'}{h{:}\istrue{\susp{\sf hd}}}$.
+\end{lemma}
+\noindent
+By induction on the structure of $T$ and case analysis on the first
+steps in $T$. Up to concurrent equality, there are five possibilities:
+\begin{itemize}
+\item $T = (\trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
+      string/done}\,y})$ -- let $T' = \emptytrace$.
+\item $T = (\trstep{x_1,x_2}{{\sf stack/left}\,x}; T'')$. By the
+  induction hppothesis (where the new frame incorporates
+  $x_1{:}\istrue{\susp{\sf <}}$), we have $T'' = (T''';
+  \trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
+      string/done}\,y})$. Let $T' = (\trstep{x_1,x_2}{{\sf
+      stack/left}\,x}; T''')$.
+\item $T = (\trstep{y_1,y_2}{{\sf string/left}\,y}; T'')$. By the
+  induction hppothesis (where the new frame incorporates
+  $y_1{:}\istrue{\susp{\sf <}}$), we have $T'' = (T''';
+  \trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
+      string/done}\,y})$. Let $T' = (\trstep{x_1,x_2}{{\sf
+      string/left}\,y}; T''')$.
+\item $T = (\trstep{y_1,y_2}{{\sf string/right}\,y}; T'')$. By the
+  induction hppothesis (where the new frame incorporates
+  $y_1{:}\istrue{\susp{\sf >}}$), we have $T'' = (T''';
+  \trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
+      string/done}\,y})$. Let $T' = (\trstep{x_1,x_2}{{\sf
+      string/right}\,y}; T''')$.
+\item $T = (S; T'')$, where $x$ and $y$ are not free in $S$. 
+      By the induction hypothesis, we have
+      $T'' = (T''';
+       \trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
+       string/done}\,y})$. Let $T' = (S; T''')$. (This case will not arise
+      in the way we use this lemma, but the statement of the theorem 
+      leaves open the possibility that there are other nonterminals
+      in $\Theta$.)
+\end{itemize}
+
+\noindent
+A corrolary of this lemma is that if 
+$T :: (g{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} \Delta$ and
+  $\restrictsig{\Delta}{\Sigma_{\it PDA}}$, then $T = (T';
+  \trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
+      string/done}\,y})$ (modulo concurrent equality), where $T' ::
+  \Delta \leadsto^*_{\Sigma_{\it Gen}}
+  \tackon{\Theta}{x'{:}\istrue{\susp{\sf gen\_stack}},
+    h{:}\istrue{\susp{\sf hd}}, y'{:}\istrue{\susp{\sf gen\_state}}}$
+  and $\Delta = \tackon{\Theta}{h{:}\istrue{\susp{\sf hd}}}$. To prove
+the corollary, we observe
+that $T = (\trstep{x,h,r}{{\sf state}\,g\,}; T'')$ and apply the lemma
+to $T''$. 
+
+\begin{lemma} The following all hold:
+\begin{itemize}
+\item If $T :: (g{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} 
+       \tackon{\Theta}{x_1{:}\istrue{\susp{\sf <}}, 
+          x_2{:}\istrue{\susp{\sf gen\_stack}}}$, \\then 
+$T = (T'; \trstep{x_1,x_2}{{\sf stack/left}\,x'})$. 
+\item If $T :: (g{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} 
+       \tackon{\Theta}{y_1{:}\istrue{\susp{\sf gen\_stack}},
+           y_2{:}\istrue{\susp{\sf <}}}$, \\then 
+$T = (T'; \trstep{x_1,x_2}{{\sf string/left}\,y'})$. 
+\item If $T :: (g{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} 
+       \tackon{\Theta}{y_1{:}\istrue{\susp{\sf gen\_stack}},
+           y_2{:}\istrue{\susp{\sf >}}}$, \\then 
+$T = (T'; \trstep{x_1,x_2}{{\sf string/right}\,y'})$. 
+\end{itemize}
+\end{lemma}
+\noindent
+The proofs are all by induction on the structure of $T$ and case
+analysis on the last steps in $T$; we will give the first proof, as
+the other two are similar. Up to concurrent equality, there are five
+possibilities:
+\begin{itemize}
+\item $T = T''; S$, where $x_1$ and $x_2$ are not bound by $S$. By the 
+induction hypothesis, $T'' = (T'''; \trstep{x_1,x_2}{{\sf stack/left}\,x'})$.
+Let $T' = (T''; S)$. 
+\end{itemize}
+Note
+
 \end{proof}
 
 \subsection{Adequacy for LF and deductive terms}
