@@ -2341,9 +2341,10 @@ decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}]
 \label{sec:prototype}
 
 The prototype implementation of \sls~contains a parser and typechecker
-for the SLS language; code that is checked by this prototype
-implementation will appear repeatedly in the rest of this thesis,
-always in a \verb|fixed-width font|.
+for the SLS language, and is available from
+\url{https://github.com/robsimmons/sls}. Code that is checked by this
+prototype implementation will appear repeatedly in the rest of this
+thesis, always in a \verb|fixed-width font|.
 
 \begin{figure}
 \begin{align*}
@@ -2370,19 +2371,33 @@ always in a \verb|fixed-width font|.
 \label{fig:translate-types}
 \end{figure}
 
-The checked \sls~code differs slightly from mathematical \sls code in
-a few ways. Following CLF and the Celf implementation, we write
-${\ocircle}A$ in Celf as \verb|{A}|. The mobile modality ${\gnab}A$
-doesn't have an ASCII representation, so write \verb|$A| when $A$ is
-mobile. Upshifts and downshifts are always inferred: this means that
-we can't write down ${\uparrow}{\downarrow}A$ or
-${\downarrow}{\uparrow}A$, but neither of these \ollll~propositions
-are part of the \sls~fragment anyway. The translation between the
-mathematical notation we use for \sls~propositions and the ASCII
-representation used by the implementation is outlined in
-Figure~\ref{fig:translate-types}.
+The checked \sls~code differs slightly from mathematical \sls~code in
+a few ways. Most dramatically, following CLF and the Celf
+implementation, we write the lax modality ${\ocircle}A$ in Celf as
+\verb|{A}|. We already used this notation informally the introduction,
+where we wrote the heads of rules as $\{ A^+ \}$ instead of
+${\ocircle}A^+$. It is the mathematical notation, not the Celf
+notation, that is nonstandard in this thesis: presentations of CLF
+generally write $\{ A^+ \}$ as the mathematical notation. We adopted
+Fairtlough and Mendler's ${\ocircle}$ connective for the lax modality
+\cite{fairtlough95propositional} because it fits the pattern of the
+other unary connectives ${\downarrow}$, ${\gnab}$, ${\bang}$, and
+${\uparrow}$ and because the curly braces are already used in our
+context constructors and matching constructs -- it seemed clearer to
+write $\frameoff{\Theta}{[{\ocircle}A^+]}$ instead of
+$\frameoff{\Theta}{[\{A^+\}]}$.
 
-Another change is for the sake of readability: if \verb|P| is a
+The
+translation between the mathematical notation we use for
+\sls~propositions and the ASCII representation used in the
+implementation is outlined in Figure~\ref{fig:translate-types}.
+The mobile modality ${\gnab}A$ doesn't have an ASCII
+representation, so write \verb|$A| when $A$ is mobile. Upshifts and
+downshifts are always inferred: this means that we can't write down
+${\uparrow}{\downarrow}A$ or ${\downarrow}{\uparrow}A$, but neither of
+these \ollll~propositions are part of the \sls~fragment anyway. 
+
+Another change was made for the sake of readability: if \verb|P| is a
 persistent atomic proposition, we can optionally write \verb|!P|
 wherever \verb|P| is expected, and if \verb|P| is a linear atomic
 proposition, we can write \verb|$P| wherever \verb|P| is
@@ -2397,39 +2412,238 @@ when a signature uses more than one proposition. When all of these
 optional annotations are included, the rules in a signature that uses
 positive atomic propositions look the same as rules in a signature
 that uses the pseudo-positive negative atomic propositions described
-in Section~\ref{sec:pseudopositive}.
+in Section~\ref{sec:pseudopositive}. 
 
-\section{Logic programming interpretation}
+In the code examples given in the remainder of this thesis, we will
+use these option annotations in a consistent way.  We will omit the
+optional \verb|$A| annotations only in specifications with no ordered
+atomic propositions, and we will omit the optional \verb|!A|
+annotations in specifications with no ordered or linear atomic
+propositions. This making the mixture of different exponentials
+explicit while avoiding the need for rules like
+\verb|($a * $b * $c >-> {$d * $e})| when specifications are entirely
+linear (and likewise when specifications are entirely persistent).
+
+\section{Logic programming}
 \label{sec:framework-logicprog}
 
 The logic programming interpretation of CLF was explored by the
 Lollimon implementation \cite{lopez05monadic} and adapted by the Celf
-implementation \cite{schacknielsen08celf}. This interpretation 
-was part of our motivation 
+implementation \cite{schacknielsen08celf}. Logic programming
+interpretations of \sls~are not a focus this thesis, but we will touch
+on a few points in this section. 
 
- of the motivation behind separating the structure of deductive
-\sls~proofs -- that is, proofs of $\istrue{\susp{p^-}}$ -- from the structure of traces,
-partial proofs of $\islax{A^+}$, 
+Logic programming is important because it provides us with operational
+intuitions about the behavior of specifications; these intuitions will
+form the basis of the operationalization transformations on
+\sls~specifications considered in Chapter~6. Additionally, logic
+programming intuitions motivated the design of \sls, in particular the
+separation of traces from the deductive fragment, as we will discuss
+in Section~\ref{sec:framework-logicprog-trace}.
 
-In Chapter 3 I call this distinction one between ``concurrent and deductive''
-proofs, operationally it's the difference between forward chaining 
-and backward chaining. Maintaining the distinction between these is why
-we don't want the class $p^-_\mlax$ in the logic.
-
-We have talked about {\it concurrent} and {\it deductive} proof
-objects, and also about the intuitive notion of {\it concurrent
-  computation} as the non-backtracking, forward-chaining 
-
-(definitely discuss forward-chaining and backward-chaining as concepts)
-
-Expand on literature review of quiescence from HOSC Section 4
-
-Leave the question of quiescence versus eagerly-trying-to-right-focus
-versus saturation ambiguous. If you talk about pure saturation the
-forward-reference Chapter 8. 
-
-\subsection{Modes and well-moded specifications}
+\subsection{Deductive computation}
+\label{sec:framework-logicprog-deductive}
 \label{sec:framework-modes}
+
+Deductive computation in \sls~is the search for {\it complete} proofs
+of sequents of the form $\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$.
+The most common form of deductive computation is {\it goal-directed}
+computation.  In goal-directed computation, we will only try to prove
+the sequent $\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$ by focusing on a
+proposition like ${\downarrow}p_n^- \lefti \ldots \lefti
+{\downarrow}p_1^- \lefti p^-$ which has a head $p^-$ that matches the
+succedent. This replaces the goal
+$\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$ with $n$ goals
+$\foc{\Psi}{\Delta_1}{\istrue{\susp{p_1^-}}}$ \ldots
+$\foc{\Psi}{\Delta_n}{\istrue{\susp{p_n^-}}}$, where $\Delta$ matches
+$\Delta_1,\ldots,\Delta_n$.
+
+Goal-directed deductive computation is also called {\it backward
+  chaining}, because we're working backwards from the goal we want to
+prove.\footnote{The term {\it top-down logic programming} is also
+  used, and refers to the fact that the rule ${\downarrow}p_n^- \lefti
+  \ldots \lefti {\downarrow}p_1^- \lefti p^-$ would be written with
+  $p^-$ on the first line, $p_1^-$ on the second, etc. This is
+  counterintuitive from a proof-construction perspective, as we are
+  building partial proofs from the bottom up. Therefore, we will avoid
+  this terminology, as well as the terminology {\it bottom-up logic
+    programming}, which is a synonym for {\it forward chaining}.}  The
+backward-chaining interpretation of intuitionistic logics dates back to
+the work by Miller et al.~on uniform proofs \cite{miller91uniform}.
+An even older concept, Clark's {\it negation-as-failure}
+\cite{clark87negation}, stipulates that if the logic programming
+interpreter reports that it has failed to find a proof of a
+goal-directed sequent, we should be able to conclude that no proof
+exists. This interpretation requires that proof search be {\it
+  backtracking}: if we we try to prove
+$\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$ by focusing on a particular
+proposition and one of the resulting subgoals fails, we have to
+consider any other propositions that could have been used to prove the
+sequent before giving up. Backtracking can be extremely powerful in
+certain cases and incredibly expensive in others, and so most logic
+programming languages have an escape hatch that modifies or limits
+backtracking at the user's discretion, such as the Prolog cut (no
+relation to the admissible rule ${\it cut}$) or Twelf's deterministic
+declarations. Non-backtracking goal-oriented deductive computation
+is called {\it flat resolution} \cite{aitkaci99warrens}.
+
+Another feature of goal-oriented deductive computation is that is
+allows for unspecified variables. Consider the following \sls~signatures:
+\begin{align*}
+ \Sigma_{\it Add} = \cdot, 
+~&{\sf nat} : {\sf type}, 
+~~\lf{\sf z} : {\sf nat}, 
+~~\lf{\sf s} : {\sf nat} \rightarrow {\sf nat},\\
+~&{\sf plus} : {\sf nat} \rightarrow {\sf nat} \rightarrow {\sf nat} 
+                 \rightarrow {\sf prop},\\
+~&{\sf plus/z} : \forall \lf{n}{:}{\sf nat}.\,
+({\sf plus}\,\lf{\sf z}\,\lf{n}\,\lf{n}),\\
+~&{\sf plus/z} : \forall \lf{n}{:}{\sf nat}.\, 
+                 \forall \lf{m}{:}{\sf nat}.\, 
+                 \forall \lf{p}{:}{\sf nat}.\,
+{!}({\sf plus}\,\lf{n}\,\lf{m}\,\lf{p})
+\lefti ({\sf plus}\,({\sf s}\,\lf{n})\,\lf{m}\,({\sf s}\,\lf{p}))
+\end{align*}
+In addition to searching for a proof of ${\sf plus}\,\lf{\sf
+  (s\,z)}\,\lf{\sf (s\,z)}\,\lf{\sf (s\,(s\,z))}$ (which will succeed,
+as $1 + 1 = 2$) or searching for a proof of ${\sf plus}\,\lf{\sf
+  (s\,z)}\,\lf{\sf (s\,z)}\,\lf{\sf (s\,(s\,(s\,z)))}$ (which will
+fail, as $1 + 1 \neq 3$), we can use goal-oriented deductive
+computation to search for ${\sf plus}\,\lf{\sf (s\,z)}\,\lf{\sf
+  (s\,z)}\,X$, where $X$ is initially unspecified.  This search will
+succeed, reporting that $X = \lf{\sf (s\,(s\,z))}$.
+
+We say that ${\sf plus}$ is a {\it well-moded} predicate with {\it
+  mode} $({\sf plus}\,{+}\,{+}\,{-})$, because whenever we perform
+deductive computation to derive $({\sf plus}\,\lf{n}\,\lf{m}\,\lf{p})$
+where $\lf{n}$ and $\lf{m}$ are fully specified, any unspecified
+variables in $\lf{p}$ will become fully specified in the course of
+deductive computation. Well-moded predicates can be treated as partial
+functions from their inputs (the indices marked ``${+}$'' in the
+mode) to their outputs (the indices marked ``${-}$'' in the
+mode). A predicate can, in general, be given more than one mode: 
+$({\sf plus}\,{+}\,{-}\,{+})$ is a valid mode for ${\sf plus}$, but 
+$({\sf plus}\,{+}\,{-}\,{-})$ is not. 
+
+The implementation of goal-oriented deductive computation in various
+substructural logics has been explored by Hodas \cite{hodas94logic},
+Polakow \cite{polakow00linear,polakow01ordered}, Armel\'in and Pym
+\cite{armelin01bunched}, and others. Efficient implementation of these
+languages is complicated by the problem of {\it resource
+  management}. In linear logic proof search, it would be technically
+correct but highly inefficient to perform proof search by enumerating
+the ways that a context can be split and then backtracking over each
+possible split. Resource management allows the interpreter to avoid
+this potentially exponential backtracking, but specifying resource
+management, especially for richer substructural logics, can be complex
+and subtle \cite{cervesato00efficient}.
+
+The term {\it deductive computation} is meant to be interpreted very
+broadly, and goal-directed search is not the only form of deductive
+computation. Another paradigm for deductive computation is the {\it
+  inverse method}, where the interpreter attempts to prove a sequent
+$\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$ by creating and growing
+database of sequents that are derivable -- attempting to build the
+complete derivation from the top down, as it were. The inverse method
+is generally associated with theorem proving and not logic
+programming. However, Chaudhuri, Pfenning, and Price have shown that
+that deductive computation with the inverse method in a focused linear
+logic can simulate both backward-chaining deductive computation and
+forward-chaining trace computation (considered below) for persistent
+Horn-clause logic programs \cite{chaudhuri10logical}.
+
+\subsection{Trace computation}
+\label{sec:framework-logicprog-trace}
+
+Trace computation is the search for {\it partial} proofs of
+sequents. As the name suggests, in \sls~trace computation is
+associated with the search for partial proofs of the judgment
+$\islax{A^+}$, which correspond to traces $(\Psi;
+\Delta)_{\lf{\sigma}} \leadsto^* (\Psi'; \Delta')_{\lf{\sigma'}}$. 
+
+Trace computation is usually understood in terms of specifying a
+signature, an initial process state $(\Psi;\Delta)$, and then allowing
+this initial state to evolve freely by applying rules from the
+signature.  This {\it forward-chaining} interpretation of persistent
+intuitionistic logic is the basis of Datalog. There is also significant
+body of work in giving forward-chaining interpretations to linear
+logic, including Forum \cite{miller96multiple} and Lollimon
+\cite{lopez05monadic}. Other languages and programming paradigms, such
+as multiset rewriting and Gamma, are defined independently of linear
+logic but can be partially or completely described in terms of proof
+search in linear logic \cite{paola96linear,cervesato09relating}.
+Forward-chaining trace computation in substructural logics is {\it
+  committed choice} and not backtracking: once we observe that
+$(\Psi;\Delta) \leadsto (\Psi'; \Delta')$, we try to evolve the state
+$(\Psi'; \Delta')$, and we do not consider what other process states
+could be obtained by evolving $(\Psi;\Delta)$.
+
+Forward-chaining trace computation does not consider unspecified
+variables and is largely free of the resource management problems that
+appear in backward-chaining deductive computation for substructural
+logics. In previous work, we designed a forward-chaining interpreters
+for linear logic that admits abstract reasoning about the asymptotic
+complexity of logical specifications \cite{simmons08linear}, but this
+is
+
+We will be most interested in forward-chaining trace computation in
+this thesis. Another paradigm is model checking, where we are given a
+signature and an initial state $(\Psi;\Delta)$ and want to enumerate
+or characterize the set of states $(\Psi'; \Delta')$ such that $(\Psi;
+\Delta) \leadsto^* (\Psi'; \Delta')$. In the special case where
+specifications are entirely persistent, this is {\it saturating} trace
+computation.
+
+\subsection{Integrating deductive and trace computation}
+
+In logic programming interpreter used by Lollimon and Celf,
+backtracking, goal-directed search is associated with the deductive
+fragment, and trace computation is performed by committed-choice
+forward chaining. The two sometimes have an uneasy relationship. To
+see why, consider the following signature:
+\begin{align*}
+ \Sigma_{\it Demo} = \cdot, 
+~&{\sf posA} : {\sf prop}\,{\sf ord}, 
+~~{\sf posB} : {\sf prop}\,{\sf ord}, 
+~~{\sf posC} : {\sf prop}\,{\sf ord}, 
+~~{\sf negD} : {\sf prop},\\
+~&{\sf fwdruleAB} : {\sf posA} \lefti {\ocircle}{\sf posB},\\
+~&{\sf fwdruleAC} : {\sf posA} \lefti {\ocircle}{\sf posC},\\
+~&{\sf bwdrule} : ({\sf posA} \lefti {\ocircle}{\sf posB}) \lefti {\sf negD}
+\end{align*}
+
+In an empty context, there is only one derivation of ${\sf negD}$
+under this signature: it is represented by the proof term ${\sf
+  bwdrule}\,(\lambda x.\,\tlet{\trstep{y}{{\sf
+      fwdruleAB}\,x}}{y})$. The negation-as-failure interpretation of
+backtracking, goal-directed search is that an interpreter tasked with
+finding a proof of ${\sf negD}$ should either find this proof or never
+terminate. This is not what happens under the logic programming
+interpretation used by Celf and Lollimon.  Deductive computation will
+begin by trying to prove ${\sf negD}$; this can only be done with the
+rule ${\sf bwdrule}$. Applying this rule generates the subgoal ${\sf
+  posA} \lefti {\ocircle}{\sf posB}$ which Celf/Lollimon will attempt
+to satisfy by constructing a trace $(x{:}\istrue{\susp{\sf posA}}) \leadsto
+(y{:}\istrue{\susp{\sf posB}})$.
+
+There are {\it two} nontrivial traces in this signature starting from
+the process state $(x{:}\istrue{\susp{\sf posA}})$ -- the first is
+$(\trstep{y}{{\sf fwdruleAB}\,x}) :: (x{:}\istrue{\susp{\sf posA}})
+\leadsto (y{:}\istrue{\susp{\sf posB}})$, and the second is
+$(\trstep{y}{{\sf fwdruleAC}\,x})::(x{:}\istrue{\susp{\sf posA}})
+\leadsto (y{:}\istrue{\susp{\sf posC}})$.  Forward-chaining can
+plausibly come up with either one. If it derives the second one, the
+the subgoal fails, and a Celf/Lollimon-style interpreter will report
+that it failed to prove ${\sf negD}$.
+
+This example indicates that it is difficult to make backtracking
+backward-chaining deductive computation reliant on committed-choice
+forward-chaining concurrent computation, at least if we are interested
+in preserving the former's usual negation-as-failure
+interpretation. In the other direction, it is entirely natural to make
+forward-chaining computation dependent upon deductive computation. The
+fragment of CLF that encodes this kind of computation was called the
+{\it semantic effects} fragment by DeYoung \cite{deyoung09reasoning}.
 
 \section{Design decisions}
 \label{sec:designdecisions}
