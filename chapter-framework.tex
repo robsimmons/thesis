@@ -480,7 +480,7 @@ treat term-level operations like substitution somewhat informally.
 While we will always include the annotations for signature $\Sigma$
 and the subordination relation $\subord$ in the definitions of section
 and the next one, in the future we will often leave the signature
-$\Sigma$ implicit when it is unambiguous or uninportent. We will
+$\Sigma$ implicit when it is unambiguous or unimportant. We will
 almost always leave the subordination relation implicit; we can assume
 where applicable that we are working with the {\it strongest} (that
 is, the smallest) subordination relation of the given signature
@@ -1245,7 +1245,7 @@ increases the modularity of separation logic proofs, because two
 program fragments that reason about different parts of the state can
 be reasoned about independently. 
 
-Similar frame properties hold for \sls~traces. The direct analouge of
+Similar frame properties hold for \sls~traces. The direct analogue of
 the frame rule is the observation that a trace can always have some
 extra state framed on to the outside. This is essentially a
 generalization of weakening to \sls~traces.
@@ -1262,7 +1262,7 @@ The frame rule is a weakening property which ensures that new,
 irrelevant state can can always be added to a state. Conversely, any
 state that is never accessed or modified by a trace can be always be 
 removed without making the trace ill-typed. This property
-is a generalization of strenghtening to \sls~traces.
+is a generalization of strengthening to \sls~traces.
 
 \bigskip
 \begin{theorem}[Frame strengthening]\label{thm:framestrong}~\\
@@ -1565,28 +1565,33 @@ state $\ctxinterp{\obj{k \rhd s}} \leadsto_{\Sigma_{\it PDA}}
 $\obj{k'}$ and $\obj{s'}$. The third step is the main adequacy result:
 that $\ctxinterp{k \rhd s} \leadsto_{\Sigma_{\it PDA}} \ctxinterp{k'
   \rhd s'}$ if and only if $\obj{k \rhd s} \mapsto \obj{k' \rhd
-  s'}$. The second step is cruicial: without it, we might transition
+  s'}$. The second step is crucial: without it, we might transition
 in \sls~from the encoding of some $\obj{k \rhd s}$ to a state
-$\Delta'$ that is not in the image of encoding.
+$\Delta'$ that is not in the image of encoding. 
 
-In this section, we re-factor this methadology to use {\it generative
-  signatures}. Generative signatures are a rich generalization of {\it
-  regular worlds} that can be used to describe invariants of
-\sls~traces, a topic we will explore further in Chatper~9.  The first
-step in our revised methadology is to describe a generative signature
-$\Sigma_{\it Gen}$ that precisely captures the set of process states
-that encode machine states (Theorem~\ref{thm:pda-encoding} below).  The
-second step is showing that the generative signature $\Sigma_{\it
-  Gen}$ describes an invariant of the signature $\Sigma_{\it PDA}$
-(Theorem~\ref{thm:pda-preservation}).
-because this invariant captures the set process states that encode
-PDA states, we therefore know that a process state that encodes
-a PDA state can only step to another process state that encodes 
-a PDA state. The third step, showing that 
-$\ctxinterp{k \rhd s} \leadsto_{\Sigma_{\it PDA}} \ctxinterp{k'
-  \rhd s'}$ if and only if $\obj{k \rhd s} \mapsto \obj{k' \rhd
-  s'}$, is the same as in other developments.
-1
+In the case of our deterministic PDA, this concern is less readily
+apparent, because we could avoid the second proof by instead proving
+that if $\ctxinterp{k \rhd s} \leadsto_{\Sigma_{\it PDA}} \Delta$ and
+$\ctxinterp{k \rhd s} \leadsto_{\Sigma_{\it PDA}} \Delta'$ then
+$\Delta = \Delta'$. In this section, we will use this
+preservation-like property to motivate a topic we will discuss further
+in Part~3 of this thesis. This presentation re-factors the methodology
+given here by using {\it generative signatures}. Generative signatures
+are a rich generalization of {\it regular worlds} that can be used to
+describe invariants of \sls~traces.  The first step in our revised
+methodology is to describe a generative signature $\Sigma_{\it Gen}$
+that precisely captures the set of process states that encode machine
+states (Theorem~\ref{thm:pda-encoding} below).  The second step is
+showing that the generative signature $\Sigma_{\it Gen}$ describes an
+invariant of the signature $\Sigma_{\it PDA}$
+(Theorem~\ref{thm:pda-preservation}).  because this invariant captures
+the set process states that encode PDA states, we therefore know that
+a process state that encodes a PDA state can only step to another
+process state that encodes a PDA state. The third step, showing that
+$\ctxinterp{k \rhd s} \leadsto_{\Sigma_{\it PDA}} \ctxinterp{k' \rhd
+  s'}$ if and only if $\obj{k \rhd s} \mapsto \obj{k' \rhd s'}$, is
+the same as in other developments.
+
 \subsection{Regular and generated worlds}
 
 A critical aspect of any adequacy arguments is an understanding of the
@@ -1631,7 +1636,7 @@ zones:
 \]
 In essence, the generalization we propose is a move from a description
 of worlds based on regular expressions to a description of worlds
-based on context-free grammars. Convienently, these contexts can be
+based on context-free grammars. Conveniently, these contexts can be
 characterized within the machinery of \sls~itself by describing {\it
   generative signatures} that can form the set of process states we
 are interested in from a single seed context.  The signature
@@ -1806,7 +1811,7 @@ $T :: ({g{:}\istrue{\susp{\sf gen}}}) \leadsto^*_{\Sigma_{\it Gen}}
 (\ctxinterp{k \rhd s})$. 
 \end{lemma}
 \noindent
-By straightforward construciton using the first two lemmas
+By straightforward construction using the first two lemmas
 and frame weakening (Theorem~\ref{thm:frameweak}): 
 \begin{align*}
 & \qquad\qquad (g{:}\istrue{\susp{\sf gen}})\\
@@ -1876,11 +1881,11 @@ are four possibilities:
 induction hypothesis on the smaller trace $T'$.  The proof above takes
 a number of facts about concurrent equality for granted. For example,
 the trace $T = (\trstep{()}{{\sf stack/done}\,x};
-\trstep{y_1,y_2}{{\sf string/right}\,y}; T')$ does not syntatically
+\trstep{y_1,y_2}{{\sf string/right}\,y}; T')$ does not syntactically
 match any of the traces above, but it matches the last case because $T
 = (\trstep{y_1,y_2}{{\sf string/right}\,y}; \trstep{()}{{\sf
     stack/done}\,x}; T')$ modulo concurrent equality. If we didn't
-implicitly rely on concurrent equality in theis way, the resulting
+implicitly rely on concurrent equality in this way, the resulting
 proof would have twice as many cases.  We will take these finite uses
 of concurrent equality for granted when we specify that a proof
 proceeds by case analysis on the first steps of $T$ (or, conversely,
@@ -1933,7 +1938,7 @@ the first two lemmas treated trace composition as left-associative,
 but the induction we performed on traces in the next-to-last lemma
 treated trace composition as right-associative.
 
-\subsection{World preservation}
+\subsection{Generated world preservation}
 
 The generative signature $\Sigma_{\it Gen}$ precisely captures the
 world of \sls~process states that are in the image of the encoding
@@ -1995,10 +2000,11 @@ decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}]
 \end{tikzpicture} 
 \end{center}
 
-\begin{proof}
-The proof is by case analysis on the structure of $S$; it relies on four
-lemmas about the structure of $T_1$. 
+\noindent
+The proof of Theorem~\ref{thm:pda-preservation} relies on two lemmas, 
+which we will consider first. 
 
+\bigskip
 \begin{lemma}
   Let $\Delta = \tackon{\Theta}{x{:}\istrue{\susp{\sf gen\_stack}},
     h{:}\istrue{\susp{\sf hd}}, y{:}\istrue{\susp{\sf gen\_state}}}$.
@@ -2011,26 +2017,26 @@ lemmas about the structure of $T_1$.
     h{:}\istrue{\susp{\sf hd}}, y'{:}\istrue{\susp{\sf gen\_state}}}$
   and $\Delta' = \tackon{\Theta'}{h{:}\istrue{\susp{\sf hd}}}$.
 \end{lemma}
-\noindent
+\begin{proof}
 By induction on the structure of $T$ and case analysis on the first
 steps in $T$. Up to concurrent equality, there are five possibilities:
 \begin{itemize}
 \item $T = (\trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
       string/done}\,y})$ -- let $T' = \emptytrace$.
 \item $T = (\trstep{x_1,x_2}{{\sf stack/left}\,x}; T'')$. By the
-  induction hppothesis (where the new frame incorporates
+  induction hypothesis (where the new frame incorporates
   $x_1{:}\istrue{\susp{\sf <}}$), we have $T'' = (T''';
   \trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
       string/done}\,y})$. Let $T' = (\trstep{x_1,x_2}{{\sf
       stack/left}\,x}; T''')$.
 \item $T = (\trstep{y_1,y_2}{{\sf string/left}\,y}; T'')$. By the
-  induction hppothesis (where the new frame incorporates
+  induction hypothesis (where the new frame incorporates
   $y_1{:}\istrue{\susp{\sf <}}$), we have $T'' = (T''';
   \trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
       string/done}\,y})$. Let $T' = (\trstep{x_1,x_2}{{\sf
       string/left}\,y}; T''')$.
 \item $T = (\trstep{y_1,y_2}{{\sf string/right}\,y}; T'')$. By the
-  induction hppothesis (where the new frame incorporates
+  induction hypothesis (where the new frame incorporates
   $y_1{:}\istrue{\susp{\sf >}}$), we have $T'' = (T''';
   \trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
       string/done}\,y})$. Let $T' = (\trstep{x_1,x_2}{{\sf
@@ -2044,9 +2050,10 @@ steps in $T$. Up to concurrent equality, there are five possibilities:
       leaves open the possibility that there are other nonterminals
       in $\Theta$.)
 \end{itemize}
+This completes the proof. 
+\end{proof}
 
-\noindent
-A corrolary of this lemma is that if 
+A corollary of this lemma is that if 
 $T :: (g{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} \Delta$ and
   $\restrictsig{\Delta}{\Sigma_{\it PDA}}$, then $T = (T';
   \trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
@@ -2059,6 +2066,7 @@ the corollary, we observe
 that $T = (\trstep{x,h,r}{{\sf state}\,g\,}; T'')$ and apply the lemma
 to $T''$. 
 
+\bigskip
 \begin{lemma} The following all hold:
 \begin{itemize}
 \item If $T :: (g{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} 
@@ -2075,28 +2083,259 @@ $T = (T'; \trstep{x_1,x_2}{{\sf string/left}\,y'})$.
 $T = (T'; \trstep{x_1,x_2}{{\sf string/right}\,y'})$. 
 \end{itemize}
 \end{lemma}
-\noindent
+\begin{proof}
 The proofs are all by induction on the structure of $T$ and case
-analysis on the last steps in $T$; we will give the first proof, as
-the other two are similar. Up to concurrent equality, there are five
+analysis on the last steps in $T$; we will prove the last statement, as
+the other two are similar. Up to concurrent equality, there are two
 possibilities:
 \begin{itemize}
-\item $T = T''; S$, where $x_1$ and $x_2$ are not bound by $S$. By the 
-induction hypothesis, $T'' = (T'''; \trstep{x_1,x_2}{{\sf stack/left}\,x'})$.
+\item $T = (T'; \trstep{y_1, y_2}{{\sf string/right}\,y'})$ -- Immediate.
+\item $T = (T''; S)$, where $y_1$ and $y_2$ are not bound by $S$. By the 
+induction hypothesis, $T'' = (T'''; \trstep{y_1,y_2}{{\sf string/right}\,y'})$.
 Let $T' = (T''; S)$. 
 \end{itemize}
-Note
-
+This completes the proof. 
 \end{proof}
+
+Note that we do not consider any cases where 
+$T = (T'; \trstep{y_1',y_2}{{\sf string/right}\,y'})$ (for $y_1 \neq y_1'$),
+$T = (T'; \trstep{y_1',y_2}{{\sf string/right}\,y'})$ (for $y_2 \neq y_2'$),
+or (critically) where 
+$T = (T'; \trstep{y_1,y_2'}{{\sf string/left}\,y'})$. There is no 
+way for any of these traces to have the correct type, which makes
+the resulting case analysis quite simple. 
+
+\begin{proof}[Proof of Theorem~\ref{thm:pda-preservation} (Preservation)]
+By case analysis on the structure of $S$. 
+
+\bigskip
+\noindent
+{\bf Case 1:} $S = \trstep{x',h'}{{\sf push}\,(\tfuser{h}{y})}$,
+which means that we are given the following 
+generative trace in $\Sigma_{\it Gen}$:
+\begin{align*}
+& \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
+& T\\
+& \qquad \tackon{\Theta}{h{:}\istrue{\susp{\sf hd}}, ~~
+                   y{:}\istrue{\susp{\sf <}}}
+\intertext{and we must construct a trace 
+$({g{:}\istrue{\susp{\sf gen}}}) \leadsto^*_{\Sigma_{\it Gen}} 
+\tackon{\Theta}{x'{:}\istrue{\susp{\sf <}},
+                   h'{:}\istrue{\susp{\sf hd}}}$. Changing
+$h$ to $h'$ is just renaming a bound variable, so we have}
+& \qquad 
+({g{:}\istrue{\susp{\sf gen}}})\\
+& T'\\
+& \qquad \tackon{\Theta}{h'{:}\istrue{\susp{\sf hd}}, ~~
+                   y{:}\istrue{\susp{\sf <}}}
+\intertext{
+The corollary 
+to the first lemma above on $T'$ gives us}
+& \qquad 
+({g{:}\istrue{\susp{\sf gen}}})\\
+& T'';\\
+& \qquad \tackon{\Theta}{
+                   x_g{:}\istrue{\susp{\sf gen\_stack}}, ~~
+                   h'{:}\istrue{\susp{\sf hd}}, ~~
+                   y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
+                   y{:}\istrue{\susp{\sf <}}}\\
+& \trstep{()}{{\sf stack/done}\,x_g};\\
+& \trstep{()}{{\sf string/done}\,y_g}\\
+& \qquad \tackon{\Theta}{h'{:}\istrue{\susp{\sf hd}}, ~~
+                   y{:}\istrue{\susp{\sf <}}}
+\intertext{The second lemma (second part) on $T''$ gives us}
+& \qquad 
+({g{:}\istrue{\susp{\sf gen}}})\\
+& T''';\\
+& \qquad \tackon{\Theta}{
+                   x_g{:}\istrue{\susp{\sf gen\_stack}}, ~~
+                   h'{:}\istrue{\susp{\sf hd}}, ~~
+                   y_g'{:}\istrue{\susp{\sf gen\_string}}}\\
+& \trstep{y_g,y}{{\sf string/left}\,y_g'};\\
+& \qquad \tackon{\Theta}{
+                   x_g{:}\istrue{\susp{\sf gen\_stack}}, ~~
+                   h'{:}\istrue{\susp{\sf hd}}, ~~
+                   y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
+                   y{:}\istrue{\susp{\sf <}}}\\
+& \trstep{()}{{\sf stack/done}\,x_g};\\
+& \trstep{()}{{\sf string/done}\,y_g}\\
+& \qquad \tackon{\Theta}{h'{:}\istrue{\susp{\sf hd}}, ~~
+                   y{:}\istrue{\susp{\sf <}}}
+\intertext{Now, we can construct the trace we need using $T'''$:}
+& \qquad 
+({g{:}\istrue{\susp{\sf gen}}})\\
+& T''';\\
+& \qquad \tackon{\Theta}{
+                   x_g{:}\istrue{\susp{\sf gen\_stack}}, ~~
+                   h'{:}\istrue{\susp{\sf hd}}, ~~
+                   y_g'{:}\istrue{\susp{\sf gen\_string}}}\\
+& \trstep{x', x_g'}{{\sf stack/left}\,x_g};\\
+& \qquad \tackon{\Theta}{
+                   x'{:}\istrue{\susp{\sf <}}, ~~
+                   x_g'{:}\istrue{\susp{\sf gen\_stack}}, ~~
+                   h'{:}\istrue{\susp{\sf hd}}, ~~
+                   y_g'{:}\istrue{\susp{\sf gen\_string}}}\\
+& \trstep{()}{{\sf stack/done}\,x_g'};\\
+& \trstep{()}{{\sf string/done}\,y_g'}\\
+& \qquad \tackon{\Theta}{
+                   x'{:}\istrue{\susp{\sf <}}, ~~
+                   h'{:}\istrue{\susp{\sf hd}}}
+\end{align*}
+
+\bigskip
+\noindent
+{\bf Case 2:} $S = \trstep{h'}{{\sf pop}\,(\tfuser{x}{\tfuser{h}{y}})}$,
+which means that we are given the following 
+generative trace in $\Sigma_{\it Gen}$:
+\begin{align*}
+& \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
+& T\\
+& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf <}}, ~~
+                   h{:}\istrue{\susp{\sf hd}}, ~~
+                   y{:}\istrue{\susp{\sf >}}}
+\intertext{and we must construct a trace 
+$({g{:}\istrue{\susp{\sf gen}}}) \leadsto^*_{\Sigma_{\it Gen}} 
+\tackon{\Theta}{h'{:}\istrue{\susp{\sf hd}}}$. Changing
+$h$ to $h'$ is just renaming a bound variable, so we have}
+& \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
+& T'\\
+& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf <}}, ~~
+                   h'{:}\istrue{\susp{\sf hd}}, ~~
+                   y{:}\istrue{\susp{\sf >}}}
+\intertext{The corollary to the first lemma above on $T'$ gives us}
+& \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
+& T'';\\
+& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf <}}, ~~
+                   x_g{:}\istrue{\susp{\sf gen\_stack}}, ~~
+                   h'{:}\istrue{\susp{\sf hd}}, ~~
+                   y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
+                   y{:}\istrue{\susp{\sf >}}}\\
+& \trstep{()}{{\sf stack/done}\,x_g};\\
+& \trstep{()}{{\sf string/done}\,y_g}\\
+& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf <}}, ~~
+                   h'{:}\istrue{\susp{\sf hd}}, ~~
+                   y{:}\istrue{\susp{\sf >}}}
+\intertext{The second lemma (first part) on $T''$ gives us}
+& \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
+& T''';\\
+& \qquad \tackon{\Theta}{x_g'{:}\istrue{\susp{\sf gen\_stack}}, ~~
+                   h'{:}\istrue{\susp{\sf hd}}, ~~
+                   y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
+                   y{:}\istrue{\susp{\sf >}}}\\
+& \trstep{x, x_g}{{\sf stack/left}\,x_g'};\\
+& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf <}}, ~~
+                   x_g{:}\istrue{\susp{\sf gen\_stack}}, ~~
+                   h'{:}\istrue{\susp{\sf hd}}, ~~
+                   y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
+                   y{:}\istrue{\susp{\sf >}}}\\
+& \trstep{()}{{\sf stack/done}\,x_g};\\
+& \trstep{()}{{\sf string/done}\,y_g}\\
+& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf <}}, ~~
+                   h'{:}\istrue{\susp{\sf hd}}, ~~
+                   y{:}\istrue{\susp{\sf >}}}
+\intertext{The second lemma (third part) on $T'''$ gives us}
+& \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
+& T'''';\\
+& \qquad \tackon{\Theta}{x_g'{:}\istrue{\susp{\sf gen\_stack}}, ~~
+                   h'{:}\istrue{\susp{\sf hd}}, ~~
+                   y_g'{:}\istrue{\susp{\sf gen\_string}}}\\
+& \trstep{y_g, y}{{\sf string/right}\,y_g'};\\
+& \qquad \tackon{\Theta}{x_g'{:}\istrue{\susp{\sf gen\_stack}}, ~~
+                   h'{:}\istrue{\susp{\sf hd}}, ~~
+                   y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
+                   y{:}\istrue{\susp{\sf >}}}\\
+& \trstep{x, x_g}{{\sf stack/left}\,x_g'};\\
+& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf <}}, ~~
+                   x_g{:}\istrue{\susp{\sf gen\_stack}}, ~~
+                   h'{:}\istrue{\susp{\sf hd}}, ~~
+                   y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
+                   y{:}\istrue{\susp{\sf >}}}\\
+& \trstep{()}{{\sf stack/done}\,x_g};\\
+& \trstep{()}{{\sf string/done}\,y_g}\\
+& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf <}}, ~~
+                   h'{:}\istrue{\susp{\sf hd}}, ~~
+                   y{:}\istrue{\susp{\sf >}}}
+\intertext{Now, we can construct the trace we need using $T''''$:}
+& \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
+& T'''';\\
+& \qquad \tackon{\Theta}{x_g'{:}\istrue{\susp{\sf gen\_stack}}, ~~
+                   h'{:}\istrue{\susp{\sf hd}}, ~~
+                   y_g'{:}\istrue{\susp{\sf gen\_string}}}\\
+& \trstep{()}{{\sf stack/done}\,x_g'};\\
+& \trstep{()}{{\sf string/done}\,y_g'}\\
+& \qquad \tackon{\Theta}{h'{:}\istrue{\susp{\sf hd}}}
+\end{align*}
+
+\noindent
+These two cases represent the only two transitions that are possible
+under the signature $\Sigma_{\it PDA}$, so we are done.
+\end{proof}
+
+Proving that generation under a generative signature like $\Sigma_{\it
+  Gen}$ is invariant under transitions in a signature like
+$\Sigma_{\it PDA}$ is something we will consider extensively in Part~3
+of this thesis. All such proofs essentially follow the structure of
+Theorem~\ref{thm:pda-preservation}. First, we enumerate the synthetic
+transitions associated with a given signature. Then, in each of those
+cases, we use the type of the synthetic transition to perform
+inversion on the structure of the given generative trace until we
+obtain a trace that we can use to construct a generative
+trace that establishes the fact that the invariant was preserved.
 
 \subsection{Adequacy for LF and deductive terms}
 
-Adequacy in both Linear LF \cite{cervesato02linear} and Ordered LF 
-\cite{polakow01ordered} requires that we be able to capture contexts
-with 
+The hard work of adequacy is established by the preservation theorem; 
+the actual adequacy theorem is just an enumeration in both directions.
 
-\subsection{Adequacy for concurrent traces}
+\bigskip
+\begin{theorem}[Adequacy]\label{thm:pda-adequacy}
+  $\ctxinterp{k \rhd s} \leadsto^*_{\Sigma_{\it PDA}} \ctxinterp{k'
+    \rhd s'}$ if and only if $\obj{k \rhd s} \mapsto \obj{k' \rhd s'}$.
+\end{theorem}
 
+\begin{proof}
+  Both directions can be established by case analysis on the structure
+  of $\obj{k}$ and $\obj{s}$.
+\end{proof}
+
+In our two-dimensional notation, the complete discussion of adequacy
+for \sls~is captured by the following picture:
+
+\begin{center}
+\begin{tikzpicture} 
+\draw (.8,2.3) node{$(x{:}\istrue{\susp{\sf gen}})$};
+\draw [->,decorate, 
+decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}] 
+(0.8,2) -- (.8,.8); 
+\draw (.9,.8) node{$_*$};
+\draw (.3,1.4) node{$\Sigma_{\it Gen}$};
+\draw (.8,.5) node{$\Delta$};
+\draw [thick,dash pattern = on 2.82842842712mm off 2mm,decorate,decoration={saw,amplitude=2mm,segment length=2mm}] 
+(.4,0) -- (1.2,0); 
+\draw (.8,-.3) node{$\Delta$};
+\draw (1.1,-.7) node{\begin{turn}{-45}$\Leftrightarrow$\end{turn}};
+\draw (1.8,-1) node{$\obj{k \rhd s}$};
+%
+\draw (4.8,2.3) node{$(x{:}\istrue{\susp{\sf gen}})$};
+\draw [->,densely dotted,decorate, 
+decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}] 
+(4.8,2) -- (4.8,.8); 
+\draw (4.9,.8) node{$_*$};
+\draw (4.3,1.4) node{$\Sigma_{\it Gen}$};
+\draw (4.8,.5) node{$\Delta'$};
+\draw (2.8, 0) node{$\Sigma_{\it PDA}$};
+\draw [thick,dash pattern = on 0.677mm off .4mm on 0.676142375mm off .4mm on 0.676142375mm off 2mm,decorate,decoration={saw,amplitude=2mm,segment length=2mm}] 
+(4.4,0) -- (5.2,0); 
+\draw (4.8,-.3) node{$\Delta'$};
+\draw (5.1,-.7) node{\begin{turn}{-45}$\Leftrightarrow$\end{turn}};
+\draw (5.8,-1) node{$\obj{k' \rhd s'}$};
+%
+\draw [->,decorate, 
+decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}] 
+(1.2,-.3) -- (4.4,-.3); 
+\draw [|->] (2.5,-1.04) -- (5,-1.04);;
+\end{tikzpicture} 
+\end{center}
 
 \section{The \sls~implementation}
 \label{sec:prototype}
@@ -2147,16 +2386,30 @@ Another change is for the sake of readability: if \verb|P| is a
 persistent atomic proposition, we can optionally write \verb|!P|
 wherever \verb|P| is expected, and if \verb|P| is a linear atomic
 proposition, we can write \verb|$P| wherever \verb|P| is
-expected. This allows us to write either \verb|a * b * c| or
-\verb|a * $b * !c| in SLS to express the positive proposition ${\sf a}
-\fuse {\sf b} \fuse {\sf c}$ where ${\sf a}$, ${\sf b}$, and ${\sf c}$
-are ordered, linear, and persistent positive atomic propositions
-(respectively). Without this information, it becomes difficult to tell
-how order, linearity, and persistence interact in specifications that 
-use more than one of them. 
+expected. This means that if ${\sf a}$, ${\sf b}$, and ${\sf c}$ are
+(respectively) ordered, linear, and persistent positive atomic
+propositions, we can write the positive proposition ${\sf a} \fuse
+{\sf b} \fuse {\sf c}$ in the \sls~implementation as
+\verb|(a * b * c)|, \verb|(a * $b * c)|, \verb|(a * b * !c)|, or
+\verb|(a * $b * !c)|. Without these annotations, it is difficult to
+tell at a glance which propositions are ordered, linear, or persistent
+when a signature uses more than one proposition. When all of these
+optional annotations are included, the rules in a signature that uses
+positive atomic propositions look the same as rules in a signature
+that uses the pseudo-positive negative atomic propositions described
+in Section~\ref{sec:pseudopositive}.
 
 \section{Logic programming interpretation}
 \label{sec:framework-logicprog}
+
+The logic programming interpretation of CLF was explored by the
+Lollimon implementation \cite{lopez05monadic} and adapted by the Celf
+implementation \cite{schacknielsen08celf}. This interpretation 
+was part of our motivation 
+
+ of the motivation behind separating the structure of deductive
+\sls~proofs -- that is, proofs of $\istrue{\susp{p^-}}$ -- from the structure of traces,
+partial proofs of $\islax{A^+}$, 
 
 In Chapter 3 I call this distinction one between ``concurrent and deductive''
 proofs, operationally it's the difference between forward chaining 
