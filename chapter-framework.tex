@@ -1,22 +1,25 @@
 \chapter{Substructural logical specifications}
 \label{chapter-framework}
 
-In this chapter, we discuss the derivation of a logical framework
-\sls. The framework \sls~is justified as a fragment of the
-logic \ollll~from Chapter~3, though we modify the presentation 
-significantly, both to simplify the appearance of proof terms and to
-facilitate talking about partial proofs: we explain partial 
+In this chapter, we discuss the derivation of a logical framework of
+substructural logical specifications (\sls). The framework \sls~is
+justified as a fragment of the logic \ollll~from Chapter~3, though we
+modify the presentation significantly, both to simplify the appearance
+of proof terms and to facilitate writing down and manipulating partial
+proofs.
 
-The specifics of the typed term language of \ollll~were omitted; in
-Section~\ref{sec:sls-termlanguage} we give a careful presentation of
-the term language for \sls, Spine Form LF. In
+The specifics of the typed term language of \ollll~were omitted in
+Chapter~3; in Section~\ref{sec:sls-termlanguage} we give a careful
+presentation of the term language for \sls, Spine Form LF. In
 Section~\ref{sec:slsframework} we present \sls~as a fragment of
 \ollll, and in Section~\ref{sec:framework-concurrenteq} we discuss
 {\it concurrent equivalence}, a coarser equivalence on \sls~proof
 terms than the one given by focused \ollll. In
 Section~\ref{sec:sls-adequate} we adopt the methodology of adequate
-encoding to \sls. In Section~\ref{sec:prototype} we cover the SLS
-prototype implementation. Finally, in
+encoding to \sls. In Section~\ref{sec:prototype} we cover the
+\sls~prototype implementation, and in
+Section~\ref{sec:framework-logicprog} we review some intuitions about
+logic programming in the framework. Finally, in
 Section~\ref{sec:designdecisions}, we discuss some of the design
 decisions reflected in the design of \sls~and how they could have been
 made differently.
@@ -225,7 +228,7 @@ ${\mid}\lfpi{a}{\tau}{\tau'}{\mid}^- = {\mid}\tau{\mid}^- \supset
  & = {\sf prop}\,{\sf pers} 
 \\
 \lf{\sigma}(\lfroot{\sf a}{\spi}) 
- & = \lfroot{\sf a}{\no{\rsubst{\lf{t}}{\lf{a}}{\lf{\spi}}}} 
+ & = \lfroot{\sf a}{{\lf{\sigma\spi}}}
 \end{align*}
 \caption{Simultaneous substitution on terms, spines, and classifiers}
 \label{fig:simsubst}
@@ -474,6 +477,15 @@ well-typed.  However, as these theorems are adequately covered
 elsewhere, we will proceed with using LF as a term language and will 
 treat term-level operations like substitution somewhat informally.
 
+While we will always include the annotations for signature $\Sigma$
+and the subordination relation $\subord$ in the definitions of section
+and the next one, in the future we will often leave the signature
+$\Sigma$ implicit when it is unambiguous or uninportent. We will
+almost always leave the subordination relation implicit; we can assume
+where applicable that we are working with the {\it strongest} (that
+is, the smallest) subordination relation of the given signature
+\cite{harper07mechanizing}.
+
 \subsection{Adequacy}
 \label{sec:lf-adequacy}
 
@@ -713,10 +725,7 @@ assignment for \sls~that facilitates discussing concurrent equality
 and partial proofs. \sls~proof terms are in bijective correspondence
 with \ollll~proof terms when we consider complete (deductive) proofs,
 but the introduction of patterns and traces changes the structure
-of derivations and proof terms.
-
-
-
+of derivations and proof terms. 
 
 \subsection{Process states}
 
@@ -1227,6 +1236,43 @@ This evolution can now be precisely captured as a trace in \sls:
 \right)
 \end{align*}
 
+\subsection{Frame properties}
+
+The {\it frame rule} is a concept from Reynold's separation logic.  It
+states that if a property holds of some program, then it holds of that
+property under any extension of the mutable state. The frame rule
+increases the modularity of separation logic proofs, because two
+program fragments that reason about different parts of the state can
+be reasoned about independently. 
+
+Similar frame properties hold for \sls~traces. The direct analouge of
+the frame rule is the observation that a trace can always have some
+extra state framed on to the outside. This is essentially a
+generalization of weakening to \sls~traces.
+
+\bigskip
+\begin{theorem}[Frame weakening]\label{thm:frameweak}~\\
+If $T :: (\Psi; \Delta) \leadsto^*_{\Sigma, \subord} (\Psi'; \Delta')$, then
+$T :: (\Psi, \Psi''; \tackon{\Theta}{\Delta})
+       \leadsto^*_{\Sigma, \subord} (\Psi', \Psi''; \tackon{\Theta}{\Delta})$.
+\end{theorem}
+\bigskip
+
+The frame rule is a weakening property which ensures that new,
+irrelevant state can can always be added to a state. Conversely, any
+state that is never accessed or modified by a trace can be always be 
+removed without making the trace ill-typed. This property
+is a generalization of strenghtening to \sls~traces.
+
+\bigskip
+\begin{theorem}[Frame strengthening]\label{thm:framestrong}~\\
+  If $T :: (\Psi; \tackon{\Theta}{x{:}\islvl{T}}) \leadsto^*_{\Sigma,
+    \subord} (\Psi'; \tackon{\Theta}{x{:}\islvl{T}})$ and $x$ is not
+  free in any of the steps of $T$, then $T :: (\Psi;
+  \tackon{\Theta}{\cdot}) \leadsto^*_{\Sigma, \subord} (\Psi';
+  \tackon{\Theta}{\cdot})$.
+\end{theorem}
+
 \section{Concurrent equality}
 \label{sec:linconcurrenteq}
 \label{sec:framework-concurrenteq}
@@ -1474,19 +1520,471 @@ deductive fragment of \sls~approximately extends both LLF and OLF, and
 the adequacy arguments made by Cervesato and Polakow extend
 straightforwardly to \sls.
 
+The example that we will give to illustrate adequate encoding is the
+following signature, the \sls~encoding of the push-down automata 
+for parentheses matching from the introduction. 
+\begin{align*}
+ \Sigma_{\it PDA} = \cdot, 
+~&{\sf <} : {\sf prop}\,{\sf ord},\\
+~&{\sf >} : {\sf prop}\,{\sf ord},\\
+~&{\sf hd} : {\sf prop}\,{\sf ord},\\
+~&{\sf push} : 
+     {\sf hd} \fuse {\sf <}
+       \lefti {\ocircle}({\sf <} \fuse {\sf hd}),\\
+~&{\sf pop} : 
+     {\sf <} \fuse {\sf hd} \fuse {\sf >}
+       \lefti {\ocircle}({\sf hd})
+\end{align*}
+We will relate this specification to a push-down automata defined in
+terms of strings $\obj{s}$ defined as $\obj{s} ::= \obj{\cdot} \mid
+\obj{{\sf <}s} \mid \obj{{\sf >}s}$ and stacks $\obj{k}$ defined as
+$\obj{k} ::= \obj{\cdot} \mid \obj{k{\sf <}}$ with two rules: $\obj{(k
+  \rhd ({\sf <}s))} \mapsto \obj{((k{\sf <}) \rhd s)}$ and
+$\obj{((k{\sf <}) \rhd ({\sf >}s))} \mapsto \obj{(k \rhd s)}$.
+
+Existing adequacy arguments for \sls~specifications by Cervesato et
+al.~\cite{cervesato02concurrent} and by
+Schack-Nielsen~\cite{schacknielsen07induction} have a three-part
+structure structure.  The first step is to define an encoding
+function $\ctxinterp{k \rhd s} = \Delta$ from PDA states $\obj{k \rhd
+  s}$ to process states $\Delta$, so that, for example, the PDA state
+$\obj{(\cdot{\sf <<}) \rhd ({\sf >>><}\cdot)}$ is encoded as the
+process state
+\[
+x_2{:}\istrue{\susp{\sf <}}, ~~
+x_1{:}\istrue{\susp{\sf <}}, ~~
+h{:}\istrue{\susp{\sf hd}}, ~~
+y_1{:}\istrue{\susp{\sf >}}, ~~
+y_2{:}\istrue{\susp{\sf >}}, ~~
+y_3{:}\istrue{\susp{\sf >}}, ~~
+y_4{:}\istrue{\susp{\sf <}}
+\]
+The second step is to prove a preservation-like adequacy theorem: if
+state $\ctxinterp{\obj{k \rhd s}} \leadsto_{\Sigma_{\it PDA}}
+\Delta'$, then $\Delta' = \ctxinterp{{k' \rhd s'}}$ for some
+$\obj{k'}$ and $\obj{s'}$. The third step is the main adequacy result:
+that $\ctxinterp{k \rhd s} \leadsto_{\Sigma_{\it PDA}} \ctxinterp{k'
+  \rhd s'}$ if and only if $\obj{k \rhd s} \mapsto \obj{k' \rhd
+  s'}$. The second step is cruicial: without it, we might transition
+in \sls~from the encoding of some $\obj{k \rhd s}$ to a state
+$\Delta'$ that is not in the image of encoding.
+
+In this section, we re-factor this methadology to use {\it generative
+  signatures}. Generative signatures are a rich generalization of {\it
+  regular worlds} that can be used to describe invariants of
+\sls~traces, a topic we will explore further in Chatper~9.  The first
+step in our revised methadology is to describe a generative signature
+$\Sigma_{\it Gen}$ that precisely captures the set of process states
+that encode machine states (Theorem~\ref{thm:pda-encoding} below).  The
+second step is showing that the generative signature $\Sigma_{\it
+  Gen}$ describes an invariant of the signature $\Sigma_{\it PDA}$
+(Theorem~\ref{thm:pda-preservation}).
+because this invariant captures the set process states that encode
+PDA states, we therefore know that a process state that encodes
+a PDA state can only step to another process state that encodes 
+a PDA state. The third step, showing that 
+$\ctxinterp{k \rhd s} \leadsto_{\Sigma_{\it PDA}} \ctxinterp{k'
+  \rhd s'}$ if and only if $\obj{k \rhd s} \mapsto \obj{k' \rhd
+  s'}$, is the same as in other developments.
+1
+\subsection{Regular and generated worlds}
+
 A critical aspect of any adequacy arguments is an understanding of the
 structure of the LF context. In the statement of adequacy for untyped
-$\lambda$-calculus terms, for instance, it is necessary to require
+$\lambda$-calculus terms, for instance, it was necessary to require
 that the context $\Psi$ take the form $\lf{a_1}{:}{\sf
   exp},\ldots,\lf{a_n}{:}{\sf exp}$. In the adequacy theorems that
-have been presented for deductive logical frameworks, the structure
-of the context is {\it regular} -- 
+have been presented for deductive logical frameworks, the structure of
+the context is always {\it regular} -- we can describe a set of
+building blocks that build small pieces of the context, and then
+define the set of valid contexts (the {\it world}) to be any context
+that can be built from a particular set of building blocks.  The
+simplest {\it regular worlds} are those that forbid the presence of
+any LF variables. This is the {\it closed world assumption}, and
+regular worlds can be presented as a generalization of closed worlds.
+Twelf contains both
+a syntax for declaring worlds and facilities for checking that a
+signatures respects a particular world structure
+\cite{schurmann00automating}.
 
-that Polakow
-and Cervesato discuss, we only need to
+The relevant building blocks in our $\lambda$-calculus encoding are
+just LF variables of type $\lf{a}{:}{\sf exp}$. In other LF examples
+regular worlds involve multiple context elements that must appear in
+tandem. In proving adequacy for typing derivations, for instance, we
+must generally assume that a variable $\lf{a}{:}{\sf exp}$ always
+appears in tandem with a variable $\lf{d}{:}({\sf
+  of}\,\lf{a}\,\lf{tp})$ that associates the variable with some closed
+LF term $\lf{tp}$ of type ${\sf typ}$ that encodes the type of that
+variable.
 
- to impose a {\it regular} structure
-on the context. 
+Regular worlds remain sufficient for the encoding of stores in Linear
+LF \cite{cervesato02linear} and stacks in Ordered LF
+\cite{polakow01ordered}. Our PDA sates, on the other hand, do not have
+a regular structure, because the process state is organized into three
+zones:
+\[
+[~\mbox{the stack}~]
+~
+[~\mbox{the head}~]
+~
+[~\mbox{the string being read}~]
+\]
+In essence, the generalization we propose is a move from a description
+of worlds based on regular expressions to a description of worlds
+based on context-free grammars. Convienently, these contexts can be
+characterized within the machinery of \sls~itself by describing {\it
+  generative signatures} that can form the set of process states we
+are interested in from a single seed context.  The signature
+$\Sigma_{\it Gen}$ in Figure~\ref{fig:pda-gen} treats all the elements
+of $\Sigma_{\it PDA}$ -- the atomic propositions ${\sf <}$, ${\sf >}$
+and ${\sf hd}$ -- as {\it terminals}, and introduces three {\it
+  nonterminals} ${\sf gen}$, ${\sf gen\_stack}$, and ${\sf
+  gen\_string}$.
+
+\begin{figure}
+\begin{align*}
+ \Sigma_{\it Gen} = \cdot, 
+~&{\sf <} : {\sf prop}\,{\sf ord},\\
+~&{\sf >} : {\sf prop}\,{\sf ord},\\
+~&{\sf hd} : {\sf prop}\,{\sf ord},\\
+~&{\sf gen} : {\sf prop}\,{\sf ord},\\
+~&{\sf gen\_stack} : {\sf prop}\,{\sf ord},\\
+~&{\sf gen\_string} : {\sf prop}\,{\sf ord},\\
+~&{\sf state} : {\sf gen} 
+       \lefti {\ocircle}({\sf gen\_stack} \fuse {\sf hd} 
+                         \fuse {\sf gen\_string})
+& G & \rightarrow G_k\,{\sf hd}\,G_s\\
+~&{\sf stack/left} : {\sf gen\_stack} 
+       \lefti {\ocircle}({\sf <} \fuse {\sf gen\_stack})
+& G_k & \rightarrow {\sf <}\,G_k \\
+~&{\sf stack/done} : {\sf gen\_stack} \lefti {\ocircle}(\one)
+& G_k & \rightarrow \epsilon\\
+~&{\sf string/left} : 
+     {\sf gen\_string} 
+       \lefti {\ocircle}({\sf gen\_string} \fuse {\sf <})
+& G_s & \rightarrow G_s\,{\sf <}\\
+~&{\sf string/right} : 
+     {\sf gen\_string} 
+       \lefti {\ocircle}({\sf gen\_string} \fuse {\sf >})
+& G_s & \rightarrow G_s\,{\sf >}\\
+~&{\sf string/done} : 
+     {\sf gen\_string} 
+       \lefti {\ocircle}(\one)
+& G_s & \rightarrow \epsilon
+\end{align*}
+\caption{Generative specification of PDA states and an analogous
+  context-free grammar}
+\label{fig:pda-gen}
+\end{figure}
+
+An informal translation of the signature $\Sigma_{\it Gen}$ as a
+context-free grammar is given on the right-hand side of
+Figure~\ref{fig:pda-gen}. Observe that the sentences in the language
+$G$ encode the states of our PDA as a string. To formalize this
+statement in terms of \sls, we first note that process states $\Delta$
+such that $(x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}}
+\Delta$ are only well-formed under the signature $\Sigma_{\it PDA}$ if
+they are free of nonterminals. We capture this property by defining a
+partial function for {\it restriction} of process states,
+$\restrictsig{(\Psi; \Delta)}{\Sigma}$. Restriction is only defined if
+all the ordered and linear propositions in $\Delta'$ are well-formed
+in $\Sigma$; this means that $\restrictsig{(x{:}\istrue{\susp{\sf
+      gen}})}{\Sigma_{\it PDA}}$ is not defined. When all ordered and
+linear atomic propositions are defined, then $\restrictsig{(\Psi;
+  \Delta')}{\Sigma} = (\Psi'; \Delta')$, where $\Psi'$ contains every
+LF variable from $\Psi$ whose type is well-formed in $\Sigma$ and
+$\Delta'$ contains every mapping $x{:}\islvl{A^-}$ or
+$x{:}\islvl{\susp{p^+_\mlvl}}$ from $\Delta$ that is well-formed in
+the $\Sigma$.
+
+Restriction acts as a semi-permeable membrane on process states: some
+process states cannot pass through at all, and others pass through
+with some of their LF variables and persistent propositions
+removed. We can represent context restriction $\restrictsig{(\Psi;
+  \Delta')}{\Sigma} = (\Psi'; \Delta')$ in a two-dimensional notation
+as a dashed line annotated with the restricting signature:
+\begin{center}
+\begin{tikzpicture} 
+\draw (.8,.5) node{$(\Psi; \Delta)$};
+\draw (-.3, .1) node{$\Sigma$};
+\draw [thick,dash pattern = on 2.82842842712mm off 2mm,decorate,decoration={saw,amplitude=2mm,segment length=2mm}] 
+(0,0) -- (1.6,0); 
+\draw (.8,-.3) node{$(\Psi'; \Delta')$};
+\end{tikzpicture} 
+\end{center}
+
+For all process states that evolve from the initial state
+$(x{:}\istrue{\susp{\sf gen}})$ under the signature $\Sigma_{\it
+  Gen}$, restriction to $\Sigma_{\it PDA}$ is the identity function
+whenever it is defined. Therefore, in the statement of
+Theorem~\ref{thm:pda-encoding}, we just use restriction as a judgment
+that holds whenever the partial function is defined.
+
+\bigskip
+\begin{theorem}[Encoding]\label{thm:pda-encoding}
+  Up to variable renaming, there is a bijective correspondence between
+  PDA states $\obj{k \rhd s}$ and process states $\Delta$ such that
+  $T :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}}
+  \Delta'$ and $\Delta'$ matches $\restrictto{\Delta}{\Sigma_{\it
+      PDA}}$.
+\end{theorem}
+
+\begin{proof}To establish the bijective correspondence, we first define
+an encoding function from PDA states to process states:
+\smallskip
+\begin{itemize}
+\item $\ctxinterp{k \rhd s} = 
+  \ctxinterp{k}, ~~
+  h{:}\istrue{\susp{\sf hd}}, ~~
+  \ctxinterp{s}$
+\item $\ctxinterp{\cdot} = \cdot$
+\item $\ctxinterp{k{\sf <}} = \ctxinterp{k}, ~~ x{:}\istrue{\susp{\sf <}}$
+\item $\ctxinterp{{\sf <}s} = y{:}\istrue{\susp{\sf <}}, ~~ \ctxinterp{s}$
+\item $\ctxinterp{{\sf >}s} = y{:}\istrue{\susp{\sf >}}, ~~ \ctxinterp{s}$
+\end{itemize}
+\smallskip
+If $\obj{k \rhd s} \neq \obj{k' \rhd s'}$ then 
+$\ctxinterp{k \rhd s} \neq \ctxinterp{k' \rhd s'}$, 
+and for all $\obj{k}$ and $\obj{s}$ the 
+process state $\ctxinterp{k \rhd s}$ matches 
+$\restrictto{\ctxinterp{k \rhd s}}{\Sigma_{\it PDA}}$ -- the function we have
+defined only includes terminals. Therefore, to show that the encoding function
+is injective we must show that, for any $\obj{k \rhd s}$,
+there exists a trace $T :: (x{:}\istrue{\susp{\sf gen}})
+\leadsto^*_{\it Gen} \ctxinterp{k \rhd s}$. To show that the encoding
+function is surjective, we must show that if 
+$T :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}}
+  \Delta'$ and $\Delta'$ matches $\restrictto{\Delta}{\Sigma_{\it
+      PDA}}$ then $\Delta = \ctxinterp{k \rhd s}$ for some $\obj{k}$
+and $\obj{s}$. (An injective and surjective function is bijective.)
+
+
+\begin{lemma} For all $\obj{k}$, there exists
+$T :: ({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
+({\ctxinterp{k}, x'{:}\istrue{\susp{\sf gen\_stack}}})$.
+\end{lemma}
+\noindent
+By induction on $\obj{k}$. 
+\begin{itemize}
+\item If $\obj{k} = \cdot$, $T = \emptytrace ::
+({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
+(x{:}\istrue{\susp{\sf gen\_stack}})$
+\item If $\obj{k} = \obj{k'}{\sf <}$, we have 
+$T' :: ({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
+({\ctxinterp{k'}, x''{:}\istrue{\susp{\sf gen\_stack}}})$ by the induction
+hypothesis, so $T = (T'; \trstep{x_1, x_2}{{\sf stack/left}\,x'}) :: 
+({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
+({\ctxinterp{k'}, x_1{:}\istrue{\susp{\sf <}}, x_2{:}\istrue{\susp{\sf gen\_stack}}})$
+\end{itemize}
+
+\begin{lemma} For all $\obj{s}$, there exists
+$T :: ({y{:}\istrue{\susp{\sf gen\_string}}}) \leadsto^*_{\Sigma_{\it Gen}} 
+({x'{:}\istrue{\susp{\sf gen\_string}}, \ctxinterp{s}})$.
+\end{lemma}
+\noindent
+By induction on $\obj{s}$.
+\begin{itemize}
+\item If $\obj{s} = \cdot$, $T = \emptytrace ::
+({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
+(x{:}\istrue{\susp{\sf gen\_stack}})$
+\item If $\obj{s} = \obj{s'}{\sf <}$, we have 
+$T' :: ({x{:}\istrue{\susp{\sf gen\_string}}}) \leadsto^*_{\Sigma_{\it Gen}} 
+(x'{:}\istrue{\susp{\sf gen\_string}}, \ctxinterp{s'})$ by the induction
+hypothesis, so $T = (T'; \trstep{x_1, x_2}{{\sf string/left}\,x'}) :: 
+({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
+(x_1{:}\istrue{\susp{\sf gen\_stack}},
+ x_2{:}\istrue{\susp{\sf <}},
+\ctxinterp{k'})$
+\item If $\obj{s} = \obj{s'}{\sf >}$, we have 
+$T' :: ({x{:}\istrue{\susp{\sf gen\_string}}}) \leadsto^*_{\Sigma_{\it Gen}} 
+(x'{:}\istrue{\susp{\sf gen\_string}}, \ctxinterp{s'})$ by the induction
+hypothesis, so $T = (T'; \trstep{x_1, x_2}{{\sf string/right}\,x'}) :: 
+({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
+(x_1{:}\istrue{\susp{\sf gen\_stack}},
+ x_2{:}\istrue{\susp{\sf >}},
+\ctxinterp{k'})$
+\end{itemize}
+
+\begin{lemma} For all $\obj{k}$ and $\obj{s}$, there exists
+$T :: ({g{:}\istrue{\susp{\sf gen}}}) \leadsto^*_{\Sigma_{\it Gen}} 
+(\ctxinterp{k \rhd s})$. 
+\end{lemma}
+\noindent
+By straightforward construciton using the first two lemmas
+and frame weakening (Theorem~\ref{thm:frameweak}): 
+\begin{align*}
+& \qquad\qquad (g{:}\istrue{\susp{\sf gen}})\\
+& \trstep{x,h,y}{{\sf state}\,g};\\
+& \qquad\qquad
+       (x{:}\istrue{\susp{\sf gen\_stack}},  ~~
+        h{:}\istrue{\susp{\sf hd}},~~ 
+        y{:}\istrue{\susp{\sf gen\_string}})\\
+& T_k; ~~ \mbox{\it (given by the first lemma and frame weakening)}\\
+& \qquad\qquad
+       (\ctxinterp{k},  ~~
+        x'{:}\istrue{\susp{\sf gen\_stack}},  ~~
+        h{:}\istrue{\susp{\sf hd}}, ~~
+        y{:}\istrue{\susp{\sf gen\_string}})\\
+& \trstep{()}{{\sf stack/done}\,x'}\\
+& \qquad\qquad
+       (\ctxinterp{k},  ~~
+        h{:}\istrue{\susp{\sf hd}}, ~~
+        y{:}\istrue{\susp{\sf gen\_string}})\\
+& T_s; ~~ \mbox{\it (given by the second lemma and frame weakening)}\\
+& \qquad\qquad
+       (\ctxinterp{k}, ~~
+        h{:}\istrue{\susp{\sf hd}}, ~~
+        y'{:}\istrue{\susp{\sf gen\_string}}, ~~
+        \ctxinterp{s})\\
+& \trstep{()}{{\sf string/done}\,y'}\\
+& \qquad\qquad 
+       (\ctxinterp{k}, ~~
+        h{:}\istrue{\susp{\sf hd}}, ~~
+        \ctxinterp{s}) \\
+& \qquad\qquad = \ctxinterp{k \rhd s}
+\end{align*}
+This lemma establishes that encoding is an injective
+function; it remains to be shown that the function is surjective. 
+
+\begin{lemma} If 
+$T :: (\ctxinterp{k}, 
+       x{:}\istrue{\susp{\sf gen\_stack}}, 
+       h{:}\istrue{\susp{\sf hd}},
+       y{:}\istrue{\susp{\sf gen\_store}},
+       \ctxinterp{s}) 
+  \leadsto^*_{\Sigma_{\it Gen}} \Delta'$ and $\Delta'$ matches
+$\restrictto{\Delta}{\Sigma_{\it
+      PDA}}$ then $\Delta = \ctxinterp{k' \rhd s'}$ for some $\obj{k'}$
+and $\obj{s'}$.
+\end{lemma}
+\noindent
+By induction on the trace $T$, taking concurrent equality
+into account. 
+
+If $T = (\trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf state/done}\,y})$
+(or the concurrently equal trace where those two steps are given
+in the other order) then we are in a base case, and we succeed letting
+$\obj{k'} = \obj{k}$ and $\obj{s'} = \obj{s}$. Otherwise, $T$ is concurrently
+equal to one of the following:
+\smallskip
+\begin{itemize}
+\item $T = \trstep{x_1,x_2}{{\sf stack/left}\,x}; T'$,
+\item $T = \trstep{y_1,y_2}{{\sf string/left}\,y}; T'$, or
+\item $T = \trstep{y_1,y_2}{{\sf string/right}\,y}; T'$.
+\end{itemize}
+\smallskip
+In all three cases the result follows directly from the induction
+hypothesis on the smaller trace $T'$. 
+
+\begin{lemma} If 
+$T :: (g{:}\istrue{\susp{\sf gen}}) 
+  \leadsto^*_{\Sigma_{\it Gen}} \Delta'$ and $\Delta'$ matches
+$\restrictto{\Delta}{\Sigma_{\it
+      PDA}}$ then $\Delta = \ctxinterp{k' \rhd s'}$ for some $\obj{k'}$
+and $\obj{s'}$.
+\end{lemma}
+\noindent
+This is a corollary of the previous lemma, as it can only
+be the case that $T = \trstep{}{}; T'$. We can apply the previous
+lemma to $T'$, letting $\obj{k} = \obj{s} = \obj{\cdot}$.
+This establishes that encoding is a surjective function, which in turn
+completes the proof. 
+\end{proof}
+
+Theorem~\ref{thm:pda-encoding} establishes that the generative
+signature $\Sigma_{\it Gen}$ describes a world -- a set of
+\sls~process states -- that precisely correspond to the states of a
+push-down automata.  We can (imperfectly) illustrate the content of
+this theorem in our two-dimensional notation as follows, where the
+$\Delta \Leftrightarrow \obj{k \rhd s}$ indicates the presence of the
+bijection:
+\begin{center}
+\begin{tikzpicture} 
+\draw (.8,2.3) node{$(x{:}\istrue{\susp{\sf gen}})$};
+\draw [->,decorate, 
+decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}] 
+(0.8,2) -- (.8,.8); 
+\draw (.9,.8) node{$_*$};
+\draw (.3,1.4) node{$\Sigma_{\it Gen}$};
+\draw (.8,.5) node{$\Delta$};
+\draw (-.2, .1) node{$\Sigma_{\it PDA}$};
+\draw [thick,dash pattern = on 2.82842842712mm off 2mm,decorate,decoration={saw,amplitude=2mm,segment length=2mm}] 
+(.4,0) -- (1.2,0); 
+\draw (.8,-.3) node{$\Delta$};
+\draw (1.1,-.7) node{\begin{turn}{-45}$\Leftrightarrow$\end{turn}};
+\draw (1.8,-1) node{$\obj{k \rhd s}$};
+\end{tikzpicture} 
+\end{center}
+
+It is interesting to note how the proof of
+Theorem~\ref{thm:pda-encoding} took advantage of the monoidal
+structure of traces: the inductive process that constructed traces in
+the first two lemmas treated trace composition as left-associative,
+but the induction we performed on traces in the next-to-last lemma
+treated trace composition as right-associative.
+
+\subsection{World preservation}
+
+The generative signature $\Sigma_{\it Gen}$ precisely captures the
+world of \sls~process states that are in the image of the encoding
+$\ctxinterp{k \rhd s}$ of PDA states as process states. In order for
+the signature $\Sigma_{\it PDA}$ to encode a reasonable notion of
+transition between PDA states, we need to show that steps in this
+signature only take encoded PDA states to encoded PDA states.
+ 
+\bigskip
+\begin{theorem}[Preservation]\label{thm:pda-preservation}
+If $T_1 :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} \Delta'_1$,
+the process state
+$\Delta'_1$ matches $\restrictto{\Delta_1}{\Sigma_{\it PDA}}$, and 
+$\Delta_1 \leadsto_{\Sigma_{\it PDA}} \Delta_2$, then 
+\end{theorem}
+\bigskip
+
+\noindent
+Given 
+
+\begin{center}
+\begin{tikzpicture} 
+\draw (.8,2.3) node{$(x{:}\istrue{\susp{\sf gen}})$};
+\draw [->,decorate, 
+decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}] 
+(0.8,2) -- (.8,.8); 
+\draw (.9,.8) node{$_*$};
+\draw (.3,1.4) node{$\Sigma_{\it Gen}$};
+\draw (.8,.5) node{$\Delta$};
+\draw [thick,dash pattern = on 2.82842842712mm off 2mm,decorate,decoration={saw,amplitude=2mm,segment length=2mm}] 
+(.4,0) -- (1.2,0); 
+\draw (.8,-.3) node{$\Delta$};
+\draw (1.1,-.7) node{\begin{turn}{-45}$\Leftrightarrow$\end{turn}};
+\draw (1.8,-1) node{$\obj{k \rhd s}$};
+%
+\draw (4.8,2.3) node{$(x{:}\istrue{\susp{\sf gen}})$};
+\draw [->,densely dotted,decorate, 
+decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}] 
+(4.8,2) -- (4.8,.8); 
+\draw (4.9,.8) node{$_*$};
+\draw (4.3,1.4) node{$\Sigma_{\it Gen}$};
+\draw (4.8,.5) node{$\Delta'$};
+\draw (2.8, 0) node{$\Sigma_{\it PDA}$};
+\draw [thick,dash pattern = on 2.82842842712mm off 2mm,decorate,decoration={saw,amplitude=2mm,segment length=2mm}] 
+(4.4,0) -- (5.2,0); 
+\draw (4.8,-.3) node{$\Delta'$};
+\draw (5.1,-.7) node{\begin{turn}{-45}$\Leftrightarrow$\end{turn}};
+\draw (5.8,-1) node{$\obj{k' \rhd s'}$};
+%
+\draw [->,decorate, 
+decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}] 
+(1.2,-.3) -- (4.4,-.3); 
+\end{tikzpicture} 
+\end{center}
+
+
+
+
+
+\begin{proof}
+\end{proof}
 
 \subsection{Adequacy for LF and deductive terms}
 

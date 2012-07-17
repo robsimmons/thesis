@@ -1,0 +1,66 @@
+\begin{figure}
+\[
+\begin{array}{ll}
+\multicolumn{2}{l}
+{{\sf bool}\,{\sf function}\,{\it foo}(l)}\\
+{\sf f_0}{:} & {\sf if}\,l\,{\sf then}\\
+{\sf f_1}{:} & ~~ {\sf return}\,{\sf false}\\
+       & {\sf else}\\
+{\sf f_2}{:} & ~~ {\sf return}\,{\sf true}\\
+       & {\sf fi}\\[15pt]
+\\
+\multicolumn{2}{l}
+{{\sf procedure}\,{\it main}()}\\
+\multicolumn{2}{l}
+{{\sf global}\,b}\\
+{\sf m_0}{:} & {\sf while}\,b\,{\sf do}\\
+{\sf m_1}{:} & ~~ b := {\it foo}(b)\\
+       & {\sf od}\\
+{\sf m_2}{:} & {\sf return}\\[15pt]
+\\
+\end{array}
+\quad
+\begin{array}{|rcl|}
+\quad b\,\langle {\sf tt}, {\sf f_0} \rangle 
+  & \rightarrow & b\,\langle {\sf tt}\,{\sf f_1} \rangle\\
+b\,\langle {\sf ff}, {\sf f_0} \rangle
+  & \rightarrow & b\,\langle {\sf ff},{\sf f_2} \rangle\\
+b\,\langle l, {\sf f_1} \rangle 
+  & \rightarrow & {\sf ff}\\
+b\,\langle l, {\sf f_2} \rangle 
+  & \rightarrow & {\sf tt}\\
+  & & \\[15pt]
+  & & \\
+  & & \\
+{\sf tt}\,{\sf m_0} 
+  & \rightarrow & {\sf tt}\,{\sf m_1}\\
+{\sf ff}\,{\sf m_0} 
+  & \rightarrow & {\sf ff}\,{\sf m_2}\\
+b\,{\sf m_1} 
+  & \rightarrow & b\,\langle b, {\sf f_0} \rangle\,{\sf m_0}  \quad\\
+b\,{\sf m_2}
+  & \rightarrow & \epsilon\\
+  & &\\[15pt]
+  & &\\
+  & &\\
+\end{array}
+\quad 
+\begin{array}{l}
+{\sf gl}(b) \fuse {\sf foo}({\sf tt}, {\sf f_0}) \lefti ~\\
+\quad \{ {\sf gl}(b) \fuse {\sf foo}({\sf tt}, {\sf f_1}) \}\\[5pt]
+{\sf gl}(b) \fuse {\sf foo}({\sf ff}, {\sf f_0}) \lefti ~\\
+\quad \{ {\sf gl}(b) \fuse {\sf foo}({\sf ff}, {\sf f_1}) \}\\[5pt]
+{\sf gl}(b) \fuse {\sf foo}(l, {\sf f_1}) \lefti \{ {\sf gl}({\sf ff}) \}\\[5pt]
+{\sf gl}(b) \fuse {\sf foo}(l, {\sf f_2}) \lefti \{ {\sf gl}({\sf tt}) \}\\
+\\
+{\sf gl}({\sf tt}) \fuse {\sf main}({\sf m_0}) \lefti ~\\
+\quad \{ {\sf gl}({\sf tt}) \fuse {\sf main}({\sf m_1}) \}\\[5pt]
+{\sf gl}({\sf ff}) \fuse {\sf main}({\sf m_0}) \lefti ~\\
+\quad \{ {\sf gl}({\sf tt}) \fuse {\sf main}({\sf m_2})\}\\[5pt]
+{\sf gl}(b) \fuse {\sf main}({\sf m_1}) \lefti ~\\
+\quad \{ {\sf gl}(b) \fuse {\sf foo}(b,{\sf f_0}) \fuse {\sf main}({\sf m_0})\}\\[5pt]
+{\sf gl}(b) \fuse {\sf main}({\sf m_2}) \lefti \{ \one \}
+\end{array}
+\]
+\caption{A Boolean program, encoded as a rewriting system and in \sls}
+\end{figure}

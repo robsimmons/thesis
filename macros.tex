@@ -7,7 +7,8 @@
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{tikz}
-\usetikzlibrary{arrows}
+\usepackage{rotating}
+\usetikzlibrary{arrows,decorations.pathmorphing,backgrounds,fit}
 \usepackage{amsthm}
 \usepackage{amsmath}
 \usepackage{latexsym}
@@ -47,8 +48,10 @@
 
 \newcommand{\mb}{Coq}
 
+
 % Theorems
 \newtheorem{theorem}{Theorem}[chapter]
+\newtheorem*{lemma}{Lemma}
 \newtheorem{proposition}{Proposition}[chapter]
 \newtheorem{definition}{Definition}[chapter]
 
@@ -68,6 +71,7 @@
 \newcommand{\dedownup}{\mbox{${\downarrow}{\uparrow}\hspace{-11.4pt}\diagdown$}}
 
 \newcommand{\restrictto}[2]{\ensuremath{{#1}{\upharpoonright}_{#2}}}
+\newcommand{\restrictsig}[2]{\ensuremath{{#1}{\mbox{\lightning}}_{#2}}}
 \newcommand{\restrictfrom}[2]{\ensuremath{{#1}{\downharpoonright}^{#2}}}
 
 % symbols of ordered logic
@@ -212,6 +216,7 @@
 
 \newcommand{\arb}{\mathbin{\mbox{$\ocircle$\hspace{-7pt}{\footnotesize ?}\hspace{3pt}}}}
 \newcommand{\interp}[1]{{\no{\ulcorner\obj{{#1}}\urcorner}}}
+\newcommand{\ctxinterp}[1]{\no{\mbox{$\ulcorner\!\!\ulcorner$}\obj{{#1}}\mbox{$\urcorner\!\!\urcorner$}}}
 
 \newcommand{\transop}[1]{{\it Op}({#1})}
 
