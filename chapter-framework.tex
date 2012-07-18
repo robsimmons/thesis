@@ -8,21 +8,27 @@ modify the presentation significantly, both to simplify the appearance
 of proof terms and to facilitate writing down and manipulating partial
 proofs.
 
-The specifics of the typed term language of \ollll~were omitted in
-Chapter~3; in Section~\ref{sec:sls-termlanguage} we give a careful
-presentation of the term language for \sls, Spine Form LF. In
-Section~\ref{sec:slsframework} we present \sls~as a fragment of
+The specifics of the domain of first-order quantification in
+\ollll~were omitted in Chapter~3, so in
+Section~\ref{sec:sls-termlanguage} we give a careful presentation of
+the term language for \sls, Spine Form LF. 
+%
+In Section~\ref{sec:slsframework} we present \sls~as a fragment of
 \ollll, and in Section~\ref{sec:framework-concurrenteq} we discuss
-{\it concurrent equivalence}, a coarser equivalence on \sls~proof
-terms than the one given by focused \ollll. In
-Section~\ref{sec:sls-adequate} we adopt the methodology of adequate
-encoding to \sls. In Section~\ref{sec:prototype} we cover the
-\sls~prototype implementation, and in
-Section~\ref{sec:framework-logicprog} we review some intuitions about
-logic programming in the framework. Finally, in
-Section~\ref{sec:designdecisions}, we discuss some of the design
-decisions reflected in the design of \sls~and how they could have been
-made differently.
+{\it concurrent equality}, a coarser equivalence on \sls~proof
+terms than the one given by focused \ollll. 
+%
+In Section~\ref{sec:sls-adequate} we adopt the methodology of adequate
+encoding from LF to \sls, in the process introducing {\it generative
+  signatures}, which play a critical role in Part 3 of this thesis.
+%
+In Section~\ref{sec:prototype} we cover the \sls~prototype
+implementation, and in Section~\ref{sec:framework-logicprog} we review
+some intuitions about logic programming in the framework. 
+%
+Finally, in Section~\ref{sec:designdecisions}, we discuss some of the
+design decisions reflected in the design of \sls~and how some
+decisions could have been potentially been made differently.
 
 \section{Spine Form LF as a term language}
 \label{sec:sls-termlanguage}
@@ -30,19 +36,19 @@ made differently.
 Other substructural logical frameworks, like Cervesato and Pfenning's
 LLF \cite{cervesato02linear}, Polakow's OLF \cite{polakow01ordered},
 and Watkins et al.'s CLF \cite{watkins02concurrent} are {\it
-  fully-dependent type theories}: the language of terms, the domain of
-first-order quantification, is the same as the language of proof
-terms, the representatives of logical derivations (we will call the
-domain of quantification the {\it object terms} when ``terms'' would
-be ambiguous). The logical framework \sls~presented in this chapter
-breaks from this tradition. The language of first-order
+  fully-dependent type theories}: the language of terms (that is, the
+domain of first-order quantification) is the same as the language of
+proof terms, the representatives of logical derivations (we will call
+the domain of quantification the {\it object terms} when ``terms''
+would be ambiguous). The logical framework \sls~presented in this
+chapter breaks from this tradition. The domain of first-order
 quantification, which was left unspecified in Chapter 3, will be
 presently described as Spine Form LF, a well-understood logical
 framework derived from the normal forms of the purely persistent type
 theory LF \cite{harper93framework}.
 
-All the information in this section is standard and adequately
-presented between Harper, Honsell, and Plotkin's original presentation
+All the information in this section is standard and is adapted from
+Harper, Honsell, and Plotkin's original presentation
 of LF \cite{harper93framework}, Cervesato and Pfenning's discussion of
 spine form terms \cite{cervesato02linear}, Watkins et al.'s
 presentation of the canonical forms of CLF \cite{watkins02concurrent},
