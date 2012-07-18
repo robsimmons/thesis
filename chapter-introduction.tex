@@ -61,9 +61,12 @@ document, or an ISO standard, is a {\it specification}.
 Specifications must be {\it formal}, because any room for
 misinterpretation could (respectively) lead to incorrect calculations,
 accusations of cheating, a robot uprising, a security breach, or
-bankruptcy. At the same time, specifications must be {\it clear}: in
-practice, a hopelessly confusing or complex specification is no more
-useful than one that is hopelessly vague. Clarity is what allows us to
+bankruptcy. At the same time, specifications must be {\it clear}:
+while clarity is obviously in the eye of the beholder, a specification
+that one finds hopelessly confusing or complex is no more useful than
+one that is hopelessly vague.
+%
+Clarity is what allows us to
 communicate with each other, to use specifications to gain a common
 understanding of what some system does and to think about how that
 system might be changed. Formality is what allows specifications to
@@ -76,7 +79,9 @@ happen to a given system.
 
 The specification of many (too many!)~critical systems still remains
 in the realm of English text, and the inevitable lack of formality can
-and does make formal reasoning about these specifications difficult.
+and does make formal reasoning about these specifications difficult or
+impossible.
+%
 Notably, this is true about most of the programming languages used to
 implement our calculators, program our robot army control systems,
 enforce our security protocols, and interact with our high-frequency
@@ -95,7 +100,10 @@ stronger safety property: that {\it every} program accepted by the
 compiler is free of undefined behavior \cite{lee07towards}.
 
 Mathematics, by contrast, has a century-long tradition of insisting on
-absolute formality, at least in principle. Over time, this tradition
+absolute formality (at least in principle: practice often falls far
+short).
+%
+Over time, this tradition
 has become a collaboration between practicing mathematicians and
 practicing computer scientists, because while humans are reasonable
 judges of clarity, computers have an absolutely superhuman patience
@@ -296,24 +304,68 @@ transition systems.  In this respect, this part of the thesis follows
 in the footsteps of Miller's Forum \cite{miller96forum}, Cervesato and
 Scedrov's multiset rewriting language $\omega$
 \cite{cervesato09relating}, and Watkins et al.'s CLF
-\cite{watkins02concurrent}. The major contribution of this part of the
-thesis is the development of {\it structural focalization}
-\cite{simmons11structural}, which unifies Andreoli's work on focused
-logics \cite{andreoli92logic} with the {\it hereditary substitution}
-technique that Watkins developed in the context of CLF
-\cite{watkins02concurrent}. Chapter~2 explains structural focalization
-in the context of linear logic, Chapter~3 establishes focalization for
-a richer substructural logic \ollll, and Chapter~4 takes focused
-\ollll~and carves out \sls, a CLF-like framework of \underline{\bf
+\cite{watkins02concurrent}. 
+
+\input{figs/fig-canonical}
+
+As an extension to CLF, the logical framework we develop is able to
+specify systems like the $\pi$-calculus, security protocols, and Petri
+nets that can be encoded in CLF \cite{cervesato02concurrent}. The
+addition of ordered logic allows us easily incorporate systems that
+are naturally understood as string rewriting systems. An example from
+the verification domain, taken from Bouajjani and Esparsa
+\cite{bouajjani06rewriting}, is shown in Figure~\ref{fig:canonical}.
+The left-hand side of the figure is a simple Boolean program: the
+procedure ${\it foo}$ has one local variable and the procedure ${\it
+  main}$ has no local variables but mentions a global variable $b$.
+Bouajjani and Esparsa represented Boolean programs like this one as
+{\it canonical systems} like the one shown in the middle of
+Figure~\ref{fig:canonical}. Canonical systems are rewriting systems
+where only the left-most tokens are ever rewritten: the left-most
+token in this canonical system always has the form $\langle b \rangle$,
+where $b$ is either true (${\sf tt}$) or false (${\sf ff}$),
+representing the valuation of the global variables -- there is only 
+one, $b$.  The token to the
+right of the global variables contains the current program counter and
+the value of the current local variables. The token to the right of
+{\it that} contains the program counter and local variables of the calling
+procedure, and so on, forming a call stack that grows off to the right
+(in contrast to the PDA's stack, which grew off to the left). This
+canonical system can be directly represented in ordered logic, as
+shown on the right-hand side of Figure~\ref{fig:canonical}. The atomic
+proposition ${\sf gl}(b)$ contains the global variables (versus
+$\langle b \rangle$ in the middle column), the atomic proposition
+${\sf foo}(l, f)$ contains the local variables and program counter
+within the procedure ${\sf foo}$ (versus $\langle l, f \rangle$ in the
+middle column), and the atomic proposition ${\sf main}(m)$ contains
+the program counter within the procedure ${\sf main}$ (versus $\langle
+m \rangle$ in the middle column).
+
+The development of \sls, a CLF-like framework of \underline{\bf
   s}ubstructural \underline{\bf l}ogical \underline{\bf
-  s}pecifications.
+  s}pecifications that includes an intrinsic notion of order, is a
+significant development of Part 1 of the thesis.  However, the
+principal contribution of these three chapters is the development of
+{\it structural focalization} \cite{simmons11structural}, which
+unifies Andreoli's work on focused logics \cite{andreoli92logic} with
+the {\it hereditary substitution} technique that Watkins developed in
+the context of CLF \cite{watkins02concurrent}. Chapter~2 explains
+structural focalization in the context of linear logic, Chapter~3
+establishes focalization for a richer substructural logic \ollll, and
+Chapter~4 takes focused \ollll~and carves out the \sls~framework as a
+fragment of the focused logic.
 
 \section{Substructural operational semantics}
 \label{sec:intro-ssos}
 
-We are not primarily interested in representing systems like PDAs;
-rather, our goal is to specify the operational semantics of
-programming languages. We can represent operational semantics in
+We are not primarily interested in representing systems like PDAs, and
+while application to the verification domain like the rewriting
+semantics of Boolean programs are an interesting application of \sls,
+they will not be a focus of this thesis. Instead, in Part~2 of the
+thesis, we will concentrate on specifying the operational semantics of
+programming languages in \sls.
+%
+We can represent operational semantics in
 \sls~in many ways, but we are particularly interested in a broad
 specification style called {\it substructural operational semantics},
 or SSOS
@@ -328,94 +380,103 @@ One of our running
 examples will be a call-by-value operational semantics for the untyped
 lambda calculus, defined by the BNF grammar:
 \[
-e ::= x \mid \lambda x.e \mid e_1\,e_2
+\obj{e} ::= \obj{x} \mid \obj{\lambda x.e} \mid \obj{e_1\,e_2}
 \]
 Taking some liberties with our representation of terms, we can
 describe call-by-value evaluation for this language with the same
-rewriting rules we used to describe the PDA. Instead of a head ${\sf
-  hd}$, our specification uses two atomic propositions: ${\sf
-  eval}(e)$ for an unevaluated expression $e$, and ${\sf retn}(v)$
-for an evaluated value $v$.
+rewriting rules we used to describe the PDA and the Boolean program's
+semantics. Our specification uses three atomic propositions: one,
+${\sf eval}(\obj{e})$, carries an unevaluated expression $\obj{e}$,
+and another, ${\sf retn}(\obj{v})$, carries an evaluated value
+$\obj{v}$.  The third atomic proposition, ${\sf cont}(\obj{f})$,
+contains a {\it continuation frame} $\obj{f}$ that represents some
+partially evaluated value: $\obj{f} = \obj{\Box\,e_2}$ is state of an
+expression $\obj{e_1\,e_2}$ waiting on the evaluation of $\obj{e_1}$
+to a value, and $\obj{f} = \obj{(\lambda x.e)\,\Box}$ is the state of
+an expression $\obj{(\lambda x.e)\,e_2}$ waiting on the evaluation of
+$\obj{e_2}$ to a value. A list of these continuation frames forms a
+stack that grows off to the right (like the Boolean program's stack
+and unlike the PDA's stack).
 
 
 The evaluation of a function is simple, as a function is already a
-fully evaluated value, so we replace ${\sf eval}(\lambda x.e)$
-in-place with ${\sf retn}(\lambda x.e)$:
+fully evaluated value, so we replace ${\sf eval}(\obj{\lambda x.e})$
+in-place with ${\sf retn}(\obj{\lambda x.e})$:
 \begin{align*}
 {\sf ev/lam}&: ~~ 
-  {\sf eval}\,(\lambda x.e) \lefti \{ {\sf retn}\,(\lambda x.e) \}
+  {\sf eval}\,(\obj{\lambda x.e})
+      \lefti \{ {\sf retn}\,(\obj{\lambda x.e}) \}
 %
-  \intertext{The evaluation of an application $e_1\,e_2$, on the other
-    hand, requires us to push a new element onto the stack. In place
-    of the PDA's stack of propositions ${\sf stack}(x)$ growing off to
-    the left, we maintain a stack of ${\sf cont}(f)$ propositions
-    growing off to the right; $f$ is called a {\it frame}. We evaluate
-    $e_1\,e_2$ by evaluating $e_1$ and leaving behind a frame
-    $\Box\,e_2$ that suspends the argument $e_2$ while $e_1$ is being
-    evaluated to a value.}
+      \intertext{The evaluation of an application $\obj{e_1\,e_2}$, on
+        the other hand, requires us to push a new element onto the
+        stack. We evaluate $\obj{e_1\,e_2}$ by evaluating $\obj{e_1}$
+        and leaving behind a frame $\obj{\Box\,e_2}$ that suspends the
+        argument $\obj{e_2}$ while $\obj{e_1}$ is being evaluated to a
+        value.}
 %
 {\sf ev/app}&: ~~ 
-  {\sf eval}\,(e_1\,e_2) \lefti \{ {\sf eval}\,(e_1) 
-     \fuse {\sf cont}\,(\Box\,e_2) \}
+  {\sf eval}\,(\obj{e_1\,e_2}) \lefti \{ {\sf eval}\,(\obj{e_1}) 
+     \fuse {\sf cont}\,(\obj{\Box\,e_2}) \}
 %
-     \intertext{When a function is returned to a waiting $(\Box\,e_2)$
+     \intertext{When a function is returned to a waiting $\obj{\Box\,e_2}$
        frame, we switch to evaluating the function argument while
-       storing the returned function in a frame $((\lambda
-       x.e)\,\Box)$.}
+       storing the returned function in a frame $\obj{(\lambda
+       x.e)\,\Box}$.}
 %
 {\sf ev/app1}&: ~~
-  {\sf retn}\,(\lambda x.e) \fuse {\sf cont}\,(\Box\,e_2)
-    \lefti \{ {\sf eval}\,(e_2) \fuse {\sf cont}\,((\lambda x.e)\,\Box) \}
+  {\sf retn}\,(\obj{\lambda x.e}) \fuse {\sf cont}\,(\obj{\Box\,e_2})
+    \lefti \{ {\sf eval}\,(\obj{e_2})
+      \fuse {\sf cont}\,(\obj{(\lambda x.e)\,\Box}) \}
 %
     \intertext{Finally, when an evaluated function argument is
-      returned to the waiting $((\lambda x.e)\,\Box)$ frame, we
+      returned to the waiting $\obj{(\lambda x.e)\,\Box}$ frame, we
       substitute the value into the body of the function and evaluate
       the result.}
 %
 {\sf ev/app2}&: ~~
-  {\sf retn}\,(v_2) \fuse {\sf cont}\,((\lambda x.e)\,\Box)
-    \lefti \{ {\sf eval}\,([v_2/x]e) \}
+  {\sf retn}\,(\obj{v_2}) \fuse {\sf cont}\,(\obj{(\lambda x.e})\,\Box)
+    \lefti \{ {\sf eval}\,([\obj{v_2}/\obj{x}]\obj{e}) \}
 %
 \end{align*}
 
 \begin{figure}
 \begin{align*}
-{\sf eval}\,((\lambda x.x)\,((\lambda y.y)\,(\lambda z.e))) 
+{\sf eval}\,(\obj{(\lambda x.x)\,((\lambda y.y)\,(\lambda z.e))}) 
 & ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app}$}\\
-{\sf eval}\,(\lambda x.x) \quad
-{\sf cont}\,(\Box\,((\lambda y.y)\,(\lambda z.e)))
+{\sf eval}\,(\obj{\lambda x.x}) \quad
+{\sf cont}\,(\obj{\Box\,((\lambda y.y)\,(\lambda z.e))})
 & ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/lam}$}\\
-{\sf retn}\,(\lambda x.x) \quad
-{\sf cont}\,(\Box\,((\lambda y.y)\,(\lambda z.e)))
+{\sf retn}\,(\obj{\lambda x.x}) \quad
+{\sf cont}\,(\obj{\Box\,((\lambda y.y)\,(\lambda z.e))})
 & ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app1}$}\\
-{\sf eval}\,((\lambda y.y)\,(\lambda z.e)) \quad
-{\sf cont}\,((\lambda x.x)\,\Box)
+{\sf eval}\,(\obj{(\lambda y.y)\,(\lambda z.e)}) \quad
+{\sf cont}\,(\obj{(\lambda x.x)\,\Box})
 & ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app}$}\\
-{\sf eval}\,(\lambda y.y) \quad
-{\sf cont}\,(\Box\,(\lambda z.e)) \quad
-{\sf cont}\,((\lambda x.x)\,\Box)
+{\sf eval}\,(\obj{\lambda y.y}) \quad
+{\sf cont}\,(\obj{\Box\,(\lambda z.e)}) \quad
+{\sf cont}\,(\obj{(\lambda x.x)\,\Box})
 & ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/lam}$}\\
-{\sf retn}\,(\lambda y.y) \quad
-{\sf cont}\,(\Box\,(\lambda z.e)) \quad
-{\sf cont}\,((\lambda x.x)\,\Box)
+{\sf retn}\,(\obj{\lambda y.y}) \quad
+{\sf cont}\,(\obj{\Box\,(\lambda z.e)}) \quad
+{\sf cont}\,(\obj{(\lambda x.x)\,\Box})
 & ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app1}$}\\
-{\sf eval}\,(\lambda z.e) \quad
-{\sf cont}\,((\lambda y.y)\,\Box) \quad
-{\sf cont}\,((\lambda x.x)\,\Box)
+{\sf eval}\,(\obj{\lambda z.e}) \quad
+{\sf cont}\,(\obj{(\lambda y.y)\,\Box}) \quad
+{\sf cont}\,(\obj{(\lambda x.x)\,\Box})
 & ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/lam}$}\\
-{\sf retn}\,(\lambda z.e) \quad
-{\sf cont}\,((\lambda y.y)\,\Box) \quad
-{\sf cont}\,((\lambda x.x)\,\Box)
+{\sf retn}\,(\obj{\lambda z.e}) \quad
+{\sf cont}\,(\obj{(\lambda y.y)\,\Box}) \quad
+{\sf cont}\,(\obj{(\lambda x.x)\,\Box})
 & ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app2}$}\\
-{\sf eval}\,(\lambda z.e) \quad
-{\sf cont}\,((\lambda x.x)\,\Box)
+{\sf eval}\,(\obj{\lambda z.e}) \quad
+{\sf cont}\,(\obj{(\lambda x.x)\,\Box})
 & ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/lam}$}\\
-{\sf retn}\,(\lambda z.e) \quad
-{\sf cont}\,((\lambda x.x)\,\Box)
+{\sf retn}\,(\obj{\lambda z.e}) \quad
+{\sf cont}\,(\obj{(\lambda x.x)\,\Box})
 & ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app2}$}\\
-{\sf eval}\,(\lambda z.e) 
+{\sf eval}\,(\obj{\lambda z.e}) 
 & ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/lam}$}\\
-{\sf retn}\,(\lambda z.e) 
+{\sf retn}\,(\obj{\lambda z.e}) 
 & ~~~\not\rightsquigarrow~~ 
 \end{align*}
 \caption{SSOS evaluation of an expression to a value.}
@@ -423,8 +484,8 @@ in-place with ${\sf retn}(\lambda x.e)$:
 \end{figure}
 
 These four rules constitute an SSOS specification of call-by-value
-evaluation; an example of evaluating the expression $(\lambda
-x.x)\,((\lambda y.y)\,(\lambda z.e))$ to a value under this
+evaluation; an example of evaluating the expression $\obj{(\lambda
+x.x)\,((\lambda y.y)\,(\lambda z.e))}$ to a value under this
 specification is given in Figure~\ref{fig:ssos-example}.  Again, each
 intermediate state is represented by a process state or ordered
 context.
@@ -444,139 +505,144 @@ On the other end of the spectrum, the {\it deductive} fragment of
 methodology used to represent inductive definitions in the LF logical
 framework \cite{harper93framework}.  We can therefore use the
 deductive fragment of \sls~to specify a big-step operational semantics
-for call-by-value evaluation by inductively defining the judgment $e
-\Downarrow v$, which expresses that the expression $e$ evaluates to
-the value $v$. On paper, this big-step operational semantics is
+for call-by-value evaluation by inductively defining the judgment $\obj{e
+\Downarrow v}$, which expresses that the expression $\obj{e}$ evaluates to
+the value $\obj{v}$. On paper, this big-step operational semantics is
 expressed with two inference rules:
 \[
 \infer
-{\lambda x.e \Downarrow \lambda x.e \mathstrut}
+{\obj{\lambda x.e \Downarrow \lambda x.e} \mathstrut}
 {}
 \quad
 \infer
-{e_1\,e_2 \Downarrow v \mathstrut}
-{e_1 \Downarrow \lambda x.e
+{\obj{e_1\,e_2 \Downarrow v} \mathstrut}
+{\obj{e_1 \Downarrow \lambda x.e}
  &
- e_2 \Downarrow v_2
+ \obj{e_2 \Downarrow v_2}
  &
- [v_2/x]e_2 \Downarrow v \mathstrut}
+ \obj{{[\obj{v_2}/\obj{x}]\obj{e_2}} \Downarrow v} \mathstrut}
 \]
 Big-step operational semantics specifications are compact and elegant,
 but they is not particularly {\it modular}. As a (rather contrived)
-example, consider the addition of a incrementing counter ${\sf count}$
-to the language of expressions $e$. The language keeps a numeral as a
-counter, and every time ${\sf count}$ is evaluated, it returns the
-value of the counter and then increments the counter.\footnote{To keep
-  the language small, we can represent numerals $\underline{n}$ as
-  Church numerals: $\underline{0} = (\lambda f. \lambda x. x)$,
-  $\underline{1} = (\lambda f. \lambda x. f x)$, $\underline{2} =
-  (\lambda f. \lambda x. f (f x))$, and so on.  Then, $\underline{n} +
-  1 = \lambda f. \lambda x. f e$ if $\underline{n} = \lambda
-  f. \lambda x. e$.}  To extend the big-step operational semantics
-with this new feature, we have to revise all the existing rules so
-that they mention the running counter:
+example, consider the addition of a incrementing counter $\obj{\sf
+  count}$ to the language of expressions $\obj{e}$. The language keeps
+a numeral as a counter, and every time $\obj{\sf count}$ is evaluated,
+it returns the value of the counter and then increments the
+counter.\footnote{To keep the language small, we can represent
+  numerals $\obj{\underline{\obj{n}}}$ as Church numerals:
+  $\obj{\underline{\obj{0}}} = \obj{(\lambda f. \lambda x. x)}$,
+  $\obj{\underline{\obj{1}}} = \obj{(\lambda f. \lambda x. f x)}$,
+  $\obj{\underline{\obj{2}}} = \obj{(\lambda f. \lambda x. f (f x))}$,
+  and so on.  Then, $\obj{\underline{\obj{n}} + \obj{1}} =
+  \obj{\lambda f. \lambda x. f e}$ if $\underline{\obj{n}} =
+  \obj{\lambda f. \lambda x. e}$.}  To extend the big-step operational
+semantics with this new feature, we have to revise all the existing
+rules so that they mention the running counter:
 %
 \[
 \infer
-{({\sf count}, \underline{n}) \Downarrow 
-  (\underline{n}, \underline{n} +1)}
+{\obj{({\sf count}, \underline{n}) \Downarrow 
+  (\underline{n}, \underline{n} +1)} \mathstrut}
 {}
 \quad 
 \infer
-{(\lambda x.e, \underline{n}) \Downarrow (\lambda x.e, \underline{n})
+{\obj{(\lambda x.e, \underline{n}) \Downarrow (\lambda x.e, \underline{n})}
  \mathstrut}
 {}
 \]
 \[
 \infer
-{(e_1\,e_2, \underline{n}) \Downarrow (v, \underline{n'}) \mathstrut}
-{(e_1, \underline{n}) \Downarrow (\lambda x.e, \underline n_1)
+{\obj{(e_1\,e_2, \underline{n}) \Downarrow (v, \underline{n'})} \mathstrut}
+{\obj{(e_1, \underline{n}) \Downarrow (\lambda x.e, \underline n_1)}
  &
- (e_2, \underline n_1) \Downarrow (v_2, \underline n_2)
+ \obj{(e_2, \underline n_1) \Downarrow (v_2, \underline n_2)}
  &
- ([v_2/x]e_2, \underline n_2 ) \Downarrow (v, \underline{n'}) \mathstrut}
+ \obj{({[\obj{v_2}/\obj{x}]\obj{e_2}}, \underline n_2 ) \Downarrow (v, \underline{n'})} \mathstrut}
 \]
+
+\begin{figure}
+\begin{align*}
+{\sf store}\,\obj{\underline 5} \quad
+{\sf eval}\,(\obj{((\lambda x.\lambda y.y)\,{\sf count})\,{\sf count}})
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app}$}\\
+{\sf store}\,\obj{\underline 5} \quad
+{\sf eval}\,(\obj{(\lambda x.\lambda y.y)\,{\sf count}}) \quad
+{\sf cont}\,(\obj{\Box\,{\sf count}})
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app}$}\\
+{\sf store}\,\obj{\underline 5} \quad
+{\sf eval}\,(\obj{\lambda x.\lambda y.y}) \quad
+{\sf cont}\,(\obj{\Box\,{\sf count}}) \quad
+{\sf cont}\,(\obj{\Box\,{\sf count}})
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/lam}$}\\
+{\sf store}\,\obj{\underline 5} \quad
+{\sf retn}\,(\obj{\lambda x.\lambda y.y}) \quad
+{\sf cont}\,(\obj{\Box\,{\sf count}}) \quad
+{\sf cont}\,(\obj{\Box\,{\sf count}})
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app1}$}\\
+{\sf store}\,\obj{\underline 5} \quad
+{\sf eval}\,(\obj{\sf count}) \quad
+{\sf cont}\,(\obj{(\lambda x.\lambda y.y)\,\Box}) \quad
+{\sf cont}\,(\obj{\Box\,{\sf count}})
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/count}$}\\
+{\sf store}\,\obj{\underline 6} \quad
+{\sf retn}\,(\obj{\underline 5}) \quad
+{\sf cont}\,(\obj{(\lambda x.\lambda y.y)\,\Box}) \quad
+{\sf cont}\,(\obj{\Box\,{\sf count}})
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app2}$}\\
+{\sf store}\,\obj{\underline 6} \quad
+{\sf eval}\,(\obj{\lambda y.y}) \quad
+{\sf cont}\,(\obj{\Box\,{\sf count}})
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/lam}$}\\
+{\sf store}\,\obj{\underline 6} \quad
+{\sf retn}\,(\obj{\lambda y.y}) \quad
+{\sf cont}\,(\obj{\Box\,{\sf count}})
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app2}$}\\
+{\sf store}\,\obj{\underline 6} \quad
+{\sf eval}\,(\obj{{\sf count}}) \quad
+{\sf cont}\,(\obj{(\lambda y.y)\,\Box})
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/count}$}\\
+{\sf store}\,\obj{\underline 7} \quad
+{\sf retn}\,(\obj{\underline 6}) \quad
+{\sf cont}\,(\obj{(\lambda y.y)\,\Box})
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app2}$}\\
+{\sf store}\,\obj{\underline 7} \quad
+{\sf eval}\,(\obj{\underline 6}) 
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/lam}$}\\
+{\sf store}\,\obj{\underline 7} \quad
+{\sf retn}\,(\obj{\underline 6}) 
+& ~~~\not\rightsquigarrow~~ 
+\end{align*}
+\caption{Evaluation with an imperative counter.}
+\label{fig:eval-ssos-ctr}
+\end{figure}
+
+
 The simple elegance of our big-step operational semantics has been
 tarnished by the need to deal with state, and each new stateful
 feature requires a similar revision.  In contrast, our SSOS
 specification can tolerate the addition of a counter without revision
 to the existing rules; we just store the counter's value in an atomic
-proposition ${\sf store}(\underline{n})$ to the left of the ${\sf
-  eval}(e)$ or ${\sf retn}(v)$ proposition in the ordered
+proposition ${\sf store}(\obj{\underline{n}})$ to the left of the ${\sf
+  eval}(\obj{e})$ or ${\sf retn}(\obj{v})$ proposition in the ordered
 context. Because the rules ${\sf ev/lam}$, ${\sf ev/app}$, ${\sf
   ev/app1}$, and ${\sf ev/app2}$ are local, they will ignore this
 extra proposition, which only needs to be accessed by the rule ${\sf
   ev/count}$.
 \begin{align*}
 {\sf ev/count} &:~~
-  {\sf store}\,\underline n \fuse {\sf eval}\,{\sf count}
-    \lefti \{ {\sf store}\,(\underline n + 1) 
-      \fuse {\sf retn}\,\underline n \}
+  {\sf store}\,\obj{\underline n} \fuse {\sf eval}\,\obj{{\sf count}}
+    \lefti \{ {\sf store}\,(\obj{\underline n + 1}) 
+      \fuse {\sf retn}\,\obj{\underline n} \}
 \end{align*}
 In Figure~\ref{fig:eval-ssos-ctr}, we give an example of evaluating
-$(((\lambda x.\lambda y.y)\,{\sf count})\,{\sf count})$ to a value
-(with a starting counter value of $\underline 5$). This solution is
+$\obj{(((\lambda x.\lambda y.y)\,{\sf count})\,{\sf count})}$ to a value
+with a starting counter value of $\obj{\underline 5}$. This solution is
 even more contrived than the problem was: if we wanted to introduce a
 {\it second} counter, where would it go? Nevertheless, the example
 does foreshadow how, in Part~2 of this thesis, we will show that SSOS
 specifications in \sls~allow for the modular specification of many
 programming language features.
 
-\begin{figure}
-\begin{align*}
-{\sf store}\,\underline 5 \quad
-{\sf eval}\,(((\lambda x.\lambda y.y)\,{\sf count})\,{\sf count})
-& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app}$}\\
-{\sf store}\,\underline 5 \quad
-{\sf eval}\,((\lambda x.\lambda y.y)\,{\sf count}) \quad
-{\sf cont}\,(\Box\,{\sf count})
-& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app}$}\\
-{\sf store}\,\underline 5 \quad
-{\sf eval}\,(\lambda x.\lambda y.y) \quad
-{\sf cont}\,(\Box\,{\sf count}) \quad
-{\sf cont}\,(\Box\,{\sf count})
-& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/lam}$}\\
-{\sf store}\,\underline 5 \quad
-{\sf retn}\,(\lambda x.\lambda y.y) \quad
-{\sf cont}\,(\Box\,{\sf count}) \quad
-{\sf cont}\,(\Box\,{\sf count})
-& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app1}$}\\
-{\sf store}\,\underline 5 \quad
-{\sf eval}\,{\sf count} \quad
-{\sf cont}\,((\lambda x.\lambda y.y)\,\Box) \quad
-{\sf cont}\,(\Box\,{\sf count})
-& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/count}$}\\
-{\sf store}\,\underline 6 \quad
-{\sf retn}\,\underline 5 \quad
-{\sf cont}\,((\lambda x.\lambda y.y)\,\Box) \quad
-{\sf cont}\,(\Box\,{\sf count})
-& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app2}$}\\
-{\sf store}\,\underline 6 \quad
-{\sf eval}\,(\lambda y.y) \quad
-{\sf cont}\,(\Box\,{\sf count})
-& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/lam}$}\\
-{\sf store}\,\underline 6 \quad
-{\sf retn}\,(\lambda y.y) \quad
-{\sf cont}\,(\Box\,{\sf count})
-& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app2}$}\\
-{\sf store}\,\underline 6 \quad
-{\sf eval}\,{\sf count} \quad
-{\sf cont}\,((\lambda y.y)\,\Box)
-& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/count}$}\\
-{\sf store}\,\underline 7 \quad
-{\sf retn}\,\underline 6 \quad
-{\sf cont}\,((\lambda y.y)\,\Box)
-& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/app2}$}\\
-{\sf store}\,\underline 7 \quad
-{\sf eval}\,\underline 6 
-& ~~~\rightsquigarrow~~ \tag{by rule ${\sf ev/lam}$}\\
-{\sf store}\,\underline 7 \quad
-{\sf retn}\,\underline 6 
-& ~~~\not\rightsquigarrow~~ 
-\end{align*}
-\caption{Evaluation with an imperative counter.}
-\label{fig:eval-ssos-ctr}
-\end{figure}
 
 An overarching theme of Part~2 is that we can have our cake and eat it
 too by deploying the {\it logical correspondence}, an idea that was

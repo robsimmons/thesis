@@ -4,9 +4,9 @@
 \multicolumn{2}{l}
 {{\sf bool}\,{\sf function}\,{\it foo}(l)}\\
 {\sf f_0}{:} & {\sf if}\,l\,{\sf then}\\
-{\sf f_1}{:} & ~~ {\sf return}\,{\sf false}\\
+{\sf f_1}{:} & ~~ {\sf return}\,{\sf ff}\\
        & {\sf else}\\
-{\sf f_2}{:} & ~~ {\sf return}\,{\sf true}\\
+{\sf f_2}{:} & ~~ {\sf return}\,{\sf tt}\\
        & {\sf fi}\\[15pt]
 \\
 \multicolumn{2}{l}
@@ -19,32 +19,33 @@
 {\sf m_2}{:} & {\sf return}\\[15pt]
 \\
 \end{array}
-\quad
+~
 \begin{array}{|rcl|}
-\quad b\,\langle {\sf tt}, {\sf f_0} \rangle 
-  & \rightarrow & b\,\langle {\sf tt}\,{\sf f_1} \rangle\\
-b\,\langle {\sf ff}, {\sf f_0} \rangle
-  & \rightarrow & b\,\langle {\sf ff},{\sf f_2} \rangle\\
-b\,\langle l, {\sf f_1} \rangle 
-  & \rightarrow & {\sf ff}\\
-b\,\langle l, {\sf f_2} \rangle 
-  & \rightarrow & {\sf tt}\\
+~ \langle b \rangle\,\langle {\sf tt}, {\sf f_0} \rangle 
+  & \rightarrow & \langle b \rangle\,\langle {\sf tt}, {\sf f_1} \rangle\\
+\langle b \rangle\,\langle {\sf ff}, {\sf f_0} \rangle
+  & \rightarrow & \langle b \rangle\,\langle {\sf ff},{\sf f_2} \rangle\\
+\langle b \rangle\,\langle l, {\sf f_1} \rangle 
+  & \rightarrow & \langle {\sf ff} \rangle\\
+\langle b \rangle\,\langle l, {\sf f_2} \rangle 
+  & \rightarrow & \langle {\sf tt} \rangle\\
   & & \\[15pt]
   & & \\
   & & \\
-{\sf tt}\,{\sf m_0} 
-  & \rightarrow & {\sf tt}\,{\sf m_1}\\
-{\sf ff}\,{\sf m_0} 
-  & \rightarrow & {\sf ff}\,{\sf m_2}\\
-b\,{\sf m_1} 
-  & \rightarrow & b\,\langle b, {\sf f_0} \rangle\,{\sf m_0}  \quad\\
-b\,{\sf m_2}
+\langle {\sf tt} \rangle\,\langle {\sf m_0} \rangle
+  & \rightarrow & \langle {\sf tt} \rangle\, \langle {\sf m_1} \rangle\\
+\langle {\sf ff} \rangle\,\langle {\sf m_0} \rangle
+  & \rightarrow & \langle {\sf ff} \rangle\,\langle {\sf m_2} \rangle\\
+\langle b \rangle\,\langle {\sf m_1} \rangle
+  & \rightarrow & \langle b \rangle\,\langle b, {\sf f_0} \rangle\,
+\langle{\sf m_0}\rangle  ~\\
+\langle b \rangle\,\langle {\sf m_2} \rangle
   & \rightarrow & \epsilon\\
   & &\\[15pt]
   & &\\
   & &\\
 \end{array}
-\quad 
+~
 \begin{array}{l}
 {\sf gl}(b) \fuse {\sf foo}({\sf tt}, {\sf f_0}) \lefti ~\\
 \quad \{ {\sf gl}(b) \fuse {\sf foo}({\sf tt}, {\sf f_1}) \}\\[5pt]
@@ -63,4 +64,5 @@ b\,{\sf m_2}
 \end{array}
 \]
 \caption{A Boolean program, encoded as a rewriting system and in \sls}
+\label{fig:canonical}
 \end{figure}

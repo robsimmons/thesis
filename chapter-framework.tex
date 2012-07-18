@@ -2494,11 +2494,15 @@ avoid this terminology.
 The backward-chaining interpretation of intuitionistic logics dates
 back to the work by Miller et al.~on uniform proofs
 \cite{miller91uniform}.  An even older concept, Clark's {\it
-  negation-as-failure} \cite{clark87negation}, stipulates that if a
-backward chaining logic programming interpreter reports that it has
-failed to find a proof of a goal-directed sequent, we should be able
-to conclude that no proof exists. This interpretation requires {\it
-  backtracking}: if we we try to prove
+  negation-as-failure} \cite{clark87negation}, is based on a {\it
+  partial completeness} criteria for logic programming interpreters.
+Partial soundness (or partial correctness) demands that if the
+interpreter reports that it has found a proof of a goal-directed
+sequent, such a proof should exist. Partial completeness, on the other
+hand, demands that if the interpreter gives up up on finding a proof,
+no proof should exist. (The interpreter is also allowed to run forever
+without succeeding or giving up.)  Partial completeness requires {\it
+  backtracking} in backward-chaining search: if we we try to prove
 $\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$ by focusing on a particular
 proposition and one of the resulting subgoals fails to be provable, we
 have to consider any other propositions that could have been used to
@@ -2511,8 +2515,11 @@ deterministic declarations. Non-backtracking goal-oriented deductive
 computation is called {\it flat resolution} \cite{aitkaci99warrens}.
 
 One feature of backward chaining and goal directed search is that it
-usually allows for unspecified variables. Consider the following
-\sls~signature:
+usually allows for terms that are not completely specified -- these
+unspecified pieces are are traditionally called {\it existential
+  variables}, but as they bear no relation to the variables introduced
+by existential quantification, that terminology is unhelpful
+here. Consider the following \sls~signature:
 \begin{align*}
  \Sigma_{\it Add} = \cdot, 
 ~&{\sf nat} : {\sf type}, 
@@ -2534,12 +2541,13 @@ as $1 + 1 = 2$) or searching for a proof of ${\sf plus}\,\lf{\sf
   (s\,z)}\,\lf{\sf (s\,z)}\,\lf{\sf (s\,(s\,(s\,z)))}$ (which will
 fail, as $1 + 1 \neq 3$), we can use goal-oriented deductive
 computation to search for ${\sf plus}\,\lf{\sf (s\,z)}\,\lf{\sf
-  (s\,z)}\,X$, where $X$ is initially unspecified.  This search will
-succeed, reporting that $X = \lf{\sf (s\,(s\,z))}$. Unification is
-generally used in backward-chaining logic programming languages as a
-technique for implementing unspecified variables; this
-implementation technique should not be confused with our use of
-unification-based equality $t \doteq s$ as a proposition in \sls.
+  (s\,z)}\,X$, where $X$ represents an initially unspecified term.
+This search will succeed, reporting that $X = \lf{\sf
+  (s\,(s\,z))}$. Unification is generally used in backward-chaining
+logic programming languages as a technique for implementing partially
+unspecified terms, but this implementation technique should not be
+confused with our use of unification-based equality $t \doteq s$ as a
+proposition in \sls.
 
 We say that ${\sf plus}$ in the signature above is a {\it well-moded}
 predicate with {\it mode} $({\sf plus}\,{+}\,{+}\,{-})$, because
@@ -2547,11 +2555,11 @@ whenever we perform deductive computation to derive $({\sf
   plus}\,\lf{n}\,\lf{m}\,\lf{p})$ where $\lf{n}$ and $\lf{m}$ are
 fully specified, any unspecified portion of $\lf{p}$ will become fully
 specified in any completed derivation. Well-moded predicates can be
-treated as partial functions from their inputs (the indices marked
-``${+}$'' in the mode) to their outputs (the indices marked ``${-}$''
-in the mode). A predicate can sometimes be given more than one mode:
-$({\sf plus}\,{+}\,{-}\,{+})$ is a valid mode for ${\sf plus}$, but
-$({\sf plus}\,{+}\,{-}\,{-})$ is not.
+treated as nondeterministic partial functions from their inputs (the
+indices marked ``${+}$'' in the mode) to their outputs (the indices
+marked ``${-}$'' in the mode). A predicate can sometimes be given more
+than one mode: $({\sf plus}\,{+}\,{-}\,{+})$ is a valid mode for ${\sf
+  plus}$, but $({\sf plus}\,{+}\,{-}\,{-})$ is not.
 
 The implementation of backward chaining in substructural logic has
 been explored by Hodas \cite{hodas94logic}, Polakow
@@ -2580,15 +2588,15 @@ logic can simulate both backward chaining and forward chaining
 (considered below) for persistent Horn-clause logic programs
 \cite{chaudhuri10logical}. 
 
-Figure~\ref{fig:computation-taxonomy} gives a taxonomy of the forms
-of deductive computation mentioned in this section. Note that, while
-we will generally use {\it backward chaining} to describe backtracking
-search, backward chaining does not always imply full backtracking
-and the negation-as-failure interpretation. This illustration,
-and the preceding discussion, leaves of many important categories,
-including tabled logic programming, and many potentially relevant
-implementation choices, such as breath-first versus depth-first
-exploration of the success continuation.
+Figure~\ref{fig:computation-taxonomy} gives an incomplete and
+imperfect taxonomy of the forms of deductive computation mentioned in
+this section. Note that, while we will generally use {\it backward
+  chaining} to describe backtracking search, backward chaining does
+not always imply full backtracking and partial completeness. This
+illustration, and the preceding discussion, leaves out many important
+categories, especially tabled logic programming, and many potentially
+relevant implementation choices, such as breath-first versus
+depth-first or parallel exploration of the success continuation.
 
 \begin{figure}
 \begin{tikzpicture}
@@ -2643,21 +2651,55 @@ associated with the search for partial proofs of the judgment
 $\islax{A^+}$, which correspond to traces $(\Psi;
 \Delta) \leadsto^* (\Psi'; \Delta')$. 
 
-We will usually think of trace computation as allowing an initial
-process state $(\Psi;\Delta)$ to evolve freely through the application
-of synthetic transitions. In persistent logics, this {\it forward
-  chaining} interpretation of has provided the basis for using logic
-programs to describe deductive databases; we will refer to forward
-chaining in persistent logics as {\it saturating logic programming} in
-Chapter 8.  Forward chaining trace computation in substructural logics
-is {\it committed choice} and not backtracking: once we observe that
-$(\Psi;\Delta) \leadsto (\Psi'; \Delta')$, we try to evolve the state
-$(\Psi'; \Delta')$, and we do not consider what other process states
-could be obtained by evolving $(\Psi;\Delta)$.  Forward chaining
+The paradigm we will primarily consider for trace computation is {\it
+  forward chaining}, which implies that we take an initial process
+state $(\Psi;\Delta)$ and allow it to evolve freely by the application
+of synthetic transitions. Additional conditions can be imposed on
+forward chaining: for instance, synthetic transitions like $(\Delta,
+x{:}\ispers{\susp{p^+_\mpers}}) \leadsto (\Delta,
+x{:}\ispers{\susp{p^+_\mpers}}, y{:}\ispers{\susp{p^+_\mpers}})$ that
+do not meaningfully change the state can be excluded (if a persistent
+proposition already exists, two copies of that proposition don't add
+anything).\footnote{Incidentally, Lollimon implements this restriction
+  and Celf does not.} Forward chaining with this restriction in a
+purely-persistent logic is associated with Datalog; we will refer to
+forward chaining in persistent logics as {\it saturating logic
+  programming} in Chapter 8. Forward chaining
 frequently does not deal with unspecified variables; when persistent
 logic programming languages support forward chaining with unspecified
 variables, it is called {\it hyperresolution}
 \cite{fermuller01resolution}.
+
+The presence of ephemeral or ordered resources in substructural logic
+means that a process state may evolve in multiple
+mutually-incompatible ways. {\it Committed choice} is a version of
+forward chaining that never goes back and reconsiders alternate
+evolutions from the initial state. Just as the default interpretation
+of backward chaining includes backtracking, we will consider the
+default interpretation of forward chaining to be committed choice,
+following \cite{lopez05monadic}.  An
+alternate interpretation of forward chaining would consider multiple
+evolutionary paths, which is a version of {\it model checking}.  The
+model checking problem takes an initial process state $(\Psi;\Delta)$
+or a set of initial states and attempts to enumerate or otherwise
+characterize the entire set of states $(\Psi'; \Delta')$ such that
+$(\Psi; \Delta) \leadsto^* (\Psi'; \Delta')$. 
+
+Outside of this work and Saurin's work on Ludics programming
+\cite{saurin08towards}, there is not much work on explicitly
+characterizing and searching for partial proofs in substructural
+logics. Other forms of computation can be characterized as trace
+computation, however.  Multiset rewriting and languages like GAMMA can
+be partially or completely understood in terms of forward chaining in
+linear logic \cite{cervesato09relating,paola96linear}, and the ordered
+aspects of \sls~allow it to capture fragments of rewriting
+logic. Multiset rewriting and rewriting logic both have
+implementations that correspond to the committed choice interpretation
+and to the model checking interpretations.  Trace computation that
+works backwards from a final state instead of forward from an initial
+state can also be considered, and {\it planning} can be seen as
+specifying both the initial and final process states and trying to
+extrapolate a trace between them by working forwards and backwards.
 
 
 % not consider unspecified variables and is largely free of the resource
@@ -2667,56 +2709,6 @@ variables, it is called {\it hyperresolution}
 % reasoning about the asymptotic complexity of logical specifications
 % \cite{simmons08linear}, but this is outside the scope of this thesis.
 
-Existing implementations of trace computation seem to entirely fall
-into the category forward chaining as either persistent saturating
-logic programming or substructural committed-choice. Examples of the
-latter include Cervesato and Scedrov's $\omega$
-\cite{cervesato09relating} and the language Gamma, which can be
-encoded as forward chaining in linear logic \cite{paola96linear}.
-Especially in substructural logic, there is not much work on the
-formal characterization of partial proofs, though Saurin's work on
-Ludics programming is a notable exception \cite{saurin08towards}.
-Another potential paradigm for trace computation is model
-checking. The model checking problem takes an initial process state
-$(\Psi;\Delta)$ or a set of initial states and enumerates or otherwise
-characterize the entire set of states $(\Psi'; \Delta')$ such that
-$(\Psi; \Delta) \leadsto^* (\Psi'; \Delta')$. It could also productive to
-consider models of trace computation that work backwards from a final
-state, or that take some aspects of the final state into account while
-working forward. 
-
-
-% \begin{figure}
-% \begin{tikzpicture}
-% \draw (0,10) node{~};
-% \draw (8,10.45) node{\bf Trace computation};
-% \draw (8,10) node{Search for partial derivations 
-%                   $(\Psi; \Delta) \leadsto^* (\Psi'; \Delta')$};
-% \draw [->] (7.5,9.5) -- (6.5,8.5); 
-% \draw (7.2,9.3) node[left]{\it c};
-% \draw (6.8,8.9) node[left]{\it };
-% \draw [->] (8.5,9.5) -- (9.5,8.5); 
-% \draw (8.9,9.3) node[right]{\it enumerate all possible};
-% \draw (9.2,8.9) node[right]{\it successor states};
-% %
-% \draw (6,8) node{\bf forward chaining};
-% %
-% \draw (10,8) node{\bf model checking$^*$};
-% %
-% % \draw (13,10.45) node{\bf Trace computation};
-% % \draw (13,10) node{Search for partial proofs 
-% %    $(\Psi; \Delta) \leadsto^* (\Psi'; \Delta')$};
-% % \draw [->] (12.5,9.5) -- (11.5,8.5); 
-% % \draw [->] (13.5,9.5) -- (14.5,8.5); 
-% %
-% \end{tikzpicture}
-
-% $^*$ In persistent logics and specifications, model checking and forward
-% chaining are very similar, we call this {\it saturating logic programming}
-% in 
-% \caption{A rough taxonomy of trace computation}
-% \label{fig:computation-taxonomy}
-% \end{figure}
 
 
 \subsection{Integrating deductive and trace computation}
@@ -2744,7 +2736,7 @@ LCI. To see why, consider the following \sls~signature:
 In an empty context, there is only one derivation of ${\sf negD}$
 under this signature: it is represented by the proof term ${\sf
   bwdrule}\,(\lambda x.\,\tlet{\trstep{y}{{\sf
-      fwdruleAB}\,x}}{y})$. The negation-as-failure interpretation of
+      fwdruleAB}\,x}}{y})$. The partially complete interpretation of
 backward chaining stipulates that an interpreter tasked with finding a
 proof of ${\sf negD}$ should either find this proof or never
 terminate, but LCI only admits this interpretation for purely
@@ -2768,14 +2760,15 @@ second one, the subgoal fails. LCI then tries to backtrack to find
 other rules that can prove the conclusion ${\sf negD}$, but there are
 none, so LCI will report that it failed to prove ${\sf negD}$.
 
-This example indicates that it is difficult to make backtracking
-backward chaining reliant on committed-choice forward chaining. Either
-we can restrict forward chaining to confluent systems (excluding
-$\Sigma_{\it Demo}$) or else we can give up on the usual
-negation-as-failure interpretation of backward chaining.  In the other
-direction, however, it is entirely natural to make forward chaining
-dependent upon backward chaining. The fragment of CLF that encodes
-this kind of computation was called the {\it semantic effects}
+This example indicates that it is difficult to make backward chaining
+(in its default backtracking form) reliant on committed-choice forward
+chaining (in its default committed-choice form) in the style of
+Lollimon or Celf. Either we can restrict forward chaining to confluent
+systems (excluding $\Sigma_{\it Demo}$) or else we can give up on the
+usual partially complete interpretation of backward chaining.  In the
+other direction, however, it is entirely natural to make forward
+chaining dependent upon backward chaining. The fragment of CLF that
+encodes this kind of computation was labeled the {\it semantic effects}
 fragment by DeYoung \cite{deyoung09reasoning}.
 
 \section{Design decisions}
