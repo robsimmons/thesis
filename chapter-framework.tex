@@ -760,7 +760,7 @@ process states. As a first cut, we can represent the initial state as
 $(\Psi; \Delta)$ and the final state as $(\Psi'; \Delta')$, and we can
 omit $\Psi$ and just write $\Delta$ when that is sufficiently clear.
 
-The first cut insufficent due to the presence of unification
+The first cut insufficient due to the presence of unification
 in \sls~-- in particular, the first use-case of unification where we
 unify members of a type only inhabited by variables. Consider the
 following partial proof:
@@ -790,7 +790,7 @@ the succedent
 $\islax{({\sf foo}\,\lf{a}\,\lf{b})}$ associated with the first. 
 %
 In general, if the derivation in above proves some arbitrary
-succeedent $\islax{A^+}$ instead of $\islax{({\sf
+succedent $\islax{A^+}$ instead of $\islax{({\sf
     foo}\,\lf{a}\,\lf{b})}$, then the missing subproof has the succedent
 $\islax{\lf{[b/a]}A^+}$.
 
@@ -1299,7 +1299,7 @@ is a generalization of strengthening to \sls~traces.
 \label{sec:framework-concurrenteq}
 
 Concurrent equality is a notion of equivalence that on traces that is
-coarser than the equvalence relation we would derive from partial
+coarser than the equivalence relation we would derive from partial
 \ollll~proofs. Consider the following \sls~signature:
 \begin{align*}
  \Sigma = \cdot, 
@@ -1352,7 +1352,7 @@ The independence here is key: if two steps consume different
 resources, then we want to treat them as independent concurrent steps
 that could have equivalently happened in the other order. However, if
 we define equivalence only in terms of the $\alpha$-equivalence of
-\ollll~derivations, the two traces above are distinct. In this
+partial \ollll~derivations, the two traces above are distinct. In this
 section, we introduce a coarser equivalence relation, {\it concurrent
   equality}, that allows us to treat traces that differ only in the
 interleaving of independent and concurrent steps as being equal.  The
@@ -1361,8 +1361,8 @@ previous section considered the proof terms of \sls~as a fragment of
 concurrent equality takes a step beyond \ollll, because it breaks the
 bijective correspondence between \ollll~proofs and \sls~proofs. As the
 example above indicates, there are simply more \ollll~proofs than
-\sls~proofs when we factor the latter modulo concurrent equality
-and declare $T_1$ and $T_2$ to be (concurrently) equal. 
+\sls~proofs when we quotient the latter modulo concurrent equality and
+declare $T_1$ and $T_2$ to be (concurrently) equal.
 
 Concurrent equality was first was introduced and explored in the
 context of CLF \cite{watkins02concurrent}, but our presentation
@@ -1373,11 +1373,30 @@ our strategy will be to take a particular well-typed trace $T$ and
 define a set $I$ of pairs of states $(S_1, S_2)$ with the property
 that, if $S_1; S_2$ is a well-typed trace, then $S_2; S_1$ is a
 concurrently equivalent and well-typed trace.  This {\it independency
-  relation} allows us to treat the trace $T$ as a {\it trace
-  monoid}, which implies the existence of a decidable notion of
-equivalence \cite{diekert90combinatorics}.
+  relation} allows us to treat the trace $T$ as a {\it trace monoid}
+\cite{diekert90combinatorics}, which implies that concurrent equality
+is decidable.
 
 \subsection{Interfaces}
+
+
+We define the independency relation in terms of three functions on
+steps $S = (\trstep{P}{R})$: the input variables ${\bullet}S$,
+the output variables $S{\bullet}$, and the unified variables
+${\ast}S$. Together, the input, output, and unified variables make
+up the step's {\it interface}. 
+
+\smallskip
+\begin{itemize}
+\item The {\it input variables} of a step, denoted ${\bullet}S$, are
+  intuitively the set of \lf~and \sls~variables free in the step. The
+  notion of what it means to be a free variable is mostly standard,
+  but \sls~has one unusual corner case. Our use of unification, and
+  the corresponding pattern form $\lf{t/a}, P$, means that
+  \sls~patterns can contain free LF variables, as defined in
+  Figure~\ref{fig:freevarspat}.  Therefore, the input interface of a
+  step ${\bullet}(\trstep{P}{R}) =  {\it FV}(P) \cup
+  {\it FV}(R)$.
 
 \begin{figure}
 \begin{align*}
@@ -1393,24 +1412,6 @@ equivalence \cite{diekert90combinatorics}.
 \label{fig:freevarspat}
 \end{figure}
 
-We define the independency relation in terms of three functions on
-steps $S = (\tstep{P}{x}{\Sp})$: the input variables ${\bullet}S$,
-the output variables $S{\bullet}$, and the unified variables
-${\ast}S$. Together, the input, output, and unified variables make
-up the step's {\it interface}. 
-
-\smallskip
-\begin{itemize}
-\item The {\it input variables} of a step, denoted ${\bullet}S$, are
-  intuitively the set of \lf~and \sls~variables free in the step. The
-  notion of what it means to be a free variable is mostly standard,
-  but \sls~has one unusual corner case. Our use of unification, and
-  the corresponding pattern form $\lf{t/a}, P$, means that
-  \sls~patterns can contain free LF variables, as defined in
-  Figure~\ref{fig:freevarspat}.  Therefore, the input interface of a
-  step ${\bullet}(\tstep{P}{x}{\Sp}) = \{ x \} \cup {\it FV}(P) \cup
-  {\it FV}(\Sp)$.
-
 % The {\it consumed variables} of a step $S = (\tstep{P}{x}{\Sp})$,
 % denoted by ${\ast}S$, are the subset of the input variables that no
 % longer appear in the process state after a step. Every \sls~variable
@@ -1422,7 +1423,7 @@ up the step's {\it interface}.
 % is likewise free in $P$ it is included in the set of consumed
 % variables.
 
-\item The {\it output variables} of a step $S = (\tstep{P}{x}{\Sp})$,
+\item The {\it output variables} of a step $S = (\trstep{P}{R})$,
   denoted by $S{\bullet}$, are all the variables $\lf{a}$ or $x$ bound
   by the pattern $P$ that are not subsequently consumed by a
   unification $\lf{t/a}$ in the same pattern.
@@ -1441,8 +1442,8 @@ up the step's {\it interface}.
 
 Consider a well-typed trace $S_1; S_2$ with two steps. It is possible,
 by renaming bound variables, to ensure that $\emptyset = {\bullet}S_1
-\cap S_2{\bullet} = {\bullet}S_1 \cap S_1{\bullet} = {\bullet}S_1 \cap
-S_1{\bullet}$, so we will generally assume that this is the case.  The
+\cap S_2{\bullet} = {\bullet}S_1 \cap S_1{\bullet} = {\bullet}S_2 \cap
+S_2{\bullet}$, so we will generally assume that this is the case.  The
 order of $S_1$ and $S_2$ is fixed if $S_1$ introduces variables that
 are used by $S_2$ -- that is, if $\emptyset \neq S_1{\bullet} \cap
 {\bullet}S_2$. For example, if $S_1 = (\trstep{x_b, x_c}{\sf
@@ -1473,15 +1474,15 @@ effects. Consider the following two-step trace:
 \\
 & \qquad\qquad
 (\lf{b}{:}p; ~~ w{:}\iseph{\susp{{\sf bar}\,\lf{b}}})
-\intertext{
+\intertext{This
 %
-  This trace cannot be reordered even though $\emptyset = \emptyset
-  \cap \{ y, z \} = (\trstep{\lf{b/a}}{x}){\bullet} \cap
+  trace cannot be reordered even though $\emptyset = \emptyset \cap \{
+  y, z \} = (\trstep{\lf{b/a}}{x}){\bullet} \cap
   {\bullet}(\trstep{w}{y\,z})$, because the atomic term $y\,z$ is only
   well typed after the LF variables $\lf{a}$ and $\lf{b}$ are unified.
   To avoid this situation, it is sufficient to require that $\emptyset
   = {\ast}S_1 \cap {\bullet}S_2$. In the other direction, consider the
-  following very similar trace:
+  following similar trace:
 %
 }
 & \qquad\qquad
@@ -1517,28 +1518,31 @@ trace $S_1; S_2$ where $\emptyset = {\bullet}S_1 \cap S_2{\bullet} =
 (which is always possible by renaming bound variables), if $\emptyset
 = S_1{\bullet} \cap {\bullet}S_2 = {\bullet}S_1 \cap {\ast}S_2 =
 {\ast}S_1 \cap {\bullet}S_2$, then $S_2; S_1$ is also a well-typed
-trace.  We can calculate $S_1{\bullet} \cap {\bullet}S_2$ and
-${\bullet}S_1 \cap S_2{\bullet}$ for any two steps in the same trace,
-even if their composition is not well-typed. Therefore, given a
+trace.  We can calculate all these sets for any two steps in the same
+trace, even if their composition is not well-typed. Therefore, given a
 well-typed and sufficiently-renamed trace $T$, we can let the
 independency relation $I$ be the set of pairs of steps $(S, S')$ in
 $T$ where $\emptyset = S_1{\bullet} \cap {\bullet}S_2 = {\bullet}S_1
 \cap {\ast}S_2 = {\ast}S_1 \cap {\bullet}S_2$. Letting $I$ be the
 independency relation of a trace monoid, we get the set of traces that
-are concurrently equal to $T$: all traces $T'$ that are
-concurrently equal to $T$ are well-typed with the same type as $T$.
+are concurrently equal to $T$: all traces $T'$ that are concurrently
+equal to $T$ are well-typed with the same type as $T$.
 
 \section{Adequate encoding}
 \label{sec:sls-adequate}
 
-In Section~\ref{sec:lf-adequacy} we discussed LF the encoding of
-$\lambda$-calculus terms in to LF terms of type ${\sf exp}$, captured by
+In Section~\ref{sec:lf-adequacy} we discussed encoding untyped
+$\lambda$-calculus terms as LF terms of type ${\sf exp}$, captured by
 the invertible function $\interp{e}$. Adequacy was extended to Linear
 LF (LLF) by Cervesato and Pfenning \cite{cervesato02linear} and was
 extended to Ordered LF (OLF) by Polakow \cite{polakow01ordered}. The
 deductive fragment of \sls~approximately extends both LLF and OLF, and
 the adequacy arguments made by Cervesato and Polakow extend
-straightforwardly to \sls.
+straightforwardly to \sls. These adequacy arguments do not extend to
+the systems we want to encode in \sls, however. The more general
+techniques we consider in this section will be explored further in
+Chapter~9 as a general technique for capturing invariants of
+\sls~specifications.
 
 The example that we will give to illustrate adequate encoding is the
 following signature, the \sls~encoding of the push-down automata 
@@ -1556,11 +1560,18 @@ for parentheses matching from the introduction.
        \lefti {\ocircle}({\sf hd})
 \end{align*}
 We will relate this specification to a push-down automata defined in
-terms of strings $\obj{s}$ defined as $\obj{s} ::= \obj{\cdot} \mid
-\obj{{\sf <}s} \mid \obj{{\sf >}s}$ and stacks $\obj{k}$ defined as
-$\obj{k} ::= \obj{\cdot} \mid \obj{k{\sf <}}$ with two rules: $\obj{(k
-  \rhd ({\sf <}s))} \mapsto \obj{((k{\sf <}) \rhd s)}$ and
-$\obj{((k{\sf <}) \rhd ({\sf >}s))} \mapsto \obj{(k \rhd s)}$.
+terms of stacks $\obj{k}$ and strings $\obj{s}$, which we define inductively:
+\begin{align*}
+\obj{k} & ::= \obj{\cdot} \mid \obj{k{\sf <}}\\
+\obj{s} & ::= \obj{\cdot} \mid \obj{{\sf <}s} \mid \obj{{\sf >}s}
+\end{align*}
+The transition system defined in terms of the stacks and strings
+has two transitions:
+\begin{align*}
+\obj{(k
+  \rhd ({\sf <}s))} & \mapsto \obj{((k{\sf <}) \rhd s)} \\
+\obj{((k{\sf <}) \rhd ({\sf >}s))} & \mapsto \obj{(k \rhd s)}
+\end{align*}
 
 Existing adequacy arguments for \sls~specifications by Cervesato et
 al.~\cite{cervesato02concurrent} and by
@@ -1579,38 +1590,37 @@ y_2{:}\istrue{\susp{\sf >}}, ~~
 y_3{:}\istrue{\susp{\sf >}}, ~~
 y_4{:}\istrue{\susp{\sf <}}
 \]
-The second step is to prove a preservation-like adequacy theorem: if
-state $\ctxinterp{\obj{k \rhd s}} \leadsto_{\Sigma_{\it PDA}}
+The second step is to prove a preservation-like property: if
+$\ctxinterp{\obj{k \rhd s}} \leadsto_{\Sigma_{\it PDA}}
 \Delta'$, then $\Delta' = \ctxinterp{{k' \rhd s'}}$ for some
 $\obj{k'}$ and $\obj{s'}$. The third step is the main adequacy result:
 that $\ctxinterp{k \rhd s} \leadsto_{\Sigma_{\it PDA}} \ctxinterp{k'
   \rhd s'}$ if and only if $\obj{k \rhd s} \mapsto \obj{k' \rhd
-  s'}$. The second step is crucial: without it, we might transition
-in \sls~from the encoding of some $\obj{k \rhd s}$ to a state
-$\Delta'$ that is not in the image of encoding. 
+  s'}$. 
 
-In the case of our deterministic PDA, this concern is less readily
-apparent, because we could avoid the second proof by instead proving
-that if $\ctxinterp{k \rhd s} \leadsto_{\Sigma_{\it PDA}} \Delta$ and
-$\ctxinterp{k \rhd s} \leadsto_{\Sigma_{\it PDA}} \Delta'$ then
-$\Delta = \Delta'$. In this section, we will use this
-preservation-like property to motivate a topic we will discuss further
-in Part~3 of this thesis. This presentation re-factors the methodology
-given here by using {\it generative signatures}. Generative signatures
-are a rich generalization of {\it regular worlds} that can be used to
-describe invariants of \sls~traces.  The first step in our revised
-methodology is to describe a generative signature $\Sigma_{\it Gen}$
-that precisely captures the set of process states that encode machine
-states (Theorem~\ref{thm:pda-encoding} below).  The second step is
-showing that the generative signature $\Sigma_{\it Gen}$ describes an
+The second step is crucial in general: without it, we might transition
+in \sls~from the encoding of some $\obj{k \rhd s}$ to a state
+$\Delta'$ that is not in the image of encoding.  With our
+deterministic example, this concern is less obvious: we could avoid
+the second proof by instead proving that if $\ctxinterp{k \rhd s}
+\leadsto_{\Sigma_{\it PDA}} \Delta$ and $\ctxinterp{k \rhd s}
+\leadsto_{\Sigma_{\it PDA}} \Delta'$ then $\Delta = \Delta'$. We will 
+take the opportunity to re-factor Cervesato et al.'s approach, 
+replacing the second step with a general statement about transitions
+in $\Sigma_{\it PDA}$ preserving a well-formedness invariant that
+belongs to a category of well-formedness invariants we will explore
+further in Chapter~9. 
+
+The first step in our revised methodology is to describe a generative
+signature $\Sigma_{\it Gen}$ that precisely captures the set of
+process states that encode machine states
+(Theorem~\ref{thm:pda-encoding} below).  The second step is showing
+that the generative signature $\Sigma_{\it Gen}$ describes an
 invariant of the signature $\Sigma_{\it PDA}$
-(Theorem~\ref{thm:pda-preservation}).  because this invariant captures
-the set process states that encode PDA states, we therefore know that
-a process state that encodes a PDA state can only step to another
-process state that encodes a PDA state. The third step, showing that
+(Theorem~\ref{thm:pda-preservation}).  The third step, showing that
 $\ctxinterp{k \rhd s} \leadsto_{\Sigma_{\it PDA}} \ctxinterp{k' \rhd
   s'}$ if and only if $\obj{k \rhd s} \mapsto \obj{k' \rhd s'}$, is
-the same as in other developments.
+straightforward and follows other developments.
 
 \subsection{Regular and generated worlds}
 
@@ -1629,7 +1639,7 @@ any LF variables. This is the {\it closed world assumption}, and
 regular worlds can be presented as a generalization of closed worlds.
 Twelf contains both
 a syntax for declaring worlds and facilities for checking that a
-signatures respects a particular world structure
+signature respects a particular world structure
 \cite{schurmann00automating}.
 
 The relevant building blocks in our $\lambda$-calculus encoding are
@@ -1644,8 +1654,8 @@ variable.
 
 Regular worlds remain sufficient for the encoding of stores in Linear
 LF \cite{cervesato02linear} and stacks in Ordered LF
-\cite{polakow01ordered}. Our PDA sates, on the other hand, do not have
-a regular structure, because the process state is organized into three
+\cite{polakow01ordered}. Our PDA states, on the other hand, do not have
+a regular structure: the process state is organized into three
 zones:
 \[
 [~\mbox{the stack}~]
@@ -1660,10 +1670,10 @@ based on context-free grammars. Conveniently, these contexts can be
 characterized within the machinery of \sls~itself by describing {\it
   generative signatures} that can form the set of process states we
 are interested in from a single seed context.  The signature
-$\Sigma_{\it Gen}$ in Figure~\ref{fig:pda-gen} treats all the elements
-of $\Sigma_{\it PDA}$ -- the atomic propositions ${\sf <}$, ${\sf >}$
-and ${\sf hd}$ -- as {\it terminals}, and introduces three {\it
-  nonterminals} ${\sf gen}$, ${\sf gen\_stack}$, and ${\sf
+$\Sigma_{\it Gen}$ in Figure~\ref{fig:pda-gen} treats all the atomic
+propositions of $\Sigma_{\it PDA}$ -- the atomic propositions ${\sf
+  <}$, ${\sf >}$ and ${\sf hd}$ -- as {\it terminals}, and introduces
+three {\it nonterminals} ${\sf gen}$, ${\sf gen\_stack}$, and ${\sf
   gen\_string}$.
 
 \begin{figure}
@@ -1743,7 +1753,7 @@ $(x{:}\istrue{\susp{\sf gen}})$ under the signature $\Sigma_{\it
   Gen}$, restriction to $\Sigma_{\it PDA}$ is the identity function
 whenever it is defined. Therefore, in the statement of
 Theorem~\ref{thm:pda-encoding}, we just use restriction as a judgment
-that holds whenever the partial function is defined.
+$\restrictsig{\Delta}{\Sigma_{\it PDA}}$ that holds whenever the partial function is defined.
 
 \bigskip
 \begin{theorem}[Encoding]\label{thm:pda-encoding}
@@ -1865,7 +1875,7 @@ and frame weakening (Theorem~\ref{thm:frameweak}):
 & \qquad\qquad = \ctxinterp{k \rhd s}
 \end{align*}
 This lemma establishes that encoding is an injective
-function; it remains to be shown that the function is surjective. 
+function; it remains to be shown that encoding function is surjective. 
 
 \begin{lemma} If 
 $T :: (\ctxinterp{k}, 
@@ -1897,19 +1907,21 @@ are four possibilities:
   the ind.~hyp.~(letting $y = y_1$, $\obj{s} =
   \obj{{\sf >}s}$).
 \end{itemize}
-\smallskip In all three cases the result follows directly from the
-induction hypothesis on the smaller trace $T'$.  The proof above takes
-a number of facts about concurrent equality for granted. For example,
-the trace $T = (\trstep{()}{{\sf stack/done}\,x};
+\smallskip 
+The proof above takes
+a number of facts about concurrent equality for granted. 
+%
+For example, the trace $T = (\trstep{()}{{\sf stack/done}\,x};
 \trstep{y_1,y_2}{{\sf string/right}\,y}; T')$ does not syntactically
-match any of the traces above, but it matches the last case because $T
-= (\trstep{y_1,y_2}{{\sf string/right}\,y}; \trstep{()}{{\sf
-    stack/done}\,x}; T')$ modulo concurrent equality. If we didn't
-implicitly rely on concurrent equality in this way, the resulting
-proof would have twice as many cases.  We will take these finite uses
-of concurrent equality for granted when we specify that a proof
-proceeds by case analysis on the first steps of $T$ (or, conversely,
-by case analysis on the last steps of $T$).
+match any of the traces above if we do not account for concurrent
+equality. Modulo concurrent equality, on the other hand, $T =
+(\trstep{y_1,y_2}{{\sf string/right}\,y}; \trstep{()}{{\sf
+    stack/done}\,x}; T')$, matching the last branch of the case
+analysis.  If we didn't implicitly rely on concurrent equality in this
+way, the resulting proof would have twice as many cases.  We will take
+these finite uses of concurrent equality for granted when we specify
+that a proof proceeds by case analysis on the first steps of $T$ (or,
+conversely, by case analysis on the last steps of $T$).
 
 \begin{lemma} If 
 $T :: (g{:}\istrue{\susp{\sf gen}}) 
@@ -1930,8 +1942,8 @@ Theorem~\ref{thm:pda-encoding} establishes that the generative
 signature $\Sigma_{\it Gen}$ describes a world -- a set of
 \sls~process states -- that precisely correspond to the states of a
 push-down automata.  We can (imperfectly) illustrate the content of
-this theorem in our two-dimensional notation as follows, where the
-$\Delta \Leftrightarrow \obj{k \rhd s}$ indicates the presence of the
+this theorem in our two-dimensional notation as follows, where 
+$\Delta \Leftrightarrow \obj{k \rhd s}$ indicates the presence of a
 bijection:
 \begin{center}
 \begin{tikzpicture} 
@@ -1952,7 +1964,7 @@ decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}]
 \end{center}
 
 It is interesting to note how the proof of
-Theorem~\ref{thm:pda-encoding} took advantage of the monoidal
+Theorem~\ref{thm:pda-encoding} takes advantage of the associative
 structure of traces: the inductive process that constructed traces in
 the first two lemmas treated trace composition as left-associative,
 but the induction we performed on traces in the next-to-last lemma
@@ -1975,8 +1987,7 @@ and prove this property without reference to the actual encoding function:
 If $T_1 :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} \Delta_1$,
 $\restrictsig{\Delta_1}{\Sigma_{\it PDA}}$, and 
 $S :: \Delta_1 \leadsto_{\Sigma_{\it PDA}} \Delta_2$, then 
-$T_2 :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} \Delta_2$
-and $\restrictsig{\Delta_1}{\Sigma_{\it PDA}}$.
+$T_2 :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} \Delta_2$.
 \end{theorem}
 \bigskip
 
@@ -2022,7 +2033,7 @@ decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}]
 
 \noindent
 The proof of Theorem~\ref{thm:pda-preservation} relies on two lemmas, 
-which we will consider first. 
+which we will consider before the proof itself. 
 
 \bigskip
 \begin{lemma}
@@ -2151,7 +2162,7 @@ $h$ to $h'$ is just renaming a bound variable, so we have}
 \intertext{
 The corollary 
 to the first lemma above on $T'$ gives us}
-& \qquad 
+T' = & \qquad 
 ({g{:}\istrue{\susp{\sf gen}}})\\
 & T'';\\
 & \qquad \tackon{\Theta}{
@@ -2164,7 +2175,7 @@ to the first lemma above on $T'$ gives us}
 & \qquad \tackon{\Theta}{h'{:}\istrue{\susp{\sf hd}}, ~~
                    y{:}\istrue{\susp{\sf <}}}
 \intertext{The second lemma (second part) on $T''$ gives us}
-& \qquad 
+T'' = & \qquad 
 ({g{:}\istrue{\susp{\sf gen}}})\\
 & T''';\\
 & \qquad \tackon{\Theta}{
@@ -2177,10 +2188,6 @@ to the first lemma above on $T'$ gives us}
                    h'{:}\istrue{\susp{\sf hd}}, ~~
                    y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
                    y{:}\istrue{\susp{\sf <}}}\\
-& \trstep{()}{{\sf stack/done}\,x_g};\\
-& \trstep{()}{{\sf string/done}\,y_g}\\
-& \qquad \tackon{\Theta}{h'{:}\istrue{\susp{\sf hd}}, ~~
-                   y{:}\istrue{\susp{\sf <}}}
 \intertext{Now, we can construct the trace we need using $T'''$:}
 & \qquad 
 ({g{:}\istrue{\susp{\sf gen}}})\\
@@ -2236,7 +2243,7 @@ $h$ to $h'$ is just renaming a bound variable, so we have}
                    h'{:}\istrue{\susp{\sf hd}}, ~~
                    y{:}\istrue{\susp{\sf >}}}
 \intertext{The second lemma (first part) on $T''$ gives us}
-& \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
+T'' = & \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
 & T''';\\
 & \qquad \tackon{\Theta}{x_g'{:}\istrue{\susp{\sf gen\_stack}}, ~~
                    h'{:}\istrue{\susp{\sf hd}}, ~~
@@ -2248,13 +2255,8 @@ $h$ to $h'$ is just renaming a bound variable, so we have}
                    h'{:}\istrue{\susp{\sf hd}}, ~~
                    y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
                    y{:}\istrue{\susp{\sf >}}}\\
-& \trstep{()}{{\sf stack/done}\,x_g};\\
-& \trstep{()}{{\sf string/done}\,y_g}\\
-& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf <}}, ~~
-                   h'{:}\istrue{\susp{\sf hd}}, ~~
-                   y{:}\istrue{\susp{\sf >}}}
 \intertext{The second lemma (third part) on $T'''$ gives us}
-& \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
+T''' = & \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
 & T'''';\\
 & \qquad \tackon{\Theta}{x_g'{:}\istrue{\susp{\sf gen\_stack}}, ~~
                    h'{:}\istrue{\susp{\sf hd}}, ~~
@@ -2264,17 +2266,6 @@ $h$ to $h'$ is just renaming a bound variable, so we have}
                    h'{:}\istrue{\susp{\sf hd}}, ~~
                    y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
                    y{:}\istrue{\susp{\sf >}}}\\
-& \trstep{x, x_g}{{\sf stack/left}\,x_g'};\\
-& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf <}}, ~~
-                   x_g{:}\istrue{\susp{\sf gen\_stack}}, ~~
-                   h'{:}\istrue{\susp{\sf hd}}, ~~
-                   y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
-                   y{:}\istrue{\susp{\sf >}}}\\
-& \trstep{()}{{\sf stack/done}\,x_g};\\
-& \trstep{()}{{\sf string/done}\,y_g}\\
-& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf <}}, ~~
-                   h'{:}\istrue{\susp{\sf hd}}, ~~
-                   y{:}\istrue{\susp{\sf >}}}
 \intertext{Now, we can construct the trace we need using $T''''$:}
 & \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
 & T'''';\\
@@ -2296,10 +2287,10 @@ Proving that generation under a generative signature like $\Sigma_{\it
 $\Sigma_{\it PDA}$ is something we will consider extensively in Part~3
 of this thesis. All such proofs essentially follow the structure of
 Theorem~\ref{thm:pda-preservation}. First, we enumerate the synthetic
-transitions associated with a given signature. Then, in each of those
+transitions associated with a given signature. Second, in each of those
 cases, we use the type of the synthetic transition to perform
-inversion on the structure of the given generative trace until we
-obtain a trace that we can use to construct a generative
+inversion on the structure of the given generative.
+Third, we construct a generative
 trace that establishes the fact that the invariant was preserved.
 
 \subsection{Adequacy for LF and deductive terms}
@@ -2363,7 +2354,7 @@ decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}]
 The prototype implementation of \sls~contains a parser and typechecker
 for the SLS language, and is available from
 \url{https://github.com/robsimmons/sls}. Code that is checked by this
-prototype implementation will appear repeatedly in the rest of this
+prototype implementation will appear frequently in the rest of this
 thesis, always in a \verb|fixed-width font|.
 
 \begin{figure}
@@ -2393,12 +2384,12 @@ thesis, always in a \verb|fixed-width font|.
 
 The checked \sls~code differs slightly from mathematical \sls~code in
 a few ways. Most dramatically, following CLF and the Celf
-implementation, we write the lax modality ${\ocircle}A$ in Celf as
+implementation, we write the lax modality ${\ocircle}A$ in ASCII as
 \verb|{A}|. We already used this notation informally the introduction,
 where we wrote the heads of rules as $\{ A^+ \}$ instead of
-${\ocircle}A^+$. It is the mathematical notation, not the Celf
+${\ocircle}A^+$. It is our mathematical notation, not the ASCII
 notation, that is nonstandard in this thesis: presentations of CLF
-generally write $\{ A^+ \}$ as the mathematical notation. We adopted
+generally use $\{ A^+ \}$ as the mathematical notation. We adopted
 Fairtlough and Mendler's ${\ocircle}$ connective for the lax modality
 \cite{fairtlough95propositional} because it fits the pattern of the
 other unary connectives ${\downarrow}$, ${\gnab}$, ${\bang}$, and
@@ -2411,7 +2402,7 @@ The
 translation between the mathematical notation we use for
 \sls~propositions and the ASCII representation used in the
 implementation is outlined in Figure~\ref{fig:translate-types}.
-The mobile modality ${\gnab}A$ doesn't have an ASCII
+The exponential ${\gnab}A$ doesn't have an ASCII
 representation, so write \verb|$A| when $A$ is mobile. Upshifts and
 downshifts are always inferred: this means that we can't write down
 ${\uparrow}{\downarrow}A$ or ${\downarrow}{\uparrow}A$, but neither of
@@ -2435,11 +2426,11 @@ that uses the pseudo-positive negative atomic propositions described
 in Section~\ref{sec:pseudopositive}. 
 
 In the code examples given in the remainder of this thesis, we will
-use these option annotations in a consistent way.  We will omit the
+use these optional annotations in a consistent way.  We will omit the
 optional \verb|$A| annotations only in specifications with no ordered
 atomic propositions, and we will omit the optional \verb|!A|
 annotations in specifications with no ordered or linear atomic
-propositions. This making the mixture of different exponentials
+propositions. This makes the mixture of different exponentials
 explicit while avoiding the need for rules like
 \verb|($a * $b * $c >-> {$d * $e})| when specifications are entirely
 linear (and likewise when specifications are entirely persistent).
@@ -2447,7 +2438,7 @@ linear (and likewise when specifications are entirely persistent).
 \section{Logic programming}
 \label{sec:framework-logicprog}
 
-The logic programming interpretation of CLF was explored by the
+One logic programming interpretation of CLF was explored by the
 Lollimon implementation \cite{lopez05monadic} and adapted by the Celf
 implementation \cite{schacknielsen08celf}. Logic programming
 interpretations of \sls~are not a focus this thesis, but we will touch
