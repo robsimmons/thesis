@@ -1235,8 +1235,8 @@ This evolution can now be precisely captured as a trace in \sls:
 &\qquad\qquad
 \left(
  x{:}\iseph{\susp{\sf 6bucks}}, ~~
- f{:}\iseph{({\sf battery} \lefti \{ {\sf robot} \})}, ~~
- g{:}\ispers{({\sf 6bucks} \lefti \{ {\sf battery} \})}
+ f{:}\iseph{({\sf battery} \lefti {\ocircle}{\sf robot})}, ~~
+ g{:}\ispers{({\sf 6bucks} \lefti {\ocircle}{\sf battery})}
 \right)
 \\
 &\trstep{y}{g\,x};
@@ -1244,8 +1244,8 @@ This evolution can now be precisely captured as a trace in \sls:
 &\qquad\qquad
 \left(
  y{:}\iseph{\susp{\sf battery}}, ~~
- f{:}\iseph{({\sf battery} \lefti \{ {\sf robot} \})}, ~~
- g{:}\ispers{({\sf 6bucks} \lefti \{ {\sf battery} \})}
+ f{:}\iseph{({\sf battery} \lefti {\ocircle}{\sf robot})}, ~~
+ g{:}\ispers{({\sf 6bucks} \lefti {\ocircle}{\sf battery})}
 \right)
 \\
 &\trstep{z}{f\,y}
@@ -1253,7 +1253,7 @@ This evolution can now be precisely captured as a trace in \sls:
 &\qquad\qquad
 \left(
  z{:}\iseph{\susp{\sf robot}}, ~~
- g{:}\ispers{({\sf 6bucks} \lefti \{ {\sf battery} \})}
+ g{:}\ispers{({\sf 6bucks} \lefti {\ocircle}{\sf battery})}
 \right)
 \end{align*}
 
@@ -2458,49 +2458,61 @@ Section~\ref{sec:framework-logicprog-trace}.
 \label{sec:framework-modes}
 
 Deductive computation in \sls~is the search for {\it complete} proofs
-of sequents of the form $\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$.
-The most common form of deductive computation is {\it goal-directed}
-computation.  In goal-directed computation, we will only try to prove
-the sequent $\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$ by focusing on a
-proposition like ${\downarrow}p_n^- \lefti \ldots \lefti
+of sequents of the form $\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$.  A
+common form of deductive computation is {\it goal-directed search}.
+In \sls, goal-directed search for the proof of a sequent
+$\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$ can only proceed by focusing
+on a proposition like ${\downarrow}p_n^- \lefti \ldots \lefti
 {\downarrow}p_1^- \lefti p^-$ which has a head $p^-$ that matches the
-succedent. This replaces the goal
-$\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$ with $n$ subgoals
+succedent. This replaces the goal sequent
+$\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$ with $n$ subgoals:
 $\foc{\Psi}{\Delta_1}{\istrue{\susp{p_1^-}}}$ \ldots
 $\foc{\Psi}{\Delta_n}{\istrue{\susp{p_n^-}}}$, where $\Delta$ matches
 $\Delta_1,\ldots,\Delta_n$.
 
-Goal-directed deductive computation is also called {\it backward
-  chaining}, because we're working backwards from the goal we want to
-prove.\footnote{The term {\it top-down logic programming} is also
-  used, and refers to the fact that, in Prolog, the rule
-  ${\downarrow}p_n^- \lefti \ldots \lefti {\downarrow}p_1^- \lefti
-  p^-$ would be written with $p^-$ on the first line, $p_1^-$ on the
-  second, etc. This is counterintuitive from a proof-construction
-  perspective, as we are building partial proofs from the bottom
-  up. Therefore, we will avoid this terminology, as well as the
-  terminology {\it bottom-up logic programming}, which is a synonym
-  for {\it forward chaining}.}  The backward-chaining interpretation
-of intuitionistic logics dates back to the work by Miller et al.~on
-uniform proofs \cite{miller91uniform}.  An even older concept, Clark's
-{\it negation-as-failure} \cite{clark87negation}, stipulates that if a
+When goal-directed search only tries to build one derivation at a
+time, it is called {\it backward chaining}, because we're working
+backwards from the goal we want to prove.\footnote{The alternative is
+  to try and derive the same sequent in multiple ways simultaneously,
+  succeeding whenever some way of proving the sequent is
+  discovered. Unlike backward chaining, this strategy of breadth-first
+  search is complete: if a proof exists, it will be found.  Backward
+  chaining as we define it is only nondeterministically complete,
+  because it can fail to terminate when a proof exists. We will call
+  this alternative to backtracking {\it breadth-first theorem
+    proving}, as it amounts to taking a breadth-first, instead of
+  depth-first, view of the so-called {\it failure continuation}
+  \cite{pfenning06backtracking}.} The term {\it top-down logic
+  programming} is also used, and refers to the fact that, in the
+concrete syntax of Prolog, the rule ${\downarrow}p_n^- \lefti \ldots
+\lefti {\downarrow}p_1^- \lefti p^-$ would be written with $p^-$ on
+the first line, $p_1^-$ on the second, etc. This is counterintuitive
+from a proof-construction perspective, as we think of backward
+chaining as building partial proofs from the bottom up, so we will
+avoid this terminology.  
+
+The backward-chaining interpretation of intuitionistic logics dates
+back to the work by Miller et al.~on uniform proofs
+\cite{miller91uniform}.  An even older concept, Clark's {\it
+  negation-as-failure} \cite{clark87negation}, stipulates that if a
 backward chaining logic programming interpreter reports that it has
 failed to find a proof of a goal-directed sequent, we should be able
-to conclude that no proof exists. This interpretation requires that
-backward chaining include {\it backtracking}: if we we try to prove
+to conclude that no proof exists. This interpretation requires {\it
+  backtracking}: if we we try to prove
 $\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$ by focusing on a particular
-proposition and one of the resulting subgoals fails, we have to
-consider any other propositions that could have been used to prove the
-sequent before giving up. Backtracking can be extremely powerful in
-certain cases and incredibly expensive in others, and so most logic
-programming languages have an escape hatch that modifies or limits
-backtracking at the user's discretion, such as the Prolog cut (no
-relation to the admissible rule ${\it cut}$) or Twelf's deterministic
-declarations. Non-backtracking goal-oriented deductive computation is
-called {\it flat resolution} \cite{aitkaci99warrens}.
+proposition and one of the resulting subgoals fails to be provable, we
+have to consider any other propositions that could have been used to
+prove the sequent before giving up. Backtracking can be extremely
+powerful in certain cases and incredibly expensive in others, and so
+most logic programming languages have an escape hatch that modifies or
+limits backtracking at the user's discretion, such as the Prolog cut
+(no relation to the admissible rule ${\it cut}$) or Twelf's
+deterministic declarations. Non-backtracking goal-oriented deductive
+computation is called {\it flat resolution} \cite{aitkaci99warrens}.
 
-Another feature of backward chaining is that is
-allows for unspecified variables. Consider the following \sls~signature:
+One feature of backward chaining and goal directed search is that it
+usually allows for unspecified variables. Consider the following
+\sls~signature:
 \begin{align*}
  \Sigma_{\it Add} = \cdot, 
 ~&{\sf nat} : {\sf type}, 
@@ -2523,19 +2535,23 @@ as $1 + 1 = 2$) or searching for a proof of ${\sf plus}\,\lf{\sf
 fail, as $1 + 1 \neq 3$), we can use goal-oriented deductive
 computation to search for ${\sf plus}\,\lf{\sf (s\,z)}\,\lf{\sf
   (s\,z)}\,X$, where $X$ is initially unspecified.  This search will
-succeed, reporting that $X = \lf{\sf (s\,(s\,z))}$.
+succeed, reporting that $X = \lf{\sf (s\,(s\,z))}$. Unification is
+generally used in backward-chaining logic programming languages as a
+technique for implementing unspecified variables; this
+implementation technique should not be confused with our use of
+unification-based equality $t \doteq s$ as a proposition in \sls.
 
-We say that ${\sf plus}$ is a {\it well-moded} predicate with {\it
-  mode} $({\sf plus}\,{+}\,{+}\,{-})$, because whenever we perform
-deductive computation to derive $({\sf plus}\,\lf{n}\,\lf{m}\,\lf{p})$
-where $\lf{n}$ and $\lf{m}$ are fully specified, any unspecified
-variables in $\lf{p}$ will become fully specified in the course of
-deductive computation. Well-moded predicates can be treated as partial
-functions from their inputs (the indices marked ``${+}$'' in the
-mode) to their outputs (the indices marked ``${-}$'' in the
-mode). A predicate can sometimes be given more than one mode: 
-$({\sf plus}\,{+}\,{-}\,{+})$ is a valid mode for ${\sf plus}$, but 
-$({\sf plus}\,{+}\,{-}\,{-})$ is not. 
+We say that ${\sf plus}$ in the signature above is a {\it well-moded}
+predicate with {\it mode} $({\sf plus}\,{+}\,{+}\,{-})$, because
+whenever we perform deductive computation to derive $({\sf
+  plus}\,\lf{n}\,\lf{m}\,\lf{p})$ where $\lf{n}$ and $\lf{m}$ are
+fully specified, any unspecified portion of $\lf{p}$ will become fully
+specified in any completed derivation. Well-moded predicates can be
+treated as partial functions from their inputs (the indices marked
+``${+}$'' in the mode) to their outputs (the indices marked ``${-}$''
+in the mode). A predicate can sometimes be given more than one mode:
+$({\sf plus}\,{+}\,{-}\,{+})$ is a valid mode for ${\sf plus}$, but
+$({\sf plus}\,{+}\,{-}\,{-})$ is not.
 
 The implementation of backward chaining in substructural logic has
 been explored by Hodas \cite{hodas94logic}, Polakow
@@ -2562,10 +2578,64 @@ programming. However, Chaudhuri, Pfenning, and Price have shown that
 that deductive computation with the inverse method in a focused linear
 logic can simulate both backward chaining and forward chaining
 (considered below) for persistent Horn-clause logic programs
-\cite{chaudhuri10logical}.
+\cite{chaudhuri10logical}. 
+
+Figure~\ref{fig:computation-taxonomy} gives a taxonomy of the forms
+of deductive computation mentioned in this section. Note that, while
+we will generally use {\it backward chaining} to describe backtracking
+search, backward chaining does not always imply full backtracking
+and the negation-as-failure interpretation. This illustration,
+and the preceding discussion, leaves of many important categories,
+including tabled logic programming, and many potentially relevant
+implementation choices, such as breath-first versus depth-first
+exploration of the success continuation.
+
+\begin{figure}
+\begin{tikzpicture}
+\draw (0,10) node{~};
+\draw (8,10.45) node{\bf Deductive computation};
+\draw (8,10) node{Search for complete derivations $\foc{\Psi}{\Delta}{U}$};
+\draw [->] (7.5,9.5) -- (6.5,8.5); 
+\draw (7.2,9.3) node[left]{\it maintains sets of};
+\draw (6.8,8.9) node[left]{\it subgoal sequents};
+\draw [->] (8.5,9.5) -- (9.5,8.5); 
+\draw (8.9,9.3) node[right]{\it maintains sets of};
+\draw (9.2,8.9) node[right]{\it derivable sequents};
+%
+\draw (6,8) node{\bf goal-directed search};
+\draw [->] (5.5,7.5) -- (4.5,6.5); 
+\draw (5,7.1) node[left]{\it depth-first};
+\draw [->] (6.5,7.5) -- (7.5,6.5); 
+\draw (7,7.1) node[right]{\it breadth-first};
+%
+\draw (4,6) node{\bf backward chaining};
+\draw [->] (3.5,5.5) -- (2.5,4.5); 
+\draw (3,5.1) node[left]{\it backtracking};
+\draw [->] (4.5,5.5) -- (5.5,4.5); 
+\draw (5,5.1) node[right]{\it committed-choice};
+%
+\draw (2,4) node{\bf backward chaining};
+%
+\draw (6,4) node{\bf flat resolution};
+%
+\draw (9.6,6) node{\bf breadth-first theorem proving};
+%
+\draw (11.6,8) node{\bf inverse method theorem proving};
+%
+% \draw (13,10.45) node{\bf Trace computation};
+% \draw (13,10) node{Search for partial proofs 
+%    $(\Psi; \Delta) \leadsto^* (\Psi'; \Delta')$};
+% \draw [->] (12.5,9.5) -- (11.5,8.5); 
+% \draw [->] (13.5,9.5) -- (14.5,8.5); 
+%
+\end{tikzpicture}
+\caption{A rough taxonomy of deductive computation}
+\label{fig:computation-taxonomy}
+\end{figure}
 
 \subsection{Trace computation}
 \label{sec:framework-logicprog-trace}
+
 
 Trace computation is the search for {\it partial} proofs of
 sequents. As the name suggests, in \sls~trace computation is
@@ -2573,56 +2643,93 @@ associated with the search for partial proofs of the judgment
 $\islax{A^+}$, which correspond to traces $(\Psi;
 \Delta) \leadsto^* (\Psi'; \Delta')$. 
 
-Trace computation is usually implemented by allowing an initial
-process state $(\Psi;\Delta)$ to evolve freely by applying synthetic
-transitions.  In persistent logics, this {\it forward chaining}
-interpretation of has provided the basis for using logic programs to
-describe deductive databases.  Forward-chaining trace computation in
-substructural logics is {\it committed choice} and not backtracking:
-once we observe that $(\Psi;\Delta) \leadsto (\Psi'; \Delta')$, we try
-to evolve the state $(\Psi'; \Delta')$, and we do not consider what
-other process states could be obtained by evolving $(\Psi;\Delta)$.
-Forward chaining does not consider unspecified
-variables and is largely free of the resource management problems that
-appear in backward-chaining deductive computation for substructural
-logics. In previous work, we designed a forward chaining interpreter
-for linear logic that admits abstract reasoning about the asymptotic
-complexity of logical specifications \cite{simmons08linear}, but this
-is outside the scope of this thesis.
+We will usually think of trace computation as allowing an initial
+process state $(\Psi;\Delta)$ to evolve freely through the application
+of synthetic transitions. In persistent logics, this {\it forward
+  chaining} interpretation of has provided the basis for using logic
+programs to describe deductive databases; we will refer to forward
+chaining in persistent logics as {\it saturating logic programming} in
+Chapter 8.  Forward chaining trace computation in substructural logics
+is {\it committed choice} and not backtracking: once we observe that
+$(\Psi;\Delta) \leadsto (\Psi'; \Delta')$, we try to evolve the state
+$(\Psi'; \Delta')$, and we do not consider what other process states
+could be obtained by evolving $(\Psi;\Delta)$.  Forward chaining
+frequently does not deal with unspecified variables; when persistent
+logic programming languages support forward chaining with unspecified
+variables, it is called {\it hyperresolution}
+\cite{fermuller01resolution}.
 
-Another paradigm for trace computation is model checking. The model
-checking problem takes an intial process state $(\Psi;\Delta)$ or a
-set of initial states and enumerates or otherwise characterize the
-entire set of states $(\Psi'; \Delta')$ such that $(\Psi; \Delta)
-\leadsto^* (\Psi'; \Delta')$. In the special case where specifications
-are entirely persistent, the forward chaning and model checking
-are essentially the same; we will call this {\it saturating} logic 
-programming and discuss it further in Chatper~8. 
 
-The rough classification we have given of deductive computation and
-trace computation is non-standard. One reason for this is that most of
-the definitions in the literature consider only persistent logics, and
-substructural logics tend to reveal distinctions that are not present
-in persistent logic. Furthermore, we have left out several important
-classes of deductive computation, like tabled logic programming and
-breadth-first goal-oriented search. (The goal-oriented search we have
-described is depth-first.) Nevertheless, the rough sketch we have
-presented is presented graphically in
-Figure~\ref{fig:computation-taxonomy}.
+% not consider unspecified variables and is largely free of the resource
+% management problems that appear in backward-chaining deductive
+% computation for substructural logics. In previous work, we designed a
+% forward chaining interpreter for linear logic that admits abstract
+% reasoning about the asymptotic complexity of logical specifications
+% \cite{simmons08linear}, but this is outside the scope of this thesis.
 
-\begin{figure}
-\[\mbox{\Huge TODO}\]
-\caption{A rough taxonomy of deductive and trace computation}
-\label{fig:computation-taxonomy}
-\end{figure}
+Existing implementations of trace computation seem to entirely fall
+into the category forward chaining as either persistent saturating
+logic programming or substructural committed-choice. Examples of the
+latter include Cervesato and Scedrov's $\omega$
+\cite{cervesato09relating} and the language Gamma, which can be
+encoded as forward chaining in linear logic \cite{paola96linear}.
+Especially in substructural logic, there is not much work on the
+formal characterization of partial proofs, though Saurin's work on
+Ludics programming is a notable exception \cite{saurin08towards}.
+Another potential paradigm for trace computation is model
+checking. The model checking problem takes an initial process state
+$(\Psi;\Delta)$ or a set of initial states and enumerates or otherwise
+characterize the entire set of states $(\Psi'; \Delta')$ such that
+$(\Psi; \Delta) \leadsto^* (\Psi'; \Delta')$. It could also productive to
+consider models of trace computation that work backwards from a final
+state, or that take some aspects of the final state into account while
+working forward. 
+
+
+% \begin{figure}
+% \begin{tikzpicture}
+% \draw (0,10) node{~};
+% \draw (8,10.45) node{\bf Trace computation};
+% \draw (8,10) node{Search for partial derivations 
+%                   $(\Psi; \Delta) \leadsto^* (\Psi'; \Delta')$};
+% \draw [->] (7.5,9.5) -- (6.5,8.5); 
+% \draw (7.2,9.3) node[left]{\it c};
+% \draw (6.8,8.9) node[left]{\it };
+% \draw [->] (8.5,9.5) -- (9.5,8.5); 
+% \draw (8.9,9.3) node[right]{\it enumerate all possible};
+% \draw (9.2,8.9) node[right]{\it successor states};
+% %
+% \draw (6,8) node{\bf forward chaining};
+% %
+% \draw (10,8) node{\bf model checking$^*$};
+% %
+% % \draw (13,10.45) node{\bf Trace computation};
+% % \draw (13,10) node{Search for partial proofs 
+% %    $(\Psi; \Delta) \leadsto^* (\Psi'; \Delta')$};
+% % \draw [->] (12.5,9.5) -- (11.5,8.5); 
+% % \draw [->] (13.5,9.5) -- (14.5,8.5); 
+% %
+% \end{tikzpicture}
+
+% $^*$ In persistent logics and specifications, model checking and forward
+% chaining are very similar, we call this {\it saturating logic programming}
+% in 
+% \caption{A rough taxonomy of trace computation}
+% \label{fig:computation-taxonomy}
+% \end{figure}
+
 
 \subsection{Integrating deductive and trace computation}
 
-In logic programming interpreter used by Lollimon and Celf,
-backtracking, goal-directed search is associated with the deductive
-fragment, and trace computation is performed by committed-choice
-forward chaining. The two sometimes have an uneasy relationship. To
-see why, consider the following signature:
+In the logic programming interpretation of CLF used by Lollimon and
+Celf, backtracking backward chaining is associated with the deductive
+fragment, and committed-choice forward chaining is associated with the
+lax modality. We will refer to an adaptation of the Lollimon/Celf
+semantics to \sls~as LCI (``Lollimon/Celf Interpreter'') for
+brevity in this section.
+
+Forward chaining and backward chaining have an uneasy relationship in
+LCI. To see why, consider the following \sls~signature:
 \begin{align*}
  \Sigma_{\it Demo} = \cdot, 
 ~&{\sf posA} : {\sf prop}\,{\sf ord}, 
@@ -2638,56 +2745,61 @@ In an empty context, there is only one derivation of ${\sf negD}$
 under this signature: it is represented by the proof term ${\sf
   bwdrule}\,(\lambda x.\,\tlet{\trstep{y}{{\sf
       fwdruleAB}\,x}}{y})$. The negation-as-failure interpretation of
-backtracking, goal-directed search is that an interpreter tasked with
-finding a proof of ${\sf negD}$ should either find this proof or never
-terminate. This is not what happens under the logic programming
-interpretation used by Celf and Lollimon.  Deductive computation will
-begin by trying to prove ${\sf negD}$; this can only be done with the
-rule ${\sf bwdrule}$. Applying this rule generates the subgoal ${\sf
-  posA} \lefti {\ocircle}{\sf posB}$ which Celf/Lollimon will attempt
-to satisfy by constructing a trace $(x{:}\istrue{\susp{\sf posA}}) \leadsto
-(y{:}\istrue{\susp{\sf posB}})$.
+backward chaining stipulates that an interpreter tasked with finding a
+proof of ${\sf negD}$ should either find this proof or never
+terminate, but LCI only admits this interpretation for purely
+deductive-proofs.
+
+In LCI, deductive computation will begin by trying to prove ${\sf
+  negD}$. This can only be done with the rule ${\sf bwdrule}$,
+generating the subgoal ${\sf posA} \lefti {\ocircle}{\sf posB}$.  LCI
+will attempt to satisfy this subgoal by constructing a trace
+$(x{:}\istrue{\susp{\sf posA}}) \leadsto (y{:}\istrue{\susp{\sf
+    posB}})$.
 
 There are {\it two} nontrivial traces in this signature starting from
 the process state $(x{:}\istrue{\susp{\sf posA}})$ -- the first is
 $(\trstep{y}{{\sf fwdruleAB}\,x}) :: (x{:}\istrue{\susp{\sf posA}})
 \leadsto (y{:}\istrue{\susp{\sf posB}})$, and the second is
 $(\trstep{y}{{\sf fwdruleAC}\,x})::(x{:}\istrue{\susp{\sf posA}})
-\leadsto (y{:}\istrue{\susp{\sf posC}})$.  Forward-chaining can
-plausibly come up with either one. If it derives the second one, the
-the subgoal fails, and a Celf/Lollimon-style interpreter will report
-that it failed to prove ${\sf negD}$.
+\leadsto (y{:}\istrue{\susp{\sf posC}})$.  Forward chaining can
+plausibly come up with either one, and if it happens to derive the
+second one, the subgoal fails. LCI then tries to backtrack to find
+other rules that can prove the conclusion ${\sf negD}$, but there are
+none, so LCI will report that it failed to prove ${\sf negD}$.
 
 This example indicates that it is difficult to make backtracking
-backward-chaining deductive computation reliant on committed-choice
-forward-chaining concurrent computation, at least if we are interested
-in preserving the former's usual negation-as-failure
-interpretation. In the other direction, it is entirely natural to make
-forward-chaining computation dependent upon deductive computation. The
-fragment of CLF that encodes this kind of computation was called the
-{\it semantic effects} fragment by DeYoung \cite{deyoung09reasoning}.
+backward chaining reliant on committed-choice forward chaining. Either
+we can restrict forward chaining to confluent systems (excluding
+$\Sigma_{\it Demo}$) or else we can give up on the usual
+negation-as-failure interpretation of backward chaining.  In the other
+direction, however, it is entirely natural to make forward chaining
+dependent upon backward chaining. The fragment of CLF that encodes
+this kind of computation was called the {\it semantic effects}
+fragment by DeYoung \cite{deyoung09reasoning}.
 
 \section{Design decisions}
 \label{sec:designdecisions}
 
-Aside from ordered propositions, the main differences between the
-framework \sls~presented in this chapter the existing logical
-framework CLF are the presence of positive atomic propositions, the
-introduction of traces as an explicit notation for partial proofs, the
-restriction of the term language to LF, and the presence of
-unification. In this section, we will discuss design choices
-that were made in terms of each of these features, their effects, and
-what choices could have been made differently. 
+Aside from ordered propositions, there are several significant
+differences between the framework \sls~presented in this chapter and
+the existing logical framework CLF, including the presence of positive
+atomic propositions, the introduction of traces as an explicit
+notation for partial proofs, the restriction of the term language to
+LF, and the presence of equality $\lf{t} \doteq \lf{s}$ as a
+proposition. In this section, we will discuss design choices that were
+made in terms of each of these features, their effects, and what
+choices could have been made differently.
 
 \subsection{Pseudo-positive atoms}
 \label{sec:pseudopositive}
 
-Unlike \sls, existing frameworks like CLF do not include positive
+Unlike \sls, the CLF framework does not include positive
 atomic propositions. Positive atomic propositions make it easy to
 characterize the synthetic transitions associated with a particular
 rule. For example, if ${\sf foo}$, ${\sf bar}$, and ${\sf baz}$ are
-all linear atomic propositions, then the presence of a rule ${\sf foo}
-\fuse {\sf bar} \lefti {\ocircle}{\sf baz}$ in the signature is associated
+all linear atomic propositions, then the presence of a rule $\left({\sf foo}
+\fuse {\sf bar} \lefti {\ocircle}{\sf baz}\right)$ in the signature is associated
 with synthetic transitions of the form
 %
 $(\Psi; \matchconj{\Delta}{\matchconj{x{:}\iseph{\susp{\sf
@@ -2716,7 +2828,7 @@ enforce that a sequent like $\foc{\Psi}{\Delta_1}{\istrue{\susp{\sf
 $x{:}\sf{foo}$; we must simply ensure that there are no propositions
 of the form $\ldots \lefti {\sf foo}$ or $\ldots \righti {\sf foo}$ in
 the signature or context. (This is essentially the \sls~version of the
-subordination criteria that allowed us to conclude that an LF type was
+subordination criteria that allows us to conclude that an LF type was
 only inhabited by variables Section~\ref{sec:slsframework}.)
 %
 When that is the case, we can
@@ -2732,12 +2844,12 @@ Negative atomic propositions that can only be concluded when they are
 the sole member of the context, like ${\sf foo}$ and ${\sf bar}$ in
 the previous example, can be called {\it
   pseudo-positive}. Pseudo-positive atoms can actually be used a bit
-more generally than \sls's regular positive atomic propositions. A
-positive atomic proposition is necessarily associated with one of the
-three judgments $\mtrue$, $\meph$, or $\mpers$, but pseudo-positive
-propositions can associate with any of the contexts. This gives
-pseudo-positive atoms in CLF or \sls~the flavor of positive atomic
-propositions under Andreoli's atom optimization
+more generally than \sls's positive atomic propositions. A positive
+atomic proposition is necessarily associated with one of the three
+judgments $\mtrue$, $\meph$, or $\mpers$, but pseudo-positive
+propositions can associate with any of the contexts. This,
+incidentally, gives pseudo-positive atoms in CLF or \sls~the flavor of
+positive atomic propositions under Andreoli's atom optimization
 (Section~\ref{sec:atomopt}).
 
 It is, of course, possible to consistently associate particular
@@ -2761,50 +2873,58 @@ money-store-battery-robot example as a trace with this type:
 \begin{align*}
 & \left(
  x{:}\iseph{\susp{\sf 6bucks}}, ~~
- f{:}\iseph{({\sf battery} \lefti \{ {\sf robot} \})}, ~~
- g{:}\ispers{({\sf 6bucks} \lefti \{ {\sf battery} \})}
+ f{:}\iseph{({\sf battery} \lefti {\ocircle}{\sf robot})}, ~~
+ g{:}\ispers{({\sf 6bucks} \lefti {\ocircle}{\sf battery})}
 \right)
 \\
 \leadsto^* &
 \left(
  z{:}\iseph{\susp{\sf robot}}, ~~
- g{:}\ispers{({\sf 6bucks} \lefti \{ {\sf battery} \})}
+ g{:}\ispers{({\sf 6bucks} \lefti {\ocircle}{\sf battery})}
 \right)
 \end{align*}
 It is also possible to translate the example from Chapter~2
 as a {\it complete} proof of the following proposition:
 \[
   {\sf 6bucks} 
-      \fuse {\gnab}({\sf battery} \lefti \{ {\sf robot} \})
-      \fuse {!}({\sf 6bucks} \lefti \{ {\sf battery} \})
+      \fuse {\gnab}({\sf battery} \lefti {\ocircle}{\sf robot})
+      \fuse {!}({\sf 6bucks} \lefti {\ocircle}{\sf battery})
      \lefti
-     \{ {\sf robot} \}
+     {\ocircle}{\sf robot}
 \]
 
 Generally speaking, we can try to represent a trace $T :: (\Psi;
 \Delta) \leadsto^* (\Psi'; \Delta')$ as a closed deductive proof
 $\lambda P.\,\tlet{T}{V}$ of the proposition $(\exists
-\Psi.\,{\fuse}\Delta) \lefti \{ \exists \Psi'.\,{\fuse}\Delta \}$,
-where the pattern $P$ re-creates the initial process state $(\Psi;
-\Delta)$ and the all the components of the final state are captured in
-the value $V$.  The problem with this approach is that the final
-proposition is under no particular obligation to capture the structure
-of the final process state. This can be seen in the example above: to
-actually capture the structure of the final process state, we should
-have concluded ${\sf robot} \fuse {!}({\sf 6bucks} \lefti \{ {\sf
-  battery} \})$ instead of simply ${\sf robot}$. It is also possible
-to conclude any of the following:
+\Psi.\,{\fuse}\Delta) \lefti {\ocircle}(\exists
+\Psi'.\,{\fuse}\Delta)$,\footnote{The notation ${\fuse}{\Delta}$ fuses
+  together all the propositions in the context. For example, if
+  $\Delta = w{:}\iseph{p^+_\meph} \fuse x{:}\istrue{A^-},
+  y{:}\iseph{B^-}, z{:}\ispers{C^-}$, then ${\fuse}{\Delta} = p^+_\meph
+  \fuse {\downarrow}A^- \fuse {\gnab}B^- \fuse {!}C^-$. The notation
+  $\exists \Psi. A^+$ turns all the bindings in the context $\Psi =
+  \lf{a_1}{:}\tau_1,\ldots,\lf{a_n}{:}\tau_n$ into existential
+  bindings $\exists \lf{a_1}{:}\tau_1\ldots\exists
+  \lf{a_n}{:}\tau_n$.}  where the pattern $P$ re-creates the initial
+process state $(\Psi; \Delta)$ and the all the components of the final
+state are captured in the value $V$.  The problem with this approach
+is that the final proposition is under no particular obligation to
+capture the structure of the final process state. This can be seen in
+the example above: to actually capture the structure of the final
+process state, we should have concluded ${\sf robot} \fuse {!}({\sf
+  6bucks} \lefti {\ocircle}{\sf battery})$ instead of simply ${\sf
+  robot}$. It is also possible to conclude any of the following:
 \smallskip
 \begin{enumerate}
-\item ${\sf robot} \fuse {!}({\sf 6bucks} \lefti \{ {\sf
-  battery} \}) \fuse {!}({\sf 6bucks} \lefti \{ {\sf
-  battery} \})$, or 
-\item ${\sf robot} \fuse {\downarrow}({\sf 6bucks} \lefti \{ {\sf
-  battery} \}) \fuse {\gnab}({\sf 6bucks} \lefti \{ {\sf
-  battery} \})$, or even
-\item ${\sf robot}  \fuse {\gnab}({\sf 6bucks} \fuse {!}({\sf battery} \lefti \{ {\sf robot} \}) \lefti \{ {\sf robot} \})
+\item ${\sf robot} \fuse {!}({\sf 6bucks} \lefti {\ocircle}{\sf
+  battery}) \fuse {!}({\sf 6bucks} \lefti {\ocircle}{\sf
+  battery})$, or 
+\item ${\sf robot} \fuse {\downarrow}({\sf 6bucks} \lefti {\ocircle}{\sf
+  battery}) \fuse {\gnab}({\sf 6bucks} \lefti {\ocircle}{\sf
+  battery})$, or even
+\item ${\sf robot}  \fuse {\gnab}({\sf 6bucks} \fuse {!}({\sf battery} \lefti {\ocircle}{\sf robot} \}) \lefti {\ocircle}{\sf robot})
   \fuse {\downarrow}({\sf robot}
-\lefti \{ {\sf robot} \})$.
+\lefti {\ocircle}{\sf robot})$.
 \end{enumerate}
 \smallskip 
 %
@@ -2813,21 +2933,23 @@ values only precisely capture the structure of contexts when there are
 no variables or persistent propositions. Cervesato and Scedrov
 approach this problem by severely restricting the logic and changing
 the interpretation of the existential quantifier so that it acts like
-a nominal quantifier \cite{cervesato09relating}. The introduction of
-traces allows us to avoid similar restrictions in \sls.
+a nominal quantifier on the right \cite{cervesato09relating}. The
+introduction of traces allows us to avoid similar restrictions in
+\sls.
 
 Despite traces being proper syntactic objects, they are not
 first-class concepts in the theory: they are derived from focused
 \ollll~terms and interpreted as partial proofs. Because hereditary
 substitution, identity expansion, and focalization are only defined on
 complete \ollll~proofs, these theorems and operations only apply by
-analogy to the deductive fragment \sls; they do not apply to traces.
-In joint work with Deng and Cervesato, we considered a presentation of
-logic that treats process states and traces as first-class concepts
-and reformulates the usual properties of cut and identity in terms of
-coinductive simulation relations on process states
-\cite{deng12relating}. We hope that this work will eventually read to
-a better understanding of traces, but the gap remains quite large.
+analogy to the deductive fragment of \sls; they do not apply to
+traces.  In joint work with Deng and Cervesato, we considered a
+presentation of logic that treats process states and traces as
+first-class concepts and reformulates the usual properties of cut and
+identity in terms of coinductive simulation relations on process
+states \cite{deng12relating}. We hope that this work will eventually
+read to a better understanding of traces, but the gap remains quite
+large.
 
 % In \cite{deng12relating}, we presented the {\it logical preorder} as a
 % relation $\Delta_1 \preceq \Delta_2$ between propositional process states
@@ -2867,7 +2989,7 @@ of \sls-like frameworks, Lollimon \cite{lopez05monadic} and Ollibot
 languages. Canonical LF and Spine Form LF are, at this point,
 well-understood enough that the additional overhead of fully
 dependently-typed terms is not a significant burden, and there are
-many examples beyond the scope of this thesis where term dependency is
+many examples beyond the scope of this thesis where dependent types are
 useful.
 
 On a theoretical level, it is a significant simplification when we
@@ -2877,14 +2999,15 @@ priority in this chapter is clear: Section~\ref{sec:sls-termlanguage}
 describes LF terms, Section~\ref{sec:slsframework} describes proof
 terms as a fragment of focused \ollll, and
 Section~\ref{sec:framework-concurrenteq} describes a coarser
-equivalence on proof terms, concurrent equality. But if the language
-of quantification was \sls~terms, these three considerations would be
-mutually dependent -- we would need to characterize concurrent
-equality before presenting the logic itself. For the purposes of
-showing that a logical framework can be carved out from a focused
-logic, the central thesis of this and the previous two chapters, it is
-easiest to break this circular dependency. We conjecture that this
-complication is no great obstacle, but this thesis avoids the issue.
+equivalence on proof terms, concurrent equality. If the domain of
+first-order of quantification was \sls~terms, these three
+considerations would be mutually dependent -- we would need to
+characterize concurrent equality before presenting the logic
+itself. For the purposes of showing that a logical framework can be
+carved out from a focused logic, the central thesis of this and the
+previous two chapters, it is easiest to break this circular
+dependency. We conjecture that this complication is no great obstacle,
+but this thesis avoids the issue.
 
 On a practical level, there are advantages to using a well-understood
 term language. The \sls~prototype implementation
@@ -2892,7 +3015,7 @@ term language. The \sls~prototype implementation
 engine of Twelf to reconstruct LF terms. Schack-Nielsen's
 implementation of type reconstruction for Celf is complicated by the
 requirements of dealing with type reconstruction for a substructural
-term language, a consideration that is completely orthogonal to this
+term language, a consideration that is orthogonal to this
 thesis \cite{schacknielsen08celf}. 
 
 Finally, it is not clear that the addition of full CLF-like dependency
@@ -2914,10 +3037,12 @@ progress and preservation for a programming language or cut
 admissibility for a logic. Substructural logical frameworks like LLF
 and CLF, in contrast, have not been successful in capturing
 metatheorems with dependent types. Instead, metatheorems have been
-done by encoding the substructural derivations in LF using Crary's
-explicit contexts technique \cite{crary10higher} or they have been in
-HLF, an extension to LF that uses equational theories to capture
-substructural properties \cite{reed09hybrid}.
+done in persistent frameworks. Crary proved theorems about linear
+logics and languages in LF using the technique of explicit contexts
+\cite{crary10higher}. Reed was able to prove cut admissibility for
+linear logic and preservation for the LLF encoding of Mini-ML in HLF,
+a persistent extension to LF that uses equational theories to capture
+the structure of substructural contexts \cite{reed09hybrid}.
 
 % But in substructural logical frameworks like Linear LF, full
 % dependency has been found to be {\it insufficient} for expressing
@@ -2936,19 +3061,21 @@ substructural properties \cite{reed09hybrid}.
 Concurrent equality is related to the equivalence relation induced by
 {\it multifocusing} \cite{chaudhuri08canonical}. Multifocusing has
 only been explored carefully in the context of classical linear
-logic, and while we conjecture that a suitably-defined notion of multifocusing
+logic. We conjecture that a suitably-defined notion of multifocusing
 for \ollll~would be in bijective correspondence with \sls~terms modulo
-concurrent equivalence, at least if we omit unification. 
+concurrent equivalence, at least if we omit unification. Of course,
+without a formal notion of multifocusing for intuitionistic logic, this
+conjecture is impossible to state explicitly.
 
-The interactions between unification and concurrent equality are quite
+The interactions between unification and concurrent equality are
 delicate, and we do not claim that the answers we give here are
 final. In Section~\ref{sec:independency}, we motivated both the
 independency requirement that $\emptyset = {\bullet}S_1 \cap
 {\ast}S_2$ and the requirement that $\emptyset = {\ast}S_1 \cap
-{\bullet}S_2$ by giving ill-typed counterexamples. The violation
-of either condition does not mean that $S_2; S_1$ will be ill-typed
-however, so it might be possible to give a more precise condition
-that admits a coarser notion of concurrent equality. 
+{\bullet}S_2$ by giving ill-typed counterexamples. The violation of
+either condition does not, in general, imply that $S_2; S_1$ will be
+ill-typed, so it might be possible to give a more precise
+condition that admits a coarser notion of concurrent equality.
 
 % For both
 % conditions, however, there are steps $S_1$ and $S_2$ where the
