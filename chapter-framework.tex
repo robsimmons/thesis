@@ -2448,9 +2448,10 @@ Logic programming is important because it provides us with operational
 intuitions about the behavior of specifications; these intuitions will
 form the basis of the operationalization transformations on
 \sls~specifications considered in Chapter~6. Additionally, logic
-programming intuitions motivated the design of \sls, in particular the
-separation of traces from the deductive fragment, as we will discuss
-in Section~\ref{sec:framework-logicprog-trace}.
+programming intuitions are relevant because they motivated the design
+of \sls, in particular the separation of traces from the deductive
+fragment, as we will discuss in
+Section~\ref{sec:framework-logicprog-trace}.
 
 \subsection{Deductive computation}
 \label{sec:framework-logicprog-deductive}
@@ -2464,7 +2465,7 @@ the sequent $\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$ by focusing on a
 proposition like ${\downarrow}p_n^- \lefti \ldots \lefti
 {\downarrow}p_1^- \lefti p^-$ which has a head $p^-$ that matches the
 succedent. This replaces the goal
-$\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$ with $n$ goals
+$\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$ with $n$ subgoals
 $\foc{\Psi}{\Delta_1}{\istrue{\susp{p_1^-}}}$ \ldots
 $\foc{\Psi}{\Delta_n}{\istrue{\susp{p_n^-}}}$, where $\Delta$ matches
 $\Delta_1,\ldots,\Delta_n$.
@@ -2472,21 +2473,21 @@ $\Delta_1,\ldots,\Delta_n$.
 Goal-directed deductive computation is also called {\it backward
   chaining}, because we're working backwards from the goal we want to
 prove.\footnote{The term {\it top-down logic programming} is also
-  used, and refers to the fact that the rule ${\downarrow}p_n^- \lefti
-  \ldots \lefti {\downarrow}p_1^- \lefti p^-$ would be written with
-  $p^-$ on the first line, $p_1^-$ on the second, etc. This is
-  counterintuitive from a proof-construction perspective, as we are
-  building partial proofs from the bottom up. Therefore, we will avoid
-  this terminology, as well as the terminology {\it bottom-up logic
-    programming}, which is a synonym for {\it forward chaining}.}  The
-backward-chaining interpretation of intuitionistic logics dates back to
-the work by Miller et al.~on uniform proofs \cite{miller91uniform}.
-An even older concept, Clark's {\it negation-as-failure}
-\cite{clark87negation}, stipulates that if the logic programming
-interpreter reports that it has failed to find a proof of a
-goal-directed sequent, we should be able to conclude that no proof
-exists. This interpretation requires that proof search be {\it
-  backtracking}: if we we try to prove
+  used, and refers to the fact that, in Prolog, the rule
+  ${\downarrow}p_n^- \lefti \ldots \lefti {\downarrow}p_1^- \lefti
+  p^-$ would be written with $p^-$ on the first line, $p_1^-$ on the
+  second, etc. This is counterintuitive from a proof-construction
+  perspective, as we are building partial proofs from the bottom
+  up. Therefore, we will avoid this terminology, as well as the
+  terminology {\it bottom-up logic programming}, which is a synonym
+  for {\it forward chaining}.}  The backward-chaining interpretation
+of intuitionistic logics dates back to the work by Miller et al.~on
+uniform proofs \cite{miller91uniform}.  An even older concept, Clark's
+{\it negation-as-failure} \cite{clark87negation}, stipulates that if a
+backward chaining logic programming interpreter reports that it has
+failed to find a proof of a goal-directed sequent, we should be able
+to conclude that no proof exists. This interpretation requires that
+backward chaining include {\it backtracking}: if we we try to prove
 $\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$ by focusing on a particular
 proposition and one of the resulting subgoals fails, we have to
 consider any other propositions that could have been used to prove the
@@ -2495,11 +2496,11 @@ certain cases and incredibly expensive in others, and so most logic
 programming languages have an escape hatch that modifies or limits
 backtracking at the user's discretion, such as the Prolog cut (no
 relation to the admissible rule ${\it cut}$) or Twelf's deterministic
-declarations. Non-backtracking goal-oriented deductive computation
-is called {\it flat resolution} \cite{aitkaci99warrens}.
+declarations. Non-backtracking goal-oriented deductive computation is
+called {\it flat resolution} \cite{aitkaci99warrens}.
 
-Another feature of goal-oriented deductive computation is that is
-allows for unspecified variables. Consider the following \sls~signatures:
+Another feature of backward chaining is that is
+allows for unspecified variables. Consider the following \sls~signature:
 \begin{align*}
  \Sigma_{\it Add} = \cdot, 
 ~&{\sf nat} : {\sf type}, 
@@ -2532,36 +2533,36 @@ variables in $\lf{p}$ will become fully specified in the course of
 deductive computation. Well-moded predicates can be treated as partial
 functions from their inputs (the indices marked ``${+}$'' in the
 mode) to their outputs (the indices marked ``${-}$'' in the
-mode). A predicate can, in general, be given more than one mode: 
+mode). A predicate can sometimes be given more than one mode: 
 $({\sf plus}\,{+}\,{-}\,{+})$ is a valid mode for ${\sf plus}$, but 
 $({\sf plus}\,{+}\,{-}\,{-})$ is not. 
 
-The implementation of goal-oriented deductive computation in various
-substructural logics has been explored by Hodas \cite{hodas94logic},
-Polakow \cite{polakow00linear,polakow01ordered}, Armel\'in and Pym
+The implementation of backward chaining in substructural logic has
+been explored by Hodas \cite{hodas94logic}, Polakow
+\cite{polakow00linear,polakow01ordered}, Armel\'in and Pym
 \cite{armelin01bunched}, and others. Efficient implementation of these
 languages is complicated by the problem of {\it resource
   management}. In linear logic proof search, it would be technically
 correct but highly inefficient to perform proof search by enumerating
 the ways that a context can be split and then backtracking over each
 possible split. Resource management allows the interpreter to avoid
-this potentially exponential backtracking, but specifying resource
-management, especially for richer substructural logics, can be complex
-and subtle \cite{cervesato00efficient}.
+this potentially exponential backtracking, but describing resource
+management and proving it correct, especially for richer substructural
+logics, can be complex and subtle \cite{cervesato00efficient}.
 
 The term {\it deductive computation} is meant to be interpreted very
 broadly, and goal-directed search is not the only form of deductive
 computation. Another paradigm for deductive computation is the {\it
   inverse method}, where the interpreter attempts to prove a sequent
 $\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$ by creating and growing
-database of sequents that are derivable -- attempting to build the
-complete derivation from the top down, as it were. The inverse method
-is generally associated with theorem proving and not logic
+database of sequents that are derivable, attempting to build the
+appropriate derivation from the leaves down. The inverse method is
+generally associated with theorem proving and not logic
 programming. However, Chaudhuri, Pfenning, and Price have shown that
 that deductive computation with the inverse method in a focused linear
-logic can simulate both backward-chaining deductive computation and
-forward-chaining trace computation (considered below) for persistent
-Horn-clause logic programs \cite{chaudhuri10logical}.
+logic can simulate both backward chaining and forward chaining
+(considered below) for persistent Horn-clause logic programs
+\cite{chaudhuri10logical}.
 
 \subsection{Trace computation}
 \label{sec:framework-logicprog-trace}
@@ -2570,40 +2571,44 @@ Trace computation is the search for {\it partial} proofs of
 sequents. As the name suggests, in \sls~trace computation is
 associated with the search for partial proofs of the judgment
 $\islax{A^+}$, which correspond to traces $(\Psi;
-\Delta)_{\lf{\sigma}} \leadsto^* (\Psi'; \Delta')_{\lf{\sigma'}}$. 
+\Delta) \leadsto^* (\Psi'; \Delta')$. 
 
-Trace computation is usually understood in terms of specifying a
-signature, an initial process state $(\Psi;\Delta)$, and then allowing
-this initial state to evolve freely by applying rules from the
-signature.  This {\it forward-chaining} interpretation of persistent
-intuitionistic logic is the basis of Datalog. There is also significant
-body of work in giving forward-chaining interpretations to linear
-logic, including Forum \cite{miller96multiple} and Lollimon
-\cite{lopez05monadic}. Other languages and programming paradigms, such
-as multiset rewriting and Gamma, are defined independently of linear
-logic but can be partially or completely described in terms of proof
-search in linear logic \cite{paola96linear,cervesato09relating}.
-Forward-chaining trace computation in substructural logics is {\it
-  committed choice} and not backtracking: once we observe that
-$(\Psi;\Delta) \leadsto (\Psi'; \Delta')$, we try to evolve the state
-$(\Psi'; \Delta')$, and we do not consider what other process states
-could be obtained by evolving $(\Psi;\Delta)$.
-
-Forward-chaining trace computation does not consider unspecified
+Trace computation is usually implemented by allowing an initial
+process state $(\Psi;\Delta)$ to evolve freely by applying synthetic
+transitions.  In persistent logics, this {\it forward chaining}
+interpretation of has provided the basis for using logic programs to
+describe deductive databases.  Forward-chaining trace computation in
+substructural logics is {\it committed choice} and not backtracking:
+once we observe that $(\Psi;\Delta) \leadsto (\Psi'; \Delta')$, we try
+to evolve the state $(\Psi'; \Delta')$, and we do not consider what
+other process states could be obtained by evolving $(\Psi;\Delta)$.
+Forward chaining does not consider unspecified
 variables and is largely free of the resource management problems that
 appear in backward-chaining deductive computation for substructural
-logics. In previous work, we designed a forward-chaining interpreters
+logics. In previous work, we designed a forward chaining interpreter
 for linear logic that admits abstract reasoning about the asymptotic
 complexity of logical specifications \cite{simmons08linear}, but this
-is
+is outside the scope of this thesis.
 
-We will be most interested in forward-chaining trace computation in
-this thesis. Another paradigm is model checking, where we are given a
-signature and an initial state $(\Psi;\Delta)$ and want to enumerate
-or characterize the set of states $(\Psi'; \Delta')$ such that $(\Psi;
-\Delta) \leadsto^* (\Psi'; \Delta')$. In the special case where
-specifications are entirely persistent, this is {\it saturating} trace
-computation.
+Another paradigm for trace computation is model checking. The model
+checking problem takes an intial process state $(\Psi;\Delta)$ or a
+set of initial states and enumerates or otherwise characterize the
+entire set of states $(\Psi'; \Delta')$ such that $(\Psi; \Delta)
+\leadsto^* (\Psi'; \Delta')$. In the special case where specifications
+are entirely persistent, the forward chaning and model checking
+are essentially the same; we will call this {\it saturating} logic 
+programming and discuss it further in Chatper~8. 
+
+The rough classification we have given of deductive computation and
+trace computation is nonstandard. Furthermore, we have left out
+several important classes of deductive computation, like tabled logic
+programming and breadth-first goal-oriented search. (The goal-oriented
+search we have described is depth-first.)
+
+\begin{figure}
+\[\mbox{\Huge TODO}\]
+\caption{A rough taxonomy of deductive and trace computation}
+\end{figure}
 
 \subsection{Integrating deductive and trace computation}
 
