@@ -48,12 +48,12 @@
 \end{figure}
 
 \begin{figure}
-\fbox{$\foctx{\Psi}{\Delta}{R}{\istrue{\susp{A^-}}}$} -- presumes
+\fbox{$\foctx{\Psi}{\Delta}{R}{U}$} -- presumes
   $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$ and
-  $\Psi \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-$
+  $U = \istrue{\susp{C^-}}$
 \[
 \infer[{\it focus}_L]
-{\foctx{\Psi}{\frameoff{\Theta}{x{:}A^-}}{\tfocusl{x}{\Sp}}{}}
+{\foctx{\Psi}{\frameoff{\Theta}{x{:}A^-}}{\tfocusl{x}{\Sp}}{U}}
 {\foctx{\Psi}{\tackon{\Theta}{[A^-]}}{\Sp}{U}}
 \quad
 \infer[{\it rule}]
@@ -78,7 +78,7 @@
 \[
 \infer[{\lefti}_R]
 {\foctx{\Psi}{\Delta}{\lambda P.N}{\istrue{A^+ \lefti B^-}}}
-{P :: (\Psi; \mkconj{A^+}{\Delta})_{\lf{\sf id}} 
+{P :: (\Psi; \mkconj{A^+}{\Delta})_{\lf{\sf id}_{\Psi}} 
   \Longrightarrow_{\Sigma,\subord}
  (\Psi';\Delta')_{\lf{\sigma}}
  &
@@ -87,7 +87,7 @@
 \[
 \infer[{\righti}_R]
 {\foctx{\Psi}{\Delta}{\lambda P.N}{\istrue{A^+ \righti B^-}}}
-{P :: (\Psi; \mkconj{\Delta}{A^+})_{\lf{\sf id}} 
+{P :: (\Psi; \mkconj{\Delta}{A^+})_{\lf{\sf id}_{\Psi}} 
   \Longrightarrow_{\Sigma,\subord}
  (\Psi';\Delta')_{\lf{\sigma}}
  &
@@ -109,7 +109,7 @@
 \[
 \infer[{\ocircle}_R]
 {\foctx{\Psi}{\Delta}{\tlet{T}{V}}{\istrue{{\ocircle}A^+}}}
-{T :: (\Psi; \Delta)_{\lf{\sf id}}
+{T :: (\Psi; \Delta)_{\lf{\sf id}_{\Psi}}
   \leadsto^*_{\Sigma,\subord}
  (\Psi';\Delta')_{\lf{\sigma'}}
  &
@@ -162,7 +162,9 @@
   {\lf{t}; \Sp}{U}}
 {\Psi \vdash_{\Sigma,\subord} \lf{t} : \tau
  &
- \foctx{\Psi}{\tackon{\Theta}{[(\lf{[t/a]}B^-)]}}{\Sp}{U}}
+ \lf{[t/a]}B^- = B'^-
+ &
+ \foctx{\Psi}{\tackon{\Theta}{[B'^-]}}{\Sp}{U}}
 \]
 \caption{\sls~spines}
 \label{fig:sls-spines}

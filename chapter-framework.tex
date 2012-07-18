@@ -47,15 +47,15 @@ presently described as Spine Form LF, a well-understood logical
 framework derived from the normal forms of the purely persistent type
 theory LF \cite{harper93framework}.
 
-All the information in this section is standard and is adapted from
-Harper, Honsell, and Plotkin's original presentation
-of LF \cite{harper93framework}, Cervesato and Pfenning's discussion of
-spine form terms \cite{cervesato02linear}, Watkins et al.'s
-presentation of the canonical forms of CLF \cite{watkins02concurrent},
-Nanevski et al.'s dependent contextual modal type theory
-\cite{nanevski08contextual}, Harper and Licata's discussion of
-Canonical LF \cite{harper07mechanizing}, and Reed's spine form
-presentation of HLF \cite{reed09hybrid}. 
+All the information in this section is standard and adapted from
+various sources, especially Harper, Honsell, and Plotkin's original
+presentation of LF \cite{harper93framework}, Cervesato and Pfenning's
+discussion of spine form terms \cite{cervesato02linear}, Watkins et
+al.'s presentation of the canonical forms of CLF
+\cite{watkins02concurrent}, Nanevski et al.'s dependent contextual
+modal type theory \cite{nanevski08contextual}, Harper and Licata's
+discussion of Canonical LF \cite{harper07mechanizing}, and Reed's
+spine form presentation of HLF \cite{reed09hybrid}.
 
 It would be entirely consistent for us to appropriate Harper and
 Licata's Canonical LF presentation instead of presenting Spine Form
@@ -71,18 +71,20 @@ presentations like the ones we have considered thus far.
 The syntax of Spine Form LF is extended in two places to handle \sls:
 rules ${\sf r} : A^-$ in the signature contain negative \sls~types
 $A^-$ (though it would be possible to separate out the LF portion of
-signatures from the \sls~rules). % We also add four additional kinds,
-% ${\sf prop}$, which classifies negative ordered atomic types $p^-$,
-% ${\sf prop}\,{\sf ord}$, which classifies positive ordered atomic
-% types $p^+$, ${\sf prop}\,{\sf lin}$, which classifies positive
-% linear/mobile/ephemeral atomic types $p^+_\meph$, and ${\sf
-%   prop}\,{\sf ord}$, which classifies positive persistent atomic types
-% $p^+_\mpers$. 
-% Other than the extra kinds classifying atomic \sls~propositions, kinds
-% $\kappa$ are otherwise exactly as they are in other presentations of
-% LF; kinds classify types $\tau$, and types $\tau$ classify normal
-% terms $\lf{t}$ and spines $\lf{\spi}$. Kinds $\kappa$ and types $\tau$
-% are both treated as syntactic refinements of {\it classifiers} $\nu$. 
+signatures from the \sls~rules), and several new base kinds
+are introduced for the sake of \sls~(${\sf prop}$, ${\sf prop}\,{\sf
+  ord}$, ${\sf prop}\,{\sf lin}$, and ${\sf prop}\,{\sf pers}$).
+% We also add four additional kinds, ${\sf prop}$, which classifies
+% negative ordered atomic types $p^-$, ${\sf prop}\,{\sf ord}$, which
+% classifies positive ordered atomic types $p^+$, ${\sf prop}\,{\sf
+%   lin}$, which classifies positive linear/mobile/ephemeral atomic
+% types $p^+_\meph$, and ${\sf prop}\,{\sf ord}$, which classifies
+% positive persistent atomic types $p^+_\mpers$.  Other than the extra
+% kinds classifying atomic \sls~propositions, kinds $\kappa$ are
+% otherwise exactly as they are in other presentations of LF; kinds
+% classify types $\tau$, and types $\tau$ classify normal terms
+% $\lf{t}$ and spines $\lf{\spi}$. Kinds $\kappa$ and types $\tau$ are
+% both treated as syntactic refinements of {\it classifiers} $\nu$.
 \begin{align*}
 & \mbox{Signatures} & \Sigma & ::= \cdot 
   \mid \Sigma, \lf{\sf c} : \tau
@@ -112,15 +114,18 @@ signatures from the \sls~rules). % We also add four additional kinds,
   \mid \lf{t/a, \sigma}
   \mid \lf{b/\!\!/a, \sigma}
 \end{align*}
-
 \noindent
-Classifiers $\nu$ can be divided into three refinements.  Types $\tau$
-are either function types $\lfpi{a}{\tau}{\tau'}$ or base types
-$\lfroot{\sf a}{\spi}$.  Kinds $\kappa$ are either families
-$\lfpi{a}{\tau}{\kappa}$ or one of the base kinds: ${\sf prop}$, ${\sf
-  prop}\,{\sf ord}$, ${\sf prop}\,{\sf lin}$, or ${\sf prop}\,{\sf
-  pers}$. Atomic classifiers $p$ have the form $\lfroot{\sf a}{\spi}$;
-they can be atomic types of LF or atomic propositions of \sls.
+There are three important refinements of the language of classifiers $\nu$:
+\smallskip
+\begin{itemize}
+\item Types $\tau$ are either function types $\lfpi{a}{\tau}{\tau'}$
+  or base types $\lfroot{\sf a}{\spi}$.
+\item Kinds $\kappa$ are either families $\lfpi{a}{\tau}{\kappa}$ or
+  one of the base kinds: ${\sf type}$, ${\sf prop}$, ${\sf prop}\,{\sf
+    ord}$, ${\sf prop}\,{\sf lin}$, or ${\sf prop}\,{\sf pers}$.
+\item Atomic classifiers $p$ have the form $\lfroot{\sf a}{\spi}$.
+\end{itemize}
+\smallskip
 
 LF spines $\lf\spi$ are just sequences of terms $\lf{(t_1; (\ldots;
   (t_n;())\ldots))}$; we will follow common convention and write
@@ -240,47 +245,47 @@ ${\mid}\lfpi{a}{\tau}{\tau'}{\mid}^- = {\mid}\tau{\mid}^- \supset
 \label{fig:simsubst}
 \end{figure}
 
-Variables and constants can be treated as having an intrinsic simple
+Variables and constants are treated as having an intrinsic simple
 type; these intrinsic simple types are sometimes written explicitly as
-annotations $\lf{a}^{\tau_s}$ or $\lf{\sf c}^{\tau_s}$ (see, for
-example, \cite{pfenning08church}), but we will leave them implicit.
-An atomic term $\lf{h\,t_1\ldots t_n}$ must have an an simple atomic
-type ${\sf a}$. This means that the head $\lf h$ must have simple type
-$\tau_{s1} \supset \ldots \supset \tau_{sn} \supset {\sf a}$ and each
-$\lf{t_i}$ much have simple type $\tau_{si}$. Similarly, a lambda term
-$\lf{\lambda a. t}$ must have simple type $\tau_s \supset \tau_s'$
-where $\lf a$ is a variable with simple type $\tau_s$ and $\lf t$ has
-simple type $\tau_s'$.  
+annotations $\lf{a}^{\tau_s}$ or $\lf{\sf c}^{\tau_s}$ (see
+\cite{pfenning08church} for an example), but we will leave them
+implicit.  An atomic term $\lf{h\,t_1\ldots t_n}$ must have an an
+simple atomic type ${\sf a}$. This means that the head $\lf h$ must
+have simple type $\tau_{s1} \supset \ldots \supset \tau_{sn} \supset
+{\sf a}$ and each $\lf{t_i}$ much have simple type
+$\tau_{si}$. Similarly, a lambda term $\lf{\lambda a. t}$ must have
+simple type $\tau_s \supset \tau_s'$ where $\lf a$ is a variable with
+simple type $\tau_s$ and $\lf t$ has simple type $\tau_s'$.
 
-Simple types, which are treated with more care elsewhere care
-elsewhere \cite{harper07mechanizing,reed09hybrid}, are critical
-because they allow us to define hereditary substitution in
-Figure~\ref{fig:lf-hsubst}. Spine Form LF terms correspond to the
-proof terms for a focused presentation of minimal logic, and
-hereditary substitution $\rsubst{\lf t}{\lf a}{\lf{t'}}$, which is
-implicitly indexed by the simple type $\tau_s$ of $\lf t$ and $\lf a$,
-is the computational content of cut admissibility on these proof
-terms. 
+Simple types, which are treated with more care elsewhere
+\cite{harper07mechanizing,reed09hybrid}, are critical because they
+allow us to define hereditary substitution and hereditary reduction as
+total functions in Figure~\ref{fig:lf-hsubst}. Spine Form LF terms
+correspond to the proof terms for a focused presentation of minimal
+logic. Hereditary reduction $\subst{\lf{t}}{\lf{\spi}}$ and hereditary
+substitution $\rsubst{\lf t}{\lf a}{\lf{t'}}$, which are both
+implicitly indexed by the simple type $\tau_s$ of $\lf t$, capture the
+computational content of structural cut admissibility on these proof
+terms.
 
 \subsection{Judgments}
 
 Hereditary substitution is necessary to define simultaneous
 substitution into types and terms in Figure~\ref{fig:simsubst}.  We
-will treat simultaneous substitutions in a mostly informal way, our
-treatment follows the careful treatment of Nanevski et
+will treat simultaneous substitutions in a mostly informal way,
+relying on the more careful treatment by Nanevski et
 al.~\cite{nanevski08contextual}. In particular, we write $\lf{[t/a]}$
 for a simultaneous substitution that acts as the identity on all
 variables except for $\lf{a}$; this notation is used in the definition
 of LF typing in in Figure~\ref{fig:lf-form}, which is adapted to Spine
 Form LF from Harper and Licata's Canonical LF presentation
-\cite{harper07mechanizing}. The judgments
-$\lf{a}\#\lf{\sigma}$, $\lf{a}\#\Psi$, $\lf{\sf c}\#\Sigma$, ${\sf
-  a}\#\Sigma$, and ${\sf r}\#\Sigma$ assert that the relevant variable
-or constant does not already appear in the context $\Psi$ (as a
-binding $\lf{a}{:}\tau$), the signature $\Sigma$ (as a declaration
-$\lf{\sf c} : \tau$, ${\sf a} : \nu$, or ${\sf r} : A^-$), or the
-substitution $\lf{\sigma}$ (as a binding $\lf{t/a}$ or
-\mbox{$\lf{b/\!\!/a}$}).
+\cite{harper07mechanizing}. The judgments $\lf{a}\#\lf{\sigma}$,
+$\lf{a}\#\Psi$, $\lf{\sf c}\#\Sigma$, ${\sf a}\#\Sigma$, and ${\sf
+  r}\#\Sigma$ assert that the relevant variable or constant does not
+already appear in the context $\Psi$ (as a binding $\lf{a}{:}\tau$),
+the signature $\Sigma$ (as a declaration $\lf{\sf c} : \tau$, ${\sf a}
+: \nu$, or ${\sf r} : A^-$), or the substitution $\lf{\sigma}$ (as a
+binding $\lf{t/a}$ or \mbox{$\lf{b/\!\!/a}$}).
 
 \begin{figure}
 \fbox{$\vdash_\subord \Sigma\,{\sf sig}$}\vspace{-10pt}
@@ -306,7 +311,7 @@ substitution $\lf{\sigma}$ (as a binding $\lf{t/a}$ or
  &
  \vdash_{\Sigma, \subord} \kappa \,{\sf kind}
  &
- {\sf a} \sqsubset_\subord \kappa 
+ \kappa  \sqsubset_\subord {\sf a} 
  &
  {\sf a} \# \Sigma\mathstrut}
 \quad
@@ -390,23 +395,23 @@ substitution $\lf{\sigma}$ (as a binding $\lf{t/a}$ or
 {\Psi, \lf{a}{:}\tau \vdash_{\Sigma,\subord} \lf{t} : \tau'\mathstrut}
 \quad
 \infer
-{\Psi \vdash_{\Sigma,\subord} \lf{\lfroot{\sf c}{\spi}} : \lfroot{\sf a}{\spi'}
+{\Psi \vdash_{\Sigma,\subord} \lf{\lfroot{\sf c}{\spi}} : p
  \mathstrut}
 {\lf{\sf c} : \tau \in {\Sigma}
  &
- \Psi; [\tau] \vdash_{\Sigma,\subord} \spi : \tau'
+ \Psi, [\tau] \vdash_{\Sigma,\subord} \lf{\spi} : \tau'
  &
- \tau' = \lfroot{\sf a}{\spi'}\mathstrut}
+ \tau' = p\mathstrut}
 \]
 \[
 \infer
-{\Psi \vdash_{\Sigma,\subord} \lf{\lfroot{a}{\spi}} : \lfroot{\sf a}{\spi'}
+{\Psi \vdash_{\Sigma,\subord} \lf{\lfroot{a}{\spi}} : p
  \mathstrut}
 {\lf{a} {:} \tau \in {\Psi}
  &
- \Psi; [\tau] \vdash_{\Sigma,\subord} \spi : \tau'
+ \Psi, [\tau] \vdash_{\Sigma,\subord} \lf{\spi} : \tau'
  &
- \tau' = \lfroot{\sf a}{\spi'}\mathstrut}
+ \tau' = p}
 \]
 
 \medskip
@@ -466,15 +471,18 @@ as a binary relation on type family constants.  Let ${\sf head}(\tau)
 = {\sf a}$ if $\tau =
 \lfpi{a_1}{\tau_{1}}{\,.\,.\lfpi{a_{m}}{\tau_{m}}{\,\lfroot{\sf
       a}{\spi}}}$. The signature formation operations depend on three
-judgments. The index subordination judgment, 
-$\kappa \sqsubset_\subord {\sf a}$, relates type
-family constants to types. It is always the case that $\kappa =
-\lfpi{a_1}{\tau_1}{\ldots\lfpi{a_n}{\tau_n}{\sf type}}$.  The judgment
-$\kappa \sqsubset_\subord {\sf a}$ holds if $({\sf head}(\tau_i), {\sf
-  a}) \in \subord$ for $1 \leq i \leq n$. The type subordination
-judgment $\tau \prec \tau'$ holds if $({\sf head}(\tau),
-{\sf head}(\tau')) \in \subord$, and the judgment $\tau \preceq \tau'$ 
-is the transitive closure of this relation.
+judgments. The index subordination judgment, $\kappa \sqsubset_\subord
+{\sf a}$, relates type family constants to types. 
+%
+It is always the case that $\kappa =
+\lfpi{a_1}{\tau_1}{\ldots\lfpi{a_n}{\tau_n}{\sf type}}$, and the
+judgment $\kappa \sqsubset_\subord {\sf a}$ holds if $({\sf
+  head}(\tau_i), {\sf a}) \in \subord$ for $1 \leq i \leq n$.
+%
+The type subordination judgment $\tau \prec_\subord \tau'$ holds if
+$({\sf head}(\tau), {\sf head}(\tau')) \in \subord$, and the judgment
+$\tau \preceq_\subord \tau'$ is the symmetric extension of this
+relation.
 
 There are a number of well-formedness theorems that we need to
 consider, such as the fact that substitutions compose in a
@@ -483,7 +491,7 @@ well-typed.  However, as these theorems are adequately covered
 elsewhere, we will proceed with using LF as a term language and will 
 treat term-level operations like substitution somewhat informally.
 
-While we will always include the annotations for signature $\Sigma$
+While we will include the annotations for signature $\Sigma$
 and the subordination relation $\subord$ in the definitions of section
 and the next one, in the future we will often leave the signature
 $\Sigma$ implicit when it is unambiguous or unimportant. We will
@@ -495,11 +503,11 @@ is, the smallest) subordination relation of the given signature
 \subsection{Adequacy}
 \label{sec:lf-adequacy}
 
-{\it Adequacy} was the name given by Harper, Honsell, and Plotkin to the
-methodology of connecting the inductive definitions we write in paper
-to the canonical forms of a particular type family in LF. Consider,
-as a standard example, the untyped lambda calculus, which is generally
-specified by a BNF grammar such as the following:
+{\it Adequacy} was the name given by Harper, Honsell, and Plotkin to
+the methodology of connecting inductive definitions to the canonical
+forms of a particular type family in LF. Consider, as a standard
+example, the untyped lambda calculus, which is generally specified by
+a BNF grammar such as the following:
 \[
 \obj{e} ::= \obj{x} \mid \obj{\lambda x.e} \mid \obj{e_1\,e_2}
 \]
@@ -622,14 +630,12 @@ and persistent propositions, respectively, omitting ``positive.''
 
 The formation judgments for \sls~types are given in
 Figure~\ref{fig:sls-propform}. Much of the complexity of the
-presentation -- in particular the introduction of a subset $\mathcal
-S$ of the LF context that is treated with a multiset discipline, is
-designed to make sure that whenever we decompose a positive
-proposition $\lf{s} \doteq \lf{t}$ we have that $\lf{s} = \lf{a}$ for
-some variable $\lf{a}$ in the context. When this is the case,
-$\lf{[t/a]}$, is always a most general unifier of $\lf{s} = \lf{a}$ and
-$\lf{t}$, which in turn means that the higher-order unification rule
-from \ollll
+presentation is designed to make sure that whenever we decompose a
+positive proposition $\lf{s} \doteq \lf{t}$ we have that $\lf{s} =
+\lf{a}$ for some variable $\lf{a}$ in the context. When this is the
+case, $\lf{[t/a]}$, is always a most general unifier of $\lf{s} =
+\lf{a}$ and $\lf{t}$, which in turn means that the higher-order
+unification rule from \ollll
 \[
 \infer[{\doteq}_L]
 {\foc{\Psi}{\frameoff{\Theta}{\lf{t} \doteq \lf{s}}}{U}}
@@ -644,7 +650,7 @@ from \ollll
 \]
 is equivalent to a much simpler rule:
 \[
-\infer[{\doteq}_L]
+\infer[{\doteq}_{\it yes}]
 {\foc{\Psi, \lf{a}{:}\tau, \Psi'}{\frameoff{\Theta}{\lf{a} \doteq \lf{t}}}{U}}
 {\foc{\Psi, \lf{[t/a]}\Psi'}{\tackon{\lf{[t/a]}\Theta}{\cdot}}{\lf{[t/a]} U}}
 \]
@@ -660,41 +666,46 @@ unification problems always have a most general solution.  \smallskip
   Types that are not self-subordinate can only be inhabited by
   variables: that is, if $p \not\prec_\subord p$ and $\Psi
   \vdash_{\Sigma,\subord} \lf{t} : p$, then $\lf{t} = \lf{{a}}$ where
-  $\lf{a}:p \in \Psi$. For any such unification problem $\lf{{a}}
+  $\lf{a}:p \in \Psi$. For any unification problem $\lf{{a}}
   \doteq \lf{{b}}$, both $\lf{[{a}/b]}$ and $\lf{[{b}/a]}$ are most
   general unifiers.
 
 \item The second condition under which unification is allowed is when
-  it is effectively used as a {\it notational definition}
-  \cite{pfenning99algorithms}. Because of the way the subset $\mathcal
-  S$ of the LF context is handled as an a multiset, each variable
-  bound by an existential quantifier $\exists \lf{a}{:}p.\,A^+$ or a
-  universal quantifier $\forall \lf{a}{:}p.\,A^-$ can be associated
-  with at most one proposition $\lf{a} \doteq \lf{t}$, where $\lf{t}$
-  is an arbitrary term that appears in the same focusing phase. This
-  condition is handled by the second formation rule for $\lf{t} \doteq
-  \lf{s}$ in Figure~\ref{fig:sls-propform}.
+  it is used as a {\it notational definition}
+  \cite{pfenning99algorithms}. The subset $\mathcal S$ of the LF
+  context is treated as an a multiset. The result of this treatment is
+  that each variable bound by an existential quantifier $\exists
+  \lf{a}{:}p.\,A^+$ or a universal quantifier $\forall
+  \lf{a}{:}p.\,A^-$ can be associated with at most one proposition
+  $\lf{a} \doteq \lf{t}$, where $\lf{t}$. This condition is handled by the
+  second formation rule for $\lf{t} \doteq \lf{s}$ in
+  Figure~\ref{fig:sls-propform}.
 
-  The proposition $\forall \lf{a}.\, \forall \lf{b}.\,
-  {\downarrow}({\sf p}\,\lf{a}) \lefti \lf{a} \doteq \lf{b} \lefti
-  {\sf p}\,\lf{b}$ satisfies this condition but $\forall
-  \lf{a}.\,\forall \lf{b}.\,{\ocircle}(\lf{a} \doteq \lf{b})$ does not
-  ($\ocircle$ breaks focus), and the proposition ${\ocircle}(\exists
+
+  The proposition $\lf{a} \doteq \lf{t}$ must be reachable from its
+  associated quantifier without crossing a shift or an exponential.
+  This is enforced by the formation rules for shifts and exponentials,
+  which clear the subset $\mathcal S$ in their premise.  The
+  proposition $\forall \lf{a}.\, {\downarrow}({\sf
+    p}\,\lf{a}) \lefti \lf{a} \doteq \lf{t} \lefti {\sf p}\,\lf{t}$
+  satisfies this condition but $\forall \lf{a}.\,\forall
+  \lf{b}.\,{\ocircle}(\lf{a} \doteq \lf{b})$ does not ($\ocircle$
+  breaks focus), and the proposition ${\ocircle}(\exists
   \lf{a}. \lf{a} \doteq \lf{t})$ satisfies this condition but
   ${\ocircle}(\exists \lf{a}.  {\uparrow}(\lf{a} \doteq \lf{t} \lefti
   {\sf p}\,\lf{a}))$ does not (${\uparrow}$ breaks focus).  The
   proposition ${\ocircle}(\exists \lf{a}.\, \lf{a} \doteq \lf{t} \fuse
   \lf{a} \doteq \lf{s})$ does not satisfy this condition because the
   introduced variable $\lf{a}$ is associated with the left-hand side
-  of two different equalities, $\lf{a} \doteq \lf{t}$ and
-  $\lf{a} \doteq \lf{s}$, that together encode an arbitrary unification
-  problem $\lf{t} \doteq \lf{s}$. 
+  of two different equalities, $\lf{a} \doteq \lf{t}$ and $\lf{a}
+  \doteq \lf{s}$, that together encode an arbitrary unification
+  problem $\lf{t} \doteq \lf{s}$.
 
-  This restriction ensures that, if the unification appears on the
-  left, the left-hand side of the unification will always be a
-  variable $\lf{a}$, meaning that $\lf{[t/a]}$ is always a most
-  general unifier.  This usage of unification is essentially just a
-  notational definition \cite{pfenning99algorithms}.
+%   This restriction ensures that, if the unification appears on the
+%   left, the left-hand side of the unification will always be a
+%   variable $\lf{a}$, meaning that $\lf{[t/a]}$ is always a most
+%   general unifier.  This usage of unification is essentially just a
+%   notational definition \cite{pfenning99algorithms}.
 \end{enumerate}
 \smallskip
 
@@ -702,14 +713,14 @@ unification problems always have a most general solution.  \smallskip
 
 The proposition formation judgments are used to specify the formation
 of stable, inverting, and in-focus \sls~contexts in
-Figure~\ref{fig:sls-ctxform}. This restrictions we make to contexts
+Figure~\ref{fig:sls-ctxform}. The restrictions we make to contexts
 justify our continued practice of omitting the $\mtrue$ annotation
 when talking about inverting positive propositions $A^+$ or focused
 negative propositions $[A^-]$ in the context.
 
 We could stop here and use the refinement of \ollll~proof terms that
 corresponds to our refinement of propositions as the language of
-\sls~proof terms. This is not ideal for two reasons. First,
+\sls~proof terms. This is not desirable for two reasons. First,
 the proof terms of focused \ollll~make it inconvenient (though not
 impossible) to talk about concurrent equality
 (Section~\ref{sec:framework-concurrenteq}). Second, one of our primary
@@ -730,8 +741,8 @@ In the remainder of this section, we will present a proof term
 assignment for \sls~that facilitates discussing concurrent equality
 and partial proofs. \sls~proof terms are in bijective correspondence
 with \ollll~proof terms when we consider complete (deductive) proofs,
-but the introduction of patterns and traces changes the structure
-of derivations and proof terms. 
+but the introduction of patterns and traces reconfigures the structure
+of derivations and proof terms.
 
 \subsection{Process states}
 
@@ -744,12 +755,12 @@ goal of concurrent traces is to capture the structure of partial proofs
 {\deduce{\vdots\mathstrut}
   {\vspace{-4pt}\foc{\Psi'}{\Delta'}{\islax{A^+}}}}
 \]
-where $A^+$ is a parametric conclusion as the relation between two 
+as a relation between two 
 process states. As a first cut, we can represent the initial state as 
 $(\Psi; \Delta)$ and the final state as $(\Psi'; \Delta')$, and we can
 omit $\Psi$ and just write $\Delta$ when that is sufficiently clear.
 
-The first cut is not quite enough due to the presence of unification
+The first cut insufficent due to the presence of unification
 in \sls~-- in particular, the first use-case of unification where we
 unify members of a type only inhabited by variables. Consider the
 following partial proof:
@@ -764,8 +775,8 @@ following partial proof:
    {~~ z{:}\iseph{\susp{{\sf foo}\,\lf{b}\,\lf{b}}}}
    {\islax{({\sf foo}\,\lf{b}\,\lf{b})}}}}
 \]
-This partial proof can be constructed in one focusing stage by left
-focusing on $x$. It is insufficient to capture the first process
+This partial proof can be constructed in one focusing stage by a left 
+focus on $x$. It is insufficient to capture the first process
 state as 
 $\left({\lf{a}{:}p, \lf{b}{:}p}; ~~
  {x{:}{\ocircle}(\lf{a} \doteq \lf{b}), ~~
@@ -776,9 +787,12 @@ $\left({\lf{b}{:}p};~~
 capture that the succedent $\islax{({\sf foo}\,\lf{b}\,\lf{b})}$
 associated with the second process state is a substitution instance of
 the succedent
-$\islax{({\sf foo}\,\lf{a}\,\lf{b})}$ associated with the first. In general,
-if the overall proof proves some proposition $\islax{A^+}$, then 
-the missing subproof has a succedent $\islax{\lf{[b/a]}A^+}$.
+$\islax{({\sf foo}\,\lf{a}\,\lf{b})}$ associated with the first. 
+%
+In general, if the derivation in above proves some arbitrary
+succeedent $\islax{A^+}$ instead of $\islax{({\sf
+    foo}\,\lf{a}\,\lf{b})}$, then the missing subproof has the succedent
+$\islax{\lf{[b/a]}A^+}$.
 
 A process state is therefore written as $(\Psi; \Delta)_{\lf{\sigma}}$ 
 and is well-formed under
@@ -812,23 +826,23 @@ between these two process states:
  {z{:}\iseph{\susp{{\sf foo}\,\lf{b}\,\lf{b}}}}\right)_{\lf{(b/a,\,b/b)}}
 \]
 
-Substitutions are necessary to describe process states as an
-integral part of the \sls~framework. However, in most cases we
-will take $\Psi_0 = \cdot$ and $\lf{\sigma} = \cdot$, which
-corresponds to the case where the parametric conclusion $A^+$ is a
-closed proposition. When the substitution is not mentioned it can be
-assumed to be empty. Additionally, when the LF context $\Psi$ is empty
-or simply irrelevant, we will omit it as well. One further
-simplification is that we will occasionally omit the judgment $\mlvl$
-associated with a suspended positive atomic proposition
-$\islvl{\susp{p^+_\mlvl}}$, but only when it is unambiguous from the
-current signature that $p^+_\mlvl$ is an ordered, linear, or
-persistent positive atomic proposition. In the examples above, we
-tacitly assumed that ${\sf foo}$ was given kind $p \rightarrow p
-\rightarrow {\sf prop}\,{\sf lin}$ in the signature $\Sigma$ when we
-tagged the suspended atomic propositions with the judgment $\meph$, but if
-it was clear that ${\sf foo}$ was linear this judgment
-could have been omitted. 
+Substitutions are necessary to describe process states as an integral
+part of the \sls~framework. However, when we consider traces in
+isolation we will generally let $\Psi_0 = \cdot$ and $\lf{\sigma} =
+\cdot$, which corresponds to the case where the parametric conclusion
+$A^+$ is a closed proposition. When the substitution is not mentioned,
+it can therefore be presumed to be empty. Additionally, when the LF
+context $\Psi$ is empty or simply irrelevant, we will omit it as
+well. One further simplification is that we will occasionally omit the
+judgment $\mlvl$ associated with a suspended positive atomic
+proposition $\islvl{\susp{p^+_\mlvl}}$, but only when it is
+unambiguous from the current signature that $p^+_\mlvl$ is an ordered,
+linear, or persistent positive atomic proposition. In the examples
+above, we tacitly assumed that ${\sf foo}$ was given kind $p
+\rightarrow p \rightarrow {\sf prop}\,{\sf lin}$ in the signature
+$\Sigma$ when we tagged the suspended atomic propositions with the
+judgment $\meph$. If it had been clear that ${\sf foo}$ was linear,
+then this judgment could have been omitted.
 
 %In almost all cases, the substitution $\lf\sigma$ associated with a process
 %state is the identity and will be omitted, and the LF context $\Psi$
@@ -933,29 +947,30 @@ could have been omitted.
 % premise. 
 
 Our restrictions on \sls~propositions give derivations the property
-that every positive proposition has exactly one premise. 
-The connectives $\zero$ and $A^+ \oplus B^+$ were excluded
-from \sls~with this goal in mind, and it is also our reason for
-restricting unification to always have a most general unifier. 
-A {\it pattern} is a syntactic entity that captures the linear structure of
-left inversion on positive propositions. Instead of having a somewhat
-inscrutable proof term of the form
-${\tlaml{\texistsl{\lf{a}}
-   {\tfusel{\tfusel{\tetap{x}{\tgnabl{y}{\tdownl{z}{N}}}}}}}}$,
-for the proposition 
+that every positive proposition has exactly one premise.  This is why
+$\zero$ and $A^+ \oplus B^+$ were excluded from \sls, and it is why
+unification is restricted so that there is always have a most general
+unifier.  
+%
+A {\it pattern} is a syntactic entity that captures the linear
+structure of left inversion on positive propositions. The \ollll~proof
+term for the proposition
 %
 $(\exists \lf{a}.\,{\sf p}\,\lf{a} 
              \fuse {\gnab}A^-
-             \fuse {\downarrow}B^-) \lefti C^-$
+             \fuse {\downarrow}B^-) \lefti C^-$,
 %
-the \sls~proof term associated with this proposition, which uses patterns, is
+is somewhat inscrutable:
+${\tlaml{\texistsl{\lf{a}}
+    {\tfusel{\tfusel{\tetap{x}{\tgnabl{y}{\tdownl{z}{N}}}}}}}}$. The
+\sls~proof of this proposition, which uses patterns, is
 $(\lambda \lf{a},x,y,z.\, N)$. The pattern $P = \lf{a}, x,y,z$ captures
 the structure of left inversion on the positive proposition 
 $\exists \lf{a}.\,{\sf p}\,\lf{a} 
              \fuse {\gnab}A^-
              \fuse {\downarrow}B^-$.
 
-The grammar of patterns is simple.
+The grammar of patterns is straightforward.
 % 
 Inversion on positive propositions
 can only have the effect of introducing new bindings (either LF
@@ -970,17 +985,17 @@ For sequences with one or more elements, we omit the trailing
 comma and $()$, writing $x, \ldots, z$ 
 instead of $x, \ldots, z, ()$. 
 
-\sls~patterns are associated with a decomposition relation on
-\sls~process states: $P :: (\Psi; \Delta)_{\lf{\sigma}}
+\sls~patterns are associated with a decomposition judgment which takes
+two process states: $P :: (\Psi; \Delta)_{\lf{\sigma}}
 \Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')_{\lf{\sigma'}}$.
 The typing rules for \sls~patterns are given in
 Figure~\ref{fig:sls-patterns}. We preserve the side conditions from
 the previous chapter: when we frame off a inverting positive
 proposition in the process state, it is required to be the left-most
-one. As with focused \ollll, this justifies our omission of the
+one. As in focused \ollll, this justifies our omission of the
 variables associated with positive propositions: the positive
-proposition we frame off are uniquely identified not by their
-associated but by their position in the context. 
+proposition we frame off is always uniquely identified not by its
+associated variable but by its position in the context. 
 
 Note that, with patterns, there no longer appears to be a one-to-one
 correspondence between proof terms and rules: ${\downarrow}_L$,
@@ -1035,11 +1050,11 @@ N & ::= R
    \mid \lf{t}; \Sp
 \end{align*}
 
-In contrast to \ollll, we distinguish the refinement $R$ of atomic
-terms $R$ that correspond to stable sequents from terms $N$. As with
-patterns, we appear to conflate the proof terms associated with
-different proof rules -- we have a single $\lambda P.N$ constructor
-and a single $V;\Sp$ spine rather than a term $\tlamr{N}$ and spine
+In contrast to \ollll, we distinguish the syntactic category $R$ of
+atomic terms that correspond to stable sequents. As with patterns, we
+appear to conflate the proof terms associated with different proof
+rules -- we have a single $\lambda P.N$ constructor and a single
+$V;\Sp$ spine rather than one term $\tlamr{N}$ and spine
 $\tappr{V}{\Sp}$ associated with propositions $A^+ \righti B^-$ and
 another term $\tlaml{N}$ and spine $\tappl{V}{\Sp}$ associated with
 propositions $A^+ \lefti B^-$.  As with patterns, it is possible to
@@ -1064,7 +1079,7 @@ the next section. The first outlier, the typing rule labeled ${\it
   rule}$, accounts for the fact that there is an additional source of
 persistent facts in \sls, the signature $\Sigma$, that is not present
 in \ollll.  To preserve the bijective correspondence between
-\ollll~and \sls~proof terms, we need to either place every rule ${\sf
+\ollll~and \sls~proof terms, we need to place every rule ${\sf
   r} : A^-$ in the \sls~signature $\Sigma$ into the corresponding
 \ollll~context as a persistent proposition.
 
@@ -1084,12 +1099,54 @@ every \sls~proposition except for the lax modality
 ${\ocircle}A^+$. It is in the context of the lax modality that we will
 present proof terms corresponding to partial proofs.
 \begin{align*}
+\qquad\qquad\qquad\qquad
 &\mbox{Steps}&
 S & ::= \tstep{P}{x}{\Sp}
+\qquad\qquad\qquad\qquad
 \\
 &\mbox{Traces}&
 T & ::= \emptytrace \mid T_1; T_2 \mid S
 \end{align*}
+
+A step $S = \tstep{P}{x}{\Sp}$ corresponds precisely to the notion of
+a {\it synthetic inference rule} as discussed in
+Section~\ref{sec:linsynthetic}. A
+step in \sls~corresponds to a use of left focus, a use of the
+left rule for the lax modality, and a use of the 
+admissible focal substitution lemma in \ollll:
+\[
+\infer-[{\it subst}^-]
+{\foc{\Psi}{\frameoff{\Theta'}{\Delta}}{\islax{\lf{\sigma}A^+}}}
+{\infer[{\it focus}_L]
+ {\foc{\Psi}{\Delta}{\istrue{\susp{{\ocircle}B^+}}}}
+ {\Delta\,{\it matches}\,\frameoff{\Theta'}{x{:}A^-}
+  &
+  \deduce
+  {\foc{\Psi}{\tackon{\Theta'}{[A^-]}}{\istrue{\susp{{\ocircle}B^+}}}}
+  {\vdots\mathstrut}}
+ &
+ \infer[{\ocircle}_L]
+ {\foc{\Psi}{\tackon{\Theta}{[{\ocircle}B^+]}}{\islax{\lf{\sigma}A^+}}}
+ {\deduce
+  {\foc{\Psi}
+    {\tackon{\Theta}{B^+}}
+    {\islax{\lf{\sigma}A^+}}\mathstrut} 
+  {\deduce{\vdots\mathstrut}
+    {\vspace{-4pt}\foc{\Psi'}
+     {\Delta'}
+     {\islax{\lf{\sigma'}A^+}}}}}}
+\]
+The spine $\Sp$ corresponds to the complete proof of
+$\foc{\Psi}{\tackon{\Theta'}{[A^-]}}{\istrue{\susp{{\ocircle}B^+}}}$,
+and the pattern $P$ corresponds to the partial proof of $\foc{\Psi}
+{\tackon{\Theta}{B^+}} {\islax{\lf{\sigma}A^+}}$. The typing rules for
+steps are given in Figure~\ref{fig:sls-steps}.  Because we understand
+these synthetic inference rules as relations between process states,
+we call steps {\it synthetic transitions}. Traces $T$ are
+monoids over steps -- $\emptytrace$ is an empty trace, $S$ is a trace
+consisting of a single step, and $T_1; T_2$ is the sequential
+composition of traces. The typing rules for traces in
+Figure~\ref{fig:sls-traces} straightforwardly reflect this monoid structure.
 
 \begin{figure}
 \fbox{$P :: (\Psi; \Delta)_{\lf{\sigma}} 
@@ -1151,48 +1208,6 @@ T' :: (\Psi_2; \Delta_2)_{\lf{\sigma_2}}
 \label{fig:sls-traces}
 \end{figure}
 
-A step $S = \tstep{P}{x}{\Sp}$ corresponds precisely to the notion of
-a {\it synthetic inference rule} discussed in
-Section~\ref{sec:linsynthetic}. 
- Whereas each typing rule for a
-pattern, value, term, or spine corresponded to a rule in \ollll, a
-step in \sls~corresponds to a use of left focus, a use of the
-left rule for the lax modality, and a use of the 
-admissible focal substitution lemma in \ollll:
-\[
-\infer-[{\it subst}^-]
-{\foc{\Psi}{\frameoff{\Theta'}{\Delta}}{\islax{\lf{\sigma}A^+}}}
-{\infer[{\it focus}_L]
- {\foc{\Psi}{\Delta}{\istrue{\susp{{\ocircle}B^+}}}}
- {\Delta\,{\it matches}\,\frameoff{\Theta'}{x{:}A^-}
-  &
-  \deduce
-  {\foc{\Psi}{\tackon{\Theta'}{[A^-]}}{\istrue{\susp{{\ocircle}B^+}}}}
-  {\vdots\mathstrut}}
- &
- \infer[{\ocircle}_L]
- {\foc{\Psi}{\tackon{\Theta}{[{\ocircle}B^+]}}{\islax{\lf{\sigma}A^+}}}
- {\deduce
-  {\foc{\Psi}
-    {\tackon{\Theta}{B^+}}
-    {\islax{\lf{\sigma}A^+}}\mathstrut} 
-  {\deduce{\vdots\mathstrut}
-    {\vspace{-4pt}\foc{\Psi'}
-     {\Delta'}
-     {\islax{\lf{\sigma'}A^+}}}}}}
-\]
-The spine $\Sp$ corresponds to the complete proof of
-$\foc{\Psi}{\tackon{\Theta'}{[A^-]}}{\istrue{\susp{{\ocircle}B^+}}}$,
-and the pattern $P$ corresponds to the partial proof of $\foc{\Psi}
-{\tackon{\Theta}{B^+}} {\islax{\lf{\sigma}A^+}}$. The typing rules for
-steps are given in Figure~\ref{fig:sls-steps}.  Because we understand
-these synthetic inference rules as relations between process states,
-we can also call steps {\it synthetic transitions}. Traces $T$ are
-monoids over steps -- $\emptytrace$ is an empty trace, $S$ is a trace
-consisting of a single step, and $T_1; T_2$ is the sequential
-composition of traces. The typing rules for traces in
-Figure~\ref{fig:sls-traces} straightforwardly reflect this monoid structure.
-
 Steps incorporate left focus and the left rule for ${\ocircle}$, and
 {\it let-expressions} $\tlet{T}{V}$, which include traces in deductive
 terms, incorporate right focus and the right rule for
@@ -1244,7 +1259,7 @@ This evolution can now be precisely captured as a trace in \sls:
 
 \subsection{Frame properties}
 
-The {\it frame rule} is a concept from Reynold's separation logic.  It
+The {\it frame rule} is a concept from separation logic.  It
 states that if a property holds of some program, then it holds of that
 property under any extension of the mutable state. The frame rule
 increases the modularity of separation logic proofs, because two
@@ -1253,8 +1268,8 @@ be reasoned about independently.
 
 Similar frame properties hold for \sls~traces. The direct analogue of
 the frame rule is the observation that a trace can always have some
-extra state framed on to the outside. This is essentially a
-generalization of weakening to \sls~traces.
+extra state framed on to the outside. This is a generalization of
+weakening to \sls~traces.
 
 \bigskip
 \begin{theorem}[Frame weakening]\label{thm:frameweak}~\\
@@ -1272,8 +1287,8 @@ is a generalization of strengthening to \sls~traces.
 
 \bigskip
 \begin{theorem}[Frame strengthening]\label{thm:framestrong}~\\
-  If $T :: (\Psi; \tackon{\Theta}{x{:}\islvl{T}}) \leadsto^*_{\Sigma,
-    \subord} (\Psi'; \tackon{\Theta}{x{:}\islvl{T}})$ and $x$ is not
+  If $T :: (\Psi; \tackon{\Theta}{x{:}\islvl{Y}}) \leadsto^*_{\Sigma,
+    \subord} (\Psi'; \tackon{\Theta'}{x{:}\islvl{Y}})$ and $x$ is not
   free in any of the steps of $T$, then $T :: (\Psi;
   \tackon{\Theta}{\cdot}) \leadsto^*_{\Sigma, \subord} (\Psi';
   \tackon{\Theta}{\cdot})$.
@@ -1283,10 +1298,9 @@ is a generalization of strengthening to \sls~traces.
 \label{sec:linconcurrenteq}
 \label{sec:framework-concurrenteq}
 
-Concurrent equality is a notion of equivalence that operates on
-traces, and represents an intermediate point between focusing and
-multifocusing \cite{chaudhuri08canonical}.  Consider the following
-\sls~signature:
+Concurrent equality is a notion of equivalence that on traces that is
+coarser than the equvalence relation we would derive from partial
+\ollll~proofs. Consider the following \sls~signature:
 \begin{align*}
  \Sigma = \cdot, 
 ~&{\sf a} : {\sf prop}\,{\sf ord},
@@ -1296,13 +1310,13 @@ multifocusing \cite{chaudhuri08canonical}.  Consider the following
 ~ {\sf e} : {\sf prop}\,{\sf ord},
 ~ {\sf f} : {\sf prop}\,{\sf ord},
 \\ & 
-  {\sf first}  : a^+ \lefti {\ocircle}(b^+ \fuse c^+), 
+  {\sf first}  : {\sf a} \lefti {\ocircle}({\sf b} \fuse {\sf c}), 
 \\ &
-  {\sf left}  : b^+ \lefti {\ocircle}d^+, ~
+  {\sf left}  : {\sf b} \lefti {\ocircle}{\sf d}, ~
 \\ &
-  {\sf right} : c^+ \lefti {\ocircle}e^+, ~
+  {\sf right} : {\sf c} \lefti {\ocircle}{\sf e}, ~
 \\ &
-  {\sf last} : d^+ \fuse e^+ \lefti {\ocircle}f^+
+  {\sf last} : {\sf d} \fuse {\sf e} \lefti {\ocircle}{\sf f}
 \end{align*}
 With the signature $\Sigma$ and a suitable subordination relation $\subord$, 
 we can create two traces with the type
