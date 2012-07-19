@@ -2546,8 +2546,8 @@ This search will succeed, reporting that $X = \lf{\sf
   (s\,(s\,z))}$. Unification is generally used in backward-chaining
 logic programming languages as a technique for implementing partially
 unspecified terms, but this implementation technique should not be
-confused with our use of unification-based equality $t \doteq s$ as a
-proposition in \sls.
+confused with our use of unification-based equality $\lf{t} \doteq
+\lf{s}$ as a proposition in \sls.
 
 We say that ${\sf plus}$ in the signature above is a {\it well-moded}
 predicate with {\it mode} $({\sf plus}\,{+}\,{+}\,{-})$, because
@@ -2857,6 +2857,7 @@ synthetic transitions would be intertwined with the subordination-like
 analysis that enforces their correct usage.
 
 \subsection{The need for traces}
+\label{sec:whytraces}
 
 One of the most important differences between \sls~and its
 predecessors, especially CLF, is that traces are treated as

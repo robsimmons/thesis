@@ -110,7 +110,7 @@ judges of clarity, computers have an absolutely superhuman patience
 for checking all the formal details of an argument.  One aspect of
 this collaboration has been the development of {\it logical
   frameworks}. In a logical framework, the language of specifications
-is derived from the language of logic, whigh gives specifications in a
+is derived from the language of logic, which gives specifications in a
 logical framework an independent meaning based on the logic from which
 the logical framework was derived. To be clear, the language of logic
 is not a single, unified entity: logics are formal systems that
@@ -139,7 +139,7 @@ pleasant to specify using existing logical frameworks. Dealing with a
 few unpleasant features at a time might not be much trouble, but the
 combinations that appear in actual programming languages cause formal
 programming language specifications to be both unclear for humans to
-read and inconvinenet for formal tools to manipulate. A more precise
+read and inconvenient for formal tools to manipulate. A more precise
 statement is that the addition of the aforementioned features is {\it
   non-modular}, because handling a new feature requires reconsidering
 and revising the rest of the specification.  Some headway on this
@@ -234,7 +234,7 @@ rewriting system can take is shown in Figure~\ref{fig:pda-transitions}
 & ~~~\rightsquigarrow~~\\
 {\sf hd} &
 \end{align*}
-\caption{Series of PDA transitions.}
+\caption{Series of PDA transitions}
 \label{fig:pda-transitions}
 \end{figure}
 
@@ -479,7 +479,7 @@ in-place with ${\sf retn}(\obj{\lambda x.e})$:
 {\sf retn}\,(\obj{\lambda z.e}) 
 & ~~~\not\rightsquigarrow~~ 
 \end{align*}
-\caption{SSOS evaluation of an expression to a value.}
+\caption{SSOS evaluation of an expression to a value}
 \label{fig:ssos-example}
 \end{figure}
 
@@ -612,7 +612,7 @@ rules so that they mention the running counter:
 {\sf retn}\,(\obj{\underline 6}) 
 & ~~~\not\rightsquigarrow~~ 
 \end{align*}
-\caption{Evaluation with an imperative counter.}
+\caption{Evaluation with an imperative counter}
 \label{fig:eval-ssos-ctr}
 \end{figure}
 
@@ -661,5 +661,108 @@ specifications, which is the focus of Chapter~8.
 
 \section{Invariants in substructural logic}
 
-(XXX Come back and write this part)
+{\it Invariants} are fundamental for reasoning about any evolving
+system. From a verification or model-checking viewpoint, invariants
+are usually expressed in terms of temporal logics like LTL and are
+usually verified by model checking or exhaustive search. Existing work
+on verifying properties of rewriting specifications has generally
+approached the problem with model checking. 
 
+In Part~3 we offer a approach to invariants that is complementary to
+the model checking approach.  From a programming languages
+perspective, invariants are often associated with {\it types}. Type
+invariants are well-formedness criteria on programs that are weak
+enough to be preserved by state transitions (a property called {\it
+  preservation}) but strong enough to allow us to express the property
+we expect to hold of all well-formed program states. In systems free
+of deadlock, a common property we want to hold is {\it progress} -- a
+well-typed state is either final can evolve to some other state with a
+state transition. (Even in systems where deadlock is a possibility,
+progress can be handled by stipulating that a deadlocked state is
+final.)
+
+Chapter~9 discusses the use of {\it generative signatures} to
+describe well-formedness invariants of specifications. Generative
+signatures look a bit like context-free grammars, and they allow us to
+characterize contexts by a describing rewriting rules that generate
+process states in the same way that context-free grammars characterize
+grammatical strings by describing rules that generate all grammatical
+strings.
+
+In our example SSOS specification, a process state that consists of
+only a single ${\sf retn}(\obj{v})$ proposition is final, and our
+well-formed state is any one that contains an atomic proposition ${\sf
+  eval}(\obj{e})$ (where $\obj{e}$ is a closed expression) or ${\sf
+  eval}(\obj{\lambda x. e})$ (where $\obj{\lambda x. e}$ is a closed
+expression) containing a ${\sf eval}(\obj{e})$ to the left 
+of a series of continuation frames ${\sf cont}(\obj{\Box\,e})$ 
+or ${\sf cont}(\obj{(\lambda x.e)\,\Box})$. We can characterize 
+all such states as being generated from an initial atomic 
+proposition ${\sf gen\_state}$ under the following generative
+signature:
+\begin{align*}
+{\sf gen/eval} &:~~
+  {\sf gen\_state} \lefti \{ {\sf eval}(\obj{e}) \}
+\\
+{\sf gen/retn} &:~~
+  {\sf gen\_state} \lefti \{ {\sf retn}(\obj{\lambda x.e}) \}
+\\
+{\sf gen/app1} &:~~
+  {\sf gen\_state} 
+    \lefti \{ {\sf gen\_state} \fuse {\sf cont}(\obj{\Box\,e_2}) \}
+\\
+{\sf gen/app2} &:~~
+  {\sf gen\_state} 
+    \lefti \{ {\sf gen\_state} \fuse {\sf cont}(\obj{(\lambda x.e)\,\Box}) \}
+\end{align*}
+An illustration of the derivation of one of the intermediate process
+states from Figure~\ref{fig:ssos-example} is shown in
+Figure~\ref{fig:ssos-gen}.
+
+\begin{figure}
+\begin{align*}
+{\sf gen\_state}
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf gen/app2}$}\\
+{\sf gen\_state} \quad
+{\sf cont}\,(\obj{(\lambda x.x)\,\Box})
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf gen/app1}$}\\
+{\sf gen\_state} \quad
+{\sf cont}\,(\obj{\Box\,(\lambda z.e)}) \quad
+{\sf cont}\,(\obj{(\lambda x.x)\,\Box})
+& ~~~\rightsquigarrow~~ \tag{by rule ${\sf gen/retn}$}\\
+{\sf retn}\,(\obj{\lambda y.y}) \quad
+{\sf cont}\,(\obj{\Box\,(\lambda z.e)}) \quad
+{\sf cont}\,(\obj{(\lambda x.x)\,\Box})
+& ~~~\not\rightsquigarrow~~ 
+\end{align*}
+\caption{Proving well-formedness of one of the states from
+  Figure~\ref{fig:ssos-example}}
+\label{fig:ssos-gen}
+\end{figure}
+
+Well-formedness is a global property of specifications, so if we add
+more state to the specification we have to change the description of
+what counts as a final state and extend the grammar of well-formed
+process states. In the case of our counter extension, final states
+have a single ${\sf store}(\obj{e})$ proposition to the left of a
+single ${\sf retn}(\obj{v})$ proposition, and well-formed states are
+generated from an initial atomic proposition ${\sf gen}$ under the
+following extension to the previous generative signature:
+%
+\begin{align*}
+{\sf gen/all} &:~~ {\sf gen} \lefti \{ {\sf gen\_store} \fuse {\sf
+  gen\_state} \}
+\\
+{\sf gen/store} &:~~ {\sf gen\_store} \lefti \{ {\sf
+  store}(\obj{\underline n}) \}
+\end{align*}
+
+It is possible to prove more specific invariants of our SSOS
+specification. For example, we can present a type system for the
+simply-typed lambda calculus and show that the type of a computation
+is always preserved. (Types will be considered in Chapter~9.) However,
+the generative signature above is sufficient for proving the progress
+theorem for our example SSOS specification, which means that our
+specification is safe -- that is, free from undefined behavior.
+Chapter~10 will consider the use of generative invariants for
+proving safety properties of specifications.
