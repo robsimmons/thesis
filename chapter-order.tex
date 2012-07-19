@@ -156,11 +156,13 @@ $A \oplus B$ that look like this:
 The related notation on the left-hand side is the construct 
 $\olseq{\Gamma}{\Delta}{\Omega_L}{A}{\Omega_R}$, which matches
 the sequent $\oseq{\Gamma}{\Delta'}{\Omega'}{U}$ if
+\smallskip
 \begin{itemize}
 \item $\Omega' = (\Omega_L, A, \Omega_R)$ and $\Delta' = \Delta$;
 \item $\Omega' = (\Omega_L, \Omega_R)$ and $\Delta' = (\Delta, A)$;
 \item $\Omega' = (\Omega_L, \Omega_R)$, $\Delta' = \Delta$, and $A \in \Gamma$.
 \end{itemize}
+\smallskip
 As in the alternate presentation of linear logic where ${\it copy}$ was
 admissible, both the ${\it copy}$ rule and a rule Polakow called ${\it
   place}$ are admissible in the logic described in
@@ -178,24 +180,26 @@ Figure~\ref{fig:ordered-prop}.
 \subsection{First-order logic}
 \label{sec:firstorderlogic}
 
-The presentation in Figure~\ref{fig:ordered-prop} is propositional; by
-uniformly adding a first-order context $\Psi$ to all sequents,
-however, it can be treated as first-order. We define quantification
-(existential and universal), as well as first-order
-equality,\footnote{That is, equality of terms from the domain of
-  first-order quantification.} in Figure~\ref{fig:ordered-fo}.
-
 \input{figs/fig-ordered-fo}
 
-The equality judgment $t \doteq s$ deserves some attention. It is a
+The presentation in Figure~\ref{fig:ordered-prop} is propositional; by
+uniformly adding a first-order context $\Psi$ to all sequents it can
+be treated as first-order. We define quantification (existential and
+universal), as well as first-order equality,\footnote{That is,
+  equality of terms from the domain of first-order quantification.} in
+Figure~\ref{fig:ordered-fo}.
+
+
+The equality proposition $\lf{t} \doteq \lf{s}$ deserves some attention. 
+The left rule, $\lf{t} \doteq \lf{s}$, is a
 higher-order judgment, in the sense that it reflects over the
-definition of simultaneous term substitutions $\Psi' \vdash \sigma :
+definition of simultaneous term substitutions $\Psi' \vdash \lf{\sigma} :
 \Psi$ and over the syntactic equality judgment for first-order terms
-$t = s$. This is a rule that, in general, will have countably many
+$\lf{t} = \lf{s}$. This is a rule that, in general, will have countably many
 premises; in the case of a trivially satisfiable equality problem like
-$x \doteq x$ it will have one premise for each well-formed
+$\lf{x} \doteq \lf{x}$ it will have one premise for each well-formed
 substitution that substitutes a term of the appropriate type for
-$x$. I used this exact style of presentation previously in
+$\lf{x}$. We used this exact style of presentation previously in
 \cite{simmons11weak}, but the approach is based on Schroeder-Heister's
 treatment of definitional reflection \cite{schroeder93rules}.
 
@@ -205,11 +209,14 @@ for equality equivalent to one with no premises. For instance, this
 means that
 \[
 \infer[\doteq_{\it no}]
-{\olfseq{\Gamma}{\Delta}{\Omega_L}{t \doteq s}{\Omega_R}}
-{{\it no~unifier~for~} t {\it ~and~} s}
+{\olfseq{\Gamma}{\Delta}{\Omega_L}{\lf{t} \doteq \lf{s}}{\Omega_R}}
+{\mbox{\it no~unifier~for~} \lf{t} \mbox{\it ~and~} \lf{s}}
 \]
-is derivable. The other important special case is
-when $t$ and $s$ have a {\it most general unifier} $\sigma_{\it mgu}$,
+is derivable -- a {\it unifier} is just a substitution $\lf{\sigma}$
+such that $\lf{\sigma}t$ and $\lf{\sigma}s$ are syntactically identical.
+ The other important special case is
+when $\lf{t}$ and $\lf{s}$ have a {\it most general unifier} 
+$\lf{\sigma_{\it mgu}}$,
 which just means that for all $\Psi' \vdash \sigma : \Psi$ such that
 $\sigma t = \sigma s$, it is the case that $\sigma = \sigma' \circ
 \sigma_{\it mgu}$ for some $\sigma'$.\footnote{Where $\circ$ is

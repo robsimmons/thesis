@@ -1,41 +1,41 @@
 \begin{figure}
 \[
 \infer[{\exists}_R]
-{\orfseq{\Gamma}{\Delta}{\Omega}{\exists a{:}\tau.B}}
-{\Psi \vdash t : \tau 
+{\orfseq{\Gamma}{\Delta}{\Omega}{\exists \lf{a}{:}\tau.B}}
+{\Psi \vdash \lf{t} : \tau 
  &
- \otseq{\Gamma}{\Delta}{\Omega}{[t/a]B}}
+ \otseq{\Gamma}{\Delta}{\Omega}{\lf{[t/a]}B}}
 \quad
 \infer[{\exists}_L]
-{\olfseq{\Gamma}{\Delta}{\Omega_L}{\exists a{:}\tau.B}{\Omega_R}}
-{\ofirstseq{\Psi,a{:}\tau}{\Gamma}{\Delta}{\Omega_L,B,\Omega_R}{U}}
+{\olfseq{\Gamma}{\Delta}{\Omega_L}{\exists \lf{a}{:}\tau.B}{\Omega_R}}
+{\ofirstseq{\Psi,\lf{a}{:}\tau}{\Gamma}{\Delta}{\Omega_L,B,\Omega_R}{U}}
 \]
 \[
 \infer[{\forall}_R]
-{\orfseq{\Gamma}{\Delta}{\Omega}{\forall a{:}\tau.B}}
-{\ofirstseq{\Psi,a{:}\tau}{\Gamma}{\Delta}{\Omega}{\istrue{B}}}
+{\orfseq{\Gamma}{\Delta}{\Omega}{\forall \lf{a}{:}\tau.B}}
+{\ofirstseq{\Psi,\lf{a}{:}\tau}{\Gamma}{\Delta}{\Omega}{\istrue{B}}}
 \quad
 \infer[{\forall}_L]
-{\olfseq{\Gamma}{\Delta}{\Omega_L}{\forall a{:}\tau.B}{\Omega_R}}
-{\Psi \vdash t : \tau
+{\olfseq{\Gamma}{\Delta}{\Omega_L}{\forall \lf{a}{:}\tau.B}{\Omega_R}}
+{\Psi \vdash \lf{t} : \tau
  &
- \opfseq{\Gamma}{\Delta}{\Omega_L}{[t/a]B,\Omega_R}}
+ \opfseq{\Gamma}{\Delta}{\Omega_L}{\lf{[t/a]}B,\Omega_R}}
 \]
 \[
 \infer[{\doteq}_R]
-{\orfseq{\Gamma}{\Delta}{\Omega}{t \doteq s}}
+{\orfseq{\Gamma}{\Delta}{\Omega}{\lf{t} \doteq \lf{s}}}
 {}
 \]
 \[
 \infer[{\doteq}_L]
-{\olfseq{\Gamma}{\Delta}{\Omega_L}{t \doteq s}{\Omega_R}}
-{\forall(\Psi' \vdash \sigma : \Psi). 
+{\olfseq{\Gamma}{\Delta}{\Omega_L}{\lf{t} \doteq \lf{s}}{\Omega_R}}
+{\forall(\Psi' \vdash \lf{\sigma} : \Psi). 
  &
- \sigma t = \sigma s 
+ \lf{\sigma t} = \lf{\sigma s}
  &
  \longrightarrow
  &
- \ofirstseq{\Psi'}{\sigma\Gamma}{\sigma\Delta}{\sigma\Omega_L,\sigma\Omega_R}{\sigma U}}
+ \ofirstseq{\Psi'}{\lf{\sigma}\Gamma}{\lf{\sigma}\Delta}{\lf{\sigma}\Omega_L,\lf{\sigma}\Omega_R}{\lf{\sigma} U}}
 \]
 
 \caption{First order ordered linear lax logic.}
