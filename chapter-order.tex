@@ -1,0 +1,3181 @@
+\chapter{Substructural logic}
+\label{chapter-order}
+
+Linear logic is the most famous of the {\it substructural logics}.
+Persistent logic admits the three so-called {\it structural rules} of
+weakening (premises need not be used), contraction (premises may be
+used multiple times) and exchange (the ordering of premises are
+irrelevant). Substructural logics, then, are logics that do not admit
+these structural rules -- linear logic has only exchange, {\it affine}
+logic (which is frequently conflated with linear logic by programming
+language designers) has exchange and weakening, and {\it ordered}
+logic, first investigated as a proof theory by Lambek
+\cite{lambek58mathematics}, lacks all three.  
+
+Calling logics like
+linear, affine, and ordered logic \underline{sub}structural relative
+to persistent logic (which is structural) is greatly unfair to the
+substructural logics. Girard's linear logic can express persistent
+provability using the exponential connective ${!}A$, and this idea is
+generally applicable in substructural logics -- for instance, it was
+applied by Polakow and Pfenning to Lambek's ordered logic
+\cite{polakow99natural}. It is certainly too
+late to advocate for these logics to be understood as
+\underline{super}structural logics, but that is undoubtedly what they
+are: generalizations of persistent logic that introduce more 
+expressive power. 
+
+In this chapter, I define a first-order ordered linear logic with a
+lax connective ${\ocircle}A$ in both unfocused
+(Section~\ref{sec:ord-unfocused}) and focused
+(Section~\ref{sec:ord-focused}) flavors (this logic will henceforth be
+called \ollll, for ordered linear lax logic). Then, following the
+structural focalization methodology \cite{simmons11structural}, I
+establish cut admissibility (Section~\ref{sec:ord-cut}), and identity
+expansion (Section~\ref{sec:ord-identity}) for focused~\ollll; with
+these results, it is possible to prove the soundness and completeness
+of focusing (Section~\ref{sec:ord-correctness}) for \ollll.  A
+fragment of this system will form the basis of the logical framework
+in Chapter 4, and that framework will, in turn, underpin the rest of
+this thesis.
+
+It is worth clarifying why I am presenting the much richer \ollll~here
+if only the fragment detailed in Chapter~4 is needed. There are two
+main reasons.  First, while we will use only a fragment of this logic
+in Chapter 4, other fragments of the logic may well be interesting and
+useful for other purposes. Second, the presentation in this chapter,
+and in particular the discussion of substructural contexts in
+Section~\ref{sec:contexts}, introduces a presentation style and
+infrastructure that I believe will generalize to focused presentations
+of richer logics, such as the logic of bunched
+implications~\cite{pym02semantics}, non-commutative linear logic (or
+``rigid logic'') \cite{simmons09linear}, subexponential logics
+\cite{nigam09algorithmic}, and so on.
+
+Furthermore, the choice to present a full account of focusing in
+\ollll~is in keeping with as Andreoli's insistence that we should
+avoid ambiguity as to whether we are ``defining a foundational
+paradigm or a [logic] programming language (two objectives that should
+clearly be kept separate)'' \cite{andreoli01focussing}. Both the full
+logic \ollll~and the general methodology followed in this chapter are
+general, foundational paradigms within which it is possible to
+instantiate families of logic programming languages and logical
+frameworks, even though we will focus on a particular logical
+framework starting in Chapter~4.
+
+\section{Ordered linear lax logic}
+\label{sec:ord-unfocused}
+
+Ordered linear logic was the subject of Polakow's thesis
+\cite{polakow01ordered}, and the adaptation of Fairtlough and
+Mendler's lax logic \cite{fairtlough95propositional} (as reconstructed
+by Pfenning and Davies \cite{pfenning01judgmental}) to linear logic is
+the basis of the CLF logical framework
+\cite{watkins02concurrent}. Putting the pieces together into one
+sequent calculus is a relatively straightforward proof-theoretic
+exercise. There are three contexts relevant to the propositional
+presentation of ordered linear lax logic.  The persistent context
+$\Gamma$ and the linear context $\Delta$ are multisets as before (so
+we think of $\Delta_1, \Delta_2$ as being equal to $\Delta_2,
+\Delta_1$, for instance). The ordered context $\Omega$ is a sequence
+of propositions, as in Gentzen's original presentation of sequent
+calculi, and {\it not} a multiset.  This means that the two ordered
+contexts $\Omega_1, \Omega_2$ and $\Omega_2, \Omega_1$ are, in
+general, not the same.
+
+\input{figs/fig-ordered-prop}
+
+There are two sequents in \ollll.  The primary sequent is
+$\oseq{\Gamma}{\Delta}{\Omega}{\istrue{A}}$, which says that $A$ is an
+(ephemeral, ordered) resource derivable from the persistent resources
+in $\Gamma$, the ephemeral resources in $\Delta$, and the ephemeral,
+ordered resources in $\Omega$. There is also a second judgment,
+$\oseq{\Gamma}{\Delta}{\Omega}{\islax{A}}$. The judgment $\islax{A}$
+is usually interpreted as truth under some unspecified constraint; one
+defining characteristic of the lax judgment is that, if $\istrue{A}$
+is derivable with some resources, then it is derivable with {\it no}
+constraint. No constraint at all is the simplest sort of constraint,
+so $\islax{A}$ is derivable with the same resources.
+
+Compare the relationship between $\mtrue$ and $\mlax$ 
+to the relationship between persistent and linear truth
+in linear logic, where the defining characteristic is that a
+persistent resource (associated with judgments of the form
+$\ispers{A}$ in $\Gamma$) can always satisfy the need for an ephemeral
+resource (associated with judgments of the form $\iseph{A}$ in
+$\Delta$). In the previous chapter, we first encoded this relationship
+as an explicit rule ${\it copy}$:
+\[
+\infer[{\it copy}]
+{\seq{\Gamma, \ispers{A}}{\Delta}{\iseph{C}}}
+{\seq{\Gamma, \ispers{A}}{\Delta, \iseph{A}}{\iseph{C}}}
+\]
+In Section~\ref{sec:linnote}, based on a discussion of synthetic
+connectives under the atom optimization, we considered a revision
+in which the ${\it copy}$ rule was admissible and 
+left rules had conclusions that used the matching
+construct $\altseq{\Gamma}{\Delta/A}{C}$,
+which matches a sequent of the form $\altseq{\Gamma}{\Delta'}{C}$ 
+if either $A \in \Gamma$ and $\Delta' = \Delta$ or if
+$\Delta' = \Delta, A$. The $\oplus_L$ rule in this logic is as follows:
+\[
+\infer[{\oplus}_L]
+{\altseq{\Gamma}{\Delta/A \oplus B}{\iseph{C}}}
+{\altseq{\Gamma}{\Delta, \iseph{A}}{\iseph{C}}
+ &
+ \altseq{\Gamma}{\Delta, \iseph{B}}{\iseph{C}}}
+\]
+
+Lax truth can be considered along the same lines, accounting for the
+fact that our primary judgment is $\istrue{A}$ ($A$ is an ordered
+ephemeral resource) instead of $\iseph{A}$ ($A$ is an ephemeral
+resource).  To follow existing judgmental presentations of lax logic,
+we would include a distinct rule ${\it lax}$ that derives lax truth
+from regular truth.
+\[
+\infer[{\it lax}]
+{\Gamma; \Delta; \Omega \longrightarrow \islax{A}}
+{\Gamma; \Delta; \Omega \longrightarrow \istrue{A}}
+\]
+The alternative is to make ${\it lax}$ admissible just as we made
+${\it copy}$ admissible: we modify all the right rules with a construct
+$\orseq{\Gamma}{\Delta}{\Omega}{A}$ that matches both 
+sequents of the form $\otseq{\Gamma}{\Delta}{\Omega}{A}$
+and sequents of the form $\oseq{\Gamma}{\Delta}{\Omega}{\islax{A}}$.
+The use of this construct gives us right rules for 
+$A \oplus B$ that look like this:
+\[
+\infer[{\oplus}_{R1}]
+{\orseq{\Gamma}{\Delta}{\Omega}{A \oplus B}}
+{\otseq{\Gamma}{\Delta}{\Omega}{A}}
+\qquad
+\infer[{\oplus}_{R2}]
+{\orseq{\Gamma}{\Delta}{\Omega}{A \oplus B}}
+{\otseq{\Gamma}{\Delta}{\Omega}{B}}
+\]
+The related notation on the left-hand side is the construct 
+$\olseq{\Gamma}{\Delta}{\Omega_L}{A}{\Omega_R}$, which matches
+the sequent $\oseq{\Gamma}{\Delta'}{\Omega'}{U}$ if
+\begin{itemize}
+\item $\Omega' = (\Omega_L, A, \Omega_R)$ and $\Delta' = \Delta$;
+\item $\Omega' = (\Omega_L, \Omega_R)$ and $\Delta' = (\Delta, A)$;
+\item $\Omega' = (\Omega_L, \Omega_R)$, $\Delta' = \Delta$, and $A \in \Gamma$.
+\end{itemize}
+As in the alternate presentation of linear logic where ${\it copy}$ was
+admissible, both the ${\it copy}$ rule and a rule Polakow called ${\it
+  place}$ are admissible in the logic described in
+Figure~\ref{fig:ordered-prop}.
+\[
+\infer-[{\it copy}]
+{\oseq{\Gamma, {A}}{\Delta}{\Omega_L, \Omega_R}{U}}
+{\oseq{\Gamma, {A}}{\Delta}{\Omega_L, {A}, \Omega_R}{U}}
+\qquad
+\infer-[{\it place}]
+{\oseq{\Gamma}{\Delta, {A}}{\Omega_L, \Omega_R}{U}}
+{\oseq{\Gamma}{\Delta}{\Omega_L, {A}, \Omega_R}{U}}
+\]
+
+\subsection{First-order logic}
+\label{sec:firstorderlogic}
+
+The presentation in Figure~\ref{fig:ordered-prop} is propositional; by
+uniformly adding a first-order context $\Psi$ to all sequents,
+however, it can be treated as first-order. We define quantification
+(existential and universal), as well as first-order
+equality,\footnote{That is, equality of terms from the domain of
+  first-order quantification.} in Figure~\ref{fig:ordered-fo}.
+
+\input{figs/fig-ordered-fo}
+
+The equality judgment $t \doteq s$ deserves some attention. It is a
+higher-order judgment, in the sense that it reflects over the
+definition of simultaneous term substitutions $\Psi' \vdash \sigma :
+\Psi$ and over the syntactic equality judgment for first-order terms
+$t = s$. This is a rule that, in general, will have countably many
+premises; in the case of a trivially satisfiable equality problem like
+$x \doteq x$ it will have one premise for each well-formed
+substitution that substitutes a term of the appropriate type for
+$x$. I used this exact style of presentation previously in
+\cite{simmons11weak}, but the approach is based on Schroeder-Heister's
+treatment of definitional reflection \cite{schroeder93rules}.
+
+There are two important special cases. First, an unsatisfiable 
+equation on the left implies a contradiction, and makes the left rule
+for equality equivalent to one with no premises. For instance, this
+means that
+\[
+\infer[\doteq_{\it no}]
+{\olfseq{\Gamma}{\Delta}{\Omega_L}{t \doteq s}{\Omega_R}}
+{{\it no~unifier~for~} t {\it ~and~} s}
+\]
+is derivable. The other important special case is
+when $t$ and $s$ have a {\it most general unifier} $\sigma_{\it mgu}$,
+which just means that for all $\Psi' \vdash \sigma : \Psi$ such that
+$\sigma t = \sigma s$, it is the case that $\sigma = \sigma' \circ
+\sigma_{\it mgu}$ for some $\sigma'$.\footnote{Where $\circ$ is
+  composition -- $(\sigma' \circ \sigma_{\it mgu})t = \sigma'(\sigma_{\it mgu}
+  t)$.} In this case, the left rule for equality is equivalent to the
+following rule:
+\[
+\infer[\doteq_{\it yes}]
+{\olfseq{\Gamma}{\Delta}{\Omega_L}{t \doteq s}{\Omega_R}}
+{{\it mgu}(t, s) = \Psi' \vdash \sigma : \Psi
+ &
+ \ofirstseq{\Psi'}{\sigma\Gamma}{\sigma\Delta}{\sigma\Omega_L, \sigma\Omega_R}{\sigma U}}
+\]
+Therefore, given a first-order domain in which any two terms are
+decidably either non-unifiable or unifiable with a most general
+unifier, defining the logic with two rules $\doteq_{\it no}$ and
+$\doteq_{\it yes}$ is equivalent to defining the logic with
+$\doteq_L$.
+
+We have not yet thoroughly specified the type and term structure of
+first-order individuals; in the next chapter we clarify that these
+types and terms will actually be types and terms of Canonical LF
+\cite{harper07mechanizing}.
+
+\section{Substructural contexts}
+\label{sec:contexts}
+
+First-ordered linear lax logic has a lot of contexts -- the persistent
+context $\Gamma$, the linear context $\Delta$, and the ordered context
+$\Omega$, not to mention the first-order context $\Psi$. In most rules
+these contexts just hang around, obscuring the logic's presentation
+and ensuring that the {\LaTeX} code of figures and displays remains
+permanently unreadable. And there are yet more contexts we might want to 
+add, such as the affine contexts present in the Celf implementation
+\cite{schacknielsen08celf}.
+
+In this section, we will consider a more compact way of dealing with
+the contexts that we interpret as containing resources (persistent,
+affine, linear, or ordered resources), though we choose to maintain
+the distinction between resource contexts and first-order variable
+contexts $\Psi$.  The particular way we define substructural contexts
+can be generalized substantially: it would be trivial to extend this
+presentation to the affine exponential ${@}A$ or to the subexponentials
+discussed by Nigam and Miller \cite{nigam09algorithmic}, and it should
+be reasonably straightforward to extend our presentation to richer
+logics, such as the logic of bunched implication.
+
+We write unified substructural contexts as either $\Delta$ or $\Xi$,
+preferring the latter when there is a chance of confusing them with
+linear contexts $\Delta$. For the purposes of encoding \ollll, we can
+see these contexts as sequences, defined by the grammar
+\[
+\Xi ::= \cdot 
+  \mid \Xi, x{:}\ispers{T}
+  \mid \Xi, x{:}\iseph{T}
+  \mid \Xi, x{:}\istrue{T}
+\]
+where each of the {\em variables} $x$ are distinct, so that the
+context also represents a finite map from variables $x$ to {\it
+  judgments} $\islvl{T}$, where $\mlvl$ is either $\mpers$, $\meph$,
+or $\mtrue$.  By separating out a substructural context into three
+subsequences of persistent, linear, and ordered judgments, we can
+recover the presentations of contexts for \ollll~given in
+Figure~\ref{fig:ordered-prop}. We will use this observation in an
+informal way throughout the chapter, writing $\Xi = \Gamma; \Delta;
+\Omega$.
+
+The domain represented by the metavariable $T$ is arbitrary: when
+discussing the unfocused logic given in Figure~\ref{fig:ordered-prop},
+$T$ varies over unpolarized propositions $A$, but when discussing a
+focused logic in Section~\ref{sec:ord-focused} it will vary over
+stable negative propositions $A^-$, positive suspended propositions
+$\susp{A^+}$, focused negative propositions $[A^-]$, and inverting
+positive propositions $A^+$.
+
+
+
+% The first step towards this understanding 
+% has already been take in Figure~\ref{fig:linear-alt} and
+% Figure~\ref{fig:ordered-prop}, which make it quite obvious that the
+% context-{\it matching} notation that we perform in the conclusion of
+% an inference rule may not be the same as the context-{\it extending}
+% notation we use in the premise of that rule.
+
+The key innovation in this presentation was already present in the
+unfocused logic shown in Figure~\ref{sec:ord-unfocused}: we need to
+differentiate {\it constructions}, which appear in the premises of
+rules, and {\it matching constructs}, which appear in the conclusions
+of rules.  The notation $\Gamma; \Delta; \Omega_L/A\fuse B/\Omega_R$
+that appears in the conclusion of ${\fuse}_L$ is a matching construct;
+as discussed in Section~\ref{sec:ord-unfocused}, there are multiple
+ways in which a context $\Gamma'; \Delta'; \Omega'$ could match this
+context, because $A \fuse B$ could come from any of the three
+contexts. However, $\Gamma; \Delta; \Omega_L,{A},{B}, \Omega_R$ in the
+premise of ${\fuse}_L$ is a construction, and is unambiguously equal
+to only one context $\Gamma'; \Delta'; \Omega'$ -- the one where
+$\Gamma' = \Gamma$, $\Delta' = \Delta$, and 
+$\Omega' = \Omega_L, {A}, {B}, \Omega_R$.
+
+\subsection{Fundamental operations on contexts}
+
+The first fundamental idea we consider is {\it singleton} contexts.
+We construct a single-element context by writing $x{:}\islvl{T}$.
+The corresponding matching construct on contexts is 
+$x{:}{T}$. In unfocused \ollll, we say that $\Xi$ matches 
+$x{:}{A}$ if its decomposition into persistent, linear, and 
+ordered contexts matches $\Gamma; \cdot; /A/$. Specifically,
+
+\bigskip
+\begin{definition}[Sole membership]
+  $\Xi$ matches $x{:}T$ if
+\begin{itemize}
+\item $\Xi$ contains no linear judgments and contains exactly
+one
+ordered judgment $x{:}\istrue{T}$ (corresponding to the situation where
+$\Xi = \Gamma; \cdot; T$), 
+\item $\Xi$ contains no ordered judgments and contains exactly
+one linear judgement $x{:}\iseph{T}$ (corresponding to the situation where
+$\Xi = \Gamma; T; \cdot$), or 
+\item $\Xi$ contains only persistent judgments, including
+$x{:}\ispers{T}$ (corresponding to the situation where
+$\Xi = \Gamma, T; \cdot; \cdot$). 
+\end{itemize}
+\end{definition}
+\bigskip
+
+Sole membership is related to the initial sequents and the 
+matching construct $\Gamma; \cdot;/A/$ for contexts that was used
+in Figure~\ref{fig:ordered-prop}.
+We could rewrite the {\it init} rule
+from that figure as follows:
+\[
+\infer[{\it init}]
+{x{:}p \altv \islvl{p}}
+{}
+\]
+As in all rules involving matching constructs in the conclusion,
+it is fair to view the matching construct as an extra premise; thus,
+the ${\it init}$ rule above is the same as the ${\it init}$ rule 
+below:
+\[
+\infer[{\it init}]
+{\Xi \altv \islvl{p}}
+{\Xi \textit{~matches~} x{:}p}
+\]
+
+The second basic operation on contexts requires a new concept, {\it
+  frames} $\Theta$. Intuitively, we can look frames as substructural
+contexts for \ollll~as a series of persistent, linear, and ordered
+contexts where the ordered context is missing a particular piece. 
+Informally, we
+can write this missing piece as a box: $\Gamma; \Delta; \Omega_L,
+\Box, \Omega_R$. Alternatively we can think of a frame as a one-hole
+context or Huet-style zipper \cite{huet97zipper} over the structure of
+substructural contexts. We will also think of them morally
+as linear functions $(\lambda\Xi.\, \Xi_L, \Xi, \Xi_R)$ as in
+\cite{simmons09linear}.
+
+The construction associated with frames, $\tackon{\Theta}{\Xi}$,
+is just a straightforward operation of filling in the hole or 
+beta-reducing the linear function; doing this requires that the 
+variables in $\Theta$ and $\Xi$ be distinct. If we
+think of $\Theta$ informally as $\Gamma; \Delta; \Omega_L, \Box,
+\Omega_R$, then this is {\it almost} like the operation of filling in
+the hole, as $\tackon{\Theta}{x{:}\istrue{A}} = \Gamma; \Delta;
+\Omega_L, A, \Omega_R$. The main difference is that we can also use
+the operation to insert linear propositions
+($\tackon{\Theta}{x{:}\iseph{A}} = \Gamma; \Delta, A; \Omega_L,
+\Omega_R$) and persistent propositions
+($\tackon{\Theta}{x{:}\ispers{A}} = \Gamma, A; \Delta; \Omega_L,
+\Omega_R$).
+
+The matching construct for frames is a bit more complicated,
+Informally, if we treat linear contexts as multisets and say that $\Xi
+= \Gamma; \Delta, \Delta'; \Omega_L, \Omega', \Omega_R$, then we can
+say $\Xi = \frameoff{\Theta}{\Xi'}$ in the case that $\Theta = \Gamma;
+\Delta; \Omega_L, \Box, \Omega_R$ and $\Xi' = \Gamma; \Delta';
+\Omega'$. The sub-context $\Xi'$, then, has been {\it framed off} from
+$\Xi$, its frame is $\Theta$. If we only had ordered judgments
+$\istrue{T}$, then the framing-off matching construct
+$\frameoff{\Theta}{\Xi'}$ would be essentially the same as the
+construction form $\tackon{\Theta}{\Xi'}$. However, persistent and
+linear judgments can be reordered in the process of matching, and
+persistent judgments always end up in both the frame and the 
+framed-off context. 
+
+\bigskip
+\begin{definition}[Framing off]
+$\Xi$ matches $\frameoff{\Theta}{\Xi'}$ if the union of the variables in 
+$\Theta$ and $\Xi'$ is exactly the variables in $\Xi$ and
+\begin{itemize}
+\item if $x{:}\ispers{T} \in \Xi$, then the same mapping appears in 
+  $\Theta$ and $\Xi'$;
+\item if $x{:}\iseph{T} \in \Xi$ or $x{:}\istrue{T} \in \Xi$, 
+  then the same mapping appears in $\Theta$ or $\Xi'$ (but not both); 
+\item in both $\Theta$ and $\Xi'$, 
+  the sequence of mappings $x{:}\istrue{T}$ 
+  is a subsequence of $\Xi$; and 
+\item if $x{:}\istrue{T} \in \Theta$, then either
+  \begin{itemize}
+  \item for all $y{:}\istrue{T'} \in \Xi'$, the mapping for $x$ appeared before
+    the mapping for $y$ in $\Xi$, or
+  \item for all $y{:}\istrue{T'} \in \Xi'$, the mapping for $x$ appeared after
+    the mapping for $y$ in $\Xi$. 
+  \end{itemize}
+\end{itemize}
+\end{definition}
+\bigskip
+
+An important derived matching construct is $\frameoff{\Theta}{x{:}T}$,
+which matches $\Xi$ if $\Xi$ matches $\frameoff{\Theta}{\Xi'}$ for
+some $\Xi'$ such that $\Xi'$ matches $x{:}T$.  This pattern is needed
+to describe almost every left rule from Figure~\ref{fig:ordered-prop},
+for instance:
+\[
+\infer[]
+{\frameoff{\Theta}{x{:}A \oplus B} \altv U}
+{\tackon{\Theta}{y{:}\istrue{A}} \altv U
+ &
+ \tackon{\Theta}{z{:}\istrue{B}} \altv U}
+\quad
+\infer[]
+{\frameoff{\Theta}{x{:}A \with B} \altv U}
+{\tackon{\Theta}{y{:}\istrue{A}} \altv U}
+\quad
+\infer[]
+{\frameoff{\Theta}{x{:}A \with B} \altv U}
+{\tackon{\Theta}{y{:}\istrue{B}} \altv U}
+\]
+
+We can also use this notation to describe the one of the
+cut principles for ordered linear lax logic. 
+\[
+\infer-[{\it cut}]
+{\frameoff{\Theta}{\Xi} \altv \istrue{C}}
+{\Xi \altv \istrue{A}
+ &
+ \tackon{\Theta}{x{:}A\,{\it true}} \altv \istrue{C}}
+\]
+Especially for the eventual proof of this cut principle, it is important
+to consider that this cut principle is equivalent to the one that describes
+the matching as an explicit extra premise:
+\[
+\infer-[{\it cut}]
+{\Xi' \altv \istrue{C}}
+{\Xi \altv \istrue{A}
+ &
+ \tackon{\Theta}{x{:}A\,{\it true}} \altv \istrue{C}
+ &
+ \Xi' \textit{~matches~} \frameoff{\Theta}{\Xi}}
+\]
+
+\futurework{
+As an aside: it need not always be the case that the same operation
+used to describe 
+
+The idea that the operators $\frameoff{\Theta}{\Xi}$
+and $\tackon{\Theta}{\Xi}$ are sufficient to describe the 
+cut principle is related to the display property, which fails
+for some reasonable logics, such as Reed's queue logic
+\cite{reed09queue}.}
+
+\subsection{Multiplicative operations}
+
+To describe the multiplicative connectives of \ollll, including the critical
+connective of implication, we need to have multiplicative operations on 
+contexts. As a construction, $\mkconj{\Xi_L}{\Xi_R}$ is just the
+syntactic concatenation of two contexts with distinct variable domains, and
+the unit $\mkunit$ is just the empty sequence. The matching constructs
+are more complicated to define, but the intuition is, again, 
+uncomplicated: if 
+$\Xi = \Gamma; \Delta, \Delta'; \Omega_L, \Omega_R$, where linear contexts
+are multisets and ordered contexts are sequences, then 
+$\Xi = \mkconj{\Xi_L}{\Xi_R}$ if $\Xi_L = \Gamma; \Delta; \Omega_L$ and
+$\Xi_R = \Gamma; \Delta'; \Omega_R$. Note that here we are using the same 
+notation for constructions and matching constructs: 
+$\matchconj{\Xi_L}{\Xi_R}$ is a matching construct when it appears
+in the conclusion of a rule, $\mkconj{\Xi_L}{\Xi_R}$ is a construction
+when it appears in the premise of a rule.
+
+\bigskip
+\begin{definition}[Conjunction]
+$\Xi$ matches $\matchunit$ if $\Xi$ contains only
+persistent judgments.
+
+\smallskip
+\noindent
+$\Xi$ matches $\matchconj{\Xi_L}{\Xi_R}$ if the union 
+of the variables in $\Xi_L$ and $\Xi_R$ is exactly the variables in $\Xi$
+and 
+\begin{itemize}
+\item if $x{:}\ispers{T} \in \Xi$, then the same mapping appears in $\Xi_L$
+  and $\Xi_R$;
+\item if $x{:}\iseph{T} \in \Xi$ or $x{:}\istrue{T} \in \Xi$, then the
+  same mapping appears in $\Xi_L$ or $\Xi_R$ (but not both); 
+\item in both $\Xi_L$ and $\Xi_R$, 
+  the sequence of mappings $x{:}\istrue{T}$ 
+  is a subsequence of $\Xi$; and 
+\item if $x{:}\istrue{T} \in \Xi_L$ and $y{:}\istrue{T'} \in \Xi_R$, then
+  the mapping for $x$ appeared before the mapping for $y$ in $\Xi$. 
+\end{itemize}
+\end{definition}
+\bigskip
+
+The constructs for multiplicative conjunction are put to obvious use
+in the description of multiplicative conjunction, which is essentially
+just the propositional internalization of context conjunction:
+\[
+\infer
+{\matchconj{\Xi_L}{\Xi_R} \altv \islvl{A \fuse B}}
+{\Xi_L \altv \istrue{A} & \Xi_R \altv \istrue{B}}
+\quad
+\infer
+{\frameoff{\Theta}{x{:}A \fuse B} \altv U}
+{\tackon{\Theta}{\mkconj{y{:}A}{z{:}B}} \altv U}
+\quad
+\infer
+{\cdot \altv \one}
+{}
+\quad
+\infer
+{\frameoff{\Theta}{x{:}\one} \altv U}
+{\tackon{\Theta}{\cdot} \altv U}
+\]\[
+\infer
+{\Xi \altv \islvl{A \lefti B}}
+{x{:}\istrue{A}, \Xi \altv \istrue{B}}
+\quad
+\infer
+{\frameoff{\Theta}{\Xi_A, x{:}A \lefti B} \altv U}
+{\Xi_A \altv \istrue{A} & \tackon{\Theta}{y{:}\istrue{B}} \altv U}
+\]
+Implication makes deeper use of context conjunction:
+% we can look at 
+$\Xi$ matches
+$\frameoff{\Theta}{\matchconj{\Xi_A}{x{:}A \lefti B}}$ 
+%in two ways.
+%One way of reading this notation 
+exactly when there exist $\Xi'$ and $\Xi''$ such that 
+% is 
+$\Xi$ matches $\frameoff{\Theta}{\Xi'}$, 
+$\Xi'$ matches $\matchconj{\Xi_A}{\Xi''}$,
+and $x{:}A$ matches $\Xi''$. 
+
+% The other
+% way of reading the notation 
+% is that $\Xi$ matches $\frameoff{\Theta'}{x{:}A \lefti B}$, and
+% $\Theta'$ matches $\frameoff{\Theta}{\matchconj{\Xi_A}{\Box}}$, 
+% It is critical that these two ways of 
+
+% \bigskip
+% \begin{definition}[Matching into frames]
+% $\Theta$ matches $\frameoff{\Theta'}{\matchconj{\Xi_A}{\Box}}$ if, 
+% for all $\Xi'$ and $\Xi_A$, $\Xi'$ matches $\matchconj{\Xi_A}{\Xi_B}$
+% if and only if 
+
+% For all $\Xi$, $\Xi_A$, $\Xi_B$ and $\Theta$, 
+% \begin{itemize}
+% \item there exists $\Xi'$ such that $\Xi$ matches $\frameoff{\Theta}{\Xi}$
+%   and $\Xi$ matches $\matchconj{\Xi_A}{\Xi_B}$
+%   if and only if there exists $\Delta'$ such that $\Xi$ matches 
+%   $\frameoff{\Theta}{\Xi_A}$ and $\Theta$ matches 
+%   $\frameoff{\Theta'}{}$
+% \end{itemize}
+% \end{definition}
+
+
+% As a matching construct, $\Xi = \matchconj{\Xi_L}{\Xi_R}$ if every 
+% $x{:}\ispers{T}$ in $\Xi$ appears in both $\Xi_L$ and $\Xi_R$, every 
+% $x{:}\iseph{T}$ or $x{:}\istrue{T}$ 
+% in $\Xi$ appears in exactly one of $\Xi_L$ or $\Xi_R$, and
+% if furthermore every 
+% $x{:}\iseph{T}$ $\Xi_L$
+
+
+% As a construction form, 
+
+
+\subsection{Exponential operations}
+
+The exponentials ${!}$ and ${\gnab}$ do not have a construction form
+associated with them, unless we view the singleton
+construction forms $x{:}\ispers{T}$ and $x{:}\iseph{T}$ as
+being associated with these exponentials. The matching
+operation is quite simple: $\Xi$ matches $\restrictto{\Xi}{\mpers}$ if
+$\Xi$ contains no ephemeral or ordered judgments -- in other words,
+it says that $\Xi = \Gamma; \cdot; \cdot$. This form can then be used
+to describe the right rule for ${!}A$ in unfocused \ollll:
+\[
+\infer
+{\restrictto{\Xi}{\mpers} \altv \islvl{{!}A}}
+{\Xi \altv \istrue{A}}
+\]
+Similarly, $\Xi$ matches $\restrictto{\Xi}{\meph}$ if $\Xi$ contains
+no ordered judgments (that is, if $\Xi = \Gamma; \Delta; \cdot$).
+$\Xi$ always matches $\restrictto{\Xi}{\mtrue}$; we don't ever
+explicitly use this construct, but it allows us to generally refer to
+$\restrictto{\Xi}{\mlvl}$ in the statement of theorems like cut admissibility.
+
+The exponential matching constructs 
+don't actually modify contexts in the way
+other matching constructs do, but this is a consequence of the 
+particular choice of logic we're considering. Given affine resources,
+for instance, the matching construct associated with the 
+affine connective ${@}A$ would
+clear the context of affine facts: 
+$\Xi$ matches $\restrictto{\Xi'}{\mpers}$ if 
+$\Xi$ has only persistent and affine resources and $\Xi'$ 
+contains the same persistent resources as $\Xi$ but none of the affine ones.
+
+We can describe a mirror-image operation on succedents $U$.  $U$
+matches $\restrictfrom{U}{\mlax}$ only if it has the form $\islax{T}$,
+and $U$ always matches $\restrictfrom{U}{\mtrue}$. The latter matching
+construct is another degenerate form that similarly allows us to refer
+to $\restrictfrom{U}{\mlvl}$ as a generic matching construct. We write
+$\restrictto{\Delta}{\mlvl}$ as a judgment to mean that 
+$\Delta$ matches $\restrictto{\Delta}{\mlvl}$, 
+and write $\restrictfrom{U}{\mtrue}$
+as a judgment to mean that $U$ matches $\restrictfrom{U}{\mtrue}$.
+
+\section{Focused sequent calculus}
+\label{sec:ord-focused}
+
+A sequent in the focused sequent calculus presentation of \ollll~has
+the form $\foc{\Psi}{\Delta}{U}$, where $\Psi$ is the first-order
+variable context, $\Delta$ is a substructural context as described in
+the previous section, and $U$ is a succedent. The domain $T$ of the
+substructural context consists of stable negative propositions $A^-$,
+positive suspended propositions $\susp{A^+}$, focused negative
+propositions $[A^-]$, and inverting positive propositions $A^+$.
+
+The form of the succedent $U$ is $\islvl{T}$, where $\mlvl$ is either
+$\mtrue$ or $\mlax$; in this way, $U$ is just a like a special
+substructural context with exactly one element -- we don't need
+to care about the name of the variable, because there's only one.  The
+domain of $T$ for succedents is complementary to the domain of $T$
+for contexts: stable positive propositions $A^+$, negative suspended
+propositions $\susp{A^-}$, focused positive propositions $[A^+]$, and
+inverting negative propositions $A^-$.
+
+\subsection{Restrictions on the form of sequents}
+
+A sequent $\foc{\Psi}{\Delta}{U}$ is {\it stable} when the context
+$\Delta$ and succedent $U$ contain only stable propositions ($A^-$ in
+the context, $A^+$ in the succedent) and suspended propositions
+($\susp{A^+}$ in the context, $\susp{A^-}$ in the succedent). We
+repeat the focusing constraint discussed in Chapter 2: there is only
+ever at most one focused proposition in a sequent, and if there is
+focused proposition in the sequent, then the sequent is otherwise
+stable. A restriction on the rules ${\it focus}_L$ and ${\it focus}_R$
+is sufficient to enforce this restriction: reading rules from
+top down, we can only use a rule ${\it focus}_L$ or ${\it focus}_R$ to
+prove a stable sequent, and reading rules from bottom up, we can only
+apply ${\it focus}_L$ or ${\it focus}_R$ when we are searching for a
+proof of a stable sequent.
+
+Because there is always a distinct focused proposition in a sequent,
+we do not need a variable name to reference the focused proposition in
+a context $\Delta$ any more than we need a variable name to reference
+the unique member of the context-like succedent $U$. Therefore, we
+can write $\istrue{[B^-]}$ instead of $x{:}\istrue{[B^-]}$. Furthermore,
+we restrict focused propositions and inverting propositions so that
+they are always associated with the judgment $\mtrue$. With this
+restriction, we can write $[A^-]$ and $x{:}A^+$ instead of
+$\istrue{[A^-]}$ and $x{:}\istrue{A^+}$ in $\Delta$, and we can write
+$[A^+]$ and $A^-$ instead of $\istrue{[A^+]}$ and $\istrue{A^-}$ for
+$U$.
+
+In a confluent presentation of focused logic like the one given for
+linear logic in Chapter 2, that would be as far as we could take our
+simplifications. However, this presentation will match the fixed
+presentation of logic from the structural focalization development
+\cite{simmons11structural}. Specifically, if there is more than one
+invertible proposition in a sequent, {\it only} the leftmost one will
+be treated as eligible to have a rule applied to it. All the
+propositions in $\Delta$ are treated as being to the left of the
+succedent $U$, so we always prioritize inversion on positive
+propositions in $\Delta$. With this additional restriction, it is
+always unambiguous which proposition we are referring to in an
+invertible rule, and we write $A^+$ instead of $x{:}A^+$ or
+$x{:}\istrue{A^+}$.
+
+We will maintain the notational convention (only) within this chapter that
+first-order variables are written as $a$, variables associated
+with stable negative propositions are written as $x$, and variables
+associated with suspended positive propositions are written as 
+$z$.
+
+\subsection{Polarized propositions}
+\label{sec:ordpolarprop}
+
+The propositions of ordered logic are fundamentally sorted into
+positive propositions $A^+$ and negative propositions $A^-$; both
+classes, and the inclusions between them, 
+are shown in Figure~\ref{fig:ordered}. The
+positive propositions have a refinement, {\it permeable} propositions
+$A^+_\mpers$, that is analogous to the refinement discussed for linear
+logic in Section~\ref{sec:permeable}. There is also a more generous
+refinement, the {\it mobile} propositions, $A^+_\meph$, for positive
+propositions that bottom out with one of the two exponentials ${!}$ and
+${\gnab}$. We introduce atomic propositions $p^+$ that stand for
+arbitrary positive propositions, $p^+_\meph$ that stand for arbitrary
+mobile propositions, and $p^+_\mpers$ that stand for arbitrary
+permeable propositions. We treat $A^+_\mtrue$ and $p^+_\mtrue$ as synonymous
+with $A^+$ and $p^+$, respectively, which allows us to generically
+refer to $A^+_\mlvl$ and $p^+_\mlvl$ in rules like $\eta^+$ and in the
+statement of the identity expansion theorem.
+
+\begin{figure}
+\begin{align*}
+A^+ & ::= p^+ \mid p^+_\meph \mid p^+_\mpers
+        \mid {\downarrow}A^- \mid {\gnab}A^- \mid {!}A^- 
+        \mid \one \mid A^+ \fuse B^+ \mid \zero \mid A^+ \oplus B^+ 
+        \mid \exists a{:}\tau. A^+ \mid t \doteq s
+\\
+A^+_\meph & ::= p^+_\meph \mid p^+_\mpers
+        \mid {\gnab}A^- \mid {!}A^- 
+        \mid \one \mid A^+_\meph \fuse B^+_\meph
+        \mid \zero \mid A^+_\meph \oplus B^+_\meph
+        \mid \exists a{:}\tau. A^+_\meph \mid t \doteq s
+\\
+A^+_\mpers & ::= p^+_\mpers 
+        \mid {!}A^- 
+        \mid \one \mid A^+_\mpers \fuse B^+_\mpers 
+        \mid \zero \mid A^+_\mpers \oplus B^+_\mpers
+        \mid \exists a{:}\tau. A^+_\mpers \mid t \doteq s
+\\
+A^- & ::= p^- \mid p^-_\mlax 
+        \mid {\uparrow}A^+ \mid {\ocircle}A^+
+        \mid A^+ \lefti B^- \mid A^+ \righti B^-
+        \mid \top \mid A^- \with B^-
+        \mid \forall a{:}\tau.A^-
+\\
+A^-_\mlax & ::= p^-_\mlax 
+        \mid {\ocircle}A^+
+        \mid A^+ \lefti B^-_\mlax \mid A^+ \righti B^-_\mlax
+        \mid \top \mid A^-_\mlax \with B^-_\mlax
+        \mid \forall a{:}\tau.A^-_\mlax
+\end{align*}
+\caption{Propositions of focused \ollll.}
+\label{fig:ordered}
+\end{figure}
+
+Negative propositions also have a refinement, $A^-_\mlax$, for
+negative propositions that always bottom out as connective 
+of the form
+${\ocircle}A^+$.  This is interesting as a formal artifact and there
+is very little overhead involved in putting it into our development,
+but I don't claim to fully understand what the refinement means or
+what the inclusion of right-permeable atomic propositions $p^-_\mlax$
+means in terms of the structure of proofs. Certainly we do {\it not}
+want to include such propositions in the logical framework, as to do
+so would break the distinction between concurrent and deductive proofs
+that will be discussed in Section~\ref{sec:framework-logicprog}.
+
+The presentation of the exponentials, and the logic that we now
+present, emphasises the degree to which the shifts ${\uparrow}$ and
+${\downarrow}$ have much of the character of exponentials in a focused
+substructural logic. The upshift ${\uparrow}A^+$ is like an ordered
+variant of the lax truth ${\ocircle}A^+$ that puts no constraints on
+the form of the succedent, and the downshift ${\downarrow}A^-$ is
+like an ordered variant of the persistent and linear exponentials
+${!}A^-$ and ${\gnab}A^-$ that puts no constraints on the form of the
+context. This point is implicit in Laurent's thesis
+\cite{laurent02etude}. In that thesis, Laurent defines the polarized
+LLP {\it without} the shifts ${\uparrow}$ and ${\downarrow}$, so that
+the only connection points between the polarities are the
+exponentials. The resulting logic is much persistent than linear,
+a point we will return to in Section~\ref{sec:perm-fragments}.
+
+\subsection{Derivations and proof terms}
+\label{sec:ord-proof-terms}
+
+\input{figs/fig-foc-mall}
+\input{figs/fig-foc-add}
+\input{figs/fig-foc-fo}
+
+The multiplicative and exponential fragment of focused \ollll~is given
+in Figure~\ref{fig:foc-mall}, the additive fragment is given in
+Figure~\ref{fig:foc-add}, and the first-order connectives are treated
+in Figure~\ref{fig:foc-fo}. These rules are all written with sequents
+of the form $\foct{\Psi}{\Delta}{E}{U}$, where $E$ is a {\it proof
+  term} that corresponds to a derivation of that sequent. Just
+as sequent forms are divided into the right-focused, inverting, and
+left-focused sequents, we divide expressions into {\it values} $V$,
+derivations of right-focused sequents; {\it terms} $N$,
+derivations of inverting sequents; and {\it spines} $\Sp$,
+derivations of left-focused sequents. The structure of
+values, terms, and spines is as follows:
+\input{proofterms-3}
+
+Expressions are treated as in the structural focalization development
+\cite{simmons11structural}. It is possible to take a ``Curry-style''
+view of expressions as {\it extrinsically} typed, which means we
+consider both well-typed and ill-typed expressions; the well-typed
+expressions are those for which the sequent
+$\foct{\Psi}{\Delta}{E}{U}$ is derivable. However, we will take the
+``Church-style'' view that expressions are intrinsically typed
+representatives of derivations: that is, $\foct{\Psi}{\Delta}{E}{U}$
+expresses that $E$ is a derivation of the sequent
+$\foc{\Psi}{\Delta}{U}$. Justifying this close correspondence requires
+us to take care that the structure of expressions is faithful to the
+structure of proofs; this is the primary reason that we don't (yet)
+introduce the patterns that are common in other proof term assignments
+for focused logic
+\cite{watkins02concurrent,licata08focusing,krishnaswami09focusing}.
+
+There are two caveats to the idea that expressions are representatives
+of derivations. One caveat is that, in order for there to be an actual
+correspondence between expressions and terms, we need to annotate all
+variables with the judgment they are associated with, and we need to
+annotate $\tinr{V}$, $\tinl{V}$, $\tpione{\Sp}$, and $\tpitwo{\Sp}$
+terms with the type of the branch not taken. Pfenning writes these as
+superscripts \cite{pfenning08church}, but which we will follow Girard
+in leaving them implicit \cite{girard89proofs}. The second caveat is
+that, because we do not explicitly represent the significant
+bookkeeping associated with matching constructs in proof terms, if
+$\foct{\Psi}{\Delta}{E}{U}$, then $\foct{\Psi, a{:}\tau}{\Delta,
+  x{:}\ispers{A^+}}{E}{U}$ as well. Therefore, even given appropriate
+type annotations, when we say that some expression $E$ is a derivation
+of $\foc{\Psi}{\Delta}{U}$, it is only {\it uniquely} a derivation of
+that sequent if we account for the implicit bookkeeping on contexts.
+
+The proof terms presented here will be reused in our formulation of a
+logical framework in the next chapter.  Additionally, working on the
+level of proof terms allows for a greatly compressed presentation of
+cut admissibility and identity expansion that emphasizes the
+computational nature of these proofs: cut admissibility clearly
+generalizes the {\it hereditary substitution} operation in so-called {\it
+  spine form} presentations of LF \cite{cervesato02linear}, and
+identity expansion is, computationally, a novel $\eta$-expansion
+property on proof terms \cite{simmons11structural}.  To be fair, much
+of this compression is due to neglecting the implicit bookkeeping
+associated with matching constructs, bookkeeping that must be made
+explicit in proofs like the cut admissibility theorem.
+
+\subsection{Variable substitution}
+
+The first-order variables introduced by universal quantifiers (on the
+right) and existential quantifiers (on the left) are proper {\it
+  variables} in the sense that the meaning of first-order variables is
+given by substitution \cite[Chapter 1]{harper12practical}. A sequent
+with free variables is thus a {\it generic} representative of all the
+sequents that can be obtained by plugging terms in for those free
+variables through the operation of substitution. This intuition is
+formalized by the variable substitution theorem,
+Theorem~\ref{thm:varsubst}.
+
+\bigskip
+\begin{theorem}[Variable substitution]
+\label{thm:varsubst}
+If $\Psi' \vdash \sigma : \Psi$ and $\foc{\Psi}{\Delta}{U}$, then 
+$\foc{\Psi'}{\sigma\Delta}{\sigma{U}}$.
+\end{theorem}
+
+\begin{proof}
+On the level of proof terms, 
+we are given $E$, a expression corresponding to a derivation of
+$\foc{\Psi}{\Delta}{U}$; we are defining the operation $\sigma{E}$,
+an expression corresponding to a derivation of 
+$\foc{\Psi'}{\sigma\Delta}{\sigma{U}}$.
+
+\paragraph{\it Propositional fragment}
+For the exponential, multiplicative, and additive fragments, this
+operation is simple to define at the level of proof terms, and we will
+omit most of the cases: $\sigma(\tfuser{V_1}{V_2}) =
+\tfuser{\sigma{V_1}}{\sigma{V_2}}$, $\sigma(\tdownl{x}{N}) =
+\tdownl{x}{\sigma N}$, and so on. (Note that first-order variables
+$a$ do not interact with variables $x$ and $z$ in the substructural
+context.) However, this compact notation does
+capture a great deal of complexity. In particular, it is important to
+emphasize that we need lemmas saying that variable substitution is
+compatible with all the context matching operations from
+Section~\ref{sec:contexts}.  In full detail, these two simple cases
+would be:
+
+\begin{itemize}
+
+\item[--]
+$\sigma(\tfuser{V_1}{V_2}) = \tfuser{\sigma{V_1}}{\sigma{V_2}}$\smallskip\\
+We are given a proof of $\foc{\Psi}{\Delta}{[A^+ \fuse B^+]}$ that
+ends with the ${\fuse}_R$ rule; the subderivations are
+$V_1$, a derivation of $\foc{\Psi}{\Delta_1}{[A^+]}$, and
+$V_2$, a derivation of $\foc{\Psi}{\Delta_2}{[B^+]}$. Furthermore, we know that
+$\Delta$ matches $\matchconj{\Delta_1}{\Delta_2}$. We need a lemma that
+tells us that $\sigma\Delta$ matches $\sigma\Delta_1, \sigma\Delta_2$;
+then, by rule ${\fuse}_R$, it suffices to show that
+$\foc{\Psi'}{\sigma\Delta_1}{\sigma{A^+}}$ (which we have by the 
+induction hypothesis on $\sigma$ and $V_1$) and that
+$\foc{\Psi'}{\sigma\Delta_2}{\sigma{B^+}}$ 
+(which we have by the induction hypothesis
+on $\sigma$ and $V_2$). \smallskip
+
+\item[--]
+$\sigma(\tdownl{x}{N}) = \tdownl{x}{\sigma N}$ \smallskip\\ 
+We are given a proof
+of $\foc{\Psi}{\Delta}{U}$ that ends with ${\downarrow}_L$; 
+the subderivation is $N$, a derivation of
+$\foc{\Psi}{\tackon{\Theta}{x{:}\istrue{A^-}}}{U}$. Furthermore, we know that
+$\Delta$ matches $\frameoff{\Theta}{{\downarrow}A^-}$. We need a lemma
+that tells us that $\sigma\Delta$ matches
+$\frameoff{\sigma\Theta}{{\downarrow}\sigma A^-}$; then, by 
+rule ${\downarrow}_L$, it suffices to show 
+$\foc{\Psi'}{\tackon{\sigma\Theta}{x{:}\istrue{\sigma{A^-}}}}{\sigma{U}}$ 
+(which we have by the induction hypothesis on $\sigma$ and $N$).
+
+\end{itemize}
+
+\paragraph{\it First-order fragment} For the first-order fragment, we need
+to be more careful, especially when considering the 
+$\doteq_L$ rule, which notably
+does {\it not} require an invocation of the induction hypothesis. The cases
+for the $\exists$ quantifier mimic the ones we give for the $\forall$
+quantifier, and so the discussion of these cases is omitted.
+
+\begin{itemize}
+
+\item[--]
+$\sigma(\texistsr{t}{N}) = \texistsr{\sigma{t}}{\sigma{N}}$ 
+
+\item[--]
+$\sigma(\texistsl{a}{\Sp}) = \tforalll{a}{(\sigma, a/a)\Sp}$ 
+
+\item[--]
+$\sigma(\tunifr) = \tunifr$
+
+\item[--]
+$\sigma(\phi) = \left( \mathsf{fn}~\sigma' \Rightarrow \phi (\sigma'
+  \circ \sigma) \right)$ \smallskip\\ We are given a proof of
+$\foc{\Psi}{\Delta}{U}$ that ends with ${\doteq}_L$; we know that
+$\Delta$ matches $\frameoff{\Theta}{t \doteq s}$, and the
+subderivation is $\phi$, a function from substitutions 
+$\Psi'' \vdash \sigma'' : \Psi$ that unify $t$ and $s$ to derivations
+of $\foc{\Psi''}{\tackon{\sigma''\Theta}{\cdot}}{\sigma''{U}}$. We need a lemma
+that tells us that $\sigma\Delta$ matches 
+$\frameoff{\sigma\Theta}{\sigma t \doteq \sigma s}$; then, by rule
+${\doteq}_L$, it suffices to show that for all 
+$\Psi'' \vdash \sigma' : \Psi'$ that unify $\sigma t$ and $\sigma s$, 
+there exists a derivation of 
+$\foc{\Psi''}{\tackon{\sigma'(\sigma \Theta)}{\cdot}}{\sigma'(\sigma U)}$,
+which is the same thing as a derivation of 
+$\foc{\Psi''}{\tackon{(\sigma' \circ \sigma) \Theta}{\cdot}}
+    {(\sigma' \circ \sigma) U}$. We have that 
+$\Psi'' \vdash \sigma' \circ \sigma : \Psi$, and certainly 
+$\sigma' \circ \sigma$ unifies $t$ and $s$, so we can conclude by
+applying $\phi$ to $\sigma' \circ \sigma$.\smallskip
+
+\item[--]
+$\sigma(\tforallr{a}{N}) = \tforallr{a}{(\sigma, a/a)N}$ \smallskip\\ We are
+given a proof of $\foc{\Psi}{\Delta}{\forall a{:}\tau.A^-}$ 
+that ends with $\forall_R$; the subderivation
+is $N$, a derivation of $\foc{\Psi,a{:}\tau}{\Delta}{A^-}$. Because
+$\sigma(\forall{a}{:}{\tau}.A^-) 
+ = \forall{a}{:}{\sigma\tau}.(\sigma, a/a){A^-}$,
+by rule $\forall_R$ it suffices to show 
+$\foc{\Psi', a{:}\sigma\tau}{\sigma\Delta}{(\sigma, a/a)A^-}$, 
+which is the same thing
+as $\foc{\Psi', a{:}\sigma\tau}{(\sigma, a/a)\Delta}{(\sigma, a/a)A^-}$.
+The result
+follows by the induction hypothesis on $(\sigma, a/a)$ and $N$. \smallskip
+
+\item[--]
+$\sigma(\tforalll{t}{\Sp}) = \tforalll{\sigma{t}}{\sigma\Sp}$ \smallskip\\
+We are given a proof of $\foc{\Psi}{\Delta}{U}$ that ends with 
+$\forall_L$; the subderivation is $\Sp$, a derivation of 
+$\foc{\Psi}{\tackon{\Theta}{[t/a]\Sp}}{U}$. Furthermore,
+we know that $\Delta$ matches $\frameoff{\Theta}{[\forall a{:}\tau.A]}$.
+We need a lemma that tells us that $\sigma\Delta$ matches
+$\frameoff{\sigma\Theta}{[\forall a{:}\tau.(\sigma, a/a)A^-]}$; then,
+by rule $\forall_L$, it suffices to show 
+$\foc{\Psi'}{\tackon{\sigma\Theta}{[[\sigma{t}/a](\sigma, a/a)A^-]}}
+  {\sigma{U}}$, which is the same thing as
+$\foc{\Psi'}{\tackon{\sigma\Theta}{[\sigma([t/a]A^-)]}}
+  {\sigma{U}}$. This follows by the induction hypothesis on $\sigma$ and
+$\Sp$.
+
+\end{itemize}
+
+Note that, in the case for $\forall_R$, the substitution $\sigma$ was
+applied to the first-order type $\tau$ as well as to as at the fact
+that our first-order terms are dependently typed.
+\end{proof}
+
+Given we write the constructive content of the variable substitution
+theorem as $\sigma{E}$, where $E$ is an expression,
+we can also write Theorem~\ref{thm:varsubst} as an admissible
+rule in one of two ways, both with and without proof terms:
+\[
+\infer-[{\it varsubst}]
+{\foct{\Psi'}{\sigma{\Delta}}{\sigma{E}}{\sigma{U}}}
+{\Psi' \vdash \sigma : \Psi
+ &
+ \foct{\Psi}{\Delta}{E}{U}}
+\qquad
+\infer-[{\it varsubst}]
+{\foc{\Psi'}{\sigma{\Delta}}{\sigma{U}}}
+{\Psi' \vdash \sigma : \Psi
+ &
+ \foc{\Psi}{\Delta}{U}}
+\]
+We will tend towards the expression-annotated presentations, such as
+the one on the left, in this chapter.
+
+\subsection{Focal substitution}
+
+Both cut admissibility and identity expansion depend on the same
+focal substation theorem that was considered for linear logic in 
+Section~\ref{sec:lin-suspended}. Both of these theorems use the
+compound matching construct $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$,
+a pattern that will also be used in the proof of cut admissibility: 
+$\Delta'$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$
+if $\restrictto{\Delta}{\mlvl}$ (which, again, is a shorthand way of 
+saying $\Delta$ matches $\restrictto{\Delta}{\mlvl}$) and if
+$\Delta'$ matches $\frameoff{\Theta}{\Delta}$.
+
+\bigskip
+\begin{theorem}[Focal substitution]~
+\begin{itemize}
+\item If $\foc{\Psi}{\Delta}{[A^+]}$, ~
+      $\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{A^+}}}}{U}$,\\
+      and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$, ~
+      then $\foc{\Psi}{\Xi}{U}$
+\item If $\foc{\Psi}{\Delta}{\islvl{\susp{A^-}}}$, ~
+      $\foc{\Psi}{\tackon{\Theta}{[A^-]}}{U}$, \\
+      $\Xi$ matches $\frameoff{\Theta}{\Delta}$, ~
+      and $\restrictfrom{U}{\mlvl}$, ~
+      then $\foc{\Psi}{\Xi}{U}$
+\end{itemize}
+\end{theorem}
+
+\begin{proof}
+Both proofs proceed by induction over the derivation $E$ containing
+the suspended proposition; this is the second derivation in positive 
+focal substitution and the first derivation in negative focal substitution. 
+\end{proof}
+
+Pay attention to the way this compound matching construct is being
+used. In unfocused linear logic, using the compound notation
+effectively means that a single statement:
+\begin{center}
+If $\Delta \altv \istrue{A}$, ~
+$\tackon{\Theta}{x{:}\islvl{A}} \altv \istrue{C}$, ~
+and $\Delta'$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$, ~
+then $\Delta' \altv C$.
+\end{center}
+can simultaneously express 
+three cut
+principles: \smallskip
+\begin{itemize}
+\item If $\oseq{\Gamma}{\cdot}{\cdot}{A}$ 
+      and $\oseq{\Gamma, A}{\Delta'}{\Omega'}{C}$,
+      then $\oseq{\Gamma}{\Delta'}{\Omega'}{C}$.
+\item If $\oseq{\Gamma}{\Delta}{\cdot}{A}$ 
+      and $\oseq{\Gamma}{\Delta', A}{\Omega'}{C}$,
+      then $\oseq{\Gamma}{\Delta', \Delta}{\Omega'}{C}$.
+\item If $\oseq{\Gamma}{\Delta}{\Omega}{A}$ 
+      and $\oseq{\Gamma}{\Delta'}{\Omega_L, A, \Omega_R}{C}$,
+      then $\oseq{\Gamma}{\Delta',\Delta}{\Omega_L, \Omega, \Omega_R}{C}$.
+\end{itemize}
+\smallskip
+As an admissible rule, we would write this
+as follows:
+\[
+\infer-[{\it unfocused\mbox{-}cut}]
+{\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}} \altv \istrue{C}}
+{\Delta \altv \istrue{A}
+ &
+ \tackon{\Theta}{x{:}\islvl{A}} \altv \istrue{C}}
+\]
+
+In the negative focal substation (as the leftist substitutions of
+cut admissibility), there is a corresponding use of
+$\restrictfrom{U}{\mlvl}$ to capture that we can use a proof of
+$\istrue{A}$ to discharge a hypothesis of $\istrue{A}$ in a proof of
+$\istrue{C}$ or a proof of $\islax{C}$, but that a proof of
+$\islax{A}$ can only discharge a hypothesis of $\istrue{A}$ in a proof
+of $\islax{C}$. 
+
+
+The computational content of positive focal substitution is the
+substitution of a value $V$ for a variable $z$ in an expression $E$, 
+written $[V/z]E$. The computational
+content of negative focal substitution is the substitution of a spine $\Sp$,
+which represents a continuation, into an expression $E$ waiting on that 
+continuation, written $[E]\Sp$. As admissible rules, focal substitution is
+represented as follows:
+\[
+\infer-[{\it subst}^+]
+{\foct{\Psi}{\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}}{[V/z]E}{U}}
+{\foct{\Psi}{\Delta}{V}{[A^+]}
+ &
+ \foct{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{A^+}}}}{E}{U}}
+\]
+\[
+\infer-[{\it subst}^-]
+{\foct{\Psi}{\frameoff{\Theta}{\Delta}}{[ E ] \Sp}{\restrictfrom{U}{\mlvl}}}
+{\foct{\Psi}{\Delta}{E}{\islvl{\langle A^- \rangle}}
+ &
+ \foct{\Psi}{\tackon{\Theta}{[A^-]}}{\Sp}{U}}
+\]
+
+\section{Cut admissibility}
+\label{sec:ord-cut}
+
+It is a little wordy to say that, in a context or succedent, the only
+judgments involving suspensions are $(\ispers{\susp{p^+_\mpers}})$,
+$(\iseph{\susp{p^+_\meph}})$, $(\istrue{\susp{p^+}})$,
+$(\istrue{\susp{p^-}})$, and $(\islax{\susp{p^-_\mlax}})$, but this is a
+critical precondition of cut admissibility property for focused
+\ollll. We'll call contexts and succedents with this property {\it
+  suspension-normal}.
+
+\bigskip
+\begin{theorem}[Cut admissibility]\label{thm:ord-cut}
+For suspension-normal $\Psi$, $A^+$, $A^-$, $\Delta$, $\Theta$, $\Xi$, and $U$,
+\begin{enumerate}
+\item If $\foc{\Psi}{\Delta}{[ A^+ ]}$, ~
+         $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$,\\
+      and $\Xi$ matches $\frameoff{\Theta}{{\Delta}}$, ~
+      then $\foc{\Psi}{\Xi}{U}$.
+\item If $\foc{\Psi}{\Delta}{A^-}$, ~
+         $\foc{\Psi}{\tackon{\Theta}{[A^-]}}{U}$, ~
+         $\Delta$ is stable, \\
+      and $\Xi$ matches $\frameoff{\Theta}{\Delta}$, ~
+      then $\foc{\Psi}{\Xi}{U}$.
+\item If $\foc{\Psi}{\Delta}{\islvl{A^+}}$, ~
+         $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$, ~
+         $\Theta$ and $U$ are stable, \\ 
+      $\Xi$ matches $\frameoff{\Theta}{\Delta}$, ~
+      and $\restrictfrom{U}{\mlvl}$, ~
+      then $\foc{\Psi}{\Xi}{U}$.
+\item If $\foc{\Psi}{\Delta}{\istrue{A^-}}$, ~
+         $\foc{\Psi}{\tackon{\Theta}{x{:}\islvl{A^-}}}{U}$, ~
+         $\Delta$ is stable, \\ 
+      and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$,
+      then $\foc{\Psi}{\Xi}{U}$
+\end{enumerate}
+\end{theorem}
+\bigskip
+
+\noindent
+The four cases of cut admissibility (and their proof below) neatly
+codify an observation about the structure of cut admissibility proofs
+made by Pfenning in his work on structural cut elimination
+\cite{pfenning00structural}.  The first two parts of
+Theorem~\ref{thm:ord-cut} are the home of the {\it principal cases}
+that decompose both derivations simultaneously, the third part
+contains all the {\it left commutative cases} that perform case
+analysis and induction only on the first given derivation, and the
+fourth part contains all the {\it right commutative cases} that
+perform case analysis and induction only on the second given
+derivation.
+
+In Pfenning's work on structural cut elimination, this classification
+of cases was informal, but the structure of our cut admissibility
+proofs actually isolates the principal, left commutative, and right
+commutative cases into different parts of the theorem
+\cite{pfenning00structural}. This separation of cases is the reason
+why cut admissibility in a focused sequent calculus can use a more
+refined induction metric than cut admissibility in an unfocused
+sequent calculus. As noted previously \cite{simmons11structural}, the
+refined induction metric makes the theorem easier to prove.  For
+instance, the refined induction metric means that we do not need to
+rely on the fact that weakening and variable substitution preserve
+the size of derivations.
+
+Before discussing the proof, it is worth noting that this theorem
+statement is already a sort of victory. It is an extremely simple
+statement of cut admissibility for a rather complex logic.
+
+\subsection{Optimizing the statement of cut admissibility}
+
+We will pick the cut admissibility proof
+from Chaudhuri's thesis \cite{chaudhuri06focused} as a representative
+example of existing work on cut admissibility in focused logics.  His
+statement of cut admissibility linear logic has 10 parts, 
+which are sorted into
+five groups. In order to extend his
+proof structure to handle the extra lax and mobile connectives in
+\ollll, we would need a dramatically larger number of
+cases. Furthermore, at a computational level, Chaudhuri's proof
+requires a lot of code duplication -- that is, the proof of two
+different parts may both require a case that looks essentially the
+same.
+
+A great deal of simplification is due to the use of the matching
+constructs $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$ and
+$\restrictfrom{U}{\mlvl}$. Without that notation, part 3 would split
+into two parts for $\mtrue$ and $\mlax$ and part 4 would split into
+three parts for $\mtrue$, $\meph$, and $\mpers$. The fifth part of
+the cut admissibility theorem in Chapter 2
+(Theorem~\ref{thm:lincut}), which is computationally a
+near-duplicate of the fourth part of the same theorem, is due to the
+lack of this simplification.
+
+Further simplification is due to defining right-focused, inverting,
+and left-focused sequents as refinements of general sequents
+$\foc{\Psi}{\Delta}{U}$. This strategy was not used in the structural
+focalization development, and while no code duplication resulted, the
+statement of part 3 was split into two parts (for substituting into
+terms and spines) and the statement of part 4 was split in three (for
+substituting into values, terms, spines) \cite{simmons11structural}.
+Without either of the aforementioned simplifications, we would have 15
+parts in the statement of Theorem~\ref{thm:ord-cut} instead of four
+and about a 2x blowup in the total number of cases that needed to be
+written down and checked.
+
+A final improvement in our theorem statement is very subtle: the {\it
+  particular} fixed inversion strategy we chose matters.  The use of a
+fixed inversion strategy is critical to avoid two problems with the
+development in Chapter~2. The more serious problem, discussed in
+Section~\ref{sec:confluent-v-fixed}, is the need to prove a tedious,
+quadratically large confluence theorem in order to define a strong
+notion of canonical forms. This first problem is solved by the choice
+of {\it any} fixed inversion strategy. The less serious problem is
+that the proof of Theorem~\ref{thm:lincut} duplicates many right
+commutative cases in both part 1 and part 4 (which map directly onto
+parts 1 and 4 of Theorem~\ref{thm:ord-cut} above). Our system
+prioritizes the inversion of positive formulas on the left over the
+inversion of negative formulas on the right. If we made the opposite
+choice, as Chaudhuri's system does, then this (smaller) problem 
+would remain, resulting in code duplication. 
+We get a lot of mileage out of the
+fact that if $\Xi = \tackon{\Theta}{A^+}$ then $A^+$ unambiguously
+refers to the left-most proposition in $\Xi$, and this invariant would
+no longer be possible to maintain in the proof of cut
+admissibility if we prioritized inversion of negative propositions on
+the right.
+
+
+\subsection{Proof of cut admissibility, Theorem~\ref{thm:ord-cut}}
+
+The proof proceeds by lexicographic induction.  In parts 1 and 2, the
+type gets smaller in every call to the induction hypothesis. In part
+3, the induction hypothesis is only ever invoked on the same type
+$A^+$, and every invocation of the induction hypothesis is either to
+part 1 (smaller part number) or to part 3 (same part number, first
+derivation is smaller). Similarly, in part 4, the induction hypothesis
+is only invoked at the same type $A^-$, and every invocation of the
+induction hypothesis is either to part 2 (smaller part number) or to
+part 4 (same part number, second derivation is smaller).
+
+The remainder of this section will cover each of the four parts of
+this proof in turn. Most of the theorem will be presented at the level
+of proof terms, but for representative cases we will discuss what the
+manipulation of proof terms means in terms of sequents and matching
+constructs. In many cases, we discuss the necessity of constructing
+certain contexts or frames; in general, we will state the necessary
+properties of these constructions without detailing the relatively
+straightforward process of constructing them.
+
+\subsubsection{Positive principal substitution}
+Positive principal substitution encompasses half the {\it principal
+  cuts} from Pfenning's structural cut admissibility proof -- the
+principal cuts where the principal cut formula is positive. The
+constructive content of this part is a function
+$(\subst{V}{N})^{A^+}$ that normalizes a value against a
+term. Induction is on the structure of the positive type. The
+admissible rule associated with principal positive substitution is
+${\it cut}^+$.
+\[
+\infer-[{\it cut}^+]
+{\foct{\Psi}{\frameoff{\Theta}{\Delta}}{(\subst{V}{N})^{A^+}}{U}}
+{\foct{\Psi}{\Delta}{V}{[A^+]}
+ &
+ \foct{\Psi}{\tackon{\Theta}{A^+}}{N}{U}}
+\]
+We have to be careful, especially in the positive principal substitution
+associated with the type $A^+ \fuse B^+$, to maintain the
+invariant that, in an unstable context, we only ever consider the {\it
+  leftmost} inverting positive proposition.
+
+\begin{itemize}
+\item[--] $(\subst{z}{\tetap{z'}{N}})^{p^+_{\mlvl}} = [z/z']N$\smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where 
+  \begin{itemize}
+   \item $\Delta$ matches $z{:}\susp{p^+_\mlvl}$,
+   \item $\tackon{\Theta}{p^+}$ matches $\frameoff{\Theta'}{p^+}$,
+      $N$ is a derivation of 
+      $\foc{\Psi}{\tackon{\Theta'}{z'{:}\islvl{\susp{p^+_\mlvl}}}}{U}$,
+   \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
+  \end{itemize}
+  Because $\Delta$ is suspension-normal, 
+  we can derive $\foc{\Psi}{\Delta}{[p^+_\mlvl]}$ by ${\it
+    id}^+$, and
+  $\Xi$ matches
+  $\frameoff{\Theta'}{\restrictto{\Delta'}{\mlvl}}$.
+  Therefore, the result follows by focal substitution on $z$ and $N$. 
+
+\futurework{I'm relying on a property I haven't explicitly proven:
+ which feels familiar from the Agda developments:
+ if $\Xi$   matches $\frameoff{\Theta}{\Delta}$
+ and $\tackon{\Theta}{x:\islvl{T}}$ 
+            matches $\frameoff{\Theta'}{x{:}\islvl{T}}$
+ then $\Xi$ matches $\frameoff{\Theta}{\Delta}$.  }
+\smallskip
+ 
+\item[--] $(\subst{\tdownr{M}}{\tdownl{x}{N}})^{{\downarrow}A^-} 
+           = \rsubsta{M}{x}{N}{A^-}$ %\\
+%   We must show $\foc{\Psi}{\Xi}{U}$, where
+%   \begin{itemize}
+%   \item $M$ is derivation of $\foc{\Psi}{\Delta}{A^-}$, $\Delta$ is stable,
+%   \item $\tackon{\Theta}{{\downarrow}A^-}$ matches 
+%         $\frameoff{\Theta'}{{\downarrow}A^-}$,
+%         $N$ is a derivation of 
+%         $\foc{\Psi}{\tackon{\Theta'}{x{:}\istrue{A^-}}}{U}$, 
+%   \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
+%   \end{itemize}
+
+%   $\Xi$ matches $\frameoff{\Theta'}{\Delta}$, so the result follows by
+%   part 4 of cut admissibility on $N$ and $M$. 
+
+
+\item[--] $(\subst{\tgnabr{M}}{\tgnabl{x}{N}})^{{\scriptgnab}A^-}
+           = \rsubsta{M}{x}{N}{A^-}$
+
+\item[--] $(\subst{\tbangr{M}}{\tbangl{x}{N}})^{{!}A^-}
+           = \rsubsta{M}{x}{N}{A^-}$ \smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $\Delta$ matches $\restrictto{\Delta'}{\mpers}$,
+        $M$ is derivation of $\foc{\Psi}{\Delta'}{A^-}$, 
+        $\Delta'$ is stable,
+  \item $\tackon{\Theta}{{\downarrow}A^-}$ matches 
+        $\frameoff{\Theta'}{{\downarrow}A^-}$,
+        $N$ is a derivation of 
+        $\foc{\Psi}{\tackon{\Theta'}{x{:}\istrue{A^-}}}{U}$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
+  \end{itemize}
+
+  $\Xi$ matches $\frameoff{\Theta'}{\restrictto{\Delta'}{\mpers}}$,
+  so the result follows by
+  part 4 of cut admissibility on $N$ and $M$. 
+
+\futurework{Oh, stability has to be preserved my mapping. So many theorems!
+ I'm glad I'm not proving this in Agda (this time).}
+\smallskip
+
+\item[--] $(\subst{\toner}{\tonel{N}})^{\one} = N$
+
+\item[--] $(\subst{(\tfuser{V_1}{V_2})}{(\tfusel{N}}))^{A^+ \fuse B^+}
+           = (\subst{V_2}{(\subst{V_1}{N})^{A^+}})^{B^+}$ \smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $\Delta$ matches $\matchconj{\Delta_1}{\Delta_2}$,\\
+        $V_1$ is a derivation of $\foc{\Psi}{\Delta_1}{[A^+]}$,
+        $V_2$ is a derivation of $\foc{\Psi}{\Delta_2}{[B^+]}$,
+  \item $\tackon{\Theta}{A^+ \fuse B^+}$ matches
+        $\frameoff{\Theta'}{A^+ \fuse B^+}$, 
+        $N$ is a derivation of 
+        $\foc{\Psi}{\tackon{\Theta'}{A^+, B^+}}{U}$, 
+  \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
+  \end{itemize}
+
+  It is clear we can to construct a frame $\Theta_B$ such that
+  $\tackon{\Theta'}{\mkconj{A^+}{B^+}} = \tackon{\Theta_B}{A^+}$; we're just exchanging
+  the part in the frame with the part not in the frame. We also 
+  must be able to construct a second frame, $\Theta_A$, such that
+  1) $\Xi$ matches $\frameoff{\Theta_A}{\Delta_2}$ and 
+  2) $\tackon{\Theta_A}{B^+}$ matches $\frameoff{\Theta_B}{\Delta_1}$.
+
+\futurework{It's probably (I might say hopefully) not clear to the reader
+ what a doozy that is, but I've done it in Agda once in that proof I lost, 
+ I guess.}
+
+  Because $\tackon{\Theta_A}{B^+}$ matches $\frameoff{\Theta_B}{\Delta_1}$,
+  by the induction hypothesis on $V_1$ and $N$ we have
+  $(\subst{V_1}{N})^{A^+}$, a derivation of 
+  $\foc{\Psi}{\tackon{\Theta_A}{B^+}}{U}$.
+
+  Because $\Xi$ matches $\frameoff{\Theta_A}{\Delta_2}$, by the induction
+  hypothesis on $V_2$ and $(\subst{V_1}{N})^{A^+}$, we have a derivation
+  of $\foc{\Psi}{\Xi}{U}$ as required. \smallskip
+
+\item[--] $(\subst{\tinl{V}}{\toplusl{N_1}{N_2}})^{A^+ \oplus B^+} 
+           = (\subst{V}{N_1})^{A^+}$
+
+\item[--] $(\subst{\tinr{V}}{\toplusl{N_1}{N_2}})^{A^+ \oplus B^+} 
+           = (\subst{V}{N_2})^{B^+}$
+
+\item[--] $(\subst{\texistsr{t}{V}}{\texistsl{a}{N}})^{\exists a{:}\tau.A^+}
+           = (\subst{V}{[t/a]N})^{[t/a]A^+}$ \smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $\Psi \vdash t : \tau$, $V$ is a derivation of 
+     $\foc{\Psi}{\Delta}{[[t/a]A^+]}$,
+  \item $\tackon{\Theta}{\exists a{:}\tau. A^+}$ 
+     matches $\frameoff{\Theta'}{\exists a{:}\tau. A^+}$, 
+     $N$ is a derivation of 
+     $\foc{\Psi, a{:}\tau}{\tackon{\Theta}{A^+}}{U}$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
+  \end{itemize}
+  $\Xi$ matches $\frameoff{\Theta'}{\Delta}$, and by the variable
+  substitution on $[t/a]$ and $N$, we have a derivation $[t/a]N$ of
+  $\foc{\Psi}{\tackon{\Theta}{[t/a]A^+}}{U}$.  We count $[t/a]A^+$ as
+  being a smaller formula than $\exists x{:}\tau.A^+$, so by the
+  induction hypothesis on $V$ and $[t/a]N$, we get a derivation of
+  $\foc{\Psi}{\Xi}{U}$ as required. \smallskip
+
+\item[--] $(\subst{\tunifr}{\phi})^{t \doteq t} = \phi({\sf id})$\smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $\Delta$ matches $\cdot$,
+  \item $\tackon{\Theta}{t \doteq t}$ matches $\frameoff{\Theta'}{t \doteq t}$,
+     $\phi$ is a function from substitutions $\Psi' \vdash \sigma : \Psi$
+     that unify $t$ and $t$ to derivations of 
+     $\foc{\Psi}{\tackon{\Theta'}{\cdot}}{U}$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
+  \end{itemize}
+  We simply apply the identity substitution to $\phi$
+  to obtain a derivation of $\foc{\Psi}{\tackon{\Theta'}{\cdot}}{U}$.
+  Note that this is not the derivation of 
+  $\foc{\Psi}{\Xi}{U}$ that we need; we need an exchange-like lemma that, 
+  given a derivation of $\foc{\Psi}{\tackon{\Theta'}{\cdot}}{U}$
+  and the fact that $\Xi$ matches $\frameoff{\Theta'}{\cdot}$,
+  we can get a proof of $\foc{\Psi}{\Xi}{U}$ as we require.
+
+\end{itemize}
+
+\subsubsection{Negative principal substitution}
+Negative principal substitution encompass all the {\it principal cuts}
+from Pfenning's structural cut admissibility proof for which the
+principal formula is negative. The constructive content of this part
+is a function $(\subst{N}{\Sp})^{A^-}$ that normalizes a term against
+a spine; a similar function appears as {\it hereditary reduction} 
+in presentations of hereditary
+substitution for LF \cite{watkins02concurrent}. Induction is on the
+structure of the negative type. The admissible rule associated with
+negative principal substitution is ${\it cut}^-$:
+\[
+\infer-[{\it cut}^-]
+{\foct{\Psi}{\frameoff{\Theta}{\Delta}}{(\subst{N}{\Sp})^{A^-}}{U}}
+{\foct{\Psi}{\Delta}{N}{A^-}
+ &
+ \foct{\Psi}{\tackon{\Theta}{[A^-]}}{\Sp}{U}
+ &
+ \stableL{\Delta}}
+\]
+
+\begin{itemize}
+\item[--] $(\subst{\tetan{N}}{\tnil})^{p^-_\mlvl} = N$\smallskip\\
+   We must show $\foc{\Psi}{\Xi}{U}$, where
+   \begin{itemize}
+   \item $N$ is a derivation of $\foc{\Psi}{\Delta}{\islvl{\susp{p^-_\mlvl}}}$
+   \item $\tackon{\Theta}{[p^-_\mlvl]}$ matches $[p^-_\mlvl]$,
+      $U = \islvl{\susp{p^-_\mlvl}}'$,
+   \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
+   \end{itemize}
+   Because $U$ is suspension-normal, $\mlvl = \mlvl'$.
+   A derivation of $\foc{\Psi}{\Delta}{\islvl{\susp{p^-_\mlvl}}}$ is not
+   quite a proof of $\foc{\Psi}{\Xi}{U}$, so we need an exchange-like 
+   lemma that we can get one from the other. \smallskip
+
+\item[--] $(\subst{\tupr{N}}{\tupl{M}})^{{\uparrow}A^+} = \lsubsta{N}{M}{A^+}$
+
+\item[--] $(\subst{\tlaxr{N}}{\tlaxl{M}})^{{\ocircle}A^+}
+           = \lsubsta{N}{M}{A^+}$\smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $N$ is a derivation of 
+     $\foc{\Psi}{\Delta}{\islax{A^+}}$, 
+  \item $\tackon{\Theta}{{\ocircle}A^+}$ matches 
+     $\frameoff{\Theta'}{{\ocircle}A^+}$, 
+     $\restrictfrom{U}{\mlax}$, 
+     $\Theta'$ and $U$ are stable, 
+     $M$ is a derivation of $\foc{\Psi}{\tackon{\Theta'}{A^+}}{U}$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
+  \end{itemize}
+  $\Xi$ matches $\frameoff{\Theta'}{\Delta}$, so the result follows
+  by part 3 of cut admissibility on $N$ and $M$. \smallskip
+
+\item[--] $(\subst{(\tlaml{N})}{(\tappl{V}{\Sp})})^{A^+ \lefti B^-}
+           = (\subst{(\subst{V}{N})^{A^+}}{\Sp})^{B^-}$
+
+\item[--] $(\subst{(\tlamr{N})}{(\tappr{V}{\Sp})})^{A^+ \righti B^-} 
+           = (\subst{(\subst{V}{N})^{A^+}}{\Sp})^{B^-}$\smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $N$ is a derivation of 
+     $\foc{\Psi}{\mkconj{\Delta}{A^+}}{B^-}$, $\Delta$ is stable (by the fixed
+     inversion invariant -- we only invert on the right when there is 
+     no further inversion to do on the left), 
+  \item $\tackon{\Theta}{[A^+ \righti B^-]}$ matches 
+     $\frameoff{\Theta'}{\matchconj{[A^+ \righti B^-]}{\Delta_A}}$, 
+     $V$ is a derivation of $\foc{\Psi}{\Delta_A}{[A^+]}$,
+     $\Sp$ is a derivation of $\foc{\Psi}{\tackon{\Theta'}{[B^-]}}{U}$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
+  \end{itemize}
+  We can simultaneously view the construction $\Delta,A^+$ as a frame
+  $\Theta_\Delta$ such that $\tackon{\Theta_\Delta}{A^+} =
+  \Delta,A^+$.  Note that this is only possible to do because $\Delta$
+  is stable; if there were a non-stable proposition in $\Delta$, the
+  fixed inversion invariant would not permitted us to frame off the
+  right-most proposition $A^+$.
+
+  We next construct a context $\Delta'_A$ that matches
+  $\frameoff{\Theta_\Delta}{\Delta_A}$ (and also $\Delta, \Delta_A$ viewed
+  as a matching construct), while simultaneously
+  $\Xi$ matches $\frameoff{\Theta'}{\Delta'_A}$. 
+
+  By the part 1 of cut admissibility
+  on $V$ and $N$, we have $(\subst{V}{N})^{A^+}$, a derivation of 
+  $\foc{\Psi}{\Delta'_A}{B^-}$, and 
+  the result then follows by the induction hypothesis on 
+  $(\subst{V}{N})^{A^+}$ and $\Sp$.  \smallskip
+
+\item[--] $(\subst{(\twithr{N_1}{N_2})}{(\tpione{\Sp})})^{A^- \with B^-}
+           = (\subst{N_1}{\Sp})^{A^-}$
+
+\item[--] $(\subst{(\twithr{N_1}{N_2})}{(\tpitwo{\Sp})})^{A^- \with B^-}
+           = (\subst{N_2}{\Sp})^{A^-}$
+
+\item[--] $(\subst{(\tforallr{a}{N})}{(\tforalll{t}{\Sp})})^{\forall x.A^-}
+           = (\subst{[t/a]N}{\Sp})^{[t/a]A^-}$
+\end{itemize}
+
+\subsubsection{Leftist substitution}
+In focal substitution, the positive case
+corresponds to our usual intuitions about cut admissibility and the
+negative case is strange.  In cut admissibility, the situation is
+reversed: rightist substitutions (considered in
+Section~\ref{sec:rsubst} below), associated with negative principal
+cut formals, look like normal substitutions, and the leftist 
+substitutions, considered here, are strange, as they break
+apart the expression that proves $A^+$ rather than the term
+where $A^+$ appears in the context.
+
+Leftist substitutions encompass all the {\it left commutative cuts}
+from Pfenning's structural cut admissibility proof.
+The constructive content of leftist substitution is a function
+$\lsubst{E}{M}$; we say we are {\it substituting} $M$ {\it out of} $E$. 
+Induction is on the first subterm, as we crawl 
+through $E$ looking for places where focus takes place on the 
+right. The admissible rule associated with leftist substitution is
+${\it lcut}$:
+\[
+\infer-[{\it lcut}]
+{\foct{\Psi}{\frameoff{\Theta}{\Delta}}{\lsubsta{E}{M}{A^+}}{\restrictfrom{U}{\mlvl}}}
+{\foct{\Psi}{\Delta}{E}{\islvl{A^+}}
+ &
+ \foct{\Psi}{\tackon{\Theta}{A^+}}{M}{U}
+ &
+ \stableL{\Theta}
+ &
+ \stableR{U}}
+\]
+
+Except for the case where the first given derivation ends in the rule
+${\it focus}_R$, every case of this theorem involves a left rule.
+The general pattern for these cases is that
+$\Xi$ matches $\frameoff{\Theta}{\Delta}$ and
+$\Delta$ matches $\frameoff{\Theta_B}{x{:}\istrue{T}}$.
+$\Theta$ and $\Theta_B$ have the same persistent variables but
+distinct ephemeral and ordered variables, and we must construct
+a frame ${\Theta}{\circ}{\Theta_B}$
+that is effectively the composition of $\Theta$ and $\Theta_B$. 
+In
+cases that we discuss in detail, necessary properties of this
+composition frame are stated but not proven.
+
+\paragraph{\it Substitution into terms}
+
+\begin{itemize}
+\item[--] $\lsubsta{\tfocusr{V}}{M}{A^+} = (\subst{V}{M})^{A^+}$\smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $V$ is a derivation of $\foc{\Psi}{\Delta}{[A^+]}$,
+  \item $M$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$,
+  \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$, and 
+    $\restrictfrom{U}{\mlvl}$
+  \end{itemize}
+  The result follows from part 1 of cut admissibility
+  on $V$ and $M$. \smallskip
+
+\item[--] $\lsubsta{\tfocusl{x}{\Sp}}{M}{A^+}
+           = \tfocusl{x}{(\lsubsta{\Sp}{M}{A^+})}$\smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $\Delta$ matches $\frameoff{\Theta_B}{x{:}B^-}$, 
+    $\Sp$ is a derivation of
+    $\foc{\Psi}{\tackon{\Theta_B}{[B^-]}}{\islvl{A^+}}$,
+  \item $M$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$,
+  \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$, and
+    $\restrictfrom{U}{\mlvl}$.
+  \end{itemize}
+  $\Xi$ matches $\frameoff{(\Theta {\circ} \Theta_B)}{x{:}B^-}$
+  and $\tackon{(\Theta {\circ} \Theta_B)}{[B^-]}$ matches
+  $\frameoff{\Theta'}{\tackon{\Theta_B}{[B^-]}}$. By the induction
+  hypothesis on $\Sp$ and $M$ we have 
+  $\foc{\Psi}{\tackon{(\Theta {\circ} \Theta_B)}{[B^-]}}{U}$, and
+  the required result then follows from rule ${\it focus}_L$. \smallskip
+  
+\item[--] $\lsubsta{\tetap{z}{N}}{M}{A^+} 
+           = \tetap{z}{(\lsubsta{N}{M}{A^+})}$
+\item[--] $\lsubsta{\tdownl{x}{N}}{M}{A^+} 
+           = \tdownl{x}{(\lsubsta{N}{M}{A^+})}$
+\item[--] $\lsubsta{\tgnabl{x}{N}}{M}{A^+} 
+           = \tgnabl{x}{(\lsubsta{N}{M}{A^+})}$
+\item[--] $\lsubsta{\tbangl{x}{N}}{M}{A^+} 
+           = \tbangl{x}{(\lsubsta{N}{M}{A^+})}$\smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $\Delta$ matches $\frameoff{\Theta_B}{{!}B^-}$, 
+    $N$ is a derivation of
+    $\foc{\Psi}{\tackon{\Theta_B}{\ispers{x{:}B^-}}}{\islvl{A^+}}$,
+  \item $M$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$,
+  \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$, and
+    $\restrictfrom{U}{\mlvl}$.
+  \end{itemize}
+  We can construct a $\Theta'$ such that 
+  $\tackon{\Theta'}{A^+} = (\tackon{\Theta}{A^+},x{:}\ispers{B^-})$. By
+  admissible weakening, $M$ is a derivation of 
+  $\foc{\Psi}{\tackon{\Theta'}{A^+}}{U}$, too.
+
+  $\Xi$ matches $\frameoff{(\Theta {\circ} \Theta_B)}{{!}B^-}$ and
+  $\tackon{(\Theta {\circ} \Theta_B)}{x{:}\ispers{B^-}}$ matches
+  $\frameoff{\Theta'}{\tackon{\Theta_B}{x{:}\ispers{B^-}}}$.
+  By the induction hypothesis on $N$ and $M$ we have 
+  $\foc{\Psi}{\tackon{(\Theta {\circ}
+      \Theta_B)}{x{:}\ispers{B^-}}}{U}$, and the required
+  result then follows from rule ${!}_L$. \smallskip
+
+\item[--] $\lsubsta{\tfusel{N}}{M}{A^+} = \tfusel{(\lsubsta{N}{M}{A^+})}$
+\item[--] $\lsubsta{\tabort}{M}{A^+} = \tabort$
+\item[--] $\lsubsta{\toplusl{N_1}{N_2}}{M}{A^+} = \toplusl{(\lsubsta{N_1}{M}{A^+})}{(\lsubsta{N_2}{M}{A^+})}$
+\item[--] $\lsubsta{\texistsl{a}{N}}{M}{A^+} = \texistsl{a}{(\lsubsta{N}{M}{A^+})}$\smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $\Delta$ matches $\frameoff{\Theta_B}{\exists a{:}\tau.B^+}$, 
+     $N$ is a derivation of $\foc{\Psi,a{:}\tau}{\tackon{\Theta_B}{B^+}}{A^+}$,
+  \item $M$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$,
+  \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$, and
+     $\restrictfrom{U}{\mlvl}$.
+  \end{itemize}
+  $\Xi$ matches $\frameoff{(\Theta{\circ}\Theta_B)}{\exists a{:}\tau.B^+}$
+  and $\tackon{(\Theta{\circ}\Theta_B)}{B^+}$ matches 
+  $\frameoff{\Theta}{\tackon{\Theta_B}{B^+}}$. By variable weakening,
+  $M$ is also a derivation of $\foc{\Psi, a{:}\tau}{\tackon{\Theta}{A^+}}{U}$,
+  so by the induction hypothesis on $N$ and $M$ we have
+  $\foc{\Psi, a{:}\tau}{\tackon{(\Theta{\circ}\Theta_B)}{B^+}}{U}$, 
+  and the required result then follows from rule $\exists_L$. \smallskip
+
+\item[--] $\lsubsta{\phi}{M}{A^+} 
+           = (\mathsf{fn}~\sigma \Rightarrow \lsubsta{\phi(\sigma)}{(\sigma{M})}{A^+})$\smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $\Delta$ matches $\frameoff{\Theta_B}{t \doteq s}$,
+    $\phi$ is a function from substitutions $\Psi' \vdash \sigma : \Psi$
+    that unify $t$ and $s$ to derivations of 
+    $\foc{\Psi'}{\tackon{\sigma{\Theta_B}}{\cdot}}{\sigma{A^+}}$,
+  \item $M$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$,
+  \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$, and 
+     $\restrictfrom{U}{\mlvl}$.
+  \end{itemize}
+  $\Xi$ matches $\frameoff{(\Theta{\circ}\Theta_B)}{t \doteq s}$, and 
+  for any substitution $\sigma$, 
+  $\restrictfrom{\sigma{U}}{\mlvl}$ and
+  $\tackon{\sigma(\Theta{\circ}\Theta_B)}{\cdot}$ matches 
+  $\frameoff{\sigma\Theta}{\tackon{\sigma\Theta_B}{\cdot}}$.
+  By rule $\doteq_L$, it suffices to show that, 
+  given an arbitrary substitution $\Psi' \vdash \sigma : \Psi$, 
+  there is a derivation of 
+  $\foc{\Psi'}{\tackon{\sigma(\Theta{\circ}\Theta_B)}{\cdot}}{\sigma{U}}$.
+  
+
+  By applying $\sigma$ to $\phi$, we get $\phi(\sigma)$, a derivation 
+  of $\foc{\Psi'}{\tackon{\sigma\Theta_B}{\cdot}}{\sigma{A^+}}$;
+  the usual interpretation of higher-order derivations is that 
+  $\phi(\sigma)$ is a subderivation of $\phi$, so $\phi(\sigma)$ can be
+  used to invoke the induction hypothesis.
+  From variable substitution, we get
+  $\sigma{M}$, a derivation of 
+  $\foc{\Psi'}{\tackon{\sigma\Theta}{\sigma{A^+}}}{\sigma{U}}$, and then
+  the result follows by the induction hypothesis on 
+  $\phi(\sigma)$ and $\sigma{M}$. 
+
+\end{itemize}
+
+\paragraph{\it Substitution into spines}
+
+\begin{itemize}
+\item[--] $\lsubsta{\tupl{N}}{M}{A^+} = \tupl{(\lsubsta{N}{M}{A^+})}$
+\item[--] $\lsubsta{\tlaxl{N}}{M}{A^+} = \tlaxl{\lsubsta{N}{M}{A^+}}$\smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $\Delta$ matches $\frameoff{\Theta_B}{{\ocircle}B^+}$, 
+     $\restrictfrom{(\islvl{A^+})}{\mlax}$,\\
+     $N$ is a derivation of $\foc{\Psi}{\tackon{\Theta_B}{A^+}}{U_A}$
+  \item $M$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$,
+  \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$, and $U'$ matches 
+     $\restrictfrom{U}{\mlvl}$.
+  \end{itemize}
+  Because $\restrictfrom{(\islvl{A^+})}{\mlax}$ and $\restrictfrom{U}{\mlvl}$, 
+  we can conclude that 
+  $\restrictfrom{U}{\mlax}$. 
+
+  $\Xi$ matches $\frameoff{(\Theta{\circ}\Theta_B)}{{\ocircle}B^+}$
+  and $\tackon{(\Theta{\circ}\Theta_B)}{B^+}$ matches 
+  $\frameoff{\Theta}{\tackon{\Theta_B}{B^+}}$.
+  By the induction hypothesis on $N$ and $M$ we have
+  $\foc{\Psi, a{:}\tau}{\tackon{(\Theta{\circ}\Theta_B)}{B^+}}{U}$,
+  and the result follows by rule ${\ocircle}_L$.  \smallskip
+
+\item[--] $\lsubsta{\tappl{V}{\Sp}}{M}{A^+} 
+           = \tappl{V}{(\lsubsta{\Sp}{M}{A^+})}$
+\item[--] $\lsubsta{\tappr{V}{\Sp}}{M}{A^+} 
+           = \tappr{V}{(\lsubsta{\Sp}{M}{A^+})}$\smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $\Delta$ matches 
+     $\frameoff{\Theta_B}{\matchconj{[B_1^+ \righti B_2^-]}{\Delta_B}}$,
+     $V$ is a derivation of $\foc{\Psi}{\Delta_B}{[B_1^+]}$, \\
+     $\Sp$ is a derivation of 
+     $\foc{\Psi}{\tackon{\Theta_B}{[B_2^-]}}{\islvl{A^+}}$,
+  \item $M$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$,
+  \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$, and 
+     $\restrictfrom{U}{\mlvl}$.
+  \end{itemize}
+  $\Xi$ matches 
+  $\frameoff{(\Theta{\circ}\Theta_B)}
+    {\matchconj{[B_1^+ \righti B_2^-]}{\Delta_B}}$
+  and $\tackon{(\Theta{\circ}\Theta_B)}{[B_2^-]}$ matches 
+  $\frameoff{\Theta}{\tackon{\Theta_B}{[B_2^-]}}$.
+  By the induction hypothesis on $\Sp$ and $M$ we have
+  $\lsubsta{\Sp}{M}{A^+}$, a derivation of
+  $\foc{\Psi}{\tackon{(\Theta{\circ}\Theta_B)}{[B_2^-]}}{U}$.
+  The required result follows by rule ${\righti}_L$ on $V$ and 
+  $\lsubsta{\Sp}{M}{A^+}$.  \smallskip
+
+\item[--] $\lsubsta{\tpione{\Sp}}{M}{A^+} = \tpione{(\lsubsta{\Sp}{M}{A^+})}$
+\item[--] $\lsubsta{\tpitwo{\Sp}}{M}{A^+} = \tpitwo{(\lsubsta{\Sp}{M}{A^+})}$
+\item[--] $\lsubsta{\tforalll{t}{\Sp}}{M}{A^+} 
+           = \tforalll{t}{(\lsubsta{\Sp}{M}{A^+})}$
+\end{itemize}
+
+
+\subsubsection{Rightist substitution}\label{sec:rsubst}
+Rightist substitutions encompass all the {\it right commutative cuts}
+from Pfenning's structural cut admissibility proof.  The constructive
+content of this part is a function $\rsubsta{M}{x}{E}{A^-}$; we 
+say we are {\it substituting} $M$ {\it into} $E$. Induction
+is on the second subterm, as we crawl through $E$ looking for places
+where $x$ is mentioned.
+The admissible rule associated with rightist substitution is
+${\it rcut}$:
+\[
+\infer-[{\it rcut}]
+{\foct{\Psi}{\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}}{\rsubsta{M}{x}{E}{A^-}}{U}}
+{\foct{\Psi}{\Delta}{M}{A^-}
+ &
+ \foct{\Psi}{\tackon{\Theta}{x{:}\islvl{A^-}}}{E}{U}
+ & 
+ \stableL{\Delta}}
+\]
+
+A unique aspect of the right commutative cuts is that the implicit 
+bookkeeping on contexts matters to the computational behavior of 
+the proof: when we have deal with
+multiplicative connectives like $A^+ \fuse B^+$ and $A^+ \lefti B^+$ 
+under focus, 
+we actually must consider that the variable $x$ that we're substituting
+for can end up in only one specific branch of the proof 
+(if $x$ is associated with a judgment $\istrue{A^-}$ or 
+ $\iseph{A^-}$) or in both
+branches of the proof (if
+$x$ is associated with a judgment $x{:}\ispers{A^-}$). The computational
+representation of these cases looks nondeterministic, but it is actually
+determined by the annotations and bookkeeping that we don't write
+down as part of the proof term. This is a point that we return to in
+Section~\ref{sec:intrinsic-extrinsic}.
+
+For cases involving left rules, the general pattern is that
+$\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$ and
+the action of the left rule, when we read it bottom-up, is observe that  
+$\tackon{\Theta}{x{:}\islvl{A^-}}$ matches 
+$\frameoff{\Theta'}{y{:}\istrue{T}}$ in its conclusion and constructs 
+$\frameoff{\Theta'}{y{:}\islvl{T'}'}$ in its premise(s). 
+Effectively, we need to abstract
+a {\it two}-hole function (call it $\Gamma$) from $\Xi$. 
+One hole -- the place where $x$ is --
+is defined by the frame $\Theta$: morally, 
+$\Theta = \lambda \Delta_B. \Gamma(x{:}\islvl{A^-})(\Delta_B)$.
+The other hole -- the place where $y$ is -- 
+is defined by $\Theta'$: morally,
+$\Theta' = \lambda \Delta_A. \Gamma(\Delta_A)(y{:}\istrue{T})$. 
+However, we cannot directly represent these functions due to
+the need to operate around matching constructs. Instead, we use
+construct $\Theta_\Delta$ to represent the frame that is
+morally $\lambda \Delta_B. \Gamma(\Delta)(\Delta_B)$, and 
+$\Theta_{T'}$ to represent the frame that is morally
+$\lambda \Delta_A. \Gamma(\Delta_A)(y{:}\islvl{T'}')$. As before, in
+cases that we discuss in detail, necessary properties of these
+two frames are stated but not proven.
+
+
+\paragraph{\it Substitution into values}
+
+\begin{itemize}
+\item[--] $\rsubsta{M}{x}{z}{A^-} = z$
+\item[--] $\rsubsta{M}{x}{(\tdownr{N})}{A^-}
+           = \tdownr{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{(\tgnabr{N})}{A^-}
+           = \tgnabr{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{(\tbangr{N})}{A^-}
+           = \tbangr{(\rsubsta{M}{x}{N}{A^-})}$\smallskip\\
+  We must show $\foc{\Psi}{\Xi}{[{!}B^-]}$, where 
+  \begin{itemize}
+  \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
+  \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches 
+     $\restrictto{\Delta'}{\mpers}$,
+     $N$ is a derivation of $\foc{\Psi}{\Delta'}{B^-}$, 
+  \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
+  \end{itemize}
+  Because $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches
+  $\restrictto{\Delta'}{\mpers}$ and $\Xi$ matches 
+  $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$, we can conclude that
+  there exists a $\Theta'$ such that
+  $\Delta' = \tackon{\Theta'}{x{:}\islvl{A^-}}$ and also that
+  $\Xi$ matches $\restrictto{\Xi}{\mpers}$.
+
+  By the induction hypothesis on $M$ and $N$, 
+  we have a derivation of $\foc{\Psi}{\Xi}{B^-}$, 
+  and the result follows by rule ${!}_R$. 
+
+\smallskip
+
+\item[--] $\rsubsta{M}{x}{\toner}{A^-} = \toner$ \smallskip\\
+  We must show $\foc{\Psi}{\Xi}{[\one]}$, where
+  \begin{itemize}
+  \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
+  \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches $\cdot$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
+  \end{itemize}
+  Because $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches $\cdot$, it is
+  effectively the case that we must have $\mlvl = \mpers$, and so 
+  $\Xi$ matches $\cdot$ as well. The result follows by rule ${\one}_R$. 
+
+\smallskip
+
+\item[--] $\rsubsta{M}{x}{(\tfuser{V_1}{V_2})}{A^-} = $ \smallskip\\
+    $\begin{array}{ll}
+    \qquad \tfuser{(\rsubsta{M}{x}{V_1}{A^-})}{V_2}
+     & \mbox{\it (if $x$ is in $V_1$'s context but not $V_2$'s)}\\
+    \qquad \tfuser{V_1}{(\rsubsta{M}{x}{V_2}{A^-})}
+     & \mbox{\it (if $x$ is in $V_2$'s context but not $V_1$'s)}\\
+    \qquad \tfuser{(\rsubsta{M}{x}{V_1}{A^-})}{(\rsubsta{M}{x}{V_2}{A^-})}
+     \qquad & \mbox{\it (if $x$ is in both $V_1$ and $V_2$'s contexts)}
+    \end{array}$\smallskip\\
+  We must show $\foc{\Psi}{\Xi}{[B_1^+ \fuse B_2^+]}$, where 
+  \begin{itemize}
+  \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
+  \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches $\Delta_1, \Delta_2$,
+     $V_1$ is a derivation of $\foc{\Psi}{\Delta_1}{B_1^+}$, \\
+     $V_2$ is a derivation of $\foc{\Psi}{\Delta_2}{B_2^+}$, 
+  \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
+  \end{itemize}
+  There are three possibilities: either $x$ is a mapping in $\Delta_1$
+  or $\Delta_2$ but not both (if $\mlvl$ is $\meph$ or $\mtrue$) 
+  or $x$ is a mapping in both $\Delta_1$ and $\Delta_2$ (if $\mlvl$ 
+  is $\mpers$). 
+
+  The first two cases are symmetric; 
+  assume without loss of generality that $x$ is a mapping
+  in $\Delta_1$ but not $\Delta_2$; we can construct a 
+  $\Theta_1$ and $\Delta_1'$ 
+  such that $\tackon{\Theta_1}{x{:}\islvl{A^-}} = \Delta_1$,
+  $\Delta_1'$ matches $\frameoff{\Theta_1}{\restrictto{\Delta_1}{\mlvl}}$,
+  and $\Xi$ matches $\matchconj{\Delta_1'}{\Delta_2}$
+  By the induction hypothesis on $M$ and $V_1$, we have 
+  $\rsubsta{M}{x}{V_1}{A^-}$, a derivation of 
+  $\foc{\Psi}{\Delta_1'}{[B_1^+]}$, and the result follows by
+  rule ${\fuse}_R$ on $\rsubsta{M}{x}{V_1}{A^-}$ and $V_2$.
+
+  The third case is similar; we construct a 
+  $\Theta_1$, $\Delta_1'$, $\Theta_2$, and $\Delta_2'$ such that 
+  $\tackon{\Theta_1}{x{:}\islvl{A^-}} = \Delta_1$,
+  $\tackon{\Theta_2}{x{:}\islvl{A^-}} = \Delta_2$,
+  $\Delta_1'$ matches $\frameoff{\Theta_1}{\restrictto{\Delta_1}{\mlvl}}$,
+  $\Delta_2'$ matches $\frameoff{\Theta_1}{\restrictto{\Delta_2}{\mlvl}}$,
+  and $\Xi$ matches $\matchconj{\Delta_1'}{\Delta_2'}$, which is only 
+  possible because $\mlvl = \mpers$; we then invoke the induction 
+  hypothesis twice. 
+
+\smallskip
+
+\item[--] $\rsubsta{M}{x}{(\tinl{V})}{A^-} 
+           = \tinl{\rsubsta{M}{x}{V}{A^-}}$
+\item[--] $\rsubsta{M}{x}{(\tinr{V})}{A^-} 
+           = \tinr{\rsubsta{M}{x}{V}{A^-}}$
+\item[--] $\rsubsta{M}{x}{(\texistsr{t}{V})}{A^-} 
+           = \texistsr{t}{(\rsubsta{M}{x}{V}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tunifr}{A^-} = \tunifr$
+\end{itemize}
+
+\paragraph{\it Substitution into terms}
+
+\begin{itemize}
+\item[--] $\rsubsta{M}{x}{\tfocusr{V}}{A^-} 
+           = \tfocusr{\rsubsta{M}{x}{V}{A^-}}$
+\item[--] $\rsubsta{M}{x}{(\tfocusl{y}{\Sp})}{A^-} 
+           = \tfocusl{y}{(\rsubsta{M}{x}{\Sp}{A^-})} \qquad$ {\it ($x \# y$)}
+\item[--] $\rsubsta{M}{x}{(\tfocusl{x}{\Sp})}{A^-} =$\\
+    $\begin{array}{ll}
+    \qquad (\subst{M}{\Sp})^{A^-}
+     & \mbox{\it (if $x$ is not in $\Sp$'s context)}\\
+    \qquad (\subst{M}{(\rsubsta{M}{x}{\Sp}{A^-})})^{A^-}
+     & \mbox{\it (if $x$ is in $\Sp$'s context)}
+    \end{array}$\smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
+  \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches
+     $\frameoff{\Theta'}{[A^-]}$, 
+     $\Sp$ is a derivation of 
+     $\foc{\Psi}{\tackon{\Theta'}{[A^-]}}{U}$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
+  \end{itemize}
+  If $\mlvl$ is $\meph$ or $\mtrue$, then 
+  $\Xi$ matches $\frameoff{\Theta'}{\Delta}$, and the result follows by
+  part 1 of cut admissibility on $M$ and $\Sp$. 
+
+  If $\mlvl$ is $\mpers$, $\Xi$ doesn't match $\frameoff{\Theta'}{\Delta}$,
+  since $\Theta'$ has an extra mapping $x{:}\ispers{A^-}$. Instead,
+  we have that 
+    $\tackon{\Theta}{[A^-]}$ matches 
+   $\frameoff{\Theta_{[A^-]}}{\restrictto{\Delta}{\mpers}}$
+  and $\tackon{\Theta_{[A^-]}}{x{:}\ispers{A^-}} = \tackon{\Theta'}{[A^-]}$,
+  so $\Sp$ is also a derivation of 
+  $\foc{\Psi}{\tackon{\Theta_{[A^-]}}{x{:}\ispers{A^-}}}{U}$. 
+  By the induction hypothesis on $M$ and $\Sp$, we have 
+  $\rsubsta{M}{x}{\Sp}{A^-}$, a derivation of 
+  $\foc{\Psi}{\tackon{\Theta}{[A^-]}}{U}$. Then, because
+  $\Xi$ matches $\frameoff{\Theta}{\Delta}$, the result follows
+  from part 1 of cut admissibility on $M$ and $\rsubsta{M}{x}{\Sp}{A^-}$.
+  
+ 
+\futurework{For affine logic: extra step of weakening to get from 
+ $M$ to $M$ weakened with more affine stuff.}
+
+\smallskip
+
+\item[--] $\rsubsta{M}{x}{(\tetap{z}{N})}{A^-} 
+           = \tetap{z}{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tetan{N}}{A^-} 
+           = \tetan{\rsubsta{M}{x}{N}{A^-}}$
+
+\item[--] $\rsubsta{M}{x}{(\tdownl{y}{N})}{A^-} 
+           = \tdownl{y}{(\rsubsta{M}{x}{N}{A^-})}$
+
+\item[--] $\rsubsta{M}{x}{(\tgnabl{y}{N})}{A^-} 
+           = \tgnabl{y}{(\rsubsta{M}{x}{N}{A^-})}$ %\smallskip\\
+%   We must show $\foc{\Psi}{\Xi}{U}$, where
+%   \begin{itemize}
+%   \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
+%   \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches 
+%      $\frameoff{\Theta'}{{\gnab}B^-}$, $N$ is a derivation of 
+%      $\foc{\Psi}{\tackon{\Theta'}{y{:}\iseph{B^-}}}{U}$,
+%   \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
+%   \end{itemize}
+%   $\Xi$ matches $\frameoff{\Theta_\Delta}{{!}B^-}$, 
+%   $\tackon{\Theta_\Delta}{y{:}\iseph{B^-}}$ matches
+%   $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$, and
+%   $\tackon{\Theta_B}{x{:}\islvl{A}} = \tackon{\Theta'}{y{:}\iseph{B^-}}$.
+%   By the induction hypothesis on $M$ and $N$ we have
+%   $\foc{\Psi}{\tackon{\Theta_\Delta}{y{:}\iseph{B^-}}}{U}$, and 
+%   the result follows by rule ${\gnab}_L$. 
+
+\item[--] $\rsubsta{M}{x}{(\tbangl{y}{N})}{A^-} 
+           = \tbangl{y}{(\rsubsta{M}{x}{N}{A^-})}$\smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
+  \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches 
+     $\frameoff{\Theta'}{{!}B^-}$, $N$ is a derivation of 
+     $\foc{\Psi}{\tackon{\Theta'}{y{:}\ispers{B^-}}}{U}$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
+  \end{itemize}
+ 
+  Let $\Delta' = \mkconj{\Delta}{y{:}\ispers{B^-}}$.
+  By admissible weakening, $M$ is derivation of $\foc{\Psi}{\Delta'}{A^-}$ too.
+
+  $\Xi$ matches $\frameoff{\Theta_{\Delta}}{{!}B^-}$,
+  $\tackon{\Theta_{\Delta}}{y{:}\ispers{B^-}}$ matches 
+  $\frameoff{\Theta_{B^-}}{\restrictto{\Delta'}{\mlvl}}$,
+  and 
+  $\tackon{\Theta_{B^-}}{x{:}\islvl{A^-}} = \tackon{\Theta'}{y{:}\ispers{B^-}}$.
+  By the induction hypothesis on $M$ and $N$ we have
+  $\foc{\Psi}{\tackon{\Theta_{\Delta}}{y{:}\ispers{B^-}}}{U}$, and the result
+  follows by rule ${!}_L$.
+
+  \smallskip
+
+\item[--] $\rsubsta{M}{x}{(\tupr{N})}{A^-} 
+           = \tupr{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tlaxr{N}}{A^-} 
+           = \tlaxr{\rsubsta{M}{x}{N}{A^-}}$
+
+\item[--] $\rsubsta{M}{x}{\tfusel{N}}{A^-} 
+           = \tfusel{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tlaml{N}}{A^-} 
+           = \tlaml{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tlamr{N}}{A^-} 
+           = \tlamr{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tabort}{A^-} 
+           = \tabort$
+\item[--] $\rsubsta{M}{x}{\toplusl{N_1}{N_2}}{A^-} 
+           = \toplusl{\rsubsta{M}{x}{N_1}{A^-}}{\rsubsta{M}{x}{N_2}{A^-}}$
+  \smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where 
+  \begin{itemize}
+  \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
+  \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches 
+     $\frameoff{\Theta'}{B_1^+ \oplus B_2^+}$, $N_1$ is a derivation of 
+     $\foc{\Psi}{\tackon{\Theta'}{B_1^+}}{U}$,\\
+     $N_2$ is a derivation of $\foc{\Psi}{\tackon{\Theta'}{B_2^+}}{U}$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
+  \end{itemize}
+
+  $\Xi$ matches $\frameoff{\Theta_{\Delta}}{B_1^+ \oplus B_2^+}$,
+  and for $i \in \{1,2\}$,
+  $\tackon{\Theta_{\Delta}}{B_i^+}$ matches
+  $\frameoff{\Theta_{B_i^+}}{\restrictto{\Delta}{\mpers}}$ 
+  and
+  $\tackon{\Theta_{B_i^+}}{x{:}\islvl{A^-}} =
+   \tackon{\Theta'}{B_i^+}$.
+
+  By the induction hypothesis on $M$ and $N_1$, we have
+  $\foc{\Psi}{\tackon{\Theta_{\Delta}}{B_1^+}}{U}$, by the induction 
+  hypothesis on $M$ and $N_2$, we have 
+  $\foc{\Psi}{\tackon{\Theta_{\Delta}}{B_2^+}}{U}$, and the
+  result follows by rule $\oplus_L$. 
+
+
+\smallskip
+
+\item[--] $\rsubsta{M}{x}{\ttopr}{A^-} 
+           = \ttopr$
+\item[--] $\rsubsta{M}{x}{(\twithr{N_1}{N_2})}{A^-} 
+           = \twithr{(\rsubsta{M}{x}{N_1}{A^-})}{(\rsubsta{M}{x}{N_2}{A^-})}$
+
+\item[--] $\rsubsta{M}{x}{\texistsl{a}{N}}{A^-} 
+           = \texistsl{a}{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tforallr{a}{N}}{A^-} 
+           = \tforallr{a}{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\phi}{A^-} 
+           = ({\sf fn}~\sigma \Rightarrow 
+              \rsubsta{\sigma{M}}{x}{\phi(\sigma)}{A^-})$\smallskip\\
+  We must show $\foc{\Psi}{\Xi}{U}$, where
+  \begin{itemize}
+  \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
+  \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches 
+     $\frameoff{\Theta'}{t \doteq s}$, $\phi$ 
+     is a function from substitutions $\Psi' \vdash \sigma : \Psi$
+     that unify $t$ and $s$ to derivations of 
+     $\foc{\Psi'}{\tackon{\sigma\Theta'}{\cdot}}{\sigma{U}}$.
+  \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
+  \end{itemize}
+
+  $\Xi$ matches $\frameoff{\Theta_\Delta}{t \doteq s}$, and 
+  for any substitution $\sigma$, $\tackon{\sigma\Theta_\Delta}{\cdot}$
+  matches $\frameoff{\sigma\Theta}{\restrictto{\Delta}{\mlvl}}$.
+  By rule $\doteq_L$, it suffices to show that, given an arbitrary
+  substitution $\Psi' \vdash \sigma : \Psi$, there
+  is a derivation of 
+  $\foc{\Psi'}{\tackon{\sigma\Theta_\Delta}{\cdot}}{\sigma{U}}$.
+
+  By applying $\sigma$ to $\phi$, we get $\phi(\sigma)$, a derivation 
+  of $\foc{\Psi'}{\tackon{\sigma\Theta_B}{\cdot}}{\sigma{A^+}}$;
+  the usual interpretation of higher-order derivations is that 
+  $\phi(\sigma)$ is a subderivation of $\phi$, so $\phi(\sigma)$ can be
+  used to invoke the induction hypothesis.
+  From variable substitution, we get $\sigma{M}$, a derivation
+  of 
+  $\foc{\Psi'}{\sigma\Delta}{\islvl{\sigma{A^-}}}$,
+  and the result follows
+  by the induction hypothesis on $\sigma{M}$ and 
+  $\phi(\sigma)$.
+
+\end{itemize}
+
+\paragraph{\it Substitution into spines}
+
+\begin{itemize}
+\item[--] $\rsubsta{M}{x}{\tnil}{A^-} 
+           = \tnil$
+\item[--] $\rsubsta{M}{x}{(\tupl{N})}{A^-} 
+           = \tupl{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tlaxl{N}}{A^-} 
+           = \tlaxl{\rsubsta{M}{x}{N}{A^-}}$
+\item[--] $\rsubsta{M}{x}{\tappl{V}{\Sp}}{A^-} =$\\
+    $\begin{array}{ll}
+    \qquad \tappl{(\rsubsta{M}{x}{V}{A^-})}{\Sp}
+     & \mbox{\it (if $x$ is in $V$'s context but not $\Sp$'s)}\\
+    \qquad \tappl{V}{(\rsubsta{M}{x}{\Sp}{A^-})}
+     & \mbox{\it (if $x$ is in $\Sp$'s context but not $V$'s)}\\
+    \qquad \tappl{(\rsubsta{M}{x}{V}{A^-})}{(\rsubsta{M}{x}{\Sp}{A^-})}
+     \qquad & \mbox{\it (if $x$ is in both $V$ and $\Sp$'s contexts)}
+    \end{array}$
+\item[--] $\rsubsta{M}{x}{\tappr{V}{\Sp}}{A^-} =$\\
+    $\begin{array}{ll}
+    \qquad \tappr{(\rsubsta{M}{x}{V}{A^-})}{\Sp}
+     & \mbox{\it (if $x$ is in $V$'s context but not $\Sp$'s)}\\
+    \qquad \tappr{V}{(\rsubsta{M}{x}{\Sp}{A^-})}
+     & \mbox{\it (if $x$ is in $\Sp$'s context but not $V$'s)}\\
+    \qquad \tappr{(\rsubsta{M}{x}{V}{A^-})}{(\rsubsta{M}{x}{\Sp}{A^-})}
+     \qquad & \mbox{\it (if $x$ is in both $V$ and $\Sp$'s contexts)}
+    \end{array}$ \smallskip\\
+  We must show $\foc{\Psi}{\Xi}{\forall x{:}\tau. B^-}$, where
+  \begin{itemize}
+  \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
+  \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches 
+     $\frameoff{\Theta'}{[B_1^+ \righti B_2^-], \Delta_A}$, 
+     $V$ is a derivation of 
+     $\foc{\Psi}{\Delta_A}{[B_1^+]}$,\\
+     $\Sp$ is a derivation of 
+     $\foc{\Psi}{\tackon{\Theta'}{[B_2^-]}}{U}$,
+  \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
+  \end{itemize}
+  
+  There are three possibilities: either $x$ is a mapping in 
+  $\Theta'$ or $\Delta_A$ but not both (if $\mlvl$ is $\meph$
+  or $\mtrue$) or $x$ is a mapping in both $\Theta'$ and $\Delta_A$
+  (if $\mlvl$ is $\mpers$). 
+
+  In the first case ($x$ is a mapping in $\Delta_A$ only), 
+  $\Xi$ matches 
+  $\frameoff{\Theta'}{\matchconj{[B_1^+ \righti B_2^-]}{\Delta_A'}}$,
+  $\Delta_A'$ matches $\frameoff{\Theta_A}{\restrictto{\Delta}{\mlvl}}$, and 
+  $\Delta_A = \tackon{\Theta_A}{x{:}\islvl{A^-}}$. 
+  By the induction hypothesis on $M$ and $V$ we have
+  $\rsubsta{M}{x}{V}{A^-}$, a derivation of $\foc{\Psi}{\Delta'_A}{[B_1^+]}$,
+  and the result follows by rule ${\righti}_L$ on 
+  $\rsubsta{M}{x}{V}{A^-}$ and $\Sp$.
+
+  In the second case ($x$ is a mapping in $\Theta'$ only),
+  $\Xi$ matches 
+  $\frameoff{\Theta_\Delta}{\matchconj{[B_1^+ \righti B_2^-]}{\Delta_A}}$,
+  $\tackon{\Theta_\Delta}{[B_2^-]}$ matches
+  $\frameoff{\Theta_{[B_2^-]}}{\restrictto{\Delta}{\mlvl}}$,
+  and  
+  $\tackon{\Theta_{[B_2^-]}}{x{:}\mlvl} = \tackon{\Theta'}{[B_2^-]}$.
+  By the induction hypothesis on $M$ and $\Sp$, we have 
+  $\rsubsta{M}{x}{\Sp}{A^-}$, a derivation of 
+  $\foc{\Psi}{\tackon{\Theta_\Delta}{[B_2^-]}}{U}$, and the result follows
+  by rule ${\righti}_L$ on $V$ and $\rsubsta{M}{x}{\Sp}{A^-}$.
+
+  In the third case ($x$ is a mapping in $\Theta'$ and $\Delta_A$), 
+  $\Xi$ matches 
+  $\frameoff{\Theta_\Delta}{\matchconj{[B_1^+ \righti B_2^-]}{\Delta_A'}}$,
+  where $\Theta_\Delta$ and $\Delta_A'$ have the same properties as before,
+  and we proceed invoking the induction hypothesis twice.
+
+\smallskip
+  
+\item[--] $\rsubsta{M}{x}{\tpione{\Sp}}{A^-} 
+           = \tpione{(\rsubsta{M}{x}{\Sp}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tpitwo{\Sp}}{A^-} 
+           = \tpitwo{(\rsubsta{M}{x}{\Sp}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tforalll{t}{\Sp}}{A^-} 
+           = \tforalll{t}{(\rsubsta{M}{x}{\Sp}{A^-})}$
+\end{itemize}
+
+\section{Identity expansion}
+\label{sec:ord-identity}
+
+The form of the identity expansion theorems is already available to
+us: the admissible rules $\eta_{A^+}$ and $\eta_{A^-}$ are
+straightforward generalizations of the explicit rules $\eta^+$ and
+$\eta^-$ in Figure~\ref{fig:foc-mall} from ordered atomic propositions
+to arbitrary propositions (and from permeable atomic propositions to
+arbitrary permeable propositions and so on).
+\[
+\infer-[\eta_{A^+_\mlvl}]
+{\foct{\Psi}{\frameoff{\Theta}{A^+_\mlvl}}{\etapa{z}{N}{A^+_\mlvl}}{U}}
+{\foct{\Psi}{\tackon{\Theta}{z{:}\islvl{\langle A^+_\mlvl \rangle}}}{N}{U}}
+\quad
+\infer-[\eta_{A^-_\mlvl}]
+{\foct{\Psi}{\Delta}{\etana{N}{A^-_\mlvl}}{A^-_\mlvl}}
+{\foct{\Psi}{\Delta}{N}{\islvl{\langle A^-_\mlvl \rangle}}
+ &
+ \stableL{\Delta}}
+\]
+In the proof of identity expansion, we do pay some price in return for
+including including permeable propositions, as we perform slightly
+different bookkeeping depending on whether or not it is necessary to
+apply admissible weakening to the subderivation $N$.
+
+\bigskip
+\begin{theorem}[Identity expansion]~
+\begin{itemize}
+\item If 
+  $\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{\langle A^+_\mlvl \rangle}}}{U}$
+  and $\Delta$ matches $\frameoff{\Theta}{A^+_\mlvl}$, 
+  then $\foc{\Psi}{\Delta}{U}$.
+\item If
+  $\foc{\Psi}{\Delta}{\islvl{\langle A^-_\mlvl \rangle}}$
+  and $\Delta$ is stable,
+  then $\foc{\Psi}{\Delta}{A^-_\mlvl}$.
+\end{itemize}
+\end{theorem}
+
+\begin{proof} By mutual induction over the structure of types. We 
+provide the full definition at the level of proof terms, but omit
+the full discussion of some of the simpler cases (like units) and
+cases that are very similar to others.
+
+\subsubsection{Positive cases}
+
+\begin{itemize}
+\item[--] $\etapa{z}{N}{p^+_\mlvl} = \tetap{z}{N}$
+\item[--] $\etapa{z}{N}{{\downarrow}A^-} 
+           = \tdownl{x}{([(\tdownr{(\etana{\tfocusl{x}{\tnil}}{A^-})})/z]N)}$
+  \smallskip
+
+  $N$ is a derivation of 
+  $\foc{\Psi}{\tackon{\Theta}{z{:}\istrue{\susp{{\downarrow}A^-}}}}{U}$.
+  By ${\downarrow_L}$, it suffices to show 
+  $\foc{\Psi}{\tackon{\Theta}{x{:}\istrue{A^-}}}{U}$.
+  We construct a context $\Xi$ that matches $x{:}A^-$ such that
+  $\tackon{\Theta}{x{:}\istrue{A^-}}$ matches $\frameoff{\Theta}{\Xi}$.
+  \smallskip
+
+  $\tfocusl{x}{\tnil}$ (that is, ${\it focus}_L$ followed by ${\it id}^-$) 
+  is a derivation of 
+  $\foc{\Psi}{\Xi}{\istrue{\susp{A^-}}}$.
+  By the induction hypothesis, we have 
+  $\foc{\Psi}{\Xi}{A^-}$, and by ${\downarrow}_R$
+  we then have 
+  $\foc{\Psi}{\Xi}{[ {\downarrow}{A^-} ]}$. 
+  The result follows by the focal substitution on this derivation into $N$.
+  \smallskip
+
+\item[--] $\etapa{z}{N}{{\scriptgnab}A^-}
+           = \tgnabl{x}{([(\tgnabr{(\etana{\tfocusl{x}{\tnil}}{A^-})})/z]N)}$ 
+  \smallskip
+
+  $N$ is a derivation of 
+  $\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{{\gnab}A^-}}}}{U}$, where
+  $\mlvl$ is $\mtrue$ or $\meph$.
+  By ${\gnab}_L$, it suffices to show 
+  $\foc{\Psi}{\tackon{\Theta}{x{:}\iseph{A^-}}}{U}$.
+  We construct a context $\Xi$ that matches $x{:}A^-$ such that
+  $\tackon{\Theta}{x{:}\iseph{A^-}}$ matches $\frameoff{\Theta}{\Xi}$
+  and $\Xi$ matches $\restrictto{\Xi}{\meph}$.
+  \smallskip
+
+  $\tfocusl{x}{\tnil}$ (that is, ${\it focus}_L$ followed by
+  ${\it id}^-$) is a derivation of $\foc{\Psi}{\Xi}{\istrue{\susp{A^-}}}$. 
+  By the induction hypothesis, we have $\foc{\Psi}{\Xi}{A^-}$, 
+  and by ${\gnab}_R$ and the fact that $\Xi$ matches $\restrictto{\Xi}{\meph}$
+  we have $\foc{\Psi}{\Xi}{[{\gnab}A^-]}$. The result follows
+  by focal substitution on this derivation into $N$.
+  \smallskip
+
+\item[--] $\etapa{z}{N}{{!}A^-}
+           = \tbangl{x}{([(\tbangr{(\etana{\tfocusl{x}{\tnil}}{A^-})})/z]N)}$ 
+  \smallskip
+
+  $N$ is a derivation of 
+  $\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{{!}A^-}}}}{U}$, where
+  $\mlvl$ can be anything ($\mtrue$, $\meph$, or $\mpers$).
+  By ${!}_L$, it suffices to show 
+  $\foc{\Psi}{\tackon{\Theta}{x{:}\ispers{A^-}}}{U}$.
+  We construct a context $\Xi$ that matches $x{:}A^-$ such that
+  $\tackon{\Theta}{x{:}\ispers{A^-}}$ matches $\frameoff{\Theta'}{\Xi}$
+  and $\Xi$ matches $\restrictto{\Xi}{\mpers}$. The frame
+  $\Theta'$ is $\Theta$ plus an additional mapping 
+  $x{:}\ispers{A^-}$, and $N$ is also a derivation of 
+  $\foc{\Psi}{\tackon{\Theta'}{z{:}\islvl{\susp{{!}A^-}}}}{U}$
+  by admissible weakening.
+  \smallskip
+
+  $\tfocusl{x}{\tnil}$ (that is, ${\it focus}_L$ followed by
+  ${\it id}^-$) is a derivation of $\foc{\Psi}{\Xi}{\istrue{\susp{A^-}}}$. 
+  By the induction hypothesis, we have $\foc{\Psi}{\Xi}{A^-}$, 
+  and by ${!}_R$ and the fact that $\Xi$ matches $\restrictto{\Xi}{\mpers}$
+  we have $\foc{\Psi}{\Xi}{[{!}A^-]}$. The result follows
+  by focal substitution on this derivation into $N$.
+  \smallskip
+
+\item[--] $\etapa{z}{N}{\one} = \tonel{([\toner/z]N)}$ 
+\item[--] $\etapa{z}{N}{A^+_\mlvl \fuse B^+_\mlvl} =
+            \etapa{z_1}
+             {~\etapa{z_2}
+              {~[(\tfuser{z_1}{z_2})/z]N}
+              {B^+_\mlvl}}
+             {A^+_\mlvl}$
+  \smallskip
+
+  $N$ is a derivation of 
+  $\foc{\Psi}{\tackon{\Theta}
+   {z{:}\islvl{\susp{A^+_\mlvl \fuse B^+_\mlvl}}}}{U}$. 
+  By ${\fuse}_L$, it suffices to
+  show $\foc{\Psi}{\tackon{\Theta}{A^+_\mlvl, B^+_\mlvl}}{U}$.
+  We construct a context $\Xi$ that matches 
+  $\matchconj{z_1{:}\susp{A^+_\mlvl}}{z_2{:}\susp{B^+_\mlvl}}$
+  such that $\tackon{\Theta}
+              {\mkconj{z_1{:}\islvl{\susp{A^+_\mlvl}}}
+                      {z_2{:}\islvl{\susp{B^+_\mlvl}}}}$
+  matches $\frameoff{\Theta'}{\Xi}$. The frame 
+  $\Theta'$ is either $\Theta$ (if $\mlvl$ is $\mtrue$ or $\meph$) 
+  or it is $\Theta$ plus additional mappings
+  $z_1{:}\islvl{\susp{A^+_\mlvl}}$ and 
+  $z_2{:}\islvl{\susp{B^+_\mlvl}}$ (if $\mlvl$ is $\mpers$). In either
+  case , $N$ is also a derivation of 
+  $\foc{\Psi}{\tackon{\Theta'}
+   {z{:}\islvl{\susp{A^+_\mlvl \fuse B^+_\mlvl}}}}{U}$, either
+  immediately or by admissible weakening.
+  \smallskip
+
+
+  $\tfuser{z_1}{z_2}$ (that is, ${\fuse}_R$ followed by two instances of 
+  ${\it id}^+$) is a derivation of 
+  $\foc{\Psi}{\Xi}{[A^+_\mlvl \fuse B^+_\mlvl]}$.
+  By focal substitution into $N$, we have
+  a derivation of 
+  $\foc{\Psi}{\tackon{\Theta}
+              {\mkconj{z_1{:}\islvl{\susp{A^+_\mlvl}}}
+                      {z_2{:}\islvl{\susp{B^+_\mlvl}}}}}{U}$,
+  by the induction hypothesis on $B^+_\mlvl$ we have
+  $\foc{\Psi}{\tackon{\Theta}
+              {\mkconj{z_1{:}\islvl{\susp{A^+_\mlvl}}}
+                      {B^+_\mlvl}}}{U}$, and by
+  the induction hypothesis on $A^+_\mlvl$ we have
+   $\foc{\Psi}{\tackon{\Theta}
+              {\mkconj{A^+_\mlvl}
+                      {B^+_\mlvl}}}{U}$ as required.
+  \smallskip
+ 
+
+\item[--] $\etapa{z}{N}{\zero} = \tabort$ 
+
+\item[--] $\etapa{z}{N}{A^+_\mlvl \oplus B^+_\mlvl} = 
+           \toplusl
+            {\etapa{z_1}{~[\tinl{z_1}/z]N}{A^+_\mlvl}}
+            {\etapa{z_2}{~[\tinr{z_2}/z]N}{B^+_\mlvl}}$
+\smallskip
+
+$N$ is a derivation 
+$\foc{\Psi}{\tackon{\Theta}{z{:}\susp{A^+_\mlvl \oplus B^+_\mlvl}}}{U}$.
+By $\oplus_L$, it suffices to show 
+$\foc{\Psi}{\tackon{\Theta}{A^+_\mlvl}}{U}$
+and
+$\foc{\Psi}{\tackon{\Theta}{B^+_\mlvl}}{U}$; we will show the first, as the
+two cases are symmetric. 
+\smallskip
+
+We construct a context $\Xi_1$ that matches $z_1{:}\susp{A^+_\mlvl}$
+such that $\tackon{\Theta}{z_1{:}\islvl{\susp{A^+_\mlvl}}}$ matches
+$\frameoff{\Theta_1}{\Xi}$. The frame $\Theta_1$ is either 
+$\Theta$ (if $\mlvl$ is $\mtrue$ or $\meph$) or it is $\Theta$
+plus an additional mapping $z_1{:}\islvl{\susp{A^+_\mlvl}}$ (if
+$\mlvl$ is $\mpers$). In either case, $N$ is also a derivation
+of $\foc{\Psi}{\tackon{\Theta_1}{z{:}\susp{A^+_\mlvl \oplus B^+_\mlvl}}}{U}$,
+either immediately or by by admissible weakening.
+\smallskip
+
+$\tinl{z_1}$ (that is, $\oplus_{R1}$ followed by ${\it id}^+$) is a
+derivation of $\foc{\Psi}{\Xi_1}{[A^+_\mlvl \oplus B^+_\mlvl]}$.  By
+focal substitution into $N$, we have 
+$\foc{\Psi}{\tackon{\Theta}{z_1{:}\islvl{\susp{A^+_\mlvl}}}}{U}$, and by the
+induction hypothesis on $A^+_\mlvl$ we have 
+$\foc{\Psi}{\tackon{\Theta}{A^+_\mlvl}}{U}$ as required.
+\smallskip
+
+\item[--] $\etapa{z}{N}{\exists a{:}\tau. A^+_\mlvl} 
+           = \texistsl{a}
+              {\etapa{z'}
+                {~[(\texistsr{a}{z'})/z]N}
+                {A^+}}$ 
+\smallskip
+
+$N$ is a derivation of 
+$\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{\exists a{:}\tau. A^+_\mlvl}}}}
+  {U}$.
+By $\exists_L$, it suffices to show 
+$\foc{\Psi, a{:}\tau}{\tackon{\Theta}{A^+}}{U}$.
+We construct a context $\Xi$ that matches
+$z'{:}\susp{A^+_\mlvl}$ such that
+$\tackon{\Theta}{z'{:}\islvl{\susp{A^+_\mlvl}}}$ matches
+$\frameoff{\Theta'}{\Xi}$. The frame $\Theta'$ is either $\Theta$
+(if $\mlvl$ is $\mtrue$ or $\meph$) or it is $\Theta$ plus 
+an additional mapping $z'{:}\islvl{\susp{A^+_\mlvl}}$
+(if $\mlvl$ is $\mpers$). In either case,
+$N$ is a derivation of 
+$\foc{\Psi, a{:}\tau}
+  {\tackon{\Theta'}{z{:}\islvl{\susp{\exists a{:}\tau. A^+_\mlvl}}}}
+  {U}$ by variable weakening and (possibly) admissible weakening.
+
+\smallskip
+$\texistsr{a}{z'}$ (that is, $\exists_R$ followed by 
+an instance of ${\it id}^+$) is a derivation of 
+$\foc{\Psi, a{:}\tau}{\Xi}{[A^+_\mlvl]}$. By focal 
+substitution into $N$, we have a derivation of 
+$\foc{\Psi, a{:}\tau}{\tackon{\Theta}{z'{:}\islvl{\susp{A^+_\mlvl}}}}{U}$,
+and by the induction hypothesis on $A^+_\mlvl$ we have
+$\foc{\Psi, a{:}\tau}{\tackon{\Theta}{A^+}}{U}$ as required.
+
+\smallskip
+
+\item[--] $\etapa{z}{N}{t \doteq s} 
+           = {\sf fn}~ \sigma \Rightarrow [\tunifr/z](\sigma{N})$
+\smallskip
+
+$N$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{t
+        \doteq s}}}}{U}$, and by $\doteq_L$, it suffices to show, for
+an arbitrary $\Psi' \vdash \sigma : \Psi$ such that $\sigma{t} =
+\sigma{s}$, that
+$\foc{\Psi'}{\tackon{\sigma\Theta}{\cdot}}{\sigma{U}}$.  We construct
+a context $\Xi$ containing just the persistent mappings in
+$\tackon{\sigma\Theta}{\cdot}$ ($\Xi$ therefore matches $\cdot$), and
+have that $\tackon{\sigma\Theta}{\cdot}$ matches
+$\frameoff{\sigma\Theta}{\Xi}$.
+
+Because $\sigma{t} = \sigma{s}$, $\tunifr$ (that is, the derivation
+consisting of ${\doteq}_R$) is a derivation of
+$\foc{\Psi'}{\Xi}{[\sigma{t} \doteq \sigma{s}]}$.  The result then
+follows by focal substitution into $\sigma{N}$, the derivation of
+$\foc{\Psi}{\tackon{\sigma\Theta}{z{:}\islvl{\susp{\sigma{t} \doteq
+        \sigma{s}}}}}{U}$ obtained from $N$ by variable substitution.
+
+\end{itemize}
+
+\subsubsection{Negative cases}
+
+\begin{itemize}
+\item[--] $\etana{N}{p^-_\mlvl} = \tetan{N}$
+\item[--] $\etana{N}{{\uparrow}A^+} 
+           = \tupr{([N](\tupl{(\etapa{z}{\tfocusr{z}}{A^+})}))}$
+% \smallskip
+
+% $N$ is a derivation of $\foc{\Psi}{\Delta}{\istrue{\susp{{\uparrow}A^+}}}$.
+% By ${\uparrow}_R$, it suffices to show $\foc{\Psi}{\Delta}{\istrue{A^+}}$.
+% We construct the empty (except for persistent resources) 
+% frame $\Theta$ such that 
+% $\tackon{\Theta}{z{:}\istrue{\susp{A^+}}}$ matches $z{:}\susp{A^+}$
+% and $\Delta$ matches $\frameoff{\Theta}{\Delta}$. 
+% \smallskip
+
+% $\tfocusr{z}$ (that is, ${\it focus}_R$ followed by ${\it id}^+$) is
+% a derivation of 
+% $\foc{\Psi}{\tackon{\Theta}{z{:}\istrue{\susp{A^+}}}}{\istrue{A^+}}$. 
+% By the induction hypothesis on $A^+$, we have
+% $\foc{\Psi}{\tackon{\Theta}{A^+}}{\istrue{A^+}}$, and 
+% by rule ${\uparrow}_L$ we then have
+% $\foc{\Psi}{\tackon{\Theta}{[{\uparrow}A^+]}}{\istrue{A^+}}$, 
+% and the result follows by focal substitution out of $N$.
+% \smallskip
+
+\item[--] $\etana{N}{{\ocircle}A^+} 
+           = \tlaxr{[N](\tlaxl{\etapa{z}{\tfocusr{z}}{A^+}})}$
+\smallskip
+
+$N$ is a derivation of 
+$\foc{\Psi}{\Delta}{\islvl{\susp{{\ocircle}A^+}}}$, where
+$\mlvl$ is $\mtrue$ or $\mlax$.
+By ${\ocircle}_R$, it suffices to show $\foc{\Psi}{\Delta}{\islax{A^+}}$.
+We construct the empty (except for persistent resources) 
+frame $\Theta$ such that 
+$\tackon{\Theta}{z{:}\istrue{\susp{A^+}}}$ matches $z{:}\susp{A^+}$
+and $\Delta$ matches $\frameoff{\Theta}{\Delta}$. 
+\smallskip
+
+$\tfocusr{z}$ (that is, ${\it focus}_R$ followed by ${\it id}^+$) is
+a derivation of 
+$\foc{\Psi}{\tackon{\Theta}{z{:}\istrue{\susp{A^+}}}}{\islax{A^+}}$. 
+By the induction hypothesis on $A^+$, we have
+$\foc{\Psi}{\tackon{\Theta}{A^+}}{\islax{A^+}}$, and 
+by rule ${\ocircle}_L$ we then have
+$\foc{\Psi}{\tackon{\Theta}{[{\ocircle}A^+]}}{\islax{A^+}}$.
+The result follows by focal substitution out of $N$.
+\smallskip
+
+\item[--] $\etana{N}{A^+ \lefti B^-_\mlvl}
+           = \tlaml{(\etapa{z}{~\etana{[N](\tappl{z}{\tnil})}{B^-_\mlvl}}{A^+})}$
+\item[--] $\etana{N}{A^+ \righti B^-_\mlvl}
+           = \tlamr{(\etapa{z}{~\etana{[N](\tappr{z}{\tnil})}{B^-_\mlvl}}{A^+})}$
+\smallskip
+
+$N$ is a derivation of 
+$\foc{\Psi}{\Delta}{\islvl{\susp{A^+ \righti B^-_\mlvl}}}$. By 
+${\righti}_R$, it suffices to show $\foc{\Psi}{\Delta, A^+}{B^-_\mlvl}$.
+We construct a frame $\Theta$ with $\Delta$'s persistent resources and 
+a hole to the left of the mapping $z{:}\istrue{\susp{A^+}}$; therefore,
+$\mkconj{\Delta}{z{:}\istrue{\susp{A^+}}}$ matches 
+$\frameoff{\Theta}{\Delta}$.
+
+% empty (except for persistent resources)
+%frame $\Theta$ such that $\tackon{}{}$
+% \smallskip
+
+% $\tappr{z}{\tnil}$ (that is, ${\righti}_R$ followed by ${\it id}^+$ and
+% ${\it id}^-$) is a derivation of 
+% $\foc{\Psi}{[A^+ \righti B^-_\mlvl],\Xi}{\islvl{\susp{B^-_\mlvl}}}$.
+% By focal substitution out of $N$, we have
+% $\foc{\Psi}{\tackon{\Theta}{x{:}\istrue{\susp{A^+}}}}
+% {\islvl{\susp{B^-_\mlvl}}}$
+
+$\tappr{z}{\tnil}$ (that is, ${\righti}_R$ followed by ${\it id}^+$ and
+${\it id}^-$) is a derivation of 
+$\foc{\Psi}{\tackon{\Theta}{[A^+ \righti B^-_\mlvl]}}{\islvl{\susp{B^-_\mlvl}}}$.
+By focal substitution out of $N$, we have a derivation of 
+$\foc{\Psi}{\Delta, z{:}\istrue{\susp{A^+}}}{\islvl{\susp{B^-_\mlvl}}}$,
+by the induction hypothesis on $B^-_\mlvl$ we have
+$\foc{\Psi}{\Delta, z{:}\istrue{\susp{A^+}}}{B^-_\mlvl}$, and
+by the induction hypothesis on $A^+$ we have
+$\foc{\Psi}{\Delta, A^+}{B^-_\mlvl}$ as required.
+
+\smallskip
+
+\item[--] $\etana{N}{\top} = \top$ 
+\item[--] $\etana{N}{A^-_\mlvl \with B^-_\mlvl}
+           = \twithr
+              {(\etana{[N](\tpione{\tnil})}{A^-_\mlvl})}
+              {(\etana{[N](\tpitwo{\tnil})}{B^-_\mlvl})}$
+\smallskip
+
+$N$ is a derivation of 
+$\foc{\Psi}{\Delta}{\islvl{\susp{A^-_\mlvl \with B^-_\mlvl}}}$. By 
+$\with_R$, it suffices to show $\foc{\Psi}{\Delta}{A^-_\mlvl}$
+and $\foc{\Psi}{\Delta}{B^-_\mlvl}$; we will show the first, as the two
+cases are symmetric.
+\smallskip
+
+We construct the empty (except for persistent resources) frame
+$\Theta$ such that $\Delta$ matches $\frameoff{\Theta}{\Delta}$. 
+$\tpione{\tnil}$ (that is, ${\with}_{R1}$ followed by ${\it id}^-$) is
+a derivation of 
+$\foc{\Psi}{\tackon{\Theta}{[A^-_\mlvl \with B^-_\mlvl]}}
+  {\islvl{\susp{A^-_\mlvl}}}$.
+By focal substitution out of $N$, we have 
+a derivation of $\foc{\Psi}{\Delta}{\islvl{\susp{A^-_\mlvl}}}$, and
+by the induction 
+hypothesis on $A^-_\mlvl$ we have 
+ $\foc{\Psi}{\Delta}{A^-_\mlvl}$ as required.
+\smallskip
+
+\item[--] $\etana{N}{\forall x.A^-_\mlvl}
+           = \tforallr{a}{(\etana{[N](\tforalll{a}{\tnil})}{A^-_\mlvl})}$
+
+\end{itemize}
+
+\end{proof}
+
+\section{Correctness of focusing}
+\label{sec:ord-correctness}
+
+Our proof of the correctness of focusing is based on erasure as
+described in Chapter 2. The argument follows the one from the
+structural focalization development, and the key component is {\it
+  unfocused admissibility lemmas}, lemmas that establish that each of
+the reasoning steps that can be made in unfocused \ollll~are
+admissible inferences made on stable sequents in focused \ollll.
+
+% In fact, once we have established the unfocused admissibility lemmas,
+% the proof of the completeness of focusing is arguably a bit simpler
+% than the mechanized structural focalization result for persistent
+% logic in \cite{simmons11structural}. In the soundness proof of that
+% paper, we had to work around a separate inversion context that
+% enforced our fixed inversion strategy, but for us that structure is
+% already present in the stucutre of the ordered context. In the
+% completeness proof of that paper, on the other hand, we had to account
+% for the fact that our 
+
+
+\subsection{Erasure}
+
+As in Chapter 2, we define erasure only on stable, suspension-normal
+sequents. Erasure for propositions is defined as in
+Figure~\ref{fig:ord-erasure}. As discussed in
+Section~\ref{sec:permable-atomic}, even though we have not
+incorporated a notion of permeable and mobile atomic propositions into
+the unfocused presentation of \ollll, it is possible to erase a
+permeable atomic proposition $p^+_\mpers$ as
+${!}p^+_\mpers$.\footnote{The polarity and level annotations are
+  meaningless in the unfocused logic. We keep them only to emphasize
+  that $p^+_\mpers$ and $p^-_\mlax$ do $\it not$ erase to the same
+  unpolarized atomic proposition $p$ but two distinct unpolarized
+  atomic propositions.}  In this way, we can see the separation
+criteria from our previous work
+\cite{simmons08linear,pfenning09substructural} arising as an emergent
+phenomena of erasure.
+
+We have to define erasure on non-stable sequents in order for the
+soundness of focusing to go through, though we will only define
+erasure on suspension-normal sequents.  The erasure of sequents,
+$U^\circ$, maps polarized succedents $\islvl{A^+}$,
+$\islvl{\susp{p^-_\mlvl}}$, $[A^+]$, and $A^-$ in the obvious way to
+unpolarized succedents $\islvl{(A^+)^\circ}$, $\islvl{p^-_\mlvl}$,
+$\istrue{(A^+)^\circ}$, and $\istrue{(A^-)^\circ}$, respectively.  To
+describe the erasure of contexts more simply, we will assume that we
+can give a presentation of unfocused \ollll~that uses unified
+substructural contexts, as we outlined in
+Section~\ref{sec:contexts}; the judgments of this presentation
+have the form $\Psi; \Delta \altv U$. 
+In this presentation, we can define $\Delta^\circ$ that
+takes every mapping $x{:}\islvl{A^-}$, $x{:}\islvl{\susp{p^+_\mlvl}}$,
+$[A^-]$, or $A^+$ to a mapping $x{:}\islvl{(A^-)^\circ}$,
+$x{:}\islvl{p^+_\mlvl}$, $x{:}\istrue{(A^-)^\circ}$, or
+$x{:}\istrue{(A^+)^\circ}$ (and in the process, either comes up with
+or reveals the suppressed variable names associated with focused
+negative propositions and inverting positive propositions).
+
+\begin{figure}
+{\small \[
+\begin{array}{rcl|rcl}
+\fbox{$(A^+)^\circ$} & & &
+\fbox{$(A^-)^\circ$} & & 
+\\
+(p^+)^\circ & \!\!\!=\!\!\! & p^+ &
+(p^-)^\circ & \!\!\!=\!\!\! & p^- \\
+(p^+_\meph)^\circ & \!\!\!=\!\!\! & {\gnab}p^+_\meph &
+(p^-_\mlax)^\circ & \!\!\!=\!\!\! & {\ocircle}p^-_\mlax 
+\\
+(p^+_\mpers)^\circ & \!\!\!=\!\!\! & {!}p^+_\mpers &
+& & 
+\\
+({\downarrow}A^-)^\circ & \!\!\!=\!\!\! & (A^-)^\circ &
+({\uparrow}A^+)^\circ & \!\!\!=\!\!\! & (A^+)^\circ 
+\\
+({\gnab}A^-)^\circ & \!\!\!=\!\!\! & {\gnab}(A^-)^\circ &
+({\ocircle}A^+)^\circ & \!\!\!=\!\!\! & {\ocircle}(A^+)^\circ 
+\\
+({!}A^-)^\circ & \!\!\!=\!\!\! & {!}(A^-)^\circ &
+& & 
+\\
+(\one)^\circ & \!\!\!=\!\!\! & \one &
+(A^+ \lefti B^-)^\circ & \!\!\!=\!\!\! & (A^+)^\circ \lefti (B^+)^\circ 
+\\
+(A^+ \fuse B^+)^\circ & \!\!\!=\!\!\! & (A^+)^\circ \fuse (B^+)^\circ &
+(A^+ \righti B^-)^\circ & \!\!\!=\!\!\! & (A^+)^\circ \righti (B^-)^\circ 
+\\
+(\zero)^\circ & \!\!\!=\!\!\! & \zero &
+(\top)^\circ & \!\!\!=\!\!\! & \top 
+\\
+(A^+ \oplus B^+)^\circ & \!\!\!=\!\!\! & (A^+)^\circ \oplus (B^+)^\circ &
+(A^- \with B^-)^\circ & \!\!\!=\!\!\! & (A^-)^\circ \with (B^-)^\circ 
+\\
+(\exists a{:}\tau.A^+)^\circ & \!\!\!=\!\!\! & \exists a{:}\tau. (A^+)^\circ &
+(\forall a{:}\tau.A^-)^\circ & \!\!\!=\!\!\! & \forall a{:}\tau. (A^-)^\circ 
+\\
+(t \doteq s)^\circ & \!\!\!=\!\!\! & t \doteq s &
+& &
+\end{array}
+\]}
+
+\caption{Erasure in \ollll.}
+\label{fig:ord-erasure}
+\end{figure}
+
+
+\subsection{De-focalization}
+
+The act of taking a focused proof of a sequent and getting an unfocused
+proof of the corresponding erased sequent is {\it de-focalization}.
+If we run the constructive content of 
+the proof of the soundness of focusing (the \ollll~analogue of
+Theorem~\ref{thm:linfocsound} from Section~\ref{sec:lincorrectness}),
+the proof performs de-focalization.
+
+\bigskip
+\begin{theorem}[Soundness of focusing/de-focalization]
+If $\foc{\Psi}{\Delta}{U}$, then $\Psi; \Delta^\circ \altv U^\circ$.
+\end{theorem}
+
+\begin{proof}
+  By induction over the structure of focused proofs. 
+  Most rules (${\fuse}_L$, $\righti_R$, etc.) in the
+  focused derivations have an obviously analogous rule in the unfocused
+  logic, and for the four rules dealing with shifts,
+  the necessary result follows directly from the induction hypothesis. 
+  The ${\it focus}_L$ rule potentially requires an instance of the
+  admissible ${\it copy}$ or ${\it place}$ rules in unfocused \ollll, and
+  the ${\it focus}_R$ rule potentially requires an instance of the
+  admissible ${\it lax}$ rule in unfocused \ollll.
+\end{proof}
+
+\begin{figure}[tp]
+\small
+
+{\it Atomic propositions}
+\[
+\infer-
+{\foct{\Psi}{z{:}\susp{p^+_\mlvl}}
+  {\tfocusr{z}}
+  {\islvl{p^+_\mlvl}'}}
+{}
+\quad
+\infer-
+{\foct{\Psi}{x{:}{\uparrow}p^+_\mlvl}
+  {\tfocusl{x}{\tupl{\tetap{z}{~\tfocusr{z}}}}}
+  {\islvl{p^+_\mlvl}'}}
+{}
+\]
+\[
+\infer-
+{\foct{\Psi}{x{:}{p^-_\mlvl}}
+  {\tfocusl{x}{\tnil}}
+  {\islvl{\susp{p^-_\mlvl}}}}
+{}
+\quad
+\infer-
+{\foct{\Psi}{x{:}p^-_\mlvl}
+  {\tfocusr{\tdownr{\tetan{\tfocusl{x}{\tnil}}}}}
+  {\islvl{{\downarrow}p^-_\mlvl}}}
+{}
+\]
+
+\medskip
+{\it Modalities}
+\[
+\infer-
+{\foct{\Psi}{\Delta}
+  {\tfocusr{\tdownr{\tupr{N}}}}
+  {\islvl{{\downarrow}{\uparrow}A^+}}}
+{\foct{\Psi}{\Delta}{N}{\istrue{A^+}}}
+\qquad
+\infer-
+{\foct{\Psi}{\frameoff{\Theta}{x{:}{\uparrow}{\downarrow}A^-}}
+  {\tfocusl{x}{\tupl{\tdownl{x'}{N}}}}
+  {U}}
+{\foct{\Psi}{\tackon{\Theta}{x'{:}\istrue{A^-}}}{N}{U}}
+\]
+\[
+\infer-
+{\foct{\Psi}{\restrictto{\Delta}{\meph}}
+  {\rsubsta{\tupr{N}}{x}
+    {\tfocusr
+      {\tgnabr
+        {\etana
+          {\tfocusl{x}{\tupl{\tdownl{x'}{~\tfocusl{x'}{\tnil}}}}}
+          {A^-}}}}
+    {{\uparrow}{\downarrow}A^-}}{\islvl{{\gnab}A^-}}}
+{\foct{\Psi}{\Delta}{N}{\istrue{{\downarrow}A^-}}}
+\quad
+\infer-
+{\foct{\Psi}{\frameoff{\Theta}{x{:}{\uparrow}{\gnab}A^-}}
+  {\tfocusl{x}{\tupl{\tgnabl{x'}{N}}}}
+  {U}}
+{\foct{\Psi}{\tackon{\Theta}{x'{:}\iseph{A^-}}}{N}{U}}
+\]
+\[
+\infer-
+{\foct{\Psi}{\restrictto{\Delta}{\mpers}}
+  {\rsubsta{\tupr{N}}{x}
+    {\tfocusr
+      {\tbangr
+        {\etana
+          {\tfocusl{x}{\tupl{\tdownl{x'}{~\tfocusl{x'}{\tnil}}}}}
+          {A^-}}}}
+    {{\uparrow}{\downarrow}A^-}}{\islvl{{!}A^-}}}
+{\foct{\Psi}{\Delta}{N}{\istrue{{\downarrow}A^-}}}
+\quad
+\infer-
+{\foct{\Psi}{\frameoff{\Theta}{x{:}{\uparrow}{!}A^-}}
+  {\tfocusl{x}{\tupl{\tbangl{x'}{N}}}}
+  {U}}
+{\foct{\Psi}{\tackon{\Theta}{x'{:}\ispers{A^-}}}{N}{U}}
+\]
+\[
+\infer-
+{\foct{\Psi}{\Delta}
+  {\tfocusr{\tdownr{\tlaxr{N}}}}
+  {\islvl{{\downarrow}{\ocircle}A^+}}}
+{\foct{\Psi}{\Delta}{N}{\islax{A^+}}}
+\quad
+\infer-
+{\foct{\Psi}{\frameoff{\Theta}{x{:}{\ocircle}A^+}}
+  {\lsubsta
+    {\tfocusl{x}{\etapa{z}{~\tfocusr{\tdownr{\tupr{\tfocusr{z}}}}}{A^+}}}
+    {\tdownl{x'}{N}}{{\downarrow}{\uparrow}A^+}}
+  {\restrictfrom{U}{\mlax}}}
+{\foct{\Psi}{\tackon{\Theta}{x'{:}\istrue{{\uparrow}A^+}}}{N}{U}}
+\]
+
+\medskip
+{\it Multiplicative connectives ($\lefti$ and $\righti$ are symmetric)}
+\[
+\infer-
+{\foct{\Psi}{\cdot}{\tfocusr{\toner}}{\islvl{\one}}}
+{}
+\quad
+\infer-
+{\foct{\Psi}{\frameoff{\Theta}{x{:}{\uparrow}\one}}
+  {\tfocusl{x}{\tupl{\tonel{N}}}}{U}}
+{\foct{\Psi}{\tackon{\Theta}{\cdot}}{N}{U}}
+\]
+\[
+\infer-
+{\foct{\Psi}{\matchconj{\Delta_1}{\Delta_2}}
+  {\rsubsta{\tupr{N_1}}{x_1}
+    {(\lsubsta{N_2}
+      {\etapa{z_2}
+        {~\tfocusl{x_1}
+          {\tupl
+            {\etapa{z_1}
+              {~\tfocusr{\tfuser{z_1}{z_2}}} 
+              {A^+}}}}
+        {B^+}}
+      {B^+})}
+    {{\uparrow}A^+}}
+  {\islvl{A^+ \fuse B^+}}}
+{\foct{\Psi}{\Delta_1}{N_1}{\istrue{A^+}}
+ &
+ \foct{\Psi}{\Delta_2}{N_2}{\istrue{B^+}}}
+\]
+\[
+\infer-
+{\foct{\Psi}{\frameoff{\Theta}{x{:}{\uparrow}(A^+ \fuse B^+)}}
+  {\tfocusl{x}
+    {\tupl
+      {\lsubsta
+        {\etapa{z_1}
+          {~\etapa{z_2}
+            {~\tfocusr
+              {\tfuser
+                {\tdownr{\tupr{\tfocusr{z_1}}}}
+                {\tdownr{\tupr{\tfocusr{z_2}}}}}}
+            {B^+}}
+          {A^+}}
+        {\tfusel{(\tdownl{x_1}{\tdownl{x_2}{N}})}}
+        {{\downarrow}{\uparrow}A^+ \fuse 
+         {\downarrow}{\uparrow}B^+}}}}
+  {U}}
+{\foct{\Psi}
+  {\tackon{\Theta}{x_1{:}{\uparrow}A^+,x_2{:}{\uparrow}B^+}}{N}{U}}
+\]
+\[
+\infer-
+{\foct{\Psi}{\Delta}
+  {\rsubsta{(\tlaml{(\tdownl{x}{\tupr{N}})})}{x'}
+    {(\tfocusr
+      {\tdownr
+       {\tlaml
+        {\etapa{z}
+          {~\etana
+            {\tfocusl{x'}
+              {\tappl
+                {(\tdownr{\tupr{\tfocusr{z}}})}
+                {(\tupl{\tdownl{x''}{\tfocusl{x''}{\tnil}}})}}}
+            {B^-}}
+          {A^+}}}})}
+    {{\downarrow}{\uparrow}A^+ \lefti {\uparrow}{\downarrow}B^-}}
+  {\istrue{{\downarrow}(A^+ \lefti B^-)}}}
+{\foct{\Psi}{x{:}\istrue{{\uparrow}A^+},\Delta}{N}{\istrue{{\downarrow}B^-}}}
+\]
+\[
+\infer-
+{\foct{\Psi}{\frameoff{}{\matchconj{\Delta_A}{x{:}\istrue{A^+ \lefti B^-}}}}
+  {\lsubst
+    {\lsubst
+      {N}
+      {\etapa{z}
+        {~\tfocusr
+          {\tdownr
+            {\etana
+              {\tfocusl{x}
+                {\tappl{z}{\tnil}}}
+              {B^-}}}}
+        {A^+}}}
+    {\tdownl{x'}{N_2}}}
+  {U}}
+{\foct{\Psi}{\Delta_A}{N_1}{\istrue{{A^+}}}
+ &
+ \foct{\Psi}{\tackon{\Theta}{x'{:}\istrue{B^-}}}{N_2}{U}}
+\]
+
+\caption{Unfocused admissibility for the 
+multiplicative, exponential fragment of \ollll}
+\label{fig:admit-mell}
+\end{figure}
+
+\begin{figure}[tp]
+\centering
+{\it XXX needs done}
+
+\caption{Unfocused admissibility for the additive connectives of \ollll.}
+\label{fig:admit-additive}
+\end{figure}
+
+\begin{figure}[tp]
+\centering
+{\it XXX needs done}
+
+\caption{Unfocused admissibility for the first-order connectives of \ollll.}
+\label{fig:admit-fo}
+\end{figure}
+
+\subsection{Unfocused admissibility}
+\label{sec:ord-unfocused-admissibility}
+
+Unfocused admissibility has a structure that is essentially unchanged
+from the previous discussion in the proof of the completeness of
+focusing for linear logic (Theorem~\ref{thm:linfoccomplete} in
+Section~\ref{sec:lincorrectness}). In this presentation, as in the
+structural focalization development, we present unfocused
+admissibility primarily on the level of proof terms; the resulting
+presentation is quite dense and would greatly benefit from 
+mechanization, though we leave that for future work. 
+
+For the most part, there is exactly one unfocused admissibility rule
+for each rule of unfocused \ollll. 
+The justifications for the 
+unfocused admissibility lemmas for the multiplicative, exponential
+fragment of \ollll~are given in Figure~\ref{fig:admit-mell}; the
+additive fragment is given in Figure~\ref{fig:admit-additive}, and
+the first-order connectives are treated in Figure~\ref{fig:admit-fo}.
+There are two additional
+rules that account for the fact that different polarized
+propositions, like ${\downarrow}{\uparrow}{\downarrow}{\uparrow}A^+$
+and $A^+$, sometimes erase to the same unpolarized propositions
+$(A^+)^\circ$. 
+For the same reason, Figure~\ref{fig:admit-mell} contains four
+${\it init}$-like rules, since atomic propositions can come in positive
+and negative varieties and can appear in the context either suspended or not.
+
+We can view unfocused admissibility as creating an abstraction layer
+of admissible rules that can be used to build focused proofs of stable
+sequents.  The proof of the completeness of focusing below constructs
+focused proofs entirely by working through the interface layer of
+unfocused admissibility.
+
+
+\subsection{Focalization}
+
+The act of taking an unfocused proof of an erased sequent and getting
+a focused proof of the un-erased sequent is {\it focalization}. If 
+we run the constructive content of the proof of the completeness of
+focusing (the \ollll~analogue of Theorem~\ref{thm:linfoccomplete} from
+Section~\ref{sec:lincorrectness}), which takes any stable, 
+suspension-normal sequent as input, the proof performs focalization.
+
+\bigskip
+\begin{theorem}[Complteness of focusing/focalization]~\\
+If $\Psi; \Delta^\circ \altv U^\circ$, where $\Delta$ and $U$ are 
+stable and suspension-normal, then $\foc{\Psi}{\Delta}{U}$. 
+\end{theorem}
+
+\begin{proof}
+By an outer induction on the structure of unfocused proofs and
+an inner induction over the structure of polarized formulas $A^+$ and
+$A^-$ in order to remove series of shifts 
+${\uparrow}{\downarrow}\ldots{\uparrow}{\downarrow}A^-$ from formulas until
+an unfocused admissibility lemma can be applied.
+\end{proof}
+
+\section{Properties of syntactic fragments}
+\label{sec:perm-fragments}
+
+In the structural focalization methodology, once 
+cut admissibility and identity expansion are established the only
+interesting part of the proof of the completeness of focusing is 
+the definition of an erasure function and the presentation of a 
+series of unfocused admissibility lemmas. The unfocused admissibility
+lemmas for non-invertible rules, like ${\fuse}_R$ and 
+${\lefti}_L$, look straightforward:
+\[
+\infer-
+{\foc{\Psi}{\matchconj{\Delta_1}{\Delta_2}}{\islvl{A^+ \fuse B^+}}}
+{\foc{\Psi}{\Delta_1}{\istrue{A^+}}
+ &
+ \foc{\Psi}{\Delta_2}{\istrue{B^+}}}
+\quad
+\infer-
+{\foc{\Psi}{\frameoff{\Theta}{\matchconj{\Delta_A}{x{:}A^+ \lefti B^-}}}{U}}
+{\foc{\Psi}{\Delta_A}{\istrue{A^+}}
+ &
+ \foc{\Psi}{\tackon{\Theta}{x'{:}\istrue{B^-}}}{U}}
+\]
+Because unfocused admissibility is defined only on
+stable sequents in our methodology, the invertible rules,
+like ${\fuse}_L$ and ${\lefti}_R$, require the presence of shifts:
+\[
+\infer-
+{\foc{\Psi}{\frameoff{\Theta}{x{:}{\uparrow}(A^+ \fuse B^+)}}{U}}
+{\foc{\Psi}{\tackon{\Theta}{\mkconj{x_1{:}\istrue{{\uparrow}A^+}}{x_2{:}\istrue{{\uparrow}B^+}}}}{U}}
+\quad
+\infer-
+{\foc{\Psi}{\Delta}{\islvl{{\downarrow}(A^+ \lefti B^-)}}}
+{\foc{\Psi}{\mkconj{x{:}\istrue{{\uparrow}A^+}}{\Delta}}{\istrue{{\downarrow}B^-}}}
+\]
+The presence of shifts is curious, due to our observation in
+Section~\ref{sec:ordpolarprop} that the shifts have much of the character
+of exponentials; they are 
+exponentials that do not place any restrictions on the form of the
+context.
+
+As a thought experiment, imagine the removal of shifts ${\uparrow}$
+and ${\downarrow}$ from the language of propositions in \ollll. Were
+it not for the presence of atomic propositions $p^+$ and $p^-$, this
+change would make every proposition $A^+$ a mobile proposition
+$A^+_\meph$ and would make every proposition $A^-$ a right-permeable
+proposition $A^-_\mlax$. But arbitrary atomic propositions
+are intended to be stand-ins for arbitrary propositions! If arbitrary
+propositions lack shifts, then non-mobile atomic propositions would
+appear to no longer stand for anything. Therefore, I argue that it is
+appropriate to remove them too, leaving only the permeable, mobile,
+and right-permeable atomic propositions $p^+_\mpers$, $p^+_\meph$, and
+$p^-_\mlax$. Having done so, every positive proposition is mobile, and
+every negative proposition is right-permeable.
+
+Now we have a logical fragment where every positive proposition is is
+mobile and every negative proposition is observed to be
+right-permeable. Consider a derivation
+$\foc{\Psi}{\Delta}{\islax{A^+}}$ where $\Delta$ is stable and
+includes only linear and persistent judgments (that is, $\Delta =
+\restrictto{\Delta}{\meph}$). It is simple to observe that, for every
+subderivation $\foc{\Psi'}{\Delta'}{U'}$, if $\Delta'$ is stable
+then $\Delta' = \restrictto{\Delta'}{\meph}$, and if $U$ is stable
+then $U = \restrictfrom{U}{\mlax}$. Given that this is the case, the
+restrictions that the focused ${\gnab}_R$ and ${\ocircle}_L$ rules
+make are {\it always satisfiable}, the same property that we previously
+observed of focused shift rules ${\downarrow}_R$ and ${\uparrow}_L$.
+In our syntactic fragment, in other words, the exponentials 
+${\gnab}$ and ${\ocircle}$ have become effective {\it replacements} for
+${\downarrow}$ and ${\uparrow}$. 
+
+The cut and identity theorems survive our restriction of the logic
+entirely intact: these theorems handle each of the connectives
+separately and are stable to the addition or removal of individual
+connectives.  That is not true for the unfocused admissibility lemmas,
+which critically and heavily use shifts. However, while we no longer
+have our original shifts, we have replacement shifts in the form of
+${\gnab}$ and ${\ocircle}$, and can replay the logic of the unfocused
+admissibility lemmas in order to gain new ones that look like this:
+\[
+\infer-
+{\foc{\Psi}{\matchconj{\Delta_1}{\Delta_2}}{\islax{A^+ \fuse B^+}}}
+{\foc{\Psi}{\Delta_1}{\islax{A^+}}
+ &
+ \foc{\Psi}{\Delta_2}{\islax{B^+}}}
+\quad
+\infer-
+{\foc{\Psi}{\frameoff{\Theta}{\matchconj{\Delta_A}{x{:}A^+ \lefti B^-}}}{U}}
+{\foc{\Psi}{\Delta_A}{\islax{A^+}}
+ &
+ \foc{\Psi}{\tackon{\Theta}{x'{:}\iseph{B^-}}}{U}}
+\]
+\[
+\infer-
+{\foc{\Psi}{\frameoff{\Theta}{x{:}{\gnab}(A^+ \fuse B^+)}}{U}}
+{\foc{\Psi}{\tackon{\Theta}{\mkconj{x_1{:}\iseph{{\gnab}A^+}}{x_2{:}\iseph{{\gnab}B^+}}}}{U}}
+\quad
+\infer-
+{\foc{\Psi}{\Delta}{\islax{{\ocircle}(A^+ \lefti B^-)}}}
+{\foc{\Psi}{\mkconj{x{:}\iseph{{\gnab}A^+}}{\Delta}}{\islax{{\ocircle}B^-}}}
+\]
+(To be clear, just as all the unfocused admissibility lemmas only applied
+to stable sequents, the unfocused admissibility lemmas above only apply when
+contexts and succedents are both stable and free of judgments ${\istrue{T}}$.)
+
+The point of this exercise is that, given the definition and
+metatheory of \ollll, there is a reasonably large family of related
+systems, including ordered logic, lax logic, linear lax logic, and
+linear logic, that can be given erasure-based focalization proofs
+relative to \ollll; at most, the erasure function and the unfocused
+admissibility lemmas need to be adapted. The fragment we have defined
+here corresponds to regular linear logic. In the erasure of polarized
+\ollll~propositions to linear logic propositions, the
+``pseudo-shifts'' ${\ocircle}$ and ${\gnab}$ are wiped away:
+$({\ocircle}A^+)^\circ = (A^+)^\circ$ and $({\gnab}A^-)^\circ =
+(A^-)^\circ$.  Additionally, the two implications are conflated: $(A^+
+\lefti B^-)^\circ = (A^+ \righti B^-)^\circ = (A^+)^\circ \lolli
+(B^+)^\circ$. Beyond that, and the renaming of fuse to tensor -- $(A^+
+\fuse B^+)^\circ = (A^+)^\circ \otimes (B^+)^\circ$ -- the structure
+of erasure remains intact, and we can 
+meaningfully focalize unfocused linear logic derivations into focused 
+\ollll~derivations.
+
+\section{The design space of proof terms}
+\label{sec:intrinsic-extrinsic}
+
+In the design space of logical frameworks, our decision to view
+proof terms $E$ as being fully intrinsically typed representatives
+of focused derivations is somewhat unusual. This is because, in 
+a dependently typed logical framework, the variable substitution
+theorem (which we had to establish very early on) and the cut 
+admissibility theorem (which we established much later) are effectively
+the same theorem; handling everything at once is difficult at best,
+and dependent types seem to force everything to be handled at once in
+an intrinsically typed presentation.
+
+Since the advent of Watkins' observations about the existence of
+hereditary substitution and its application to logical frameworks
+\cite{watkins02concurrent}, the dominant approach to the metatheory of
+logical frameworks has to define proof terms $E$ that have little, if
+any, implicit type structure: just enough that it is possible so that
+it is possible to define the hereditary substitution function
+$\rsubst{M}{x}{E}$. The work by Martens and Crary goes further,
+treating hereditary substitution as a relation, not a function, so
+that absolutely no intrinsic type system is necessary, and the proof
+terms are merely untyped abstract binding trees
+\cite{martens11mechanizing}.
+
+If we were to take such an approach, we would need to treat the
+judgment $\foct{\Psi}{\Delta}{E}{U}$ as a genuine four-place relation,
+rather than the three-place relation $\foc{\Psi}{\Delta}{U}$ annotated
+with a derivation $E$ of that sequent.  Then, the analogue of cut
+admissibility (part 4) would show that if
+$\foct{\Psi}{\Delta}{M}{A^-}$ and
+$\foct{\Psi}{\tackon{\Theta}{x{:}\islvl{A^-}}}{E}{U}$, and $\Xi$
+matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$, then
+$\foct{\Psi}{\Xi}{\rsubst{M}{x}{E}}{U}$, where {\it $\rsubst{M}{x}{E}$
+  is some function on proof terms that has already been defined},
+rather than just an expression of the computational content of the
+theorem. Being able to comfortably conflate the computational content
+of a theorem with its operation on proof terms is the primary
+advantage of the approach taken in this chapter; it avoids a great
+deal of duplicated effort. (The cost is that we lose the ability to
+quantify over proof terms $E$ with the universal and existential
+quantifiers, which is a nontrivial, but hopefully acceptable, loss. This
+point is justified further in Section~\ref{sec:why-not-fully-dependent}.)
+
+It is not obvious how the substitution 
+$\rsubst{M}{x}{E}$ could be defined without accounting for the 
+full structure of derivations. The rightist substitution function,
+in particular, is computationally dependent
+on the implicit bookkeeping associated with the matching constructs, and
+that bookkeeping is far more of a difficulty in our setting than the
+implicit type annotations. 
+The problem, if we wish to see it as a problem, is that we cannot
+substitute a derivation $M$ of $\foc{\Psi}{\Delta}{A^-}$
+into a derivation $E$ of $\foc{\Psi}{\tackon{\Theta}{x{:}\istrue{A^-}}}{U}$
+unless $x$ is {\it actually free} in $E$. Therefore, when we try to
+substitute the same $M$ into $\tfuser{V_1}{V_2}$, we are forced to determine
+what judgment $x$ is associated with; if $x$ is associated with a
+linear or ephemeral judgment, we must track which subderivation 
+$x$ is assigned to in order to determine what is to be done next.
+
+It might be possible to bring our development more in line with other
+developments by introducing a new matching construct of substitution
+into contexts, the substitution construct $[\Delta/(x{:}\islvl{A^-})]\Xi$.
+If $\Xi = \tackon{\Theta}{x{:}\islvl{A^-}}$, then this would be the same 
+as $\frameoff{\Theta}{\Delta}$, but if $x$ is not in the variable domain
+of $\Xi$, then $\Xi$ matches $[\Delta/(x{:}\islvl{A^-})]\Xi$.
+\[
+\infer-[{\it rcut}]
+{\foct{\Psi}{[\Delta/(x{:}\islvl{A^-})]\Xi}{E'}{U}}
+{\restrictto{\Delta}{\mlvl}
+ &
+ \foct{\Psi}{\Delta}{M}{A^-}
+ &
+ \foct{\Psi}{\Xi}{E}{U}
+ &
+ \stableL{\Delta}
+ &
+ \rsubst{M}{x}{E} = E'}
+\]
+Using this formulation of {\it rcut}, it becomes unproblematic to
+define $\rsubst{M}{x}{(\tfuser{V_1}{V_2})}$ to be
+$\tfuser{(\rsubst{M}{x}{V_1})}{(\rsubst{M}{x}{V_2})}$, as we are
+allowed to substitute for $x$ even in terms where the variable cannot
+appear. Using this strategy, it could be possible to describe and
+formalize the development in this chapter with proof terms that do
+nothing more than capture the binding structure of derivations, in the
+style of Crary's LF encoding of linear logic \cite{crary10higher}.
+
+
+While the above argument suggests that the framing-off operation 
+is {\it inconvenient} to use for specifying the {\it rcut} part
+of cut admissibility, it is clearly adequate. That is not necessarily
+the case for every logic. For instance, to give a focused presentation
+of Reed's queue logic \cite{reed09queue}, we would need a matching construct
+$[\Delta/x]\Xi$ that is quite different from the framing-off operation
+$\frameoff{\Delta}{x{:}A^-}$ used to describe the logic's left rules.
+I conjecture that logics where the framing-off operation is adequate
+for the presentation of cut admissibility are the same as those
+logics which can be treated in Belnap's display logic \cite{belnap82display}.
+
