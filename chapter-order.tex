@@ -858,7 +858,12 @@ of this compression is due to neglecting the implicit bookkeeping
 associated with matching constructs, bookkeeping that must be made
 explicit in proofs like the cut admissibility theorem.
 
-XXXX here is a good place to prove weakening
+One theorem that takes place entirely at the level of this implicit
+bookkeping is the admissible weakening lemma: if $\Delta'$ matches
+$\restrictto{\Delta'}{\mpers}$ and $N$ is a derivation of
+$\foc{\Psi}{\Delta}{U}$, then $N$ is also a derivation of
+$\foc{\Psi}{\Delta, \Delta'}{U}$. As usual, this proof can be
+established by straightforward induction on the structure of $N$.
 
 \subsection{Variable substitution}
 
@@ -1522,7 +1527,7 @@ negative principal substitution is ${\it cut}^-$:
   $\Theta_\Delta$ such that $\tackon{\Theta_\Delta}{A^+} =
   \Delta,A^+$.  Note that this is only possible to do because $\Delta$
   is stable; if there were a non-stable proposition in $\Delta$, the
-  fixed inversion invariant would not permitted us to frame off the
+  fixed inversion invariant would not permit us to frame off the
   right-most proposition $A^+$.
 
   We next construct a context $\Delta'_A$ that matches
@@ -1542,13 +1547,13 @@ negative principal substitution is ${\it cut}^-$:
 \item[--] $(\subst{(\twithr{N_1}{N_2})}{(\tpitwo{\Sp})})^{A^- \with B^-}
            = (\subst{N_2}{\Sp})^{A^-}$
 
-\item[--] $(\subst{(\tforallr{a}{N})}{(\tforalll{t}{\Sp})})^{\forall x.A^-}
-           = (\subst{[t/a]N}{\Sp})^{[t/a]A^-}$
+\item[--] $(\subst{(\tforallr{\lf a}{N})}{(\tforalll{\lf t}{\Sp})})^{\forall \lf{a}{:}\tau.A^-}
+           = (\subst{\lf{[t/a]}N}{\Sp})^{\lf{[t/a]}A^-}$
 \end{itemize}
 
 \subsubsection{Leftist substitution}
 In focal substitution, the positive case
-corresponds to our usual intuitions about cut admissibility and the
+corresponds to our usual intuitions about substitution and the
 negative case is strange.  In cut admissibility, the situation is
 reversed: rightist substitutions (considered in
 Section~\ref{sec:rsubst} below), associated with negative principal
@@ -1590,7 +1595,7 @@ In
 cases that we discuss in detail, necessary properties of this
 composition frame are stated but not proven.
 
-\paragraph{\it Substitution into terms}
+\paragraph{\it Substitution out of terms}
 
 \begin{itemize}
 \item[--] $\lsubsta{\tfocusr{V}}{M}{A^+} = (\subst{V}{M})^{A^+}$\smallskip\\
@@ -1655,60 +1660,61 @@ composition frame are stated but not proven.
 \item[--] $\lsubsta{\tfusel{N}}{M}{A^+} = \tfusel{(\lsubsta{N}{M}{A^+})}$
 \item[--] $\lsubsta{\tabort}{M}{A^+} = \tabort$
 \item[--] $\lsubsta{\toplusl{N_1}{N_2}}{M}{A^+} = \toplusl{(\lsubsta{N_1}{M}{A^+})}{(\lsubsta{N_2}{M}{A^+})}$
-\item[--] $\lsubsta{\texistsl{a}{N}}{M}{A^+} = \texistsl{a}{(\lsubsta{N}{M}{A^+})}$\smallskip\\
+\item[--] $\lsubsta{\texistsl{\lf{a}}{N}}{M}{A^+} = \texistsl{\lf{a}}{(\lsubsta{N}{M}{A^+})}$\smallskip\\
   We must show $\foc{\Psi}{\Xi}{U}$, where
   \begin{itemize}
-  \item $\Delta$ matches $\frameoff{\Theta_B}{\exists a{:}\tau.B^+}$, 
-     $N$ is a derivation of $\foc{\Psi,a{:}\tau}{\tackon{\Theta_B}{B^+}}{A^+}$,
+  \item $\Delta$ matches $\frameoff{\Theta_B}{\exists \lf{a}{:}\tau.B^+}$, 
+     $N$ is a derivation of $\foc{\Psi,\lf{a}{:}\tau}{\tackon{\Theta_B}{B^+}}{A^+}$,
   \item $M$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$,
   \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$, and
      $\restrictfrom{U}{\mlvl}$.
   \end{itemize}
-  $\Xi$ matches $\frameoff{(\Theta{\circ}\Theta_B)}{\exists a{:}\tau.B^+}$
+  $\Xi$ matches $\frameoff{(\Theta{\circ}\Theta_B)}{\exists \lf{a}{:}\tau.B^+}$
   and $\tackon{(\Theta{\circ}\Theta_B)}{B^+}$ matches 
-  $\frameoff{\Theta}{\tackon{\Theta_B}{B^+}}$. By variable weakening,
-  $M$ is also a derivation of $\foc{\Psi, a{:}\tau}{\tackon{\Theta}{A^+}}{U}$,
+  $\frameoff{\Theta}{\tackon{\Theta_B}{B^+}}$. By variable weakening (a special case of variable substitution),
+  $M$ is also a derivation of $\foc{\Psi, \lf{a}{:}\tau}{\tackon{\Theta}{A^+}}{U}$,
   so by the induction hypothesis on $N$ and $M$ we have
-  $\foc{\Psi, a{:}\tau}{\tackon{(\Theta{\circ}\Theta_B)}{B^+}}{U}$, 
+  $\foc{\Psi, \lf{a}{:}\tau}{\tackon{(\Theta{\circ}\Theta_B)}{B^+}}{U}$, 
   and the required result then follows from rule $\exists_L$. \smallskip
 
-\item[--] $\lsubsta{\phi}{M}{A^+} 
-           = (\mathsf{fn}~\sigma \Rightarrow \lsubsta{\phi(\sigma)}{(\sigma{M})}{A^+})$\smallskip\\
+\item[--] $\lsubsta{\phi}{M}{{A^+}} 
+           = (\mathsf{fn}~\lf\sigma \Rightarrow \lsubsta{\phi(\lf\sigma)}{(\lf\sigma{M})}{\lf\sigma A^+})$\smallskip\\
   We must show $\foc{\Psi}{\Xi}{U}$, where
   \begin{itemize}
-  \item $\Delta$ matches $\frameoff{\Theta_B}{t \doteq s}$,
-    $\phi$ is a function from substitutions $\Psi' \vdash \sigma : \Psi$
-    that unify $t$ and $s$ to derivations of 
-    $\foc{\Psi'}{\tackon{\sigma{\Theta_B}}{\cdot}}{\sigma{A^+}}$,
+  \item $\Delta$ matches $\frameoff{\Theta_B}{\lf t \doteq \lf s}$,
+    $\phi$ is a function from substitutions $\Psi' \vdash \lf \sigma : \Psi$
+    that unify $\lf t$ and $\lf s$ to derivations of 
+    $\foc{\Psi'}{\tackon{\lf \sigma{\Theta_B}}{\cdot}}{\lf \sigma{A^+}}$,
   \item $M$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{A^+}}{U}$,
   \item $\Xi$ matches $\frameoff{\Theta}{\Delta}$, and 
      $\restrictfrom{U}{\mlvl}$.
   \end{itemize}
-  $\Xi$ matches $\frameoff{(\Theta{\circ}\Theta_B)}{t \doteq s}$, and 
-  for any substitution $\sigma$, 
-  $\restrictfrom{\sigma{U}}{\mlvl}$ and
-  $\tackon{\sigma(\Theta{\circ}\Theta_B)}{\cdot}$ matches 
-  $\frameoff{\sigma\Theta}{\tackon{\sigma\Theta_B}{\cdot}}$.
+  $\Xi$ matches $\frameoff{(\Theta{\circ}\Theta_B)}{\lf t \doteq \lf s}$, and 
+  for any substitution $\lf \sigma$, 
+  $\restrictfrom{\lf \sigma{U}}{\mlvl}$ and
+  $\tackon{\lf \sigma(\Theta{\circ}\Theta_B)}{\cdot}$ matches 
+  $\frameoff{\lf \sigma\Theta}{\tackon{\lf\sigma\Theta_B}{\cdot}}$.
   By rule $\doteq_L$, it suffices to show that, 
-  given an arbitrary substitution $\Psi' \vdash \sigma : \Psi$, 
+  given an arbitrary substitution $\Psi' \vdash \lf\sigma : \Psi$, 
   there is a derivation of 
-  $\foc{\Psi'}{\tackon{\sigma(\Theta{\circ}\Theta_B)}{\cdot}}{\sigma{U}}$.
+  $\foc{\Psi'}{\tackon{\lf \sigma(\Theta{\circ}\Theta_B)}{\cdot}}{\sigma{U}}$.
   
 
-  By applying $\sigma$ to $\phi$, we get $\phi(\sigma)$, a derivation 
-  of $\foc{\Psi'}{\tackon{\sigma\Theta_B}{\cdot}}{\sigma{A^+}}$;
-  the usual interpretation of higher-order derivations is that 
-  $\phi(\sigma)$ is a subderivation of $\phi$, so $\phi(\sigma)$ can be
-  used to invoke the induction hypothesis.
-  From variable substitution, we get
-  $\sigma{M}$, a derivation of 
-  $\foc{\Psi'}{\tackon{\sigma\Theta}{\sigma{A^+}}}{\sigma{U}}$, and then
-  the result follows by the induction hypothesis on 
-  $\phi(\sigma)$ and $\sigma{M}$. 
+  By applying $\lf \sigma$ to $\phi$, we get $\phi(\lf\sigma)$, a
+  derivation of
+  $\foc{\Psi'}{\tackon{\lf\sigma\Theta_B}{\cdot}}{\lf\sigma{A^+}}$.
+  We treat $\lf\sigma A^+$ as having the same size as $A^+$, and the
+  usual interpretation of higher-order derivations is that
+  $\phi(\lf\sigma)$ is a subderivation of $\phi$, so $\phi(\lf\sigma)$
+  can be used to invoke the induction hypothesis.  From variable
+  substitution, we get $\lf\sigma{M}$, a derivation of
+  $\foc{\Psi'}{\tackon{\lf\sigma\Theta}{\lf\sigma{A^+}}}{\lf\sigma{U}}$,
+  and then the result follows by the induction hypothesis on
+  $\phi(\lf\sigma)$ and $\lf\sigma{M}$.
 
 \end{itemize}
 
-\paragraph{\it Substitution into spines}
+\paragraph{\it Substitution out of spines}
 
 \begin{itemize}
 \item[--] $\lsubsta{\tupl{N}}{M}{A^+} = \tupl{(\lsubsta{N}{M}{A^+})}$
@@ -1730,7 +1736,7 @@ composition frame are stated but not proven.
   and $\tackon{(\Theta{\circ}\Theta_B)}{B^+}$ matches 
   $\frameoff{\Theta}{\tackon{\Theta_B}{B^+}}$.
   By the induction hypothesis on $N$ and $M$ we have
-  $\foc{\Psi, a{:}\tau}{\tackon{(\Theta{\circ}\Theta_B)}{B^+}}{U}$,
+  $\foc{\Psi}{\tackon{(\Theta{\circ}\Theta_B)}{B^+}}{U}$,
   and the result follows by rule ${\ocircle}_L$.  \smallskip
 
 \item[--] $\lsubsta{\tappl{V}{\Sp}}{M}{A^+} 
@@ -1761,8 +1767,8 @@ composition frame are stated but not proven.
 
 \item[--] $\lsubsta{\tpione{\Sp}}{M}{A^+} = \tpione{(\lsubsta{\Sp}{M}{A^+})}$
 \item[--] $\lsubsta{\tpitwo{\Sp}}{M}{A^+} = \tpitwo{(\lsubsta{\Sp}{M}{A^+})}$
-\item[--] $\lsubsta{\tforalll{t}{\Sp}}{M}{A^+} 
-           = \tforalll{t}{(\lsubsta{\Sp}{M}{A^+})}$
+\item[--] $\lsubsta{\tforalll{\lf t}{\Sp}}{M}{A^+} 
+           = \tforalll{\lf t}{(\lsubsta{\Sp}{M}{A^+})}$
 \end{itemize}
 
 
@@ -1787,7 +1793,7 @@ ${\it rcut}$:
 
 A unique aspect of the right commutative cuts is that the implicit 
 bookkeeping on contexts matters to the computational behavior of 
-the proof: when we have deal with
+the proof: when we deal with
 multiplicative connectives like $A^+ \fuse B^+$ and $A^+ \lefti B^+$ 
 under focus, 
 we actually must consider that the variable $x$ that we're substituting
@@ -1816,7 +1822,7 @@ The other hole -- the place where $y$ is --
 is defined by $\Theta'$: morally,
 $\Theta' = \lambda \Delta_A. \Gamma(\Delta_A)(y{:}\istrue{T})$. 
 However, we cannot directly represent these functions due to
-the need to operate around matching constructs. Instead, we use
+the need to operate around matching constructs. Instead, we 
 construct $\Theta_\Delta$ to represent the frame that is
 morally $\lambda \Delta_B. \Gamma(\Delta)(\Delta_B)$, and 
 $\Theta_{T'}$ to represent the frame that is morally
@@ -1863,8 +1869,8 @@ two frames are stated but not proven.
   \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches $\cdot$,
   \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
   \end{itemize}
-  Because $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches $\cdot$, it is
-  effectively the case that we must have $\mlvl = \mpers$, and so 
+  Because $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches $\cdot$, it must
+  be the case that $\mlvl = \mpers$, and so 
   $\Xi$ matches $\cdot$ as well. The result follows by rule ${\one}_R$. 
 
 \smallskip
@@ -1919,8 +1925,8 @@ two frames are stated but not proven.
            = \tinl{\rsubsta{M}{x}{V}{A^-}}$
 \item[--] $\rsubsta{M}{x}{(\tinr{V})}{A^-} 
            = \tinr{\rsubsta{M}{x}{V}{A^-}}$
-\item[--] $\rsubsta{M}{x}{(\texistsr{t}{V})}{A^-} 
-           = \texistsr{t}{(\rsubsta{M}{x}{V}{A^-})}$
+\item[--] $\rsubsta{M}{x}{(\texistsr{\lf t}{V})}{A^-} 
+           = \texistsr{\lf t}{(\rsubsta{M}{x}{V}{A^-})}$
 \item[--] $\rsubsta{M}{x}{\tunifr}{A^-} = \tunifr$
 \end{itemize}
 
@@ -1942,7 +1948,7 @@ two frames are stated but not proven.
   \begin{itemize}
   \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
   \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches
-     $\frameoff{\Theta'}{[A^-]}$, 
+     $\frameoff{\Theta'}{x{:}A^-}$, 
      $\Sp$ is a derivation of 
      $\foc{\Psi}{\tackon{\Theta'}{[A^-]}}{U}$,
   \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
@@ -2070,43 +2076,43 @@ two frames are stated but not proven.
 \item[--] $\rsubsta{M}{x}{(\twithr{N_1}{N_2})}{A^-} 
            = \twithr{(\rsubsta{M}{x}{N_1}{A^-})}{(\rsubsta{M}{x}{N_2}{A^-})}$
 
-\item[--] $\rsubsta{M}{x}{\texistsl{a}{N}}{A^-} 
-           = \texistsl{a}{(\rsubsta{M}{x}{N}{A^-})}$
-\item[--] $\rsubsta{M}{x}{\tforallr{a}{N}}{A^-} 
-           = \tforallr{a}{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\texistsl{\lf a}{N}}{A^-} 
+           = \texistsl{\lf a}{(\rsubsta{M}{x}{N}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tforallr{\lf a}{N}}{A^-} 
+           = \tforallr{\lf a}{(\rsubsta{M}{x}{N}{A^-})}$
 \item[--] $\rsubsta{M}{x}{\phi}{A^-} 
-           = ({\sf fn}~\sigma \Rightarrow 
-              \rsubsta{\sigma{M}}{x}{\phi(\sigma)}{A^-})$\smallskip\\
+           = ({\sf fn}~\lf\sigma \Rightarrow 
+              \rsubsta{\sigma{M}}{x}{\phi(\lf\sigma)}{A^-})$\smallskip\\
   We must show $\foc{\Psi}{\Xi}{U}$, where
   \begin{itemize}
   \item $M$ is a derivation of $\foc{\Psi}{\Delta}{A^-}$, 
   \item $\tackon{\Theta}{x{:}\islvl{A^-}}$ matches 
-     $\frameoff{\Theta'}{t \doteq s}$, $\phi$ 
-     is a function from substitutions $\Psi' \vdash \sigma : \Psi$
-     that unify $t$ and $s$ to derivations of 
-     $\foc{\Psi'}{\tackon{\sigma\Theta'}{\cdot}}{\sigma{U}}$.
+     $\frameoff{\Theta'}{\lf t \doteq \lf s}$, $\phi$ 
+     is a function from substitutions $\Psi' \vdash \lf \sigma : \Psi$
+     that unify $\lf t$ and $\lf s$ to derivations of 
+     $\foc{\Psi'}{\tackon{\lf \sigma\Theta'}{\cdot}}{\lf \sigma{U}}$.
   \item and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
   \end{itemize}
 
-  $\Xi$ matches $\frameoff{\Theta_\Delta}{t \doteq s}$, and 
-  for any substitution $\sigma$, $\tackon{\sigma\Theta_\Delta}{\cdot}$
-  matches $\frameoff{\sigma\Theta}{\restrictto{\Delta}{\mlvl}}$.
+  $\Xi$ matches $\frameoff{\Theta_\Delta}{\lf t \doteq \lf s}$, and 
+  for any substitution $\lf \sigma$, $\tackon{\lf \sigma\Theta_\Delta}{\cdot}$
+  matches $\frameoff{\lf\sigma\Theta}{\restrictto{\Delta}{\mlvl}}$.
   By rule $\doteq_L$, it suffices to show that, given an arbitrary
-  substitution $\Psi' \vdash \sigma : \Psi$, there
+  substitution $\Psi' \vdash \lf \sigma : \Psi$, there
   is a derivation of 
-  $\foc{\Psi'}{\tackon{\sigma\Theta_\Delta}{\cdot}}{\sigma{U}}$.
+  $\foc{\Psi'}{\tackon{\lf\sigma\Theta_\Delta}{\cdot}}{\lf\sigma{U}}$.
 
-  By applying $\sigma$ to $\phi$, we get $\phi(\sigma)$, a derivation 
-  of $\foc{\Psi'}{\tackon{\sigma\Theta_B}{\cdot}}{\sigma{A^+}}$;
+  By applying $\lf\sigma$ to $\phi$, we get $\phi(\lf\sigma)$, a derivation 
+  of $\foc{\Psi'}{\tackon{\lf\sigma\Theta_B}{\cdot}}{\lf\sigma{A^+}}$;
   the usual interpretation of higher-order derivations is that 
-  $\phi(\sigma)$ is a subderivation of $\phi$, so $\phi(\sigma)$ can be
+  $\phi(\lf\sigma)$ is a subderivation of $\phi$, so $\phi(\lf\sigma)$ can be
   used to invoke the induction hypothesis.
-  From variable substitution, we get $\sigma{M}$, a derivation
+  From variable substitution, we get $\lf\sigma{M}$, a derivation
   of 
-  $\foc{\Psi'}{\sigma\Delta}{\islvl{\sigma{A^-}}}$,
+  $\foc{\Psi'}{\lf \sigma\Delta}{\islvl{\lf \sigma{A^-}}}$,
   and the result follows
-  by the induction hypothesis on $\sigma{M}$ and 
-  $\phi(\sigma)$.
+  by the induction hypothesis on $\lf \sigma{M}$ and 
+  $\phi(\lf \sigma)$.
 
 \end{itemize}
 
@@ -2188,8 +2194,8 @@ two frames are stated but not proven.
            = \tpione{(\rsubsta{M}{x}{\Sp}{A^-})}$
 \item[--] $\rsubsta{M}{x}{\tpitwo{\Sp}}{A^-} 
            = \tpitwo{(\rsubsta{M}{x}{\Sp}{A^-})}$
-\item[--] $\rsubsta{M}{x}{\tforalll{t}{\Sp}}{A^-} 
-           = \tforalll{t}{(\rsubsta{M}{x}{\Sp}{A^-})}$
+\item[--] $\rsubsta{M}{x}{\tforalll{\lf t}{\Sp}}{A^-} 
+           = \tforalll{\lf t}{(\rsubsta{M}{x}{\Sp}{A^-})}$
 \end{itemize}
 
 \section{Identity expansion}
@@ -2200,7 +2206,7 @@ us: the admissible rules $\eta_{A^+}$ and $\eta_{A^-}$ are
 straightforward generalizations of the explicit rules $\eta^+$ and
 $\eta^-$ in Figure~\ref{fig:foc-mall} from ordered atomic propositions
 to arbitrary propositions (and from permeable atomic propositions to
-arbitrary permeable propositions and so on).
+arbitrary permeable propositions).
 \[
 \infer-[\eta_{A^+_\mlvl}]
 {\foct{\Psi}{\frameoff{\Theta}{A^+_\mlvl}}{\etapa{z}{N}{A^+_\mlvl}}{U}}
@@ -2213,7 +2219,7 @@ arbitrary permeable propositions and so on).
  \stableL{\Delta}}
 \]
 In the proof of identity expansion, we do pay some price in return for
-including including permeable propositions, as we perform slightly
+including permeable propositions, as we perform slightly
 different bookkeeping depending on whether or not it is necessary to
 apply admissible weakening to the subderivation $N$.
 
@@ -2231,36 +2237,52 @@ apply admissible weakening to the subderivation $N$.
 \end{itemize}
 \end{theorem}
 
-\begin{proof} By mutual induction over the structure of types. We 
-provide the full definition at the level of proof terms, but omit
-the full discussion of some of the simpler cases (like units) and
-cases that are very similar to others.
+\begin{proof} By mutual induction over the structure of types. We
+  provide the full definition at the level of proof terms, but omit
+  the full discussion of some of the simpler cases (like units) and
+  cases that are very similar to others.\robnote{I think this cases of
+    this proof that I wrote out in detail need to be redone entirely
+    in the style of the ${\downarrow}A^-$ case, but I want to get
+    feedback before I do that.  For now, I've left the rest of this
+    proof alone (July 19).}
 
 \subsubsection{Positive cases}
 
 \begin{itemize}
-\item[--] $\etapa{z}{N}{p^+_\mlvl} = \tetap{z}{N}$
+\item[--] $\etapa{z}{N}{p^+_\mlvl} = 
+  \infer[\eta^+]
+   {\foct{\Psi}{\frameoff{\Theta}{p^+_\mlvl}}{\tetap{z}{N}}{U}}
+   {\foct{\Psi}{\tackon{\Theta}{z{:}\islvl{p^+_\mlvl}}}{N}{U}}$
+
+\medskip
+
 \item[--] $\etapa{z}{N}{{\downarrow}A^-} 
            = \tdownl{x}{([(\tdownr{(\etana{\tfocusl{x}{\tnil}}{A^-})})/z]N)}$
-  \smallskip
 
+  \smallskip
   $N$ is a derivation of 
-  $\foc{\Psi}{\tackon{\Theta}{z{:}\istrue{\susp{{\downarrow}A^-}}}}{U}$.
-  By ${\downarrow_L}$, it suffices to show 
-  $\foc{\Psi}{\tackon{\Theta}{x{:}\istrue{A^-}}}{U}$.
-  We construct a context $\Xi$ that matches $x{:}A^-$ such that
-  $\tackon{\Theta}{x{:}\istrue{A^-}}$ matches $\frameoff{\Theta}{\Xi}$.
-  \smallskip
-
-  $\tfocusl{x}{\tnil}$ (that is, ${\it focus}_L$ followed by ${\it id}^-$) 
-  is a derivation of 
-  $\foc{\Psi}{\Xi}{\istrue{\susp{A^-}}}$.
-  By the induction hypothesis, we have 
-  $\foc{\Psi}{\Xi}{A^-}$, and by ${\downarrow}_R$
-  we then have 
-  $\foc{\Psi}{\Xi}{[ {\downarrow}{A^-} ]}$. 
-  The result follows by the focal substitution on this derivation into $N$.
-  \smallskip
+  $\foc{\Psi}{\tackon{\Theta}{z{:}\istrue{\susp{{\downarrow}A^-}}}}{U}$. 
+  We construct a frame $\Theta^-$ that contains only the persistent
+  propositions from $\Delta$ and then derive:
+  \[\footnotesize \infer[{\downarrow}_L]
+  {\foct{\Psi}{\frameoff{\Theta}{{\downarrow}A^-}}
+     {\tdownl{x}{([(\tdownr{(\etana{\tfocusl{x}{\tnil}}{A^-})})/z]N)}}
+     {U}}
+  {\infer-[{\it subst}^+]
+   {\foct{\Psi}{\tackon{\Theta}{x{:}\istrue{A^-}}}
+      {[(\tdownr{(\etana{\tfocusl{x}{\tnil}}{A^-})})/z]N}
+      {U}}
+   {\infer[{\downarrow}_R]
+    {\foct{\Psi}{\tackon{\Theta^-}{x{:}\istrue{A^-}}}{\tdownr{(\etana{\tfocusl{x}{\tnil}}{A^-})}}{[{\downarrow}A^-]}}
+    {\infer-[{\eta}_{A^-}]
+     {\foct{\Psi}{\tackon{\Theta^-}{x{:}\istrue{A^-}}}{\etana{\tfocusl{x}{\tnil}}{A^-}}{\istrue{A^-}}}
+     {\infer[{\it focus}_R]
+      {\foct{\Psi}{\tackon{\Theta^-}{x{:}\istrue{A^-}}}{\tfocusl{x}{\tnil}}{\istrue{\susp{A^-}}}}
+      {\infer[{\it id}^-]
+       {\foct{\Psi}{\tackon{\Theta^-}{[A^-]}}{\tnil}{\istrue{\susp{A^-}}}}
+       {}}}}
+    &
+    \foct{\Psi}{\tackon{\Theta}{z{:}\istrue{\susp{{\downarrow}A^-}}}}{N}{U}}}\]
 
 \item[--] $\etapa{z}{N}{{\scriptgnab}A^-}
            = \tgnabl{x}{([(\tgnabr{(\etana{\tfocusl{x}{\tnil}}{A^-})})/z]N)}$ 
@@ -2611,7 +2633,7 @@ ${!}p^+_\mpers$.\footnote{The polarity and level annotations are
   atomic propositions.}  In this way, we can see the separation
 criteria from our previous work
 \cite{simmons08linear,pfenning09substructural} arising as an emergent
-phenomena of erasure.
+property of erasure.
 
 We have to define erasure on non-stable sequents in order for the
 soundness of focusing to go through, though we will only define
@@ -2668,10 +2690,10 @@ negative propositions and inverting positive propositions).
 (A^+ \oplus B^+)^\circ & \!\!\!=\!\!\! & (A^+)^\circ \oplus (B^+)^\circ &
 (A^- \with B^-)^\circ & \!\!\!=\!\!\! & (A^-)^\circ \with (B^-)^\circ 
 \\
-(\exists a{:}\tau.A^+)^\circ & \!\!\!=\!\!\! & \exists a{:}\tau. (A^+)^\circ &
-(\forall a{:}\tau.A^-)^\circ & \!\!\!=\!\!\! & \forall a{:}\tau. (A^-)^\circ 
+(\exists\lf a{:}\tau.A^+)^\circ & \!\!\!=\!\!\! & \exists\lf a{:}\tau. (A^+)^\circ &
+(\forall\lf a{:}\tau.A^-)^\circ & \!\!\!=\!\!\! & \forall\lf a{:}\tau. (A^-)^\circ 
 \\
-(t \doteq s)^\circ & \!\!\!=\!\!\! & t \doteq s &
+(\lf t \doteq \lf s)^\circ & \!\!\!=\!\!\! & \lf t \doteq \lf s &
 & &
 \end{array}
 \]}
@@ -2878,7 +2900,7 @@ If $\foc{\Psi}{\Delta}{U}$, then $\Psi; \Delta^\circ \altv U^\circ$.
 \]
 \[
 \infer-
-{\foct{\Psi}{\frameoff{}{\matchconj{\Delta_A}{x{:}\istrue{A^+ \lefti B^-}}}}
+{\foct{\Psi}{\frameoff{}{\matchconj{\Delta_A}{x{:}{A^+ \lefti B^-}}}}
   {\lsubst
     {\lsubst
       {N}
@@ -2903,16 +2925,127 @@ multiplicative, exponential fragment of \ollll}
 \end{figure}
 
 \begin{figure}[tp]
-\centering
-{\it XXX needs done}
+\[
+\infer-
+{\foct{\Psi}{\frameoff{\Theta}{x{:}{\uparrow}{\zero}}}
+  {\tfocusl{x}{\tupl{\tabort}}}
+  {U}}
+{}
+\qquad
+\infer-
+{\foct{\Psi}{\Delta}
+  {\lsubst{N_1}{\etapa{z}{\tfocusr{\tinl{z}}}{A^+}}{A^+}}
+  {\islvl{A^+ \oplus B^+}}}
+{\foct{\Psi}{\Delta}{N_1}{\istrue{A^+}}}
+\]
+\[
+\infer-
+{\foct{\Psi}{\frameoff{\Theta}{x{:}{\uparrow}(A^+ \oplus B^+)}}
+  {\tfocusl{x}{\tupl{\lsubst
+      {\toplusl{\etapa{y}{\tfocusr{\tdownr{\tupr{\tfocusr{y}}}}}{A^+}}
+               {\etapa{y}{\tfocusr{\tdownr{\tupr{\tfocusr{y}}}}}{B^+}}}
+      {\toplusl{\tdownl{x_1}{N_1}}{\tdownl{x_2}{N_2}}}}}}
+  {U}}
+{\foct{\Psi}{\tackon{\Theta}{x_1{:}\istrue{{\uparrow}A^+}}}{N_1}{U}
+ &
+ \foct{\Psi}{\tackon{\Theta}{x_1{:}\istrue{{\uparrow}B^+}}}{N_2}{U}}
+\]
+\[
+\infer-
+{\foct{\Psi}{\Delta}{\tfocusr{\tdownr{\ttopr}}}{\islvl{{\downarrow}\top}}}
+{}
+\qquad
+\infer-
+{\foct{\Psi}{\frameoff{\Theta}{x{:}A^- \with B^-}}
+  {\rsubst{\etana{\tfocusl{x}{\tpione{\tnil}}}{A^-}}{x_1}{N_1}}
+  {U}}
+{\foct{\Psi}{\tackon{\Theta}{x_1{:}\istrue{A^-}}}{N_1}{U}}
+\]
+\[
+\infer-
+{\foct{\Psi}{\Delta}
+  {\rsubst{(\twithr{\tupr{N_1}}{\tupr{N_2}})}{x}
+      {\tfocusr{\tdownr{(\twithr
+         {\etana{\tfocusl{x}{\tpione{\tupl{(\tdownl{y}{\,\tfocusl{y}{\tnil}})}}}}{A^-}}
+         {\etana{\ldots}{B^-}})}}}}
+  {\islvl{{\downarrow}(A^- \with B^-)}}}
+{\foct{\Psi}{\Delta}{N_1}{\istrue{{\downarrow}A^-}}
+ &
+ \foct{\Psi}{\Delta}{N_2}{\istrue{{\downarrow}B^-}}}
+\]
 
-\caption{Unfocused admissibility for the additive connectives of \ollll.}
+\caption{Unfocused admissibility for the additive connectives of 
+\ollll~(omits ${\oplus}_{R2}$, ${\with}_{L2}$).}
 \label{fig:admit-additive}
 \end{figure}
 
-\begin{figure}[tp]
-\centering
-{\it XXX needs done}
+\begin{figure}[t]
+\[
+\infer-
+{\foct{\Psi}{\Delta}
+  {\lsubst{N}{(\etapa{z}{\,(\tfocusr{\texistsr{\lf t}{z}})}{\lf{[t/a]}A^+})}}
+  {\islvl{\exists\lf{a}{:}\tau.A^+}}}
+{\Psi \vdash \lf{t} : \tau
+ & 
+ \foct{\Psi}{\Delta}{N}{\istrue{\lf{[t/a]}A^+}}}
+\]
+\[
+\infer-
+{\foct{\Psi}{\frameoff{\Theta}{x{:}{\uparrow}(\exists \lf{a}{:}\tau. A^+)}}
+  {\tfocusl{x}{\tupl{
+      \lsubsta
+        {\texistsl{\lf a}{\etapa{z}{\,(\tfocusr{\texistsr{\lf a}{\tdownr{\tupr{\tfocusr{z}}}}})}{A^+}}}
+        {(\texistsl{\lf a}{\tdownl{x'}{N}})}
+        {\exists \lf{a}{:}\tau.{\downarrow}{\uparrow}A^+}}}} 
+  {U}}
+{\foct{\Psi,\lf{a}{:}\tau}{\tackon{\Theta}{x'{:}\istrue{{\uparrow}A^+}}}
+  {N} 
+  {U}}
+\]
+\[
+\infer-
+{\foct{\Psi}{\Delta}
+  {\rsubsta{\tforallr{\lf a}{\tupr{N}}}{x}
+    {\tfocusr{\tupr{(\tforallr{\lf a}{\etana{\tfocusl{x}{\tforalll{\lf a}{\tupl{(\tdownl{y}{\tfocusl{y}{\tnil}})}}}}{A^-}})}}}
+    {\forall\lf{a}{:}\tau.{\uparrow}{\downarrow}A^-}}
+  {\islvl{{\downarrow}(\forall \lf{a}{:}\tau. A^-)}}}
+{\foct{\Psi, \lf{a}{:}\tau}{\Delta}
+  {N}
+  {\istrue{{\downarrow}A^-}}}
+\]
+\[
+\infer-
+{\foct{\Psi}{\frameoff{\Theta}{x{:}\forall \lf{a}{:}\tau. A^-}}
+  {\rsubst{\etana{\tfocusl{x}{\tforalll{\lf a}{\tnil}}}{\lf{[t/a]}A^-}}{x'}{N'}}
+  {U}}
+{\Psi \vdash \lf{t} : \tau
+ &
+ \foct{\Psi}{\tackon{\Theta}{x'{:}\istrue{\lf{[t/a]}A^-}}}
+  {N}
+  {U}}
+\quad
+\infer-
+{\foct{\Psi}{\cdot}
+  {\tfocusr{\tunifr}}
+  {\islvl{\lf t \doteq \lf t}}}
+{}
+\]
+\[
+\infer-
+{\foct{\Psi}{\frameoff{\Theta}{x{:}{\uparrow}({\lf t \doteq \lf s})}}
+  {\tfocusl{x}{\tupl{({\sf fn}~ \lf \sigma \Rightarrow \phi(\lf \sigma))}}}
+  {U}}
+{\forall(\Psi' \vdash \lf\sigma : \Psi).
+ &
+ \lf{\sigma t} = \lf{\sigma s}
+ &
+ \rightarrow
+ &
+ \foct{\Psi'}{\tackon{\lf\sigma\Theta}{\cdot}}
+  {\phi(\lf\sigma)}
+  {\lf\sigma U}}
+\]
+
 
 \caption{Unfocused admissibility for the first-order connectives of \ollll.}
 \label{fig:admit-fo}
@@ -2921,7 +3054,7 @@ multiplicative, exponential fragment of \ollll}
 \subsection{Unfocused admissibility}
 \label{sec:ord-unfocused-admissibility}
 
-Unfocused admissibility has a structure that is essentially unchanged
+Unfocused admissibility has a structure that is unchanged
 from the previous discussion in the proof of the completeness of
 focusing for linear logic (Theorem~\ref{thm:linfoccomplete} in
 Section~\ref{sec:lincorrectness}). In this presentation, as in the
@@ -2940,7 +3073,7 @@ the first-order connectives are treated in Figure~\ref{fig:admit-fo}.
 There are two additional
 rules that account for the fact that different polarized
 propositions, like ${\downarrow}{\uparrow}{\downarrow}{\uparrow}A^+$
-and $A^+$, sometimes erase to the same unpolarized propositions
+and $A^+$ erase to the same unpolarized proposition
 $(A^+)^\circ$. 
 For the same reason, Figure~\ref{fig:admit-mell} contains four
 ${\it init}$-like rules, since atomic propositions can come in positive
@@ -3025,8 +3158,8 @@ $A^+_\meph$ and would make every proposition $A^-$ a right-permeable
 proposition $A^-_\mlax$. But arbitrary atomic propositions
 are intended to be stand-ins for arbitrary propositions! If arbitrary
 propositions lack shifts, then non-mobile atomic propositions would
-appear to no longer stand for anything. Therefore, I argue that it is
-appropriate to remove them too, leaving only the permeable, mobile,
+appear to no longer stand for anything. Therefore, let's
+remove them too, leaving only the permeable, mobile,
 and right-permeable atomic propositions $p^+_\mpers$, $p^+_\meph$, and
 $p^-_\mlax$. Having done so, every positive proposition is mobile, and
 every negative proposition is right-permeable.
@@ -3035,8 +3168,8 @@ Now we have a logical fragment where every positive proposition is is
 mobile and every negative proposition is observed to be
 right-permeable. Consider a derivation
 $\foc{\Psi}{\Delta}{\islax{A^+}}$ where $\Delta$ is stable and
-includes only linear and persistent judgments (that is, $\Delta =
-\restrictto{\Delta}{\meph}$). It is simple to observe that, for every
+includes only linear and persistent judgments (that is, $\Delta$ matches
+$\restrictto{\Delta}{\meph}$). It is simple to observe that, for every
 subderivation $\foc{\Psi'}{\Delta'}{U'}$, if $\Delta'$ is stable
 then $\Delta' = \restrictto{\Delta'}{\meph}$, and if $U$ is stable
 then $U = \restrictfrom{U}{\mlax}$. Given that this is the case, the
@@ -3083,7 +3216,7 @@ contexts and succedents are both stable and free of judgments ${\istrue{T}}$.)
 
 The point of this exercise is that, given the definition and
 metatheory of \ollll, there is a reasonably large family of related
-systems, including ordered logic, lax logic, linear lax logic, and
+systems, including ordered linear logic, lax logic, linear lax logic, and
 linear logic, that can be given erasure-based focalization proofs
 relative to \ollll; at most, the erasure function and the unfocused
 admissibility lemmas need to be adapted. The fragment we have defined
@@ -3122,7 +3255,7 @@ $\rsubst{M}{x}{E}$. The work by Martens and Crary goes further,
 treating hereditary substitution as a relation, not a function, so
 that absolutely no intrinsic type system is necessary, and the proof
 terms are merely untyped abstract binding trees
-\cite{martens11mechanizing}.
+\cite{martens12lf}.
 
 If we were to take such an approach, we would need to treat the
 judgment $\foct{\Psi}{\Delta}{E}{U}$ as a genuine four-place relation,
