@@ -858,6 +858,8 @@ of this compression is due to neglecting the implicit bookkeeping
 associated with matching constructs, bookkeeping that must be made
 explicit in proofs like the cut admissibility theorem.
 
+XXXX here is a good place to prove weakening
+
 \subsection{Variable substitution}
 
 The first-order variables introduced by universal quantifiers (on the
@@ -873,24 +875,24 @@ Theorem~\ref{thm:varsubst}.
 \bigskip
 \begin{theorem}[Variable substitution]
 \label{thm:varsubst}
-If $\Psi' \vdash \sigma : \Psi$ and $\foc{\Psi}{\Delta}{U}$, then 
-$\foc{\Psi'}{\sigma\Delta}{\sigma{U}}$.
+If $\Psi' \vdash \lf\sigma : \Psi$ and $\foc{\Psi}{\Delta}{U}$, then 
+$\foc{\Psi'}{\lf\sigma\Delta}{\lf\sigma{U}}$.
 \end{theorem}
 
 \begin{proof}
 On the level of proof terms, 
 we are given $E$, a expression corresponding to a derivation of
-$\foc{\Psi}{\Delta}{U}$; we are defining the operation $\sigma{E}$,
+$\foc{\Psi}{\Delta}{U}$; we are defining the operation $\lf\sigma{E}$,
 an expression corresponding to a derivation of 
-$\foc{\Psi'}{\sigma\Delta}{\sigma{U}}$.
+$\foc{\Psi'}{\lf\sigma\Delta}{\lf\sigma{U}}$.
 
 \paragraph{\it Propositional fragment}
 For the exponential, multiplicative, and additive fragments, this
 operation is simple to define at the level of proof terms, and we will
-omit most of the cases: $\sigma(\tfuser{V_1}{V_2}) =
-\tfuser{\sigma{V_1}}{\sigma{V_2}}$, $\sigma(\tdownl{x}{N}) =
-\tdownl{x}{\sigma N}$, and so on. (Note that first-order variables
-$a$ do not interact with variables $x$ and $z$ in the substructural
+omit most of the cases: $\lf\sigma(\tfuser{V_1}{V_2}) =
+\tfuser{\lf\sigma{V_1}}{\lf\sigma{V_2}}$, $\lf\sigma(\tdownl{x}{N}) =
+\tdownl{x}{\lf\sigma N}$, and so on. (Note that first-order variables
+$\lf{a}$ do not interact with variables $x$ and $z$ in the substructural
 context.) However, this compact notation does
 capture a great deal of complexity. In particular, it is important to
 emphasize that we need lemmas saying that variable substitution is
@@ -901,124 +903,127 @@ would be:
 \begin{itemize}
 
 \item[--]
-$\sigma(\tfuser{V_1}{V_2}) = \tfuser{\sigma{V_1}}{\sigma{V_2}}$\smallskip\\
+$\lf\sigma(\tfuser{V_1}{V_2}) = \tfuser{\lf\sigma{V_1}}{\lf\sigma{V_2}}$\smallskip\\
 We are given a proof of $\foc{\Psi}{\Delta}{[A^+ \fuse B^+]}$ that
 ends with the ${\fuse}_R$ rule; the subderivations are
 $V_1$, a derivation of $\foc{\Psi}{\Delta_1}{[A^+]}$, and
 $V_2$, a derivation of $\foc{\Psi}{\Delta_2}{[B^+]}$. Furthermore, we know that
 $\Delta$ matches $\matchconj{\Delta_1}{\Delta_2}$. We need a lemma that
-tells us that $\sigma\Delta$ matches $\sigma\Delta_1, \sigma\Delta_2$;
+tells us that $\lf\sigma\Delta$ matches $\lf\sigma\Delta_1, \lf\sigma\Delta_2$;
 then, by rule ${\fuse}_R$, it suffices to show that
-$\foc{\Psi'}{\sigma\Delta_1}{\sigma{A^+}}$ (which we have by the 
-induction hypothesis on $\sigma$ and $V_1$) and that
-$\foc{\Psi'}{\sigma\Delta_2}{\sigma{B^+}}$ 
+$\foc{\Psi'}{\lf\sigma\Delta_1}{\lf\sigma{A^+}}$ (which we have by the 
+induction hypothesis on $\lf\sigma$ and $V_1$) and that
+$\foc{\Psi'}{\lf\sigma\Delta_2}{\lf\sigma{B^+}}$ 
 (which we have by the induction hypothesis
-on $\sigma$ and $V_2$). \smallskip
+on $\lf\sigma$ and $V_2$). \smallskip
 
 \item[--]
-$\sigma(\tdownl{x}{N}) = \tdownl{x}{\sigma N}$ \smallskip\\ 
+$\lf\sigma(\tdownl{x}{N}) = \tdownl{x}{\lf\sigma N}$ \smallskip\\ 
 We are given a proof
 of $\foc{\Psi}{\Delta}{U}$ that ends with ${\downarrow}_L$; 
 the subderivation is $N$, a derivation of
 $\foc{\Psi}{\tackon{\Theta}{x{:}\istrue{A^-}}}{U}$. Furthermore, we know that
 $\Delta$ matches $\frameoff{\Theta}{{\downarrow}A^-}$. We need a lemma
-that tells us that $\sigma\Delta$ matches
-$\frameoff{\sigma\Theta}{{\downarrow}\sigma A^-}$; then, by 
+that tells us that $\lf\sigma\Delta$ matches
+$\frameoff{\lf\sigma\Theta}{{\downarrow}\lf\sigma A^-}$; then, by 
 rule ${\downarrow}_L$, it suffices to show 
-$\foc{\Psi'}{\tackon{\sigma\Theta}{x{:}\istrue{\sigma{A^-}}}}{\sigma{U}}$ 
-(which we have by the induction hypothesis on $\sigma$ and $N$).
+$\foc{\Psi'}{\tackon{\lf\sigma\Theta}{x{:}\istrue{\lf\sigma{A^-}}}}{\lf\sigma{U}}$ 
+(which we have by the induction hypothesis on $\lf\sigma$ and $N$).
 
 \end{itemize}
 
-\paragraph{\it First-order fragment} For the first-order fragment, we need
-to be more careful, especially when considering the 
-$\doteq_L$ rule, which notably
-does {\it not} require an invocation of the induction hypothesis. The cases
+\paragraph{\it First-order fragment} We will present variable
+substitution on the first-order fragment fully. Note the $\doteq_L$
+rule in particular, which does 
+{\it not} require an invocation of the induction hypothesis. The cases
 for the $\exists$ quantifier mimic the ones we give for the $\forall$
 quantifier, and so the discussion of these cases is omitted.
 
 \begin{itemize}
 
 \item[--]
-$\sigma(\texistsr{t}{N}) = \texistsr{\sigma{t}}{\sigma{N}}$ 
+$\lf\sigma(\texistsr{\lf{t}}{N}) = \texistsr{\lf{\sigma t}}{\lf\sigma{N}}$ 
 
 \item[--]
-$\sigma(\texistsl{a}{\Sp}) = \tforalll{a}{(\sigma, a/a)\Sp}$ 
+$\lf\sigma(\texistsl{\lf{a}}{\Sp}) = \tforalll{\lf{a}}{\lf{(\sigma, a/a)}\Sp}$ 
 
 \item[--]
-$\sigma(\tunifr) = \tunifr$
+$\lf\sigma(\tunifr) = \tunifr$
 
 \item[--]
-$\sigma(\phi) = \left( \mathsf{fn}~\sigma' \Rightarrow \phi (\sigma'
-  \circ \sigma) \right)$ \smallskip\\ We are given a proof of
-$\foc{\Psi}{\Delta}{U}$ that ends with ${\doteq}_L$; we know that
-$\Delta$ matches $\frameoff{\Theta}{t \doteq s}$, and the
-subderivation is $\phi$, a function from substitutions 
-$\Psi'' \vdash \sigma'' : \Psi$ that unify $t$ and $s$ to derivations
-of $\foc{\Psi''}{\tackon{\sigma''\Theta}{\cdot}}{\sigma''{U}}$. We need a lemma
-that tells us that $\sigma\Delta$ matches 
-$\frameoff{\sigma\Theta}{\sigma t \doteq \sigma s}$; then, by rule
-${\doteq}_L$, it suffices to show that for all 
-$\Psi'' \vdash \sigma' : \Psi'$ that unify $\sigma t$ and $\sigma s$, 
-there exists a derivation of 
-$\foc{\Psi''}{\tackon{\sigma'(\sigma \Theta)}{\cdot}}{\sigma'(\sigma U)}$,
-which is the same thing as a derivation of 
-$\foc{\Psi''}{\tackon{(\sigma' \circ \sigma) \Theta}{\cdot}}
-    {(\sigma' \circ \sigma) U}$. We have that 
-$\Psi'' \vdash \sigma' \circ \sigma : \Psi$, and certainly 
-$\sigma' \circ \sigma$ unifies $t$ and $s$, so we can conclude by
-applying $\phi$ to $\sigma' \circ \sigma$.\smallskip
+$\lf\sigma(\phi) = \left( \mathsf{fn}~\lf{\sigma'} \Rightarrow \phi \lf{(\sigma'
+  \circ \sigma)}\right)$ \smallskip\\ 
+%
+  We are given a proof of $\foc{\Psi}{\Delta}{U}$ that ends with
+  ${\doteq}_L$; we know that $\Delta$ matches $\frameoff{\Theta}{\lf{t}
+    \doteq \lf{s}}$, and the subderivation is $\phi$, a function from
+  substitutions $\Psi'' \vdash \lf{\sigma''} : \Psi$ that unify $\lf{t}$ and $\lf{s}$
+  to derivations of
+  $\foc{\Psi''}{\tackon{\lf{\sigma''}\Theta}{\cdot}}{\lf{\sigma''}{U}}$. We need
+  a lemma that tells us that $\lf\sigma\Delta$ matches
+  $\frameoff{\lf\sigma\Theta}{\lf{\sigma t} \doteq \lf{\sigma s}}$; then, by rule
+  ${\doteq}_L$, it suffices to show that for all $\Psi'' \vdash
+  \lf{\sigma'} : \Psi'$ that unify $\lf{\sigma t}$ and $\lf{\sigma s}$, 
+  there exists
+  a derivation of $\foc{\Psi''}{\tackon{\lf{\sigma'}(\lf{\sigma}
+      \Theta)}{\cdot}}{\lf{\sigma'}(\lf{\sigma} U)}$, which is the same thing as
+  a derivation of $\foc{\Psi''}{\tackon{\lf{(\sigma' \circ \sigma)}
+      \Theta}{\cdot}} {\lf{(\sigma' \circ \sigma)} U}$. We have that
+  $\Psi'' \vdash \lf{\sigma' \circ \sigma} : \Psi$, and certainly $\lf{\sigma'
+  \circ \sigma}$ unifies $\lf t$ and $\lf s$, so we can conclude by passing
+  $\lf{\sigma' \circ \sigma}$ to $\phi$.\smallskip
 
 \item[--]
-$\sigma(\tforallr{a}{N}) = \tforallr{a}{(\sigma, a/a)N}$ \smallskip\\ We are
-given a proof of $\foc{\Psi}{\Delta}{\forall a{:}\tau.A^-}$ 
+$\lf\sigma(\tforallr{\lf{a}}{N}) = \tforallr{\lf{a}}{\lf{(\sigma, a/a)}N}$ \smallskip\\ We are
+given a proof of $\foc{\Psi}{\Delta}{\forall \lf{a}{:}\tau.A^-}$ 
 that ends with $\forall_R$; the subderivation
-is $N$, a derivation of $\foc{\Psi,a{:}\tau}{\Delta}{A^-}$. Because
-$\sigma(\forall{a}{:}{\tau}.A^-) 
- = \forall{a}{:}{\sigma\tau}.(\sigma, a/a){A^-}$,
+is $N$, a derivation of $\foc{\Psi,\lf{a}{:}\tau}{\Delta}{A^-}$. Because
+$\lf \sigma(\forall{\lf{a}}{:}{\tau}.A^-) 
+ = \forall{\lf{a}}{:}{\lf\sigma\tau}.\lf{(\sigma, a/a)}{A^-}$,
 by rule $\forall_R$ it suffices to show 
-$\foc{\Psi', a{:}\sigma\tau}{\sigma\Delta}{(\sigma, a/a)A^-}$, 
+$\foc{\Psi', \lf{a}{:}\lf\sigma\tau}{\lf\sigma\Delta}{\lf{(\sigma, a/a)}A^-}$, 
 which is the same thing
-as $\foc{\Psi', a{:}\sigma\tau}{(\sigma, a/a)\Delta}{(\sigma, a/a)A^-}$.
+as $\foc{\Psi', \lf{a}{:}\sigma\tau}{\lf{(\sigma, a/a)}\Delta}{\lf{(\sigma, a/a)}A^-}$.
 The result
-follows by the induction hypothesis on $(\sigma, a/a)$ and $N$. \smallskip
+follows by the induction hypothesis on $\lf{(\sigma, a/a)}$ and $N$. \smallskip
 
 \item[--]
-$\sigma(\tforalll{t}{\Sp}) = \tforalll{\sigma{t}}{\sigma\Sp}$ \smallskip\\
+$\lf\sigma(\tforalll{\lf{t}}{\Sp}) = \tforalll{\lf{\sigma t}}{\lf\sigma\Sp}$ \smallskip\\
 We are given a proof of $\foc{\Psi}{\Delta}{U}$ that ends with 
 $\forall_L$; the subderivation is $\Sp$, a derivation of 
-$\foc{\Psi}{\tackon{\Theta}{[t/a]\Sp}}{U}$. Furthermore,
-we know that $\Delta$ matches $\frameoff{\Theta}{[\forall a{:}\tau.A]}$.
-We need a lemma that tells us that $\sigma\Delta$ matches
-$\frameoff{\sigma\Theta}{[\forall a{:}\tau.(\sigma, a/a)A^-]}$; then,
+$\foc{\Psi}{\tackon{\Theta}{\lf{[t/a]}\Sp}}{U}$. Furthermore,
+we know that $\Delta$ matches $\frameoff{\Theta}{[\forall \lf{a}{:}\tau.A]}$.
+We need a lemma that tells us that $\lf\sigma\Delta$ matches
+$\frameoff{\lf\sigma\Theta}{[\forall \lf{a}{:}\tau.\lf{(\sigma, a/a)}A^-]}$; then,
 by rule $\forall_L$, it suffices to show 
-$\foc{\Psi'}{\tackon{\sigma\Theta}{[[\sigma{t}/a](\sigma, a/a)A^-]}}
-  {\sigma{U}}$, which is the same thing as
-$\foc{\Psi'}{\tackon{\sigma\Theta}{[\sigma([t/a]A^-)]}}
-  {\sigma{U}}$. This follows by the induction hypothesis on $\sigma$ and
+$\foc{\Psi'}{\tackon{\lf\sigma\Theta}{[\lf{[\sigma{t}/a](\sigma, a/a)}A^-]}}
+  {\lf\sigma{U}}$, which is the same thing as
+$\foc{\Psi'}{\tackon{\lf\sigma\Theta}{[\lf{\sigma}(\lf{[t/a]}A^-)]}}
+  {\lf\sigma{U}}$. This follows by the induction hypothesis on $\lf\sigma$ and
 $\Sp$.
 
 \end{itemize}
 
-Note that, in the case for $\forall_R$, the substitution $\sigma$ was
-applied to the first-order type $\tau$ as well as to as at the fact
-that our first-order terms are dependently typed.
+Note that, in the case for $\forall_R$, the substitution $\lf\sigma$
+was applied to the first-order type $\tau$ as well as to the
+proposition $A^-$.  This alludes to the fact that our first-order
+terms are dependently typed (Section~\ref{sec:sls-termlanguage}).
 \end{proof}
 
 Given we write the constructive content of the variable substitution
-theorem as $\sigma{E}$, where $E$ is an expression,
+theorem as $\lf\sigma{E}$, where $E$ is an expression,
 we can also write Theorem~\ref{thm:varsubst} as an admissible
 rule in one of two ways, both with and without proof terms:
 \[
 \infer-[{\it varsubst}]
-{\foct{\Psi'}{\sigma{\Delta}}{\sigma{E}}{\sigma{U}}}
-{\Psi' \vdash \sigma : \Psi
+{\foct{\Psi'}{\lf\sigma{\Delta}}{\lf\sigma{E}}{\lf\sigma{U}}}
+{\Psi' \vdash \lf\sigma : \Psi
  &
  \foct{\Psi}{\Delta}{E}{U}}
 \qquad
 \infer-[{\it varsubst}]
-{\foc{\Psi'}{\sigma{\Delta}}{\sigma{U}}}
-{\Psi' \vdash \sigma : \Psi
+{\foc{\Psi'}{\lf\sigma{\Delta}}{\lf\sigma{U}}}
+{\Psi' \vdash \lf\sigma : \Psi
  &
  \foc{\Psi}{\Delta}{U}}
 \]
@@ -1182,7 +1187,8 @@ commutative cases into different parts of the theorem
 \cite{pfenning00structural}. This separation of cases is the reason
 why cut admissibility in a focused sequent calculus can use a more
 refined induction metric than cut admissibility in an unfocused
-sequent calculus. As noted previously \cite{simmons11structural}, the
+sequent calculus. As noted previously (in \cite{simmons11structural}
+and in the proof of Theorem~\ref{thm:lincut}), the
 refined induction metric makes the theorem easier to prove.  For
 instance, the refined induction metric means that we do not need to
 rely on the fact that weakening and variable substitution preserve
@@ -1294,21 +1300,27 @@ associated with the type $A^+ \fuse B^+$, to maintain the
 invariant that, in an unstable context, we only ever consider the {\it
   leftmost} inverting positive proposition.
 
+In most of these cases, one of the givens is that
+$\tackon{\Theta}{A^+}$ matches $\frameoff{\Theta'}{A^+}$ for some
+$\Theta'$. Because this implies that $\Theta = \Theta'$, we take
+the equality for granted rather than mentioning and 
+reasoning explicitly about the premise every time.
+
 \begin{itemize}
 \item[--] $(\subst{z}{\tetap{z'}{N}})^{p^+_{\mlvl}} = [z/z']N$\smallskip\\
   We must show $\foc{\Psi}{\Xi}{U}$, where 
   \begin{itemize}
    \item $\Delta$ matches $z{:}\susp{p^+_\mlvl}$,
-   \item $\tackon{\Theta}{p^+}$ matches $\frameoff{\Theta'}{p^+}$,
+   \item 
       $N$ is a derivation of 
-      $\foc{\Psi}{\tackon{\Theta'}{z'{:}\islvl{\susp{p^+_\mlvl}}}}{U}$,
+      $\foc{\Psi}{\tackon{\Theta}{z'{:}\islvl{\susp{p^+_\mlvl}}}}{U}$,
    \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
   \end{itemize}
   Because $\Delta$ is suspension-normal, 
   we can derive $\foc{\Psi}{\Delta}{[p^+_\mlvl]}$ by ${\it
     id}^+$, and
-  $\Xi$ matches
-  $\frameoff{\Theta'}{\restrictto{\Delta'}{\mlvl}}$.
+  $\Xi$ matches 
+  $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$.
   Therefore, the result follows by focal substitution on $z$ and $N$. 
 
 \futurework{I'm relying on a property I haven't explicitly proven:
@@ -1342,17 +1354,16 @@ invariant that, in an unstable context, we only ever consider the {\it
            = \rsubsta{M}{x}{N}{A^-}$ \smallskip\\
   We must show $\foc{\Psi}{\Xi}{U}$, where
   \begin{itemize}
-  \item $\Delta$ matches $\restrictto{\Delta'}{\mpers}$,
-        $M$ is derivation of $\foc{\Psi}{\Delta'}{A^-}$, 
-        $\Delta'$ is stable,
-  \item $\tackon{\Theta}{{\downarrow}A^-}$ matches 
-        $\frameoff{\Theta'}{{\downarrow}A^-}$,
-        $N$ is a derivation of 
-        $\foc{\Psi}{\tackon{\Theta'}{x{:}\istrue{A^-}}}{U}$,
+  \item $\Delta$ matches $\restrictto{\Delta}{\mpers}$,
+        $M$ is derivation of $\foc{\Psi}{\Delta}{A^-}$, 
+  \item $N$ is a derivation of 
+        $\foc{\Psi}{\tackon{\Theta}{x{:}\ispers{A^-}}}{U}$,
   \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
   \end{itemize}
 
-  $\Xi$ matches $\frameoff{\Theta'}{\restrictto{\Delta'}{\mpers}}$,
+  $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mpers}}$
+  and $\Delta$ is stable (it was in a focused
+  sequent $\foct{\Psi}{\Delta}{\tbangr{M}}{[{!}A^-]}$),
   so the result follows by
   part 4 of cut admissibility on $N$ and $M$. 
 
@@ -1369,17 +1380,16 @@ invariant that, in an unstable context, we only ever consider the {\it
   \item $\Delta$ matches $\matchconj{\Delta_1}{\Delta_2}$,\\
         $V_1$ is a derivation of $\foc{\Psi}{\Delta_1}{[A^+]}$,
         $V_2$ is a derivation of $\foc{\Psi}{\Delta_2}{[B^+]}$,
-  \item $\tackon{\Theta}{A^+ \fuse B^+}$ matches
-        $\frameoff{\Theta'}{A^+ \fuse B^+}$, 
-        $N$ is a derivation of 
-        $\foc{\Psi}{\tackon{\Theta'}{A^+, B^+}}{U}$, 
+  \item $N$ is a derivation of 
+        $\foc{\Psi}{\tackon{\Theta}{A^+, B^+}}{U}$, 
   \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
   \end{itemize}
 
-  It is clear we can to construct a frame $\Theta_B$ such that
-  $\tackon{\Theta'}{\mkconj{A^+}{B^+}} = \tackon{\Theta_B}{A^+}$; we're just exchanging
-  the part in the frame with the part not in the frame. We also 
-  must be able to construct a second frame, $\Theta_A$, such that
+  We can to construct a frame $\Theta_B$ such that
+  $\tackon{\Theta}{\mkconj{A^+}{B^+}} = \tackon{\Theta_B}{A^+}$;
+  we're just exchanging
+  the part in the frame with the part not in the frame. We can also 
+  construct a second frame, $\Theta_A$, such that
   1) $\Xi$ matches $\frameoff{\Theta_A}{\Delta_2}$ and 
   2) $\tackon{\Theta_A}{B^+}$ matches $\frameoff{\Theta_B}{\Delta_1}$.
 
@@ -1402,41 +1412,39 @@ invariant that, in an unstable context, we only ever consider the {\it
 \item[--] $(\subst{\tinr{V}}{\toplusl{N_1}{N_2}})^{A^+ \oplus B^+} 
            = (\subst{V}{N_2})^{B^+}$
 
-\item[--] $(\subst{\texistsr{t}{V}}{\texistsl{a}{N}})^{\exists a{:}\tau.A^+}
-           = (\subst{V}{[t/a]N})^{[t/a]A^+}$ \smallskip\\
+\item[--] $(\subst{\texistsr{\lf{t}}{V}}{\texistsl{a}{N}})^{\exists \lf{a}{:}\tau.A^+}
+           = (\subst{V}{\lf{[t/a]}N})^{\lf{[t/a]}A^+}$ \smallskip\\
   We must show $\foc{\Psi}{\Xi}{U}$, where
   \begin{itemize}
-  \item $\Psi \vdash t : \tau$, $V$ is a derivation of 
-     $\foc{\Psi}{\Delta}{[[t/a]A^+]}$,
-  \item $\tackon{\Theta}{\exists a{:}\tau. A^+}$ 
-     matches $\frameoff{\Theta'}{\exists a{:}\tau. A^+}$, 
+  \item $\Psi \vdash \lf{t} : \tau$, $V$ is a derivation of 
+     $\foc{\Psi}{\Delta}{[\lf{[t/a]}A^+]}$,
+  \item 
      $N$ is a derivation of 
-     $\foc{\Psi, a{:}\tau}{\tackon{\Theta}{A^+}}{U}$,
+     $\foc{\Psi, \lf{a}{:}\tau}{\tackon{\Theta}{A^+}}{U}$,
   \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
   \end{itemize}
-  $\Xi$ matches $\frameoff{\Theta'}{\Delta}$, and by the variable
-  substitution on $[t/a]$ and $N$, we have a derivation $[t/a]N$ of
-  $\foc{\Psi}{\tackon{\Theta}{[t/a]A^+}}{U}$.  We count $[t/a]A^+$ as
-  being a smaller formula than $\exists x{:}\tau.A^+$, so by the
-  induction hypothesis on $V$ and $[t/a]N$, we get a derivation of
+  By variable
+  substitution on $\lf{[t/a]}$ and $N$, we have a derivation $\lf{[t/a]}N$ of
+  $\foc{\Psi}{\tackon{\Theta}{\lf{[t/a]}A^+}}{U}$.  We count $\lf{[t/a]}A^+$ as
+  being a smaller formula than $\exists \lf{a}{:}\tau.A^+$, so by the
+  induction hypothesis on $V$ and $\lf{[t/a]}N$, we get a derivation of
   $\foc{\Psi}{\Xi}{U}$ as required. \smallskip
 
-\item[--] $(\subst{\tunifr}{\phi})^{t \doteq t} = \phi({\sf id})$\smallskip\\
+\item[--] $(\subst{\tunifr}{\phi})^{\lf t \doteq \lf t} = \phi(\lf{\sf id})$\smallskip\\
   We must show $\foc{\Psi}{\Xi}{U}$, where
   \begin{itemize}
   \item $\Delta$ matches $\cdot$,
-  \item $\tackon{\Theta}{t \doteq t}$ matches $\frameoff{\Theta'}{t \doteq t}$,
-     $\phi$ is a function from substitutions $\Psi' \vdash \sigma : \Psi$
-     that unify $t$ and $t$ to derivations of 
-     $\foc{\Psi}{\tackon{\Theta'}{\cdot}}{U}$,
+  \item $\phi$ is a function from substitutions $\Psi' \vdash \lf\sigma : \Psi$
+     that unify $\lf t$ and $\lf t$ to derivations of 
+     $\foc{\Psi}{\tackon{\Theta}{\cdot}}{U}$,
   \item and $\Xi$ matches $\frameoff{\Theta}{\Delta}$.
   \end{itemize}
   We simply apply the identity substitution to $\phi$
-  to obtain a derivation of $\foc{\Psi}{\tackon{\Theta'}{\cdot}}{U}$.
-  Note that this is not the derivation of 
+  to obtain a derivation of $\foc{\Psi}{\tackon{\Theta}{\cdot}}{U}$.
+  Note that this is not quite the derivation of 
   $\foc{\Psi}{\Xi}{U}$ that we need; we need an exchange-like lemma that, 
-  given a derivation of $\foc{\Psi}{\tackon{\Theta'}{\cdot}}{U}$
-  and the fact that $\Xi$ matches $\frameoff{\Theta'}{\cdot}$,
+  given a derivation of $\foc{\Psi}{\tackon{\Theta}{\cdot}}{U}$
+  and the fact that $\Xi$ matches $\frameoff{\Theta}{\cdot}$,
   we can get a proof of $\foc{\Psi}{\Xi}{U}$ as we require.
 
 \end{itemize}
