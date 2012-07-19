@@ -18,3 +18,11 @@ Only seems to be a pretty common weasel word for me: global check.
 In Chapter 4 we
 NOT
 In Chapter 4, we
+
+
+STABLE NEGATIVE PROPOSITIONS
+POSITIVE SUSPENDED PROPOSITIONS
+FOCUSED NEGATIVE PROPOSITIONS
+INVERTING POSITIVE PROPOSITIONS
+
+"matches" should always be mboxed

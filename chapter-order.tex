@@ -213,22 +213,21 @@ means that
 {\mbox{\it no~unifier~for~} \lf{t} \mbox{\it ~and~} \lf{s}}
 \]
 is derivable -- a {\it unifier} is just a substitution $\lf{\sigma}$
-such that $\lf{\sigma}t$ and $\lf{\sigma}s$ are syntactically identical.
- The other important special case is
-when $\lf{t}$ and $\lf{s}$ have a {\it most general unifier} 
-$\lf{\sigma_{\it mgu}}$,
-which just means that for all $\Psi' \vdash \sigma : \Psi$ such that
-$\sigma t = \sigma s$, it is the case that $\sigma = \sigma' \circ
-\sigma_{\it mgu}$ for some $\sigma'$.\footnote{Where $\circ$ is
-  composition -- $(\sigma' \circ \sigma_{\it mgu})t = \sigma'(\sigma_{\it mgu}
-  t)$.} In this case, the left rule for equality is equivalent to the
-following rule:
+such that $\lf{\sigma t}$ and $\lf{\sigma s}$ are syntactically
+identical.  The other important special case is when $\lf{t}$ and
+$\lf{s}$ have a {\it most general unifier} $\lf{\sigma_{\it mgu}}$,
+which just means that for all $\Psi' \vdash \lf{\sigma} : \Psi$ such
+that $\lf{\sigma t} = \lf{\sigma s}$, it is the case that $\lf{\sigma}
+= \lf{\sigma' \circ \sigma_{\it mgu}}$ for some
+$\lf{\sigma'}$.\footnote{Where $\lf\circ$ is composition -- $\lf{(\sigma'
+  \circ \sigma_{\it mgu})t} = \lf{\sigma'(\sigma_{\it mgu} t)}$.} In this
+case, the left rule for equality is equivalent to the following rule:
 \[
 \infer[\doteq_{\it yes}]
-{\olfseq{\Gamma}{\Delta}{\Omega_L}{t \doteq s}{\Omega_R}}
-{{\it mgu}(t, s) = \Psi' \vdash \sigma : \Psi
+{\olfseq{\Gamma}{\Delta}{\Omega_L}{\lf{t} \doteq \lf{s}}{\Omega_R}}
+{{\it mgu}(\lf{t}, \lf{s}) = \Psi' \vdash \lf{\sigma} : \Psi
  &
- \ofirstseq{\Psi'}{\sigma\Gamma}{\sigma\Delta}{\sigma\Omega_L, \sigma\Omega_R}{\sigma U}}
+ \ofirstseq{\Psi'}{\lf{\sigma}\Gamma}{\lf{\sigma}\Delta}{\lf{\sigma}\Omega_L, \lf{\sigma}\Omega_R}{\lf{\sigma} U}}
 \]
 Therefore, given a first-order domain in which any two terms are
 decidably either non-unifiable or unifiable with a most general
@@ -237,16 +236,16 @@ $\doteq_{\it yes}$ is equivalent to defining the logic with
 $\doteq_L$.
 
 We have not yet thoroughly specified the type and term structure of
-first-order individuals; in the next chapter we clarify that these
-types and terms will actually be types and terms of Canonical LF
-\cite{harper07mechanizing}.
+first-order individuals; in Section~\ref{sec:sls-termlanguage} we
+clarify that these types and terms will actually be types and terms of
+Spine Form LF \cite{harper07mechanizing}.
 
 \section{Substructural contexts}
 \label{sec:contexts}
 
 First-ordered linear lax logic has a lot of contexts -- the persistent
 context $\Gamma$, the linear context $\Delta$, and the ordered context
-$\Omega$, not to mention the first-order context $\Psi$. In most rules
+$\Omega$, and the first-order context $\Psi$. In most rules
 these contexts just hang around, obscuring the logic's presentation
 and ensuring that the {\LaTeX} code of figures and displays remains
 permanently unreadable. And there are yet more contexts we might want to 
@@ -346,21 +345,21 @@ $\Xi = \Gamma, T; \cdot; \cdot$).
 Sole membership is related to the initial sequents and the 
 matching construct $\Gamma; \cdot;/A/$ for contexts that was used
 in Figure~\ref{fig:ordered-prop}.
-We could rewrite the {\it init} rule
+We could rewrite the {\it id} rule
 from that figure as follows:
 \[
-\infer[{\it init}]
+\infer[{\it id}]
 {x{:}p \altv \islvl{p}}
 {}
 \]
 As in all rules involving matching constructs in the conclusion,
 it is fair to view the matching construct as an extra premise; thus,
-the ${\it init}$ rule above is the same as the ${\it init}$ rule 
+the ${\it id}$ rule above is the same as the ${\it id}$ rule 
 below:
 \[
-\infer[{\it init}]
+\infer[{\it id}]
 {\Xi \altv \islvl{p}}
-{\Xi \textit{~matches~} x{:}p}
+{\Xi \mbox{\it ~matches~} x{:}p}
 \]
 
 The second basic operation on contexts requires a new concept, {\it
@@ -426,28 +425,7 @@ $\Theta$ and $\Xi'$ is exactly the variables in $\Xi$ and
 \end{definition}
 \bigskip
 
-An important derived matching construct is $\frameoff{\Theta}{x{:}T}$,
-which matches $\Xi$ if $\Xi$ matches $\frameoff{\Theta}{\Xi'}$ for
-some $\Xi'$ such that $\Xi'$ matches $x{:}T$.  This pattern is needed
-to describe almost every left rule from Figure~\ref{fig:ordered-prop},
-for instance:
-\[
-\infer[]
-{\frameoff{\Theta}{x{:}A \oplus B} \altv U}
-{\tackon{\Theta}{y{:}\istrue{A}} \altv U
- &
- \tackon{\Theta}{z{:}\istrue{B}} \altv U}
-\quad
-\infer[]
-{\frameoff{\Theta}{x{:}A \with B} \altv U}
-{\tackon{\Theta}{y{:}\istrue{A}} \altv U}
-\quad
-\infer[]
-{\frameoff{\Theta}{x{:}A \with B} \altv U}
-{\tackon{\Theta}{y{:}\istrue{B}} \altv U}
-\]
-
-We can also use this notation to describe the one of the
+Use the framing-off notation to describe the one of the
 cut principles for ordered linear lax logic. 
 \[
 \infer-[{\it cut}]
@@ -478,6 +456,31 @@ and $\tackon{\Theta}{\Xi}$ are sufficient to describe the
 cut principle is related to the display property, which fails
 for some reasonable logics, such as Reed's queue logic
 \cite{reed09queue}.}
+
+An important derived matching construct is $\frameoff{\Theta}{x{:}T}$,
+which matches $\Xi$ if $\Xi$ matches $\frameoff{\Theta}{\Xi'}$ for
+some $\Xi'$ such that $\Xi'$ matches $x{:}T$.  This notation is
+equivalent to the matching construct
+$\olseq{\Gamma}{\Delta}{\Omega_L}{A}{\Omega_R}$ from
+Figure~\ref{fig:ordered-prop}, which is need to describe
+almost every left rule for \ollll. Here are three rules given with
+this matching construct:
+\[
+\infer[]
+{\frameoff{\Theta}{x{:}A \oplus B} \altv U}
+{\tackon{\Theta}{y{:}\istrue{A}} \altv U
+ &
+ \tackon{\Theta}{z{:}\istrue{B}} \altv U}
+\quad
+\infer[]
+{\frameoff{\Theta}{x{:}A \with B} \altv U}
+{\tackon{\Theta}{y{:}\istrue{A}} \altv U}
+\quad
+\infer[]
+{\frameoff{\Theta}{x{:}A \with B} \altv U}
+{\tackon{\Theta}{y{:}\istrue{B}} \altv U}
+\]
+
 
 \subsection{Multiplicative operations}
 
@@ -559,7 +562,7 @@ exactly when there exist $\Xi'$ and $\Xi''$ such that
 % is 
 $\Xi$ matches $\frameoff{\Theta}{\Xi'}$, 
 $\Xi'$ matches $\matchconj{\Xi_A}{\Xi''}$,
-and $x{:}A$ matches $\Xi''$. 
+and $x{:}A \lefti B$ matches $\Xi''$. 
 
 % The other
 % way of reading the notation 
@@ -663,7 +666,7 @@ A sequent $\foc{\Psi}{\Delta}{U}$ is {\it stable} when the context
 $\Delta$ and succedent $U$ contain only stable propositions ($A^-$ in
 the context, $A^+$ in the succedent) and suspended propositions
 ($\susp{A^+}$ in the context, $\susp{A^-}$ in the succedent). We
-repeat the focusing constraint discussed in Chapter 2: there is only
+adopt the focusing constraint discussed in Chapter 2: there is only
 ever at most one focused proposition in a sequent, and if there is
 focused proposition in the sequent, then the sequent is otherwise
 stable. A restriction on the rules ${\it focus}_L$ and ${\it focus}_R$
@@ -691,7 +694,7 @@ simplifications. However, this presentation will match the fixed
 presentation of logic from the structural focalization development
 \cite{simmons11structural}. Specifically, if there is more than one
 invertible proposition in a sequent, {\it only} the leftmost one will
-be treated as eligible to have a rule applied to it. All the
+be treated as eligible to have a rule or matching applied to it. All the
 propositions in $\Delta$ are treated as being to the left of the
 succedent $U$, so we always prioritize inversion on positive
 propositions in $\Delta$. With this additional restriction, it is
@@ -700,7 +703,7 @@ invertible rule, and we write $A^+$ instead of $x{:}A^+$ or
 $x{:}\istrue{A^+}$.
 
 We will maintain the notational convention (only) within this chapter that
-first-order variables are written as $a$, variables associated
+first-order variables are written as $\lf{a}$, variables associated
 with stable negative propositions are written as $x$, and variables
 associated with suspended positive propositions are written as 
 $z$.
@@ -718,8 +721,9 @@ logic in Section~\ref{sec:permeable}. There is also a more generous
 refinement, the {\it mobile} propositions, $A^+_\meph$, for positive
 propositions that bottom out with one of the two exponentials ${!}$ and
 ${\gnab}$. We introduce atomic propositions $p^+$ that stand for
-arbitrary positive propositions, $p^+_\meph$ that stand for arbitrary
-mobile propositions, and $p^+_\mpers$ that stand for arbitrary
+arbitrary positive propositions, mobile
+atomic propositions $p^+_\meph$ that stand for arbitrary
+mobile propositions, and persistent $p^+_\mpers$ that stand for arbitrary
 permeable propositions. We treat $A^+_\mtrue$ and $p^+_\mtrue$ as synonymous
 with $A^+$ and $p^+$, respectively, which allows us to generically
 refer to $A^+_\mlvl$ and $p^+_\mlvl$ in rules like $\eta^+$ and in the
@@ -761,16 +765,14 @@ A^-_\mlax & ::= p^-_\mlax
 \end{figure}
 
 Negative propositions also have a refinement, $A^-_\mlax$, for
-negative propositions that always bottom out as connective 
-of the form
-${\ocircle}A^+$.  This is interesting as a formal artifact and there
-is very little overhead involved in putting it into our development,
-but I don't claim to fully understand what the refinement means or
-what the inclusion of right-permeable atomic propositions $p^-_\mlax$
-means in terms of the structure of proofs. Certainly we do {\it not}
-want to include such propositions in the logical framework, as to do
-so would break the distinction between concurrent and deductive proofs
-that will be discussed in Section~\ref{sec:framework-logicprog}.
+negative propositions that always bottom out with a connective of the
+form ${\ocircle}A^+$.  This is interesting as a formal artifact and
+there is very little overhead involved in putting it into our
+development, but the meaning of this class, as well as the meaning of
+right-permeable atomic propositions $p^-_\mlax$, is unclear.
+Certainly we do {\it not} want to include such propositions in our
+logical framework, as to do so would interfere with our development 
+of traces as a syntax for partial proofs in Chapter~4.
 
 The presentation of the exponentials, and the logic that we now
 present, emphasises the degree to which the shifts ${\uparrow}$ and
@@ -784,7 +786,8 @@ context. This point is implicit in Laurent's thesis
 \cite{laurent02etude}. In that thesis, Laurent defines the polarized
 LLP {\it without} the shifts ${\uparrow}$ and ${\downarrow}$, so that
 the only connection points between the polarities are the
-exponentials. The resulting logic is much persistent than linear,
+exponentials. Were it not for atomic propositions, the resulting logic
+would be more persistent than linear,
 a point we will return to in Section~\ref{sec:perm-fragments}.
 
 \subsection{Derivations and proof terms}
@@ -812,17 +815,19 @@ Expressions are treated as in the structural focalization development
 \cite{simmons11structural}. It is possible to take a ``Curry-style''
 view of expressions as {\it extrinsically} typed, which means we
 consider both well-typed and ill-typed expressions; the well-typed
-expressions are those for which the sequent
+expressions are then those for which the sequent
 $\foct{\Psi}{\Delta}{E}{U}$ is derivable. However, we will take the
 ``Church-style'' view that expressions are intrinsically typed
 representatives of derivations: that is, $\foct{\Psi}{\Delta}{E}{U}$
 expresses that $E$ is a derivation of the sequent
-$\foc{\Psi}{\Delta}{U}$. Justifying this close correspondence requires
-us to take care that the structure of expressions is faithful to the
-structure of proofs; this is the primary reason that we don't (yet)
-introduce the patterns that are common in other proof term assignments
-for focused logic
+$\foc{\Psi}{\Delta}{U}$. To justify this close correspondence, we
+require the inductive structure of expressions to be faithful to the
+inductive structure of proofs; this is the primary reason that we
+don't introduce the patterns that are common in other proof term
+assignments for focused logic
 \cite{watkins02concurrent,licata08focusing,krishnaswami09focusing}.
+(In Section~\ref{sec:framework-patterns}, a limited form of patterns
+is introduced as part of the logical framework \sls.)
 
 There are two caveats to the idea that expressions are representatives
 of derivations. One caveat is that, in order for there to be an actual
@@ -840,7 +845,7 @@ type annotations, when we say that some expression $E$ is a derivation
 of $\foc{\Psi}{\Delta}{U}$, it is only {\it uniquely} a derivation of
 that sequent if we account for the implicit bookkeeping on contexts.
 
-The proof terms presented here will be reused in our formulation of a
+The proof terms presented here mirror our formulation of a
 logical framework in the next chapter.  Additionally, working on the
 level of proof terms allows for a greatly compressed presentation of
 cut admissibility and identity expansion that emphasizes the
@@ -864,8 +869,7 @@ sequents that can be obtained by plugging terms in for those free
 variables through the operation of substitution. This intuition is
 formalized by the variable substitution theorem,
 Theorem~\ref{thm:varsubst}.
-
-\bigskip
+l\bigskip
 \begin{theorem}[Variable substitution]
 \label{thm:varsubst}
 If $\Psi' \vdash \sigma : \Psi$ and $\foc{\Psi}{\Delta}{U}$, then 
@@ -2726,7 +2730,7 @@ If $\foc{\Psi}{\Delta}{U}$, then $\Psi; \Delta^\circ \altv U^\circ$.
 \]
 
 \medskip
-{\it Modalities}
+{\it Exponentials}
 \[
 \infer-
 {\foct{\Psi}{\Delta}
