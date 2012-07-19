@@ -759,8 +759,8 @@ reconfigures the structure of derivations and proof terms.
 \subsection{Process states}
 
 A {\it process state} is a disembodied left-hand side of a sequent that
-we use to describe the intermediate states of concurrent systems. The 
-goal of concurrent traces is to capture the structure of partial proofs
+we use to describe the intermediate states of concurrent systems. Traces,
+which we will type in terms of process states in Section~\ref{sec:framework-concurrent}, are intended to capture the structure of partial proofs:
 \[
 \deduce
 {\foc{\Psi}{\Delta}{\islax{A^+}}\mathstrut}
@@ -1107,11 +1107,14 @@ fact that atomic terms consist of a variable and a spine.
 \label{sec:framework-concurrent}
 \label{sec:framework-substprop}
 
-The deductive fragment of \sls~presented in 
-Figures~\ref{fig:sls-pattern}--\ref{fig:sls-spines} covers
-every \sls~proposition except for the lax modality
-${\ocircle}A^+$. It is in the context of the lax modality that we will
-present proof terms corresponding to partial proofs.
+The deductive fragment of \sls~presented in
+Figures~\ref{fig:sls-patterns}--\ref{fig:sls-spines} covers every
+\sls~proposition except for the lax modality ${\ocircle}A^+$. It is in
+the context of the lax modality that we will present proof terms
+corresponding to partial proofs; we call this fragment the {\it
+  concurrent} fragment of \sls~because of its relationship with
+concurrent equality, described in
+Section~\ref{sec:framework-concurrenteq}.
 \begin{align*}
 \qquad\qquad\qquad\qquad
 &\mbox{Steps}&
@@ -1632,15 +1635,17 @@ that $\ctxinterp{k \rhd s} \leadsto_{\Sigma_{\it PDA}} \ctxinterp{k'
 
 The second step is crucial in general: without it, we might transition
 in \sls~from the encoding of some $\obj{k \rhd s}$ to a state
-$\Delta'$ that is not in the image of encoding.  With our
-deterministic example, this concern is less obvious: we could avoid
-the second proof by instead proving that if $\ctxinterp{k \rhd s}
-\leadsto_{\Sigma_{\it PDA}} \Delta$ and $\ctxinterp{k \rhd s}
-\leadsto_{\Sigma_{\it PDA}} \Delta'$ then $\Delta = \Delta'$. We will 
+$\Delta'$ that is not in the image of encoding. % With our
+%deterministic example, this concern is less obvious: we could avoid
+%the second proof by instead proving that if $\ctxinterp{k \rhd s}
+%\leadsto_{\Sigma_{\it PDA}} \Delta$ and $\ctxinterp{k \rhd s}
+%\leadsto_{\Sigma_{\it PDA}} \Delta'$ then $\Delta = \Delta'$. 
+We will 
 take the opportunity to re-factor Cervesato et al.'s approach, 
 replacing the second step with a general statement about transitions
-in $\Sigma_{\it PDA}$ preserving a well-formedness invariant that
-belongs to a category of well-formedness invariants we will explore
+in $\Sigma_{\it PDA}$ preserving a well-formedness invariant. The 
+invariant we discuss is a simple instance of
+the well-formedness invariants that we will explore
 further in Chapter~9. 
 
 The first step in our revised methodology is to describe a generative
@@ -1656,7 +1661,7 @@ straightforward and follows other developments.
 
 \subsection{Regular and generated worlds}
 
-A critical aspect of any adequacy arguments is an understanding of the
+A critical aspect of any adequacy argument is an understanding of the
 structure of the LF context. In the statement of adequacy for untyped
 $\lambda$-calculus terms, for instance, it was necessary to require
 that the context $\Psi$ take the form $\lf{a_1}{:}{\sf
@@ -1670,8 +1675,8 @@ simplest {\it regular worlds} are those that forbid the presence of
 any LF variables. This is the {\it closed world assumption}, and
 regular worlds can be presented as a generalization of closed worlds.
 Twelf contains both
-a syntax for declaring worlds and facilities for checking that a
-signature respects a particular world structure
+a syntax for declaring regular worlds and facilities for checking that a
+signature respects a particular regular world structure
 \cite{schurmann00automating}.
 
 The relevant building blocks in our $\lambda$-calculus encoding are
@@ -1696,11 +1701,13 @@ zones:
 ~
 [~\mbox{the string being read}~]
 \]
-In essence, the generalization we propose is a move from a description
+The generalization we propose is a move from a description
 of worlds based on regular expressions to a description of worlds
-based on context-free grammars. Conveniently, these contexts can be
+based on (something like) context-free grammars. 
+Conveniently, the something-like-context-free grammars we are interested
+in can be
 characterized within the machinery of \sls~itself by describing {\it
-  generative signatures} that can form the set of process states we
+  generative signatures} that can generate the set of process states we
 are interested in from a single seed context.  The signature
 $\Sigma_{\it Gen}$ in Figure~\ref{fig:pda-gen} treats all the atomic
 propositions of $\Sigma_{\it PDA}$ -- the atomic propositions ${\sf
@@ -1720,24 +1727,24 @@ three {\it nonterminals} ${\sf gen}$, ${\sf gen\_stack}$, and ${\sf
 ~&{\sf state} : {\sf gen} 
        \lefti {\ocircle}({\sf gen\_stack} \fuse {\sf hd} 
                          \fuse {\sf gen\_string})
-& G & \rightarrow G_k\,{\sf hd}\,G_s\\
+&& G \rightarrow G_k\,{\sf hd}\,G_s\\
 ~&{\sf stack/left} : {\sf gen\_stack} 
        \lefti {\ocircle}({\sf <} \fuse {\sf gen\_stack})
-& G_k & \rightarrow {\sf <}\,G_k \\
+&& G_k \rightarrow {\sf <}\,G_k \\
 ~&{\sf stack/done} : {\sf gen\_stack} \lefti {\ocircle}(\one)
-& G_k & \rightarrow \epsilon\\
+&& G_k \rightarrow \epsilon\\
 ~&{\sf string/left} : 
      {\sf gen\_string} 
        \lefti {\ocircle}({\sf gen\_string} \fuse {\sf <})
-& G_s & \rightarrow G_s\,{\sf <}\\
+&& G_s \rightarrow G_s\,{\sf <}\\
 ~&{\sf string/right} : 
      {\sf gen\_string} 
        \lefti {\ocircle}({\sf gen\_string} \fuse {\sf >})
-& G_s & \rightarrow G_s\,{\sf >}\\
+&& G_s \rightarrow G_s\,{\sf >}\\
 ~&{\sf string/done} : 
      {\sf gen\_string} 
        \lefti {\ocircle}(\one)
-& G_s & \rightarrow \epsilon
+&& G_s \rightarrow \epsilon
 \end{align*}
 \caption{Generative specification of PDA states and an analogous
   context-free grammar}
@@ -1754,11 +1761,11 @@ such that $(x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}}
 they are free of nonterminals. We capture this property by defining a
 partial function for {\it restriction} of process states,
 $\restrictsig{(\Psi; \Delta)}{\Sigma}$. Restriction is only defined if
-all the ordered and linear propositions in $\Delta'$ are well-formed
+all the ordered and linear propositions in $\Delta$ are well-formed
 in $\Sigma$; this means that $\restrictsig{(x{:}\istrue{\susp{\sf
       gen}})}{\Sigma_{\it PDA}}$ is not defined. When all ordered and
 linear atomic propositions are defined, then $\restrictsig{(\Psi;
-  \Delta')}{\Sigma} = (\Psi'; \Delta')$, where $\Psi'$ contains every
+  \Delta)}{\Sigma} = (\Psi'; \Delta')$, where $\Psi'$ contains every
 LF variable from $\Psi$ whose type is well-formed in $\Sigma$ and
 $\Delta'$ contains every mapping $x{:}\islvl{A^-}$ or
 $x{:}\islvl{\susp{p^+_\mlvl}}$ from $\Delta$ that is well-formed in
@@ -1768,7 +1775,7 @@ Restriction acts as a semi-permeable membrane on process states: some
 process states cannot pass through at all, and others pass through
 with some of their LF variables and persistent propositions
 removed. We can represent context restriction $\restrictsig{(\Psi;
-  \Delta')}{\Sigma} = (\Psi'; \Delta')$ in a two-dimensional notation
+  \Delta)}{\Sigma} = (\Psi'; \Delta')$ in a two-dimensional notation
 as a dashed line annotated with the restricting signature:
 \begin{center}
 \begin{tikzpicture} 
@@ -1784,8 +1791,9 @@ For all process states that evolve from the initial state
 $(x{:}\istrue{\susp{\sf gen}})$ under the signature $\Sigma_{\it
   Gen}$, restriction to $\Sigma_{\it PDA}$ is the identity function
 whenever it is defined. Therefore, in the statement of
-Theorem~\ref{thm:pda-encoding}, we just use restriction as a judgment
-$\restrictsig{\Delta}{\Sigma_{\it PDA}}$ that holds whenever the partial function is defined.
+Theorem~\ref{thm:pda-encoding}, we use restriction as a judgment
+$\restrictsig{\Delta}{\Sigma_{\it PDA}}$ that holds whenever the partial 
+function is defined.
 
 \bigskip
 \begin{theorem}[Encoding]\label{thm:pda-encoding}
@@ -1816,7 +1824,7 @@ any $\obj{k \rhd s}$, there exists a trace $T ::
 (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\it Gen} \ctxinterp{k \rhd
   s}$. To show that the encoding function is surjective, we must show
 that if $T :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it
-    Gen}} \Delta$ and $\restrictto{\Delta}{\Sigma_{\it PDA}}$ then
+    Gen}} \Delta$ and $\restrictsig{\Delta}{\Sigma_{\it PDA}}$ then
 $\Delta = \ctxinterp{k \rhd s}$ for some $\obj{k}$ and $\obj{s}$. This
 will complete the proof: an injective and surjective function is
 bijective.
@@ -1832,7 +1840,7 @@ By induction on $\obj{k}$.
 \item If $\obj{k} = \cdot$, $T = \emptytrace ::
 ({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
 (x{:}\istrue{\susp{\sf gen\_stack}})$
-\item If $\obj{k} = \obj{k'}{\sf <}$, we have 
+\item If $\obj{k} = \obj{k' {\sf <}}$, we have 
 $T' :: ({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
 ({\ctxinterp{k'}, x''{:}\istrue{\susp{\sf gen\_stack}}})$ by the induction
 hypothesis, so $T = (T'; \trstep{x_1, x_2}{{\sf stack/left}\,x'}) :: 
@@ -1850,22 +1858,22 @@ By induction on $\obj{s}$.
 \item If $\obj{s} = \cdot$, $T = \emptytrace ::
 ({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
 (x{:}\istrue{\susp{\sf gen\_stack}})$
-\item If $\obj{s} = \obj{s'}{\sf <}$, we have 
+\item If $\obj{s} = \obj{{\sf <}s' }$, we have 
 $T' :: ({x{:}\istrue{\susp{\sf gen\_string}}}) \leadsto^*_{\Sigma_{\it Gen}} 
 (x'{:}\istrue{\susp{\sf gen\_string}}, \ctxinterp{s'})$ by the induction
 hypothesis, so $T = (T'; \trstep{x_1, x_2}{{\sf string/left}\,x'}) :: 
 ({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
 (x_1{:}\istrue{\susp{\sf gen\_stack}},
  x_2{:}\istrue{\susp{\sf <}},
-\ctxinterp{k'})$
-\item If $\obj{s} = \obj{s'}{\sf >}$, we have 
+\ctxinterp{s'})$
+\item If $\obj{s} = \obj{{\sf >}s' }$, we have 
 $T' :: ({x{:}\istrue{\susp{\sf gen\_string}}}) \leadsto^*_{\Sigma_{\it Gen}} 
 (x'{:}\istrue{\susp{\sf gen\_string}}, \ctxinterp{s'})$ by the induction
 hypothesis, so $T = (T'; \trstep{x_1, x_2}{{\sf string/right}\,x'}) :: 
 ({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
 (x_1{:}\istrue{\susp{\sf gen\_stack}},
  x_2{:}\istrue{\susp{\sf >}},
-\ctxinterp{k'})$
+\ctxinterp{s'})$
 \end{itemize}
 
 \begin{lemma} For all $\obj{k}$ and $\obj{s}$, there exists
@@ -1916,7 +1924,7 @@ $T :: (\ctxinterp{k},
        y{:}\istrue{\susp{\sf gen\_store}},
        \ctxinterp{s}) 
   \leadsto^*_{\Sigma_{\it Gen}} \Delta$ and
-$\restrictto{\Delta}{\Sigma_{\it
+$\restrictsig{\Delta}{\Sigma_{\it
       PDA}}$, then $\Delta = \ctxinterp{k' \rhd s'}$ for some $\obj{k'}$
 and $\obj{s'}$.
 \end{lemma}
@@ -1958,7 +1966,7 @@ conversely, by case analysis on the last steps of $T$).
 \begin{lemma} If 
 $T :: (g{:}\istrue{\susp{\sf gen}}) 
   \leadsto^*_{\Sigma_{\it Gen}} \Delta$ and
-$\restrictto{\Delta}{\Sigma_{\it
+$\restrictsig{\Delta}{\Sigma_{\it
       PDA}}$, then $\Delta = \ctxinterp{k' \rhd s'}$ for some $\obj{k'}$
 and $\obj{s'}$.
 \end{lemma}
