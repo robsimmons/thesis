@@ -26,3 +26,6 @@ FOCUSED NEGATIVE PROPOSITIONS
 INVERTING POSITIVE PROPOSITIONS
 
 "matches" should always be mboxed
+
+Consider grepping "unification" everywhere and always trying to 
+say something better.
