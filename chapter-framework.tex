@@ -658,7 +658,7 @@ is equivalent to a much simpler rule:
 There are two distinct conditions under which we can be sure that
 unification problems always have a most general solution.  \smallskip
 \begin{enumerate}
-\item Unification at an atomic type $p$ that is {\it not subordinate
+\item Equality at an atomic type $p$ that is {\it not subordinate
     to itself} ($p \not\prec_\subord p$) is always allowed.  This is
   reflected in the first formation rule for $\lf{t} \doteq
   \lf{s}$ in Figure~\ref{fig:sls-propform}. 
@@ -670,7 +670,7 @@ unification problems always have a most general solution.  \smallskip
   \doteq \lf{{b}}$, both $\lf{[{a}/b]}$ and $\lf{[{b}/a]}$ are most
   general unifiers.
 
-\item The second condition under which unification is allowed is when
+\item The second condition under which equality is allowed is when
   it is used as a {\it notational definition}
   \cite{pfenning99algorithms}. The subset $\mathcal S$ of the LF
   context is treated as an a multiset. The result of this treatment is
@@ -683,7 +683,9 @@ unification problems always have a most general solution.  \smallskip
 
 
   The proposition $\lf{a} \doteq \lf{t}$ must be reachable from its
-  associated quantifier without crossing a shift or an exponential.
+  associated quantifier without crossing a shift or an exponential --
+  in Andreoli's terms, it must be in the same {\it monopole}
+  (Section~\ref{sec:linsynthetic}).
   This is enforced by the formation rules for shifts and exponentials,
   which clear the subset $\mathcal S$ in their premise.  The
   proposition $\forall \lf{a}.\, {\downarrow}({\sf

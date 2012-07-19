@@ -86,9 +86,9 @@ to obtain lunch -- but only once!\footnote{Conjunction will always
   proposition ${\sf 6bucks} \lolli ({\sf soup} \tensor {\sf
     sandwich})$.} Linear logic also has a connective ${!}A$
 representing a persistent resource that can be used to generate any
-number of $A$ resources, including zero. A sandwich shop that allows
-six dollars to be exchanged for both soup and a sandwich any number
-of times could be represented as the resource
+number of $A$ resources, including zero. Your local Panera, which
+allows six dollars to be exchanged for both soup and a sandwich any number
+of times, can be represented as the resource
 ${!}({\sf 6bucks} \lolli {\sf soup} \tensor {\sf sandwich})$. 
 
 \input{figs/fig-linear.tex}
@@ -1713,18 +1713,28 @@ The first idea behind synthetic inference rules is that the most
 important sequents in a polarized sequent calculus are stable sequents
 where all suspended propositions are atomic.  This was reflected by
 our proof of the completeness of focusing
-(Theorem~\ref{thm:linfoccomplete}); we discussed but did not mention
-the unfocused cut admissibility rule. The second idea is that the
-proof of a stable sequent must end with one of three rules. Once we
-know whether the last rule is
+(Theorem~\ref{thm:linfoccomplete}), which was restricted to stable
+sequents.\footnote{If we had established the unfocused cut rule
+  discussed in Section~\ref{sec:confluent-v-fixed} and had then proven
+  the completeness of focusing (Theorem~\ref{thm:linfoccomplete}) for
+  arbitrary inverting sequents, it would have enabled an
+  interpretation that puts all unfocused sequents on similar footing,
+  but that is not our goal here.}
+The second idea is that the bottommost rule in the proof of 
+a stable sequent must be one of the following:
+\smallskip
 \begin{itemize}
 \item ${\it copy}$ on some proposition $A^-$ from $\Gamma$, 
 \item ${\it focus}_L$ on some proposition $A^-$ in $\Delta$, or
 \item ${\it focus}_R$ on the succedent $A^+$
-\end{itemize} (it must be one of these three), then the bipole
-structure of the proposition we focus on is all we need to know in
-order to understand the structure of the proof up to the next
-occurrences of stable sequents.
+\end{itemize}
+\smallskip
+%
+Once we know which proposition we have focused on, the bipole
+structure of that proposition (that is, the outermost structure of the
+proposition up through the second occurance of a shift of exponential)
+completely (though not uniquely) dictates the structure of the proof
+up to the next occurrences of stable sequents.
 
 For example, consider the act of focusing on the proposition $a^+
 \lolli {\uparrow}b^+$ in $\Gamma$ using the ${\it copy}$ rule, where
@@ -1754,7 +1764,7 @@ of the structure of the proof, as they are fully determined by the
 choice of focus, so we can collapse this series of transitions
 into a single synthetic rule:
 \[
-\infer[{\sf CP}_{a^+ \lolli {\uparrow}b^+}]
+\infer[{\sf CP}]%_{a^+ \lolli {\uparrow}b^+}]
 {\mildseq{\Gamma, a^+ \lolli {\uparrow}b^+}{\Delta, \langle a^+ \rangle}{U}}
 {\mildseq{\Gamma, a^+ \lolli {\uparrow}b^+}{\Delta, \langle b^+ \rangle}{U}}
 \]
@@ -1765,31 +1775,48 @@ on that proposition) and two rules with every negative proposition
 context and left focus on that negative proposition in the positive
 context). Here are three examples:
 \[
-\infer[{\sf LP}_{a^+ \lolli {\uparrow}b^+}]
+\infer[{\sf LF}]%_{a^+ \lolli {\uparrow}b^+}]
 {\mildseq{\Gamma}{\Delta, \langle a^+ \rangle, a^+ \lolli {\uparrow}b^+}{U}}
 {\mildseq{\Gamma}{\Delta, \langle b^+ \rangle}{U}}
 \]
 \[
-\infer[{\sf RF}_{{\downarrow}({!}A^- \otimes b^+ \otimes {\downarrow}C^- \lolli 
-   {\uparrow}D^+)}]
+\infer[{\sf RF}%_{{\downarrow}({!}A^- \otimes b^+ \otimes {\downarrow}C^- \lolli 
+%   {\uparrow}D^+)}
+]
 {\mildseq{\Gamma}{\Delta}
   {{\downarrow}({!}A^- \otimes b^+ \otimes {\downarrow}C^- \lolli 
    {\uparrow}D^+)}}
 {\mildseq{\Gamma, A^-}{\Delta, \langle b^+ \rangle, C^-}{D^+}}
 \quad
-\infer[{\sf RF}_{a^+}]
+\infer[{\sf RF}']%_{a^+}]
 {\mildseq{\Gamma}{\langle a^+ \rangle}{a^+}}
 {}
 \]
 This doesn't mean that there are no choices to be made within focused
 phases, just that, in MELL, those choices are limited to the way the
-resources are distributed between different branches of the context.
-If we also consider additive connectives, we can identify some number
-of synthetic rules for each right focus, left focus, or copy. This may be 
-zero, as there's no way to successfully right focus on a proposition like
-$\zero \otimes {\uparrow}{\downarrow}A^+$, or it may be more than one:
-there are three ways to successfully right focus on the proposition
-$a^+ \oplus b^+ \oplus c^+$.
+resources -- propositions in $\Delta$ -- are distributed among the
+branches of the proof.  If we also consider additive connectives, we
+can identify some number of synthetic rules for each right focus, left
+focus, or copy. This may be zero, as there's no way to successfully
+right focus on a proposition like $\zero \otimes
+{\uparrow}{\downarrow}A^+$, and therefore zero synthetic inference rules
+are associated with this proposition. It may be more than one: there are
+three ways to successfully right focus on the proposition $a^+ \oplus
+b^+ \oplus c^+$, and so three synthetic inference rules are associated
+with this proposition:
+\[
+\infer
+{\mildseq{\Gamma}{\susp{a^+}}{a^+ \oplus b^+ \oplus c^+}}
+{}
+\quad
+\infer
+{\mildseq{\Gamma}{\susp{b^+}}{a^+ \oplus b^+ \oplus c^+}}
+{}
+\quad
+\infer
+{\mildseq{\Gamma}{\susp{c^+}}{a^+ \oplus b^+ \oplus c^+}}
+{}
+\]
 
 \begin{figure}
 \small\[
@@ -1811,7 +1838,7 @@ $a^+ \oplus b^+ \oplus c^+$.
   {\mildseq{{\sf 6bucks} \lolli {\uparrow}{\sf battery}\quad}
     {\quad{\sf battery} \lolli {\uparrow}{\sf robot}, ~~
      \langle {\sf battery} \rangle\quad}{\quad{\sf robot}}}
-  {\infer[{\sf RF}%_{a^+}
+  {\infer[{\sf RF}'%_{a^+}
 ]
    {\mildseq{{\sf 6bucks} \lolli {\uparrow}{\sf battery}\quad}
        {\quad\langle {\sf robot} \rangle\quad}{\quad{\sf robot}}}
@@ -1823,10 +1850,11 @@ $a^+ \oplus b^+ \oplus c^+$.
 
 Focused proofs of stable sequents are, by definition, in a 1-to-1
 correspondence with proofs using synthetic inference rules. If we look
-at our running example as a derivation using synthetic inference rules
+at our running example as a derivation using the
+example synthetic inference rules presented above
 (as demonstrated in Figure~\ref{fig:synthetic-robot}), we see that the
-system takes four steps. The last three steps, furthermore, correspond
-precisely to the three steps in our informal description of the
+system takes four steps. The middle two steps, furthermore, correspond
+precisely to the two steps in our informal description of the
 robot-battery-store system.
 
 
@@ -1848,7 +1876,7 @@ intuitionistic analogue to Andreoli's original presentation of focusing
   Pfenning's presentation, but the observations are equally applicable
   in Andreoli's focused triadic system.}  Nor does it have the same
 synthetic inference rules as the focused presentation used in the
-framework of ordered logical specifications that Pfenning and I
+framework of ordered logical specifications that we
 presented in \cite{pfenning09substructural}.
 % However, our current objective is not simply to study
 % focused logic; we want to use the structure of proofs in focused
@@ -1857,7 +1885,7 @@ presented in \cite{pfenning09substructural}.
 
 In this section, we will discuss four different presentations of 
 focused sequent calculi that are closely connected to the logic we
-have just presented. Each system differs most dramatically in its
+have just presented. Each system differs significantly in its
 treatment of positive atomic propositions, the exponential 
 ${!}A$, and the interaction between them.
 \begin{itemize}
@@ -1875,8 +1903,8 @@ ${!}A$, and the interaction between them.
   notion (which dates at least back to Girard's LU
   \cite{girard93unity}) that some propositions can be treated as {\it
     permeable} between the persistent and linear contexts and that
-  permeable atoms can be introduced to stand for this class of 
-  permeable propositions.
+  permeable atomic propositions can be introduced to stand for this
+  class of permeable propositions.
 \end{itemize}
 
 The reason why we survey these different systems is that they all
@@ -1901,8 +1929,8 @@ include calorie information. This means that, in the near future, we
 can exchange six bucks for a soup and salad at Panera, but only if we
 know how many calories are in the meal. The six bucks, soup, and salad
 remain ephemeral resources like $q$ and $r$, but the calorie count is
-persistent. It is mathematical and scientific knowledge, 
-a resource that is not consumed by the transition.
+persistent. A calorie count is scientific knowledge, which is a
+resource that is not consumed by the transition.
 
 My justification for presenting Chaudhuri's system as the canonical
 focusing system for linear logic in Section~\ref{sec:foclinlog} is
@@ -1916,11 +1944,11 @@ the focused system relative to the unfocused system
 (Theorems~\ref{thm:linfocsound}~and~\ref{thm:linfoccomplete}). The
 various modifications we discuss in this section complicate the
 treatment of focused logics as independently justifiable sequent
-calculi for linear logic. However, I suggest in
+calculi for linear logic. I suggest in
 Section~\ref{sec:permeable} that the last option, the incorporation of
 permeable atomic propositions, provides the most natural mechanism for
-incorporating the structure that we are interested in into a focused
-presentation of linear logic. 
+incorporating the structure we desire into a focused presentation of
+linear logic.
 
 All of the options discussed in this section are compatible with a
 fifth option, discussed in Section~\ref{sec:pseudopositive}, of
@@ -1934,11 +1962,15 @@ inference rule:
 {\mildseq{\Gamma}{\Delta}{\susp{a^-}} &
   \mildseq{\Gamma}{\Delta'}{\susp{b^-}}}
 \]
-However, if we can prove a general theorem that the sequent
+If we can prove a general theorem that the sequent
 $\mildseq{\Gamma}{\Delta}{\susp{a^-}}$ can only be proven if $\Delta =
-a^-$ or if $\Delta = \cdot$ and $a^- \in \Gamma$, then the persistent
+a^-$ or if $\Delta = \cdot$ and $a^- \in \Gamma$, then $a^-$ is a {\it
+  pseudo-positive} atomic proposition. Proving the succeedent
+$\susp{a^-}$ where $a^-$ is pseudo-positive is functionally very
+similar to proving the succeedent $\susp{[a^+]}$ for a positive atomic
+proposition. If $a^-$ is pseudo-positive, the persistent
 proposition ${\downarrow}a^- \lolli {\downarrow}b^- \lolli c^-$ can be
-associated with these two synthetic inference rule-like rules:
+associated with these two synthetic inference rules:
 \[
 \infer
 {\mildseq{\Gamma}{\Delta, {\downarrow}a^- \lolli
@@ -1950,10 +1982,10 @@ associated with these two synthetic inference rule-like rules:
     {\downarrow}b^- \lolli c^-}{\susp{c^-}}}
 {\mildseq{\Gamma, a^-}{\Delta}{\susp{b^-}}}
 \]
-The machinery of lax logic introduced in Chapter~3, along with the
-separation of concurrent and deductive proofs introduced in Chapter~4,
-are what make it possible to reason about negative propositions like
-$a^-$ that act like positive propositions in practice. 
+The machinery of lax logic introduced in Chapter~3 and the fragment
+of this logic that forms a logical framework in Chapter~4 make
+it feasible, in practice, to observe when negative atomic propositions 
+are pseudo-positive.
 
 \subsection{Atom optimization}
 \label{sec:atomopt}
@@ -1970,8 +2002,7 @@ fragment:\footnote{We will use the sequent form
   $\andseq{\Gamma}{\Delta}{C}$ in this section for focused but
   unpolarized systems, and will frequently reference Pfenning's
   presentation of focused linear logic \cite{pfenning12chaining} as a
-  faithful intuitionistic analogue of Andreoli's system. This is, of
-  course, a somewhat subjective claim.}
+  faithful intuitionistic analogue of Andreoli's system.}
 \[
 \infer[{\it copy}]
 {\andseq{p^+ \otimes q^+}{\cdot}{q^+ \otimes p^+}}
@@ -2015,7 +2046,7 @@ logic again.
  {\andseq{\cdot}{{!}p^+}{p^+}}
  {\infer[{\it focus}_R]
   {\andseq{p^+}{\cdot}{p^+}}
-  {\infer[{\it I}^+_2]
+  {\infer[{\it id}^+_2]
    {\andseq{p^+}{\cdot}{[p^+]}}
    {}}}}
 \]
@@ -2070,7 +2101,7 @@ the presence of a positive atomic proposition:
 {\mildseq{\Gamma, \langle A^+ \rangle}{\cdot}{[A^+]}}
 {}
 \]
-The third approach is to introduce a third connective, $\pbang$, that
+The third approach is to introduce a new connective, $\pbang$, that
 can only be applied to positive atomic propositions, just as ${!}$ can
 only be applied to negative propositions. We can initially view this
 option as equivalent to the previous one by defining ${\pbang}p^+$ as
@@ -2192,9 +2223,11 @@ one new case of identity expansion, which is unproblematic:
    {\mathcal D}}}}
 \]
 
-Even though the identity expansion theorem is unproblematic, the
-suspended persistent propositions begin to illuminate one problem with
-the atom optimization.  Previously, when we substituted a positive
+Even though the identity expansion theorem is unproblematic, we can
+illuminate one problem with the atom optimization by considering
+suspended atomic propositions.
+%
+Previously, when we substituted a positive
 proposition for an atomic proposition, the proof's structure remained
 fundamentally unchanged -- instances of the $\eta^+$ rule on $p^+$
 turned into admissible instances of the general identity expansion
@@ -2242,61 +2275,6 @@ the statement of part 5 of Theorem~\ref{thm:lincut}
 and $\mildseq{\Gamma, A^-}{\underline{\Delta}}{\underline{U}}$, 
 then $\mildseq{\Gamma}{\underline{\Delta}}{\underline{U}}$),
 but the proof is not so straightforward.
-
-To see why this cut is more complicated to prove than part 5 of 
-Theorem~\ref{thm:lincut}, consider what it will take to reduce
-the cut in the top half of Figure~\ref{fig:bad-cut}. We cannot immediately 
-call induction on the sub-derivation in the right branch, as 
-there is no way to prove $p^+ \otimes p^+$ in focus when 
-$\langle p^+ \rangle$ does not appear (twice) in the linear context. 
-We need to get two suspended $\langle p^+ \rangle$ antecedents
-in the linear context; then we can replace all the instances of
-${\it id}_2^+$ with instances of ${\it id}_1^+$ that use freshly-minted
-$\langle p^+ \rangle$ antecedents. This can be achieved with 
-repeated application of part 3 of Theorem~\ref{thm:lincut}, as shown
-in the bottom half of Figure~\ref{fig:bad-cut}.
-
-The minimal extension to cut admissibility (Theorem~\ref{thm:lincut})
-that justifies the atom optimization appears to be the following,
-where $\langle p^+ \rangle^n$ denotes $n$ copies of the suspended
-positive proposition $\langle p^+ \rangle$.
-
-\bigskip
-\begin{theorem}[Extra cases of cut admissibility (Theorem~\ref{thm:lincut})]
-~
-\begin{enumerate}
-\item[6a.] 
-  If $\mildseq{\Gamma}{\cdot}{p^+}$ 
-  and $\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{[ B^+ ]}$, 
-  then there exists $n$ such that
-      $\mildseq{\Gamma}
-          {\Delta, \langle p^+ \rangle^n}
-          {[ B^+ ]}$.
-\item[6b.] 
-  If $\mildseq{\Gamma}{\cdot}{p^+}$
-  and $\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}$,
-  then $\mildseq{\Gamma}{\Delta}{U}$. 
-\item[6c.]
-  If $\mildseq{\Gamma}{\cdot}{p^+}$
-  and $\mildseq{\Gamma, \langle p^+ \rangle}{\Delta, [B^-]}{U}$,
-  then there exists $n$ such that
-      $\mildseq{\Gamma}
-          {\Delta, \langle p^+ \rangle^n, [B^-]}
-          {U}$.
-\end{enumerate}
-\end{theorem}
-
-\begin{proof}
-Induction on the second given derivation; whenever ${\it focus}_R$,
-${\it focus}_L$ or ${\it copy}$ are the last rule in part 6b, we need
-to make $n$ calls to part 3 of the cut admissibility lemma, each one
-followed by a use of the $\eta^+$ rule, where
-$n$ is determined by the inductive call to part {\it 6a} (for ${\it focus}_R$) 
-or {\it 6c} (for ${\it focus}_L$ and ${\it copy}$). 
-
-The calls to part 3 are justified by the existing induction metric: the 
-principal cut formula $p^+$ stays the same and the part number gets smaller.
-\end{proof}
 
 \begin{figure}[t]
 \[
@@ -2373,6 +2351,62 @@ the ${\pbang}p^+$ connective.}
 \label{fig:bad-cut}
 \end{figure}
 
+To see why this cut is more complicated to prove than part 5 of 
+Theorem~\ref{thm:lincut}, consider what it will take to reduce
+the cut in the top half of Figure~\ref{fig:bad-cut}. We cannot immediately 
+call the induction hypothesis on the sub-derivation in the right branch, as 
+there is no way to prove $p^+ \otimes p^+$ in focus when 
+$\langle p^+ \rangle$ does not appear (twice) in the linear context. 
+We need to get two suspended $\langle p^+ \rangle$ antecedents
+in the linear context; then we can replace all the instances of
+${\it id}_2^+$ with instances of ${\it id}_1^+$ that use freshly-minted
+$\langle p^+ \rangle$ antecedents. This can be achieved with 
+repeated application of part 3 of Theorem~\ref{thm:lincut}, as shown
+in the bottom half of Figure~\ref{fig:bad-cut}.
+
+The minimal extension to cut admissibility (Theorem~\ref{thm:lincut})
+that justifies the atom optimization appears to be the following,
+where $\langle p^+ \rangle^n$ denotes $n$ copies of the suspended
+positive proposition $\langle p^+ \rangle$.
+
+\bigskip
+\begin{theorem}[Extra cases of cut admissibility (Theorem~\ref{thm:lincut})]
+~
+\begin{enumerate}
+\item[6a.] 
+  If $\mildseq{\Gamma}{\cdot}{p^+}$ 
+  and $\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{[ B^+ ]}$, 
+  then there exists $n$ such that
+      $\mildseq{\Gamma}
+          {\Delta, \langle p^+ \rangle^n}
+          {[ B^+ ]}$.
+\item[6b.] 
+  If $\mildseq{\Gamma}{\cdot}{p^+}$
+  and $\mildseq{\Gamma, \langle p^+ \rangle}{\Delta}{U}$,
+  then $\mildseq{\Gamma}{\Delta}{U}$. 
+\item[6c.]
+  If $\mildseq{\Gamma}{\cdot}{p^+}$
+  and $\mildseq{\Gamma, \langle p^+ \rangle}{\Delta, [B^-]}{U}$,
+  then there exists $n$ such that
+      $\mildseq{\Gamma}
+          {\Delta, \langle p^+ \rangle^n, [B^-]}
+          {U}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Induction on the second given derivation; whenever ${\it focus}_R$,
+${\it focus}_L$ or ${\it copy}$ are the last rule in part 6b, we need
+to make $n$ calls to part 3 of the cut admissibility lemma, each one
+followed by a use of the $\eta^+$ rule, where
+$n$ is determined by the inductive call to part {\it 6a} (for ${\it focus}_R$) 
+or {\it 6c} (for ${\it focus}_L$ and ${\it copy}$). 
+
+The calls to part 3 are justified by the existing induction metric: the 
+principal cut formula $p^+$ stays the same and the part number gets smaller.
+\end{proof}
+
+
 \paragraph{Correctness of focusing}
 
 The obvious way of extending erasure for our extended logic is
@@ -2428,9 +2462,6 @@ a case of ordinary focal substitution:
  }
 \]
 
-\subsection{Exponential optimization}
-\label{sec:bangopt}
-
 For such a seemingly simple change, the atom optimization adds a
 surprising amount of complexity to the cut admissibility theorem for
 focused linear logic. What's more, the three extra cases of cut that
@@ -2438,6 +2469,9 @@ we had to introduce were all for the purpose of handling a single
 problematic case
 in the proof of part 1 where both derivations were decomposing the
 principal cut formula ${\pbang}p^+$.
+
+\subsection{Exponential optimization}
+\label{sec:bangopt}
 
 The choice of adding ${\pbang}p^+$ as a special new connective instead
 of defining it as ${!}{\uparrow}p^+$ paves the way for us to modify
@@ -2534,12 +2568,12 @@ because ${\pbang}{\downarrow}{\uparrow}(A \otimes B) \vdash
 want avoid this route because it gives the shifts too much power: they
 influence the {\it existence} of proofs, not just the structure of
 proofs.\footnote{Both the note of Girard and the paper of Melli{\`e}s
-  and Tabareau see the shifts as a form of negation; therefore, they
+  and Tabareau see the shifts as a form of negation; therefore, 
+  writing from an intuitionstic perspective, they
   are unconcerned that $A^+$ has a different meaning of
-  ${\downarrow}{\uparrow}A^+$ in their constructive logic. For any
-  proposition $A$ that is classically but not intuitionistic true, we
-  know that the double negation $\neg\neg A$ will be true in
-  intuitionistic logic! This view of shifts as negations seems rather
+  ${\downarrow}{\uparrow}A^+$ in their constructive logic. There
+  are manay propositions where $\neg\neg A$ is provable even though 
+  $A$ is not! This view of shifts as negations seems rather
   foreign to the erasure-based understanding of shifts we have been
   discussing, though Zeilberger has attempted to reconcile these
   viewpoints \cite{zeilberger08unity}.} This interpretation of shifts
@@ -2616,8 +2650,9 @@ rule for ${!}_R$ is derivable using these two rules:
  {\Gamma; \cdot \vdash \iseph{A}} \mathstrut}
 \]
 
-Note that the ${!}'_R$ rule is naturally synchronous (positive),
-because it forces the linear context to be empty. The ${\it pers}$
+Note that the ${!}'_R$ rule is not invertable,
+because it forces the linear context to be empty, which means ${!}$
+must be positive. The ${\it pers}$
 rule, on the other hand, is invertible and so naturally negative,
 because it represents the invertible step of deciding to prove that
 $A$ is {\it persistently} true by proving that it is {\it ephemerally}
@@ -2749,31 +2784,33 @@ logic.
 \subsection{Permeability}
 \label{sec:permeable}
 
-In our attempts to motivate a notion of persistent positive
-propositions, we have now surveyed Andreoli's atom optimization that
-interferes with the structure of cut admissibility, the exponential
-optimization that lacks a good interpretation in unfocused linear
-logic, and an adjoint formulation of linear logic that introduces
-persistent positive propositions as members of a syntactic class $X$
-of persistent propositions that usually lies hidden in between the two
-right-synchronous and right-asynchronous (that is, positive and
-negative) halves of the ${!}$ connective.  Our final attempt to
-logically motivate a notion of a persistent positive proposition will
-be based on an analysis of {\it permeability}.  Permeability in
-classical presentations of linear logic dates back to Girard's LU
-\cite{girard93unity}.  In this section, we will motivate permeable
-atomic propositions in intuitionistic linear logic by first
-considering a new identity expansion principle that only applies to
-permeable propositions, which are a syntactic refinement of the
-positive propositions.\footnote{Permeable {\it negative} propositions
-  are relevant to classical linear logic, but the asymmetry of
-  intuitionistic linear logic means that, for now, it is reasonable to
-  consider permeability exclusively as a property of positive
-  propositions. We will consider a certain kind of right-permeable
-  propositions in Chapter 3.}
+Let us review the problems with our previous attempts to motivate a
+satisfactory treatment of positive propositions in the persistent
+context.  Andreoli's atom optimization interferes with the structure
+of cut admissibility. The exponential optimization lacks a good
+interpretation in unfocused linear logic. The adjoint formulation of
+linear logic introduces persistent positive propositions as members of
+a syntactic class $X$ of persistent propositions which usually lies
+hidden in between the two right-synchronous and right-asynchronous
+(that is, positive and negative) halves of the ${!}$ connective; this
+approach works but requires a lot of extra machinery.
+
+Our final attempt to logically motivate a notion of a persistent
+positive proposition will be based on an analysis of {\it
+  permeability}.  Permeability in classical presentations of linear
+logic dates back to Girard's LU \cite{girard93unity}.  In this
+section, we will motivate permeable atomic propositions in
+intuitionistic linear logic by first considering a new identity
+expansion principle that only applies to permeable propositions, a
+syntactic refinement of the positive propositions.\footnote{Permeable
+  {\it negative} propositions are relevant to classical linear logic,
+  but the asymmetry of intuitionistic linear logic means that, for
+  now, it is reasonable to consider permeability exclusively as a
+  property of positive propositions. We will consider a certain kind
+  of right-permeable propositions in Chapter 3.}
 
 The admissible identity expansion rules, like the admissible identity
-rule present in most unfocused sequent calculus systems, can help us
+rule present in most unfocused sequent calculus systems, help us
 write down compact proofs. If $F(n) = p_1^+ \otimes \ldots \otimes
 p_n^+$, then the size of the smallest proof of
 $\mildseq{\Gamma}{F(n)}{F(n)}$ is in $\Omega(n)$. However, by using
@@ -2788,8 +2825,8 @@ proof in a compact way:
    {\mildseq{\Gamma}{\susp{F(n)}}{[ F(n) ]}}
    {}}}}}
 \]
-The use of identity expansion lets write down potentially large proofs 
-quite concisely.
+%The use of identity expansion lets write down potentially large proofs 
+%quite concisely.
 
 \subsubsection{Permeability as a property of identity expansion}
 
@@ -2830,9 +2867,9 @@ then $\mildseq{\Gamma}{\underline{\Delta'}}{\underline{U}}$.
   Once again, this is a straightforward induction over the second
   given derivation, as in a proof of regular substitution in a natural
   deduction system. If the second derivation is the axiom ${\it
-    id}_p^+$ that the distinguished suspended proposition $\langle A^+
-  \rangle$, then the result follows immediately using the first given
-  derivation.
+    id}_p^+$ applied to the suspended proposition $\langle A^+
+  \rangle$ we are substituting for, then the result follows
+  immediately using the first given derivation.
 \end{proof}
 
 Given this focal substitution principle, we can consider the class of
@@ -2842,7 +2879,7 @@ suspend it in the linear context, we might just as well suspend it in
 the persistent context, as it decomposes entirely into persistent
 pieces. In other words, we want a class of propositions $A^+_p$ such
 that $\mildseq{\Gamma, \langle A^+_p \rangle}{\Delta}{U}$ implies
-$\mildseq{\Gamma}{\Delta, A^+_p}{U}$, which is the permeable identity
+$\mildseq{\Gamma}{\Delta, A^+_p}{U}$; this is the permeable identity
 expansion property. It is possible to precisely characterize the MELL
 propositions that are permeable as a syntactic refinement of positive
 propositions:
@@ -3066,8 +3103,8 @@ conclusion $\mildseq{\Gamma}{\Delta_1, \Delta_2}{[A \otimes B]}$ of
 the ${\tensor}_R$ rule indicates the condition that the context can be
 split into two parts. In other words, both the conclusion of the
 ${\one}_R$ rule and ${\otimes}_R$ rule, as we normally write them, can
-be seen as a special {\it matching construct} that constrains the
-shape of the context $\Delta$.\footnote{More than anything else I have
+be seen as a special {\it matching construct} that constrain the
+shape of the context $\Delta$.\footnote{More than anything else we have
   discussed so far, this is a view of inference rules that emphasizes
   {\it bottom-up} proof search and proof construction. A view of
   linear logic that is informed by the inverse method, or top-down
