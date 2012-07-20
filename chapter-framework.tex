@@ -2032,7 +2032,7 @@ $T_2 :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} \Delta_2$.
 \bigskip
 
 \noindent
-If we represent provided elements as solid lines and lines that we have
+If we illustrate given elements as solid lines and elements that we have
 to prove as dashed lines, the big picture of the encoding and preservation
 theorems is the following:
 
@@ -2073,7 +2073,10 @@ decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}]
 
 \noindent
 The proof of Theorem~\ref{thm:pda-preservation} relies on two lemmas, 
-which we will consider before the proof itself. 
+which we will consider before the proof itself. They are both
+{\it inversion lemmas}: they help uncover the structure of the
+trace based on the type of that trace. Treating
+traces modulo concurrent equality is critical in both cases. 
 
 \bigskip
 \begin{lemma}
@@ -2082,7 +2085,7 @@ which we will consider before the proof itself.
   If $T :: \Delta \leadsto^*_{\Sigma_{\it Gen}} \Delta'$ and
   $\restrictsig{\Delta'}{\Sigma_{\it PDA}}$, then $T = (T';
   \trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
-      string/done}\,y})$ (modulo concurrent equality), where $T' ::
+      string/done}\,y})$, where $T' ::
   \Delta \leadsto^*_{\Sigma_{\it Gen}}
   \tackon{\Theta'}{x'{:}\istrue{\susp{\sf gen\_stack}},
     h{:}\istrue{\susp{\sf hd}}, y'{:}\istrue{\susp{\sf gen\_state}}}$
@@ -2093,7 +2096,7 @@ By induction on the structure of $T$ and case analysis on the first
 steps in $T$. Up to concurrent equality, there are five possibilities:
 \begin{itemize}
 \item $T = (\trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
-      string/done}\,y})$ -- let $T' = \emptytrace$.
+      string/done}\,y})$. Immediate, letting $T' = \emptytrace$.
 \item $T = (\trstep{x_1,x_2}{{\sf stack/left}\,x}; T'')$. By the
   induction hypothesis (where the new frame incorporates
   $x_1{:}\istrue{\susp{\sf <}}$), we have $T'' = (T''';
@@ -2108,7 +2111,7 @@ steps in $T$. Up to concurrent equality, there are five possibilities:
       string/left}\,y}; T''')$.
 \item $T = (\trstep{y_1,y_2}{{\sf string/right}\,y}; T'')$. By the
   induction hypothesis (where the new frame incorporates
-  $y_1{:}\istrue{\susp{\sf >}}$), we have $T'' = (T''';
+  $y_2{:}\istrue{\susp{\sf >}}$), we have $T'' = (T''';
   \trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
       string/done}\,y})$. Let $T' = (\trstep{x_1,x_2}{{\sf
       string/right}\,y}; T''')$.
@@ -2128,8 +2131,9 @@ A corollary of this lemma is that if
 $T :: (g{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} \Delta$ and
   $\restrictsig{\Delta}{\Sigma_{\it PDA}}$, then $T = (T';
   \trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
-      string/done}\,y})$ (modulo concurrent equality), where $T' ::
-  \Delta \leadsto^*_{\Sigma_{\it Gen}}
+      string/done}\,y})$ -- modulo concurrent equality, naturally -- 
+where $T' ::
+  (g{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}}
   \tackon{\Theta}{x'{:}\istrue{\susp{\sf gen\_stack}},
     h{:}\istrue{\susp{\sf hd}}, y'{:}\istrue{\susp{\sf gen\_state}}}$
   and $\Delta = \tackon{\Theta}{h{:}\istrue{\susp{\sf hd}}}$. To prove
@@ -2201,7 +2205,7 @@ $h$ to $h'$ is just renaming a bound variable, so we have}
                    y{:}\istrue{\susp{\sf <}}}
 \intertext{
 The corollary 
-to the first lemma above on $T'$ gives us}
+to the first inversion lemma above on $T'$ gives us}
 T' = & \qquad 
 ({g{:}\istrue{\susp{\sf gen}}})\\
 & T'';\\
@@ -2214,7 +2218,7 @@ T' = & \qquad
 & \trstep{()}{{\sf string/done}\,y_g}\\
 & \qquad \tackon{\Theta}{h'{:}\istrue{\susp{\sf hd}}, ~~
                    y{:}\istrue{\susp{\sf <}}}
-\intertext{The second lemma (second part) on $T''$ gives us}
+\intertext{The second inversion lemma (second part) on $T''$ gives us}
 T'' = & \qquad 
 ({g{:}\istrue{\susp{\sf gen}}})\\
 & T''';\\
@@ -2269,8 +2273,8 @@ $h$ to $h'$ is just renaming a bound variable, so we have}
 & \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf <}}, ~~
                    h'{:}\istrue{\susp{\sf hd}}, ~~
                    y{:}\istrue{\susp{\sf >}}}
-\intertext{The corollary to the first lemma above on $T'$ gives us}
-& \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
+\intertext{The corollary to the first inversion lemma above on $T'$ gives us}
+T' = & \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
 & T'';\\
 & \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf <}}, ~~
                    x_g{:}\istrue{\susp{\sf gen\_stack}}, ~~
@@ -2282,7 +2286,7 @@ $h$ to $h'$ is just renaming a bound variable, so we have}
 & \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf <}}, ~~
                    h'{:}\istrue{\susp{\sf hd}}, ~~
                    y{:}\istrue{\susp{\sf >}}}
-\intertext{The second lemma (first part) on $T''$ gives us}
+\intertext{The second inversion lemma (first part) on $T''$ gives us}
 T'' = & \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
 & T''';\\
 & \qquad \tackon{\Theta}{x_g'{:}\istrue{\susp{\sf gen\_stack}}, ~~
@@ -2295,7 +2299,7 @@ T'' = & \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
                    h'{:}\istrue{\susp{\sf hd}}, ~~
                    y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
                    y{:}\istrue{\susp{\sf >}}}\\
-\intertext{The second lemma (third part) on $T'''$ gives us}
+\intertext{The second inversion lemma (third part) on $T'''$ gives us}
 T''' = & \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
 & T'''';\\
 & \qquad \tackon{\Theta}{x_g'{:}\istrue{\susp{\sf gen\_stack}}, ~~
@@ -2318,18 +2322,18 @@ T''' = & \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
 \end{align*}
 
 \noindent
-These two cases represent the only two transitions that are possible
+These two cases represent the only two synthetic transitions that are possible
 under the signature $\Sigma_{\it PDA}$, so we are done.
 \end{proof}
 
 Proving that generation under a generative signature like $\Sigma_{\it
   Gen}$ is invariant under transitions in a signature like
-$\Sigma_{\it PDA}$ is something we will consider extensively in Part~3
-of this thesis. All such proofs essentially follow the structure of
+$\Sigma_{\it PDA}$ is something we will consider further
+in Chapter 9.  All such proofs essentially follow the structure of
 Theorem~\ref{thm:pda-preservation}. First, we enumerate the synthetic
 transitions associated with a given signature. Second, in each of those
 cases, we use the type of the synthetic transition to perform
-inversion on the structure of the given generative.
+inversion on the structure of the given generative trace.
 Third, we construct a generative
 trace that establishes the fact that the invariant was preserved.
 
@@ -2398,57 +2402,69 @@ prototype implementation will appear frequently in the rest of this
 thesis, always in a \verb|fixed-width font|.
 
 \begin{figure}
+\newcommand{\thingamajig}{=}
 \begin{align*}
-{\downarrow}A^- & \rightarrow \mbox{\Verb|A|} 
- & {\ocircle}A^+ & \rightarrow \mbox{\Verb|\{A\}|}
- & \lf{\lambda a.t} & \rightarrow \mbox{{\texttt{\char`\\}}\Verb|a.t|}
+{\downarrow}A^- & \thingamajig \mbox{\Verb|A|} 
+ & {\ocircle}A^+ & \thingamajig \mbox{\Verb|\{A\}|}
+ & \lf{\lambda a.t} & \thingamajig \mbox{{\texttt{\char`\\}}\Verb|a.t|}
 \\
-{\gnab}A^- & \rightarrow \mbox{\Verb|\$A|}
- & A^+ \lefti B^- & \rightarrow \mbox{\Verb|A >-> B|}
- & \lf{{\sf foo}\,t_1\ldots t_n} & \rightarrow \mbox{\Verb|foo t1...tn|}
+{\gnab}A^- & \thingamajig \mbox{\Verb|\$A|}
+ & A^+ \lefti B^- & \thingamajig \mbox{\Verb|A >-> B|}
+ & \lf{{\sf foo}\,t_1\ldots t_n} & \thingamajig \mbox{\Verb|foo t1...tn|}
 \\
-{!}A^- & \rightarrow \mbox{\Verb|!A|}
- & A^+ \righti B^- & \rightarrow \mbox{\Verb|A ->> B|}
+{!}A^- & \thingamajig \mbox{\Verb|!A|}
+ & A^+ \righti B^- & \thingamajig \mbox{\Verb|A ->> B|}
 \\
-\one & \rightarrow \mbox{\Verb|one|}
- & A^- \with B^- & \rightarrow \mbox{\Verb|A \& B|}
+\one & \thingamajig \mbox{\Verb|one|}
+ & A^- \with B^- & \thingamajig \mbox{\Verb|A \& B|}
+ & \Pi\lf{a}{:}\tau.\nu & \thingamajig \mbox{\Verb|Pi x.nu|}
 \\
-\exists \lf{a}.\tau. A^+ & \rightarrow \mbox{\Verb|Exists x.A|}
- & \forall \lf{a}.\tau. A^- & \rightarrow \mbox{\Verb|All x.A|}
+A^+ \fuse B^+ & \thingamajig \mbox{\Verb|A * B|}
+ & \forall \lf{a}.\tau. A^- & \thingamajig \mbox{\Verb|All x.A|}
+ & \tau \rightarrow \nu & \thingamajig{\mbox{\Verb|tau -> nu|}}
 \\
-\lf{t} \doteq \lf{s} & \rightarrow \mbox{\Verb|t == s|}
+\exists \lf{a}.\tau. A^+ & \thingamajig \mbox{\Verb|Exists x.A|}
+ & {\gnab}A^- \lefti B^- & \thingamajig \mbox{\Verb|A -o B|}
+ & {\sf bar}\,\lf{t_1 \ldots t_n} & \thingamajig{\mbox{\Verb|bar t1...tn|}}
+\\
+\lf{t} \doteq \lf{s} & \thingamajig \mbox{\Verb|t == s|}
+ & {!}A^- \lefti B^- & \thingamajig \mbox{\Verb|A -> B|}
 \end{align*}
-\caption{Mathematical and ASCII representations of SLS types and LF terms}
+\caption{Mathematical and ASCII representations of propositions,
+  terms, and classifiers}
 \label{fig:translate-types}
 \end{figure}
 
-The checked \sls~code differs slightly from mathematical \sls~code in
-a few ways. Most dramatically, following CLF and the Celf
-implementation, we write the lax modality ${\ocircle}A$ in ASCII as
-\verb|{A}|. We already used this notation informally the introduction,
-where we wrote the heads of rules as $\{ A^+ \}$ instead of
-${\ocircle}A^+$. It is our mathematical notation, not the ASCII
-notation, that is nonstandard in this thesis: presentations of CLF
-generally use $\{ A^+ \}$ as the mathematical notation. We adopted
-Fairtlough and Mendler's ${\ocircle}$ connective for the lax modality
-\cite{fairtlough95propositional} because it fits the pattern of the
-other unary connectives ${\downarrow}$, ${\gnab}$, ${\bang}$, and
-${\uparrow}$ and because the curly braces are already used in our
-context constructors and matching constructs -- it seemed clearer to
-write $\frameoff{\Theta}{[{\ocircle}A^+]}$ instead of
-$\frameoff{\Theta}{[\{A^+\}]}$.
 
-The
+The checked \sls~code differs slightly from mathematical \sls~code in
+a few ways -- the
 translation between the mathematical notation we use for
 \sls~propositions and the ASCII representation used in the
 implementation is outlined in Figure~\ref{fig:translate-types}.
+Following CLF and the Celf implementation, we write the
+lax modality ${\ocircle}A$ in ASCII as \verb|{A}| -- recall that in
+Section~\ref{sec:slsframework} we introduced the $\{ A^+ \}$ notation
+from CLF as a synonym for Fairtlough and Mendler's ${\ocircle}A^+$.
 The exponential ${\gnab}A$ doesn't have an ASCII
 representation, so write \verb|$A| when $A$ is mobile. Upshifts and
 downshifts are always inferred: this means that we can't write down
 ${\uparrow}{\downarrow}A$ or ${\downarrow}{\uparrow}A$, but neither of
 these \ollll~propositions are part of the \sls~fragment anyway. 
 
-Another change was made for the sake of readability: if \verb|P| is a
+The \sls~implementation also supports standard abbreviations for
+arrows that we will won't use in mathematical notation: ${\gnab}A^-
+\lefti B^-$ can be written as \verb|A -o B| or \verb|$A >-> B| in the
+\sls~implementation, and ${!}A^- \lefti B^-$ can be written as
+\verb|A -> B| or \verb|!A >-> B|.  (This final proposition is
+ambiguous, because \verb|X -> Y| can be an abbreviation for ${!}X
+\lefti Y$ or $\Pi \lf{a}{:}X. Y$, but \sls~can figure out whether the
+proposition or classifier was intended by analyzing the structure of
+\verb|Y|.)  All arrows can also be written backwards: \verb|B <-< A|
+is equivalent to \verb|A >-> B|, \verb|B o- A| is equivalent to
+\verb|A -o B|, and so on.
+
+Another significant piece of syntactic sugar is used for 
+the sake of readability: if \verb|P| is a
 persistent atomic proposition, we can optionally write \verb|!P|
 wherever \verb|P| is expected, and if \verb|P| is a linear atomic
 proposition, we can write \verb|$P| wherever \verb|P| is
@@ -2464,6 +2480,7 @@ optional annotations are included, the rules in a signature that uses
 positive atomic propositions look the same as rules in a signature
 that uses the pseudo-positive negative atomic propositions described
 in Section~\ref{sec:pseudopositive}. 
+
 
 In the code examples given in the remainder of this thesis, we will
 use these optional annotations in a consistent way.  We will omit the
@@ -2485,21 +2502,24 @@ interpretations of \sls~are not a focus this thesis, but we will touch
 on a few points in this section. 
 
 Logic programming is important because it provides us with operational
-intuitions about the behavior of specifications; these intuitions will
-form the basis of the operationalization transformations on
-\sls~specifications considered in Chapter~6. Additionally, logic
-programming intuitions are relevant because they motivated the design
-of \sls, in particular the separation of traces from the deductive
-fragment, as we will discuss in
+intuitions about the intended behavior of the systems we specify in
+\sls. One specific set of these intuitions will form the basis of the
+operationalization transformations on \sls~specifications considered
+in Chapter~6. Additionally, logic programming intuitions are relevant
+because they motivated the design of \sls, in particular the
+presentation of the concurrent fragment in terms of partial, rather
+than complete, proofs. We discuss this point in
 Section~\ref{sec:framework-logicprog-trace}.
 
-\subsection{Deductive computation}
+\subsection{Deductive computation and backward chaining}
 \label{sec:framework-logicprog-deductive}
 \label{sec:framework-modes}
 
 Deductive computation in \sls~is the search for {\it complete} proofs
 of sequents of the form $\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$.  A
-common form of deductive computation is {\it goal-directed search}.
+common form of deductive computation is {\it goal-directed search}, or
+what Andreoli calls the {\it proof construction paradigm}
+\cite{andreoli01focussing}.
 In \sls, goal-directed search for the proof of a sequent
 $\foc{\Psi}{\Delta}{\istrue{\susp{p^-}}}$ can only proceed by focusing
 on a proposition like ${\downarrow}p_n^- \lefti \ldots \lefti
@@ -2517,7 +2537,8 @@ backwards from the goal we want to prove.\footnote{The alternative is
   succeeding whenever some way of proving the sequent is
   discovered. Unlike backward chaining, this strategy of breadth-first
   search is complete: if a proof exists, it will be found.  Backward
-  chaining as we define it is only nondeterministically complete,
+  chaining as we define it is only nondeterministically or 
+  partially complete,
   because it can fail to terminate when a proof exists. We will call
   this alternative to backtracking {\it breadth-first theorem
     proving}, as it amounts to taking a breadth-first, instead of
@@ -2526,9 +2547,10 @@ backwards from the goal we want to prove.\footnote{The alternative is
   programming} is also used, and refers to the fact that, in the
 concrete syntax of Prolog, the rule ${\downarrow}p_n^- \lefti \ldots
 \lefti {\downarrow}p_1^- \lefti p^-$ would be written with $p^-$ on
-the first line, $p_1^-$ on the second, etc. This is counterintuitive
+the first line, $p_1^-$ on the second, etc. This is exactly backwards
 from a proof-construction perspective, as we think of backward
-chaining as building partial proofs from the bottom up, so we will
+chaining as building partial proofs from the bottom up, the
+root towards the leaves, so we will
 avoid this terminology.  
 
 The backward-chaining interpretation of intuitionistic logics dates
@@ -2558,7 +2580,8 @@ One feature of backward chaining and goal directed search is that it
 usually allows for terms that are not completely specified -- these
 unspecified pieces are are traditionally called {\it existential
   variables}, but as they bear no relation to the variables introduced
-by existential quantification, that terminology is unhelpful
+by the left rule for $\exists \lf{a}{:}\tau. A^+$, 
+that terminology is unhelpful
 here. Consider the following \sls~signature:
 \begin{align*}
  \Sigma_{\it Add} = \cdot, 
@@ -2593,7 +2616,7 @@ We say that ${\sf plus}$ in the signature above is a {\it well-moded}
 predicate with {\it mode} $({\sf plus}\,{+}\,{+}\,{-})$, because
 whenever we perform deductive computation to derive $({\sf
   plus}\,\lf{n}\,\lf{m}\,\lf{p})$ where $\lf{n}$ and $\lf{m}$ are
-fully specified, any unspecified portion of $\lf{p}$ will become fully
+fully specified, any unspecified portion of $\lf{p}$ must be fully
 specified in any completed derivation. Well-moded predicates can be
 treated as nondeterministic partial functions from their inputs (the
 indices marked ``${+}$'' in the mode) to their outputs (the indices
@@ -2627,16 +2650,6 @@ that deductive computation with the inverse method in a focused linear
 logic can simulate both backward chaining and forward chaining
 (considered below) for persistent Horn-clause logic programs
 \cite{chaudhuri10logical}. 
-
-Figure~\ref{fig:computation-taxonomy} gives an incomplete and
-imperfect taxonomy of the forms of deductive computation mentioned in
-this section. Note that, while we will generally use {\it backward
-  chaining} to describe backtracking search, backward chaining does
-not always imply full backtracking and partial completeness. This
-illustration, and the preceding discussion, leaves out many important
-categories, especially tabled logic programming, and many potentially
-relevant implementation choices, such as breath-first versus
-depth-first or parallel exploration of the success continuation.
 
 \begin{figure}
 \begin{tikzpicture}
@@ -2681,34 +2694,45 @@ depth-first or parallel exploration of the success continuation.
 \label{fig:computation-taxonomy}
 \end{figure}
 
-\subsection{Trace computation}
+Figure~\ref{fig:computation-taxonomy} gives an taxonomy (incomplete
+and imperfect) of the forms of deductive computation mentioned in this
+section. Note that, while we will generally use {\it backward
+  chaining} to describe backtracking search, backward chaining does
+not always imply full backtracking and partial completeness. This
+illustration, and the preceding discussion, leaves out many important
+categories, especially tabled logic programming, and many potentially
+relevant implementation choices, such as breath-first versus
+depth-first or parallel exploration of the success continuation.
+
+
+\subsection{Concurrent computation}
 \label{sec:framework-logicprog-trace}
 
 
-Trace computation is the search for {\it partial} proofs of
-sequents. As the name suggests, in \sls~trace computation is
+Concurrent computation is the search for {\it partial} proofs of
+sequents. As the name suggests, in \sls~concurrent computation is
 associated with the search for partial proofs of the judgment
 $\islax{A^+}$, which correspond to traces $(\Psi;
 \Delta) \leadsto^* (\Psi'; \Delta')$. 
 
-The paradigm we will primarily consider for trace computation is {\it
-  forward chaining}, which implies that we take an initial process
-state $(\Psi;\Delta)$ and allow it to evolve freely by the application
-of synthetic transitions. Additional conditions can be imposed on
-forward chaining: for instance, synthetic transitions like $(\Delta,
-x{:}\ispers{\susp{p^+_\mpers}}) \leadsto (\Delta,
+The paradigm we will primarily associate with concurrent computation
+is {\it forward chaining}, which implies that we take an initial
+process state $(\Psi;\Delta)$ and allow it to evolve freely by the
+application of synthetic transitions. Additional conditions can be
+imposed on forward chaining: for instance, synthetic transitions like
+$(\Delta, x{:}\ispers{\susp{p^+_\mpers}}) \leadsto (\Delta,
 x{:}\ispers{\susp{p^+_\mpers}}, y{:}\ispers{\susp{p^+_\mpers}})$ that
 do not meaningfully change the state can be excluded (if a persistent
 proposition already exists, two copies of that proposition don't add
 anything).\footnote{Incidentally, Lollimon implements this restriction
   and Celf does not.} Forward chaining with this restriction in a
-purely-persistent logic is associated with Datalog; we will refer to
-forward chaining in persistent logics as {\it saturating logic
-  programming} in Chapter 8. Forward chaining
-frequently does not deal with unspecified variables; when persistent
-logic programming languages support forward chaining with unspecified
-variables, it is called {\it hyperresolution}
-\cite{fermuller01resolution}.
+purely-persistent logic is strongly associated with the Datalog
+language and its implementations; we will refer to forward chaining in
+persistent logics as {\it saturating logic programming} in Chapter
+8. Forward chaining does not always deal with partially-unspecified
+terms; when persistent logic programming languages support forward
+chaining with partially-unspecified terms variables, it is called {\it
+  hyperresolution} \cite{fermuller01resolution}.
 
 The presence of ephemeral or ordered resources in substructural logic
 means that a process state may evolve in multiple
@@ -2723,23 +2747,25 @@ evolutionary paths, which is a version of {\it model checking}.  The
 model checking problem takes an initial process state $(\Psi;\Delta)$
 or a set of initial states and attempts to enumerate or otherwise
 characterize the entire set of states $(\Psi'; \Delta')$ such that
-$(\Psi; \Delta) \leadsto^* (\Psi'; \Delta')$. 
+$(\Psi; \Delta) \leadsto^* (\Psi'; \Delta')$. Trace computation that
+works backwards from a final state instead of forward from an initial
+state can also be considered, and {\it planning} can be seen as
+specifying both the initial and final process states and trying to
+extrapolate a trace between them by working in both directions.
 
 Outside of this work and Saurin's work on Ludics programming
 \cite{saurin08towards}, there is not much work on explicitly
 characterizing and searching for partial proofs in substructural
-logics. Other forms of computation can be characterized as trace
-computation, however.  Multiset rewriting and languages like GAMMA can
-be partially or completely understood in terms of forward chaining in
-linear logic \cite{cervesato09relating,paola96linear}, and the ordered
-aspects of \sls~allow it to capture fragments of rewriting
+logics.\footnote{As such, ``concurrent computation,'' while
+  appropriate for \sls, may or may not prove to be a good name for the
+  general paradigm.}  Other forms of computation can be characterized
+as trace computation, however.  Multiset rewriting and languages like
+GAMMA can be partially or completely understood in terms of forward
+chaining in linear logic \cite{cervesato09relating,paola96linear}, and
+the ordered aspects of \sls~allow it to capture fragments of rewriting
 logic. Multiset rewriting and rewriting logic both have
 implementations that correspond to the committed choice interpretation
-and to the model checking interpretations.  Trace computation that
-works backwards from a final state instead of forward from an initial
-state can also be considered, and {\it planning} can be seen as
-specifying both the initial and final process states and trying to
-extrapolate a trace between them by working forwards and backwards.
+and to the model checking interpretations.  
 
 
 % not consider unspecified variables and is largely free of the resource
@@ -2780,14 +2806,13 @@ under this signature: it is represented by the proof term ${\sf
 backward chaining stipulates that an interpreter tasked with finding a
 proof of ${\sf negD}$ should either find this proof or never
 terminate, but LCI only admits this interpretation for purely
-deductive-proofs.
-
-In LCI, deductive computation will begin by trying to prove ${\sf
-  negD}$. This can only be done with the rule ${\sf bwdrule}$,
-generating the subgoal ${\sf posA} \lefti {\ocircle}{\sf posB}$.  LCI
-will attempt to satisfy this subgoal by constructing a trace
-$(x{:}\istrue{\susp{\sf posA}}) \leadsto (y{:}\istrue{\susp{\sf
-    posB}})$.
+deductive-proofs. To see why, consider backward-chaining search
+attempting to prove ${\sf negD}$ in a closed context.  This can only
+be done with the rule ${\sf bwdrule}$, generating the subgoal ${\sf
+  posA} \lefti {\ocircle}{\sf posB}$.  At this point, LCI will switch
+from backward chaining to forward chaining and attempt to satisfy this
+subgoal by constructing a trace $(x{:}\istrue{\susp{\sf posA}})
+\leadsto (y{:}\istrue{\susp{\sf posB}})$.
 
 There are {\it two} nontrivial traces in this signature starting from
 the process state $(x{:}\istrue{\susp{\sf posA}})$ -- the first is
@@ -2808,11 +2833,14 @@ systems (excluding $\Sigma_{\it Demo}$) or else we can give up on the
 usual partially complete interpretation of backward chaining.  In the
 other direction, however, it is entirely natural to make forward
 chaining dependent upon backward chaining. The fragment of CLF that
-encodes this kind of computation was labeled the {\it semantic effects}
-fragment by DeYoung \cite{deyoung09reasoning}.
-
-XXX note that this corresponds to just leaving out ${\ocircle}$, or 
-equivalently $\tlet{T}{V}$. 
+encodes this kind of computation was labeled the {\it semantic
+  effects} fragment by DeYoung \cite{deyoung09reasoning}. At the
+logical level, the semantic effects fragment of \sls~removes the right
+rule for ${\ocircle}A^+$, which corresponds to the proof term
+$\tlet{T}{V}$.  As discussed in
+Section~\ref{sec:framework-concurrent}, let-expressions are the only point
+where traces are included into the language of
+deductive terms.
 
 \section{Design decisions}
 \label{sec:designdecisions}
@@ -2850,7 +2878,7 @@ focusing on the rule has this form.
 CLF has no positive propositions, so the closest analogue that we can
 consider is where ${\sf foo}$, ${\sf bar}$, and ${\sf baz}$ are
 negative propositions, and the rule ${\gnab}{\sf foo} \fuse
-{\gnab}{\sf bar} \lefti \ocircle({\downarrow}({\gnab}{\sf baz}))$ appears in the
+{\gnab}{\sf bar} \lefti \ocircle({\gnab}{\sf baz})$ appears in the
 signature. Such a rule is associated with synthetic transitions of the
 form
 %
@@ -2858,16 +2886,22 @@ $(\Psi; \matchconj{\Delta}{\matchconj{\Delta_1}{\Delta_2}}) \leadsto
 (\Psi; \mkconj{\Delta}{z{:}\istrue{{\sf baz}}})$ such that
 $\foc{\Psi}{\restrictto{\Delta_1}{\meph}}{\istrue{\susp{\sf foo}}}$
 and $\foc{\Psi}{\restrictto{\Delta_2}{\meph}}{\istrue{\susp{\sf
-      bar}}}$. It is a relatively simple syntactic criterion to
-enforce that a sequent like $\foc{\Psi}{\Delta_1}{\istrue{\susp{\sf
+      bar}}}$. In \sls, it is a relatively simple syntactic criterion
+to enforce that a sequent like $\foc{\Psi}{\Delta_1}{\istrue{\susp{\sf
       foo}}}$ can only be derived if $\Delta_1$ matches
 $x{:}\sf{foo}$; we must simply ensure that there are no propositions
 of the form $\ldots \lefti {\sf foo}$ or $\ldots \righti {\sf foo}$ in
-the signature or context. (This is essentially the \sls~version of the
-subordination criteria that allows us to conclude that an LF type was
-only inhabited by variables Section~\ref{sec:slsframework}.)
-%
-When that is the case, we can
+the signature or context. (In fact, this is essentially the
+\sls~version of the subordination criteria that allows us to conclude
+that an LF type was only inhabited by variables
+Section~\ref{sec:slsframework}.)  Note that, in full \ollll, this task
+would not be so easy: we might prove $\istrue{\susp{\sf foo}}$
+indirectly by forward chaining. This is one reason why association of
+traces with the lax modality is so important!
+
+When it is the case that  $\foc{\Psi}{\Delta_1}{\istrue{\susp{\sf
+      foo}}}$ can only be derived if $\Delta_1$ matches
+$x{:}\sf{foo}$, we can
 associate the rule ${\gnab}{\sf foo} \fuse
 {\gnab}{\sf bar} \lefti \ocircle({\downarrow}({\gnab}{\sf baz}))$
 with the synthetic transition $(\Psi;
@@ -2875,10 +2909,9 @@ with the synthetic transition $(\Psi;
         bar}'}}}) \leadsto (\Psi; \mkconj{\Delta}{z{:}\iseph{\susp{\sf
       baz}}})$ under the condition that neither $\mlvl$ or $\mlvl'$
 are $\mtrue$.
-
 Negative atomic propositions that can only be concluded when they are
 the sole member of the context, like ${\sf foo}$ and ${\sf bar}$ in
-the previous example, can be called {\it
+this example, can be called {\it
   pseudo-positive}. Pseudo-positive atoms can actually be used a bit
 more generally than \sls's positive atomic propositions. A positive
 atomic proposition is necessarily associated with one of the three
@@ -2895,9 +2928,9 @@ propositions of \sls. The tradeoff between positive and
 pseudo-positive propositions could be resolved either way. By
 including positive atomic propositions, we made \sls~more complicated,
 but in a local way -- we needed a few more kinds and a few more
-rules. If we used pseudo-positive propositions, the notion of
-synthetic transitions would be intertwined with the subordination-like
-analysis that enforces their correct usage.
+rules. On the other hand, if we used pseudo-positive propositions, the
+notion of synthetic transitions would be intertwined with the
+subordination-like analysis that enforces their correct usage.
 
 \subsection{The need for traces}
 \label{sec:whytraces}
@@ -2936,16 +2969,17 @@ $\lambda P.\,\tlet{T}{V}$ of the proposition $(\exists
 \Psi.\,{\fuse}\Delta) \lefti {\ocircle}(\exists
 \Psi'.\,{\fuse}\Delta)$,\footnote{The notation ${\fuse}{\Delta}$ fuses
   together all the propositions in the context. For example, if
-  $\Delta = w{:}\iseph{p^+_\meph} \fuse x{:}\istrue{A^-},
+  $\Delta = w{:}\iseph{\susp{p^+_\meph}} \fuse x{:}\istrue{A^-},
   y{:}\iseph{B^-}, z{:}\ispers{C^-}$, then ${\fuse}{\Delta} = p^+_\meph
   \fuse {\downarrow}A^- \fuse {\gnab}B^- \fuse {!}C^-$. The notation
   $\exists \Psi. A^+$ turns all the bindings in the context $\Psi =
   \lf{a_1}{:}\tau_1,\ldots,\lf{a_n}{:}\tau_n$ into existential
   bindings $\exists \lf{a_1}{:}\tau_1\ldots\exists
-  \lf{a_n}{:}\tau_n$.}  where the pattern $P$ re-creates the initial
+  \lf{a_n}{:}\tau_n.A^+$.}  where the pattern $P$ re-creates the initial
 process state $(\Psi; \Delta)$ and the all the components of the final
 state are captured in the value $V$.  The problem with this approach
 is that the final proposition is under no particular obligation to
+faithfully
 capture the structure of the final process state. This can be seen in
 the example above: to actually capture the structure of the final
 process state, we should have concluded ${\sf robot} \fuse {!}({\sf
@@ -2966,7 +3000,8 @@ process state, we should have concluded ${\sf robot} \fuse {!}({\sf
 \smallskip 
 %
 The problem with encoding traces as complete proofs, then, is that
-values only precisely capture the structure of contexts when there are
+values cannot be forced to 
+precisely capture the structure of contexts, especially when there are
 no variables or persistent propositions. Cervesato and Scedrov
 approach this problem by severely restricting the logic and changing
 the interpretation of the existential quantifier so that it acts like
@@ -2985,7 +3020,7 @@ presentation of logic that treats process states and traces as
 first-class concepts and reformulates the usual properties of cut and
 identity in terms of coinductive simulation relations on process
 states \cite{deng12relating}. We hope that this work will eventually
-read to a better understanding of traces, but the gap remains quite
+lead to a better understanding of traces, but the gap remains quite
 large.
 
 % In \cite{deng12relating}, we presented the {\it logical preorder} as a
@@ -3019,10 +3054,10 @@ The decision to use LF as a first-order domain of quantification
 rather than using a fully-dependent system is based on several
 considerations. First and foremost, this choice was sufficient for the
 purposes of this thesis. In fact, for the purposes of this thesis, we
-could used an even simpler term language of simply-typed LF
-\cite{pfenning08church}; two other logic programming interpretations
+could have used an even simpler term language of simply-typed LF
+\cite{pfenning08church}. Two other logic programming interpretations
 of \sls-like frameworks, Lollimon \cite{lopez05monadic} and Ollibot
-\cite{pfenning09substructural}, were based on simply-typed term
+\cite{pfenning09substructural}, are in fact based on simply-typed term
 languages. Canonical LF and Spine Form LF are, at this point,
 well-understood enough that the additional overhead of fully
 dependently-typed terms is not a significant burden, and there are
@@ -3033,7 +3068,7 @@ On a theoretical level, it is a significant simplification when we
 restrict ourselves to {\it any} typed term language with a reasonable
 notion of equality and simultaneous substitution. The conceptual
 priority in this chapter is clear: Section~\ref{sec:sls-termlanguage}
-describes LF terms, Section~\ref{sec:slsframework} describes proof
+describes object terms, Section~\ref{sec:slsframework} describes proof
 terms as a fragment of focused \ollll, and
 Section~\ref{sec:framework-concurrenteq} describes a coarser
 equivalence on proof terms, concurrent equality. If the domain of
@@ -3041,8 +3076,8 @@ first-order of quantification was \sls~terms, these three
 considerations would be mutually dependent -- we would need to
 characterize concurrent equality before presenting the logic
 itself. For the purposes of showing that a logical framework can be
-carved out from a focused logic, the central thesis of this and the
-previous two chapters, it is easiest to break this circular
+carved out from a focused logic -- the central thesis of this and the
+previous two chapters -- it is easiest to break this circular
 dependency. We conjecture that this complication is no great obstacle,
 but this thesis avoids the issue.
 
@@ -3078,7 +3113,7 @@ done in persistent frameworks. Crary proved theorems about linear
 logics and languages in LF using the technique of explicit contexts
 \cite{crary10higher}. Reed was able to prove cut admissibility for
 linear logic and preservation for the LLF encoding of Mini-ML in HLF,
-a persistent extension to LF that uses equational theories to capture
+a persistent extension to LF that uses an equational theory to capture
 the structure of substructural contexts \cite{reed09hybrid}.
 
 % But in substructural logical frameworks like Linear LF, full
@@ -3111,8 +3146,9 @@ independency requirement that $\emptyset = {\bullet}S_1 \cap
 {\ast}S_2$ and the requirement that $\emptyset = {\ast}S_1 \cap
 {\bullet}S_2$ by giving ill-typed counterexamples. The violation of
 either condition does not, in general, imply that $S_2; S_1$ will be
-ill-typed, so it might be possible to give a more precise
-condition that admits a coarser notion of concurrent equality.
+ill-typed, however. This indicates that it might be possible to give a
+more precise condition that admits a coarser notion of concurrent
+equality.
 
 % For both
 % conditions, however, there are steps $S_1$ and $S_2$ where the
