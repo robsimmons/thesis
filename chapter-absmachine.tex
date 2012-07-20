@@ -407,10 +407,14 @@ previous section. We
 will first give the transformation on signatures; the transformation
 of rule declarations ${\sf r} : C$ is the key case.
 
-Each two-place predicate ${\sf ac}$ gets turned into two one-place
+Each two-place predicate ${\sf ac}$ gets associated with two
+one-place
 predicates ${\sf eval\_a}$ and ${\sf retn\_a}$: both ${\sf
   eval\_a}\,t$ and ${\sf retn\_a}\,t$ are positive ordered atomic
-propositions.  We will write $\opsubst{X}$ for the operation of
+propositions. The predicate ${\sf eval\_a}$ must be uniquely
+identifiable with ${\sf ac}$,
+but different predicates can share the same return predicate ${\sf retn\_a}$.
+We will write $\opsubst{X}$ for the operation of
 substituting all occurrences of $p^-_c = {\sf ac}\,t_1\,t_2$ with
 $({\sf eval\_a}\,t_1 \lefti \{ {\sf retn\_a}\,t_2 \})$ in $X$. This
 substitution operation is used on propositions, contexts, and frames;
@@ -422,64 +426,69 @@ it appears in the transformation of rules ${\sf r} : D$ below.
     \rightarrow {\sf prop}} = \transop{\Sigma}, ~ {\sf eval\_a} :
   \tau_1 \rightarrow {\sf prop\,ord}, ~ {\sf retn\_a} : \tau_2
   \rightarrow {\sf prop\,ord}$ 
-\item $\transop{\Sigma, {\sf b} : K} = \transop{\Sigma}, ~ {\sf b}
-  : K$ {\it (if ${\sf b} \neq {\sf ac}$)}
-\item $\transop{\Sigma, {\sf c} : \tau} = \transop{\Sigma}, ~ {\sf
+\item $\transop{\Sigma, {\sf ac} : \tau_1 \rightarrow \tau_2
+    \rightarrow {\sf prop}} = \transop{\Sigma}, ~ {\sf eval\_a} :
+  \tau_1 \rightarrow {\sf prop\,ord}$ \\
+{\it (if ${\sf retn\_a}$ is already defined)}
+\item $\transop{\Sigma, {\sf b} : \kappa} = \transop{\Sigma}, ~ {\sf b}
+  : \kappa$ {\it (if ${\sf b} \neq {\sf ac}$)}
+\item $\transop{\Sigma, \lf{\sf c} : \tau} = \transop{\Sigma}, ~ \lf{\sf
     c} : \tau$ 
 \item $\transop{\Sigma, {\sf r} : C} = \transop{\Sigma}, ~ {\sf r}
-  : \forall \overline{x_0}.\, {\sf eval\_a}\,t_0 \lefti 
-      \opbasic{A^+_1, \ldots, A^+_n}{t_{n+1}}{\sf id}$ \\ {\it (where $C$ is
-    equivalent to $\forall \overline{x_0}\ldots \forall
-    \overline{x_n}.\, A^+_n \lefti \ldots \lefti A^+_1 \lefti {\sf
-      ac}\,t_{0}\,t_{n+1}$)}
+  : \forall \lf{\overline{x_0}}.\, {\sf eval\_a}\,\lf{t_0} \lefti 
+      \opbasic{A^+_1, \ldots, A^+_n}{\lf{t_{n+1}}}{\lf{\sf id}}$ \\ 
+    {\it (where $C$ is
+    equivalent to $\forall \lf{\overline{x_0}}\ldots \forall
+    \lf{\overline{x_n}}.\, A^+_n \lefti \ldots \lefti A^+_1 \lefti {\sf
+      ac}\,\lf{t_{0}}\,\lf{t_{n+1}}$)}
 \item $\transop{\Sigma, {\sf r} : D} = \transop{\Sigma}, ~ {\sf r}
   : \opsubst{D}$
 \end{itemize}
 
 The transformation of a proposition $C = \forall
-\overline{x_0}\ldots \forall \overline{x_n}.\,A^+_n \lefti \ldots
-\lefti A^+_1 \lefti {\sf ac}\,t_{0}\,t_{n+1}$ involves the definition
-$\opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma}$, where $\sigma$
-substitutes only for variables in $\overline{x_j}$ where $j < i$. The
+\lf{\overline{x_0}}\ldots \forall \lf{\overline{x_n}}.\,A^+_n \lefti \ldots
+\lefti A^+_1 \lefti {\sf ac}\,\lf{t_{0}}\,\lf{t_{n+1}}$ involves the definition
+$\opbasic{A^+_i,\ldots,A^+_n}{\lf{t_{n+1}}}{\lf{\sigma}}$, where $\lf\sigma$
+substitutes only for variables in $\lf{\overline{x_j}}$ where $j < i$. The
 function is defined inductively on the length of the sequence
 $A^+_i,\ldots,A^+_n$.
 
 \begin{itemize}
-\item $\opbasic{}{t_{n+1}}{\sigma} = \{ {\sf retn\_a}\,(\sigma{t_{n+1}}) \}$
+\item $\opbasic{}{t_{n+1}}{\sigma} = \{ {\sf retn\_a}\,(\lf{\sigma{t_{n+1}}}) \}$
 \item $\opbasic{p^+_\mpers,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma} 
-  = \forall \overline{x_i}.\, (\sigma{p^+_\mpers}) \lefti \opbasic{A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma}$
+  = \forall \lf{\overline{x_i}}.\, (\lf\sigma{p^+_\mpers}) \lefti \opbasic{A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma}$
 \item $\opbasic{{!}p^-_c,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma}$
   \\
-  $~ \qquad = \{ {\sf eval\_b}\,({\sigma}t^{\it in}_i) \fuse
-  (\forall\overline{x_i}.\, {\sf retn\_b}\,(\sigma{t^{\it out}_i})
+  $~ \qquad = \{ {\sf eval\_b}\,\lf{({\sigma}t^{\it in}_i)} \fuse
+  (\forall\lf{\overline{x_i}}.\, {\sf retn\_b}\,(\lf{\sigma t^{\it out}_i})
   \lefti \opbasic{A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma}) \}$\\
-  {\it (where $p^-_c$ is ${\sf bc}\,t^{\it in}_i\,t^{\it out}_i$)}
+  {\it (where $p^-_c$ is ${\sf bc}\,\lf{t^{\it in}_i}\,\lf{t^{\it out}_i}$)}
 \item $\opbasic{{!}G,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma} = \forall
-  \overline{x_i}.\, {!}(\sigma\opsubst{G}) \lefti
+  \lf{\overline{x_i}}.\, {!}(\lf\sigma\opsubst{G}) \lefti
   \opbasic{A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma}$
 \end{itemize}
 
 \noindent
 This operation is slightly more general than it needs to be to
 describe the transformation on signatures, where the substitution
-$\sigma$ will always just be the identity substitution ${\sf id}$.
+$\lf\sigma$ will always just be the identity substitution $\lf{\sf id}$.
 Non-identity substitutions arise during the proof of correctness, which
 is why we introduce them here.
 
-We have already given an example of the this basic operationalization
-transformation, as Figure~\ref{fig:example-transform-cbv} is an
+Figure~\ref{fig:example-transform-cbv} is an
 instance of this transformation.
 
 \subsection{Tail-recursion}
 \label{sec:trans-tail}
 
 Consider again our motivating example, the procedure for that takes
-expressions $e$ and searches for expressions $v$ such that $e
-\Downarrow v$ is derivable. If we were to implement that procedure as
+expressions $\obj{e}$ and searches for expressions $\obj{v}$ such that 
+$\obj{e \Downarrow v}$ is derivable. If we were to implement that procedure as
 a functional program, the procedure would be {\it tail-recursive}. In
-the procedure that handles the case when $e = e_1\,e_2$, the last step
+the procedure that handles the case when $\obj{e} = \obj{e_1\,e_2}$, 
+the last step
 is that the search procedure is invoked recursively. If and when that
-callee returns $v$, then the caller will also return $v$.
+callee returns $\obj{v}$, then the caller will also return $\obj{v}$.
 
 Tail-recursion is significant in functional programming because
 tail-recursive calls can be implemented without allocating a stack
@@ -487,57 +496,56 @@ frame: when a compiler makes this more efficient choice, we say it is
 performing {\it tail-recursion optimization}.\footnote{Or {\it tail-call optimization}, as a tail-recursive function call is just a
   specific instance of a tail call.} An analogous opportunity for
 tail-recursion optimization also arises in our logical compilation
-procedure. In our motivating example, the last step in the $e_1\,e_2$
+procedure. In our motivating example, the last step in the $\obj{e_1\,e_2}$
 case was operationalized as a positive proposition of the form ${\sf
-  eval}\,(E\, V) \fuse (\forall v.\,{\sf retn}\,v \lefti \{ {\sf
+  eval}\,\lf{(E\, V_2)} \fuse (\forall \lf{V}.\,{\sf retn}\,\lf{V} \lefti \{ {\sf
   retn}\,v \})$. In a successful search, the process state 
 \[ x{:}{\sf
-  eval}\,(E\, V), y{:}\istrue{(\forall v.\,{\sf retn}\,v \lefti \{
-  {\sf retn}\,v \})}, \Delta\]
+  eval}\,\lf{(E\, V_2)}, y{:}\istrue{(\forall \lf{V}.\,{\sf retn}\,\lf{V} \lefti \{
+  {\sf retn}\,\lf{V} \})}, \Delta\]
 will concurrently compute until the
 state 
-\[ x'{:}{\sf retn}\,V, y{:}\istrue{(\forall v.\,{\sf retn}\,v \lefti
-  \{ {\sf retn}\,v \})}, \Delta\] is reached, at which point the next
-step \[y'{:}{\sf retn}\,V, \Delta\] is reached in one step by focusing
+\[ x'{:}{\sf retn}\,\lf{V'}, y{:}\istrue{(\forall \lf{V}.\,{\sf retn}\,\lf{V} \lefti
+  \{ {\sf retn}\,\lf{V} \})}, \Delta\] is reached, at which point the next
+step \[y'{:}{\sf retn}\,\lf{V'}, \Delta\] is reached in one step by focusing
 on $y$. 
 
-If we operationalize the last step in the $e_1\,e_2$ case as ${\sf
-  eval}\,(E\,V)$ instead of as ${\sf eval}\,(E\, V) \fuse (\forall
-v.\,{\sf retn}\,v \lefti \{ {\sf retn}\,v \})$, we will reach the same
-final state with one less transition. The tail-recursion optimizing
+If we operationalize the last step in the $\obj{e_1\,e_2}$ case as ${\sf
+  eval}\,\lf{(E\,V_2)}$ instead of as ${\sf eval}\,\lf{(E\, V_2)} \fuse (\forall
+\lf{V}.\,{\sf retn}\,\lf{V} \lefti \{ {\sf retn}\,\lf{V} \})$, we will reach the same
+final state with one fewer transition. The tail-recursion optimizing
 version of the operationalization transformation creates concurrent
 computations that avoid these useless steps.
 
 We cannot perform tail recursion in general because the output of the
 last subgoal may be different from the output of the goal. For example,
-the rule ${\sf r} : \forall{x}.\,\forall{y}.\,{!}{\sf a}\,x\,y \lefti
-{\sf a}\,({\sf c}\,x)\,({\sf c}\,y)$ will translate to
-\[ {\sf r} : \forall{x}.\,{\sf eval\_a}\,({\sf c}\,x) \lefti \{ {\sf
-  eval\_a}\,x \fuse (\forall y.\, {\sf retn\_a}\,y \lefti \{ {\sf
-  retn\_a}\,({\sf c}\,y) \} ) \} \] There is no opportunity for
+the rule ${\sf r} : \forall\lf{X}.\,\forall\lf{Y}.\,{!}{\sf a}\,\lf{X}\,\lf{Y} \lefti
+{\sf a}\,\lf{({\sf c}\,X)}\,\lf{({\sf c}\,Y)}$ will translate to
+\[ {\sf r} : \forall\lf{X}.\,{\sf eval\_a}\,\lf{({\sf c}\,X)} \lefti \{ {\sf
+  eval\_a}\,\lf{X} \fuse (\forall \lf{Y}.\, {\sf retn\_a}\,\lf{Y} \lefti \{ {\sf
+  retn\_a}\,\lf{({\sf c}\,Y)} \} ) \} \] There is no opportunity for
 tail-recursion optimization, because the output of the last search
-procedure, $t^{\it out}_n = y$, is different than the value returned
-down the stack, $t_{n+1} = {\sf c}\,y$. This case corresponds to
+procedure, $\lf{t^{\it out}_n} = \lf{Y}$, is different than the value returned
+down the stack, $\lf{t_{n+1}} = \lf{{\sf c}\,Y}$. This case corresponds to
 functional programs that cannot be tail-call optimized.
 
-More subtly, we cannot even eliminate all cases where $t^{\it out}_n =
-t_{n+1}$ unless these terms are {\it fully general}. We say that
-$t_{n+1}$ with type $\tau$ is fully general if all of its free
-variables are in $\overline{x_n}$ (and therefore not fixed by the
-input of any other subgoal) and if, for any variable-free term $t'$ of
-type $\tau$, there exists a substitution $\sigma$ such that $t =
-{\sigma}t_{n+1}$. The simplest way to ensure this is to require
-that $t_{n+1} = t^{\it out}_n = y$ where $y =
-\overline{x_n}$.\footnote{It is also possible to have a fully general
-  $t_{n+1} = {\sf c}\,y_1\,y_2$ if, for instance, ${\sf c}$ has type
+More subtly, we cannot even eliminate all cases where $\lf{t^{\it out}_n} =
+\lf{t_{n+1}}$ unless these terms are {\it fully general}. We say that
+$\lf{t_{n+1}}$ with type $\tau$ is fully general if all of its free
+variables are in $\lf{\overline{x_n}}$ (and therefore not fixed by the
+input of any other subgoal) and if, for any variable-free term $\lf{t'}$ of
+type $\tau$, there exists a substitution $\lf{\sigma}$ such that $\lf{t} =
+\lf{{\sigma}t_{n+1}}$. The simplest way to ensure this is to require
+that $\lf{t_{n+1}} = \lf{t^{\it out}_n} = \lf{y}$ where $\lf{y} =
+\lf{\overline{x_n}}$.\footnote{It is also possible to have a fully general
+  $\lf{t_{n+1}} = \lf{{\sf c}\,y_1\,y_2}$ if, for instance, $\lf{\sf c}$ 
+has type
   $\tau_1 \rightarrow \tau_2 \rightarrow {\sf foo}$ and there are no
   other constructors of type ${\sf foo}$. However, we also have to
   check that there are no other first-order variables in $\Psi$ with
   types like $\tau_3 \rightarrow {\sf foo}$ that could be used to make
-  other terms of type ${\sf foo}$. The technology to handle this,
-  worlds checking and subordination analysis, is well-understood and
-  surveyed elsewhere \cite{harper07mechanizing}, but this is
-  tangential to the current discussion.} This condition doesn't have
+  other terms of type ${\sf foo}$. This is
+  tangential to the current discussion, however.} This condition doesn't have
 an analogue in functional programming, because it corresponds to the
 possibility that moded deductive computation can perform pattern
 matching on {\it outputs} and fail if the pattern match fails.
@@ -547,8 +555,8 @@ case to the definition of
 $\opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma}$:
 
 \begin{itemize}
-\item $\opbasic{{!}{\sf a}\,t^{\it in}_n\,t_{n+1}}{t_{n+1}}{\sigma} 
-  = \{{\sf eval\_a}\,({\sigma}{t^{\it in}_n})\}$
+\item $\opbasic{{!}{\sf a}\,\lf{t^{\it in}_n}\,\lf{t_{n+1}}}{\lf{t_{n+1}}}{\sigma} 
+  = \{{\sf eval\_a}\,\lf{({\sigma}{t^{\it in}_n})}\}$
 \\
   {\it (where $t_{n+1}$ is fully general)}
 \end{itemize}
@@ -564,112 +572,116 @@ optimization can be applied or not in a nondeterministic manner.
 \label{fig:cbv-ev-ssos-tail}
 \end{figure}
 
-\subsubsection{Example}
-
 Operationalizing the natural semantics from
 \ref{fig:example-transform-cbv} with tail-recursion optimization gives
 us the ordered abstract machine in Figure~\ref{fig:cbv-ev-ssos-tail}.
-For a dramatic illustration of tail-call optimization, consider a
-definition of
-big-step evaluation that is based on a small-step structural
-operational semantics (SOS) specification. In SOS specifications,
-single-step evaluation is the two-place relation ${\sf step} : {\sf
-  exp} \rightarrow {\sf exp} \rightarrow {\sf prop}$ (moded ${\sf
-  exp}\,{+}\,{-}$) that makes use of the helper judgment ${\sf value}
-: {\sf exp} \rightarrow {\sf prop}$ (moded ${\sf value}\,{+}$). We
-will not define these propositions here, but we do so later on in
-Section~\ref{sec:evaluationcontexts}.
 
-Given the definition of ${\sf step}\,\interp{e}\,\interp{e'}$, it is
-easy to define big-step evaluation ${\sf ev}\,\interp{e}\,\interp{v}$
-as a series of small steps:
+% \subsubsection{Example}
 
-\smallskip
-\fvset{fontsize=\small,boxwidth=auto}
-\VerbatimInput{sls/cbv-sos-steps.sls}
-\smallskip
+% Operationalizing the natural semantics from
+% \ref{fig:example-transform-cbv} with tail-recursion optimization gives
+% us the ordered abstract machine in Figure~\ref{fig:cbv-ev-ssos-tail}.
+% For a dramatic illustration of tail-call optimization, consider a
+% definition of
+% big-step evaluation that is based on a small-step structural
+% operational semantics (SOS) specification. In SOS specifications,
+% single-step evaluation is the two-place relation ${\sf step} : {\sf
+%   exp} \rightarrow {\sf exp} \rightarrow {\sf prop}$ (moded ${\sf
+%   exp}\,{+}\,{-}$) that makes use of the helper judgment ${\sf value}
+% : {\sf exp} \rightarrow {\sf prop}$ (moded ${\sf value}\,{+}$). We
+% will not define these propositions here, but we do so later on in
+% Section~\ref{sec:evaluationcontexts}.
 
-\begin{figure}
-\begin{minipage}[b]{0.55\linewidth}
-\fvset{fontsize=\small,boxwidth=auto}
-\VerbatimInput{sls/cbv-sos-proc2.sls}
-\end{minipage}
-\hspace{0.5cm}
-\begin{minipage}[b]{0.45\linewidth}
-\fvset{fontsize=\small,boxwidth=auto}
-\VerbatimInput{sls/cbv-sos-proc.sls}
-\end{minipage}
-\caption{The transformation of a trivial big-step semantics, both
-  without (left) and with (right) tail-recursion optimization.}
-\label{fig:sos-tailrecursion}
-\end{figure}
+% Given the definition of ${\sf step}\,\interp{e}\,\interp{e'}$, it is
+% easy to define big-step evaluation ${\sf ev}\,\interp{e}\,\interp{v}$
+% as a series of small steps:
 
-If we run this specification through the operationalization
-transformation and only operationalize the ${\sf ev}$ predicate,
-the result is
-results in what I consider to be the most boring substructural
-operational semantics specification. 
-Figure~\ref{fig:sos-tailrecursion} presents the resulting specification
- both without the tail-recursion
-optimization (left) and with the tail-recursion optimization (right).
+% \smallskip
+% \fvset{fontsize=\small,boxwidth=auto}
+% \VerbatimInput{sls/cbv-sos-steps.sls}
+% \smallskip
 
-\begin{figure}
-\begin{align*}
-& x_1{:}\susp{{\sf eval}\,\interp{e_1}} 
-\\
-\leadsto ~ & x_2{:}\susp{{\sf eval}\,\interp{e_2}}, 
-  y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} 
-\\
-\leadsto ~ & x_3{:}\susp{{\sf eval}\,\interp{e_3}}, 
-  y_2{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})}, 
-  y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} 
-\\
-\leadsto ~ & \cdots
-\\
-\leadsto ~ & x_n{:}\susp{{\sf eval}\,\interp{v}}, 
-  y_{n-1}{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})}, 
-  \cdots,
-  y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} 
-\\
-\leadsto ~ & z_n{:}\susp{{\sf retn}\,\interp{v}}, 
-  y_{n-1}{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})}, 
-  \cdots,
-  y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} 
-\\
-\leadsto ~ & \cdots 
-\\
-\leadsto ~ & z_3{:}\susp{{\sf retn}\,\interp{v}}, 
-  y_2{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})}, 
-  y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} 
-\\
-\leadsto ~ & z_2{:}\susp{{\sf retn}\,\interp{v}}, 
-  y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} \\
-\leadsto ~ & z_1{:}\susp{{\sf retn}\,\interp{v}}
-\end{align*}
-\caption{Example trace with the non-tail-recursion-optimized
-  semantics in Figure~\ref{fig:sos-tailrecursion}.}
-\label{fig:example-proc-non-tail-recursive-trace}
-\end{figure}
+% \begin{figure}
+% \begin{minipage}[b]{0.55\linewidth}
+% \fvset{fontsize=\small,boxwidth=auto}
+% \VerbatimInput{sls/cbv-sos-proc2.sls}
+% \end{minipage}
+% \hspace{0.5cm}
+% \begin{minipage}[b]{0.45\linewidth}
+% \fvset{fontsize=\small,boxwidth=auto}
+% \VerbatimInput{sls/cbv-sos-proc.sls}
+% \end{minipage}
+% \caption{The transformation of a trivial big-step semantics, both
+%   without (left) and with (right) tail-recursion optimization.}
+% \label{fig:sos-tailrecursion}
+% \end{figure}
 
-The tail-recursion optimized translation is definitely superior for
-this example. Concurrent proofs for the non-tail-recursion-optimized
-specification build up an enormous stack of useless copies of the
-proposition $(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})$,
-as shown in Figure~\ref{fig:example-proc-non-tail-recursive-trace}.
-In contrast, the tail-recursion optimized version on the right hand
-side of Figure~\ref{fig:sos-tailrecursion} takes half as many steps,
-and each step is smaller, simpler, and the overall trace does a better
-job of capturing the linear computation that is involved in performing
-evaluation using a small-step structural operational semantics:
-\[
-x_1{:}\susp{{\sf eval}\,\interp{e_1}}
- ~\leadsto~
-x_2{:}\susp{{\sf eval}\,\interp{e_2}}
- ~\leadsto~ \cdots ~\leadsto~
-x_n{:}\susp{{\sf eval}\,\interp{v}}
- ~\leadsto~ 
-z{:}\susp{{\sf retn}\,\interp{v}}
-\]
+% If we run this specification through the operationalization
+% transformation and only operationalize the ${\sf ev}$ predicate,
+% the result is
+% results in what I consider to be the most boring substructural
+% operational semantics specification. 
+% Figure~\ref{fig:sos-tailrecursion} presents the resulting specification
+%  both without the tail-recursion
+% optimization (left) and with the tail-recursion optimization (right).
+
+% \begin{figure}
+% \begin{align*}
+% & x_1{:}\susp{{\sf eval}\,\interp{e_1}} 
+% \\
+% \leadsto ~ & x_2{:}\susp{{\sf eval}\,\interp{e_2}}, 
+%   y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} 
+% \\
+% \leadsto ~ & x_3{:}\susp{{\sf eval}\,\interp{e_3}}, 
+%   y_2{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})}, 
+%   y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} 
+% \\
+% \leadsto ~ & \cdots
+% \\
+% \leadsto ~ & x_n{:}\susp{{\sf eval}\,\interp{v}}, 
+%   y_{n-1}{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})}, 
+%   \cdots,
+%   y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} 
+% \\
+% \leadsto ~ & z_n{:}\susp{{\sf retn}\,\interp{v}}, 
+%   y_{n-1}{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})}, 
+%   \cdots,
+%   y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} 
+% \\
+% \leadsto ~ & \cdots 
+% \\
+% \leadsto ~ & z_3{:}\susp{{\sf retn}\,\interp{v}}, 
+%   y_2{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})}, 
+%   y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} 
+% \\
+% \leadsto ~ & z_2{:}\susp{{\sf retn}\,\interp{v}}, 
+%   y_1{:}\istrue{(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})} \\
+% \leadsto ~ & z_1{:}\susp{{\sf retn}\,\interp{v}}
+% \end{align*}
+% \caption{Example trace with the non-tail-recursion-optimized
+%   semantics in Figure~\ref{fig:sos-tailrecursion}.}
+% \label{fig:example-proc-non-tail-recursive-trace}
+% \end{figure}
+
+% The tail-recursion optimized translation is definitely superior for
+% this example. Concurrent proofs for the non-tail-recursion-optimized
+% specification build up an enormous stack of useless copies of the
+% proposition $(\forall v. {\sf retn}\,v \lefti \{ {\sf retn}\,v \})$,
+% as shown in Figure~\ref{fig:example-proc-non-tail-recursive-trace}.
+% In contrast, the tail-recursion optimized version on the right hand
+% side of Figure~\ref{fig:sos-tailrecursion} takes half as many steps,
+% and each step is smaller, simpler, and the overall trace does a better
+% job of capturing the linear computation that is involved in performing
+% evaluation using a small-step structural operational semantics:
+% \[
+% x_1{:}\susp{{\sf eval}\,\interp{e_1}}
+%  ~\leadsto~
+% x_2{:}\susp{{\sf eval}\,\interp{e_2}}
+%  ~\leadsto~ \cdots ~\leadsto~
+% x_n{:}\susp{{\sf eval}\,\interp{v}}
+%  ~\leadsto~ 
+% z{:}\susp{{\sf retn}\,\interp{v}}
+% \]
 
 \subsection{Parallelism}
 \label{sec:trans-par}
@@ -3144,7 +3156,9 @@ syntax, SOS specifications are defined inductively on the structure
 of syntax. This is the SOS specification for 
 call-by-value evaluation of the untyped lambda calculus:
 
-XXX
+XXX Moved to beginning
+
+XXX add in the ``boring'' semantics removed from 6.1.3 to this section
 
 This inductive specification is adequately encoded on the left-hand
 side of Figure~\ref{fig:cbv-sos}, along with the proposition ${\sf
