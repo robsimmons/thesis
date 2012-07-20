@@ -126,7 +126,7 @@ call-by-need evaluation, and recoverable failure.
 \label{sec:operationalization}
 
 The intuition behind operationalization is rather simple: we examine
-the structure of backward chaining and then specfiy that
+the structure of backward chaining and then specify that
 computational process as an \sls~specification.  Before presenting
 the general transformation, we will motivate this transformation using
 our natural semantics specification of call-by-value evaluation. 
@@ -173,7 +173,7 @@ computation: \smallskip
 \smallskip
 %
 The goal of the operationalization transformation is to represent this
-deductive computation as specificaiton in the concurrent fragment of
+deductive computation as specification in the concurrent fragment of
 \sls. The first step in this process, representing the syntax
 of expressions LF terms of type ${\sf exp}$, was discussed
 in Section~\ref{sec:lf-adequacy}. The second step is to
@@ -202,11 +202,18 @@ we will generalize our picture of the process state to allow us to store a
 stack of unfinished work in the ordered context, growing out to the
 right. Our new understanding, then, is that contexts either have the
 form $x{:}\susp{{\sf eval}\,\interp{e}}, \Delta$ or the form $x{:}\susp{{\sf
-  retn}\,\interp{v}}, \Delta$. In the process of constructing 
-a trace $x_e{:}\susp{{\sf eval}\,\interp{e_1\,e_2}}, \Delta
-\leadsto^* x_v{:}\susp{{\sf retn}\,\interp{v}}, \Delta$, each of the
-recursive calls to the search procedure will involve a sub-trace of the
-form
+  retn}\,\interp{v}}, \Delta$. 
+
+We will establish a calling convention for recursive calls to the
+search procedure. Whenever, in the course of constructing
+$x_e{:}\susp{{\sf eval}\,\interp{e_1\,e_2}}, \Delta \leadsto^*
+x_v{:}\susp{{\sf retn}\,\interp{v}}, \Delta$, we need to recursively
+call the search procedure on some other expression $\interp{e'}$, we
+will leave a negative ordered proposition $\istrue{A^-}$ in the
+context that awaits the return of a proposition ${\sf
+  retn}\,\interp{v'}$ to its left and then continues with the search
+procedure. Thus, each of the recursive calls to the search procedure
+will involve a sub-trace of the form
 %
 \[x_e{:}\susp{{\sf eval}\,\interp{e'}}, y{:}\istrue{A^-}, \Delta
   \leadsto^*
@@ -214,9 +221,10 @@ form
 %
   where $A^-$ is a negative proposition that is prepared to interact
   with the subgoal's final ${\sf retn}\,\interp{v'}$ proposition to
-  kickstart the rest of the computation.
+  kickstart the rest of the computation.  This negative proposition
+  is, in effect, the calling procedure's continuation.
 
-It's helpful to work backwards: in the fourth step, we have found
+It's helpful to work backwards: in the fourth and fifth steps, we have found
 $\lf{\lambda x.\,E\,x} = \lf{\lambda x.\interp{e}}$ (where $\obj{e}$ potentially has $\obj{x}$ free) and $\lf{V_2} =
 \interp{v_2}$. The recursive call is to ${\sf
   eval}\,\interp{[v_2/x]e}$, which is the same thing as ${\sf
@@ -228,49 +236,49 @@ that implements the continuation can be written as $(\forall \lf{V}.\,{\sf
   retn}\,\lf{V} \lefti \{ {\sf retn}\,\lf{V} \})$. The positive proposition that
 will create this sub-computation can be written as follows:
 \begin{align*}
-{\it Step_4}(E,V_2) & \equiv {\sf eval}\,(E\,V_2) 
-\fuse {\downarrow}(\forall V.\, {\sf retn}\,V \lefti \{ {\sf retn}\,V \})
+{\it Step_{4,5}}(\lf{E},\lf{V_2}) & \equiv {\sf eval}\,\lf{(E\,V_2)} 
+\fuse {\downarrow}(\forall \lf{V}.\, {\sf retn}\,\lf{V} \lefti \{ {\sf retn}\,\lf{V} \})
 %
-\intertext{Moving backwards, in the third step we have a $E_2 =
-  \interp{e_2}$ that we were given and $\lambda x.\,E\,x = \lambda x.\interp{e}$ that we
+\intertext{Moving backwards, in the third step we have a $\lf{E_2} =
+  \interp{e_2}$ that we were given and $\lf{\lambda x.\,E\,x} = \lf{\lambda x.\interp{e}}$ that we
   have computed. The recursive call is to ${\sf
     eval}\,\interp{e_2}$, and assuming that it completes, we need
   to begin the fourth step. The positive proposition that will 
   create this sub-computation can be written as follows:}
 %
-{\it Step_3}(E_2,E) & \equiv {\sf eval}\,E_2 
-\fuse {\downarrow}(\forall V_2.\,
-  {\sf retn}\,V_2 \lefti \{ {\it Step_4}(E,V_2) \})
+{\it Step_3}(\lf{E_2},\lf{E}) & \equiv {\sf eval}\,\lf{E_2} 
+\fuse {\downarrow}(\forall \lf{V_2}.\,
+  {\sf retn}\,\lf{V_2} \lefti \{ {\it Step_{4,5}}(\lf{E},\lf{V_2}) \})
 %
 \intertext{Finally, the first two steps can be handled together. We have
-$E_1 = \interp{e_1}$ and $E_2 = \interp{e_2}$; the recursive
+$\lf{E_1} = \interp{e_1}$ and $\lf{E_2} = \interp{e_2}$; the recursive
 call is to ${\sf eval}\,\interp{e_1}$. Once the
 recursive call completes, we can enforce that the returned value has
 the form $\interp{\lambda x.e}$ before proceeding
 to the continuation.}
-{\it Step_{1,2}}(E_1, E_2) & \equiv {\sf eval}\,E_1
-\fuse {\downarrow}(\forall E.\, {\sf retn}\,({\sf lam}\,\lambda x.\,E\,x)
-\lefti \{ {\it Step_3}(E_2, E)\})
+{\it Step_{1,2}}(\lf{E_1}, \lf{E_2}) & \equiv {\sf eval}\,\lf{E_1}
+\fuse {\downarrow}(\forall \lf{E}.\, {\sf retn}\,\lf{({\sf lam}\,\lambda x.\,E\,x)}
+\lefti \{ {\it Step_3}(\lf{E_2}, \lf{E})\})
 \end{align*}
 Thus, the rule implementing this entire portion of the search
 procedure is 
 \[
-\forall E_1.\,\forall E_2.\,
-{\sf eval}\,({\sf app}\,E_1\,E_2) \lefti \{ {\it
-  Step_{1,2}}(E_1, E_2) \}
+\forall \lf{E_1}.\,\forall \lf{E_2}.\,
+{\sf eval}\,\lf{({\sf app}\,E_1\,E_2)} \lefti \{ {\it
+  Step_{1,2}}(\lf{E_1}, \lf{E_2}) \}
 \]
 The \sls~encoding of our example natural semantics is shown in
 Figure~\ref{fig:example-transform-cbv} alongside the transformed
 specification, which has the form of an ordered abstract machine
 semantics, though it is different than the ordered abstract machine
 semantics presented in the introduction. We say the specification
-above is {\it higher-order}, as ${\sf ev/app}$ is a rule that, when it
-participates in a transition, produces a new rule $(\forall E.\,{\sf
-  retn}\,({\sf lam}\,\lambda x.\,E\,x) \lefti \{ \ldots \})$ that
+above is {\it nest}, as ${\sf ev/app}$ is a rule that, when it
+participates in a transition, produces a new rule $(\forall \lf{E}.\,{\sf
+  retn}\,\lf{({\sf lam}\,\lambda x.\,E\,x)} \lefti \{ \ldots \})$ that
 lives in the context. (In contrast, the ordered abstract machine
-semantics from the introduction was {\it first-order}.)  We discuss
+semantics from the introduction was {\it flat}.)  We discuss
 the defunctionalization transformation, which allows us to derive
-first-order specifications from specifications that are higher-order
+flat specifications from specifications that are nested
 in this way, in Section~\ref{sec:defunctionalization} below.
 
 \begin{figure}
@@ -296,11 +304,10 @@ independently in the context of CLF by Schack-Nielsen
 two specifications, whereas Cruz and Favonia used the connection
 informally. The contribution of this section is to describe a general
 transformation (of which Figure~\ref{fig:example-transform-cbv} is one
-instance) and to prove the transformation correct in general. I have
-implemented the operationalization transformation within my prototype
-typechecker for \sls~specifications, whereas the defunctionalization 
-transformation is not implemented and will be treated somewhat more
-informally.
+instance) and to prove the transformation correct in general. We have
+implemented the operationalization
+and defunctionalization transformations within the prototype
+implementation of \sls.
 
 In Section~\ref{sec:trans-subset} we will present the subset of
 specifications that our operationalization transformation handles, and
@@ -321,7 +328,7 @@ Section~\ref{sec:framework-modes}. Every declared negative predicate
 will either remain defined by deductive proofs (we write these
 predicates as ${\sf ad}$ and write the atomic propositions built with
 these predicates as $p_d^-$, $d$ for deductive) or will be transformed
-so that it is concurrently defined (we write these predicates as ${\sf
+into the concurrent fragment of \sls~(we write these predicates as ${\sf
   ac}$ and write the atomic propositions built with these predicates
 as $p_c^-$, $c$ for concurrent).
 
@@ -354,17 +361,17 @@ refinements of the negative propositions of \sls~that are defined as
 follows:
 \begin{align*}
 C & ::= p^-_{c} 
-    \mid \forall x{:}\tau.\, C
+    \mid \forall \lf x{:}\tau.\, C
     \mid p^+_\mpers \lefti C
     \mid {!}p^-_c \lefti C
     \mid {!}G \lefti C \\
 D & ::= p^-_{d}
-    \mid \forall x{:}\tau.\, D
+    \mid \forall \lf x{:}\tau.\, D
     \mid p^+_\mpers \lefti D
     \mid {!}p^-_c \lefti D
     \mid {!}G \lefti C \\
 G & ::= p^-_d 
-    \mid \forall x{:}\tau.\, G
+    \mid \forall \lf x{:}\tau.\, G
     \mid p^+_\mpers \lefti G
     \mid {!}D \lefti G
 \end{align*}
@@ -379,17 +386,17 @@ rules to the Horn fragment.
 
 All propositions $C$ are equivalent (at the level of synthetic
 inference rules) to propositions of the form $\forall
-\overline{x_0}\ldots \forall \overline{x_n}.\,A^+_n \lefti \ldots
-\lefti A^+_1 \lefti {\sf ac}\,t_{0}\,t_{n+1}$, where the $\forall
-\overline{x_i}$ are shorthand for a series of universal quantifiers
-$\forall {x_{i1}}{:}{\tau_{i1}} \ldots \forall {x_{\it
+\lf{\overline{x_0}}\ldots \forall \lf{\overline{x_n}}.\,A^+_n \lefti \ldots
+\lefti A^+_1 \lefti {\sf ac}\,\lf{t_{0}}\,\lf{t_{n+1}}$, where the $\forall
+\lf{\overline{x_i}}$ are shorthand for a series of universal quantifiers
+$\forall \lf{x_{i1}}{:}{\tau_{i1}} \ldots \forall \lf{x_{\it
     ik}}{:}{\tau_{\it ik}}$ and where each variable in
-$\overline{x_i}$ does not appear in $t_0$ (unless $i = 0$) nor in any
-$A^+_j$ with $j < i$ but does appear in $A^+_i$ (or $t_0$ if $i =
+$\lf{\overline{x_i}}$ does not appear in $\lf{t_0}$ (unless $i = 0$) nor in any
+$A^+_j$ with $j < i$ but does appear in $A^+_i$ (or $\lf{t_0}$ if $i =
 0$). Therefore, when we consider moded proof search, the variables
-bound in $\overline{x_0}$ are all fixed by the query and those bound
-in the other $\overline{x_i}$ are all fixed by the output position of
-the $i^{\rm th}$ premise.
+bound in $\lf{\overline{x_0}}$ are all fixed by the query and those bound
+in the other $\lf{\overline{x_i}}$ are all fixed by the output position of
+the $i^{\rm th}$ subgoal.
 
 \subsection{Basic transformation}
 \label{sec:trans-basic}
@@ -481,7 +488,7 @@ performing {\it tail-recursion optimization}.\footnote{Or {\it tail-call optimiz
   specific instance of a tail call.} An analogous opportunity for
 tail-recursion optimization also arises in our logical compilation
 procedure. In our motivating example, the last step in the $e_1\,e_2$
-case was operationlized as a positive proposition of the form ${\sf
+case was operationalized as a positive proposition of the form ${\sf
   eval}\,(E\, V) \fuse (\forall v.\,{\sf retn}\,v \lefti \{ {\sf
   retn}\,v \})$. In a successful search, the process state 
 \[ x{:}{\sf
@@ -517,7 +524,7 @@ More subtly, we cannot even eliminate all cases where $t^{\it out}_n =
 t_{n+1}$ unless these terms are {\it fully general}. We say that
 $t_{n+1}$ with type $\tau$ is fully general if all of its free
 variables are in $\overline{x_n}$ (and therefore not fixed by the
-input of any other premise) and if, for any variable-free term $t'$ of
+input of any other subgoal) and if, for any variable-free term $t'$ of
 type $\tau$, there exists a substitution $\sigma$ such that $t =
 {\sigma}t_{n+1}$. The simplest way to ensure this is to require
 that $t_{n+1} = t^{\it out}_n = y$ where $y =
@@ -1746,7 +1753,7 @@ the same form, but with a suspended ${\sf retn}\,\interp{v}$ instead
 of ${\sf eval}\,\interp{e}$. 
 
 The simplest \sls~signature that encodes this structure essentially
-has the structure of a CNF grammar for describing well-formed
+has the structure of a context-free grammar for describing well-formed
 contexts, with two unary productions ${\sf gen/eval}$ and ${\sf gen/retn}$
 and one binary production ${\sf gen/cont}$.
 
