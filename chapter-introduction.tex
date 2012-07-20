@@ -666,20 +666,21 @@ system. From a verification or model-checking viewpoint, invariants
 are usually expressed in terms of temporal logics like LTL and are
 usually verified by model checking or exhaustive search. Existing work
 on verifying properties of rewriting specifications has generally
-approached the problem with model checking. 
+approached the problem from a model checking perspective. 
 
 In Part~3 we offer a approach to invariants that is complementary to
 the model checking approach.  From a programming languages
 perspective, invariants are often associated with {\it types}. Type
 invariants are well-formedness criteria on programs that are weak
 enough to be preserved by state transitions (a property called {\it
-  preservation}) but strong enough to allow us to express the property
+  preservation}) but strong enough to allow us to express the properties
 we expect to hold of all well-formed program states. In systems free
 of deadlock, a common property we want to hold is {\it progress} -- a
 well-typed state is either final can evolve to some other state with a
 state transition. (Even in systems where deadlock is a possibility,
 progress can be handled by stipulating that a deadlocked state is
-final.)
+final.) Progress and preservation together imply the safety property
+that a language is free of unspecified behavior. 
 
 Chapter~9 discusses the use of {\it generative signatures} to
 describe well-formedness invariants of specifications. Generative
@@ -690,11 +691,11 @@ grammatical strings by describing rules that generate all grammatical
 strings.
 
 In our example SSOS specification, a process state that consists of
-only a single ${\sf retn}(\obj{v})$ proposition is final, and our
-well-formed state is any one that contains an atomic proposition ${\sf
+only a single ${\sf retn}(\obj{v})$ proposition is final, and a
+well-formed state is any state that consists of an atomic proposition ${\sf
   eval}(\obj{e})$ (where $\obj{e}$ is a closed expression) or ${\sf
-  eval}(\obj{\lambda x. e})$ (where $\obj{\lambda x. e}$ is a closed
-expression) containing a ${\sf eval}(\obj{e})$ to the left 
+  retn}(\obj{\lambda x. e})$ (where $\obj{\lambda x. e}$ is a closed
+expression) to the left 
 of a series of continuation frames ${\sf cont}(\obj{\Box\,e})$ 
 or ${\sf cont}(\obj{(\lambda x.e)\,\Box})$. We can characterize 
 all such states as being generated from an initial atomic 
@@ -715,7 +716,7 @@ signature:
   {\sf gen\_state} 
     \lefti \{ {\sf gen\_state} \fuse {\sf cont}(\obj{(\lambda x.e)\,\Box}) \}
 \end{align*}
-An illustration of the derivation of one of the intermediate process
+The derivation of one of the intermediate process
 states from Figure~\ref{fig:ssos-example} is shown in
 Figure~\ref{fig:ssos-gen}.
 
@@ -740,11 +741,11 @@ Figure~\ref{fig:ssos-gen}.
 \label{fig:ssos-gen}
 \end{figure}
 
-Well-formedness is a global property of specifications, so if we add
-more state to the specification we have to change the description of
+Well-formedness is a global property of specifications. Therefore, 
+if we add state to the specification, we have to change the description of
 what counts as a final state and extend the grammar of well-formed
 process states. In the case of our counter extension, final states
-have a single ${\sf store}(\obj{e})$ proposition to the left of a
+have a single ${\sf store}(\obj{\underline n})$ proposition to the left of a
 single ${\sf retn}(\obj{v})$ proposition, and well-formed states are
 generated from an initial atomic proposition ${\sf gen}$ under the
 following extension to the previous generative signature:
@@ -760,7 +761,7 @@ following extension to the previous generative signature:
 It is possible to prove more specific invariants of our SSOS
 specification. For example, we can present a type system for the
 simply-typed lambda calculus and show that the type of a computation
-is always preserved. (Types will be considered in Chapter~9.) However,
+is always preserved, and types will be considered in Chapter~9. However,
 the generative signature above is sufficient for proving the progress
 theorem for our example SSOS specification, which means that our
 specification is safe -- that is, free from undefined behavior.
