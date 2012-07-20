@@ -90,20 +90,20 @@ specification inspired by Plotkin's structural operational semantics
 (SOS) \cite{plotkin04structural,kahn87natural}. While Kahn et
 al.~defined the term broadly, natural semantics has been consistently
 connected with the big-step operational semantics style discussed in
-the introduction, where the judgment $e \Downarrow v$ expresses that
-the $e$ evaluates to the value $v$:
+the introduction, where the judgment $\obj{e \Downarrow v}$ expresses that
+the $e$ evaluates to the value $\obj{v}$:
 \[
 \infer[{\sf ev/lam}]
-{\lambda x. e \Downarrow \lambda x. e \mathstrut}
+{\obj{\lambda x. e \Downarrow \lambda x. e} \mathstrut}
 {}
 \quad
 \infer[{\sf ev/app}]
-{e_1\,e_2 \Downarrow v \mathstrut}
-{e_1 \Downarrow \lambda x.e
+{\obj{e_1\,e_2 \Downarrow v} \mathstrut}
+{\obj{e_1 \Downarrow \lambda x.e}
  &
- e_2 \Downarrow v_2
+ \obj{e_2 \Downarrow v_2}
  &
- [v_2/x]e \Downarrow v \mathstrut}
+ \obj{[v_2/x]e \Downarrow v} \mathstrut}
 \]
 % Plotkin's SOS, in contrast, has been consistently identified with a
 % small-step operational semantics style in which a judgment $e \mapsto
@@ -147,13 +147,14 @@ natural semantics derivation \cite{clement86simple}.
 The operational interpretation of natural semantics assigns a more
 specific meaning to expressions than the inductive definition does.
 For example, the rule ${\sf ev/app}$ as an inductive definition does not
-specify whether $e_1$ or $e_2$ should be evaluated in some particular
+specify whether $\obj{e_1}$ or $\obj{e_2}$ 
+should be evaluated in some particular
 order or in parallel; the TYPOL-to-Prolog compiler could have
 reasonably made several choices in such a situation. More critically,
 interpreting the natural semantics as an inductive definition does not
 allow us to distinguish non-termination (searching forever for a $v$
-such that $e \Downarrow v$) from failure (concluding finitely that
-there is no $v$ such that $e \Downarrow v$).
+such that $\obj{e \Downarrow v}$) from failure (concluding finitely that
+there is no $\obj{v}$ such that $\obj{e \Downarrow v}$).
 
 We will present a transformation from \sls-encoded natural semantics
 specifications into ordered abstract machines by a transformation
@@ -262,12 +263,12 @@ contain {\it rules} in the conclusions of rules; when the rule fires,
 the resulting process state contains the rule. 
 A rule $A^+ \lefti \{ B^+ \}$ in the context can only fire if a piece 
 of the context
-matching $A^+$ appears to its right, so  $\left(x{:}\susp{\sf p1(c)}, ~
-y{:}\istrue{\left( {\sf p1(c)} \lefti \{ {\sf p2(c)} \} \right)}\right)
-\leadsto \left(z{:}\susp{\sf p2(c)}\right)$, whereas 
-$\left(y{:}\istrue{\left( {\sf p1(c)} \lefti \{ {\sf p2(c)} \} \right)},~
-x{:}\susp{\sf p1(c)}\right)
-\not \leadsto$. An example of the evolution of a 
+matching $A^+$ appears to its right, so  $\left(x{:}\susp{\sf p1(\lf{c})}, ~
+y{:}\istrue{\left( {\sf p1(\lf{c})} \lefti \{ {\sf p2(\lf{c})} \} \right)}\right)
+\leadsto \left(z{:}\susp{\sf p2(\lf{c})}\right)$, whereas 
+$\left(y{:}\istrue{\left( {\sf p1(\lf{c})} \lefti \{ {\sf p2(\lf{c})} \} \right)},~
+x{:}\susp{\sf p1(\lf{c})}\right)
+\not \leadsto$. Another example of the evolution of a 
 process state with nested rules is given 
 in Figure~\ref{fig:ho-evo-ex}.
 %
@@ -283,19 +284,19 @@ specifications.
 
 \begin{figure}[t]
 \begin{align*}
-x_1{:}\susp{{\sf p2}({\sf c})}, ~~
-x_2{:}\susp{{\sf p1}({\sf c})}, ~~
-x_3{:}\istrue{(\forall x.\,{\sf p_1}(x) 
-                \lefti \{ {\sf p_2}(x) \lefti \{ {\sf p_3}(x) \} \})}, ~~
-x_4{:}\istrue{({\sf p3}({\sf c}) \lefti \{ {\sf p_4} \})} & \\
-\leadsto ~~~ 
-x_1{:}\susp{{\sf p2}({\sf c})}, ~~
-x_5{:}\istrue{({\sf p_2}({\sf c}) \lefti \{ {\sf p_3}({\sf c}) \})}, ~~
-x_4{:}\istrue{({\sf p3}({\sf c}) \lefti \{ {\sf p_4} \})} & \\
-\leadsto ~~~ 
-x_6{:}\susp{{\sf p3}({\sf c})}, ~~
-x_4{:}\istrue{({\sf p3}({\sf c}) \lefti \{ {\sf p_4} \})} & \\
-\leadsto ~~~ 
+x_1{:}\susp{{\sf p2}(\lf{\sf c})}, ~
+x_2{:}\susp{{\sf p1}(\lf{\sf c})}, ~
+x_3{:}\istrue{(\forall \lf{x}.\,{\sf p_1}(\lf{x}) 
+                \lefti \{ {\sf p_2}(\lf{x}) \lefti \{ {\sf p_3}(\lf{x}) \} \})}, ~
+x_4{:}\istrue{({\sf p3}(\lf{\sf c}) \lefti \{ {\sf p_4} \})} & \\
+\leadsto ~~ 
+x_1{:}\susp{{\sf p2}(\lf{\sf c})}, ~
+x_5{:}\istrue{({\sf p_2}(\lf{\sf c}) \lefti \{ {\sf p_3}(\lf{\sf c}) \})}, ~
+x_4{:}\istrue{({\sf p3}(\lf{\sf c}) \lefti \{ {\sf p_4} \})} & \\
+\leadsto ~~ 
+x_6{:}\susp{{\sf p3}(\lf{\sf c})}, ~
+x_4{:}\istrue{({\sf p3}(\lf{\sf c}) \lefti \{ {\sf p_4} \})} & \\
+\leadsto ~~ 
 x_7{:}\susp{{\sf p_4}} & 
 \end{align*}
 \caption{Evolution of a nested \sls~process state (${\sf p1}$, ${\sf
@@ -461,70 +462,73 @@ recovering the original operational interpretation of natural semantics
 specifications as logic programs and using Twelf's facilities for
 reasoning about logic programs.  Leroy and Grall, in
 \cite{leroy09coinductive}, suggest a novel {\it coinductive}
-interpretation of natural semantics specifications. Coevaluation $e
-\Downarrow^{\sf co} v$ is defined as the {\it greatest} fixed point of
+interpretation of natural semantics specifications. Coevaluation $\obj{e
+\Downarrow^{\sf co} v}$ is defined as the {\it greatest} fixed point of
 the following rules:
 \[
 \infer%[{\sf evco/lam}]
-{\lambda x. e \Downarrow^{\sf co} \lambda x. e \mathstrut}
+{\obj{\lambda x. e \Downarrow^{\sf co} \lambda x. e} \mathstrut}
 {}
 \quad
 \infer%[{\sf evco/app}]
-{e_1\,e_2 \Downarrow^{\sf co} v \mathstrut}
-{e_1 \Downarrow^{\sf co} \lambda x.e
+{\obj{e_1\,e_2 \Downarrow^{\sf co} v} \mathstrut}
+{\obj{e_1 \Downarrow^{\sf co} \lambda x.e}
  &
- e_2 \Downarrow^{\sf co} v_2
+ \obj{e_2 \Downarrow^{\sf co} v_2}
  &
- [v_2/x]e \Downarrow^{\sf co} v \mathstrut}
+ \obj{[v_2/x]e \Downarrow^{\sf co} v} \mathstrut}
 \]
-Aside from the ${\sf co}$ annotation and the different interpretation,
+Aside from the $\obj{\sf co}$ annotation and the different interpretation,
 these rules are syntactically identical to the natural semantics above
 that were implicitly given an inductive interpretation.
 
 Directly reinterpreting the inductive specification as a coinductive
 specification doesn't quite produce the right result in the end. For
-some diverging terms like $\omega = (\lambda x.\,x\,x)\,(\lambda
-x.\,x\,x)$, we can derive $\omega \Downarrow^{\sf co} e$ for any
-expression $e$, including expressions that are not values and
+some diverging terms like $\obj{\omega} = \obj{(\lambda x.\,x\,x)\,(\lambda
+x.\,x\,x)}$, we can derive $\obj{\omega \Downarrow^{\sf co} e}$ for any
+expression $\obj{e}$, including expressions that are not values and
 expressions with no relation to the original term. Conversely, there
-are diverging terms ${\it Div}$ such that ${\it Div} \Downarrow^{\sf
-  co} e$ is not derivable for {\it any} $e$.\footnote{Leroy and Grall
-  discuss a counterexample due to Filinski: ${\it Div} = {\it Y}{\it
-    F}x$, where $\it Y$ is the fixed-point combinator $\lambda
+are diverging terms $\obj{\it Div}$ such that $\obj{{\it Div} \Downarrow^{\sf
+  co} e}$ is not derivable for {\it any} $\obj{e}$.\footnote{Leroy and Grall
+  discuss a counterexample due to Filinski: $\obj{{\it Div}} = \obj{{\it Y}{\it
+    F}x}$, where $\obj{\it Y}$ is the fixed-point combinator $\obj{\lambda
   f.\,(\lambda x.\,f\,(\lambda v.\,(x\,x)\,v))\,(\lambda
-  x.\,f\,(\lambda v.\,(x\,x)\,v))$ and $\it F$ is $\lambda f.\,\lambda
-  x.\,(\lambda g.\,\lambda y.\,g\,y)\,(f\,x)$
+  x.\,f\,(\lambda v.\,(x\,x)\,v))}$ and $\obj{\it F}$ is 
+  $\obj{\lambda f.\,\lambda
+  x.\,(\lambda g.\,\lambda y.\,g\,y)\,(f\,x)}$
   \cite{leroy09coinductive}.} As a result, Leroy and Grall also give a
-coinductive definition of diverging terms $e \Downarrow^\infty$ that
-references the inductively-defined evaluation judgment $e \Downarrow v$:
+coinductive definition of diverging terms $\obj{e \Downarrow^\infty}$ that
+references the inductively-defined evaluation judgment 
+$\obj{e \Downarrow v}$:
 \[
 \infer%[{\sf div/app1}]
-{e_1\,e_2 \Downarrow^\infty}
-{e_1 \Downarrow^\infty}
+{\obj{e_1\,e_2 \Downarrow^\infty} \mathstrut}
+{\obj{e_1 \Downarrow^\infty} \mathstrut}
 \quad
 \infer%[{\sf div/app2}]
-{e_1\,e_2 \Downarrow^\infty}
-{e_1 \Downarrow v_1
+{\obj{e_1\,e_2 \Downarrow^\infty} \mathstrut}
+{\obj{e_1 \Downarrow v_1}
  & 
- e_2 \Downarrow^\infty}
+ \obj{e_2 \Downarrow^\infty} \mathstrut}
 \quad
 \infer%[{\sf div/app3}]
-{e_1\,e_2 \Downarrow^\infty}
-{e_1 \Downarrow \lambda x.\,e
+{\obj{e_1\,e_2 \Downarrow^\infty} \mathstrut}
+{\obj{e_1 \Downarrow \lambda x.\,e}
  & 
- e_2 \Downarrow v_2
+ \obj{e_2 \Downarrow v_2}
  &
- [v_2/x]e \Downarrow^\infty}
+ \obj{[v_2/x]e \Downarrow^\infty} \mathstrut}
 \]
 Now diverging expressions are fully characterized as derivations for
-which $e \Downarrow^\infty$ is derivable with an infinite derivation
+which $\obj{e \Downarrow^\infty}$ is derivable with an infinite derivation
 tree. With this definition, Leroy and Grall prove a type safety
-property: if $e$ has type $\tau$, then either $e \Downarrow v$ or $e
-\Downarrow^{\infty}$.  However, the disjunctive character of this
+property: if $\obj{e}$ has type $\obj{\tau}$, then either 
+$\obj{e \Downarrow v}$ or $\obj{e
+\Downarrow^{\infty}}$.  However, the disjunctive character of this
 theorem means that a constructive proof of type safety would be
-required to take a typing derivation $e : \tau$ as input and produce
-as output either a proof of termination $e \Downarrow v$ or a proof of
-divergence $e \Downarrow^\infty$. This implies that a constructive
+required to take a typing derivation $\obj{e : \tau}$ as input and produce
+as output either a proof of termination $\obj{e \Downarrow v}$ or a proof of
+divergence $\obj{e \Downarrow^\infty}$. This implies that a constructive
 type safety theorem would need to decide termination, and so it is
 unsurprising that type safety is proved classically by Leroy and
 Grall.
@@ -536,8 +540,8 @@ of infinite terms in the natural semantics. Both approaches
 reinterpret natural semantics in an operational way, but the
 operationalization transformation gives us a satisfactory treatment of
 diverging terms without requiring the definition of an additional
-coinductive judgment $e \Downarrow^\infty$. And even {\it with} the
-addition of the coinductively defined judgment $e \Downarrow^\infty$,
+coinductive judgment $\obj{e \Downarrow^\infty}$. And even {\it with} the
+addition of the coinductively defined judgment $\obj{e \Downarrow^\infty}$,
 coinductive big-step operational semantics have significant issues
 handling nondeterministic languages, a point that we will elaborate on
 in Section~\ref{sec:absmachine-nondeterminism}.

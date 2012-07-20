@@ -16,107 +16,148 @@ continue to use the natural semantics specification of call-by-value
 evaluation for the lambda calculus as a running example:
 \[
 \infer[{\sf ev/lam}]
-{\lambda x. e \Downarrow \lambda x. e \mathstrut}
+{\obj{\lambda x. e \Downarrow \lambda x. e} \mathstrut}
 {}
 \quad
 \infer[{\sf ev/app}]
-{e_1\,e_2 \Downarrow v \mathstrut}
-{e_1 \Downarrow \lambda x.e
+{\obj{e_1\,e_2 \Downarrow v} \mathstrut}
+{\obj{e_1 \Downarrow \lambda x.e}
  &
- e_2 \Downarrow v_2
+ \obj{e_2 \Downarrow v_2}
  &
- [v_2/x]e \Downarrow v \mathstrut}
+ \obj{[v_2/x]e \Downarrow v} \mathstrut}
+\]
+Natural semantics are a {\it big-step} semantics: the judgment
+$\obj{e \Downarrow v}$ describes the relationship between an 
+initial expression
+$\obj{e}$ and the value $\obj{v}$ to which it will eventually evaluate.
+
+The alternative to a big-step semantics is a {\it small-step}
+semantics, which describes the relationship between the intermediate
+state of a computation and another intermediate state after a
+transition. One form of small-step semantics is a structural
+operational semantics (SOS) specification
+\cite{plotkin04structural}. The SOS specification of the call-by-value
+evaluation of the lambda calculus is specified in terms of two
+judgments: $\obj{v\,{\sf value}}$, which expresses that $\obj{v}$ is a
+value that is not expected to make any more transitions, and $\obj{e_1
+  \mapsto e_2}$, which expresses that $\obj{e_1}$ transitions to 
+$\obj{e_2}$ by reducing a $\beta$-redex. 
+\[
+\infer
+{\obj{\lambda x.e\,{\sf value}} \mathstrut}
+{}
+\quad
+\infer
+{\obj{e_1\,e_2 \mapsto e_1'\,e_2} \mathstrut}
+{\obj{e_1 \mapsto e_1'} \mathstrut}
+\quad
+\infer
+{\obj{e_1\,e_2 \mapsto e_1\,e_2'} \mathstrut}
+{\obj{e_1\,{\sf value}}
+ &
+ \obj{e_2 \mapsto e_2'} \mathstrut}
+\quad
+\infer
+{\obj{(\lambda x. e)v \mapsto [v/x]e} \mathstrut}
+{\obj{v\,{\sf value}} \mathstrut}
 \]
 
-Abstract machine semantics are less prevalent than natural
-semantics. The most well-known is almost certainly Landin's SECD
-machine \cite{landin64mechanical}, though our abstract machine
-presentation is much more similar to Danvy's SC machine from
+Abstract machine semantics are another important small-step semantics
+style. The most well-known abstract semantics is almost certainly
+Landin's SECD machine \cite{landin64mechanical}, though our abstract
+machine presentation below is much closer to Danvy's SC machine from
 \cite{danvy03rational} and Harper's $\mathcal K\{{\sf
   nat}{\rightharpoonup}\}$ system from \cite[Chapter
 27]{harper12practical}.  This abstract machine semantics is defined in
-terms of states $s$. The state $s = k \rhd e$ represents the
-expression $e$ being evaluated on top of the stack $k$, and the state
-$s = k \lhd v$ represents the value $v$ being returned to the stack
-$k$. Stacks $k$ are sequences of frames $f_i$ with the form
-$((\ldots({\sf halt}; f_1); \ldots); f_n)$, and each frame $f$ either
-has the form $\Box\,e_2$ (an application frame waiting for an
-evaluated function to be returned to it) or the form $(\lambda
-x.e)\,\Box$ (an application frame with an evaluated function waiting
-for an evaluated value to be returned to it). Given states, stacks,
-and frames, we can define a ``classical'' abstract machine for
-call-by-value evaluation of the lambda calculus as a transition system
-with four transition rules:
+terms of states $\obj{s}$. The state $\obj{s} = \obj{k \rhd e}$
+represents the expression $\obj{e}$ being evaluated on top of the
+stack $\obj{k}$, and the state $\obj{s} = \obj{k \lhd v}$ represents
+the value $\obj{v}$ being returned to the stack $\obj{k}$. Stacks
+$\obj{k}$ are sequences of frames $\obj{f_i}$ with the form $\obj{((\ldots({\sf
+  halt}; f_1); \ldots); f_n)}$, and each frame $\obj{f}$ either has the form
+$\obj{\Box\,e_2}$ (an application frame waiting for an evaluated function to
+be returned to it) or the form $\obj{(\lambda x.e)\,\Box}$ (an application
+frame with an evaluated function waiting for an evaluated value to be
+returned to it). Given states, stacks, and frames, we can define a
+``classical'' abstract machine for call-by-value evaluation of the
+lambda calculus as a transition system with four transition rules:
 \begin{align*}
-{\sf absmachine/lam}{:} & ~~ k \rhd \lambda x.e ~ \mapsto ~ k \lhd \lambda x.e
+{\sf absmachine/lam}{:} & ~~ 
+ \obj{k \rhd \lambda x.e ~ \mapsto ~ k \lhd \lambda x.e}
 \\
-{\sf absmachine/app}{:} & ~~ k \rhd e_1\,e_2 ~ \mapsto ~ (k; \Box\,e_2) \rhd e_1
+{\sf absmachine/app}{:} & ~~ 
+ \obj{k \rhd e_1\,e_2 ~ \mapsto ~ (k; \Box\,e_2) \rhd e_1}
 \\
 {\sf absmachine/app1}{:} & ~~ 
-  (k; \Box\,e_2) \lhd \lambda x.e ~ \mapsto ~ (k; (\lambda x.e)\,\Box) \rhd e_2
+ \obj{(k; \Box\,e_2) \lhd \lambda x.e ~ 
+   \mapsto ~ (k; (\lambda x.e)\,\Box) \rhd e_2}
 \\
 {\sf absmachine/app2}{:} & ~~
-  (k; (\lambda x.e)\,\Box) \lhd v_2 ~ \mapsto ~ k \rhd [v_2/x]e
+ \obj{(k; (\lambda x.e)\,\Box) \lhd v_2 ~ \mapsto ~ k \rhd [v_2/x]e}
 \end{align*}
 
 The operational intuition for these rules is precisely the same as the
 operational intuition for the rewriting rules given in
 Section~\ref{sec:intro-ssos}. This is not coincidental: the
 \sls~specification from the introduction adequately encodes the
-transition system $s \mapsto s'$ defined above, a point that we will
+transition system $\obj{s \mapsto s'}$ defined above, a point that we will
 make precise in Section~\ref{sec:nat-ssos-adequacy}. The
 \sls~specification from the introduction is {\it also} the result of
 applying the operationalization and defunctionalization
 transformations to the \sls~encoding of the natural semantics given
 above, so the these two transformations combined with the adequacy
-arguments at either end constitute a logical correspondence between
-natural semantics and abstract machines. 
+arguments at either end constitute a {\it logical correspondence between
+natural semantics and abstract machines}. 
 
 As discussed in Section~\ref{sec:the-point-is-modular-extension}, it
 is interesting to put existing specification styles into logical
 correspondence, but that is not our main reason for investigating
-logical correspondence. Instead, we are primarily interested in
-exploring the set of programming language features that can be
-modularly integrated into a transformed \sls~specification that could
-not be integrated into a natural semantics specification.  In
-Section~\ref{sec:richer-ordered-abstract} we explore a selection of
-these features, including mutable storage, call-by-need evaluation,
-and recoverable failure.
+logical correspondence in the context of this thesis. Instead, we are
+primarily interested in exploring the set of programming language
+features that can be modularly integrated into a transformed
+\sls~specification and that could {\it not} be integrated into a natural
+semantics specification in a modular fashion.  
+In Section~\ref{sec:richer-ordered-abstract}
+we explore a selection of these features, including mutable storage,
+call-by-need evaluation, and recoverable failure.
 
 \section{Logical transformation: operationalization}
 \label{sec:operationalization}
 
 The intuition behind operationalization is rather simple: we examine
-the behavior of a deductive computation and then encode that
-operational intuition as a concurrent computation.  Before presenting
+the structure of backward chaining and then specfiy that
+computational process as an \sls~specification.  Before presenting
 the general transformation, we will motivate this transformation using
-our natural semantics specification of call-by-value-evaluation. 
+our natural semantics specification of call-by-value evaluation. 
 
-The definition of $e \Downarrow v$ is moded with $e$ as an input and
-$v$ as an output, so it is meaningful to talk about being given $e$
-and using deductive computation to search for a $v$ such that $e
-\Downarrow v$ is derivable.  Consider a recursive search procedure
-implementing this particular deductive computation:
+The definition of $\obj{e \Downarrow v}$ is moded with $\obj{e}$ as an
+input and $\obj{v}$ as an output, so it is meaningful to talk about
+being given $\obj{e}$ and using deductive computation to search for a
+$\obj{v}$ such that $\obj{e \Downarrow v}$ is derivable.  Consider a
+recursive search procedure implementing this particular deductive
+computation: \smallskip
 \begin{itemize}
 \item
-      If $e = \lambda x. e'$, 
+      If $\obj{e} = \obj{\lambda x. e'}$, 
       it is possible to derive 
-      $\lambda x. e' \Downarrow \lambda x. e'$
+      $\obj{\lambda x. e' \Downarrow \lambda x. e'}$
       with the rule ${\sf ev/lam}$.
 \item
-       If $e = e_1\,e_2$,
+       If $\obj{e} = \obj{e_1\,e_2}$,
        attempt to derive 
-       $e_1\,e_2 \Downarrow v$
+       $\obj{e_1\,e_2 \Downarrow v}$
        using the rule ${\sf ev/app}$ by doing the following:
     \begin{enumerate}
-    \item Search for a $v_1$ such that 
-          $e_1 \Downarrow v_1$ is derivable.
-    \item Assert that $v_1 = \lambda x.e'$ for some
-          $e'$; fail if it is not.
-    \item Search for a $v_2$ such that 
-          $e_2 \Downarrow v_2$ is derivable.
-    \item Search for a $v$ such that 
-          $[v_2/x]e \Downarrow v$ is derivable.
+    \item Search for a $\obj{v_1}$ such that 
+          $\obj{e_1 \Downarrow v_1}$ is derivable.
+    \item Assert that $\obj{v_1} = \obj{\lambda x.e'}$ for some
+          $\obj{e'}$; fail if it is not.
+    \item Search for a $\obj{v_2}$ such that 
+          $\obj{e_2 \Downarrow v_2}$ is derivable.
+    \item Compute $\obj{e'} = \obj{[v_2/x]e}$
+    \item Search for a $\obj{v}$ such that 
+          $\obj{e' \Downarrow v}$ is derivable.
     \end{enumerate}
 % \item
 %       If $e = e_1 \arb e_2$,
@@ -129,24 +170,31 @@ implementing this particular deductive computation:
 %       the rule ${\sf ev/choose2}$ by searching for a 
 %       $v$ such that $e_2 \Downarrow v$ is derivable.  
 \end{itemize}
+\smallskip
 %
-The goal of the operationalization transformation is to implement this
-deductive computation as a concurrent computation. The first step in
-doing so is to introduce two new ordered atomic propositions.  The
-proposition ${\sf eval}\,\interp{e}$ is the starting point, indicating
-that we want to search for a $v$ such that $e \Downarrow v$, and the
-proposition ${\sf retn}\,\interp{v}$ indicates the successful
-completion of this procedure. Therefore, searching for a $v$ such that
-$e \Downarrow v$ is derivable will be analogous to building a trace $T
-:: x_e{:}\susp{{\sf eval}\,\interp{e}} \leadsto^* x_v{:}\susp{{\sf
+The goal of the operationalization transformation is to represent this
+deductive computation as specificaiton in the concurrent fragment of
+\sls. The first step in this process, representing the syntax
+of expressions LF terms of type ${\sf exp}$, was discussed
+in Section~\ref{sec:lf-adequacy}. The second step is to
+introduce two new ordered atomic propositions.  The proposition ${\sf
+  eval}\,\interp{e}$ is the starting point, indicating that we want to
+search for a $\obj{v}$ such that $\obj{e \Downarrow v}$,
+ and the proposition ${\sf
+  retn}\,\interp{v}$ indicates the successful completion of this
+procedure. Therefore, searching for a $\obj{v}$ such that 
+$\obj{e \Downarrow v}$
+is derivable will be analogous to building a trace $T ::
+x_e{:}\susp{{\sf eval}\,\interp{e}} \leadsto^* x_v{:}\susp{{\sf
     retn}\,\interp{v}}$ with concurrent computation.
 
 Representing the first case is straightforward: if we are evaluating
-$\lambda x.e$, then we have succeeded and can return $\lambda x.e$. 
-This is encoded as the following proposition:
+$\obj{\lambda x.e}$, then we have succeeded and can return
+$\obj{\lambda x.e}$.  This is encoded as the following proposition:
 \[
-{\sf eval}\,({\sf lam}\,\lambda x.\,E\,x)
-   \lefti \{ {\sf retn}\,({\sf lam}\,\lambda x.\,E\,x) \}
+\forall \lf{E}.\,
+{\sf eval}\,\lf{({\sf lam}\,\lambda x.\,E\,x)}
+   \lefti \{ {\sf retn}\,\lf{({\sf lam}\,\lambda x.\,E\,x)} \}
 \]
 Because the natural deduction rule ${\sf ev/app}$ 
 involves both recursion and multiple subgoals,
@@ -154,8 +202,8 @@ we will generalize our picture of the process state to allow us to store a
 stack of unfinished work in the ordered context, growing out to the
 right. Our new understanding, then, is that contexts either have the
 form $x{:}\susp{{\sf eval}\,\interp{e}}, \Delta$ or the form $x{:}\susp{{\sf
-  retn}\,\interp{v}}, \Delta$. In the process of concurrently
-computing a trace $x_e{:}\susp{{\sf eval}\,\interp{e_1\,e_2}}, \Delta
+  retn}\,\interp{v}}, \Delta$. In the process of constructing 
+a trace $x_e{:}\susp{{\sf eval}\,\interp{e_1\,e_2}}, \Delta
 \leadsto^* x_v{:}\susp{{\sf retn}\,\interp{v}}, \Delta$, each of the
 recursive calls to the search procedure will involve a sub-trace of the
 form
@@ -169,15 +217,15 @@ form
   kickstart the rest of the computation.
 
 It's helpful to work backwards: in the fourth step, we have found
-$\lambda x.\,E\,x = \lambda x.\interp{e}$ (where $e$ potentially has $x$ free) and $V_2 =
+$\lf{\lambda x.\,E\,x} = \lf{\lambda x.\interp{e}}$ (where $\obj{e}$ potentially has $\obj{x}$ free) and $\lf{V_2} =
 \interp{v_2}$. The recursive call is to ${\sf
   eval}\,\interp{[v_2/x]e}$, which is the same thing as ${\sf
-  eval}\,(E\,V_2)$. If the recursive call successfully returns, the
+  eval}\,\lf{(E\,V_2)}$. If the recursive call successfully returns, the
 context will contain a suspended atomic proposition of the form ${\sf
-  retn}\,V$ where $V = \interp{v}$, and the search procedure as a
-whole is complete: the answer is $v$.  Thus, the negative proposition
-that implements the continuation can be written as $(\forall V.\,{\sf
-  retn}\,V \lefti \{ {\sf retn}\,V \})$. The positive proposition that
+  retn}\,\lf{V}$ where $\lf{V} = \interp{v}$, and the search procedure as a
+whole is complete: the answer is $\obj{v}$.  Thus, the negative proposition
+that implements the continuation can be written as $(\forall \lf{V}.\,{\sf
+  retn}\,\lf{V} \lefti \{ {\sf retn}\,\lf{V} \})$. The positive proposition that
 will create this sub-computation can be written as follows:
 \begin{align*}
 {\it Step_4}(E,V_2) & \equiv {\sf eval}\,(E\,V_2) 
@@ -3088,25 +3136,9 @@ specifications are ``flat'' and defined only by pattern-matching on
 syntax, SOS specifications are defined inductively on the structure
 of syntax. This is the SOS specification for 
 call-by-value evaluation of the untyped lambda calculus:
-\[
-\infer
-{\lambda x.e\,{\sf value} \mathstrut}
-{}
-\quad
-\infer
-{e_1\,e_2 \mapsto e_1'\,e_2 \mathstrut}
-{e_1 \mapsto e_1' \mathstrut}
-\quad
-\infer
-{e_1\,e_2 \mapsto e_1\,e_2' \mathstrut}
-{e_1\,{\sf value}
- &
- e_2 \mapsto e_2' \mathstrut}
-\quad
-\infer
-{(\lambda x. e)v \mapsto [v/x]e \mathstrut}
-{v\,{\sf value} \mathstrut}
-\]
+
+XXX
+
 This inductive specification is adequately encoded on the left-hand
 side of Figure~\ref{fig:cbv-sos}, along with the proposition ${\sf
   ev}\,e\,v$ that describes a big-step operational semantics in terms

@@ -2451,7 +2451,7 @@ downshifts are always inferred: this means that we can't write down
 ${\uparrow}{\downarrow}A$ or ${\downarrow}{\uparrow}A$, but neither of
 these \ollll~propositions are part of the \sls~fragment anyway. 
 
-The \sls~implementation also supports standard abbreviations for
+The \sls~implementation also supports conventional abbreviations for
 arrows that we will won't use in mathematical notation: ${\gnab}A^-
 \lefti B^-$ can be written as \verb|A -o B| or \verb|$A >-> B| in the
 \sls~implementation, and ${!}A^- \lefti B^-$ can be written as
@@ -2461,10 +2461,24 @@ ambiguous, because \verb|X -> Y| can be an abbreviation for ${!}X
 proposition or classifier was intended by analyzing the structure of
 \verb|Y|.)  All arrows can also be written backwards: \verb|B <-< A|
 is equivalent to \verb|A >-> B|, \verb|B o- A| is equivalent to
-\verb|A -o B|, and so on.
+\verb|A -o B|, and so on. Also following traditional conventions,
+upper-case variables that are free in a rule will be treated as
+implicitly quantified. Therefore, the line
+\bigskip
+\begin{verbatim}
+rule: foo X <- (bar Y -> baz Z).
+\end{verbatim}
+\bigskip
+will be reconstructed as the \sls~declaration 
+\[{\sf rule} : \forall\lf{Y}{:}\tau_1.\,\forall\lf{Z}{:}\tau_2.\,\forall\lf{X}{:}\tau_3.\,{!}({!}{\sf bar}\,\lf{Y} \lefti {\sf baz}\,\lf{Z}) \lefti {\sf foo}\,\lf{X}\] 
+%
+where the implementation infers the types $\tau_1$, $\tau_2$, and
+$\tau_3$ appropriately from the declarations of the negative
+predicates ${\sf foo}$, ${\sf bar}$, and ${\sf baz}$.
 
-Another significant piece of syntactic sugar is used for 
-the sake of readability: if \verb|P| is a
+Another significant piece of syntactic sugar introduced for 
+the sake of readability is less conventional, if only because
+positive atomic propositions are not conventional. If \verb|P| is a
 persistent atomic proposition, we can optionally write \verb|!P|
 wherever \verb|P| is expected, and if \verb|P| is a linear atomic
 proposition, we can write \verb|$P| wherever \verb|P| is
@@ -2590,13 +2604,13 @@ here. Consider the following \sls~signature:
 ~~\lf{\sf s} : {\sf nat} \rightarrow {\sf nat},\\
 ~&{\sf plus} : {\sf nat} \rightarrow {\sf nat} \rightarrow {\sf nat} 
                  \rightarrow {\sf prop},\\
-~&{\sf plus/z} : \forall \lf{n}{:}{\sf nat}.\,
-({\sf plus}\,\lf{\sf z}\,\lf{n}\,\lf{n}),\\
-~&{\sf plus/z} : \forall \lf{n}{:}{\sf nat}.\, 
-                 \forall \lf{m}{:}{\sf nat}.\, 
-                 \forall \lf{p}{:}{\sf nat}.\,
-{!}({\sf plus}\,\lf{n}\,\lf{m}\,\lf{p})
-\lefti ({\sf plus}\,({\sf s}\,\lf{n})\,\lf{m}\,({\sf s}\,\lf{p}))
+~&{\sf plus/z} : \forall \lf{N}{:}{\sf nat}.\,
+({\sf plus}\,\lf{\sf z}\,\lf{N}\,\lf{N}),\\
+~&{\sf plus/z} : \forall \lf{N}{:}{\sf nat}.\, 
+                 \forall \lf{M}{:}{\sf nat}.\, 
+                 \forall \lf{P}{:}{\sf nat}.\,
+{!}({\sf plus}\,\lf{N}\,\lf{M}\,\lf{P})
+\lefti ({\sf plus}\,({\sf s}\,\lf{N})\,\lf{M}\,({\sf s}\,\lf{P}))
 \end{align*}
 In addition to searching for a proof of ${\sf plus}\,\lf{\sf
   (s\,z)}\,\lf{\sf (s\,z)}\,\lf{\sf (s\,(s\,z))}$ (which will succeed,
