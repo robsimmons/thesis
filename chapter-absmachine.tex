@@ -944,10 +944,9 @@ there is
 $\slst{\transop\Sigma}{\Psi}{\opsubst{\Gamma},[
 \opbasic{A_i^+, \ldots, A_n^+}{t_{n+1}}{\sigma_0}
 ]}{\Sp'}{\susp{{\ocircle}C^+}}$,
-\item a pattern $P :: (\Psi; \tackon{\opsubst{\Theta}}{C^+}) \Longrightarrow_{\transop{\Sigma}} (\Psi; \tackon{\opsubst{\Theta}}{\Delta})$
-\item and a trace of the form
-$T :: (\Psi; \tackon{\opsubst{\Theta}}{\Delta}) \leadsto^*_{\transop{\Sigma}}
- (\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,({\sigma_n}t_{n+1})})$. 
+\item a pattern+trace $\lambda P.T :: (\Psi; \tackon{\opsubst{\Theta}}{C^+}) 
+\leadsto^*_{\transop{\Sigma}}
+ (\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,({\sigma_n}t_{n+1})})$.\footnote{The derived pattern+trace form is discussed at the end of Section~\ref{sec:framework-concurrent}.}
 \end{itemize}
 \smallskip
 We will prove this
@@ -1002,13 +1001,10 @@ We need to construct a trace $(\Psi;
   $\slst{\transop{\Sigma}}{\Psi}{\Gamma, [\opbasic{A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i}}]}{\Sp'}{\susp{{\ocircle} C^+ \} }}$
   \` (by inner ind. hyp.)
   \\
-  $P :: (\Psi; \tackon{\opsubst{\Theta}}{C^+}) \Longrightarrow_{\transop{\Sigma}}
-        (\Psi; \tackon{\opsubst{\Theta}}{\Delta})$
-  \` (by inner ind. hyp.)
-  \\
-  $T :: (\Psi; \tackon{\opsubst{\Theta}}{\Delta}) \leadsto^*_{\transop{\Sigma}}
+  $\lambda P.T :: (\Psi; \tackon{\opsubst{\Theta}}{C^+}) 
+     \leadsto^*_{\transop{\Sigma}}
    (\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,\lf{({\sigma_n}t_{n+1})})}$
-  \` (by inner ind. hyp.)
+ \` ''\qquad\qquad~
   \\
   $\slst{\transop{\Sigma}}{\Psi}
     {\Gamma, [\forall \lf{\overline{x_i}}.\, (\lf{\sigma_{i-1}}{p^+}_\mpers)
@@ -1022,17 +1018,17 @@ We need to construct a trace $(\Psi;
 
 \item $\opbasic{{!}p^-_{ci},\ldots,{!}p^-_{cj},A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}$
   \\
-  $~ \qquad = \{ {\sf eval\_bi}\,\lf{({\sigma_{i-1}}t^{\it in}_i)}
+  $~ \qquad = {\ocircle}({\sf eval\_bi}\,\lf{({\sigma_{i-1}}t^{\it in}_i)}
                     \fuse  \ldots \fuse
                  {\sf eval\_bj}\,\lf{({\sigma_{i-1}}t^{\it in}_j)} \fuse ~$
   \\
-  $~ \qquad \qquad (\forall\lf{\overline{x_i}}\ldots\forall\lf{\overline{x_j}}.\, 
+  $~ \qquad \qquad \quad (\forall\lf{\overline{x_i}}\ldots\forall\lf{\overline{x_j}}.\, 
      {\sf retn\_bi}\,\lf{(\sigma_{i-1}{t^{\it out}_i})}
      \fuse \ldots \fuse 
      {\sf retn\_bj}\,\lf{(\sigma_{i-1}{t^{\it out}_j})}$
   \\
-  $~ \qquad \qquad \quad
-   \lefti \opbasic{A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}) \}$\\
+  $~ \qquad \qquad \qquad
+   \lefti \opbasic{A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}))$\\
   {\it (where
    $p^-_{ck}$ is ${\sf bkc}\,\lf{t^{\it in}_k}\,\lf{t^{\it out}_k}$ 
    and $\emptyset = FV(\lf{t_k^{\it in}}) \cap (\lf{\overline{x_i}} \cup \ldots \cup \lf{\overline{x_j}})$ 
@@ -1147,27 +1143,27 @@ the completeness proof.
 
 \subsubsection{Soundness}
 
-Soundness under the parallel translation requires that we be able
-to manipulate traces into other (permutively equivalent) traces, which
-means we need to be a bit more explicit about the global structure of 
-contexts. To this end, we describe two new refinements of negative
+Soundness under the parallel translation requires us to prove an
+inversion lemma like the one that we first encountered in the proof of
+preservation for adequacy (Theorem~\ref{thm:pda-preservation}).
+To this end, we describe two new refinements of negative
 propositions that capture the structure of transformed concurrent
 rules. 
 \begin{align*}
-R & ::= \forall \overline{x}.\,{\sf retn\_b1}\,t_1 \fuse \ldots \fuse {\sf retn\_bn}\,t_n \lefti S
+R & ::= \forall \lf{\overline{x}}.\,{\sf retn\_b1}\,\lf{t_1} \fuse \ldots \fuse {\sf retn\_bn}\,\lf{t_n} \lefti S
 \\
-S & ::= \forall x{:}\tau.\,S 
+S & ::= \forall \lf{x}{:}\tau.\,S 
    \mid p^+_\mpers \lefti S
    \mid {!}A^- \lefti S
-   \mid \{ {\sf eval\_b1}\,t_1 \fuse \ldots \fuse {\sf eval\_bn}\,t_n 
+   \mid \{ {\sf eval\_b1}\,\lf{t_1} \fuse \ldots \fuse {\sf eval\_bn}\,\lf{t_n} 
            \fuse {\downarrow}R \}
-   \mid \{ {\sf eval\_b}\,t \} 
+   \mid \{ {\sf eval\_b}\,\lf{t} \} 
 \end{align*}
 
 \noindent
 Every concurrent rule in a transformed signature
-$\transop{\Sigma}$ has the form ${\sf r} : \forall \overline{x}.\,
-{\sf eval\_b}\,t \lefti S$. 
+$\transop{\Sigma}$ has the form ${\sf r} : \forall \lf{\overline{x}}.\,
+{\sf eval\_b}\,\lf{t} \lefti S$. 
 
 
 
@@ -1176,66 +1172,62 @@ $\transop{\Sigma}$ has the form ${\sf r} : \forall \overline{x}.\,
 If $\Delta$ contains only atomic propositions, persistent propositions
 of the form $D$, and ordered 
 propositions of the form $R$, and if $\Gamma$ matches
-$z{:}\susp{{\sf retn\_z}\,t_z}$, 
+$z{:}\susp{{\sf retn\_z}\,\lf{t_z}}$, 
 then 
 \begin{enumerate}
 \item If $\Delta$ matches 
 $\frameoff{\Theta}
  {\matchconj
-  {x_1{:}\susp{{\sf retn\_b1}\,t_1}}
+  {x_1{:}\susp{{\sf retn\_b1}\,\lf{t_1}}}
   {\matchconj
     {\ldots}
     {\matchconj 
-      {x_n{:}\susp{{\sf retn\_bn}\,t_n}}
-      {y{:}{(\forall \overline{x}.\,{\sf retn\_b1},s_1 \fuse \ldots \fuse {\sf retn\_bn}\,s_n \lefti S)}}}}}$ and 
+      {x_n{:}\susp{{\sf retn\_bn}\,\lf{t_n}}}
+      {y{:}{(\forall \lf{\overline{x}}.\,{\sf retn\_b1}\,\lf{s_1} \fuse \ldots \fuse {\sf retn\_bn}\,\lf{s_n} \lefti S)}}}}}$ and 
 $T :: (\Psi; \Delta) \leadsto^*_{\transop{\Sigma}}
 (\Psi; \Gamma)$, then 
-$T \equiv \tstep{p}{y}{(\tforalll{\overline{u}}{(\tappl{(\tfuser{x_1}{\tfuser{\ldots}{x_n}})}{\Sp})})}; T'$
-where $(\overline{u}/\overline{x})s_i = t_i$ for $1 \leq i \leq n$.
+$T = \tstep{P}{y}{(\lf{\overline{u}}; (\tfuser{x_1}{\tfuser{\ldots}{x_n}}); \Sp)}; T'$
+where $\lf{(\overline{u}/\overline{x})s_i} = \lf{t_i}$ for $1 \leq i \leq n$.
 \item If $\Delta$ matches
 $\frameoff{\Theta}
- {y{:}\susp{{\sf eval\_b}\,t}}$ and 
+ {y{:}\susp{{\sf eval\_b}\,\lf{t}}}$ and 
 $T :: (\Psi; \Delta) \leadsto^*_{\transop{\Sigma}}
 (\Psi; \Gamma)$, 
-then $T \equiv \tstep{p}{\sf r}{(\tforalll{\overline{u}}{(\tappl{y}{\Sp})})}; T'$
+then 
+$T = \tstep{P}{\sf r}{(\lf{\overline{u}}; y; \Sp)}; T'$
 where 
-${\sf r} : \forall \overline{x}.\,{\sf eval\_b}\,s \lefti S 
+${\sf r} : \forall \lf{\overline{x}}.\,{\sf eval\_b}\,\lf{s} \lefti S 
 \in \transop{\Sigma}$.
 \end{enumerate}
 \end{theorem}
 
 \begin{proof}
-By induction over the structure of traces.
-
-The transitions described {\it must} happen at some point: the
-negative proposition associated with $y$ in part 1 and the suspended
-${\sf eval}$ proposition in part 2 are not in the final state $(\Psi;
-z{:}\susp{{\sf retn\_z}\,t_z})$, so the base cases where $T =
-\emptytrace$ is vacuous. The actual base case is when first step 
-focuses on $y$ (part 1) or consumes $y$ by focusing on some 
-rule in the transformed signature (part 2), in which case the 
-result follows immediately. 
-
-The inductive case is when the first step occurs by focusing on 
-some 
-$y'{:}\istrue{R}$ in $\Delta$ that is distinct from $y$ (part 1)
-or on some
-transformed rule from the signature that does not first 
-consume $x$ (part 2). It is necessary to show that this step will not
-consume $y$ or, in part 1, any $x_i{:}\susp{{\sf retn\_bi}\,t_i}$ (part 1),
-which allows us to invoke the induction hypothesis and permute the
-step we're looking for to the beginning of the subtrace. We then have
-to check that the first step doesn't introduce any variables or resources
-that can be consumed by the step we're looking for (which is now the second
-step); this is immediate from the structure of $R$, $S$, and transformed
-signatures. 
+In both cases, the proof is by
+induction on the structure of $T$ and case analysis on the first
+steps in $T$. 
+%
+If the first step does not proceed by focusing on $y$ (part 1) or
+focusing on a rule in the signature and consuming $y$ (part 2), then
+we proceed by induction on the smaller trace to move the relevant step
+to the front. We have to check that the first step doesn't output any
+variables that are input variables of the relevant step.  This is
+immediate from the structure of $R$, $S$, and transformed signatures.
 \end{proof}
 
+The main soundness theorem is Theorem~\ref{thm:opersound}. The first
+three cases of Theorem~\ref{thm:opersound} are straightforward 
+transformations from deductive proofs to deductive proofs, and the last
+two cases are the key. In the last two cases, we take a trace that, by
+its type, must contain the information needed to 
+reconstruct a deductive proof, and we use induction and inversion to
+read off the form of that proof.
+
+\bigskip
 \begin{theorem}[Soundness of operationalization]\label{thm:opersound}
 If all propositions in $\Gamma$ have the form 
 $x{:}\ispers{D}$ or $z{:}\susp{p^+_{\mpers}}$, and all propositions in 
 $\Delta$ have the form $x{:}\ispers{D}$, $z{:}\susp{p^+_{\mpers}}$,
-$x{:}\susp{{\sf eval\_b}\,t}$, $x{:}\susp{{\sf retn\_b}\,t}$, or
+$x{:}\susp{{\sf eval\_b}\,\lf{t}}$, $x{:}\susp{{\sf retn\_b}\,\lf{t}}$, or
 $x{:}\istrue{R}$, 
 \begin{enumerate}
 \item If $\slss{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}}{\susp{p^-_d}}$,
@@ -1244,24 +1236,24 @@ then $\slss{\Sigma}{\Psi}{\Gamma}{\susp{p^-_d}}$.
 \item If $\slss{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}}{\opsubst{G}}$, then
  $\slss{\Sigma}{\Psi}{\Gamma}{G}$.
 \item If $\Delta$ matches $\frameoff{\opsubst{\Theta}}{\opsubst{\Gamma}}$,
-$\Gamma_z$ matches $z{:}\susp{{\sf retn\_z}\,t_z}$, \\
+$\Gamma_z$ matches $z{:}\susp{{\sf retn\_z}\,\lf{t_z}}$, \\
 and
-$(\Psi; \frameoff{\opsubst{\Theta}}{\mkconj{\Gamma}{x{:}\susp{{\sf eval\_a}\,t}}}) \leadsto^*_{\transop{\Sigma}} (\Psi; \Gamma_z)$, \\
-then there exists an $s$ s.t.
-$\slss{\Sigma}{\Psi}{\Gamma}{\susp{{\sf ac}\,t\,s}}$ and
-$(\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,s}}) 
+$(\Psi; \frameoff{\opsubst{\Theta}}{\mkconj{\Gamma}{x{:}\susp{{\sf eval\_a}\,\lf{t}}}}) \leadsto^*_{\transop{\Sigma}} (\Psi; \Gamma_z)$, \\
+then there exists an $\lf{s}$ s.t.
+$\slss{\Sigma}{\Psi}{\Gamma}{\susp{{\sf ac}\,\lf{t}\,\lf{s}}}$ and
+$(\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,\lf{s}}}) 
    \leadsto^*_{\transop{\Sigma}}
  (\Psi; \Gamma_z)$.
 \item If $\Delta$ matches $\frameoff{\opsubst{\Theta}}{\opsubst{\Gamma}}$,
-$\Gamma_z$ matches $z{:}\susp{{\sf retn\_z}\,t_z}$, \\
+$\Gamma_z$ matches $z{:}\susp{{\sf retn\_z}\,\lf{t_z}}$, \\
 $\slss{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}, [\opbasic{A_i,\ldots,A_n}{t_{n+1}}{\sigma_i}]}{\susp{\{C^+\}}}{}$, and 
 $(\Psi; \tackon{\opsubst{\Theta}}{C^+})
          \leadsto^*_{\transop{\Sigma}}
        (\Psi; \Gamma_z)$, \\
-then there exists a $\sigma \supseteq \sigma_i$ such that 
-$\slss{\Sigma}{\Psi}{\Gamma}{[{\sigma}A^+_j]}$ for $i \leq j \leq n$\\
+then there exists a $\lf{\sigma} \supseteq \lf{\sigma_i}$ such that 
+$\slss{\Sigma}{\Psi}{\Gamma}{[\lf{\sigma}A^+_j]}$ for $i \leq j \leq n$\\
 and 
-$(\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,(\sigma t_{n+1})}})
+$(\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,(\lf{\sigma t_{n+1}})}})
   \leadsto^*_{\transop{\Sigma}}
  (\Psi; \Delta_z)$. 
 \end{enumerate}
@@ -1270,63 +1262,81 @@ $(\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,(\sigma t_{n+1})}})
 \begin{proof}
 By induction on the structure of the given derivation or given trace. Parts 
 1 and 3 exactly match the structure of the completeness proof 
-(Theorem~\ref{thm:opercomp}), and the only difference in Part 2 is the case
-where $D = {!}p_c \lefti D'$. 
-
-In the interesting case of part 2, $D = {!}p_c \lefti D'$ where ${\sf
-  p_c} = {\sf ac}\,t_1\,t_2$, and we have that 
-$\opsubst{D} = {!}({\sf eval\_a}\,t_1
-\lefti \{ {\sf retn\_a}\,t_2 \}) \lefti \opsubst{D'}$. Thus, 
-the given derivation is 
-$\Sp = \tappl{\tbangr{(\tlaml{\tetap{x}{\tlet{T}{y}}})}}{\Sp'}$.
+(Theorem~\ref{thm:opercomp}); the only difference in Part 2 is the case
+where $D = {!}p_c \lefti D'$. In his case, we reason as follows:
 
 \begin{tabbing}
-$T :: (\Psi; \Gamma, x{:}\susp{{\sf eval\_a}\,t_1}) \leadsto^*_{\transop{\Sigma}} (\Psi; \Gamma_z)$
+$D = {!}p_c \lefti D'$, where $p_c = {\sf ac}\,\lf{t_1}\,\lf{t_2}$
  \` (given)
 \\
-$\Gamma_z$ matches $y{:}\susp{{\sf retn\_a}\,t_2}$ 
+$\opsubst{D} = {!}({\sf eval\_a}\,\lf{t_1}
+\lefti \{ {\sf retn\_a}\,\lf{t_2} \}) \lefti \opsubst{D'}$
+ \` (definition of $\opsubst{D}$)
+\\
+$\slst{\transop{\Sigma}}{\Psi}{\Gamma, [{!}({\sf eval\_a}\,\lf{t_1}
+\lefti \{ {\sf retn\_a}\,\lf{t_2} \}) \lefti \opsubst{D'}]}{\Sp}{\susp{p^-_d}}$
  \` (given)
 \\
-$\slst{\transop{\Sigma}}{\Psi}{\Gamma, [\opsubst{D'}]}{\Sp'}{\susp{p^-_d}}$
- \` (given)
+$\Sp = \tbangr{(\lambda x.\,\tlet{T}{y})}; \Sp'$, where
+ \` (inversion on the type of $\Sp$)
+\\
+\qquad $T :: (\Psi; \Gamma, x{:}\susp{{\sf eval\_a}\,\lf{t_1}}) \leadsto^*_{\transop{\Sigma}} (\Psi; \Gamma_z)$,
+ \` ''\qquad\qquad~
+\\
+\qquad $\Gamma_z$ matches $y{:}\susp{{\sf retn\_a}\,\lf{t_2}}$, and
+ \` ''\qquad\qquad~
+\\
+\qquad $\slst{\transop{\Sigma}}{\Psi}{\Gamma, [\opsubst{D'}]}{\Sp'}{\susp{p^-_d}}$
+ \` ''\qquad\qquad~
 \\
 $\slst{{\Sigma}}{\Psi}{\Gamma, [{D'}]}{\Sp''}{\susp{p^-_d}}$
  \` (ind. hyp. (part 2) on $\Sp'$)
 \\
-$\slst{\Sigma}{\Psi}{\Gamma}{N}{\susp{{\sf ac}\,t_1\,s}}$
+$\slst{\Sigma}{\Psi}{\Gamma}{N}{\susp{{\sf ac}\,\lf{t_1}\,\lf{s}}}$
  \` (ind. hyp. (part 4) on $T$)
 \\
-$T' :: (\Psi; \Gamma, y'{:}\susp{{\sf retn\_a}\,s})
+$T' :: (\Psi; \Gamma, y'{:}\susp{{\sf retn\_a}\,\lf{s}})
          \leadsto^*_{\transop{\Sigma}}
        (\Psi; \Gamma_z)$
- \` (ind. hyp. (part 4) on $T$)
+ \` ''\qquad\qquad~
 \\
-$T' = \emptytrace$, $y' = y$, and $t_2 = s$
+$T' = \emptytrace$, $y' = y$, and $\lf{t_2} = \lf{s}$
  \` (case analysis on the structure of $T'$)
 \\
-$\slst{\Sigma}{\Psi}{\Gamma, [D]}{\tappl{\tbangr{N}}{\Sp'}}{\susp{p^-_d}}$
+$\slst{\Sigma}{\Psi}{\Gamma, [{!}p_c \lefti D']}{\tbangr{N}; {\Sp'}}{\susp{p^-_d}}$
  \` (construction)
 \end{tabbing}
 
+\noindent
+{\bf Part 4}
 In part 4, we are given a trace 
-$T :: (\Psi; \frameoff{\opsubst{\Theta}}{x{:}\susp{{\sf eval\_a}\,t}}) 
+$T :: (\Psi; \frameoff{\opsubst{\Theta}}{x{:}\susp{{\sf eval\_a}\,\lf{t}}}) 
        \leadsto^*_{\transop{\Sigma}} 
       (\Psi; \Gamma_z)$
 and we use Theorem~\ref{thm:rearrangement} to get
-$T \equiv \tstep{p}{{\sf r}}{(\tforalll{\overline{u}}{(\tappl{x}{\Sp})})}; T'$;
+% (\tforalll{\overline{u}}{(\tappl{x}{\Sp})})
+$T \equiv \tstep{P}{\sf r}{(\lf{\overline{u}})}; T'$;
 we let $\sigma_0 = (\overline{u}/\overline{x})$. 
 \begin{tabbing}
-${\sf r} : \forall \overline{x_0}.\, {\sf eval\_a}\,t_0 \lefti 
+$T :: (\Psi; \frameoff{\opsubst{\Theta}}{x{:}\susp{{\sf eval\_a}\,\lf{t}}}) 
+       \leadsto^*_{\transop{\Sigma}} 
+      (\Psi; \Gamma_z)$
+ \` (given)
+\\
+$T = \tstep{P}{\sf r}{(\lf{\overline{u}})}; T'$
+ \` (Theorem~\ref{thm:rearrangement} on $T$)
+\\
+\qquad ${\sf r} : \forall \lf{\overline{x_0}}.\, {\sf eval\_a}\,\lf{t_0} \lefti 
    \opbasic{A^+_1, \ldots, A^+_n}{t_{n+1}}{\sf id} \in \transop{\Sigma}$ 
- \` (given)
+ \` ''\qquad\qquad~
 \\
-$t = {\sigma_0}t_0$ 
- \` (given)
+\qquad $\lf{t} = \lf{{\sigma_0}t_0}$ 
+ \` ''\qquad\qquad~
 \\
-$\slst{\transop{\Sigma}}{\Psi}{\Gamma,[\opbasic{A_1^+,\ldots,A_n^+}{t_{n+1}}{\sigma_0}]}{\Sp}{\susp{\{ C^+ \}}}$ 
- \` (given)$^*$
+\qquad $\slst{\transop{\Sigma}}{\Psi}{\Gamma,[\opbasic{A_1^+,\ldots,A_n^+}{t_{n+1}}{\sigma_0}]}{\Sp}{\susp{{\ocircle} C^+}}$ 
+ \` ''\qquad\qquad~
 \\
-$T' :: (\Psi; \tackon{\opsubst{\Theta}}{C^+})
+\qquad $T' :: (\Psi; \tackon{\opsubst{\Theta}}{C^+})
          \leadsto^*_{\transop{\Sigma}}
        (\Psi; \Gamma_z)$ 
  \` (given)

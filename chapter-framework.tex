@@ -1255,6 +1255,19 @@ complete proof of $\foc{\Psi'}
       {\islax{[\lf{\sigma'}A^+]}}$ that follows the series of synthetic
 transitions.
 
+Both of the endpoints of a trace are stable sequents, but it will
+occasionally be useful to talk about steps and traces that start from
+unstable sequents by decompositing positive propositions. We will use
+the usual trace notation $(\Psi; \Delta)_{\lf\sigma}
+\leadsto^*_{\Sigma,\subord} (\Psi'; \Delta')_{\lf{\sigma'}}$ to
+describe the type of these partial proofs. The proof term
+associated with this type will be written as $\lambda P.T$, where $P :: (\Psi;
+\Delta)_{\lf\sigma} \Longrightarrow_{\Sigma,\subord} (\Psi'';
+\Delta'')_{\lf{\sigma''}}$ and $T :: (\Psi'';
+\Delta'')_{\lf{\sigma''}} \leadsto^*_{\Sigma,\subord} (\Psi';
+\Delta')_{\lf{\sigma'}}$.
+
+
 \subsection{Presenting traces}
 
 To present traces in a readable way, we can use a notation that
@@ -1829,6 +1842,12 @@ $\Delta = \ctxinterp{k \rhd s}$ for some $\obj{k}$ and $\obj{s}$. This
 will complete the proof: an injective and surjective function is
 bijective.
 
+\subsubsection{Encoding is injective}
+
+We prove that for
+any $\obj{k \rhd s}$, there exists a trace $T ::
+(x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\it Gen} \ctxinterp{k \rhd
+  s}$ with a series of three lemmas.
 
 \begin{lemma} For all $\obj{k}$, there exists
 $T :: ({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
@@ -1914,8 +1933,16 @@ and frame weakening (Theorem~\ref{thm:frameweak}):
         \ctxinterp{s}) \\
 & \qquad\qquad = \ctxinterp{k \rhd s}
 \end{align*}
-This lemma establishes that encoding is an injective
-function; it remains to be shown that encoding function is surjective. 
+
+
+\subsubsection{Encoding is surjective}
+
+We prove that if $T :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it
+    Gen}} \Delta$ and $\restrictsig{\Delta}{\Sigma_{\it PDA}}$ then
+$\Delta = \ctxinterp{k \rhd s}$ for some $\obj{k}$ and $\obj{s}$
+any $\obj{k \rhd s}$, there exists a trace $T ::
+(x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\it Gen} \ctxinterp{k \rhd
+  s}$ with a series of two lemmas.
 
 \begin{lemma} If 
 $T :: (\ctxinterp{k}, 
