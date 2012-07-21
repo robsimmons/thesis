@@ -559,10 +559,10 @@ case to the definition of
 $\opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma}$:
 
 \begin{itemize}
-\item $\opbasic{{!}{\sf a}\,\lf{t^{\it in}_n}\,\lf{t_{n+1}}}{\lf{t_{n+1}}}{\sigma} 
+\item $\opbasic{{!}{\sf b}\,\lf{t^{\it in}_n}\,\lf{t_{n+1}}}{\lf{t_{n+1}}}{\sigma} 
   = \{{\sf eval\_a}\,\lf{({\sigma}{t^{\it in}_n})}\}$
 \\
-  {\it (where $t_{n+1}$ is fully general)}
+  {\it (where $t_{n+1}$ is fully general and ${\sf retn\_a} = {\sf retn\_b}$)}
 \end{itemize}
 This case overlaps with the third case of the definition given
 in Section~\ref{sec:trans-basic}, which indicates that tail-recursion
@@ -932,23 +932,21 @@ get $\lf{\sigma_i} = \lf{(\overline{s_0}/\overline{x_0},\ldots,
 we have a value
 $\slst{\Sigma}{\Psi}{\Gamma}{V_i}{[\lf{\sigma_i}{A^+_i}]}$. 
 We also have $\lf{t} = \lf{\sigma_0{t_0}}$ and $\lf{s} = \lf{\sigma_n{t_{n+1}}}$.
-
-Because 
-${\sf r}{:}\forall\lf{\overline{x_0}}.\,{\sf eval\_a}\,\lf{t_0} \lefti \opbasic{A_1, \ldots, A_n}{t_{n+1}}{{\sf id}} \in \transop{\Sigma}$, by focusing
-on that constant
-it suffices to show that, for all $1 \leq i \leq n$, 
+It suffices to show that, for any $1 \leq i \leq n$, 
 there is
 \smallskip
 \begin{itemize}
-\item a spine $\Sp'$ such that 
+\item a spine $\Sp$ such that 
 $\slst{\transop\Sigma}{\Psi}{\opsubst{\Gamma},[
 \opbasic{A_i^+, \ldots, A_n^+}{t_{n+1}}{\sigma_0}
-]}{\Sp'}{\susp{{\ocircle}C^+}}$,
+]}{\Sp}{\susp{{\ocircle}C^+}}$,
 \item a pattern+trace $\lambda P.T :: (\Psi; \tackon{\opsubst{\Theta}}{C^+}) 
 \leadsto^*_{\transop{\Sigma}}
- (\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,({\sigma_n}t_{n+1})})$.\footnote{The derived pattern+trace form is discussed at the end of Section~\ref{sec:framework-concurrent}.}
+ (\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,\lf{({\sigma_n}t_{n+1})}})$.\footnote{The derived pattern+trace form is discussed at the end of Section~\ref{sec:framework-concurrent}.}
 \end{itemize}
 \smallskip
+Once we prove this, the trace we need to show is $\tstep{P}{\sf r}{(\lf{s_0};\Sp)}; T$.
+
 We will prove this
 by induction on the length of the sequence sequence $A_i,\ldots,A_n$, and
 proceed
@@ -958,11 +956,11 @@ by case analysis on the definition of the operationalization transformation:
 
   \bigskip
   This is a base case: 
-  let $\Sp' = \tnil$, $P = y$, and $T = \emptytrace$, and 
+  let $\Sp = \tnil$, $P = y$, and $T = \emptytrace$, and 
   we are done.
   \bigskip
 
-\item $\opbasic{{!}{\sf ac}\,\lf{t^{\it in}_n}\,\lf{t_{n+1}}}{t_{n+1}}{\sigma_{n-1}} 
+\item $\opbasic{{!}{\sf ac}\,\lf{t^{\it in}_n}\,\lf{t_{n+1}}}{t_{n+1}}{\lf{\sigma_{n-1}}} 
   = {\ocircle}({\sf eval\_a}\,\lf{(\sigma_{n-1}{t^{\it in}_n})})$
 
   \bigskip
@@ -972,18 +970,18 @@ by case analysis on the definition of the operationalization transformation:
   observe that $\lf{\sigma_{n-1}{t_n^{\it in}}} = \lf{\sigma_n{t_n^{\it in}}}$.
 
   \smallskip
-  This is also a base case: let $\Sp' = \tnil$, and let
+  This is also a base case: let $\Sp = \tnil$, and let
   $P = x_n :: (\Psi; 
   \tackon{\opsubst{\Theta}}
-  {{\sf eval\_a}\,(\sigma_{n}{t^{\it in}_n})}) \Longrightarrow_{\transop{\Sigma}}
+  {{\sf eval\_a}\,\lf{(\sigma_{n}{t^{\it in}_n})})} \Longrightarrow_{\transop{\Sigma}}
    (\Psi; 
   \tackon{\opsubst{\Theta}}
-  {x_{n}{:}{\susp{{\sf eval\_a}\,(\sigma_{n}{t^{\it in}_n})}}})$.
-We need to construct a trace $(\Psi; 
+  {x_{n}{:}{\susp{{\sf eval\_a}\,\lf{(\sigma_{n}{t^{\it in}_n})}}}})$.
+We need a trace $T :: (\Psi; 
   \tackon{\opsubst{\Theta}}
-  {x_{n}{:}{\susp{{\sf eval\_a}\,(\sigma_{n}{t^{\it in}_n})}}})
+  {x_{n}{:}{\susp{{\sf eval\_a}\,\lf{(\sigma_{n}{t^{\it in}_n})}}}})
   \leadsto^*_{\transop{\Sigma}} 
-  (\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,s})$; 
+  (\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,\lf{(\sigma_n{t_{n+1}})}})$; 
   this follows from the
   outer induction hypothesis (part 4) on $N$. 
   \bigskip
@@ -1015,20 +1013,25 @@ We need to construct a trace $(\Psi;
   \\ 
   \` (construction)
   \end{tabbing}
+  We conclude  by letting $\Sp = \lf{\overline{s_i}}; z; \Sp'$.
+  \bigskip
 
 \item $\opbasic{{!}p^-_{ci},\ldots,{!}p^-_{cj},A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}$
   \\
-  $~ \qquad = {\ocircle}({\sf eval\_bi}\,\lf{({\sigma_{i-1}}t^{\it in}_i)}
+  $~ \qquad = {\ocircle}\left(
+      \begin{array}{l}
+        {\sf eval\_bi}\,\lf{({\sigma_{i-1}}t^{\it in}_i)}
                     \fuse  \ldots \fuse
-                 {\sf eval\_bj}\,\lf{({\sigma_{i-1}}t^{\it in}_j)} \fuse ~$
-  \\
-  $~ \qquad \qquad \quad (\forall\lf{\overline{x_i}}\ldots\forall\lf{\overline{x_j}}.\, 
-     {\sf retn\_bi}\,\lf{(\sigma_{i-1}{t^{\it out}_i})}
-     \fuse \ldots \fuse 
-     {\sf retn\_bj}\,\lf{(\sigma_{i-1}{t^{\it out}_j})}$
-  \\
-  $~ \qquad \qquad \qquad
-   \lefti \opbasic{A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}))$\\
+                 {\sf eval\_bj}\,\lf{({\sigma_{i-1}}t^{\it in}_j)} \fuse ~
+      \\
+      (\forall\lf{\overline{x_i}}\ldots\forall\lf{\overline{x_j}}.\, 
+        {\sf retn\_bi}\,\lf{(\sigma_{i-1}{t^{\it out}_i})}
+        \fuse \ldots \fuse 
+        {\sf retn\_bj}\,\lf{(\sigma_{i-1}{t^{\it out}_j})}
+      \\
+      ~ \quad
+      \lefti \opbasic{A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}))
+      \end{array}\right)$\\
   {\it (where
    $p^-_{ck}$ is ${\sf bkc}\,\lf{t^{\it in}_k}\,\lf{t^{\it out}_k}$ 
    and $\emptyset = FV(\lf{t_k^{\it in}}) \cap (\lf{\overline{x_i}} \cup \ldots \cup \lf{\overline{x_j}})$ 
@@ -1038,7 +1041,7 @@ We need to construct a trace $(\Psi;
   Let $\Sp = \tnil$ and $P = y_i,\ldots,y_j,y_{ij}$. It suffices 
   to show that there is a trace
 \begin{align*}
-    &(\Psi, \opsubst{\Theta} \tackonstart
+  T ::  ~  &(\Psi, \opsubst{\Theta} \tackonstart
         y_i{:}\susp{{\sf eval\_bi}\,\lf{({\sigma_{i-1}}t^{\it in}_i)}}, \ldots,
     y_j{:}\susp{{\sf eval\_bj}\,\lf{({\sigma_{i-1}}t^{\it in}_j)}},
   \\
@@ -1051,7 +1054,7 @@ We need to construct a trace $(\Psi;
        \tackonstop)
   \\
   & \quad \leadsto^*_{\transop{\Sigma}} 
-     (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,({\sigma_n}t_{n+1})}})
+     (\Psi; \tackon{\opsubst{\Theta}}{z{:}\susp{{\sf retn\_a}\,({\sigma_n}t_{n+1})}})
 \end{align*}
 
   \begin{tabbing}
@@ -1086,17 +1089,15 @@ We need to construct a trace $(\Psi;
   \\
   $\slst{\transop{\Sigma}}{\Psi}
      {\Gamma,[\opbasic{A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{j}}]}
-     {\Sp'}{\susp{{\ocircle}C^+}}$  \` (by inner ind. hyp.)
+     {\Sp'}{\susp{{\ocircle}C^+}}$  
+  \` (by inner ind. hyp.)
   \\
-  $P' :: (\Psi, \tackon{\opsubst{\Theta}}{C^+}) \Longrightarrow_{\transop{\Sigma}}
-        (\Psi, \tackon{\opsubst{\Theta}}{\Delta})$ 
-   \` (by inner ind. hyp.)
-  \\
-  $T' :: (\Psi, \tackon{\opsubst{\Theta}}{\Delta}) \leadsto^*_{\transop{\Sigma}}
+  $\lambda P'.T' :: (\Psi, \tackon{\opsubst{\Theta}}{C^+}) 
+       \leadsto^*_{\transop{\Sigma}}
         (\Psi, \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,s}})$ 
-   \` (by inner ind. hyp.)
+ \` ''\qquad\qquad~
   \end{tabbing}
-  We can conclude letting $T = 
+  We  conclude  by letting $T = 
   \left(T_0; \tstep{P'}{y_{ij}}{(\lf{\overline{s_i}}; \ldots \lf{\overline{s_j}}; (\tfuser{y_i}{\tfuser{\ldots}{y_j}}); \Sp')}; T'\right)$.
   \bigskip
 
@@ -1117,23 +1118,20 @@ We need to construct a trace $(\Psi;
   $\slst{\transop{\Sigma}}{\Psi}{\Gamma, [\opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma_{i}}]}{\Sp'}{\susp{{\ocircle}C^+}}$
   \` (by inner ind. hyp.)
   \\
-  $P :: (\Psi; \tackon{\opsubst{\Theta}}{C^+}) \Longrightarrow^*_{\transop{\Sigma}}
-   (\Psi; \tackon{\opsubst{\Theta}}{\Delta})$
-  \` (by inner ind. hyp.)
-  \\
-  $T :: (\Psi; \tackon{\opsubst{\Theta}}{\Delta}) \leadsto^*_{\transop{\Sigma}}
+  $\lambda P.T :: (\Psi; \tackon{\opsubst{\Theta}}{C^+}) \leadsto^*_{\transop{\Sigma}}
    (\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,\lf{s}})$
-  \` (by inner ind. hyp.)
+ \` ''\qquad\qquad~
   \\
   $\slst{\transop{\Sigma}}{\Psi}
     {\Gamma, [\forall \lf{\overline{x_i}}.\, {!}(\lf{\sigma_{i-1}}{G})
                 \lefti \opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}]}
     %{\left(\tforalll{\overline{s_i}}{\tappl{\tbangr{N}}{\Sp'}}\right)}
-    {(\lf{\overline{s_i}}; {!}N; \Sp')}
+    {(\lf{\overline{s_i}}; \tbangr{N'}; \Sp')}
     {\susp{{\ocircle}C^+}}$
   \\ 
   \` (construction)
   \end{tabbing}
+  We conclude  by letting $\Sp = \lf{\overline{s_i}}; \tbangr{N'}; \Sp'$.
 \end{itemize}
 
 \noindent
