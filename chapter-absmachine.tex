@@ -1251,7 +1251,7 @@ $(\Psi; \tackon{\opsubst{\Theta}}{C^+})
 then there exists a $\lf{\sigma} \supseteq \lf{\sigma_i}$ such that 
 $\slss{\Sigma}{\Psi}{\Gamma}{[\lf{\sigma}A^+_j]}$ for $i \leq j \leq n$\\
 and 
-$(\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,(\lf{\sigma t_{n+1}})}})
+$(\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,\lf{(\lf{\sigma t_{n+1}})}}})
   \leadsto^*_{\transop{\Sigma}}
  (\Psi; \Delta_z)$. 
 \end{enumerate}
@@ -1307,13 +1307,13 @@ $\slst{\Sigma}{\Psi}{\Gamma, [{!}p_c \lefti D']}{\tbangr{N}; {\Sp'}}{\susp{p^-_d
 
 \noindent
 {\bf Part 4}
-In part 4, we are given a trace 
-$T :: (\Psi; \frameoff{\opsubst{\Theta}}{x{:}\susp{{\sf eval\_a}\,\lf{t}}}) 
-       \leadsto^*_{\transop{\Sigma}} 
-      (\Psi; \Gamma_z)$
-and we use Theorem~\ref{thm:rearrangement} to get
+%In part 4, we are given a trace 
+%$T :: (\Psi; \frameoff{\opsubst{\Theta}}{x{:}\susp{{\sf eval\_a}\,\lf{t}}}) 
+%       \leadsto^*_{\transop{\Sigma}} 
+%      (\Psi; \Gamma_z)$
+%and we use Theorem~\ref{thm:rearrangement} to get
 % (\tforalll{\overline{u}}{(\tappl{x}{\Sp})})
-$T \equiv \tstep{P}{\sf r}{(\lf{\overline{u}})}; T'$;
+% $T \equiv \tstep{P}{\sf r}{(\lf{\overline{u}})}; T'$;
 we let $\sigma_0 = (\overline{u}/\overline{x})$. 
 \begin{tabbing}
 $T :: (\Psi; \frameoff{\opsubst{\Theta}}{x{:}\susp{{\sf eval\_a}\,\lf{t}}}) 
@@ -1321,7 +1321,7 @@ $T :: (\Psi; \frameoff{\opsubst{\Theta}}{x{:}\susp{{\sf eval\_a}\,\lf{t}}})
       (\Psi; \Gamma_z)$
  \` (given)
 \\
-$T = \tstep{P}{\sf r}{(\lf{\overline{u}})}; T'$
+$T = \tstep{P}{\sf r}{(\lf{\overline{u}}; x; \Sp)}; T'$
  \` (Theorem~\ref{thm:rearrangement} on $T$)
 \\
 \qquad ${\sf r} : \forall \lf{\overline{x_0}}.\, {\sf eval\_a}\,\lf{t_0} \lefti 
@@ -1334,74 +1334,123 @@ $T = \tstep{P}{\sf r}{(\lf{\overline{u}})}; T'$
 \qquad $\slst{\transop{\Sigma}}{\Psi}{\Gamma,[\opbasic{A_1^+,\ldots,A_n^+}{t_{n+1}}{\sigma_0}]}{\Sp}{\susp{{\ocircle} C^+}}$ 
  \` ''\qquad\qquad~
 \\
-\qquad $T' :: (\Psi; \tackon{\opsubst{\Theta}}{C^+})
+\qquad $\lambda P.T' :: (\Psi; \tackon{\opsubst{\Theta}}{C^+})
          \leadsto^*_{\transop{\Sigma}}
        (\Psi; \Gamma_z)$ 
- \` (given)
+ \` ''\qquad\qquad~
 \\
-$\slst{\Sigma}{\Psi}{\Gamma}{V_i}{[\sigma{A^+_i}]}$ for $1 \leq j \leq n$
+$\slst{\Sigma}{\Psi}{\Gamma}{V_i}{[\lf{\sigma}{A^+_i}]}$ for $1 \leq j \leq n$
 \` (ind. hyp. (part 5) on $\Sp$ and $T'$)
 \\
 $T'' :: (\Psi; \tackon{\opsubst{\Theta}}
-                 {y{:}\susp{{\sf retn\_a}\,({\sigma}t_{n+1})}})
+                 {y{:}\susp{{\sf retn\_a}\,\lf{({\sigma}t_{n+1})}}})
          \leadsto^*_{\transop{\Sigma}}
         (\Psi; \Gamma_z)$
-\` (ind. hyp. (part 5) on $\Sp$ and $T'$)
+ \` ''\qquad\qquad~
 \end{tabbing}
 
 \noindent
-The trace $T''$ is half of what we needed to show. For the rest, we observe
-that ${\sf r} \in \Sigma$ has a type equivalent to
-$\forall \overline{x_0}\ldots \forall \overline{x_n}.\,
-  A^+_n \lefti \ldots \lefti A^+_0 \lefti {\sf ac}\,t_0\,t_{n+1}$. Therefore,
-by letting
-$s = {\sigma}t_{n+1}$ and using the $V_i$ from the induction hypothesis,
-we can construct a derivation of 
-$\slss{\Sigma}{\Psi}{\Gamma}{\susp{{\sf ac}\,t\,s}}$ by focusing on
-${\sf r}$, which is the other thing we needed to show.
+We needed to show a derivation and a trace: the trace $T''$ is
+precisely the latter thing. For the derivation of ${\sf
+  ac}\,\lf{t}\,\lf{s}$ (for some $\lf{s}$), we observe that ${\sf r}
+\in \Sigma$ has a type equivalent to $\forall
+\lf{\overline{x_0}}\ldots \forall \lf{\overline{x_n}}.\, A^+_n \lefti
+\ldots \lefti A^+_0 \lefti {\sf ac}\,\lf{t_0}\,\lf{t_{n+1}}$.
+Therefore, by letting $\lf{s} = \lf{{\sigma}t_{n+1}}$ and using the
+$V_i$ from the induction hypothesis (part 5) above, we can construct a
+derivation of $\slss{\Sigma}{\Psi}{\Gamma}{\susp{{\sf
+      ac}\,\lf{t}\,\lf{s}}}$ by focusing on ${\sf r}$, which is the
+other thing we needed to show.
 
-In part 5, we are given a spine
+The step above where we assume that the head of ${\sf r}$ involves the
+predicate ${\sf ac}$ is the only point in the correctness proofs where
+we rely on the fact that each transformed predicate ${\sf eval\_a}$ is
+associated with exactly one original-signature predicate ${\sf ac}$ --
+if this were not the case and ${\sf eval\_a}$ were also associated
+with an original-signature predicate ${\sf b}$, then we might get the
+``wrong'' derivation back from this step. We do not have to similarly
+rely on ${\sf retn\_a}$ being similarly uniquely associated with ${\sf
+  ac}$.
+
+
+\bigskip\noindent
+{\bf Part 5}
+We are given a spine
 $\slst{\transop{\Sigma}}{\Psi}
   {\opsubst{\Gamma},[\opbasic{A_i,\ldots,A_n}{t_{n+1}}{\sigma_i}]}
   {\Sp}{\susp{\{C^+\}}}$ and a trace
-$T :: (\Psi; \tackon{\opsubst{\Theta}}{C^+})
+$\lambda P.T :: (\Psi; \tackon{\opsubst{\Theta}}{C^+})
          \leadsto^*_{\transop{\Sigma}}
-       (\Psi; \Gamma_z)$. We proceed by case analysis on the definition of
+       (\Psi; \Gamma_z)$. 
+We need to show a $\lf{\sigma} \supseteq \lf{\sigma_i}$, an
+$\slst{\transop{\Sigma}}{\Psi}{\Gamma}{N}{[\lf\sigma A^+_k]}$
+for $i \leq j \leq n$, and 
+$T' :: (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,\lf{(\lf{\sigma t_{n+1}})}}})
+  \leadsto^*_{\transop{\Sigma}}
+ (\Psi; \Delta_z)$.
+
+We proceed by case analysis on the definition of
 the operationalization transformation:
 \begin{itemize}
-\item $\opbasic{}{t_{n+1}}{\sigma_n} = \{ {\sf retn\_a}\,(\sigma_{n}{t_{n+1}}) \}$
+\item $\opbasic{}{t_{n+1}}{\sigma_n} = \{ {\sf retn\_a}\,\lf{(\sigma_{n}{t_{n+1}})} \}$
 
   \bigskip
-  This is a base case, and there are no values to construct. Because
-  $(\Psi; \tackon{\opsubst{\Theta}}{{\sf retn\_a}\,(\sigma_{n}{t_{n+1}})})$
+  This is a base case: there are no values to construct. By inversion on the
+  type of $P$ we know it has the form
+  $y :: (\Psi; \tackon{\opsubst{\Theta}}{{\sf retn\_a}\,\lf{(\sigma_{n}{t_{n+1}})}}) \Longrightarrow_{\transop{\Sigma}} (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,\lf{(\sigma_{n}{t_{n+1}})}}})$. 
+  %
+  Let $\lf{\sigma} = \lf{\sigma_n}$
+  and we are done; the trace $T$ is the necessary trace. 
+  %
+  Because
+  $(\Psi; \tackon{\opsubst{\Theta}}{{\sf retn\_a}\,\lf{(\sigma_{n}{t_{n+1}})}})$
   decomposes to 
-  $(\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,(\sigma_{n}{t_{n+1}})}})$, we let $\sigma = \sigma_n$ and we are done.
+  $(\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,\lf{(\sigma_{n}{t_{n+1}})}}})$, we let $\lf{\sigma} = \lf{\sigma_n}$ and we are done.
   \bigskip
 
-\item $\opbasic{{!}{\sf ac}\,t^{\it in}_n\,t_{n+1}}{t_{n+1}}{\sigma_{n-1}} 
+\item $\opbasic{{!}{\sf ac}\,\lf{t^{\it in}_n}\,\lf{t_{n+1}}}{t_{n+1}}{\sigma_{n-1}} 
   = \{{\sf eval\_a}\,(\sigma_{n-1}{t^{\it in}_n})\}$
 
   \bigskip
-  This is also a base case, and we have to construct a $\sigma$ and one value
-  of type ${!}{\sf ac}\,{\sigma}t^{\it in}_n\,{\sigma}t_{n+1}$. The
-  process state  
-  $(\Psi; \tackon{\opsubst{\Theta}}{{\sf eval\_a}\,(\sigma_{n}{t^{\it in}_{n}})})$
-  decomposes to 
-  $(\Psi; \tackon{\opsubst{\Theta}}
-            {y{:}\susp{{\sf eval\_a}\,(\sigma_{n}{t^{\it in}_{n}})}})$,
-  so $T$ can be passed to the induction hypothesis 
-  (part 4) giving us an $s$ such that 
-  $\slst{\Sigma}{\Psi}{\Gamma}{N}{\susp{{\sf ac}\,t\,s}}$ and
-  $T' :: (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,s}}) 
+  This is also a base case: we have one value of type 
+  ${!}{\sf ac}\,\lf{({\sigma}t^{\it in}_n)}\,\lf{({\sigma}t_{n+1})}$ to construct, where
+  $\lf{\sigma} \supseteq \lf{\sigma_{n-1}}$. By inversion on the type of
+  $P$ we know it has the form 
+  $y :: (\Psi; \tackon{\opsubst{\Theta}}{{\sf eval\_a}\,\lf{(\sigma_{n}{t^{\it in}_{n}})}}) \Longrightarrow_{\transop{\Sigma}}
+     (\Psi; \tackon{\opsubst{\Theta}}
+            {y{:}\susp{{\sf eval\_a}\,\lf{(\sigma_{n}{t^{\it in}_{n}})}}})$, 
+  meaning that $T :: (\Psi; \tackon{\opsubst{\Theta}}
+            {y{:}\susp{{\sf eval\_a}\,\lf{(\sigma_{n}{t^{\it in}_{n}})}}})
+    \leadsto^*_{\transop{\Sigma}}
+ (\Psi; \Delta_z)$.
+
+  \smallskip
+  By the induction hypothesis (part 4) on $T$, we have an $\lf{s}$ such
+  that $\slst{\Sigma}{\Psi}{\Gamma}{N}{\susp{{\sf ac}\,\lf{t}\,\lf{s}}}$ and a 
+  trace
+  $T' :: (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,\lf{s}}}) 
    \leadsto^*_{\transop{\Sigma}}
   (\Psi; \Gamma_z)$. 
 
+% , and we have to construct a $\sigma$ and one value
+%   of type ${!}{\sf ac}\,{\sigma}t^{\it in}_n\,{\sigma}t_{n+1}$. The
+%   process state  
+%   $(\Psi; \tackon{\opsubst{\Theta}}{{\sf eval\_a}\,(\sigma_{n}{t^{\it in}_{n}})})$
+%   decomposes to 
+%   $(\Psi; \tackon{\opsubst{\Theta}}
+%             {y{:}\susp{{\sf eval\_a}\,(\sigma_{n}{t^{\it in}_{n}})}})$,
+%   so $T$ can be passed to the induction hypothesis 
+%   (part 4) giving us an $s$ such that 
+%   $\slst{\Sigma}{\Psi}{\Gamma}{N}{\susp{{\sf ac}\,t\,s}}$ and
+%   $T' :: (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,s}}) 
+%    \leadsto^*_{\transop{\Sigma}}
+%   (\Psi; \Gamma_z)$. 
+
   \smallskip
-  We can only apply tail-recursion optimization when $t_{n+1}$ is 
-  fully general; this means we can construct
-  a $\sigma \supseteq \sigma_{n-1}$ such that $\sigma{t_{n+1}} = s$;
-  therefore, the value we needed to construct is just 
-  $\tbangr{\tetan{N}}$, and the trace $T'$ is in the form we need,
+  We can only apply tail-recursion optimization when $\lf{t_{n+1}}$ is 
+  fully general, which means we can construct
+  a $\lf{\sigma} \supseteq \lf{\sigma_{n-1}}$ such that $\lf{\sigma{t_{n+1}}} = \lf{s}$. The value we needed to construct is just 
+  $\tbangr{{N}}$, and the trace $T'$ is in the form we need,
   so we are done.
   \bigskip
 
@@ -1409,16 +1458,16 @@ the operationalization transformation:
   = \forall \overline{x_i}.\, \sigma_{i-1}{p^+}_\mpers \lefti \opbasic{A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}$
  
   \bigskip
-  $\Sp = \tforalll{u_i}{(\tappl{z}{\Sp'})}$,
-  let $\sigma_i = (\sigma_{i-1},\overline{u_i}/\overline{x_i})$. The
+  By type inversion, the spine
+  $\Sp = \lf{\overline{u_i}}; z; \Sp'$.
+  Let $\lf{\sigma_i} = \lf{(\sigma_{i-1},\overline{u_i}/\overline{x_i})}$. The
   induction hypothesis (part 5) on $\Sp'$ and $T$
-  gives $\sigma \supseteq \sigma_{i}$, values
-  $\sigma{A^+_{j}}$ for $i < j \leq n$, and 
-  a trace $T' :: (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,(\sigma t_{n+1})}})
+  gives $\lf{\sigma} \supseteq \lf{\sigma_{i}}$, values
+  $\lf\sigma{A^+_{j}}$ for $i < j \leq n$, and 
+  a trace $T' :: (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,\lf{(\sigma t_{n+1})}}})
   \leadsto^*_{\transop{\Sigma}}
- (\Psi; \Delta_z)$. We need to produce a value $A_i = \sigma{p^+_\mpers}$, which
-  we do by constructing 
-  $\slst{\Sigma}{\Psi}{\Gamma}{z}{[\sigma{p^+_\mpers}]}$
+ (\Psi; \Delta_z)$. The remaining value of $\lf\sigma A_i = \sigma{p^+_\mpers}$
+  is just $z$.
   \bigskip
 
 \item $\opbasic{{!}p^-_{ci},\ldots,{!}p^-_{cj},A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}$
@@ -1497,32 +1546,26 @@ the operationalization transformation:
   $\slst{\Sigma}{\Psi}{\Gamma}{\tbangr{\tetan{N_k}}}{[{!}(\sigma{p^-_{ck}})]}$.
   \bigskip
 
+
 \item $\opbasic{{!}G,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}} = \forall
   \overline{x_i}.\, {!}\sigma_{i-1}\opsubst{G} \lefti
   \opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}$
 
   \bigskip
-  $\Sp = \tforalll{u_i}{(\tappl{\tbangr{N}}{\Sp'})}$,
-  let $\sigma_i = (\sigma_{i-1},\overline{u_i}/\overline{x_i})$.  The
-  induction hypothesis (part 5) on $\Sp'$ and $T$
-  gives $\sigma \supseteq \sigma_{i}$, values
-  $\sigma{A^+_{j}}$ for $i < j \leq n$, and 
-  a trace $T' :: (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,(\sigma t_{n+1})}})
+  By type inversion, the spine $\Sp = \lf{\overline{u_i}}; {!}N; \Sp'$. 
+  Let $\lf{\sigma_i} = \lf{(\sigma_{i-1}, \overline{u_i}/\overline{x_i})}$
+  The induction hypothesis (part 5) on $\Sp'$ and $T$
+  gives $\lf{\sigma} \supseteq \lf{\sigma_{i}}$, values
+  $\lf{\sigma}{A^+_{j}}$ for $i < j \leq n$, and 
+  a trace $T' :: (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,\lf{(\sigma t_{n+1})}}})
   \leadsto^*_{\transop{\Sigma}}
- (\Psi; \Delta_z)$. We need to produce a value $A_i = {!}(\sigma{G})$. 
-  We get 
-  $\slst{\Sigma}{\Psi}{\Gamma}{N'}{G}$ from the induction hypothesis 
-  (part 3) on $N$, and  
-  then we can construct 
-  $\slst{\Sigma}{\Psi}{\Gamma}{\tbangr{\tetan{N'}}}{[{!}(\sigma{G})]}$.
+ (\Psi; \Delta_z)$. The remaining value of type 
+  $\lf\sigma A_i = {!}\lf{\sigma}G$
+  is $\tbangr{N'}$, where we get $\slst{\Sigma}{\Psi}{\Gamma}{N'}{\lf{\sigma}{G}}$ from the induction hypothesis (part 3) on $N$.
 \end{itemize}
 
-
-The two asterisks in this proof utilize a lemma: if we have
-$\slss{\transop{\Sigma}}{\Psi}{\tackon{\Theta'}{[\opbasic{A_1^+,\ldots,A_n^+}{t_{n+1}}{\sigma_0}]}}{\susp{\{ C^+ \}}}$ then $\Theta'$ contains only 
-persistent propositions. This allows us to
-instead write the derivation as $\slss{\transop{\Sigma}}{\Psi}{\Gamma, 
-{[\opbasic{A_1^+,\ldots,A_n^+}{t_{n+1}}{\sigma_0}]}}{\susp{\{ C^+ \}}}$.
+\noindent
+This completes the proof.
 \end{proof}
 
 

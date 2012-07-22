@@ -29,3 +29,7 @@ INVERTING POSITIVE PROPOSITIONS
 
 Consider grepping "unification" everywhere and always trying to 
 say something better.
+
+I removed some asterisk conditions from the last proof in 6.1; double
+check against the POPL version of the revised theorem that I didn't
+do anything sketchy.
