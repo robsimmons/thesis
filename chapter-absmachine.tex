@@ -1796,138 +1796,144 @@ Figure~\ref{fig:cbv-uncurry}.
 
 The four-rule abstract machine specification given at the
 beginning of this chapter is adequately represented by the derived
-\sls~specification in Figure~\ref{fig:cbv-ev-ssos-fun}. 
-
-
-For terms and
+\sls~specification in Figure~\ref{fig:cbv-ev-ssos-fun}. For terms and
 for deductive computations, adequacy is a well-understood concept: we
 know what it means to define an adequate encoding function $\interp{e}
-= t$ from ``on-paper'' terms $e$ with (potentially) variables
-$x_1,\ldots,x_n$ free to LF terms $t$ where $x_1{:}{\sf
-  exp},\ldots,x_n{:}{\sf exp} \vdash t : {\sf exp}$, and we know what
+= \lf{t}$ from ``on-paper'' terms $\obj{e}$ with (potentially) variables
+$\obj{x_1,\ldots,x_n}$ free to LF terms $\lf{t}$ where $\lf{x_1}{:}{\sf
+  exp},\ldots,\lf{x_n}{:}{\sf exp} \vdash \lf{t} : {\sf exp}$, and we know what
 it means to adequately encode the judgment $e \Downarrow v$ as a
 negative atomic \sls~proposition ${\sf ev}\,\interp{e}\,\interp{v}$
 and to encode derivations of this judgment to \sls~terms $N$ where
 $\slst{\Sigma}{\cdot}{\cdot}{N}{\susp{{\sf
       ev}\,\interp{e}\,\interp{v}}}$
-\cite{harper93framework,harper07mechanizing}. What does it mean to
-adequately represent machine states as process states (that is,
-substructural contexts) and to encode a transition system as a 
-concurrent \sls~specification? 
+\cite{harper93framework,harper07mechanizing}. 
+%
+In Section~\ref{sec:sls-adequate} we discussed the methadology of 
+adequacy and applied it to the very simple push-down automata from the 
+introduction. In this section, we will repeat this development
+for Figure~\ref{fig:cbv-ev-ssos-fun}.
 
-The answer given in the literature by Cervesato et
-al.~\cite{cervesato02concurrent} and by
-Schack-Nielsen~\cite{schacknielsen07induction} has three steps. The
-first step is to define an interpretation function from states $s$
-and stacks $k$ to process states $\Delta$, so that, for example, the
+The
+first step is to define an interpretation function 
+$\ctxinterp{s} = \Delta$ from 
+abstract machine states $\obj{s}$
+to process states $\Delta$ so that, for example, the
 state
 \[
-((\ldots({\sf halt}; \Box\,e_1)\ldots); (\lambda x.e_n)\,\Box) \lhd v
+\obj{((\ldots({\sf halt}; \Box\,e_1)\ldots); (\lambda x.e_n)\,\Box) \lhd v}
 \]
 is interpreted as the process state
 \[
 y{:}\susp{{\sf retn}\,\interp{v}}, ~~
-x_n{:}\susp{{\sf cont}\,({\sf app2}\,\lambda x.\interp{e_n})}, ~~
+x_n{:}\susp{{\sf cont}\,\lf{({\sf app2}\,\lambda x.\interp{e_n})}}, ~~
 \ldots, ~~
-x_1{:}\susp{{\sf cont}\,({\sf app1}\,\interp{e_1})}, ~~
+x_1{:}\susp{{\sf cont}\,\lf{({\sf app1}\,\interp{e_1})}}, ~~
 \]
-The second step is to prove a preservation-like adequacy theorem. Let
-$\Sigma\ref{fig:cbv-ev-ssos-fun}$ be the signature from
-Figure~\ref{fig:cbv-ev-ssos-fun}: we show that if state $s$ is
-interpreted and $\Delta$ and $\Delta
-\leadsto_{\Sigma\ref{fig:cbv-ev-ssos-fun}} \Delta'$, then there is a
-state $s'$ such that $s'$ is interpreted as $\Delta'$. Then we can
-prove the main adequacy result: that the interpretation of state $s$
-steps to the interpretation of state $s'$ if and only if $s \mapsto
-s'$.
+We also define a generative signature that precisely captures the set
+of process states in the image of this translation. Having done so, we
+prove that the property that encoded abstract machine states
+$\ctxinterp{s} \leadsto^*_{\Sigma_{\it CBV}} \Delta'$, where $\Sigma_{\it CBV}$ 
+stands for the signature in Figure~\ref{fig:cbv-ev-ssos-fun}, 
+only when 
+$\Delta' = \ctxinterp{s'}$ for some abstract machine state
+$\obj{s'}$. Then, the main adequacy result, that the interpretation of
+state $\obj{s}$ steps to the interpretation of state $\obj{s'}$ if and only if 
+$\obj{s \mapsto s'}$, follows by case analysis.
 
-I believe that the approach to adequacy given in previous work is
-unsatisfactory because the interpretation of process states into
-contexts is 1-to-1 but not onto (and therefore not invertible).  This
-means that there is no {\it internal} notion of what it means for a
-process state to encode a state $s$ or a stack $k$. By analogy,
-``having type ${\sf exp}$'' captures what it means for an LF term
-encode an expression and ``having type ${\sf
-  ev}\,\interp{e}\,\interp{v}$'' captures what it means for an
-\sls~term to encode a derivation of $e \Downarrow v$.
 
-In this section, we will present a different three-part approach that
-addresses this perceived deficiency. First, we create a signature
-$\Sigma\sf gen$ that encodes well-formed states: the $\Delta$ such
-that $x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta$ and ${\sf
-  gen} \notin \Delta$ are in a bijection with the states $s$
-(Section~\ref{sec:nat-ssos-adequacy-gen}). This gives us the internal
-notion of what it means to encode a process state, which is what we
-were previously lacking. Second, we prove the preservation-like
-property from before. The difference is that this can now be stated
-formally as a property of \sls~specifications: if $x{:}\susp{\sf gen}
-\leadsto^*_{\Sigma\sf gen} \Delta$ and $\Delta
-\leadsto_{\Sigma\ref{fig:cbv-ev-ssos-fun}} \Delta'$, then $x{:}
-\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta'$
-(Section~\ref{sec:nat-ssos-adequacy-pres}). The structure of this
-theorem is critical, a point that we will consider in greater depth in
-Part III of this thesis. Finally, the third step is the same as it was
-in other approaches: we prove that the interpretation of state $s$
-steps to the interpretation of state $s'$ if and only if $s \mapsto s'$.
+\subsection{Encoding states}
 
-\subsection{Adequacy of states}
-\label{sec:nat-ssos-adequacy-gen}
+% Our first step is to describe a signature $\Sigma_{\it Gen}$ with the
+% property that if $x{:}\susp{\sf gen} \leadsto^*_{\Sigma_{\it Gen}}
+% \Delta$ and ${\sf gen} \notin \Delta$ then $\Delta$ encodes a state
+% $s$. A well-formed process state that represents an abstract machine
+% state $((\ldots({\sf halt}; f_1); \ldots); f_n) \rhd e$ has the form
+% \[
+% y{:}\susp{{\sf eval}\,\interp{e}}, ~~
+% x_n{:}\susp{{\sf cont}\,\interp{f_n}}, ~~
+% \ldots, ~~
+% x_1{:}\susp{{\sf cont}\,\interp{f_1}}
+% \]
+% where $\interp{\Box\,e_2} = {\sf app1}\,\interp{e_2}$ and
+% $\interp{(\lambda x.e)\,\Box} = {\sf app2}\,(\lambda x.\interp{e})$. 
+% A well-formed process state representing a state $k \lhd v$ has 
+% the same form, but with a suspended ${\sf retn}\,\interp{v}$ instead
+% of ${\sf eval}\,\interp{e}$. 
+
+% The simplest \sls~signature that encodes this structure essentially
+% has the structure of a context-free grammar for describing well-formed
+% contexts, with two unary productions ${\sf gen/eval}$ and ${\sf gen/retn}$
+% and one binary production ${\sf gen/cont}$.
 
 Our first goal is to describe a signature $\Sigma\sf gen$ with the
-property that if $x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen}
-\Delta$ and ${\sf gen} \notin \Delta$ then $\Delta$ encodes a state
+property that if $x{:}\susp{\sf gen} \leadsto^*_{\Sigma_{\it Gen}}
+\Delta$ and $\restrictsig{\Delta}{\Sigma_{\it CBV}}$, then $\Delta$ encodes
+an abstract machine state
 $s$. A well-formed process state that represents an abstract machine
-state $((\ldots({\sf halt}; f_1); \ldots); f_n) \rhd e$ has the form
+state $\obj{((\ldots({\sf halt}; f_1); \ldots); f_n) \rhd e}$ has the form
 \[
 y{:}\susp{{\sf eval}\,\interp{e}}, ~~
 x_n{:}\susp{{\sf cont}\,\interp{f_n}}, ~~
 \ldots, ~~
 x_1{:}\susp{{\sf cont}\,\interp{f_1}}
 \]
-where $\interp{\Box\,e_2} = {\sf app1}\,\interp{e_2}$ and
-$\interp{(\lambda x.e)\,\Box} = {\sf app2}\,(\lambda x.\interp{e})$. 
-A well-formed process state representing a state $k \lhd v$ has 
+where $\interp{\Box\,e_2} = \lf{{\sf app1}\,\interp{e_2}}$ and
+$\interp{(\lambda x.e)\,\Box} = \lf{{\sf app2}\,(\lambda x.\interp{e})}$. 
+A well-formed process state representing a state $\obj{k \lhd v}$ has 
 the same form, but with a suspended ${\sf retn}\,\interp{v}$ instead
-of ${\sf eval}\,\interp{e}$. 
+of ${\sf eval}\,\interp{e}$. We also stipulate that 
+$\obj{k \lhd v}$ is only well-formed if $\obj{v}$ is actually a value
+-- in our current specifications, the only values are functions
+$\interp{\lambda x.e} = \lf{{\sf lam}\,\lambda x. \interp{e}}$.
 
-The simplest \sls~signature that encodes this structure essentially
-has the structure of a context-free grammar for describing well-formed
-contexts, with two unary productions ${\sf gen/eval}$ and ${\sf gen/retn}$
-and one binary production ${\sf gen/cont}$.
-
-\smallskip
+\begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/cbv-ev-ssos-gen.sls}
-\smallskip
+\caption{The generative signature $\Sigma_{\it Gen}$ 
+ describing encodable states.}
+\label{fig:cbv-ev-ssos-gen}
+\end{figure}
 
-\noindent In addition to the four declarations above, the full
+The simplest \sls~signature that encodes this structure has the
+structure of a context-free grammar like the CFG that encoded
+well-formed PDA states in Figure~\ref{fig:pda-gen}. The judgment ${\sf
+  value}\,\interp{e}$ captures the refinement of expressions $\obj{e}$
+that are values. In addition to the four declarations above, the full
 signature $\Sigma\sf gen$ includes all the type, proposition, and
 constant declarations from Figure~\ref{fig:cbv-ev-ssos-fun}, but none
 of the rules.
 
-Note that this specification is most definitely {\it not} well-moded.
-{\it Generative signatures} such as this one are not generally moded,
-and we don't think about traces under these signatures as 
-necessarily being concurrent computations in the same way we think
-about ordered abstract machines as encoding concurrent computations. 
-Rather than traces in these signatures being produced by
-concurrent computation, they are produced 
-and manipulated by the constructive content of
-theorems like the ones in this section.
+Note that this specification cannot reasonably be run as a logic
+program, because the variables $\lf{E}$, $\lf{V}$ and $\lf{F}$ appear
+to be invented out of thin air.  Rather than traces in these
+signatures being produced by some concurrent computation (such as
+forward chaining), they are produced and manipulated by the
+constructive content of theorems like the ones in this section.
 
 \bigskip
-\begin{theorem}[Adequacy of states]~
+\begin{theorem}[Encoding] 
 \label{thm:adequacy-states}
-\begin{itemize}
-\item There is a bijection (up to the renaming of variables in the context) 
-  between states $s$ and contexts $\Delta$ such that
-  $x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta$ where 
-  ${\sf gen} \notin \Delta$.
-\item There is a bijection (up to the renaming of variables in the context) 
-  between stacks $k$ and frames $\Theta$ such that $x{:}\susp{\sf
-    gen} \leadsto^*_{\Sigma\sf gen} \tackon{\Theta}{x'{:}{\sf gen}}$.
-\end{itemize}
+Up to variable renaming, there is a bijective correspondence between
+abstract machine states $\obj{s}$ and process states $\Delta$ such that
+$T :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{Gen}} \Delta$
+and $\restrictsig{\Delta}{\Sigma\ref{fig:cbv-ev-ssos-fun}}$.
 \end{theorem}
+\bigskip
+
+The proof of Theorem~\ref{thm:adequacy-states} follows the structure
+of Theorem~\ref{thm:pda-encoding}: we first define a context encoding function
+\smallskip
+\begin{itemize}
+\item $\ctxinterp{k \rhd e} = y{:}\susp{{\sf eval}\,\interp{e}}, ~
+        \ctxinterp{k}$
+\item $\ctxinterp{k \lhd v} = y{:}\susp{{\sf retn}\,\interp{v}}, ~
+        \ctxinterp{k}$
+\end{itemize}
+\smallskip
+While it is simple to observe that the encoding function is injective 
+(that $\ctxinterp{s} = \ctxinterp{s'}$ if and only if $\obj{s} = \obj{s'}$),
+to show that 
 
 \begin{proof}
 We will give only the translation from the ``on paper''
