@@ -2038,6 +2038,7 @@ but the induction we performed on traces in the next-to-last lemma
 treated trace composition as right-associative.
 
 \subsection{Generated world preservation}
+\label{sec:sls-pda-preservation}
 
 The generative signature $\Sigma_{\it Gen}$ precisely captures the
 world of \sls~process states that are in the image of the encoding
@@ -2364,14 +2365,15 @@ inversion on the structure of the given generative trace.
 Third, we construct a generative
 trace that establishes the fact that the invariant was preserved.
 
-\subsection{Adequacy for LF and deductive terms}
+\subsection{Adequacy of the transition system}
+\label{sec:pda-adequacy}
 
 The hard work of adequacy is established by the preservation theorem; 
 the actual adequacy theorem is just an enumeration in both directions.
 
 \bigskip
 \begin{theorem}[Adequacy]\label{thm:pda-adequacy}
-  $\ctxinterp{k \rhd s} \leadsto^*_{\Sigma_{\it PDA}} \ctxinterp{k'
+  $\ctxinterp{k \rhd s} \leadsto_{\Sigma_{\it PDA}} \ctxinterp{k'
     \rhd s'}$ if and only if $\obj{k \rhd s} \mapsto \obj{k' \rhd s'}$.
 \end{theorem}
 

@@ -56,17 +56,22 @@ Frontend.load "cbv-sos-step.sls";
 Frontend.load "evalretn.sls";
 Frontend.load "cbv-sos-proc.sls";
 
-HEADING "Figure 6.5: Parallel evaluation of application";
+(* Figure 6.4 *)
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "cbv-uncurry.sls";
+
+HEADING "Figure 6.6: Parallel evaluation of application";
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "cbv-ev-ssos-par.sls";
 
-HEADING "Figure 6.6: A first order ordered abstract machine semantics for CBV";
+HEADING "Figure 6.7: A first order ordered abstract machine semantics for CBV";
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "cbv-ev-ssos-fun.sls";
 
-HEADING "Section 6.3, generative signature (in-line with text)";
+HEADING "Figure 6.6, generative signature (in-line with text)";
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "evalretn.sls";
@@ -128,13 +133,33 @@ Frontend.load "exp.sls";
 Frontend.load "cbv-ev-ssos-fun.sls";
 Frontend.load "ssos-minml-case-bad-defun.sls";
 
-HEADING "Fig 6.11, good semantics of case analysis (not defun)";
+HEADING "Figure 6.11, semantics of case analysis (not defun)";
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "ssos-minml-case-factor.sls";
+
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "ssos-minml-case-factor.auto.sls";
+
+Frontend.load "exp.sls";
+Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.read "casen: exp -> exp -> (exp -> exp) -> prop ord.";
+Frontend.load "ssos-casen-notdefun.sls";
+
+HEADING "Figure 6.12, semantics of case analysis (defun)";
+Frontend.load "exp.sls";
+Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.read "casen: exp -> exp -> (exp -> exp) -> prop ord.";
+Frontend.load "ssos-casen.sls";
+
+HEADING "Rejected semantics of case analysis (not defun)";
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "cbv-ev-ssos-fun.sls";
 Frontend.load "ssos-minml-case-good.sls";
 
-HEADING "Fig 6.12, good semantics of case analysis (defun)";
+HEADING "Rejected semantics of case analysis (defun)";
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "cbv-ev-ssos-fun.sls";

@@ -1809,7 +1809,7 @@ $\slst{\Sigma}{\cdot}{\cdot}{N}{\susp{{\sf
       ev}\,\interp{e}\,\interp{v}}}$
 \cite{harper93framework,harper07mechanizing}. 
 %
-In Section~\ref{sec:sls-adequate} we discussed the methadology of 
+In Section~\ref{sec:sls-adequate} we discussed the methodology of 
 adequacy and applied it to the very simple push-down automata from the 
 introduction. In this section, we will repeat this development
 for Figure~\ref{fig:cbv-ev-ssos-fun}.
@@ -1896,7 +1896,7 @@ $\interp{\lambda x.e} = \lf{{\sf lam}\,\lambda x. \interp{e}}$.
 \end{figure}
 
 The simplest \sls~signature that encodes this structure has the
-structure of a context-free grammar like the CFG that encoded
+structure of a context-free grammar like the one that encoded
 well-formed PDA states in Figure~\ref{fig:pda-gen}. The judgment ${\sf
   value}\,\interp{e}$ captures the refinement of expressions $\obj{e}$
 that are values. In addition to the four declarations above, the full
@@ -1917,320 +1917,252 @@ constructive content of theorems like the ones in this section.
 Up to variable renaming, there is a bijective correspondence between
 abstract machine states $\obj{s}$ and process states $\Delta$ such that
 $T :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{Gen}} \Delta$
-and $\restrictsig{\Delta}{\Sigma\ref{fig:cbv-ev-ssos-fun}}$.
+and $\restrictsig{\Delta}{\Sigma_{\it PDA}}$.
 \end{theorem}
 \bigskip
 
 The proof of Theorem~\ref{thm:adequacy-states} follows the structure
-of Theorem~\ref{thm:pda-encoding}: we first define a context encoding function
+of Theorem~\ref{thm:pda-encoding}: we first define context encoding functions
+$\ctxinterp{s}$ and $\ctxinterp{k}$. 
 \smallskip
 \begin{itemize}
-\item $\ctxinterp{k \rhd e} = y{:}\susp{{\sf eval}\,\interp{e}}, ~
+\item $\ctxinterp{k \rhd e} = y{:}\susp{{\sf eval}\,\interp{e}}, ~~
         \ctxinterp{k}$
-\item $\ctxinterp{k \lhd v} = y{:}\susp{{\sf retn}\,\interp{v}}, ~
+\item $\ctxinterp{k \lhd v} = y{:}\susp{{\sf retn}\,\interp{v}}, ~~
         \ctxinterp{k}$
+\item $\ctxinterp{\sf halt} = \cdot$
+\item $\ctxinterp{k; f} = x_{i}{:}\susp{{\sf cont}\,\interp{f}}, ~~ \ctxinterp{k}$
 \end{itemize}
 \smallskip
-While it is simple to observe that the encoding function is injective 
+It is simple to observe that the encoding function is injective 
 (that $\ctxinterp{s} = \ctxinterp{s'}$ if and only if $\obj{s} = \obj{s'}$),
-to show that 
+so injectivity boils down to showing that every state $\obj{s}$ can be
+generated as a trace 
+$\interp{s} = T :: (x{:}\susp{gen}) \leadsto^*_{\Sigma_{\it Gen}} \ctxinterp{s}$.
+Surjectivity requires us to do induction on the structure of $T$ and 
+case analysis on the first steps in $T$. Both steps require a lemma
+that the notion of value expressed by the predicate ${\sf value}$
+in $\Sigma_{\it Gen}$ matches the notion of values $\obj{v}$ used to define
+well-formed states $\obj{k \lhd v}$. 
 
-\begin{proof}
-We will give only the translation from the ``on paper''
-semantic artifacts (states $s$ and stacks $k$) to traces:
-\begin{itemize}
-\item $\interp{s},$ which outputs 
-a trace $T$ with type $x{:}\susp{\sf gen} \leadsto_{\Sigma\sf gen} \Delta$
-where ${\sf gen} \not\in \Delta$, and 
-\item $\interp{k}$, which outputs two things: first, a trace $T$ with
-  type $x{:}\susp{\sf gen} \leadsto_{\Sigma\sf gen}
-  \tackon{\Theta}{x'{:}\susp{\sf gen}}$ where ${\sf gen} \not\in
-  \Delta$; and second, the variable name $x'$ of the resulting ${\sf
-    gen}$ proposition (which may be the same as $x$). Rather than
-  representing this output explicitly, we just assume it is always
-  named $x'$ in the definition below.
-\end{itemize}
-Note that both functions build contexts only indirectly by building 
-traces; similarly, the inverses of these functions are defined by induction
-on the structure of traces, not on the structure of contexts.
-\begin{tabbing}
-~~ \= \qquad\quad\qquad \= $~ :: ~$ \=\kill
-\> $\interp{k \rhd e} = \interp{k}; 
-     \tstep{z}{\sf gen/eval}{(\tforalll{\interp{e}}{(\tappl{x'}{\tnil})})}$
-\\ \>\> $~ :: ~$ 
-  \> $x{:}\susp{\sf gen} 
-       \leadsto^*_{\Sigma\sf gen} \tackon{\Theta}{x'{:}\susp{\sf gen}} 
-       \leadsto_{\Sigma\sf gen} 
-          \tackon{\Theta}{z{:}\susp{{\sf eval}\,\interp{e}}}$
-\\[4pt]
-\> $\interp{k \lhd v} = \interp{k}; 
-     \tstep{z}{\sf gen/retn}{(\tforalll{\interp{v}}{(\tappl{x'}{\tnil})})}$
-\\ \>\> $~ :: ~$ 
-  \> $x{:}{\sf gen} 
-       \leadsto^*_{\Sigma\sf gen} \tackon{\Theta}{x'{:}\susp{\sf gen}} 
-       \leadsto_{\Sigma\sf gen} 
-          \tackon{\Theta}{z{:}\susp{{\sf retn}\,\interp{v}}}$
-\\[4pt]
-\> $\interp{{\sf halt}} = \emptytrace$
-\> $~ :: ~$
-  \> $x{:}\susp{\sf gen} \leadsto^* x{:}\susp{\sf gen}$
-\\[4pt]
-\> $\interp{k; \Box\,e_2} = \interp{k}; \tstep{z, x''}{\sf gen/cont}
-     {(\tforalll{{\sf app1}\,\interp{e_2}}{(\tappl{x'}{\tnil})})}$
-\\ \>\> $~ :: ~$
- \> $x{:}\susp{\sf gen}
-       \leadsto^*_{\Sigma\sf gen} \tackon{\Theta}{x'{:}\susp{\sf gen}}
-       \leadsto_{\Sigma\sf gen} \tackon{\Theta}
-            {\mkconj
-               {z{:}\susp{{\sf cont}\,({\sf app1}\,\interp{e_2})}}
-               {x''{:}\susp{\sf gen}}}$
-\\[4pt]
-\> $\interp{k; (\lambda x.e)\,\Box} = \interp{k}; \tstep{z, x''}{\sf gen/cont}
-     {(\tforalll{{\sf app1}\,\interp{e_2}}{(\tappl{x'}{\tnil})})}$
-\\ \>\> $~ :: ~$
- \> $x{:}\susp{\sf gen}
-       \leadsto^*_{\Sigma\sf gen} \tackon{\Theta}{x'{:}\susp{\sf gen}}
-       \leadsto_{\Sigma\sf gen} \tackon{\Theta}
-            {\mkconj
-               {z{:}\susp{{\sf cont}\,({\sf app2}\,\lambda x.\interp{e})}}
-               {x''{:}\susp{\sf gen}}}$
-\end{tabbing}
-To complete the theorem, it is necessary to show that the two encoding
-functions are one-to-one and onto. This can be done by demonstrating
-the existence of a function $\interp{T}^{-1}_s = s$ from traces $T$
-with type $x{:}\susp{\sf gen} \leadsto_{\Sigma\sf gen} \Delta$ where
-${\sf gen} \notin \Delta$ to states $s$ and a function
-$\interp{T}^{-1}_k = k$ from traces $T$ with type $x{:}\susp{\sf gen}
-\leadsto_{\Sigma\sf gen} \tackon{\Theta}{x'{:}{\sf gen}}$ (where $x$
-and $x'$ may be the same) to stacks $k$ and then showing that
-the functions compose to the identity in both directions. 
-That proof is tedious but straightforward.
-\end{proof}
+% Note that two traces $T :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf
+%   gen} \Delta$ and $T' :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf
+%   gen} \Delta'$ are distinct if and only if the contexts $\Delta$ and
+% $\Delta'$ are distinct. Therefore, we can equivalently see adequacy as
+% a bijection between traces and abstract machine states $s$ or as a
+% bijection between contexts and abstract machine states $s$. In a
+% situation where this 1-to-1 correspondence between states and traces
+% did not exist (because two traces generate the same context), it is
+% not clear whether it would be preferable to define adequacy in
+% terms of contexts or in terms of traces.
 
-Note that two traces $T :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf
-  gen} \Delta$ and $T' :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf
-  gen} \Delta'$ are distinct if and only if the contexts $\Delta$ and
-$\Delta'$ are distinct. Therefore, we can equivalently see adequacy as
-a bijection between traces and abstract machine states $s$ or as a
-bijection between contexts and abstract machine states $s$. In a
-situation where this 1-to-1 correspondence between states and traces
-did not exist (because two traces generate the same context), it is
-not clear whether it would be preferable to define adequacy in
-terms of contexts or in terms of traces.
-
-\subsection{Preservation}
+\subsection{Preservation and adequacy}
 \label{sec:nat-ssos-adequacy-pres}
 
-Before we prove that the concurrent system from
-Figure~\ref{fig:cbv-ev-ssos-fun} adequately represents the transition
-system from the beginning of the chapter, we must show that our
-criteria for context well-formedness is actually preserved by the
-concurrent computations in Figure~\ref{fig:cbv-ev-ssos-fun}. This is
-part of the adequacy argument, but because we state it in terms of the
-generative signature $\Sigma\sf gen$, it is also a 
-standalone theorem entirely about of \sls~specifications. We will
-return to theorems of this form in Part III of this thesis.
+Generated world preservation proceeds as in
+Section~\ref{sec:sls-pda-preservation} and
+Theorem~\ref{thm:pda-preservation}; this theorem has a form that
+we will consider further in Chapter 9.
 
 \bigskip
-\begin{theorem}[Generation by $\Sigma\sf gen$ is invariant under
- $\Sigma\ref{fig:cbv-ev-ssos-fun}$]\label{thm:adequate-pres}~\\
-  If $x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta$ and
-  $\Delta \leadsto_{\Sigma\ref{fig:cbv-ev-ssos-fun}} \Delta'$, then
-  $x{:} \susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta'$
+\begin{theorem}[Preservation]\label{thm:adequate-pres}
+  If $T_1 :: (x{:}\susp{\sf gen}) \leadsto^*_{\Sigma{\it Gen}} \Delta_1$,
+  $\restrictsig{\Delta_1}{\Sigma_{\it CBV}}$, and 
+  $S :: \Delta_1 \leadsto_{\Sigma_{CBV}} \Delta_2$, then
+  $T_2 :: (x{:}\susp{\sf gen}) \leadsto^*_{\Sigma_{\it Gen}} \Delta_2$.
 \end{theorem}
+\bigskip
 
-\begin{proof}
-  Primarily by enumeration of the possible synthetic transitions of
-  $\Sigma\ref{fig:cbv-ev-ssos-fun}$ and secondarily by case analysis
-  on the structure of the trace $T :: x{:}\susp{\sf gen}
-  \leadsto^*_{\Sigma\sf gen} \Delta$.
+% \begin{proof}
+%   Primarily by enumeration of the possible synthetic transitions of
+%   $\Sigma\ref{fig:cbv-ev-ssos-fun}$ and secondarily by case analysis
+%   on the structure of the trace $T :: x{:}\susp{\sf gen}
+%   \leadsto^*_{\Sigma\sf gen} \Delta$.
 
-  \begin{itemize}
-  \item $\tstep{z}{\sf ev/lam}{(\tforalll{\lambda x.e\,x}
-                                {(\tappl{y}{\tnil})})}$
+%   \begin{itemize}
+%   \item $\tstep{z}{\sf ev/lam}{(\tforalll{\lambda x.e\,x}
+%                                 {(\tappl{y}{\tnil})})}$
 
-    \qquad $:: \frameoff{\Theta}
-                 {y{:}\susp{{\sf eval}\,({\sf lam}\,\lambda x.e\,x)}}
-               \leadsto
-               \tackon{\Theta}
-                 {z{:}\susp{{\sf retn}\,({\sf lam}\,\lambda x.e\,x)}} $
+%     \qquad $:: \frameoff{\Theta}
+%                  {y{:}\susp{{\sf eval}\,({\sf lam}\,\lambda x.e\,x)}}
+%                \leadsto
+%                \tackon{\Theta}
+%                  {z{:}\susp{{\sf retn}\,({\sf lam}\,\lambda x.e\,x)}} $
 
-    \medskip
+%     \medskip
 
-    $T = T'; \tstep{y}{\sf gen/eval}{(\tforalll{{\sf lam}\,\lambda x.e\,x}{\tappl{x'}{\tnil}})}$,\\
-    so we construct\\
-    $T'; \tstep{z}{\sf gen/retn}{(\tforalll{{\sf lam}\,\lambda x.e\,x}{\tappl{x'}{\tnil}})}$
+%     $T = T'; \tstep{y}{\sf gen/eval}{(\tforalll{{\sf lam}\,\lambda x.e\,x}{\tappl{x'}{\tnil}})}$,\\
+%     so we construct\\
+%     $T'; \tstep{z}{\sf gen/retn}{(\tforalll{{\sf lam}\,\lambda x.e\,x}{\tappl{x'}{\tnil}})}$
 
-    \medskip
+%     \medskip
 
-  \item $\tstep{z_1, z_2}{\sf ev/app}{(\tforalll{e_1}
-                                {\tforalll{e_2}{(\tappl{y}{\tnil})}})}$
+%   \item $\tstep{z_1, z_2}{\sf ev/app}{(\tforalll{e_1}
+%                                 {\tforalll{e_2}{(\tappl{y}{\tnil})}})}$
 
-    \qquad $:: \frameoff{\Theta}
-                 {y{:}\susp{{\sf eval}\,({\sf app}\,e_1\,e_2)}}
-               \leadsto
-               \tackon{\Theta}
-                 {\mkconj
-                  {z_1{:}\susp{{\sf eval}\,e_1}}
-                  {z_2{:}\susp{{\sf cont}\,({\sf app1}\,e_2)}}} $
+%     \qquad $:: \frameoff{\Theta}
+%                  {y{:}\susp{{\sf eval}\,({\sf app}\,e_1\,e_2)}}
+%                \leadsto
+%                \tackon{\Theta}
+%                  {\mkconj
+%                   {z_1{:}\susp{{\sf eval}\,e_1}}
+%                   {z_2{:}\susp{{\sf cont}\,({\sf app1}\,e_2)}}} $
 
-    \medskip
+%     \medskip
 
-    $T = T'; \tstep{y}{\sf gen/eval}{(\tforalll{{\sf app}\,e_1\,e_2}{\tappl{x'}{\tnil}})}$,\\
-    so we construct\\
-    $T'; 
-     \tstep{z', z_2}{\sf gen/cont}{(\tforalll{{\sf app1}\,e_2}{(\tappl{x'}{\tnil})})};
-     \tstep{z_1}{\sf gen/eval}{(\tforalll{e_1}{\tappl{z'}{\tnil}})}$
+%     $T = T'; \tstep{y}{\sf gen/eval}{(\tforalll{{\sf app}\,e_1\,e_2}{\tappl{x'}{\tnil}})}$,\\
+%     so we construct\\
+%     $T'; 
+%      \tstep{z', z_2}{\sf gen/cont}{(\tforalll{{\sf app1}\,e_2}{(\tappl{x'}{\tnil})})};
+%      \tstep{z_1}{\sf gen/eval}{(\tforalll{e_1}{\tappl{z'}{\tnil}})}$
 
-    \medskip
+%     \medskip
 
 
-  \item $\tstep{z_1, z_2}{\sf ev/app1}{(\tforalll{\lambda x.e\,x}
-                       {\tforalll{e_2}{(\tappl{\tfuser{y_1}{y_2}}{\tnil})}})}$
+%   \item $\tstep{z_1, z_2}{\sf ev/app1}{(\tforalll{\lambda x.e\,x}
+%                        {\tforalll{e_2}{(\tappl{\tfuser{y_1}{y_2}}{\tnil})}})}$
 
-    \qquad $:: \frameoff{\Theta}
-                 {\matchconj
-                  {y_1{:}\susp{{\sf retn}\,({\sf lam}\,\lambda x.e\,x)}}
-                  {y_2{:}\susp{{\sf cont}\,({\sf app1}\,e_2)}}}$
+%     \qquad $:: \frameoff{\Theta}
+%                  {\matchconj
+%                   {y_1{:}\susp{{\sf retn}\,({\sf lam}\,\lambda x.e\,x)}}
+%                   {y_2{:}\susp{{\sf cont}\,({\sf app1}\,e_2)}}}$
 
-    \qquad\qquad
-               $\leadsto
-               \tackon{\Theta}
-                 {\mkconj
-                  {z_1{:}\susp{{\sf eval}\,e_2}}
-                  {z_2{:}\susp{{\sf cont}\,({\sf app2}\,(\lambda x.e\,x))}}} $
+%     \qquad\qquad
+%                $\leadsto
+%                \tackon{\Theta}
+%                  {\mkconj
+%                   {z_1{:}\susp{{\sf eval}\,e_2}}
+%                   {z_2{:}\susp{{\sf cont}\,({\sf app2}\,(\lambda x.e\,x))}}} $
 
-    \medskip
+%     \medskip
 
-    $T =
-     T'; 
-     \tstep{y', y_2}{\sf gen/cont}{(\tforalll{{\sf app1}\,e_2}{\tappl{x'}{\tnil}})};
-     \tstep{y_1}{\sf gen/retn}{(\tforalll{{\sf lam}\,\lambda x.e\,x}{(\tappl{y'}{\tnil})})}$,\\
-    so we construct\\
-    $T'; 
-     \tstep{z', z_2}{\sf gen/cont}{(\tforalll{{\sf app2}\,\lambda x.e\,x}{(\tappl{x'}{\tnil})})};
-     \tstep{z_1}{\sf gen/eval}{(\tforalll{e_2}{\tappl{z'}{\tnil}})}$
+%     $T =
+%      T'; 
+%      \tstep{y', y_2}{\sf gen/cont}{(\tforalll{{\sf app1}\,e_2}{\tappl{x'}{\tnil}})};
+%      \tstep{y_1}{\sf gen/retn}{(\tforalll{{\sf lam}\,\lambda x.e\,x}{(\tappl{y'}{\tnil})})}$,\\
+%     so we construct\\
+%     $T'; 
+%      \tstep{z', z_2}{\sf gen/cont}{(\tforalll{{\sf app2}\,\lambda x.e\,x}{(\tappl{x'}{\tnil})})};
+%      \tstep{z_1}{\sf gen/eval}{(\tforalll{e_2}{\tappl{z'}{\tnil}})}$
 
-    \medskip
+%     \medskip
 
-  \item $\tstep{z}{\sf ev/app2}{(\tforalll{v_2}
-                       {\tforalll{\lambda x.e\,x}
-                         {(\tappl{\tfuser{y_1}{y_2}}{\tnil})}})}$
+%   \item $\tstep{z}{\sf ev/app2}{(\tforalll{v_2}
+%                        {\tforalll{\lambda x.e\,x}
+%                          {(\tappl{\tfuser{y_1}{y_2}}{\tnil})}})}$
 
-    \qquad $:: \frameoff{\Theta}
-                 {\matchconj
-                  {y_1{:}\susp{{\sf retn}\,v_2}}
-                  {y_2{:}\susp{{\sf cont}\,({\sf app2}\,\lambda x.e\,x)}}}
-               \leadsto
-               \tackon{\Theta}
-                 {z{:}\susp{{\sf eval}\,(e\,v_2)}} $
+%     \qquad $:: \frameoff{\Theta}
+%                  {\matchconj
+%                   {y_1{:}\susp{{\sf retn}\,v_2}}
+%                   {y_2{:}\susp{{\sf cont}\,({\sf app2}\,\lambda x.e\,x)}}}
+%                \leadsto
+%                \tackon{\Theta}
+%                  {z{:}\susp{{\sf eval}\,(e\,v_2)}} $
 
-    \medskip
+%     \medskip
 
-    $T =
-     T'; 
-     \tstep{y', y_2}{\sf gen/cont}{(\tforalll{{\sf app2}\,\lambda x.e\,x}{\tappl{x'}{\tnil}})};
-     \tstep{y_1}{\sf gen/retn}{(\tforalll{v_2}{(\tappl{y'}{\tnil})})}$,\\
-    so we construct\\
-    $T'; 
-     \tstep{z}{\sf gen/eval}{(\tforalll{e\,v_2}{\tappl{x'}{\tnil}})}$
+%     $T =
+%      T'; 
+%      \tstep{y', y_2}{\sf gen/cont}{(\tforalll{{\sf app2}\,\lambda x.e\,x}{\tappl{x'}{\tnil}})};
+%      \tstep{y_1}{\sf gen/retn}{(\tforalll{v_2}{(\tappl{y'}{\tnil})})}$,\\
+%     so we construct\\
+%     $T'; 
+%      \tstep{z}{\sf gen/eval}{(\tforalll{e\,v_2}{\tappl{x'}{\tnil}})}$
 
-    \medskip
+%     \medskip
 
-  \end{itemize}
+%   \end{itemize}
+
+% \noindent
+% This completes the proof. 
+% \end{proof}
 
 \noindent
-This completes the proof. 
-\end{proof}
-
-The primary case analysis is just an enumeration of the possible
-synthetic transitions, whereas the secondary case analyses on
-generative traces, which allows us to say that only one generative
-trace is possible in each case, requires more justification. We will
-postpone a further discussion of this for now, however.\robnote{Fill
-  in a forward reference above with a concrete reference when one
-  exists}.
-
-\subsection{Adequacy of the transition system}
-\label{sec:nat-ssos-adequacy-absmachine}
-
-The most interesting part of the adequacy proof was showing that
-formation by generative signature $\Sigma\sf gen$ was an invariant of
-$\Sigma\ref{fig:cbv-ev-ssos-fun}$. With that property established, the
-final step is as straightforward as 
+The proof proceeds by enumerating the synthetic transitions
+possible under $\Sigma_{\it CBV}$, performing inversion on the 
+structure of the trace $T_1$, and using the results to construct
+the necessary result.
+% The primary case analysis is just an enumeration of the possible
+% synthetic transitions, whereas the secondary case analyses on
+% generative traces, which allows us to say that only one generative
+% trace is possible in each case, requires more justification. We will
+% postpone a further discussion of this for now, however.\robnote{Fill
+%   in a forward reference above with a concrete reference when one
+%   exists}.
+This is the most interesting part of the adequacy proof.
+With this property established, the
+final step is a straightforward enumeration as Theorem~\ref{thm:pda-adequacy}
+in Section~\ref{sec:pda-adequacy} was.
 
 \bigskip
 \begin{theorem}[Adequacy of the transition system]
-$s \mapsto s'$ if and only if there exist $\Delta$ and $\Delta'$
-such that
-$\Delta \leadsto_{\Sigma\ref{fig:cbv-ev-ssos-fun}} \Delta'$,
-$\interp{s} :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta$, and
-$\interp{s'} :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta'$. 
+$\ctxinterp{s} \leadsto_{\Sigma_{\it CBV}} \ctxinterp{s'}$
+if and only if $\obj{s \mapsto s'}$.
 \end{theorem}
 
-\begin{proof} The proof is by straightforward case analysis and
-  construction; we will give the case associated with ${\sf ev/app}$
-  in both directions.
+% \begin{proof} The proof is by straightforward case analysis and
+%   construction; we will give the case associated with ${\sf ev/app}$
+%   in both directions.
 
-  The forward direction proceeds by case analysis over the definition
-  of the transition system from the beginning of the chapter.  For
-  instance, if $k \rhd e_1\,e_2 \mapsto (k; \Box\,e_2) \rhd e_1$ by
-  rule ${\sf absmachine/app}$ then we can form (by
-  Theorem~\ref{thm:adequacy-states}) the following traces:
-  \begin{align*}
-  \interp{k \rhd e_1\,e_2} 
-  & :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen}
-       \tackon{\Theta}
-        {y{:}\susp{{\sf eval}\,({\sf app}\,\interp{e_1}\,\interp{e_2})}}
-\\
-  \interp{(k; \Box\,e_2) \rhd e_1} 
-  & :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen}
-       \tackon{\Theta}
-        {\mkconj{z_1{:}\susp{{\sf eval}\,\interp{e_1}}}
-         {z_2{:}\susp{{\sf cont}\,({\sf app1}\,\interp{e_2})}}}
-  \end{align*}
-  It is then possible to construct the required step:
-  \begin{align*} 
-  &\tstep{z_1, z_2}{\sf ev/app}{(\tforalll{\interp{e_1}}{\tforalll{\interp{e_2}}{(\tappl{y}{\tnil})}})}
-  \\
-  &\qquad\qquad :: \tackon{\Theta}
-        {y{:}\susp{{\sf eval}\,({\sf app}\,\interp{e_1}\,\interp{e_2})}}
-     \leadsto_{\Sigma\ref{fig:cbv-ev-ssos-fun}}
-     \tackon{\Theta}
-        {\mkconj{z_1{:}\susp{{\sf eval}\,\interp{e_1}}}
-         {z_2{:}\susp{{\sf cont}\,({\sf app1}\,\interp{e_2})}}}
-  \end{align*}
+%   The forward direction proceeds by case analysis over the definition
+%   of the transition system from the beginning of the chapter.  For
+%   instance, if $k \rhd e_1\,e_2 \mapsto (k; \Box\,e_2) \rhd e_1$ by
+%   rule ${\sf absmachine/app}$ then we can form (by
+%   Theorem~\ref{thm:adequacy-states}) the following traces:
+%   \begin{align*}
+%   \interp{k \rhd e_1\,e_2} 
+%   & :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen}
+%        \tackon{\Theta}
+%         {y{:}\susp{{\sf eval}\,({\sf app}\,\interp{e_1}\,\interp{e_2})}}
+% \\
+%   \interp{(k; \Box\,e_2) \rhd e_1} 
+%   & :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen}
+%        \tackon{\Theta}
+%         {\mkconj{z_1{:}\susp{{\sf eval}\,\interp{e_1}}}
+%          {z_2{:}\susp{{\sf cont}\,({\sf app1}\,\interp{e_2})}}}
+%   \end{align*}
+%   It is then possible to construct the required step:
+%   \begin{align*} 
+%   &\tstep{z_1, z_2}{\sf ev/app}{(\tforalll{\interp{e_1}}{\tforalll{\interp{e_2}}{(\tappl{y}{\tnil})}})}
+%   \\
+%   &\qquad\qquad :: \tackon{\Theta}
+%         {y{:}\susp{{\sf eval}\,({\sf app}\,\interp{e_1}\,\interp{e_2})}}
+%      \leadsto_{\Sigma\ref{fig:cbv-ev-ssos-fun}}
+%      \tackon{\Theta}
+%         {\mkconj{z_1{:}\susp{{\sf eval}\,\interp{e_1}}}
+%          {z_2{:}\susp{{\sf cont}\,({\sf app1}\,\interp{e_2})}}}
+%   \end{align*}
 
-  In the backward direction, we are given a step in the dynamic 
-  semantics, such as the one above, as well as the two traces 
-  \begin{align*}
-  T_1
-  & :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen}
-       \tackon{\Theta}
-        {y{:}\susp{{\sf eval}\,({\sf app}\,\interp{e_1}\,\interp{e_2})}}
-\\
-  T_2
-  & :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen}
-       \tackon{\Theta}
-        {\mkconj{z_1{:}\susp{{\sf eval}\,\interp{e_1}}}
-         {z_2{:}\susp{{\sf cont}\,({\sf app1}\,\interp{e_2})}}}
-  \end{align*}
-  By the same case analysis on the structure of the trace that we performed
-  in the preservation theorem (Theorem~\ref{thm:adequate-pres}) and
-  , we 
-  need to establish that \medskip \\
-  $T_1 = T'; \tstep{y}{\sf gen/eval}{(\tforalll{\interp{e_1}}{\tforalll{\interp{e_2}}{(\tappl{x'}{\tnil})}})}$ and \\
-  $T_2 = T'; \tstep{z', z_2}{\sf gen/cont}{(\tforalll{{\sf app1}\,\interp{e_2}}{(\tappl{x'}{\tnil})})}; \tstep{z_1}{\sf gen/eval}{(\tforalll{\interp{e_1}}{(\tappl{z'}{\tnil})})}$ \medskip\\
-  % 
-  where $T' :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen}
-  \tackon{\Theta}{x'{:}{\sf gen}}$ in both cases. Therefore,
-  Theorem~\ref{thm:adequacy-states} there is a stack $k$ such that
-  $\interp{k} = T'$, $\interp{k \rhd e_1\,e_2} = T_1$, and
-  $\interp{(k; \Box\,e_2) \rhd e_1} = T_2$.
-  We conclude, then, by observing that 
-  $k \rhd e_1\,e_2 \mapsto (k; \Box\,e_2) \rhd e_1$ by rule 
-  ${\sf absmachine/app}$.
-\end{proof}
+%   In the backward direction, we are given a step in the dynamic 
+%   semantics, such as the one above, as well as the two traces 
+%   \begin{align*}
+%   T_1
+%   & :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen}
+%        \tackon{\Theta}
+%         {y{:}\susp{{\sf eval}\,({\sf app}\,\interp{e_1}\,\interp{e_2})}}
+% \\
+%   T_2
+%   & :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen}
+%        \tackon{\Theta}
+%         {\mkconj{z_1{:}\susp{{\sf eval}\,\interp{e_1}}}
+%          {z_2{:}\susp{{\sf cont}\,({\sf app1}\,\interp{e_2})}}}
+%   \end{align*}
+%   By the same case analysis on the structure of the trace that we performed
+%   in the preservation theorem (Theorem~\ref{thm:adequate-pres}) and
+%   , we 
+%   need to establish that \medskip \\
+%   $T_1 = T'; \tstep{y}{\sf gen/eval}{(\tforalll{\interp{e_1}}{\tforalll{\interp{e_2}}{(\tappl{x'}{\tnil})}})}$ and \\
+%   $T_2 = T'; \tstep{z', z_2}{\sf gen/cont}{(\tforalll{{\sf app1}\,\interp{e_2}}{(\tappl{x'}{\tnil})})}; \tstep{z_1}{\sf gen/eval}{(\tforalll{\interp{e_1}}{(\tappl{z'}{\tnil})})}$ \medskip\\
+%   % 
+%   where $T' :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen}
+%   \tackon{\Theta}{x'{:}{\sf gen}}$ in both cases. Therefore,
+%   Theorem~\ref{thm:adequacy-states} there is a stack $k$ such that
+%   $\interp{k} = T'$, $\interp{k \rhd e_1\,e_2} = T_1$, and
+%   $\interp{(k; \Box\,e_2) \rhd e_1} = T_2$.
+%   We conclude, then, by observing that 
+%   $k \rhd e_1\,e_2 \mapsto (k; \Box\,e_2) \rhd e_1$ by rule 
+%   ${\sf absmachine/app}$.
+% \end{proof}
 
 
 
@@ -2238,40 +2170,40 @@ $\interp{s'} :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta'$.
 \begin{minipage}[b]{0.2\linewidth}
 \[
 \infer
-{{\sf fix}\,x.e \Downarrow v}
-{[{\sf fix}\,x.e/x]e \Downarrow v}
+{\obj{{\sf fix}\,x.e \Downarrow v} \mathstrut}
+{\obj{[{\sf fix}\,x.e/x]e \Downarrow v} \mathstrut}
 \]
 \[
 \infer
-{\langle\rangle \Downarrow \langle\rangle}
+{\obj{\langle\rangle \Downarrow \langle\rangle} \mathstrut}
 {}
 \]
 ~
 \[
 \infer
-{\langle e_1, e_2 \rangle \Downarrow \langle v_1, v_2 \rangle}
-{e_1 \Downarrow v_1 & e_2 \Downarrow v_2}
+{\obj{\langle e_1, e_2 \rangle \Downarrow \langle v_1, v_2 \rangle} \mathstrut}
+{\obj{e_1 \Downarrow v_1} & \obj{e_2 \Downarrow v_2} \mathstrut}
 \]
 
 \[
 \infer
-{e.1 \Downarrow v_1}
-{e \Downarrow \langle v_1, v_2 \rangle}
+{\obj{e.1 \Downarrow v_1} \mathstrut}
+{\obj{e \Downarrow \langle v_1, v_2 \rangle} \mathstrut}
 \]\[
 \infer
-{e.2 \Downarrow v_2}
-{e \Downarrow \langle v_1, v_2 \rangle}
+{\obj{e.2 \Downarrow v_2} \mathstrut}
+{\obj{e \Downarrow \langle v_1, v_2 \rangle} \mathstrut}
 \]
 ~
 \[
 \infer
-{{\sf z} \Downarrow {\sf z}}
+{\obj{{\sf z} \Downarrow {\sf z}}\mathstrut}
 {}
 \]
 \[
 \infer
-{{\sf s}\,e \Downarrow {\sf s}\,v}
-{e \Downarrow v}
+{\obj{{\sf s}\,e \Downarrow {\sf s}\,v} \mathstrut}
+{\obj{e \Downarrow v} \mathstrut}
 \]
 \end{minipage}
 \hspace{0.5cm}
@@ -2289,20 +2221,20 @@ $\interp{s'} :: x{:}\susp{\sf gen} \leadsto^*_{\Sigma\sf gen} \Delta'$.
 The examples given in the previous section all deal
 with call-by-value semantics for the untyped lambda calculus, which
 has the property that any expression will either evaluate forever or
-will eventually evaluate to a value $\lambda x. e$. We now want to
+will eventually evaluate to a value $\obj{\lambda x. e}$. We now want to
 discuss ordered abstract machines with traces
 that might get {\it stuck}. One way to raise the possibility of stuck
-states is to add values besides $\lambda x.e$. In
+states is to add values besides $\obj{\lambda x.e}$. In
 Figure~\ref{fig:ssos-minml-core} we present an extension to
 Figure~\ref{fig:cbv-ev-ssos-fun} with some of the features of a pure
 ``Mini-ML'' functional programming language: fixed-point recursion
-($\interp{{\sf fix}\,x.e} = {\sf fix}\,\lambda x.\interp{e}$),
-units and pairs ($\interp{\langle\rangle} = {\sf unit}$,
-$\interp{\langle e_1, e_2 \rangle} = {\sf
-  pair}\,\interp{e_1}\,\interp{e_2}$), projections ($\interp{e.1} =
-{\sf fst}\,\interp{e})$, $\interp{e.2} = {\sf snd}\,\interp{e}$), and
-natural numbers ($\interp{{\sf z}} = {\sf zero}$, $\interp{{\sf s}\,e}
-= {\sf succ}\,\interp{e}$.  The natural semantics is given on the
+($\interp{{\sf fix}\,x.e} = \lf{{\sf fix}\,\lambda x.\interp{e}}$),
+units and pairs ($\interp{\langle\rangle} = \lf{\sf unit}$,
+$\interp{\langle e_1, e_2 \rangle} = \lf{{\sf
+  pair}\,\interp{e_1}\,\interp{e_2}}$), projections ($\interp{e.1} =
+\lf{{\sf fst}\,\interp{e}})$, $\interp{e.2} = \lf{{\sf snd}\,\interp{e}}$), and
+natural numbers ($\interp{{\sf z}} = \lf{{\sf zero}}$, $\interp{{\sf s}\,e}
+= \lf{{\sf succ}\,\interp{e}}$).  The natural semantics is given on the
 left-hand side of that figure, and the operationalized and
 defunctionalized ordered abstract machine that arises from (an
 \sls~encoding of) that natural semantics is given on the right.
@@ -2317,27 +2249,28 @@ therefore, it is not possible to show that this ordered abstract
 machine adequately encodes a traditional abstract machine presentation
 of Mini-ML.
 
-In an inductively-defined natural semantics, it is not possible to
-distinguish a non-terminating term like ${\sf fix}\,x.x$ from a stuck
-term like ${\sf z}.1$.  This is one of the problems that Leroy and
-Grall sought to overcome in their presentation of coinductive big-step
-operational semantics \cite{leroy09coinductive}. They defined the
-judgment $e \Uparrow^\infty$ coinductively; therefore it is easy to
-express the difference between non-terminating terms
-(${\sf fix}\,x.x \Uparrow^\infty$) and stuck ones
-(there is no $v$ such that ${\sf z}.1 \Downarrow v$ or
-${\sf z}.1 \Uparrow^\infty$).
+In an inductively-defined natural semantics it is not possible to
+distinguish a non-terminating term like $\obj{{\sf fix}\,x.x}$ from a
+stuck term like $\obj{{\sf z}.1}$ without relying on a
+characterization of partial proofs.  This is one of the problems that
+Leroy and Grall sought to overcome in their presentation of
+coinductive big-step operational semantics
+\cite{leroy09coinductive}. They defined the judgment $\obj{e
+  \Uparrow^\infty}$ coinductively; therefore it is easy to express the
+difference between non-terminating terms ($\obj{{\sf fix}\,x.x
+  \Uparrow^\infty}$) and stuck ones (there is no $\obj{v}$ such that
+$\obj{{\sf z}.1 \Downarrow v}$ or $\obj{{\sf z}.1 \Uparrow^\infty}$).
 
 The translation of natural semantics into ordered abstract machines
-also allows us to distinguish ${\sf fix}\,x.x$ from ${\sf z}.1$.
+also allows us to distinguish $\obj{{\sf fix}\,x.x}$ from $\obj{{\sf z}.1}$.
 The former expression generates a trace that can always be extended:
-\[ x_1{:}\susp{{\sf eval}\,({\sf fix}\,\lambda x.x)} \leadsto
-   x_2{:}\susp{{\sf eval}\,({\sf fix}\,\lambda x.x)} \leadsto
-   x_3{:}\susp{{\sf eval}\,({\sf fix}\,\lambda x.x)} \leadsto \ldots 
+\[ x_1{:}\susp{{\sf eval}\,\lf{({\sf fix}\,\lambda x.x)}} \leadsto
+   x_2{:}\susp{{\sf eval}\,\lf{({\sf fix}\,\lambda x.x)}} \leadsto
+   x_3{:}\susp{{\sf eval}\,\lf{({\sf fix}\,\lambda x.x)}} \leadsto \ldots 
 \]whereas the latter gets stuck and can make no more transitions:\[ 
-  x_1{:}\susp{{\sf eval}\,({\sf fst}\,{\sf zero})} \leadsto
-  x_2{:}\susp{{\sf eval}\,{\sf zero}}, y{:}\susp{{\sf cont}\,{\sf fst1}} \leadsto
-  x_3{:}\susp{{\sf retn}\,{\sf zero}}, y{:}\susp{{\sf cont}\,{\sf fst1}} 
+  x_1{:}\susp{{\sf eval}\,\lf{({\sf fst}\,{\sf zero})}} \leadsto
+  x_2{:}\susp{{\sf eval}\,\lf{\sf zero}}, y{:}\susp{{\sf cont}\,\lf{\sf fst1}} \leadsto
+  x_3{:}\susp{{\sf retn}\,\lf{\sf zero}}, y{:}\susp{{\sf cont}\,\lf{\sf fst1}} 
   \not\leadsto
 \]
 Thus, for deterministic semantics, both coinductive big-step
@@ -2345,9 +2278,9 @@ operational semantics and the operationalization transformation
 represent ways of reasoning about the difference between
 non-termination and failure in a natural semantics. Our approach has
 the advantage of being automatic rather than requiring the definition
-of a new coinductive relation $e \Uparrow^\infty$, though it would
-presumably be possible to consider synthesizing the definition of $e
-\Uparrow^\infty$ from the definition of $e \Downarrow v$ by an
+of a new coinductive relation $\obj{e \Uparrow^\infty}$, though it would
+presumably be possible to consider synthesizing the definition of $\obj{e
+\Uparrow^\infty}$ from the definition of $\obj{e \Downarrow v}$ by an
 analogue of our operationalization transformation.
 
 In Section~\ref{sec:choicefail}, we discuss the advantages that the
@@ -2361,7 +2294,7 @@ choices, which we discuss in Section~\ref{sec:choicecase}.
 
 For the purposes of illustration, we will extend the language of
 expressions with a nondeterministic choice operator $\interp{e_1 \arb
-  e_2} = {\sf choose}\,\interp{e_1}\,\interp{e_2}$).  The two
+  e_2} = \lf{{\sf choose}\,\interp{e_1}\,\interp{e_2}}$).  The two
 (\sls-encoded) natural semantics rules for this extension and their
 (tail-recursion optimized) operationalization are shown in
 Figure~\ref{fig:ns-arb}.
@@ -2381,63 +2314,78 @@ Figure~\ref{fig:ns-arb}.
 \end{figure}
 
 We need to think about the desired semantics of 
-expressions like $(\lambda y.\,y)
-\arb {\sf z}.1$ -- if the first subexpression $(\lambda y.\,y)$ is
+expressions like $\obj{(\lambda y.\,y)
+\arb {\sf z}.1}$ -- if the first subexpression $\obj{(\lambda y.\,y)}$ is
 chosen for evaluation, then the expression evaluates to a value, but
-if the second subexpression ${\sf z}.1$ is chosen, then the evaluation
+if the second subexpression $\obj{{\sf z}.1}$ is chosen, then the evaluation
 gets stuck. Small-step
-intuitions about language safety say that this is a possibly we should
+intuitions about language safety say that this is a possibility we should
 be able to express, if only to exclude it with an appropriately
 designed type system and type safety proof. The ordered abstract
 machine semantics allows us to produce traces where
 %
-$x{:}\susp{\interp{(\lambda y.\,y) \arb {\sf z}.1}} \leadsto^* 
- y{:}\susp{{\sf lam}\,\lambda y.y}$
+$x{:}\susp{{\sf eval}\, \interp{(\lambda y.\,y) \arb {\sf z}.1}} \leadsto^* 
+ y{:}\susp{{\sf eval}\, \lf{({\sf lam}\,\lambda y.y)}}$
 %
 and where
 %
 $x{:}\susp{{\sf eval}\,\interp{(\lambda y.\,y) \arb {\sf z}.1}} \leadsto^* 
- (x'{:}\susp{{\sf retn}\,{\sf zero}}, y{:}\susp{{\sf cont}\,{\sf fst1}})
+ (x'{:}\susp{{\sf retn}\,\lf{\sf zero}}, y{:}\susp{{\sf cont}\,\lf{\sf fst1}})
  \not\leadsto$
 %
 as we would hope. Natural semantics specifications (including
 coinductive big step operational semantics) merely conclude
-that $(\lambda y.\,y\,y) \arb {\sf z}.1 \Downarrow (\lambda
-y.\,y\,y)$. Capturing the stuck behavior in this situation 
+that $\obj{(\lambda y.\,y\,y) \arb {\sf z}.1 \Downarrow (\lambda
+y.\,y\,y)}$. Capturing the stuck behavior in this situation 
 would require defining an extra inductive judgment capturing 
-all the situations where $e$ can get stuck, which is undesirable.
+all the situations where $\obj{e}$ can get stuck, which is 
+verbose and error-prone.
 
-Our ability to reason about stuck concurrent computations is an
-artifact the fact that \sls~allows us to talk about traces $T$ in
-addition to talking about complete proofs.  The operationalization
-transformation allows us to transfer this concept to natural semantics
-specifications by way of translation.
+Our ability to reason about evaluations that go wrong is an
+artifact the fact that \sls~allows us to talk about traces $T$ 
+that represent the process of incomplete proof search 
+in addition to talking about complete proofs. 
+A trace that reaches a state that is not a final ${\sf retn}\,\interp{v}$
+state but that cannot step further, like 
+$T :: (x{:}\susp{{\sf eval}\,\interp{(\lambda y.\,y) \arb {\sf z}.1}})
+ \leadsto^* 
+ (x'{:}\susp{{\sf retn}\,\lf{\sf zero}}, y{:}\susp{{\sf cont}\,\lf{\sf fst1}})$,
+corresponds to a point at which backward chanining proof search
+must backtrack (in a backtracking interpreter) or immediately 
+fail (in a flat resolution interpreter). Because the trace above corresponds
+semantically to a failing or going-wrong evaluation, 
+we can say that faithfully capturing the semantics of nondeterminstic
+choice $\obj{e_1 \arb e_2}$ requires a particular interpretation of
+natural semantics based on flat resolution. The operationalization
+transformation allows us to concretize this particular operational strategy
+with traces.
 
 \subsection{Conditionals and factoring}
 \label{sec:choicecase}
 
 It is great that we're able to reason about nondeterministic
 specifications in the output of the operationalization transformation!
-But we run into a problem if we try to to encode a Mini-ML feature
+However, a complication arises if we try to to encode a Mini-ML feature
 that was conspicuously missing from Figure~\ref{fig:ssos-minml-core}:
 the elimination form for natural numbers $\interp{{\sf case}\,e\,{\sf
     of}\,{\sf z} \Rightarrow e_z \mid {\sf s}\,x \Rightarrow e_s} =
-{\sf case}\,\interp{e}\,\interp{e_z}\,(\lambda x.\interp{e_s})$.  The
+\lf{{\sf case}\,\interp{e}\,\interp{e_z}\,(\lambda x.\interp{e_s})}$.  The
 usual natural semantics for case analysis look like this: 
 \[
 \infer[{\sf ev/casez}]
-{\left({\sf case}\,e\,{\sf of}\,
-   {\sf z} \Rightarrow e_z \mid {\sf s}\,x \Rightarrow e_s\right) \Downarrow v}
-{e \Downarrow {\sf z}
+{\obj{\left({\sf case}\,e\,{\sf of}\,
+   {\sf z} \Rightarrow e_z \mid {\sf s}\,x \Rightarrow e_s\right) \Downarrow v} \mathstrut}
+{\obj{e \Downarrow {\sf z}}
  &
- e_z \Downarrow v}
+ \obj{e_z \Downarrow v} \mathstrut}
 \quad
 \infer[{\sf ev/cases}]
-{\left({\sf case}\,e\,{\sf of}\,
+{\obj{\left({\sf case}\,e\,{\sf of}\,
    {\sf z} \Rightarrow e_z \mid {\sf s}\,x \Rightarrow e_s\right) \Downarrow v}
-{e \Downarrow {\sf s}\,v'
+ \mathstrut}
+{\obj{e \Downarrow {\sf s}\,v'}
  &
- [v'/x]e_s \Downarrow v}
+ \obj{[v'/x]e_s \Downarrow v} \mathstrut}
 \]
 
 \begin{figure}
@@ -2457,131 +2405,164 @@ ordered abstract machine shown in Figure~\ref{fig:ssos-minml-case-bad}
 before defunctionalization and in
 Figure~\ref{fig:ssos-minml-case-bad-defun} after defunctionalization.
 This operational semantics is nondeterministic much as the semantics of
-$e_1 \arb e_2$ were, in that we can evaluate a case expression either
+$\obj{e_1 \arb e_2}$ were, in that we can evaluate a case expression either
 with rule ${\sf ev/casez}$, which effectively predicts that the answer
 will be zero, or with rule ${\sf ev/cases}$, which effectively predicts
 that the answer will be the successor of some value. But this means that
 it is possible to get stuck while executing 
 an intuitively type-safe expression if we predict the wrong branch:
 \begin{align*}
- & x_1{:}\susp{{\sf eval}\,({\sf case}\,{\sf zero}\,e_z\,\lambda x.\,e_s)}
+ & x_1{:}\susp{{\sf eval}\,\lf{({\sf case}\,{\sf zero}\,e_z\,\lambda x.\,e_s)}}
 \\
 \leadsto ~ & 
-x_2{:}\susp{{\sf eval}\,{\sf zero}},
-y_2{:}\susp{{\sf cont}\,({\sf cases}\,\lambda x.\,e_s)}
+x_2{:}\susp{{\sf eval}\,\lf{\sf zero}},
+y_2{:}\susp{{\sf cont}\,\lf{({\sf cases}\,\lambda x.\,e_s)}}
 \\
 \leadsto ~ & 
-x_3{:}\susp{{\sf retn}\,{\sf zero}},
-y_2{:}\susp{{\sf cont}\,({\sf cases}\,\lambda x.\,e_s)}
+x_3{:}\susp{{\sf retn}\,\lf{\sf zero}},
+y_2{:}\susp{{\sf cont}\,\lf{({\sf cases}\,\lambda x.\,e_s)}}
 \\
 \not\leadsto ~ & (!!!)
 \end{align*}
 
 This is actually a special case of a problem that appears in the logic
-programming literature: interpreted as a deductive computation, the
-natural semantics rules ${\sf ev/casez}$ and ${\sf ev/cases}$ may
-require backtracking: if we try to evaluate $e$ using one of the rules
+programming literature: in order for us to interpret the usual natural
+semantics specification (rules ${\sf ev/casez}$ and ${\sf ev/cases}$
+above) as an operational specification, we need backtracking. With
+backtracking, if we try to evaluate $\obj{e}$ using one of the rules
 and fail, a backtracking semantics means that we will apply the other
-rule, {\it re-evaluating} the scrutinee $e$ to a value. 
+rule, {\it re-evaluating} the scrutinee $\obj{e}$ to a
+value. Backtracking is therefore necessary for a correct
+interpretation of the standard rules above, even though it is
+incompatible with a faithful account of nondeterminstic choice!
+Something must give: we can either give up on interpreting
+nondeterminstic choice correctly or we can change the natural
+semantics of case analysis. Luckily, the second option is both possible and
+straightforward.
 
-It is possible to avoid that backtracking by a transformation called
-{\it factoring}. While factoring has been expressed by Poswolsky
+It is possible to modify the natural semantics for case analysis
+to avoid backtracking by a transformation called
+{\it factoring}. Factoring has been expressed by Poswolsky
 and Sch\"urmann as a
 transformation on functional programs in a variant of the Delphin
-programming language \cite{poswolsky03factoring}, I am unaware of any
-treatment of the factoring transformation as a generally-correct {\it
+programming language \cite{poswolsky03factoring}. It can also be seen as 
+a generally-correct {\it
   logical} transformation on Prolog, $\lambda$Prolog, or Twelf
-specifications. I will not do so here, but in this particular instance
-there are two ways to factor the natural semantics to avoid
-backtracking.  Both of them are provably equivalent to the original
-natural semantics (in terms of the judgments $e \Downarrow v$ that are
-derivable), and it is possible to use the existing metatheoretic
-machinery of Twelf to verify this fact. Furthermore, both of them can
-be operationalized into ordered abstract machine semantics that are
-free of the unnecessary stuck stakes described above. 
-
-One option is to create a new judgment ${\sf casen}\,v'\,e_z\,(x.e_s)\,v$
-that is mutually recursive with the definition of $e \Downarrow v$. 
+specifications, though this appears to be a folk theorem. 
+We factor this specification by creating a new judgment 
+$\obj{(v',e_z,x.e_s) \Downarrow^? v}$ % = {\sf casen}\,\interp{v'}\,\interp{e_z}\,\lf{(\lambda x.\interp{e_s})}$
+ that is mutually recursive with the definition of $\obj{e \Downarrow v}$. 
 \[
 \infer[{\sf ev/case}]
-{\left({\sf case}\,e\,{\sf of}\,
-   {\sf z} \Rightarrow e_z \mid {\sf s}\,x \Rightarrow e_s\right) \Downarrow v}
-{e \Downarrow v'
+{\obj{\left({\sf case}\,e\,{\sf of}\,
+   {\sf z} \Rightarrow e_z \mid {\sf s}\,x \Rightarrow e_s\right) \Downarrow v
+ }\mathstrut}
+{\obj{e \Downarrow v'}
  &
- {\sf casen}\,v'\,e_z\,(x.e_s)\,v}
+ \obj{(v',e_z,x.e_s) \Downarrow^? v} \mathstrut}
 \]
 \[
 \infer[{\sf casen/z}]
-{{\sf casen}\,{\sf z}\,e_z\,(x.e_s)\,v}
-{e_z \Downarrow v}
+{\obj{({\sf z},e_z,x.e_s)\Downarrow^? v} \mathstrut}
+{\obj{e_z \Downarrow v} \mathstrut}
 \quad
 \infer[{\sf casen/s}]
-{{\sf casen}\,({\sf s}\,v')\,e_z\,(x.e_s)\,v}
-{[v'/x]e_s \Downarrow v}
+{\obj{({\sf s}\,v',e_z,x.e_s)\Downarrow^? v} \mathstrut}
+{\obj{[v'/x]e_s \Downarrow v} \mathstrut}
 \]
-This fixes the problem with the original semantics, but the
-transformation of this specification needs to operationalize both the
-judgment $e \Downarrow v$ and the judgment ${\sf
-  casen}\,v'\,e_z\,(x.e_s)\,v$. The resulting specification includes
-what is essentially a tail-call that is missed by our somewhat
-simplistic tail-recursion optimization; this makes the resulting
-semantics unwieldy. 
-
-It would be possible to generalize the tail-recursion optimization to
-handle the specification above,\footnote{The operationalization
-  transformation we presented creates two predicates ${\sf eval\_a}$
-  and ${\sf retn\_a}$ for every predicate ${\sf ac} : \tau_1
-  \rightarrow \tau_2 \rightarrow {\sf prop}$. A modification that was
-  able to perform the desired tail-call optimization on the ${\sf
-    casen}$ specification would need to create one ${\sf eval\_a}$ for
-  every operationalized predicate and one ${\sf retn}$ for every {\it
-    return type} $\tau_2$.  This would allow ${\sf ev}$ and ${\sf
-    casen}$ to share the same return predicate, facilitating the use
-  of tail-call optimization in the operationalization of ${\sf
-    ev/case}$, ${\sf casen/z}$, and ${\sf casen/s}$. \label{returntypefootnote}} but there is another 
-elegant option that uses the operationalization transformation
-we have already described: we define a similar predicate ${\sf selectn}$
-(mode ${\sf selectn} + + + -$) that merely performs the action of 
-picking the $e_z$ or $e_s$ branch when given a value of the form
-${\sf z}$ or ${\sf s}\,v$. 
-\[
-\infer[{\sf selectn/z}]
-{{\sf selectn}\,{\sf z}\,e_z\,(x.e_s)\,e_z}
-{}
-\quad
-\infer[{\sf selectn/s}]
-{{\sf selectn}\,({\sf s}\,v')\,e_z\,(x.e_s)\,([v'/x]e_s)}
-{}
-\]
-With this ${\sf select}$ function, we can write ${\sf ev/case}$ that
-selects the next step $e'$ and then evaluates $e'$ to $v$.
-\[
-\infer[{\sf ev/case}]
-{\left({\sf case}\,e\,{\sf of}\,
-   {\sf z} \Rightarrow e_z \mid {\sf s}\,x \Rightarrow e_s\right) \Downarrow v}
-{e \Downarrow v'
- &
- {\sf selectn}\,v'\,e_z\,(x.e_s)\,e'
- &
- e' \Downarrow v}
-\]
-The operationalization of this specification
-(Figure~\ref{fig:ssos-minml-case-good}) is not quite in the form that
-we discussed defunctionalizing, but we can defunctionalize an
-equivalent specification, resulting in the semantics in
-Figure~\ref{fig:ssos-minml-case-good-defun}.
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=auto}
-\VerbatimInput{sls/ssos-minml-case-good.sls}
+\VerbatimInput{sls/ssos-casen-notdefun.sls}
 \caption{Semantics of case analysis (not defunctionalized).}
-\label{fig:ssos-minml-case-good}
+\label{fig:ssos-casen-notdefun}
 \bigskip
 \fvset{fontsize=\small,boxwidth=auto}
-\VerbatimInput{sls/ssos-minml-case-good-defun.sls}
-\caption{Semantics of case analysis (defunctionalized).}
-\label{fig:ssos-minml-case-good-defun}
+\VerbatimInput{sls/ssos-casen.sls}
+\caption{Semantics of case analysis (defunctionalized)}
+\label{fig:ssos-casen}
 \end{figure}
+
+This natural semantics specifications is provably equivalent to the
+previous one we gave when rules are interpreted as inductive
+definitions.  Not only are the same judgments $\obj{e \Downarrow v}$
+derivable, the set of possible derivations are isomorphic, and it is
+possible to use the existing metatheoretic machinery of Twelf to
+verify this fact. In fact, the two specfications are also equivalent
+if we understand natural semantics in terms of the success or failure
+backtracking proof search, though the factored presentation
+avoids redundantly re-evaluating the scrutinee. 
+It is only when interpret the natural semantics
+specification through the lens of non-backtracking backward chaining
+(also called flat resolution) that the specifications differ.
+
+The operationalization of these rules is shown in 
+Figure~\ref{fig:ssos-casen-notdefun} before defunctionalization
+and in Figure~\ref{fig:ssos-casen} after defunctionalization.
+In those figures, both  both the standard evaluation judgment
+judgment $\obj{e \Downarrow v}$ and the case evaluation judgment
+ $\obj{(v',e_z,x.e_s) \Downarrow^?v}$ are given the same return
+proposition ${\sf retn}\,\interp{v}$. 
+
+% \begin{figure}
+% \fvset{fontsize=\small,boxwidth=auto}
+% \VerbatimInput{sls/ssos-minml-case-good.sls}
+% \caption{Semantics of case analysis (not defunctionalized).}
+% \label{fig:ssos-minml-case-good}
+% \bigskip
+% \fvset{fontsize=\small,boxwidth=auto}
+% \VerbatimInput{sls/ssos-minml-case-good-defun.sls}
+% \caption{Semantics of case analysis (defunctionalized).}
+% \label{fig:ssos-minml-case-good-defun}
+% \end{figure}
+
+
+% The operationalization performed in 
+
+% here is another 
+% elegant option that uses the operationalization transformation
+% we have already described: we define a similar predicate ${\sf selectn}$
+% (mode ${\sf selectn} + + + -$) that merely performs the action of 
+% picking the $e_z$ or $e_s$ branch when given a value of the form
+% ${\sf z}$ or ${\sf s}\,v$. 
+% \[
+% \infer[{\sf selectn/z}]
+% {{\sf selectn}\,{\sf z}\,e_z\,(x.e_s)\,e_z}
+% {}
+% \quad
+% \infer[{\sf selectn/s}]
+% {{\sf selectn}\,({\sf s}\,v')\,e_z\,(x.e_s)\,([v'/x]e_s)}
+% {}
+% \]
+% With this ${\sf select}$ function, we can write ${\sf ev/case}$ that
+% selects the next step $e'$ and then evaluates $e'$ to $v$.
+% \[
+% \infer[{\sf ev/case}]
+% {\left({\sf case}\,e\,{\sf of}\,
+%    {\sf z} \Rightarrow e_z \mid {\sf s}\,x \Rightarrow e_s\right) \Downarrow v}
+% {e \Downarrow v'
+%  &
+%  {\sf selectn}\,v'\,e_z\,(x.e_s)\,e'
+%  &
+%  e' \Downarrow v}
+% \]
+% The operationalization of this specification
+% (Figure~\ref{fig:ssos-minml-case-good}) is not quite in the form that
+% we discussed defunctionalizing, but we can defunctionalize an
+% equivalent specification, resulting in the semantics in
+% Figure~\ref{fig:ssos-minml-case-good-defun}.
+
+% \begin{figure}
+% \fvset{fontsize=\small,boxwidth=auto}
+% \VerbatimInput{sls/ssos-minml-case-good.sls}
+% \caption{Semantics of case analysis (not defunctionalized).}
+% \label{fig:ssos-minml-case-good}
+% \bigskip
+% \fvset{fontsize=\small,boxwidth=auto}
+% \VerbatimInput{sls/ssos-minml-case-good-defun.sls}
+% \caption{Semantics of case analysis (defunctionalized).}
+% \label{fig:ssos-minml-case-good-defun}
+% \end{figure}
 
 
 \subsection{Flat resolution for deductive computation}
