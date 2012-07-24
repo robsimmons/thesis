@@ -674,6 +674,11 @@ synchronization and parallelism, but not with the semantics of
 recoverable failure: we would have to make some choice about what to 
 do when a future signals failure.
 
+\footnote{``Like lazy evaluation, futures can be used to compute 
+nonstrict functions -- functions that terminate despite the 
+possible nontermination of the computation of one or more argument
+values.'' \cite{halsted85multilisp}}
+
 \subsection{First-class continuations}
 \label{sec:dest-continuations}
 

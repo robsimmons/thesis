@@ -215,6 +215,15 @@ Frontend.load "cbv-ev-ssos-fun.sls";
 Frontend.read "cont2: frame -> prop ord. error: prop ord.";
 Frontend.load "ssos-fail-binary.sls";
 
+
+
+
+
+
+
+
+
+
 HEADING "Figure 6.19, left-hand side (small-step evaluation)";
 Frontend.reset ();
 Frontend.load "exp.sls";
@@ -239,6 +248,8 @@ Frontend.load "exp.sls";
 Frontend.load "cbv-ev-ssos-fun.sls";
 Frontend.load "lc-ev2.sls";
 Frontend.load "lc-ssos-3.sls";
+
+
 
 (*
 Frontend.reset ();
