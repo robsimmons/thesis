@@ -1153,9 +1153,9 @@ R & ::= \forall \lf{\overline{x}}.\,{\sf retn\_b1}\,\lf{t_1} \fuse \ldots \fuse 
 S & ::= \forall \lf{x}{:}\tau.\,S 
    \mid p^+_\mpers \lefti S
    \mid {!}A^- \lefti S
-   \mid \{ {\sf eval\_b1}\,\lf{t_1} \fuse \ldots \fuse {\sf eval\_bn}\,\lf{t_n} 
-           \fuse {\downarrow}R \}
-   \mid \{ {\sf eval\_b}\,\lf{t} \} 
+   \mid {\ocircle}({\sf eval\_b1}\,\lf{t_1} \fuse \ldots \fuse {\sf eval\_bn}\,\lf{t_n} 
+           \fuse {\downarrow}R)
+   \mid {\ocircle}({\sf eval\_b}\,\lf{t})
 \end{align*}
 
 \noindent
@@ -1244,7 +1244,7 @@ $(\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,\lf{s}}})
  (\Psi; \Gamma_z)$.
 \item If $\Delta$ matches $\frameoff{\opsubst{\Theta}}{\opsubst{\Gamma}}$,
 $\Gamma_z$ matches $z{:}\susp{{\sf retn\_z}\,\lf{t_z}}$, \\
-$\slss{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}, [\opbasic{A_i,\ldots,A_n}{t_{n+1}}{\sigma_i}]}{\susp{\{C^+\}}}{}$, and 
+$\slss{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}, [\opbasic{A_i,\ldots,A_n}{t_{n+1}}{\sigma_i}]}{\susp{{\ocircle}C^+}}{}$, and 
 $(\Psi; \tackon{\opsubst{\Theta}}{C^+})
          \leadsto^*_{\transop{\Sigma}}
        (\Psi; \Gamma_z)$, \\
@@ -1268,11 +1268,11 @@ $D = {!}p_c \lefti D'$, where $p_c = {\sf ac}\,\lf{t_1}\,\lf{t_2}$
  \` (given)
 \\
 $\opsubst{D} = {!}({\sf eval\_a}\,\lf{t_1}
-\lefti \{ {\sf retn\_a}\,\lf{t_2} \}) \lefti \opsubst{D'}$
+\lefti {\ocircle}({\sf retn\_a}\,\lf{t_2})) \lefti \opsubst{D'}$
  \` (definition of $\opsubst{D}$)
 \\
 $\slst{\transop{\Sigma}}{\Psi}{\Gamma, [{!}({\sf eval\_a}\,\lf{t_1}
-\lefti \{ {\sf retn\_a}\,\lf{t_2} \}) \lefti \opsubst{D'}]}{\Sp}{\susp{p^-_d}}$
+\lefti {\ocircle}({\sf retn\_a}\,\lf{t_2})) \lefti \opsubst{D'}]}{\Sp}{\susp{p^-_d}}$
  \` (given)
 \\
 $\Sp = \tbangr{(\lambda x.\,\tlet{T}{y})}; \Sp'$, where
@@ -1378,7 +1378,7 @@ rely on ${\sf retn\_a}$ being similarly uniquely associated with ${\sf
 We are given a spine
 $\slst{\transop{\Sigma}}{\Psi}
   {\opsubst{\Gamma},[\opbasic{A_i,\ldots,A_n}{t_{n+1}}{\sigma_i}]}
-  {\Sp}{\susp{\{C^+\}}}$ and a trace
+  {\Sp}{\susp{{\ocircle}C^+}}$ and a trace
 $\lambda P.T :: (\Psi; \tackon{\opsubst{\Theta}}{C^+})
          \leadsto^*_{\transop{\Sigma}}
        (\Psi; \Gamma_z)$. 
@@ -1392,7 +1392,7 @@ $T' :: (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,\lf{(\lf{\sigma
 We proceed by case analysis on the definition of
 the operationalization transformation:
 \begin{itemize}
-\item $\opbasic{}{t_{n+1}}{\sigma_n} = \{ {\sf retn\_a}\,\lf{(\sigma_{n}{t_{n+1}})} \}$
+\item $\opbasic{}{t_{n+1}}{\sigma_n} = {\ocircle}({\sf retn\_a}\,\lf{(\sigma_{n}{t_{n+1}})})$
 
   \bigskip
   This is a base case: there are no values to construct. By inversion on the
@@ -1409,7 +1409,7 @@ the operationalization transformation:
   \bigskip
 
 \item $\opbasic{{!}{\sf ac}\,\lf{t^{\it in}_n}\,\lf{t_{n+1}}}{t_{n+1}}{\sigma_{n-1}} 
-  = \{{\sf eval\_a}\,(\sigma_{n-1}{t^{\it in}_n})\}$
+  = {\ocircle}({\sf eval\_a}\,(\sigma_{n-1}{t^{\it in}_n}))$
 
   \bigskip
   This is also a base case: we have one value of type 
@@ -1472,79 +1472,85 @@ the operationalization transformation:
 
 \item $\opbasic{{!}p^-_{ci},\ldots,{!}p^-_{cj},A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}$
   \\
-  $~ \qquad = \{ {\sf eval\_bi}\,({\sigma_{i-1}}t^{\it in}_i) 
+  $~ \qquad = {\ocircle}\left(
+    \begin{array}{l}
+       {\sf eval\_bi}\,\lf{({\sigma_{i-1}}t^{\it in}_i)} 
                     \fuse  \ldots \fuse
-                 {\sf eval\_bj}\,({\sigma_{i-1}}t^{\it in}_j) \fuse ~$
-  \\
-  $~ \qquad \qquad (\forall\overline{x_i}\ldots\forall\overline{x_j}.\, 
-     {\sf retn\_bi}\,(\sigma_{i-1}{t^{\it out}_i})
-     \fuse \ldots \fuse 
-     {\sf retn\_bj}\,(\sigma_{i-1}{t^{\it out}_j})$
-  \\
-  $~ \qquad \qquad \quad
-   \lefti \opbasic{A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}) \}$\\
+                 {\sf eval\_bj}\,\lf{({\sigma_{i-1}}t^{\it in}_j)} \fuse ~
+       \\
+       (\forall\lf{\overline{x_i}}\ldots\forall\lf{\overline{x_j}}.\, 
+          {\sf retn\_bi}\,\lf{(\sigma_{i-1}{t^{\it out}_i})}
+          \fuse \ldots \fuse 
+       {\sf retn\_bj}\,\lf{(\sigma_{i-1}{t^{\it out}_j})}
+       \\
+       ~\quad
+       \lefti \opbasic{A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}})
+    \end{array} \right)$\\
   {\it (where
-   $p^-_{ck}$ is ${\sf bkc}\,t^{\it in}_k\,t^{\it out}_k$ 
-   and $FV(t_k^{\it in}) \notin (\overline{x_i} \cup \ldots \cup \overline{x_j})$ 
+   $p^-_{ck}$ is ${\sf bkc}\,\lf{t^{\it in}_k}\,\lf{t^{\it out}_k}$ 
+   and $FV(\lf{t_k^{\it in}}) \notin (\lf{\overline{x_i}} \cup \ldots \cup \lf{\overline{x_j}})$ 
    for $i \leq k \leq j$)}
 
   \bigskip
-  Let $R = \forall\overline{x_i}\ldots\forall\overline{x_j}.\, 
-     {\sf retn\_bi}\,(\sigma_{i-1}{t^{\it out}_i})
+  Let $R = \forall\lf{\overline{x_i}}\ldots\forall\lf{\overline{x_j}}.\, 
+     {\sf retn\_bi}\,\lf{(\sigma_{i-1}{t^{\it out}_i})}
      \fuse \ldots \fuse 
-     {\sf retn\_bj}\,(\sigma_{i-1}{t^{\it out}_j})$
+     {\sf retn\_bj}\,\lf{(\sigma_{i-1}{t^{\it out}_j})}$
 
    ~\qquad\qquad\qquad\qquad\quad $\lefti \opbasic{A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}$
 
   \smallskip
+  By inversion on the type of $P$, we know it has the form 
+  $y_i, \ldots, y_j, y$, and we know that
+  $T :: (\Psi; \tackon{\opsubst{\Theta}}
+     {y_i{:}\susp{{\sf eval\_bi}\,\lf{({\sigma_{i-1}}t^{\it in}_i)}}, \ldots,
+      y_j{:}\susp{{\sf eval\_bj}\,\lf{({\sigma_{i-1}}t^{\it in}_j)}},
+      y{:}\istrue{R}})
+    \leadsto^*_{\transop{\Sigma}} (\Psi, \Delta_z)$. 
 
-  The process state 
-  $(\Psi; \tackon{\opsubst{\Theta}}{{\sf eval\_bi}\,({\sigma_{i-1}}t^{\it in}_i) 
-                    \fuse  \ldots \fuse
-                 {\sf eval\_bj}\,({\sigma_{i-1}}t^{\it in}_j) \fuse R})$
-  decomposes to the process state
-  $(\Psi; \tackon{\opsubst{\Theta}}
-     {x_i{:}{\sf eval\_bi}\,({\sigma_{i-1}}t^{\it in}_i), \ldots,
-      x_j{:}{\sf eval\_bj}\,({\sigma_{i-1}}t^{\it in}_j),
-      y{:}\istrue{R}})$. By repeated application of the induction hypothesis
-  (part 4) starting with $T$, we obtain for $i \leq k \leq j$ a 
-  derivation of $\slst{\Sigma}{\Psi}{\Gamma}{N_k}{\susp{{\sf bkc}\,t^+{\it in}_k\,s_k}}$
+  \smallskip
+  By $j - i$ applications of the induction hypothesis
+  (part 4) starting with $T$, we obtain for $i \leq k \leq j$
+  a derivation of 
+  $\slst{\Sigma}{\Psi}{\Gamma}{N_k}{\susp{{\sf bkc}\,\lf{(\sigma_{i-1} t^{\it in}_k)\,\lf{s_k}}}}$
   and a smaller trace 
-  \[T' :: (\Psi; \tackon{\opsubst{\Theta}}
-     {y_i{:}{\sf retn\_bi}\,s_i, \ldots,
-      y_j{:}{\sf retn\_bj}\,s_j,
+  $T'' :: (\Psi; \tackon{\opsubst{\Theta}}
+     {z_i{:}\susp{{\sf retn\_bi}\,\lf{s_i}}, \ldots,
+      z_j{:}\susp{{\sf retn\_bj}\,\lf{s_j}},
       y{:}\istrue{R}})
     \leadsto^+_{\transop{\Sigma}}
-    (\Psi; \Delta_z)\]
-  Then we can use Theorem~\ref{thm:rearrangement}
-  to get that 
-  $T' \equiv \tstep{p}{y}
-            {(\tforalll{\overline{u_i}}{\ldots
-               \tforalll{\overline{u_j}}{
-                 {\tappl{(\tfuser{y_i}{\tfuser{\ldots}{y_j}})}{\Sp'}}}})};
-   T''$.
+    (\Psi; \Delta_z)$.
+
+  \smallskip
+  By Theorem~\ref{thm:rearrangement}
+  we get that 
+  $T'' = \tstep{P}{y}
+            {(\lf{\overline{u_i}}; \ldots; \lf{\overline{u_j}};
+             (\tfuser{z_i}{\tfuser{\ldots}{z_j}}); \Sp')}; T'''$.
 
    \smallskip
     
    Let
-   $\sigma_j = (\sigma_{i-1},
+   $\lf{\sigma_j} = \lf{(\sigma_{i-1},
                    \overline{u_i}/\overline{x_i},\ldots,
-                   \overline{u_j}/\overline{x_j})$.
-   Then we have that $s_k = {\sigma_i}t^{\it out}_k$ for $i \leq k \leq j$ and
-   $\slst{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma},[\opbasic{A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{j}}]}{\Sp'}{\susp{\{ C^+ \}}}$.$^*$
+                   \overline{u_j}/\overline{x_j})}$.
+   Then we have that $\lf{s_k} = \lf{{\sigma_j}t^{\it out}_k}$ 
+   for $i \leq k \leq j$ and
+   $\slst{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma},[\opbasic{A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{j}}]}{\Sp'}{\susp{{\ocircle}C^+}}$.$^*$
 
   \smallskip
 
  The induction 
-   hypothesis (part 5) on $\Sp'$ and $T''$
-  gives $\sigma \supseteq \sigma_{i}$, values
-  $\sigma{A^+_{k}}$ for $j < k \leq n$, and 
-  a trace $T' :: (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,(\sigma t_{n+1})}})
+   hypothesis (part 5) on $\Sp'$ and $T'''$
+  gives $\lf{\sigma} \supseteq \lf{\sigma_{j}}$, values
+  $\lf{\sigma}{A^+_{k}}$ for $j < k \leq n$, and 
+  a trace $T' :: (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,\lf{(\sigma t_{n+1})}}})
   \leadsto^*_{\transop{\Sigma}}
- (\Psi; \Delta_z)$. We need to produce a value $A_k = {!}(\sigma{p^-_{ck}})$
-  for $i \leq k \leq j$; in each case we can construct
-  $\slst{\Sigma}{\Psi}{\Gamma}{\tbangr{\tetan{N_k}}}{[{!}(\sigma{p^-_{ck}})]}$.
-  \bigskip
+ (\Psi; \Delta_z)$. The remaining values of type
+   $\lf{\sigma}A_k = {!}(\lf{\sigma}p^-_{ck})$ for $i \leq k \leq j$
+   all have the form ${!}N_k$ (where the $N_k$ were constructed above by
+   invoking part 4 of the induction hypothesis).
+   \bigskip
 
 
 \item $\opbasic{{!}G,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}} = \forall
@@ -1560,7 +1566,7 @@ the operationalization transformation:
   a trace $T' :: (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,\lf{(\sigma t_{n+1})}}})
   \leadsto^*_{\transop{\Sigma}}
  (\Psi; \Delta_z)$. The remaining value of type 
-  $\lf\sigma A_i = {!}\lf{\sigma}G$
+  $\lf\sigma A_i = {!}(\lf{\sigma}G)$
   is $\tbangr{N'}$, where we get $\slst{\Sigma}{\Psi}{\Gamma}{N'}{\lf{\sigma}{G}}$ from the induction hypothesis (part 3) on $N$.
 \end{itemize}
 
@@ -1572,184 +1578,228 @@ This completes the proof.
 \section{Logical transformation: defunctionalization}
 \label{sec:defunctionalization}
 
-Defunctionalization is a procedure for turning higher-order
-concurrent \sls~specifications into first-order concurrent
-\sls~specifications. It is based on the following intuitions:
+Defunctionalization is a procedure for turning higher-order concurrent
+\sls~specifications into first-order concurrent
+\sls~specifications. The defunctionalization procedure implemented in
+the \sls~prototype is actually three transformations. The first is
+properly a defunctionalization transformation
+(Section~\ref{sec:defunc-defunc}), the second is an uncurrying
+transformation (Section~\ref{sec:defunc-uncurry}), and the third
+is a refactoring that
+transforms a family of ${\sf cont}$-like predicates into a single
+${\sf cont}$ predicate and a family of frames
+(Section~\ref{sec:defunc-type}).
+
+\subsection{Defunctionalization}
+\label{sec:defunc-defunc}
+
+Defunctionalization is based on the following intuitions:
 if $A^-$ is a closed negative proposition
-of the form $\forall \overline{x}.\,A^+_1 \lefti \{ A^+_2 \}$
+of the form 
 and we have a single-step transition 
-$(\Psi; \tackon{\Theta}{y{:}\istrue{A^-}}) 
+$\tstep{P}{y}{\Sp} :: (\Psi; \tackon{\Theta}{y{:}\istrue{A^-}}) 
  \leadsto_{\Sigma} 
- (\Psi; \Delta')$
-in an \sls~specification (witnessed by the step 
-$(\tstep{\mkpat{A^+_2}}{y}{(\tforalll{\overline{t}}{\tappl{V}{\tnil}})})$), 
+ (\Psi; \Delta')$,
 then we can define an augmented signature
 \begin{align*}
 \Sigma' = ~ & \Sigma, 
 \\    ~~ & {\sf cont} : {\sf prop\,ord}, 
-\\    ~~ & {\sf run\_cont} : \forall{\overline x}.\,p^+_\mtrue \fuse {\sf cont} \lefti \{ A^+ \}
+\\    ~~ & {\sf run\_cont} : {\sf cont} \lefti A^-
 \end{align*}
 and it is the case that 
 $(\Psi; \tackon{\Theta}{y{:}\susp{\sf cont}}) 
  \leadsto_{\Sigma'} 
  (\Psi; \Delta')$
-as well; this new transition is witnessed by the step
-$(\tstep{\mkpat{A^+}}{\sf run\_cont}{(\tappl{(\tfuser{V}{y})}{\tnil})})$.
+as well. Whenever the step $\tstep{P}{y}{\Sp}$ is possible under $\Sigma$,
+the step $\tstep{P}{\sf run\_cont}{(y; \Sp)}$ will be possible under $\Sigma'$,
+and vice versa.  (It would work just as well for ${\sf run\_cont}$ to be ${\sf
+  cont} \righti A^-$ -- a persistent proposition of type $A^+ \lefti
+B^-$ is indistinguishable from a persistent proposition of type $A^+
+\righti B^-$ in ordered logic.)
 
-More generally, if we are allowed to extend the signature and $A^-$
-falls into the very specific form we have
-specified,\footnote{Obviously, the restriction to propositions $A^-$
-  of the form $\forall \overline{x}.\,A^+ \lefti \{ A^+ \}$ is
-  overly specific and designed to apply specifically to the output of
-  operationalization, but we will not consider a generalization here.}
-%  Conceptually, it is not complicated to consider a similar operation
-%  on other propositions, but it is difficult to elegantly describe the
-%  more general transformation due our use of ordered logic.}  
-we can create
-a new ordered atomic proposition to do a negative proposition's
-job. As long as $\Delta = \tackon{\Theta}{x{:}\susp{\sf cont}}$ and
-${\sf cont}$ does not appear in $\Theta$, then $[{\downarrow}A^- /{\sf
-  cont}]\Delta \leadsto_\Sigma [{\downarrow}A^- /{\sf cont}]\Delta'$
-if and only if $\Delta \leadsto_{\Sigma'} \Delta'$. \footnote{Recall
-  from Section~\ref{sec:framework-substprop} that we treat
-  %
-  $[{\downarrow}A^-/{\sf cont}](\tackon{\Theta}{z{:}\istrue{\susp{\sf cont}}})$
-  %
-  as being equal to the context in which we {\it first} perform the
-  straightforward substitution, giving us
-  $(\tackon{\Theta}{z{:}\istrue{{\downarrow}A^-}})$, and then {\it
-    second} apply invertible rules, giving us
-  $(\tackon{\Theta}{z'{:}\istrue{A^-}})$.} 
-
-We need not restrict ${\sf cont}$ to just a single appearance
-suspended in the process state.  It is
-similarly unproblematic for ${\sf cont}$ to appear in the monadic head
-of some other rule in the process state, as the appearance of an
-ordered atomic proposition in a monadic head will not effect the
-existence of any transition, but may cause the ordered atomic
-proposition to become a suspended ordered proposition in the process
-state after the transition. 
-
-By the same reasoning, it is similarly
-unproblematic for ${\sf cont}$ to appear in the head of a rule in the
-signature.  Therefore, we can replace propositions in the monadic heads
-of rules in the signature, like this one:
+Because rules in the signature must be closed negative propositions,
+this strategy won't work for a transition that mentions free variables
+from the context. However, every open proposition $\Psi \vdash_\Sigma
+A^-\,{\sf type}^-$ can be refactored as an open proposition 
+$\lf{a_1}{:}\tau_1, \ldots, \lf{a_n}{:}\tau_n \vdash B^-\,{\sf type}^-$ and
+a substitution $\lf{\sigma} = \lf{(t_1/a_1, \ldots, t_n/a_n)}$ such that
+$\Psi \vdash_\Sigma \lf{\sigma} : \lf{a_1}{:}\tau_1, \ldots, \lf{a_n}{:}\tau_n$
+and $\lf{\sigma}B^- = A^-$. Then, we can augment the signature in this 
+more general form:
 \begin{align*}
-& \Sigma, \\
-& {\sf r} : {\sf a} \lefti \{ {\sf b} \fuse {\uparrow}({\sf c} \lefti \{ {\sf d} \fuse {\uparrow}({\sf e} \lefti \{ {\sf f} \}) \}) \}
-\intertext{to produce a signature that looks like this:}
-& \Sigma, \\
-& {\sf cont1} : {\sf prop\,ord}, \\
-& {\sf r1} : {\sf c} \fuse {\sf cont1} \lefti \{ {\sf d} \fuse {\uparrow}({\sf e} \lefti \{ {\sf f} \}) \}, \\
-& {\sf r} : {\sf a} \lefti \{ {\sf b} \fuse {\sf cont1} \}
-\intertext{and the process can be iterated to obtain 
-a fully first-order signature:}
-& \Sigma, \\
-& {\sf cont2} : {\sf prop\,ord}, \\
-& {\sf r2} : {\sf e} \fuse {\sf cont2} \lefti \{ {\sf f} \}, \\
-& {\sf cont1} : {\sf prop\,ord}, \\
-& {\sf r1} : {\sf c} \fuse {\sf cont1} \lefti \{ {\sf d} \fuse {\sf cont2} \}, \\
-& {\sf r} : {\sf a} \lefti \{ {\sf b} \fuse {\sf cont1} \}
+\Sigma'' = ~ & \Sigma, 
+\\    ~~ & {\sf cont} :  \Pi\lf{a_1}{:}\tau_1\ldots \Pi\lf{a_n}{:}\tau_n.\,{\sf prop}\,{\sf ord}
+\\    ~~ & {\sf run\_cont} : \forall\lf{a_1}{:}\tau_1\ldots \forall\lf{a_n}{:}\tau_n.\,{\sf cont}\,\lf{a_1}\ldots\lf{a_n} \lefti B^-
 \end{align*}
+As before, whenever the step $\tstep{P}{y}{\Sp} :: (\Psi;
+\tackon{\Theta}{y : \istrue{A^-}}) \leadsto^*_{\Sigma} (\Psi';
+\Delta')$ is possible under $\Sigma$, the step $\tstep{P}{\sf
+  run\_cont}{(\lf{t_1}; \ldots; \lf{t_n}; y; \Sp)} ::
+  (\Psi; \tackon{\Theta}{y : \susp{{\sf cont}\,\lf{t_1}\ldots\lf{t_n}}}) \leadsto^*_{\Sigma'} (\Psi';
+\Delta')$ will be possible under
+$\Sigma'$, and vice versa.
+
+Taking this a step further, if we have a signature
+$\Sigma_1 = \Sigma, {\sf rule} : \ldots \lefti {\ocircle}(\ldots \fuse {\downarrow}B^- \fuse \ldots)
+$
+where the variables $\lf{a_1\ldots a_n}$ are free in $B^-$, 
+then any trace in this signature will be in lock-step bisimulation
+with a trace in this signature: 
+\begin{align*}
+\Sigma_2 = ~ & \Sigma,
+\\    ~~ & {\sf cont} :  \Pi\lf{a_1}{:}\tau_1\ldots \Pi\lf{a_n}{:}\tau_n.\,{\sf prop}\,{\sf ord}
+\\    ~~ & {\sf rule} : \ldots \lefti {\ocircle}(\ldots \fuse ({\sf cont}\,\lf{a_1}\ldots\lf{a_n}) \fuse \ldots)
+\\    ~~ & {\sf run\_cont} : \forall\lf{a_1}{:}\tau_1\ldots \forall\lf{a_n}{:}\tau_n.\,{\sf cont}\,\lf{a_1}\ldots\lf{a_n} \lefti B^-
+\end{align*}
+Specifically, if we say that 
+can say that $(\Psi; \Delta_1) \,\mathcal R\, (\Psi; \Delta_2)$ when 
+all instances of $\Delta_1$ is $\Delta_2$ where all instances of 
+$y{:}\istrue{\susp{{\sf cont}\,\lf{t_1}\ldots\lf{t_n}}}$ in $\Delta_2$ have been
+replaced by $y{:}\istrue{\lf{(t_1/a_1\ldots t_n/a_n)}B^-}$ in $\Delta_1$. 
+(Note that if $\vdash_{\Sigma_2} (\Psi; \Delta_2)\,{\sf state}$, then 
+ $\vdash_{\Sigma_1} (\Psi; \Delta_1)\,{\sf state}$.)
+It is the case that if
+$S_1 :: (\Psi; \Delta_1) \leadsto^*_{\Sigma_1} (\Psi'; \Delta_1')$
+then $S_2 :: (\Psi; \Delta_2) \leadsto^*_{\Sigma_2} (\Psi'; \Delta_2')$
+where $(\Psi'; \Delta'_1) \,\mathcal R\, (\Psi'; \Delta'_2)$, and vice 
+versa. The opposite also holds: if
+$S_2 :: (\Psi; \Delta_2) \leadsto^*_{\Sigma_2} (\Psi'; \Delta_2')$
+then $S_1 :: (\Psi; \Delta_1) \leadsto^*_{\Sigma_1} (\Psi'; \Delta_1')$
+where $(\Psi'; \Delta'_1) \,\mathcal R\, (\Psi'; \Delta'_2)$. For transitions
+not involving ${\sf rule}$ or ${\sf run\_cont}$ in $\Sigma_2$ this is immediate,
+for transitions involving ${\sf rule}$ we observe that the propositions
+introduced by inversion preserve the simulation, and for transitions 
+involving ${\sf run\_cont}$ we use aforementioned fact that the atomic term
+$\tfocusl{y}{\Sp}$ in $\Sigma_1$ is equivalent to the atomic term
+$\tfocusl{\sf run\_cont}{(\lf{t_1}; \ldots; \lf{t_n}; y; \Sp)}$ in $\Sigma_2$. 
+
+We can iterate this defunctionalization procedure on the 
+nested ${\sf ev/app}$ rule from Figure~\ref{fig:cbv-ev-ssos-tail}: 
+\begin{align*}
+& {\sf ev/app} : \forall\lf{E_1}. \forall\lf{E_2}.\, {\sf eval}\,\lf{({\sf app}\,E_1\,E_2)}\\
+& \qquad\qquad \lefti \{ {\sf eval}\,\lf{E_1} \fuse ~\\
+& \qquad\qquad\qquad~ {\downarrow}(\forall\lf{E}.\, {\sf retn}\,\lf{({\sf lam}\,\lambda x.E\,x)}\\
+& \qquad\qquad\qquad~\quad~ \lefti \{ {\sf eval}\,\lf{E_2} \fuse {\downarrow}(\forall \lf{V_2}.\, {\sf retn}\,\lf{V_2} \lefti \{ {\sf eval}\,\lf{(E\,V_2)} \})\})\}.
+\intertext{The outermost nested rule only has the variable $\lf{E_2}$ free,
+  so the first continuation we introduce, ${\sf cont\_app1}$, has one argument.}
+& {\sf cont\_app1} : {\sf exp} \rightarrow {\sf prop}\,{\sf ord},\\
+& {\sf ev/app} : \forall\lf{E_1}. \forall\lf{E_2}.\, {\sf eval}\,\lf{({\sf app}\,E_1\,E_2)} \lefti \{ {\sf eval}\,\lf{E_1} \fuse {\sf cont\_app1}\,\lf{E_2} \}\\
+& {\sf ev/app1} : \forall\lf{E_2}.\, {\sf cont\_app1}\,\lf{E_2} \lefti\forall\lf{E}.\, {\sf retn}\,\lf{({\sf lam}\,\lambda x.E\,x)}\\
+& \qquad\qquad\lefti \{ {\sf eval}\,\lf{E_2} \fuse  {\downarrow}(\forall \lf{V_2}.\, {\sf retn}\,\lf{V_2} \lefti \{ {\sf eval}\,\lf{(E\,V_2)} \})\}.
+%
+\intertext{This step turns ${\sf ev/app}$ into a flat rule; we repeat
+  defunctionalization on ${\sf ev/app1}$ to get a completely flat
+  specification. This introduces a new proposition ${\sf ev\_app2}$
+  that keeps track of the free variable $\lf{E}$ with type ${\sf exp}
+  \rightarrow {\sf exp}$.}
+%
+& {\sf cont\_app1} : {\sf exp} \rightarrow {\sf prop}\,{\sf ord},\\
+& {\sf cont\_app2} : ({\sf exp} \rightarrow {\sf exp}) \rightarrow {\sf prop}\,{\sf ord},\\
+& {\sf ev/app} : \forall\lf{E_1}. \forall\lf{E_2}.\, {\sf eval}\,\lf{({\sf app}\,E_1\,E_2)} \lefti \{ {\sf eval}\,\lf{E_1} \fuse {\sf cont\_app1}\,\lf{E_2} \}\\
+& {\sf ev/app1} : \forall\lf{E_2}.\, {\sf cont\_app1}\,\lf{E_2} \lefti \forall\lf{E}.\, {\sf retn}\,\lf{({\sf lam}\,\lambda x.E\,x)} \lefti \{ {\sf eval}\,\lf{E_2} \fuse {\sf cont\_app2}\,\lf{(\lambda x.E\,x)}\}.\\
+& {\sf ev/app2} : \forall \lf{E}.\, {\sf cont\_app2}\,\lf{(\lambda x.E\,x)} \lefti \forall \lf{V_2}.\, {\sf retn}\,\lf{V_2} \lefti \{ {\sf eval}\,\lf{(E\,V_2)} \}.
+\end{align*}
+
 This transformation is similar to the one proposed by
-Miller in~\cite{miller02higherorder}, where new propositions were
+Miller in~\cite{miller02higherorder}, where new propositions
+(like ${\sf cont\_app1}$ and ${\sf cont\_app2}$) were
 introduced and locally quantified to hide the internal states of processes.
 
-We can go further and allow $A^-$ to contain free variables if
-$A^- = [t_1/y_1]\ldots[t_m/x_m]B^-$ where $B^- = \forall
-\overline{x}.\,B_1^+ \lefti \{ B_2^+ \}$ has only the variables
-$\overline{y} = y_1\ldots y_m$ free.  In this more general case, we
-can revise the signature as follows:
-\begin{align*}
-\Sigma'' = ~ & \Sigma,
-\\    ~~ & {\sf cont} : 
-       \Pi y_1{:}\tau_1\ldots \Pi y_m{:}\tau_m.\, {\sf prop\,ord},
-\\    ~~ & {\sf run\_cont} : \forall \overline{x}.\,\forall \overline{y}.\,
-       p^+_\mtrue \fuse {\sf cont}\,\overline{y} \lefti \{ B^+ \}
-\end{align*}
-With this revision, we maintain that
-%
-$[{\downarrow}B^-/{\sf cont}\,\overline{x}]\Delta \leadsto_{\Sigma}
-[{\downarrow}B^-/{\sf cont}\,\overline{x}]\Delta'$ if and only if
-$\Delta \leadsto_{\Sigma''} \Delta'$ as long as propositions of the
-form ${\sf cont}\,\overline{t}$ only appear suspended in the process
-state or in the monadic heads of rules that appear in the process
-state.\robnote{The process of proving this is mostly an issue of
-  stating it precisely, which is a pain. I'd appreciate feedback as to
-  whether this seems clear or whether I need to write out the detailed
-  proof.}
+\subsection{Uncurrying}
+\label{sec:defunc-uncurry}
 
-The one twist we make to the defunctionalization transformation is
-that, instead of introducing a new ordered atomic proposition ${\sf
-  cont}\,\overline{t}$ for each iteration of the defunctionalization
-procedure, we introduce a single type $({\sf frame} : {\sf type})$ and a
-single atomic proposition $({\sf cont} : {\sf frame} \rightarrow {\sf
-  prop\,ord})$. Then, each iteration of the defunctionalization
-procedure produces a new constant with type $\Pi y_1{:}\tau_1\ldots
-\Pi y_m{:}\tau_m.\, {\sf frame}$ instead of a new atomic proposition
-with kind $\Pi y_1{:}\tau_1\ldots \Pi y_m{:}\tau_m.\, {\sf
-  prop\,ord}$.  Operationally, these two approaches are equivalent.
+While the rule ${\sf rule1} : A^+ \lefti B^+ \lefti C^-$ is equivalent
+to the rule ${\sf rule2} : A^+ \righti B^+ \lefti C^-$, these two
+rules are {\it not} equivalent to the rule ${\sf rule3} : A^+ \lefti
+B^+ \righti C^-$. The first two rules expect the context matching
+$B^+$ to appear to the left of the context matching $A^+$, and the
+third two rules expect the context matching $B^+$ to appear to the
+{\it right} of the context matching $A^+$.
+
+As forward chaining rules, rules like $A^+ \lefti B^+ \righti C^+
+\lefti D^+ \righti \{ E^+ \}$ are significantly more awkward than
+rules like $C^+ \fuse A^+ \fuse B^+ \fuse D^+ \lefti \{ E^+
+\}$. However, uncurrying can only be performed on persistent or linear
+propositions (or rules in the signature): the variable mapping
+$x{:}\istrue{(p^+ \lefti q^+ \righti \{ r^+ \})}$, is not equivalent to the 
+variable mapping
+$x{:}\istrue{(A^+ \righti \{ r^+ \})}$ or $x{:}\istrue{(A^+ \lefti \{ r^+ \})}$
+for any $A^+$. 
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/cbv-uncurry.sls}
+\caption{Uncurried call-by-value evaluation}
+\label{fig:cbv-uncurry}
+\end{figure}
+
+Thus, defunctionalization
+and uncurrying work well together: if we replace the variable
+declaration
+$x{:}\istrue{(p^+ \lefti q^+ \righti \{ r^+ \})}$ with the suspended
+ordered proposition $x{:}\istrue{\susp{\sf cont}}$ and add a rule
+${\sf run\_cont} : {\sf cont} \lefti p^+ \lefti q^+ \righti \{ r^+ \}$, that rule can 
+then be uncurried to get the equivalent rule
+$p^+ \fuse {\sf cont} \fuse q^+ \lefti \{ r^+ \}$.
+
+If we uncurry the defunctionalized specification from above, we get
+the \sls~specification shown in Figure~\ref{fig:cbv-uncurry}. This
+flat specification closely and adequately represents the abstract
+machine semantics from the beginning of this chapter, but before
+proving adequacy in Section~\ref{sec:nat-ssos-adequacy} we
+will make one more change to the semantics.
+
+\subsection{From many predicates to many frames}
+\label{sec:defunc-type}
+
+This last change we make appears to be largely cosmetic, but it will
+facilitate, in Section~\ref{sec:failure} below, the modular extension
+of our language with recoverable failure.
+
+The defunctionalization procedure introduces many new atomic
+propositions. The two predicates introduced in the call-by-value
+specification were called ${\sf cont\_app1}$ and ${\sf cont\_app2}$,
+and a larger specification will, in general, introduce many more.  The
+one last twist we make is to observe that, instead of introducing a
+new ordered atomic proposition ${\sf cont}\,\lf{\overline{t}}$ for each
+iteration of the defunctionalization procedure, it is possible to
+introduce a single type $({\sf frame} : {\sf type})$ and a single
+atomic proposition $({\sf cont} : {\sf frame} \rightarrow {\sf
+  prop\,ord})$.
+
+With this change, each iteration of the defunctionalization
+procedure adds a new constant with type $\Pi \lf{y_1}{:}\tau_1\ldots
+\Pi \lf{y_m}{:}\tau_m.\, {\sf frame}$ to the signature instead of a 
+new atomic proposition
+with kind $\Pi \lf{y_1}{:}\tau_1\ldots \Pi \lf{y_m}{:}\tau_m.\, {\sf
+  prop\,ord}$.  Operationally, these two approaches are equivalent, but
+it facilitates the addition of control features when we can 
+modularly talk about all of the atomic propositions introduced
+by defunctionalization as having the form ${\sf cont}\,\lf{F}$ for
+some term $\lf{F}$ of type ${\sf frame}$.
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/cbv-ev-ssos-fun.sls}
 \caption{A first-order ordered abstract machine semantics for CBV
-  evaluation.}
+  evaluation}
 \label{fig:cbv-ev-ssos-fun}
 \end{figure}
 
-Using the defunctionalization procedure outlined above, we obtain the
-first-order specification in Figure~\ref{fig:cbv-ev-ssos-fun} from the
-higher-order specification in Figure~\ref{fig:cbv-ev-ssos-tail}, which
-was in turn derived from the natural semantics for CBV evaluation by
-operationalization with tail-recursion optimization.
-
-% As long as 
-% $({\sf cont}\,t_1\ldots t_n)$ only appears in $\Delta$ as a 
-% suspended atomic proposition, then it is the case that
-% $[{\downarrow}(B^-\,x_1\ldots x_n)
-%     /{\sf cont}\,x_1\ldots x_n]\Delta 
-%  \leadsto_\Sigma
-%  [{\downarrow}(B^-\,x_1\ldots x_n)
-%     /{\sf cont}\,x_1\ldots\,x_n]\Delta'$ 
-% if and only if 
-% %
-% $\Delta \leadsto_{\Sigma''} \Delta'$.\footnote{Recall from
-%   Section~\ref{sec:framework-substprop} that
-%   $[{\downarrow}(B^-\,x_1\ldots x_n)/({\sf cont}\,x_1\ldots
-%   x_n)](z{:}\susp{{\sf cont}\,t_1\ldots t_n})$ as being equal to the
-%   context in which we substitue and then apply invertible rules, i.e.
-%   $z{:}\istrue{B^-\,t_1\ldots t_n}$}
-
-% In addition to allowing these newly introduced 
-% atomic propositions to appear suspended in the context, it is not 
-% a problem to allow them to appear in the heads of monadic clauses. 
-% This means that we can 
-
-%  monadic
-% clauses, there is no 
-
-% The defunctionalization transformation then applies the same reasoning
-% to signatures: if a proposition ${\downarrow}A^-$ appears in the monadic
-% head of some rule, 
-
-%  $A^- = B^-\,t_1\,t_2\,t_3$
-
-% This is even
-% true if $A^-$ has free variables: we can always define a closed
-% $B^- : $
-
-
-
+The ordered abstract machine resulting from this version of
+defunctionalization and uncurrying is shown in
+Figure~\ref{fig:cbv-ev-ssos-fun}, and can be compared to
+Figure~\ref{fig:cbv-uncurry}.
 
 \section{Adequacy with abstract machines}
 \label{sec:nat-ssos-adequacy}
 
-I\robnote{Some of this discussion should be moved to Chapter 5 and rephrased
-in terms of the PDA example.} 
-claim that the four-rule abstract machine specification given at the
+The four-rule abstract machine specification given at the
 beginning of this chapter is adequately represented by the derived
-\sls~specification in Figure~\ref{fig:cbv-ev-ssos-fun}. For terms and
+\sls~specification in Figure~\ref{fig:cbv-ev-ssos-fun}. 
+
+
+For terms and
 for deductive computations, adequacy is a well-understood concept: we
 know what it means to define an adequate encoding function $\interp{e}
 = t$ from ``on-paper'' terms $e$ with (potentially) variables
