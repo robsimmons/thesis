@@ -171,9 +171,9 @@ following:
 \end{quote}
 
 \noindent
-Part~1 of the thesis concerns the design of logical frameworks that
-support this rewriting interpretation and the design of the logical
-framework \sls~in particular. Part~2 concerns the modular
+Part~1 of the thesis covers the design of logical frameworks 
+that support this rewriting interpretation and the design of the logical
+framework \sls~in particular. Part~2 considers the modular
 specification of programming language features in \sls~and the
 methodology by which we organize and relate styles of
 specification. Part~3 discusses formal reasoning about properties of
@@ -255,8 +255,13 @@ ordered conjunction (i.e. concatenation); it binds more tightly than
 $\lefti$, a binary connective for ordered implication. The curly
 braces $\{ \ldots \}$ can be ignored for now.
 
-Our logic has first-order quantification, so we can generically
-describe a more general push-down automaton that uses ${\sf left}(X)$
+The propositional fragment of ordered logic is
+Turing complete: it is a simple exercise to specify a Turing machine!
+Nevertheless, first-order quantification is helps us write
+specifications that are short and clear. For example, by using
+first-order quantification we can describe a 
+a more general push-down automaton in a generic way. In
+this generic specification, we use ${\sf left}(X)$
 and ${\sf right}(X)$ to describe left and right angle braces ($X =
 {\sf an}$), square braces ($X = {\sf sq}$), and parentheses ($X = {\sf
   pa}$). The string {\sf [ \textless~\textgreater~( [ ] ) ]} is then
@@ -311,7 +316,7 @@ Scedrov's multiset rewriting language $\omega$
 As an extension to CLF, the logical framework we develop is able to
 specify systems like the $\pi$-calculus, security protocols, and Petri
 nets that can be encoded in CLF \cite{cervesato02concurrent}. The
-addition of ordered logic allows us easily incorporate systems that
+addition of ordered logic allows us to easily incorporate systems that
 are naturally understood as string rewriting systems. An example from
 the verification domain, taken from Bouajjani and Esparsa
 \cite{bouajjani06rewriting}, is shown in Figure~\ref{fig:canonical}.
@@ -382,7 +387,12 @@ lambda calculus, defined by the BNF grammar:
 \[
 \obj{e} ::= \obj{x} \mid \obj{\lambda x.e} \mid \obj{e_1\,e_2}
 \]
-Taking some liberties with our representation of terms, we can
+Taking some liberties with our representation of terms,\footnote{In
+particular, we are leaving the first-order quantifiers implicit in this
+section and using an informal {\it object language} representation
+of syntax. The actual representation of syntax uses LF terms
+that adequately encode this object language, as discussed in 
+Section~\ref{sec:lf-adequacy}.} we can
 describe call-by-value evaluation for this language with the same
 rewriting rules we used to describe the PDA and the Boolean program's
 semantics. Our specification uses three atomic propositions: one,
@@ -495,10 +505,10 @@ specification above resides in the {\it concurrent} fragment of
 \sls. (This rewriting-like fragment is called concurrent in part
 because we can just as easily seed the process state with two
 propositions ${\sf eval}(e)$ and ${\sf eval}(e')$ that will evaluate
-to values concurrently, side-by-side in the process state.)  Even
-within purely-concurrent specifications, there is a large design space
-of potential SSOS specifications, a point that will be explained
-further in Chapter~5.
+to values concurrently, side-by-side in the process state.)
+Specifications in the concurrent fragment of \sls~can take many
+different forms, a point that we will discuss further further in
+Chapter~5.
 
 On the other end of the spectrum, the {\it deductive} fragment of
 \sls~supports the specification of inductive definitions by the same
@@ -513,7 +523,7 @@ expressed with two inference rules:
 \infer
 {\obj{\lambda x.e \Downarrow \lambda x.e} \mathstrut}
 {}
-\quad
+\qquad
 \infer
 {\obj{e_1\,e_2 \Downarrow v} \mathstrut}
 {\obj{e_1 \Downarrow \lambda x.e}
@@ -523,7 +533,7 @@ expressed with two inference rules:
  \obj{{[\obj{v_2}/\obj{x}]\obj{e_2}} \Downarrow v} \mathstrut}
 \]
 Big-step operational semantics specifications are compact and elegant,
-but they is not particularly {\it modular}. As a (rather contrived)
+but they are not particularly {\it modular}. As a (rather contrived)
 example, consider the addition of a incrementing counter $\obj{\sf
   count}$ to the language of expressions $\obj{e}$. The language keeps
 a numeral as a counter, and every time $\obj{\sf count}$ is evaluated,
@@ -534,7 +544,7 @@ counter.\footnote{To keep the language small, we can represent
   $\obj{\underline{\obj{1}}} = \obj{(\lambda f. \lambda x. f x)}$,
   $\obj{\underline{\obj{2}}} = \obj{(\lambda f. \lambda x. f (f x))}$,
   and so on.  Then, $\obj{\underline{\obj{n}} + \obj{1}} =
-  \obj{\lambda f. \lambda x. f e}$ if $\underline{\obj{n}} =
+  \obj{\lambda f. \lambda x. f e}$ if $\obj{\underline{\obj{n}}} =
   \obj{\lambda f. \lambda x. e}$.}  To extend the big-step operational
 semantics with this new feature, we have to revise all the existing
 rules so that they mention the running counter:
@@ -544,7 +554,7 @@ rules so that they mention the running counter:
 {\obj{({\sf count}, \underline{n}) \Downarrow 
   (\underline{n}, \underline{n} +1)} \mathstrut}
 {}
-\quad 
+\qquad 
 \infer
 {\obj{(\lambda x.e, \underline{n}) \Downarrow (\lambda x.e, \underline{n})}
  \mathstrut}
@@ -636,8 +646,9 @@ extra proposition, which only needs to be accessed by the rule ${\sf
 \end{align*}
 In Figure~\ref{fig:eval-ssos-ctr}, we give an example of evaluating
 $\obj{(((\lambda x.\lambda y.y)\,{\sf count})\,{\sf count})}$ to a value
-with a starting counter value of $\obj{\underline 5}$. This solution is
-even more contrived than the problem was: if we wanted to introduce a
+with a starting counter value of $\obj{\underline 5}$. In a sense,
+this solution is even more contrived than the problem was: 
+if we wanted to introduce a
 {\it second} counter, where would it go? Nevertheless, the example
 does foreshadow how, in Part~2 of this thesis, we will show that SSOS
 specifications in \sls~allow for the modular specification of many
@@ -647,17 +658,26 @@ programming language features.
 An overarching theme of Part~2 is that we can have our cake and eat it
 too by deploying the {\it logical correspondence}, an idea that was
 developed jointly with Ian Zerny in unpublished work and is explained
-in Chapter~5. As explained in Chapter~6, we can use logical
+in Chapter~5. In Chapter~6, we show how we can use the logical
 correspondence to directly connect the big-step semantics and SSOS
 specifications above; in fact, we can automatically and mechanically
-derive the latter from the former. Therefore, we can specify
-call-by-value evaluation as a big-step semantics, and then transform
-it for the purpose of modular extension. Further transformations,
-developed in joint work with Pfenning \cite{simmons11logical}, create
-new opportunities for modular extension; this is the topic of
-Chapter~7. These transformations also allow for the derivation of
-abstract analyses (such as control flow and alias analysis) from SSOS
-specifications, which is the focus of Chapter~8.
+derive the latter from the former. As our example above showed,
+natural semantics do not support combining the specification of a pure
+feature like call-by-value evaluation with the specification of a
+stateful feature like counters by concatenating the specifications,
+but SSOS specifications in ordered logic do support this form of
+combination. Using the automatic transformations described in
+Chapter~6, we can specify pure features (like call-by-value
+evaluation) as a simpler big-step semantics specification, and then we
+can compose that specification with an SSOS specification of stateful
+features (like the counter) by mechanically transforming the big-step
+semantics part of the specification into SSOS. Further
+transformations, developed in joint work with Pfenning
+\cite{simmons11logical}, create new opportunities for modular
+extension; this is the topic of Chapter~7. These transformations also
+allow for the derivation of abstract analyses (such as control flow
+and alias analysis) from SSOS specifications, which is the focus of
+Chapter~8.
 
 \section{Invariants in substructural logic}
 
@@ -686,6 +706,7 @@ Chapter~9 discusses the use of {\it generative signatures} to
 describe well-formedness invariants of specifications. Generative
 signatures look a bit like context-free grammars, and they allow us to
 characterize contexts by a describing rewriting rules that generate
+legal or well-formed
 process states in the same way that context-free grammars characterize
 grammatical strings by describing rules that generate all grammatical
 strings.
@@ -758,12 +779,13 @@ following extension to the previous generative signature:
   store}(\obj{\underline n}) \}
 \end{align*}
 
-It is possible to prove more specific invariants of our SSOS
-specification. For example, we can present a type system for the
-simply-typed lambda calculus and show that the type of a computation
-is always preserved, and types will be considered in Chapter~9. However,
-the generative signature above is sufficient for proving the progress
-theorem for our example SSOS specification, which means that our
+The grammar above describes a very coarse invariant of our SSOS
+specification, and it is possible to prove that specifications
+preserve more specific invariants. A specific example are invariants
+about the types of expressions and process states, which will be
+considered in Chapter~9. For almost any SSOS specification more
+complicated than the one given above, type invariants are necessary
+for proving the {\it progress theorem}, which implies that the
 specification is safe -- that is, free from undefined behavior.
-Chapter~10 will consider the use of generative invariants for
-proving safety properties of specifications.
+Chapter~10 will consider the use of generative invariants for proving
+safety properties of specifications.
