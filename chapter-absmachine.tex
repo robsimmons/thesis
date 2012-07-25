@@ -3400,102 +3400,150 @@ semantics and abstract machines presented in
 \cite{danvy12interderiving}. Characterizing this observation more
 precisely is left for future work.
 
+
+
+\subsection{Operationalizing SOS specifications}
+\label{sec:evaluationcontexts}
+
+
+We have thus far considered big-step operational semantics and
+abstract machines, mostly neglecting what is arguably the third great
+tradition of operational semantics, {\it structural operational
+  semantics} (SOS) specifications \cite{plotkin04structural}, though
+we defined the small-step judgment $\interp{e \mapsto e'} = {\sf
+  step}\,\interp{e}\,\interp{e'}$ for call-by-value evaluation in the
+beginning of this chapter.  That SOS specification is repeated as an
+SLS specification in Figure~\ref{fig:cbv-sos-b}. The figure also
+defines the judgment ${\sf evsos}\,\interp{e}\,\interp{v}$ that
+implements big-step evaluation in terms of the small-step SOS
+specification.
+
 \begin{figure}[tp]
-\begin{minipage}[b]{0.450\linewidth}
+\begin{minipage}[b]{0.9\linewidth}
 \fvset{fontsize=\small,boxwidth=auto}
-\VerbatimInput{sls/cbv-sos.sls}
+\VerbatimInput{sls/cbv-sos-b.sls}
 \end{minipage}
-\hspace{0.5cm}
-\begin{minipage}[b]{0.50\linewidth}
+\caption{SOS evaluation}
+\label{fig:cbv-sos-b}
+\end{figure}
+
+
+There are several ways that we can contemplate operationalizing the
+SOS specification in Figure~\ref{fig:cbv-sos-b}. If we operationalize
+only the ${\sf evsos}$ predicate, making the evaluation predicate
+${\sf eval\_sos}$ and the return predicate ${\sf retn\_sos}$, then we
+get what I consider to be the most boring possible substructural
+operational semantics specification in
+Figure~\ref{fig:sos-tailrecursion}. The specification is fully 
+tail-recursive and there are no continuation frames, just an expression
+transitioning according to the rules of the small-step evaluation 
+relation for an indefinite number of steps as we extend the trace. 
+
+\begin{figure}[tp]
+\begin{minipage}[b]{0.9\linewidth}
 \fvset{fontsize=\small,boxwidth=auto}
-\VerbatimInput{sls/cbv-sos-eval.sls}
+\VerbatimInput{sls/cbv-sos-proc.sls}
+\end{minipage}
+\caption{The operationalization of ${\sf evsos}$ from
+  Figure~\ref{fig:cbv-sos-b}}
+\label{fig:sos-tailrecursion}
+\end{figure}
+
+% If we run this specification through the operationalization
+% transformation and only operationalize the ${\sf ev}$ predicate,
+% the result is
+% results in what I consider to be the most boring substructural
+% operational semantics specification. 
+% Figure~\ref{fig:sos-tailrecursion} presents the resulting specification
+%  both without the tail-recursion
+% optimization (left) and with the tail-recursion optimization (right).
+
+
+On the other hand, we can consider operationalizing only the 
+predicate ${\sf step}$. Instead of ${\sf eval}$ we have 
+${\sf decomp}$, since the relevant action is to decompose the
+expression looking for an applicable $\beta$-reduction, and instead of 
+${\sf retn}$ we have ${\sf plug}$, since the relevant action is 
+to plug the reduced expression back into the larger term.
+When we operationalized natural semantics, the structure of the
+suspended ${\sf cont}\,\lf{f}$ propositions was analogous to the control
+stacks $k$ of abstract machine specifications. In our operationalized
+SOS specification, the structure of the ${\sf cont}\,\lf{f}$ propositions
+is analogous to the {\it evaluation contexts}, often written as 
+$\obj{E[]}$.
+\[
+\obj{E[]} ::= \obj{E[]\,e} \mid \obj{v\,E[]} \mid \obj{[]}
+\]
+The names {\it decompose} and {\it plug} are taken from the treatment
+of evaluation contexts in the functional correspondence
+\cite{danvy08defunctionalized}.
+This inductive specification is adequately encoded in 
+Figure~\ref{fig:cbv-sos}, along with an appropriately modified
+version of ${\sf evsos}\,e\,v$. 
+
+
+\begin{figure}[tp]
+\begin{minipage}[b]{0.9\linewidth}
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/cbv-sos-eval-b.sls}
 \end{minipage}
 \caption{Small-step evaluation, and one corresponding abstract machine.}
 \label{fig:cbv-sos}
 \end{figure}
 
-\subsection{Evaluation contexts}
-\label{sec:evaluationcontexts}
 
-
-We have thus far considered big-step operational semantics and
-abstract machines, mostly neglecting the third great tradition of
-programming language specification, {\it structural operational
-  semantics} or SOS specifications. SOS specifications are small-step
-like abstract machine specifications, but whereas abstract machine
-specifications are ``flat'' and defined only by pattern-matching on
-syntax, SOS specifications are defined inductively on the structure
-of syntax. This is the SOS specification for 
-call-by-value evaluation of the untyped lambda calculus:
-
-XXX Moved to beginning
-
-XXX add in the ``boring'' semantics removed from 6.1.3 to this section
-
-This inductive specification is adequately encoded on the left-hand
-side of Figure~\ref{fig:cbv-sos}, along with the proposition ${\sf
-  ev}\,e\,v$ that describes a big-step operational semantics in terms
-of repeated application of the small-step operational semantics. This
-is the complete specification that we referred to in
-Section~\ref{sec:trans-tail} when we operationalized only the ${\sf
-  ev}$ predicate to motivate tail recursion. On the right-hand side of
-Figure~\ref{fig:cbv-sos}, we show the specification that results if we
-instead operationalize and defunctionalize only the 
-${\sf step}$ predicate. Instead of ${\sf eval}$ we have 
-${\sf decomp}$, since the relevant action is to decompose the
-expression looking for an applicable $\beta$-reduction, and instead of 
-${\sf retn}$ we have ${\sf plug}$, since the relevant action is 
-to plug the reduced expression back into the larger term.
-
-When we operationalized natural semantics, the structure of the
-suspended ${\sf cont}\,f$ propositions was analogous to the control
-stacks $k$ of abstract machine specifications. In our operationalized
-SOS specification, the structure of the ${\sf cont}\,f$ propositions
-is analogous to the {\it evaluation contexts}, often written as 
-$E[]$.
-\[
-E[] ::= E[]\,e \mid v\,E[] \mid []
-\]
-The names {\it decompose} and {\it plug} are taken from the treatment
-of evaluation contexts in the functional correspondence
-\cite{danvy08defunctionalized}.
 
 As we
 foreshadowed in Section~\ref{sec:flatresolution}, the right
 computational interpretation of Figure~\ref{fig:cbv-sos} is {\it not}
 committed-choice forward chaining. Consider terms of type ${\sf
   eval}\,\interp{(\lambda x.x)\,e} \lefti \{ {\sf
-  retn}\,\interp{(\lambda x.x)\,e'} \}$ where $e \mapsto e'$ and
+  retn}\,\interp{(\lambda x.x)\,e'} \}$ where $\obj{e \mapsto e'}$ and
 consequently $\tackon{\Theta}{x{:}\susp{{\sf eval}\,\interp{e}}}
 \leadsto^* \tackon{\Theta}{y{:}\susp{{\sf retn}\,\interp{e'}}}$.
 It is entirely possible to use rule ${\sf step/app1}$ to
 derive the following:
 \[
-  x_1{:}\susp{{\sf eval}\,\interp{(\lambda x.x)\,e}}
-   \leadsto
-  x_2{:}\susp{{\sf eval}\,\interp{\lambda x.x},
-  y_2{:}\susp{{\sf cont}\,({\sf ap1}\,\interp{e})}}
-   \not\leadsto
+  (x_1{:}\susp{{\sf eval}\,\interp{(\lambda x.x)\,e}})
+   ~~ \leadsto ~~
+  (x_2{:}\susp{{\sf eval}\,\interp{\lambda x.x}}, ~~
+  y_2{:}\susp{{\sf cont}\,({\sf ap1}\,\interp{e})})
+   ~~ \not\leadsto
 \]
 While stuck states in abstract machines raised alarm bells about
 language safety, the stuck state above is not a concern -- we merely
-should have applied rule ${\sf step/app2}$ to $x_1$ instead. This
-corresponds to the fact that both small-step SOS specifications and
-specifications that use evaluation context 
+should have applied rule ${\sf step/app2}$ to $x_1$ instead
+of rule ${\sf step/app1}$. This
+corresponds to the fact that small-step SOS specifications and
+specifications that use evaluation contexts 
 map most naturally to the backtracking
-search behavior more frequently associated with deductive computation. 
+search behavior generally associated with backward chaining. 
 
-The agnostic attitude that logical specifications take towards
-backtracking can be helpful, but actually treating the
-operationalization of an SOS specification as an effective language
-interpreter presents some interesting challenges, particularly if we
-consider operationalization of {\it both} the ${\sf step}$ and ${\sf
-  ev}$ predicates. The desired interpretation of the resulting
-specification would have phases of backtracking search as we sought to
-find a series of transitions corresponding to a small step $e \mapsto
-e'$, but these phases would exist within a larger concurrent
-derivation representing the sequence $e \mapsto e' \mapsto e'' \mapsto
-\ldots$ that is interpreted as committed-choice forward chaining.
+% The agnostic attitude that logical specifications take towards
+% backtracking can be helpful, but actually treating the
+% operationalization of an SOS specification as an effective language
+% interpreter presents some interesting challenges, particularly if we
+% consider operationalization of {\it both} the ${\sf step}$ and ${\sf
+%   ev}$ predicates. The desired interpretation of the resulting
+% specification would have phases of backtracking search as we sought to
+% find a series of transitions corresponding to a small step $e \mapsto
+% e'$, but these phases would exist within a larger concurrent
+% derivation representing the sequence $e \mapsto e' \mapsto e'' \mapsto
+% \ldots$ that is interpreted as committed-choice forward chaining.
+
+% \begin{figure}[tp]
+% \begin{minipage}[b]{0.450\linewidth}
+% \fvset{fontsize=\small,boxwidth=auto}
+% \VerbatimInput{sls/cbv-sos.sls}
+% \end{minipage}
+% \hspace{0.5cm}
+% \begin{minipage}[b]{0.50\linewidth}
+% \fvset{fontsize=\small,boxwidth=auto}
+% \VerbatimInput{sls/cbv-sos-eval.sls}
+% \end{minipage}
+% \caption{Small-step evaluation, and one corresponding abstract machine.}
+% \label{fig:cbv-sos}
+% \end{figure}
 
 \subsection{Temporal logic}
 
@@ -3503,44 +3551,52 @@ As a final example, we present two \sls~specifications of Davies'
 \rowan, a logically-motivated type system and natural
 semantics for partial evaluation \cite{davies96temporal}.  Partial
 evaluation is not a modular language extension, either on paper or in
-\sls. On paper, we have to generalize the judgment $e \Downarrow v$ to
-have free variables; we write $e \Downarrow_\Psi v$ where $\Psi$
-contains free expression variables. In \sls, this does not actually
-require us to change the judgment ${\sf ev}\,e\,v$ from
-Figure~\ref{fig:example-transform-cbv}, since the specification itself
-does not specify the context of LF. However, \rowan~also requires a
-separate judgment $e \Downarrow^n_{\Psi} e'$ for reducing expressions
-that will be fully evaluated not now but $n$ partial evaluation stages
-in the future. This is the full \rowan~specification for call-by-value
-functions:
+\sls. On paper, we have to generalize the judgment $\obj{e \Downarrow v}$ to
+have free variables; we write $\obj{e \Downarrow_\Psi v}$ where $\obj\Psi$
+contains free expression variables. 
 \[
 \infer
-{\lambda x. e \Downarrow_{\Psi} \lambda x. e \mathstrut}
+{\obj{\lambda x. e \Downarrow_{\Psi} \lambda x. e} \mathstrut}
 {}
 \quad
 \infer
-{e_1\,e_2 \Downarrow_{\Psi} v \mathstrut}
-{e_1 \Downarrow_{\Psi} \lambda x.e
+{\obj{e_1\,e_2 \Downarrow_{\Psi} v} \mathstrut}
+{\obj{e_1 \Downarrow_{\Psi} \lambda x.e}
  &
- e_2 \Downarrow_{\Psi} v_2
+ \obj{e_2 \Downarrow_{\Psi} v_2}
  & 
- [v_2/x]e \Downarrow_{\Psi} v \mathstrut}
-\quad
-\infer
-{\lambda x. e \Downarrow^n_{\Psi} \lambda x.e' \mathstrut}
-{e \Downarrow^n_{\Psi,x} e' \mathstrut}
-\quad
-\infer
-{e_1\,e_2 \Downarrow^n_{\Psi} e_1'\, e_2' \mathstrut}
-{e_1 \Downarrow^n_{\Psi} e_1'
- &
- e_2 \Downarrow^n_{\Psi} e_2' \mathstrut}
+ \obj{[v_2/x]e \Downarrow_{\Psi} v} \mathstrut}
 \]
-Note that the partial evaluation rule for $\lambda x.e$ extends
-the variable context $\Psi$. The \sls~encoding of the judgment $e
-\Downarrow^n_{\Psi} e'$ is given in
-Figure~\ref{fig:lc-ev2}, which also introduces an auxiliary ${\sf var}$
-judgment that tracks all the variables in $\Psi$. 
+In \sls, this does not actually
+require us to change the judgment ${\sf ev}\,\lf{e}\,\lf{v}$ from
+Figure~\ref{fig:example-transform-cbv}, since the specification itself
+does not specify the context of LF. However, \rowan~also requires a
+separate judgment $\obj{e \Downarrow^n_{\Psi} e'}$ for partially
+evaluating expressions
+that will be fully evaluated not now but $n$ partial evaluation stages
+in the future. On the fragment of the logic that deals with functions and
+applications, this judgment does nothing but induct over the structure
+of expressions:
+\[
+\infer
+{\obj{x \Downarrow^n_{\Psi} x} \mathstrut}
+{\obj{x} \in \obj{\Psi} \mathstrut}
+\quad
+\infer
+{\obj{\lambda x. e \Downarrow^n_{\Psi} \lambda x.e'} \mathstrut}
+{\obj{e \Downarrow^n_{\Psi,x} e'} \mathstrut}
+\quad
+\infer
+{\obj{e_1\,e_2 \Downarrow^n_{\Psi} e_1'\, e_2'} \mathstrut}
+{\obj{e_1 \Downarrow^n_{\Psi} e_1'}
+ &
+ \obj{e_2 \Downarrow^n_{\Psi} e_2'} \mathstrut}
+\]
+Note that the partial evaluation rule for $\obj{\lambda x.e}$ extends
+the variable context $\obj{\Psi}$. The \sls~encoding of the judgment $\obj{e
+\Downarrow^n_{\Psi} e'}$ is given in
+Figure~\ref{fig:lc-ev2}, which also introduces an auxiliary ${\sf fvar}$
+judgment that tracks all the variables in $\obj\Psi$. 
 
 \begin{figure}[tp]
 \fvset{fontsize=\small,boxwidth=auto}
@@ -3549,33 +3605,35 @@ judgment that tracks all the variables in $\Psi$.
 \label{fig:lc-ev2}
 \end{figure}
 
-\rowan~gets interesting when we consider the temporal fragment, which
-mediates between the $e \Downarrow_\Psi v$ and $e \Downarrow^n_\Psi
-e'$ judgments with two expressions. The first, ${\sf next}\,e$, says
-that the enclosed expression $e$ should be evaluated one time step
-later than the surrounding expression.  The second, ${\sf prev}\,e$,
+The evaluation judgment $\obj{e \Downarrow_{\Psi} v}$ and the partial
+evaluation judgment $\obj{e \Downarrow^n_{Psi} e'}$ only interact in
+\rowan~through the temporal fragment, which mediates between the two
+judgments by way of two expressions. The first, $\obj{{\sf next}\,e}$, says
+that the enclosed expression $\obj{e}$ should be evaluated one time step
+later than the surrounding expression.  The second, $\obj{{\sf prev}\,e}$,
 says that the enclosed expression should be evaluated one time step
 {\it before} the surrounding expression. There's no way to evaluate
-${\sf prev}\,e \Downarrow_{\Psi} v$ at time 0, so when we evaluate
-${\sf prev}\,e$ at time 1 it is necessary that $e$ evaluates
-to ${\sf next}\,e'$, as ${\sf prev}\,({\sf next}\,e)$ at time step 1 
-will reduce to $e$.
+$\obj{{\sf prev}\,e \Downarrow_{\Psi} v}$ at time 0, so when we evaluate
+$\obj{{\sf prev}\,e}$ at time 1 it is necessary that $\obj{e}$ evaluates to 
+$\obj{{\sf
+  next}\,e'}$, as $\obj{{\sf prev}\,({\sf next}\,e)}$ at time step 1 will
+reduce to $\obj{e}$.
 \[
 \infer
-{{\sf next}\,e \Downarrow_\Psi {\sf next}\,e'}
-{e \Downarrow^1_{\Psi} e'}
+{\obj{{\sf next}\,e \Downarrow_\Psi {\sf next}\,e'} \mathstrut}
+{\obj{e \Downarrow^1_{\Psi} e'} \mathstrut}
 \quad
 \infer
-{{\sf next}\,e \Downarrow^n_\Psi {\sf next}\,e'}
-{e \Downarrow^{n+1}_{\Psi} e'}
+{\obj{{\sf next}\,e \Downarrow^n_\Psi {\sf next}\,e'} \mathstrut}
+{\obj{e \Downarrow^{n+1}_{\Psi} e'} \mathstrut}
 \quad
 \infer
-{{\sf prev}\,e \Downarrow^1_{\Psi} e'}
-{e \Downarrow_{\Psi} {\sf next}\, e'}
+{\obj{{\sf prev}\,e \Downarrow^1_{\Psi} e'} \mathstrut}
+{\obj{e \Downarrow_{\Psi} {\sf next}\, e'} \mathstrut}
 \quad
 \infer
-{{\sf prev}\,e \Downarrow^{n+2}_{\Psi} {\sf prev}\,e'}
-{{\sf prev}\,e \Downarrow^{n+1}_{\Psi} {\sf prev}\,e'}
+{\obj{{\sf prev}\,e \Downarrow^{n+2}_{\Psi} {\sf prev}\,e'} \mathstrut}
+{\obj{{\sf prev}\,e \Downarrow^{n+1}_{\Psi} {\sf prev}\,e'} \mathstrut}
 \]
 
 \begin{figure}[tp]
@@ -3601,39 +3659,40 @@ have the structure of a $D$ proposition, so it is possible to
 operationalize the ${\sf ev}$ predicate without operationalizing the
 ${\sf evn}$ predicate. This leaves the rules in
 Figure~\ref{fig:lc-ev2} completely unchanged; the right-hand side of
-Figure~\ref{fig-lc} contains the transformed temporal fragment,
+Figure~\ref{fig:lc} contains the transformed temporal fragment,
 where ${\sf evn/next}$ and ${\sf evn/prev}$ rules are similarly unchanged. 
 The
 ${\sf ev/next}$ rule, however,
-contains a subgoal ${!}{\sf evn}\,({\sf s}\,{\sf
-  z})\,e\,v$ which uses a deductive derivation to build a concurrent
+contains a subgoal ${!}{\sf evn}\,\lf{({\sf s}\,{\sf
+  z})}\,\lf{E}\,\lf{V}$ which uses a deductive derivation to build a concurrent
 step. Conversely, the ${\sf ev/prev}$ rule contains a subgoal of ${\sf
-  eval}\,e \lefti \{ {\sf retn}\,({\sf next}\,v) \}$ that uses
+  eval}\,\lf{E} \lefti \{ {\sf retn}\,\lf{({\sf next}\,V)} \}$ that uses
 a concurrent derivation to create a deductive derivation.  This makes the
 right-hand side of Figure~\ref{fig:lc} the only \sls~specification in
 this thesis that exhibits an arbitrarily nested dependency between
 concurrent and deductive reasoning.
 
 The natural semantics of \rowan~are not, on a superficial level,
-significantly more complex than other natural semantics.   It
-turns out that the usual set of techniques for adding state
-to a natural semantics break down for \rowan. Discussing a \rowan-like
-logic with state remained a challenge for many years, though full
-solution has been given by Kameyama et al.~using delimited control
+significantly more complex than other natural semantics.  It turns out
+that the usual set of techniques for adding state to a natural
+semantics break down for \rowan. Discussing a \rowan-like logic with
+state remained a challenge for many years, though a full solution has
+recently been given by Kameyama et al.~using delimited control
 operators \cite{kameyama11shifting}. Our discussion of
-operationalization gives a perspective on why this is difficult, as the
-specification is far outside of the image of the extended natural
-semantics we considered in Section~\ref{sec:enriching-natsem}.  We
-normally add state to ordered abstract machine specifications by
-fiddling with the set of ambient linear and persistent resources.  If
-we tried to add state to \rowan~the same way we added it in
-Section~\ref{sec:mutable-storage}, the entire store would effectively
-leave scope whenever computation considered the subterm $e$ of ${\sf
-  next}(e)$.
+operationalization gives a perspective on why this task is difficult,
+as the specification is far outside of the image of the extended
+natural semantics we considered in Section~\ref{sec:enriching-natsem}.
+We normally add state to ordered abstract machine specifications by
+manipulating and extending the set of ambient linear and persistent
+resources.  If we tried to add state to \rowan~the same way we added
+it in Section~\ref{sec:mutable-storage}, the entire store would
+effectively leave scope whenever computation considered the subterm
+$\obj{e}$ of $\obj{{\sf next}\,e}$.
 
 I conjecture that the nominal generalization of ordered linear lax
 logic alluded to in the discussion of locations and existential name
 generation (Section~\ref{sec:mutable-storage}) could support
-operationalizing predicates like ${\sf evn}\,n\,e\,e'$. This might, in
-turn, make it possible to add state to an SSOS specification of
-\rowan, but that is left for future work.
+operationalizing predicates like ${\sf
+  evn}\,\lf{n}\,\lf{e}\,\lf{e'}$. This might, in turn, make it
+possible to add state to an SSOS specification of \rowan, but that is
+left for future work.
