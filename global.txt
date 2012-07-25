@@ -1,37 +1,51 @@
+NOTES:
+
 Simulaneous substitutions: ALWAYS ALL LF (in the \lf{} color)
-
-Mobile-ephemeral-linear, eph vs. lin. Worry about it?
-
-Springer LNCS not fully consistent. Editors? Location?
-
-\smallskip before and after {enumerate} or {itemize}
-
-Missing ref: sec:linconcurrenteq
-
-Chatper~\ref{}?
-
-Page number from our LFMTP paper.
-
-Only seems to be a pretty common weasel word for me: global check.
-
-
-In Chapter 4 we
-NOT
-In Chapter 4, we
-
 
 STABLE NEGATIVE PROPOSITIONS
 POSITIVE SUSPENDED PROPOSITIONS
 FOCUSED NEGATIVE PROPOSITIONS
 INVERTING POSITIVE PROPOSITIONS
 
+Mobile-ephemeral-linear, eph vs. lin. Worry about it?
+
+Missing ref: sec:linconcurrenteq
+
+
+
+CHANGES TO KEEP IN MIND:
+
+In Chapter 4 we
+NOT
+In Chapter 4, we
+
 "matches" should always be mboxed
+
+\smallskip before and after {enumerate} or {itemize}
 
 Consider grepping "unification" everywhere and always trying to 
 say something better.
+
+VARIABLE DECLARATION not mapping
+
+Realization: inductive definitions aren't partial, proofs are partial
+(LF view versus math view)
+
+
+CHANGES TO CONSIDER MAKING:
+
+Springer LNCS not fully consistent. Editors? Location?
+
+"Only" seems to be a pretty common weasel word for me: global check.
+
+Page number from our LFMTP paper.
+
+Chatper~\ref{}?
 
 I removed some asterisk conditions from the last proof in 6.1; double
 check against the POPL version of the revised theorem that I didn't
 do anything sketchy.
 
-VARIABLE DECLARATION not mapping
+
+
+

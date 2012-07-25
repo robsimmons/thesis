@@ -1700,11 +1700,6 @@ nested ${\sf ev/app}$ rule from Figure~\ref{fig:cbv-ev-ssos-tail}:
 & {\sf ev/app2} : \forall \lf{E}.\, {\sf cont\_app2}\,\lf{(\lambda x.E\,x)} \lefti \forall \lf{V_2}.\, {\sf retn}\,\lf{V_2} \lefti \{ {\sf eval}\,\lf{(E\,V_2)} \}.
 \end{align*}
 
-This transformation is similar to the one proposed by
-Miller in~\cite{miller02higherorder}, where new propositions
-(like ${\sf cont\_app1}$ and ${\sf cont\_app2}$) were
-introduced and locally quantified to hide the internal states of processes.
-
 \subsection{Uncurrying}
 \label{sec:defunc-uncurry}
 

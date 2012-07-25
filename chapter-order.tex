@@ -2,19 +2,21 @@
 \label{chapter-order}
 
 Linear logic is the most famous of the {\it substructural logics}.
-Persistent logic admits the three so-called {\it structural rules} of
-weakening (premises need not be used), contraction (premises may be
-used multiple times) and exchange (the ordering of premises are
-irrelevant). Substructural logics, then, are logics that do not admit
-these structural rules -- linear logic has only exchange, {\it affine}
-logic (which is frequently conflated with linear logic by programming
-language designers) has exchange and weakening, and {\it ordered}
-logic, first investigated as a proof theory by Lambek
-\cite{lambek58mathematics}, lacks all three.  
+Traditional intuitionstic logic, which we call persistent to emphasize
+the treatment of truth as a persistent and reusable resource, admits
+the three so-called {\it structural rules} of weakening (premises need
+not be used), contraction (premises may be used multiple times) and
+exchange (the ordering of premises are irrelevant). Substructural
+logics, then, are logics that do not admit these structural rules --
+linear logic has only exchange, {\it affine} logic (which is
+frequently conflated with linear logic by programming language
+designers) has exchange and weakening, and {\it ordered} logic, first
+investigated as a proof theory by Lambek \cite{lambek58mathematics},
+lacks all three.
 
 Calling logics like
 linear, affine, and ordered logic \underline{sub}structural relative
-to persistent logic (which is structural) is greatly unfair to the
+to persistent logic is greatly unfair to the
 substructural logics. Girard's linear logic can express persistent
 provability using the exponential connective ${!}A$, and this idea is
 generally applicable in substructural logics -- for instance, it was

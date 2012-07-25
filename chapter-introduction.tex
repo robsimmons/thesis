@@ -645,10 +645,12 @@ extra proposition, which only needs to be accessed by the rule ${\sf
       \fuse {\sf retn}\,\obj{\underline n} \}
 \end{align*}
 In Figure~\ref{fig:eval-ssos-ctr}, we give an example of evaluating
-$\obj{(((\lambda x.\lambda y.y)\,{\sf count})\,{\sf count})}$ to a value
-with a starting counter value of $\obj{\underline 5}$. In a sense,
-this solution is even more contrived than the problem was: 
-if we wanted to introduce a
+$\obj{(((\lambda x.\lambda y.y)\,{\sf count})\,{\sf count})}$ to a
+value with a starting counter value of $\obj{\underline 5}$. This
+specific solution -- adding a counter proposition to the left of the
+${\sf eval}$ or ${\sf retn}$ -- is rather contrived. We want, in
+general, to be able to add arbitrary state, and this technique only
+allows us to add {\it one} piece of state: if we wanted to introduce a
 {\it second} counter, where would it go? Nevertheless, the example
 does foreshadow how, in Part~2 of this thesis, we will show that SSOS
 specifications in \sls~allow for the modular specification of many
@@ -684,7 +686,8 @@ Chapter~8.
 {\it Invariants} are fundamental for reasoning about any evolving
 system. From a verification or model-checking viewpoint, invariants
 are usually expressed in terms of temporal logics like LTL and are
-usually verified by model checking or exhaustive search. Existing work
+usually verified by model checking or exhaustive search
+\cite{clavel11ltl}. Existing work
 on verifying properties of rewriting specifications has generally
 approached the problem from a model checking perspective. 
 
