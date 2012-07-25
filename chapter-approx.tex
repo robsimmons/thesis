@@ -55,27 +55,29 @@ for any step $(\Psi; \Delta) \leadsto_\Sigma (\Psi'; \Delta')$, it is
 the case that $\Psi$ and $\Psi'$ are the same, $x{:}\susp{p^+_\mpers}
 \in \Delta'$ implies $x{:}\susp{p^+_\mpers} \in \Delta$, and
 $x{:}\ispers{A^-} \in \Delta'$ implies $x{:}\ispers{A^-} \in
-\Delta$.\footnote{This means that a signatures with a rule that
+\Delta$. This means that a signatures with a rule that
   produces new variables by existential quantification, like ${\sf a}
-  \lefti \{ \exists x. {\sf b}(x) \}$ has no saturated process states
+  \lefti \{ \exists \lf{x}. {\sf b}\lf{(x)} \}$ has no saturated process states
   where ${\sf a}$ is present. Notions of saturation that can cope with
   existentially generated parameters are interesting, but are beyond
-  the scope of this thesis.} A {\it minimal} saturated process state
+  the scope of this thesis.
+
+A {\it minimal} saturated process state
 is one with no duplicated propositions; we can compute a process state
 from any saturated process state by removing duplicates. For purely
-persistent specifications and process sates, minimal saturated process
+persistent specifications and process states, minimal saturated process
 states are unique when they exist: if $(\Psi; \Delta)
 \leadsto^*_\Sigma (\Psi_1; \Delta_1)$ and $(\Psi; \Delta)
 \leadsto^*_\Sigma (\Psi_2; \Delta_2)$ and both $(\Psi_1; \Delta_1)$
-and $(\Psi_2; \Delta_2)$ are saturated then both $(\Psi_1; \Delta_1)$
+and $(\Psi_2; \Delta_2)$ are saturated, then $(\Psi_1; \Delta_1)$
 and $(\Psi_2; \Delta_2)$ have minimal process states that differ only
 in the names of variables.
 
 Furthermore, if a saturated process state exists for a given initial
 process state, the minimal saturated process state can be computed by
 the usual forward-chaining semantics where only transitions that
-derive ${\it new}$ persistent atomic propositions or equalities $t
-\doteq s$ are allowed. This forward-chaining logic programming
+derive ${\it new}$ persistent atomic propositions or equalities $\lf{t}
+\doteq \lf{s}$ are allowed. This forward-chaining logic programming
 interpretation of persistent logic is extremely common; in fact, it is
 what is commonly meant by ``forward-chaining logic programming.'' Just
 as the term {\it persistent logic} was introduced in Chapter 2 to
@@ -92,7 +94,7 @@ for ordered and linear logical specifications.
 Our approximation strategy is simple: a signature in an ordered or
 linear logical specification can be approximated by making all atomic
 propositions persistent, and a flat, persistent rule $\forall
-\overline{x}. A^+ \lefti \{ B^+ \}$ can be further approximated by
+\lf{\overline{x}}. \,A^+ \lefti \{ B^+ \}$ can be further approximated by
 removing premises from $A^+$ and adding conclusions to $B^+$. Of
 particular practical importance are added conclusions that equate the
 parameters introduced by existential quantification with terms: all
@@ -107,21 +109,21 @@ version of another specification:
 \begin{definition}\label{def:approxversion}
   A flat, concurrent, and persistent specification $\Sigma_a$ is an
   {\em approximate version} of another specification $\Sigma$ if every
-  predicate ${\sf a} : \Pi x_1{:}\tau_1 \ldots \Pi x_n{:}\tau_n.\,
+  predicate ${\sf a} : \Pi \lf{x_1}{:}\tau_1 \ldots \Pi \lf{x_n}{:}\tau_n.\,
   {\sf prop}\,{\sf lvl}$ declared in $\Sigma$ has a corresponding
-  predicate ${\sf a} : \Pi x_1{:}\tau_1 \ldots \Pi x_n{:}\tau_n.\,
+  predicate ${\sf a} : \Pi \lf{x_1}{:}\tau_1 \ldots \Pi \lf{x_n}{:}\tau_n.\,
   {\sf prop}\,{\sf pers}$ in $\Sigma_a$ and if for every rule ${\sf
     r} : \forall \overline{x}.\,A_1^+ \lefti \{ A_2^+ \}$ in $\Sigma$ there
-  is a corresponding rule ${\sf r} : \forall \overline{x}.\,B_1^+ \lefti
+  is a corresponding rule ${\sf r} : \forall \lf{\overline{x}}.\,B_1^+ \lefti
   \{ B_2^+ \}$ in $\Sigma_a$ such that:
   \begin{itemize}
   \item The existential quantifiers in $A_1^+$ and $A_2^+$ are
     identical to the existential quantifiers in $B_1^+$ and $B_2^+$
     (respectively),
-  \item For each premise ($p^+_\mpers$ or $t \doteq s$) in $B^+_1$,
+  \item For each premise ($p^+_\mpers$ or $\lf{t} \doteq \lf{s}$) in $B^+_1$,
     the same premise appears in $A^+_1$, and 
-  \item For each conclusion ($p^+_\mlvl$ or $t
-    \doteq s$) in $A^+_2$, the same premise appears in $B^+_2$.
+  \item For each conclusion ($p^+_\mlvl$ or $\lf{t}
+    \doteq \lf{s}$) in $A^+_2$, the same premise appears in $B^+_2$.
   \end{itemize}
 \end{definition}
 \bigskip
@@ -148,10 +150,10 @@ or a family of states.
 \begin{definition}
   The persistent process state state $(\Psi_g; \Delta_g)$ is a {\em
     generalization} of the process state $(\Psi; \Delta)$ if there is
-  a substitution $\Psi_g \vdash \sigma : \Psi$ such that, for all
-  suspended atomic propositions $p^+_\mlvl = {\sf a}\,t_1\ldots t_n$
+  a substitution $\Psi_g \vdash \lf{\sigma} : \Psi$ such that, for all
+  suspended atomic propositions $p^+_\mlvl = {\sf a}\,\lf{t_1}\ldots \lf{t_n}$
   in $\Delta$, there exists a suspended persistent proposition
-  $p^+_\mpers = {\sf a}\,(\sigma t_1)\ldots(\sigma t_n)$ in
+  $p^+_\mpers = {\sf a}\,\lf{(\sigma t_1)}\ldots\lf{(\sigma t_n)}$ in
   $\Delta_g$.
 \end{definition}
 \bigskip
@@ -179,19 +181,19 @@ $(\Psi_a; \Delta_a)$ is a generalization of $(\Psi_n; \Delta_n)$.
 An abstraction of the process state $(\Psi_0; \Delta_0)$ is therefore
 a single process state that captures {\it all possible future
   behaviors} of the state $(\Psi_0; \Delta_0)$ because, for any atomic
-proposition $p^+_\mlvl = {\sf a}\,t_1\ldots t_n$ that may be derived
-by evolving $(\Psi_0; \Delta_0)$, there is a substitution $\sigma$
-such that ${\sf a}\,(\sigma t_1)\ldots(\sigma t_n)$ is already present
+proposition $p^+_\mlvl = {\sf a}\,\lf{t_1}\ldots \lf{t_n}$ that may be derived
+by evolving $(\Psi_0; \Delta_0)$, there is a substitution $\lf\sigma$
+such that ${\sf a}\,\lf{(\sigma t_1)}\ldots\lf{(\sigma t_n)}$ is already present
 in the abstraction. The meta-approximation theorem relates this definition
 of abstraction to the concept of approximate versions of programs as
 specified by Definition~\ref{def:approxversion}.  
 
 \bigskip
 \begin{theorem}[Meta-approximation]\label{thm:metapprox}
-  If $\Sigma_a$ is an approximate version of $\Sigma$, if there is a
+  If $\Sigma_a$ is an approximate version of $\Sigma$, and if there is a
   state $(\Psi_0; \Delta_0)$ well-formed according to $\Sigma$, and if
-  for some $\Psi_0' \vdash \sigma : \Psi_0$ there is a trace
-  $(\Psi_0'; \sigma\Delta_0) \leadsto^*_{\Sigma_a} (\Psi_a; \Delta_a)$
+  for some $\Psi_0' \vdash \lf\sigma : \Psi_0$ there is a trace
+  $(\Psi_0'; \lf\sigma\Delta_0) \leadsto^*_{\Sigma_a} (\Psi_a; \Delta_a)$
   such that $(\Psi_a; \Delta_a)$ is a saturated process state, then
   $(\Psi_a; \Delta_a)$ is an abstraction of $(\Psi_0; \Delta_0)$.
 \end{theorem}
@@ -224,8 +226,11 @@ that initial state. If we can obtain a saturated process state using
 the logic programming interpretation, it is an abstraction of the
 initial process state. It is not always possible to obtain a saturated
 process state using the logic programming interpretation, however:
-rules like ${\sf a}(x) \lefti \{ {\sf a}({\sf s}(x)) \}$ and ${\sf
-  a}(x) \lefti \{ \exists y. {\sf a}(y) \}$ lead to non-termination
+rules like 
+$\forall \lf{x}.\,{\sf a}\lf{(x)} \lefti \{ {\sf a}\lf{({\sf s}(x))} \}$ and 
+$\forall \lf{x}.\,{\sf
+  a}\lf{(x)} \lefti \{ \exists \lf{y}. {\sf a}\lf{(y)} \}$ 
+lead to non-termination
 when interpreted as saturating logic programs. Important classes 
 of programs are known to terminate in all cases, such as those in the
 so-called ``Datalog fragment'' where the only terms in the program
@@ -236,14 +241,17 @@ reason explicitly about termination.
 Consider the destination-passing PDA specification from
 Figure~\ref{fig:pda-lin}. If we simply turn all linear predicates
 persistent, then the ${\sf push}$ rule will lead to non-termination
-because the head $\exists m. {\sf stack}\,x\,l\,m \fuse {\sf
-  hd}\,m\,r$ introduces a new existential parameter $m$. We can cope
-by adding a new conclusion $m \doteq t$, but we have to pick a $t$.
-The most general starting point for selecting a $t$ is to apply
+because the head $\exists \lf{m}. {\sf stack}\,\lf{x}\,\lf{l}\,\lf{m} \fuse {\sf
+  hd}\,\lf{m}\,\lf{r}$ introduces a new existential parameter $\lf{m}$. 
+We can cope
+by adding a new conclusion $\lf{m} \doteq \lf{t}$, but this means we 
+have to pick a $\lf{t}$.
+The most general starting point for selecting a $\lf{t}$ is to apply
 Skolemization to the rule. By moving the existential quantifier for
-$m$ in front of the implicitly quantified $x$, $l$, $m$, and $r$, we
-get a Skolem function ${\sf fm}\,x\,l\,m\,r$ that takes four
-arguments. Letting $t = {\sf fm}\,x\,l\,m\,r$ results in the
+$\lf{m}$ in front of the implicitly quantified $\lf{X}$, $\lf{L}$, $\lf{M}$, 
+and $\lf{R}$, we
+get a Skolem function $\lf{{\sf fm}\,X\,L\,M\,R}$ that takes four
+arguments. Letting $\lf{t} = \lf{{\sf fm}\,X\,L\,M\,R}$ results in the
 \sls~specification/logic program shown in
 Figure~\ref{fig:pda-pers}.
 
@@ -253,8 +261,8 @@ Skolemization is usually more precise than we want. From the starting
 point in Figure~\ref{fig:pda-pers}, however, we can define
 approximations simply by instantiating the Skolem constant.  For
 instance, we can equate the existentially generated destination in the
-conclusion with the one given in the premise (letting ${\sf fm} =
-\lambda x. \lambda l. \lambda m. \lambda r. m$). The result is
+conclusion with the one given in the premise (letting $\lf{\sf fm} =
+\lf{\lambda X. \lambda L. \lambda M. \lambda R.\, M}$). The result is
 equivalent to this specification:
 
 \smallskip
@@ -264,8 +272,8 @@ equivalent to this specification:
 
 \noindent This substitution yields a precise approximation
 that exactly captures the behavior of the original PDA as a saturating
-logic program. On the other hand, if we set $m$ equal to $l$ 
-(letting ${\sf fm} = \lambda x. \lambda l. \lambda m. \lambda r. l$), 
+logic program. On the other hand, if we set $\lf{m}$ equal to $\lf{l}$ 
+(letting $\lf{\sf fm} = \lf{\lambda X. \lambda L. \lambda M. \lambda R.\, L}$), 
 the result is equivalent to this specification:
 
 \smallskip
@@ -273,27 +281,33 @@ the result is equivalent to this specification:
 \VerbatimInput{sls/pda-pers-approx.sls}
 \smallskip
 
-\begin{figure}
+
+If the initial process state contains a single atomic proposition
+${\sf hd}\,\lf{d_0}\,\lf{d_1}$ in addition to all the ${\sf left}$ and ${\sf
+  right}$ facts, then the two rules above maintain the invariant that,
+as new facts are derived, the first argument of ${\sf hd}$ and the
+second and third arguments of ${\sf stack}$ will {\it always} be
+$\lf{d_0}$.  These arguments are therefore vestigial, like the extra
+arguments to ${\sf eval}$ and ${\sf retn}$ discussed in
+Section~\ref{sec:vestigial}, and we can remove them from the
+approximate specification, resulting in the specification in
+Figure~\ref{fig:pda-pers-approx2}. 
+
+\begin{figure}[ht]
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/pda-pers-approx2.sls}
 \caption{Approximated push-down automaton.}
 \label{fig:pda-pers-approx2}
 \end{figure}
 
-If the initial process state contains a single atomic proposition
-${\sf hd}\,d_0\,d_1$ in addition to all the ${\sf left}$ and ${\sf
-  right}$ facts, then the two rules above maintain the invariant that,
-as new facts are derived, the first argument of ${\sf hd}$ and the
-second and third arguments of ${\sf stack}$ will {\it always} be
-$d_0$.  These arguments are therefore vestigial, like the extra
-arguments to ${\sf eval}$ and ${\sf retn}$ discussed in
-Section~\ref{sec:vestigial}, and we can remove them from the
-approximate specification, resulting in the specification in
-Figure~\ref{fig:pda-pers-approx2}. This logical approximation of the
+This logical approximation of the
 original PDA accepts every string where, for every form of bracket
-$x$, at least one left $x$ appears before any of the right $x$. The
-string {\sf [ ] ] ] ( ( )} would be accepted by this approximated PDA,
-but the string {\sf ( ) ] [ [ ]} would not, as the first right square
+$\lf{x}$, at least one left $\lf{x}$ appears before any of the right 
+$\lf{x}$. The
+string \obj{\mbox{\sf [ ] ] ] ( ( )}} 
+would be accepted by this approximated PDA,
+but the string \obj{\mbox{\sf ( ) ] [ [ ]}} 
+would not, as the first right square
 bracket appears before any left square bracket.
 
 
@@ -301,16 +315,18 @@ bracket appears before any left square bracket.
 \label{sec:0cfa}
 
 The initial process state for destination-passing SSOS specifications
-generally has the form $(d{:}{\sf dest}; x{:}\susp{{\sf eval}\,e\,d})$
-for some program represented by the expression $e$. This means that we
+generally has the form 
+$(\lf{d}{:}{\sf dest}; x{:}\susp{{\sf eval}\,\lf{t}\,\lf{d}})$
+for some program represented by the LF term $\lf{t} = \interp{e}$. 
+This means that we
 can use the meta-approximation result to derive abstractions from
-initial expressions $e$ using the saturating logic programming
+initial expressions $\obj{e}$ using the saturating logic programming
 interpretation of persistent SSOS specifications.
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/dest-env.sls}
-\caption{Alternate environment semantics for call-by-value.}
+\caption{Alternate environment semantics for call-by-value}
 \label{fig:dest-env}
 \end{figure}
 
@@ -321,13 +337,13 @@ shown in Figure~\ref{fig:ssos-by-env} in three ways. First and
 foremost, it is a destination-passing specification instead of an
 ordered abstract machine specification, but that difference is
 accounted for by the destination-adding transformation in Chapter~7.
-A second difference is that the existentially generated parameter $x$
-associated with the persistent proposition ${\sf bind}\,x\,v$ is
+A second difference is that the existentially generated parameter $\lf{x}$
+associated with the persistent proposition ${\sf bind}\,\lf{x}\,\lf{v}$ is
 introduced as late as possible (rule ${\sf ev/app2}$ in
 Figure~\ref{fig:dest-env}), not as early as possible (rule ${\sf
   ev/app1}$ in Figure~\ref{fig:ssos-by-env}). The third difference is
-that there is an extra frame ${\sf app3}$ and an extra rule ${\sf
-  ev/app3}$ that consumes such frames. The ${\sf ev/call}$ frames are
+that there is an extra frame $\lf{\sf app3}$ and an extra rule ${\sf
+  ev/app3}$ that consumes such frames. The $\lf{\sf app3}$ frame is
 an important part of the control flow analysis we derive, but in
 \cite{simmons11logical} the addition of these frames was otherwise
 unmotivated. Based on our discussion of the logical correspondence in
@@ -338,15 +354,16 @@ applying defunctionalization.
 
 In order for us to approximate Figure~\ref{fig:dest-env} to derive a
 finite control flow analysis, our first step is to deal with the
-variables introduced by existential quantification. The parameter $x$
-introduced in ${\sf ev/app2}$ will be equated with ${\sf var}(\lambda
-x.e\,x)$. The new constructor ${\sf var}$ is a greatly simplified
-Skolem function for $x$ that only mentions the term $e$ with LF type
+variables introduced by existential quantification. The variable $\lf{x}$
+introduced in ${\sf ev/app2}$ will be equated with $\lf{{\sf var}(\lambda
+x.E\,x)}$. The new constructor $\lf{\sf var}$ is a greatly simplified
+Skolem function for $\lf{x}$ that only mentions the term $\lf{E}$ with LF type
 ${\sf exp} \rightarrow {\sf exp}$ -- the most general Skolem function
-in this setting would have also been dependent on $v$, $d$, and
-$d_2$. Adding $x \doteq {\sf var}(\lambda x.e\,x)$ as a conclusion to
+in this setting would have also been dependent on $\lf{V}$, $\lf{D}$, and
+$\lf{D_2}$. Adding $\lf{x} \doteq \lf{{\sf var}(\lambda x.E\,x)}$ 
+as a conclusion to
 the rule ${\sf ev/lam2}$ effectively causes us to associate all
-parameters ever passed into a function with the {\it function into
+variables ever passed to an LF function with the {\it function into
   which that parameter was passed}.
 
 \begin{figure}[t]
@@ -359,49 +376,49 @@ parameters ever passed into a function with the {\it function into
 The pattern above is an important one in the design of saturating
 forward-chaining logic programs that use higher-order abstract syntax,
 because it is a simple way of getting a handle on the subterms of a
-higher-order term. When given a term ${\sf a}\,({\sf b}\,{\sf c}\,{\sf
-  c})$, it is clear that there are three distinct subterms: the entire
-term, ${\sf b}\,{\sf c}\,{\sf c}$, and ${\sf c}$. Therefore, it is
+higher-order term. When given a term $\lf{{\sf a}\,({\sf b}\,{\sf c}\,{\sf
+  c})}$, it is clear that there are three distinct subterms: the entire
+term, $\lf{{\sf b}\,{\sf c}\,{\sf c}}$, and $\lf{{\sf c}}$. Therefore, it is
 meaningful to bound the size of a saturated process state using some
 function that depends on the number of subterms of the original
-term. But what are the subterms of ${\sf lam}\,(\lambda x.\,{\sf
-  app}\,x\,x)$?  Because we ensure that we {\it only} substitute terms
-of the form ${\sf var}(\lambda x.e\,x)$ into functions of the form
-$\lambda x.e\,x$ we can actually answer this question: there are three
-distinct subterms of ${\sf lam}\,(\lambda x.\,{\sf app}\,x\,x)$: the
-entire term, ${\sf app}\,({\sf var}(\lambda x.\,{\sf
-  app}\,x\,x))\,({\sf var}(\lambda x.\,{\sf app}\,x\,x))$, and ${\sf
-  var}(\lambda x.\,{\sf app}\,x\,x)$.  The subterms of any closed term
-$e$ of LF type ${\sf exp}$ can be enumerated by running this
-saturating logic program starting with the fact ${\sf subterms}(e)$,
+term. But what are the subterms of $\lf{{\sf lam}\,(\lambda x.\,{\sf
+  app}\,x\,x)}$?  Because we ensure that we {\it only} substitute terms
+of the form $\lf{{\sf var}(\lambda x.e\,x)}$ into functions of the form
+$\lf{\lambda x.e\,x}$ we can actually answer this question: there are three
+distinct subterms of $\lf{{\sf lam}\,(\lambda x.\,{\sf app}\,x\,x)}$: the
+entire term, $\lf{{\sf app}\,({\sf var}(\lambda x.\,{\sf
+  app}\,x\,x))\,({\sf var}(\lambda x.\,{\sf app}\,x\,x))}$, and $\lf{{\sf
+  var}(\lambda x.\,{\sf app}\,x\,x)}$.  The subterms of any closed term
+$\lf{e}$ of LF type ${\sf exp}$ can be enumerated by running this
+saturating logic program starting with the fact ${\sf subterms}\lf{(e)}$,
 where ${\sf subterms}$ is a persistent positive proposition.
 \begin{align*}
 {\sf sub/lam} &: ~~
-  \forall e{:}{\sf exp} \rightarrow {\sf exp}.\,
-    {\sf subterms}({\sf lam}(\lambda x.e\,x)) \lefti
-      \{ {\sf subterms}(e({\sf var}(\lambda x.e\,x))) \}
+  \forall \lf{e}{:}{\sf exp} \rightarrow {\sf exp}.\,
+    {\sf subterms}\lf{({\sf lam}(\lambda x.e\,x))} \lefti
+      \{ {\sf subterms}\lf{(e({\sf var}(\lambda x.e\,x)))} \}
 \\
 {\sf sub/app} &: ~~
-  \forall e_1{:}{\sf exp}.\, \forall e_2{:}{\sf exp}.\,
-    {\sf subterms}({\sf app}\,e_1\,e_2) \lefti
-      \{ {\sf subterms}\,e_1 \fuse {\sf subterms}\,e_2 \}
+  \forall \lf{e_1}{:}{\sf exp}.\, \forall \lf{e_2}{:}{\sf exp}.\,
+    {\sf subterms}\lf{({\sf app}\,e_1\,e_2)} \lefti
+      \{ {\sf subterms}\,\lf{e_1} \fuse {\sf subterms}\,\lf{e_2} \}
 \\
 {\sf sub/var} &: ~~ 
-  \forall e{:}{\sf exp} \rightarrow {\sf exp}.\,
-    {\sf subterms}({\sf var}(\lambda x.e\,x)) \lefti
-      \{ {\sf subterms}(e({\sf var}(\lambda x.e\,x))) \}
+  \forall \lf{e}{:}{\sf exp} \rightarrow {\sf exp}.\,
+    {\sf subterms}\lf{({\sf var}(\lambda x.e\,x))} \lefti
+      \{ {\sf subterms}\lf{(e({\sf var}(\lambda x.e\,x)))} \}
 \end{align*}
 The last rule, ${\sf sub/var}$, is redundant: if we ever derive a fact
-of the form ${\sf subterms}({\sf var}(\lambda x.e\,x))$, we know that
-we previously derived ${\sf subterms}({\sf lam}(\lambda x.e\,x))$ and
+of the form ${\sf subterms}\lf{({\sf var}(\lambda x.e\,x))}$, we know that
+we previously derived ${\sf subterms}\lf{({\sf lam}(\lambda x.e\,x))}$ and
 therefore, by the first rule, we have already derived ${\sf
-  subterms}(e({\sf var}(\lambda x.e\,x))$.
+  subterms}\lf{(e({\sf var}(\lambda x.e\,x))}$.
 
 
 
-The discussion above pertains to the existentially generated parameter
-$x$ in rule ${\sf ev/app2}$, but we still need some method for
-handling destinations $d_1$, $d_2$, and $d_3$ in ${\sf ev/app1}$,
+The discussion above pertains to the existentially generated variable
+$\lf{x}$ in rule ${\sf ev/app2}$, but we still need some method for
+handling destinations $\lf{d_1}$, $\lf{d_2}$, and $\lf{d_3}$ in ${\sf ev/app1}$,
 ${\sf ev/app2}$, and ${\sf ev/app3}$ (respectively). To this end, we
 need to have in mind the question that we intend to answer with
 control flow analysis. The primary question that such a flow analysis
@@ -411,12 +428,12 @@ location?''\footnote{This kind of ``{\it may}-'' analysis, where the
   intention is to over-approximate the events that might happen, is
   the kind of analysis (as opposed to a ``{\it must}-'' analysis) that
   maps easily onto the meta-approximation theorem.} Call sites
-correspond to expressions of the form ${\sf app}\,e_1\,e_2$, and
-functions are expressions of the form ${\sf lam}(\lambda x.e\,x)$;
+correspond to expressions of the form $\lf{{\sf app}\,e_1\,e_2}$, and
+functions are expressions of the form $\lf{{\sf lam}(\lambda x.e\,x)}$;
 therefore, our next step is to equate the destinations introduced in
-the ${\sf app}$ rules with the expressions we are evaluating at this
+the $\lf{\sf app}$ rules with the expressions we are evaluating at this
 point. One way to do this would be to introduce a new constructor
-${\sf d}: {\sf exp} \rightarrow {\sf dest}$, but we can equivalently
+$\lf{\sf d}: {\sf exp} \rightarrow {\sf dest}$, but we can equivalently
 conflate the two types to get the specification in
 Figure~\ref{fig:dest-cfa-1}. 
 
@@ -424,13 +441,14 @@ Figure~\ref{fig:dest-cfa-1}.
 The specification in Figure~\ref{fig:dest-cfa-1} has a point of
 redundancy along the lines of the redundancy in our second PDA
 approximation: the rules maintain the invariants that the two
-arguments to ${\sf eval}\,e\,d$ are always the same. Therefore, the
+arguments to ${\sf eval}\,\lf{e}\,\lf{d}$ are always the same. Therefore, the
 second argument to ${\sf eval}$ can be treated as vestigial; by
 removing that argument, we get a specification equivalent to
 Figure~\ref{fig:dest-cfa-2}. That figure includes another
-simplifications as well: instead of introducing expressions $d_1$,
-$d_2$, and $d_3$ by existential quantification just to equate them
-with expressions $e_1$, $e_2$, and $e$, we substitute in the equated
+simplifications as well: instead of introducing expressions $\lf{d_1}$,
+$\lf{d_2}$, and $\lf{d_3}$ by existential quantification just to equate them
+with expressions $\lf{e_1}$, $\lf{e_2}$, and $\lf{e}$, 
+we substitute in the equated
 expressions where the respective destinations appeared in
 Figure~\ref{fig:dest-cfa-1}. 
 
@@ -444,29 +462,31 @@ Figure~\ref{fig:dest-cfa-1}.
 
 This specification in Figure~\ref{fig:dest-cfa-2} is terminating when
 interpreted as a saturating logic program because the rules only break
-expressions $e$ and values $v$ into their subexpressions in the sense
+expressions $\lf{e}$ and values $\lf{v}$ 
+into their subexpressions in the sense
 we have described above. If the expressions in the original state of a
 program have $n$ subterms, the program can derive no more than $n$ new
 ${\sf eval}$ facts, $n^2$ new ${\sf retn}$ facts, and $2n^2 + n$ ${\sf
   cont}$ facts. This analysis combined with the meta-approximation
 theorem ensures that we have derived some sort of program analysis. To
 see that this program analysis is a control flow analysis, note that
-the third argument $e$ to ${\sf comp}\,f\,e'\,e$ is always a term
-${\sf app}\,e_1\,e_2$ -- that is, a call site. The rule ${\sf
-  ev/app2}$ starts evaluating the function ${\sf lam}(\lambda
-x.e_0\,x)$ and generates the fact ${\sf comp}\,{\sf app3}\,(e({\sf
-  var}(\lambda x.e_0\,x)))\,e$. This means that, in the course of
-evaluating some initial expression $e_{\it init}$, the function ${\sf
-  lam}(\lambda x.e_0\,x)$ may be called from the call site $e$ only if
-${\sf comp}\,{\sf app3}\,(e({\sf var}(\lambda x.e_0\,x)))\,e$ appears
+the third argument $\lf{e}$ to ${\sf comp}\,\lf{f}\,\lf{e'}\,\lf{e}$ 
+is always a term
+$\lf{{\sf app}\,e_1\,e_2}$ -- that is, a call site. The rule ${\sf
+  ev/app2}$ starts evaluating the function $\lf{{\sf lam}(\lambda
+x.e_0\,x)}$ and generates the fact ${\sf comp}\,\lf{\sf app3}\,\lf{(e({\sf
+  var}(\lambda x.e_0\,x)))}\,\lf{e}$. This means that, in the course of
+evaluating some initial expression $\lf{e_{\it init}}$, the function $\lf{{\sf
+  lam}(\lambda x.e_0\,x)}$ may be called from the call site $\lf{e}$ only if
+${\sf comp}\,\lf{\sf app3}\,\lf{(e({\sf var}(\lambda x.e_0\,x)))}\,\lf{e}$ appears
 in a saturated process state that includes the persistent 
-atomic proposition ${\sf eval}(e_{\it init})$.
+atomic proposition ${\sf eval}\lf{(e_{\it init})}$.
 
-There is one important caveat to this analysis. If for some value $v$
+There is one important caveat to this analysis. If for some value $\obj{v}$
 we consider the program $\interp{((\lambda x.x)\,(\lambda y.y))\,v}$,
 we might expect a reasonable control flow analysis to notice that only
 $\interp{\lambda y.y}$ is passed to the function $\interp{\lambda
-  x.x}$ and that only $v$ is passed to the function $\interp{\lambda
+  x.x}$ and that only $\obj{v}$ is passed to the function $\interp{\lambda
   y.y}$. Because of our use of higher-order abstract syntax, however,
 $\interp{\lambda y.y}$ and $\interp{\lambda x.x}$ are alpha-equivalent
 and therefore equal in the eyes of the logic programming
@@ -492,46 +512,48 @@ specification of a language that looked much like the Mini-ML-like
 languages considered in Chapters~6~and~7.  In this section, we try to
 derive an alias analysis that matches the interprocedural
 object-oriented alias analysis presented as a logic program in
-\cite[Chapter 12.4]{aho07compilers}.  The starting point for this
-analysis is  languages we have considered.
+\cite[Chapter 12.4]{aho07compilers}.  When we try to reverse-engineer
+a source language from which this alias analysis can be derived, we
+get the monadic language presented below.
 
 \subsection{Monadic language}
 
 The language we consider differentiates atomic actions, which we will
 call {\it expressions} (and encode in the LF type ${\sf exp}$) and
 procedures or {\it commands} (which we encode in the LF type ${\sf
-  cmd}$). There are only two commands $m$ in our monadic language. The
-first command, ${\sf ret}\,x$, is a command that returns the value
-bound to the variable $x$ (rule ${\sf ev/ret}$ in
+  cmd}$). There are only two commands $\obj{m}$ in our monadic language. The
+first command, $\obj{{\sf ret}\,x}$, is a command that returns the value
+bound to the variable $\obj{x}$ (rule ${\sf ev/ret}$ in
 Figure~\ref{fig:ssos-monadic}). The second command, $\interp{{\sf
-    bnd}^l\, x \leftarrow e \,{\sf in}\,m} = {\sf
-  bnd}\,l\,\interp{e}\,\lambda x.\interp{m}$, evaluates $e$ to a
-value, binds that value to the variable $x$, and then evaluates
-$m$. Note the presence of $l$ in the bind syntax; we will call it a
+    bnd}^l\, x \leftarrow e \,{\sf in}\,m} = \lf{{\sf
+  bnd}\,l\,\interp{e}\,\lambda x.\interp{m}}$, evaluates $\obj{e}$ to a
+value, binds that value to the variable $\obj{x}$, and then evaluates
+$\obj{m}$. Note the presence of $\obj{l}$ 
+in the bind syntax; we will call it a
 {\it label}, and we can think of it as a line number or source-code
 position from the original program.
 
-In the previous languages we have considered, values $v$ were a
-syntactic refinement of the expressions $e$. In contrast, our monadic
+In the previous languages we have considered, values $\obj{v}$ were a
+syntactic refinement of the expressions $\obj{e}$. In contrast, our monadic
 language will differentiate the two: there are five expression forms
 and three values that we will consider. An expression $\interp{\lambda
-  x.e} = {\sf fun}\,\lambda x.\interp{e}$ evaluates to a value
-$\interp{\lambda^l x.e} = {\sf lam}\,l\,\lambda x.\interp{e}$, where
-the label $l$ represents the source code position where the function
-was bound. For example, when we evaluate the command $\interp{{\sf
-    bnd}^l \, y \leftarrow \lambda x.e \,{\sf in}\,m}$ the value
-$\interp{\lambda^l x.e}$ gets bound to $y$ in the body of the command
-$m$ (rule ${\sf ev/fun}$ in Figure~\ref{fig:ssos-monadic}).
+  x.e} = \lf{{\sf fun}\,\lambda x.\interp{e}}$ evaluates to a value
+$\interp{\lambda^l x.e} = \lf{{\sf lam}\,l\,\lambda x.\interp{e}}$, where
+the label $\obj{l}$ represents the source code position where the function
+was bound. When we evaluate the command $\interp{{\sf
+    bnd}^l \, y \leftarrow \lambda x.e \,{\sf in}\,m}$, the value
+$\interp{\lambda^l x.e}$ gets bound to $\obj{y}$ in the body of the command
+$\obj{m}$ (rule ${\sf ev/fun}$ in Figure~\ref{fig:ssos-monadic}).
 
-The second expression form is a function call: $\interp{f\,x} = {\sf
-  app}\,f\,x$. To evaluate a function call, we expect a function value
-(which is a command $m_0$ with one free variable) to be bound to the
-variable $f$; we then store the rest of the current command on the
-stack and evaluate the command $m_0$ to a value. Note that the rule
+The second expression form is a function call: $\interp{f\,x} = \lf{{\sf
+  app}\,f\,x}$. To evaluate a function call, we expect a function value
+(which is a command $\obj{m_0}$ with one free variable) to be bound to the
+variable $\obj{f}$; we then store the rest of the current command on the
+stack and evaluate the command $\obj{m_0}$ to a value. Note that the rule
 ${\sf ev/call}$ in Figure~\ref{fig:ssos-monadic} also stores the call
-site's source-code location $l$ on the stack frame. The reason for
+site's source-code location $\obj{l}$ on the stack frame. The reason for
 storing a label here is that we need it for the alias
-analysis. However, it's possible to independently motivate adding
+analysis. However, it is possible to independently motivate adding
 these source-code positions to the operational semantics: for instance, it
 would allow us to model the process of giving a stack trace when an
 exception is raised. When the function we have called returns (rule
@@ -541,26 +563,27 @@ evaluating the command that was stored on the control stack.
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-monadic2.sls}
-\caption{Mutable pairs in the simple alias analysis language.}
+\caption{Mutable pairs in the simple alias analysis language}
 \label{fig:ssos-monadic2}
 \end{figure}
 
-The rules for concerning mutable pairs are given in
-Figure~\ref{fig:ssos-monadic2}. Evaluating the expression ${\sf
-  newpair}$ allocates a tuple with two fields ${\sf fst}$ and ${\sf
-  snd}$ and yields a value ${\sf loc}\,l$ referring to the tuple; both
-fields in the tuple are initialized to the value ${\sf null}$, and
+The rules for mutable pairs are given in
+Figure~\ref{fig:ssos-monadic2}. Evaluating the expression $\obj{\sf
+  newpair}$ allocates a tuple with two fields $\obj{\sf fst}$ and 
+$\obj{\sf
+  snd}$ and yields a value $\obj{{\sf loc}\,l}$ referring to the tuple; both
+fields in the tuple are initialized to the value $\obj{\sf null}$, and
 each field is represented by a separate linear ${\sf cell}$ resource
-(rule ${\sf ev/new}$). The expressions $\interp{x.{\sf fst}} = {\sf
-  proj}\,x\,{\sf fst}$ and $\interp{x.{\sf snd}} = {\sf proj}\,x\,{\sf
-  snd}$ expect a pair location to be bound to $x$, and yield the value
+(rule ${\sf ev/new}$). The expressions $\interp{x.{\sf fst}} = \lf{{\sf
+  proj}\,x\,{\sf fst}}$ and $\interp{x.{\sf snd}} = \lf{{\sf proj}\,x\,{\sf
+  snd}}$ expect a pair location to be bound to $\obj{x}$, and yield the value
 stored in the appropriate field of the mutable pair (rule ${\sf
-  ev/proj}$). The expressions $\interp{x.{\sf fst} := y} = {\sf
-  set}\,x\,{\sf fst}\,y$ and $\interp{x.{\sf snd} := y} = {\sf
-  set}\,x\,{\sf snd}\,y$ work much the same way. The difference is
+  ev/proj}$). The expressions $\interp{x.{\sf fst} := y} = \lf{{\sf
+  set}\,x\,{\sf fst}\,y}$ and $\interp{x.{\sf snd} := y} = \lf{{\sf
+  set}\,x\,{\sf snd}\,y}$ work much the same way. The difference is
 that the former expressions do not change the accessed field's
 contents, whereas the latter expressions replace the accessed field's
-contents with the value bound to $y$ (rule ${\sf ev/set}$).
+contents with the value bound to $\obj{y}$ (rule ${\sf ev/set}$).
 
 This language specification bears some similarity to Harper's
 Modernized Algol with free assignables \cite[Chapter
@@ -569,8 +592,10 @@ critical: SSOS specifications do not have a mechanism for enforcing
 the stack discipline of Algol-like languages. The other major
 difference is that Harper's version of Algol does not allow
 expressions to access the state.  For our language to behave
-similarly, the expressions ${\sf newpair}$, $x.{\sf fst}$, $x.{\sf
-  snd}$, $x.{\sf fst} := y$, and $x.{\sf snd} := y$ would need to be
+similarly, the expressions $\obj{\sf newpair}$, $\obj{x.{\sf fst}}$, 
+$\obj{x.{\sf
+  snd}}$, $\obj{x.{\sf fst} := y}$, and 
+$\obj{x.{\sf snd} := y}$ would need to be
 commands and not expressions; we make them expressions only for the
 convenience of a more regular presentation.
 
@@ -591,7 +616,7 @@ methodology from before and turn the program persistent. A further
 approximation is to remove the last premise from ${\sf ev/set}$, as
 the meta-approximation theorem allows -- the only purpose of this
 premise in Figure~\ref{fig:ssos-monadic2} was to consume the ephemeral
-proposition ${\sf cell}\,l'\,{\it fld}\,v$, and this is unnecessary
+proposition ${\sf cell}\,\lf{l'}\,\lf{\it fld}\,\lf{v}$, and this is unnecessary
 if ${\sf cell}$ is not an ephemeral predicate.  Having
 made these two moves (turning all propositions persistent, and removing
 a premise from ${\sf ev/set}$), we are left with three types of
@@ -601,33 +626,33 @@ logic program:
 
 \smallskip
 \begin{itemize}
-\item Variables $y$, introduced by every rule except for ${\sf ev/ret}$,
-\item Mutable locations $l$, introduced by rule ${\sf ev/new}$, and 
-\item Destinations $d$; the only place where a destination is created
+\item Variables $\lf{y}$, introduced by every rule except for ${\sf ev/ret}$,
+\item Mutable locations $\lf{l}$, introduced by rule ${\sf ev/new}$, and 
+\item Destinations $\lf{d}$; the only place where a destination is created
 by the destination-adding transformation is in rule ${\sf ev/call}$.
 \end{itemize}
 \smallskip
 
-Variables $y$ are generated to be substituted into the body of some
+Variables $\lf{y}$ are generated to be substituted into the body of some
 command, so we could equate them with the Skolemized function body as
 we did when deriving a control flow analysis example. Another option
 comes from noting that, for any initial source program, every command
 is associated with a particular source code location, so a simpler
 alternative is just to equate the variable with that source code
 location. This is why we stored labels on the stack: if we had not
-done so, then the label $l$ associated with $m$ in the command
+done so, then the label $\obj{l}$ associated with $\obj{m}$ in the command
 $\interp{{\sf bnd}^l\, x \leftarrow \lambda x.m_0 \,{\sf in}\,m}$ would
 no longer be available when we needed it in rule ${\sf ev/call1}$.
 
-We deal with mutable locations $l$ is a similar manner: we equate them
-with the label $l$ representing the line where that cell was
+We deal with mutable locations $\lf{l}$ is a similar manner: we equate them
+with the label $\lf{l}$ representing the line where that cell was
 generated.
 
-There are multiple ways to deal with the destination $d_0$ generated
+There are multiple ways to deal with the destination $\lf{d_0}$ generated
 in rule ${\sf ev/call}$. We want our analysis, like Aho et al.'s, to
-be insensitive to control flow, so we will equate $d_0$ with the label
-$l_0$ associated with the function we are calling.  If we instead
-equated $d_0$ with the label $l$ associated with the call-site or with
+be insensitive to control flow, so we will equate $\lf{d_0}$ with the label
+$\lf{l_0}$ associated with the function we are calling.  If we instead
+equated $\lf{d_0}$ with the label $\lf{l}$ associated with the call-site or with
 the pair of the call site and the called function, the result would be
 an analysis that is more sensitive to control flow.
 
@@ -635,24 +660,26 @@ The choices described above are reflected in
 Figure~\ref{fig:ssos-monadic-approx}, which takes the additional step
 of inlining uses of equality in the conclusions of rules. We can
 invoke this specification as a program analysis by packaging a program
-as a single command $m$ and deriving a saturated process state from the
-initial process state $(l_{\it init}{:}{\sf loc}; x{:}\susp{{\sf
-    eval}\,m\,l_{\it init}})$. The use of source-code position labels
+as a single command $\obj{m}$ and deriving a saturated process state from the
+initial process state $(\lf{l_{\it init}}{:}{\sf loc}; x{:}\susp{{\sf
+    eval}\,\interp{m}\,\lf{l_{\it init}}})$. 
+The use of source-code position labels
 makes the answers to some of the primary questions asked of an alias
 analysis quite concise. For instance:
 
 \smallskip
 \begin{itemize}
-\item {\it Might the first component of a pair created at label $l_1$
-    ever reference a pair created at label $l_2$?} Only if ${\sf
-    cell}\,l_1\,{\sf fst}\,({\sf loc}\,l_2)$ appears in the saturated
-    process state (and likewise for the second component).
-  \item {\it Might the first component of a pair created at label
-      $l_1$ ever reference the same object as the first component of a
-      pair created at label $l_2$?} Only if there is some $l'$ such
-    that ${\sf cell}\,l_1\,{\sf fst}\,({\sf loc}\,l')$ and ${\sf
-      cell}\,l_1\,{\sf fst}\,({\sf loc}\,l')$ both appear in the
-    saturated process state.
+\item {\it Might the first component of a pair created at label
+    $\obj{l_1}$ ever reference a pair created at label $\obj{l_2}$?}
+  Only if ${\sf cell}\,\lf{l_1}\,\lf{\sf fst}\,\lf{({\sf loc}\,l_2)}$
+  appears in the saturated process state (and likewise for the second
+  component).
+\item {\it Might the first component of a pair created at label
+    $\obj{l_1}$ ever reference the same object as the first component
+    of a pair created at label $\obj{l_2}$?} Only if there is some
+  $\lf{l'}$ such that ${\sf cell}\,\lf{l_1}\,\lf{\sf fst}\,\lf{({\sf
+      loc}\,l')}$ and ${\sf cell}\,\lf{l_1}\,\lf{\sf fst}\,\lf{({\sf
+      loc}\,l')}$ both appear in the saturated process state.
 \end{itemize}
 
 \section{Related work}
@@ -706,7 +733,8 @@ of denoting the abstract version of a state space $\Sigma$ as
 $\hat{\Sigma}$. The ``mysterious'' introduction of power domains that
 this entails is, in our setting, a perfectly natural result of
 relaxing the requirement that there be at most one persistent
-proposition ${\sf bind}\,x\,v$ for every $x$. As a final point of
+proposition ${\sf bind}\,\lf{x}\,\lf{v}$ for every $\lf{x}$. 
+As a final point of
 comparison, the ``abstract allocation strategy'' discussed in
 \cite{might10abstracting} is quite similar to our strategy of
 introducing and then approximating Skolem functions as a means of
