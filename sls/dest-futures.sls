@@ -1,9 +1,9 @@
 bind: exp -> exp -> prop pers.    ; Future is complete
 promise: dest -> exp -> prop lin. ; Future is waiting on a value
 
-ev/bind:    eval X D * bind X V >-> {retn V D}.
+ev/bind:    eval X D * !bind X V >-> {retn V D}.
 #| WAITING: eval X D * promise Dfuture X >-> ??? |#
-ev/promise: retn V D * promise D X >-> {bind X V}.
+ev/promise: retn V D * promise D X >-> {!bind X V}.
 
 ev/flam:    eval (flam \x. E x) D >-> {retn (flam \x. E x) D}.
 
