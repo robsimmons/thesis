@@ -211,7 +211,8 @@ all possible future behaviors of the (non-approximate) initial state.
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/pda-pers.sls}
-\caption{Skolemized approximate version of Figure~\ref{fig:pda-lin}.}
+\caption{Skolemized approximate version of the PDA specificaiton from
+Figure~\ref{fig:pda-lin}}
 \label{fig:pda-pers}
 \end{figure}
 
@@ -296,7 +297,7 @@ Figure~\ref{fig:pda-pers-approx2}.
 \begin{figure}[ht]
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/pda-pers-approx2.sls}
-\caption{Approximated push-down automaton.}
+\caption{Approximated PDA specification}
 \label{fig:pda-pers-approx2}
 \end{figure}
 
@@ -326,7 +327,7 @@ interpretation of persistent SSOS specifications.
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/dest-env.sls}
-\caption{Alternate environment semantics for call-by-value}
+\caption{Alternate environment semantics for CBV evaluation}
 \label{fig:dest-env}
 \end{figure}
 
@@ -369,7 +370,7 @@ variables ever passed to an LF function with the {\it function into
 \begin{figure}[t]
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/dest-cfa-1.sls}
-\caption{A control-flow analysis derived from Figure~\ref{fig:dest-env}.}
+\caption{A control-flow analysis derived from Figure~\ref{fig:dest-env}}
 \label{fig:dest-cfa-1}
 \end{figure}
 
@@ -455,8 +456,8 @@ Figure~\ref{fig:dest-cfa-1}.
 \begin{figure}[t]
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/dest-cfa-2.sls}
-\caption{A simplified version of Figure~\ref{fig:dest-cfa-1} that
-  eliminates the now-redundant argument to ${\sf eval}$.}
+\caption{Simplification of Figure~\ref{fig:dest-cfa-1} that
+  eliminates the redundant argument to ${\sf eval}$}
 \label{fig:dest-cfa-2}
 \end{figure}
 
@@ -501,7 +502,7 @@ use of such labels.
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-monadic.sls}
-\caption{Functions in the simple alias analysis language.}
+\caption{Semantics of functions in the simple monadic language}
 \label{fig:ssos-monadic}
 \end{figure}
 
@@ -563,7 +564,7 @@ evaluating the command that was stored on the control stack.
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-monadic2.sls}
-\caption{Mutable pairs in the simple alias analysis language}
+\caption{Semantics of mutable pairs in the simple monadic language}
 \label{fig:ssos-monadic2}
 \end{figure}
 
@@ -602,7 +603,7 @@ convenience of a more regular presentation.
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-monadic-approx.sls}
-\caption{Alias analysis.}
+\caption{Alias analysis for the simple mondaic language}
 \label{fig:ssos-monadic-approx}
 \end{figure}
 

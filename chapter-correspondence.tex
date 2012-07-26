@@ -251,7 +251,7 @@ as an automatic transformation.
 \draw (7,-1.2) node {\fboxsep=0pt\fbox{\colorbox{white}{\rule[-0.5ex]{0em}{2.5ex}\bf ~Approximation~(Sec.~\ref{sec:abstraction})~}}};
 \end{tikzpicture} 
 \end{center}
-\caption{Major transformations on \sls~specifications.}
+\caption{Major transformations on \sls~specifications}
 \label{fig:class-transform}
 \end{figure}
 
@@ -301,24 +301,23 @@ Chapter~9, seems better-adapted to describing the invariants of flat
 specifications.
 
 \begin{figure}[t]
-\begin{align*}
-x_1{:}\susp{{\sf p_2}(\lf{\sf c})}, ~
-x_2{:}\susp{{\sf p_1}(\lf{\sf c})}, ~
+{\small \begin{align*}
+x_1{:}\istrue{\susp{{\sf p_2}(\lf{\sf c})}}, ~
+x_2{:}\istrue{\susp{{\sf p_1}(\lf{\sf c})}}, ~
 x_3{:}\istrue{(\forall \lf{x}.\,{\sf p_1}(\lf{x}) 
                 \lefti \{ {\sf p_2}(\lf{x}) \lefti \{ {\sf p_3}(\lf{x}) \} \})}, ~
 x_4{:}\istrue{({\sf p_3}(\lf{\sf c}) \lefti \{ {\sf p_4} \})} & \\
 \leadsto ~~ 
-x_1{:}\susp{{\sf p_2}(\lf{\sf c})}, ~
+x_1{:}\istrue{\susp{{\sf p_2}(\lf{\sf c})}}, ~
 x_5{:}\istrue{({\sf p_2}(\lf{\sf c}) \lefti \{ {\sf p_3}(\lf{\sf c}) \})}, ~
 x_4{:}\istrue{({\sf p_3}(\lf{\sf c}) \lefti \{ {\sf p_4} \})} & \\
 \leadsto ~~ 
-x_6{:}\susp{{\sf p_3}(\lf{\sf c})}, ~
+x_6{:}\istrue{\susp{{\sf p_3}(\lf{\sf c})}}, ~
 x_4{:}\istrue{({\sf p_3}(\lf{\sf c}) \lefti \{ {\sf p_4} \})} & \\
 \leadsto ~~ 
-x_7{:}\susp{{\sf p_4}} & 
-\end{align*}
-\caption{Evolution of a nested \sls~process state (${\sf p_1}$, ${\sf
-  p_2}$ and ${\sf p_3}$ are all ordered atomic propositions).}
+x_7{:}\istrue{\susp{{\sf p_4}}} & 
+\end{align*}}\vspace{-18pt}
+\caption{Evolution of a nested \sls~process state}
 \label{fig:ho-evo-ex}
 \end{figure}
 
@@ -410,7 +409,7 @@ described above captures the scope of previous work.
 \draw (12,-.4) -- (5.5,-.4);
 \end{tikzpicture} 
 \end{center}
-\caption{Classification of existing work on SSOS specifications.}
+\caption{Classification of existing work on SSOS specifications}
 \label{fig:class-prevwork}
 \end{figure}
 
@@ -711,8 +710,7 @@ discussed further in Section~\ref{sec:approximately-related}.
 \draw[->,thick,rounded corners=.45cm] (8.2, -5.2) -- (8.7, -5.2) -- (8.7,-4.7);
 \end{tikzpicture} 
 \end{center}
-\caption{Using the logical correspondence for the modular extension of
-  a programming language's features.}
+\caption{Using the logical correspondence for the modular language extension}
 \label{fig:modularcompose}
 \end{figure}
 

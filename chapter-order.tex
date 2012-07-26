@@ -341,14 +341,14 @@ see these contexts as sequences of variable declarations, defined by
 the grammar
 \[
 \Xi ::= \cdot 
-  \mid \Xi, x{:}\ispers{T}
-  \mid \Xi, x{:}\iseph{T}
   \mid \Xi, x{:}\istrue{T}
+  \mid \Xi, x{:}\iseph{T}
+  \mid \Xi, x{:}\ispers{T}
 \]
 where each of the {\em variables} $x$ are distinct, so that the
 context also represents a finite map from variables $x$ to {\it
-  judgments} $\islvl{T}$, where $\mlvl$ is either $\mpers$, $\meph$,
-or $\mtrue$.  By separating out a substructural context into three
+  judgments} $\islvl{T}$, where $\mlvl$ is either $\mtrue$, $\meph$,
+or $\mpers$.  By separating out a substructural context into three
 subsequences of persistent, linear, and ordered judgments, we can
 recover the presentations of contexts for \ollll~given in
 Figure~\ref{fig:ordered-prop}. We will use this observation in an
@@ -934,6 +934,7 @@ A^+_\mpers & ::= \hspace{47pt} p^+_\mpers
         \mid \zero \mid A^+_\mpers \oplus B^+_\mpers
         \mid \exists \lf a{:}\tau. A^+_\mpers \mid \lf{t} \doteq_\tau \lf{s}
 \\
+\\
 A^- & ::= p^- \mid p^-_\mlax 
         \mid {\uparrow}A^+ \mid {\ocircle}A^+
         \mid A^+ \lefti B^- \hspace{5pt} \mid A^+ \righti B^- \hspace{4pt}
@@ -946,7 +947,7 @@ A^-_\mlax & ::= \hspace{20pt} p^-_\mlax \hspace{28pt}
         \mid \top \mid A^-_\mlax \with B^-_\mlax
         \mid \forall \lf a{:}\tau.A^-_\mlax
 \end{align*}}\vspace{-12pt}
-\caption{Propositions of focused \ollll.}
+\caption{Propositions of polarized \ollll}
 \label{fig:ordered}
 \end{figure}
 
@@ -2993,7 +2994,7 @@ negative propositions and inverting positive propositions).
 \end{array}
 \]}
 
-\caption{Erasure in \ollll.}
+\caption{Erasure in \ollll}
 \label{fig:ord-erasure}
 \end{figure}
 
@@ -3270,7 +3271,7 @@ multiplicative, exponential fragment of \ollll}
 \]
 
 \caption{Unfocused admissibility for the additive connectives of 
-\ollll~(omits ${\oplus}_{R2}$, ${\with}_{L2}$).}
+\ollll~(omits ${\oplus}_{R2}$, ${\with}_{L2}$)}
 \label{fig:admit-additive}
 \end{figure}
 
@@ -3342,7 +3343,7 @@ multiplicative, exponential fragment of \ollll}
 \]
 
 
-\caption{Unfocused admissibility for the first-order connectives of \ollll.}
+\caption{Unfocused admissibility for the first-order connectives of \ollll}
 \label{fig:admit-fo}
 \end{figure}
 

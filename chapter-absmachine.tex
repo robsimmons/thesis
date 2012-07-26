@@ -295,8 +295,8 @@ in this way, in Section~\ref{sec:defunctionalization} below.
 \fvset{fontsize=\small,boxwidth=auto}
 \VerbatimInput{sls/cbv-ev-ssos.sls}
 \end{minipage}
-\caption{A natural semantics for CBV (left) and the corresponding (higher-order)
-  ordered abstract machine (right).}
+\caption{Natural semantics (left) and ordered abstract machine (right) for 
+CBV evaluation}
 \label{fig:example-transform-cbv}
 \end{figure}
 
@@ -571,8 +571,8 @@ optimization can be applied or not in a nondeterministic manner.
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=auto}
 \VerbatimInput{sls/cbv-ev-ssos-tail.sls}
-\caption{Tail-recursion optimized semantics for the CBV
-  evaluation.}
+\caption{Tail-recursion optimized semantics for CBV
+  evaluation}
 \label{fig:cbv-ev-ssos-tail}
 \end{figure}
 
@@ -773,8 +773,8 @@ satisfied in the sequential case where $i = j$.
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=auto}
 \VerbatimInput{sls/cbv-ev-ssos-par.sls}
-\caption{The parallel, tail-recursion optimized ordered abstract machine for
- call-by-value evaluation.}
+\caption{Parallel, tail-recursion optimized semantics for
+ CBV evaluation}
 \label{fig:cbv-ev-ssos-par}
 \end{figure}
 
@@ -1886,7 +1886,7 @@ $\interp{\lambda x.e} = \lf{{\sf lam}\,\lambda x. \interp{e}}$.
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/cbv-ev-ssos-gen.sls}
 \caption{The generative signature $\Sigma_{\it Gen}$ 
- describing encodable states.}
+ describing states $\Delta$ that equal $\ctxinterp{s}$ for some $\obj{s}$}
 \label{fig:cbv-ev-ssos-gen}
 \end{figure}
 
@@ -2206,7 +2206,7 @@ if and only if $\obj{s \mapsto s'}$.
 \fvset{fontsize=\small,boxwidth=auto}
 \VerbatimInput{sls/ssos-minml-core.sls}
 \end{minipage}
-\caption{Semantics of some pure functional features.}
+\caption{Semantics of some pure functional features}
 \label{fig:ssos-minml-core}
 \end{figure}
 
@@ -2304,7 +2304,7 @@ Figure~\ref{fig:ns-arb}.
 \fvset{fontsize=\small,boxwidth=auto}
 \VerbatimInput{sls/cbv-arb-ssos.sls}
 \end{minipage}
-\caption{Semantics of nondeterministic choice.}
+\caption{Semantics of nondeterministic choice}
 \label{fig:ns-arb}
 \end{figure}
 
@@ -2386,12 +2386,12 @@ usual natural semantics for case analysis look like this:
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=auto}
 \VerbatimInput{sls/ssos-minml-case-bad.sls}
-\caption{Problematic semantics of case analysis (not defunctionalized).}
+\caption{Problematic semantics of case analysis (not defunctionalized)}
 \label{fig:ssos-minml-case-bad}
 \bigskip
 \fvset{fontsize=\small,boxwidth=auto}
 \VerbatimInput{sls/ssos-minml-case-bad-defun.sls}
-\caption{Problematic semantics of case analysis (defunctionalized).}
+\caption{Problematic semantics of case analysis (defunctionalized)}
 \label{fig:ssos-minml-case-bad-defun}
 \end{figure}
 
@@ -2469,12 +2469,12 @@ $\obj{(v',e_z,x.e_s) \Downarrow^? v}$ % = {\sf casen}\,\interp{v'}\,\interp{e_z}
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=auto}
 \VerbatimInput{sls/ssos-casen-notdefun.sls}
-\caption{Semantics of case analysis (not defunctionalized).}
+\caption{Revised semantics of case analysis (not defunctionalized)}
 \label{fig:ssos-casen-notdefun}
 \bigskip
 \fvset{fontsize=\small,boxwidth=auto}
 \VerbatimInput{sls/ssos-casen.sls}
-\caption{Semantics of case analysis (defunctionalized)}
+\caption{Revised semantics of case analysis (defunctionalized)}
 \label{fig:ssos-casen}
 \end{figure}
 
@@ -2649,7 +2649,7 @@ most of the specifications in
 \begin{figure}[t]
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-mutable.sls}
-\caption{SSOS semantics of mutable storage.}
+\caption{Semantics of mutable storage}
 \label{fig:ssos-mutable}
 \end{figure}
 
@@ -2832,7 +2832,7 @@ the two versions of lazy evaluation discussed by Harper in
 \begin{figure}[t]
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-cbneed.sls}
-\caption{SSOS semantics of call-by-need recursive suspensions.}
+\caption{Semantics of call-by-need recursive suspensions}
 \label{fig:ssos-cbneed}
 \end{figure}
 
@@ -2872,7 +2872,7 @@ ${\sf ev/force1a}$ and will immediately return the memoized value.
 \begin{figure}[t]
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-cbneed-refun.sls}
-\caption{SSOS semantics of call-by-need recursive suspensions, refunctionalized.}
+\caption{Semantics of call-by-need recursive suspensions, refunctionalized}
 \label{fig:ssos-cbneed-refun}
 \end{figure}
 
@@ -2891,7 +2891,7 @@ ${\sf bind}\,\lf{l}\,\lf{v}$.
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-by-need.sls}
-\caption{SSOS semantics of lazy call-by-need functions.}
+\caption{Semantics of lazy call-by-need functions}
 \label{fig:ssos-by-need}
 \end{figure}
 
@@ -2939,7 +2939,7 @@ are irrelevant.
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-by-env.sls}
-\caption{SSOS environment semantics for call-by-value functions.}
+\caption{Environment semantics for call-by-value functions}
 \label{fig:ssos-by-env}
 \end{figure}
 
@@ -3016,7 +3016,7 @@ can be handled by the expression $\interp{{\sf try}\,e_1\,{\sf ow}\,e_2} =
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-fail.sls}
-\caption{SSOS semantics of recoverable failure.}
+\caption{Semantics of recoverable failure}
 \label{fig:ssos-fail}
 \end{figure}
 
@@ -3482,7 +3482,7 @@ version of ${\sf evsos}\,e\,v$.
 \fvset{fontsize=\small,boxwidth=auto}
 \VerbatimInput{sls/cbv-sos-eval-b.sls}
 \end{minipage}
-\caption{Small-step evaluation, and one corresponding abstract machine.}
+\caption{Small-step evaluation, and one corresponding abstract machine}
 \label{fig:cbv-sos}
 \end{figure}
 
@@ -3596,7 +3596,7 @@ judgment that tracks all the variables in $\obj\Psi$.
 \begin{figure}[tp]
 \fvset{fontsize=\small,boxwidth=auto}
 \VerbatimInput{sls/lc-ev2.sls}
-\caption{Partial evaluation for \rowan~(lambda calculus fragment).}
+\caption{Semantics of partial evaluation for \rowan~(lambda calculus fragment)}
 \label{fig:lc-ev2}
 \end{figure}
 
@@ -3641,7 +3641,7 @@ reduce to $\obj{e}$.
 \fvset{fontsize=\small,boxwidth=auto}
 \VerbatimInput{sls/lc-ssos-3.sls}
 \end{minipage}
-\caption{Semantics for \rowan~(temporal fragment).}
+\caption{Semantics for \rowan~(temporal fragment)}
 \label{fig:lc}
 \end{figure}
 
