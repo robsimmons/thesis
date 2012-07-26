@@ -77,7 +77,7 @@ is replaced by a linear multiplicative conjunction $A \fuse B$, which
 represents that we have the resources to make an $A$, and they're to
 the left of the resources necessary to make a $B$. Linear implication
 $A \lolli B$, which represents a resource that, given the resources
-nnecessary to construct an $A$, can construct a $B$, splits into two
+necessary to construct an $A$, can construct a $B$, splits into two
 propositions in ordered logic. The proposition $A \lefti B$ represents
 a resource that, given the resources necessary to construct an $A$
 {\it to the left}, can construct a $B$, and the proposition $A \righti
@@ -2447,10 +2447,13 @@ The form of the identity expansion theorems is already available to
 us: the admissible rules $\eta_{A^+_\mlvl}$ and $\eta_{A^-_\mlvl}$ are
 straightforward generalizations of the explicit rules $\eta^+$ and
 $\eta^-$ in Figure~\ref{fig:foc-mall} from ordered atomic propositions
-to arbitrary propositions (and from permeable atomic propositions to
-arbitrary permeable propositions). The computational contents of 
-the admissible rules $\eta_{A^+_\mlvl}$ and $\eta_{A^-_\mlvl}$ are two functions
-$\etapa{z}{N}{A^+_\mlvl}$ and $\etana{N}{A^-_\mlvl}$.
+$p^+$ and $p^-$ to arbitrary propositions and from permeable atomic
+propositions $p^+_\meph$, $p^+_\mpers$, and $p^-_\mlax$ to arbitrary
+permeable propositions $A^+_\meph$, $A^+_\mpers$ and $A^-_\mlax$. The
+content of Theorem~\ref{thm:ordidexpand} below is captured by the two
+admissible rules $\eta_{A^+_\mlvl}$ and $\eta_{A^-_\mlvl}$ and also by
+the two functions and $\etapa{z}{N}{A^+_\mlvl}$ and
+$\etana{N}{A^-_\mlvl}$ that operate on proof terms.
 \[
 \infer-[\eta_{A^+_\mlvl}]
 {\foct{\Psi}{\frameoff{\Theta}{A^+_\mlvl}}{\etapa{z}{N}{A^+_\mlvl}}{U}}
@@ -2462,8 +2465,8 @@ $\etapa{z}{N}{A^+_\mlvl}$ and $\etana{N}{A^-_\mlvl}$.
  &
  \stableL{\Delta}}
 \]
-We define these functions in the proof of
-Theorem~\ref{thm:ordidexpand} below. Identity expansion is not the
+
+Identity expansion is not the
 perhaps not the best name for the property; the name comes from the
 fact that the usual identity properties are a corollary of identity
 expansion. Specifically, $\etapa{z}{\tfocusr{z}}{A^+}$ is a derivation
@@ -2472,9 +2475,10 @@ and $\etana{\tfocusl{x}{\tnil}}{A^-}$ is a derivation of
 $\foc{\Psi}{x{:}\istrue{A^-}}{A^-}$.
 
 In the proof of identity expansion, we do pay some price in return for
-including permeable propositions, as we perform slightly
-different bookkeeping depending on whether or not it is necessary to
-apply admissible weakening to the subderivation $N$.
+including permeable propositions, as we perform slightly different
+bookkeeping depending on whether or not it is necessary to apply
+admissible weakening to the subderivation $N$. However, this cost is
+mostly borne by the part of the context we leave implicit.
 
 \bigskip
 \begin{theorem}[Identity expansion]~\label{thm:ordidexpand}
@@ -2491,22 +2495,24 @@ apply admissible weakening to the subderivation $N$.
 \end{theorem}
 
 \begin{proof} By mutual induction over the structure of types. We
-  provide the full definition at the level of proof terms, but omit
-  the full discussion of some of the simpler cases (like units) and
-  cases that are very similar to others.\robnote{I think this cases of
-    this proof that I wrote out in detail need to be redone entirely
-    in the style of the ${\downarrow}A^-$ case, but I want to get
-    feedback before I do that.  For now, I've left the rest of this
-    proof alone (July 19).}
+  provide the full definition at the level of proof terms and include
+  an extra explanatory derivation for a few of the positive cases.
 
 \subsubsection{Positive cases}
 
 \begin{itemize}
-\item[--] $\etapa{z}{N}{p^+_\mlvl} = 
+\item[--] $\etapa{z}{N}{p^+_\mlvl} = \tetap{z}{N}$
+
+  \smallskip
+  $N$ is a derivation of 
+  $\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{p^+_\mlvl}}}{U}$; the 
+  result follows immediately by the rule $\eta^+$: 
+  \[\footnotesize
   \infer[\eta^+]
    {\foct{\Psi}{\frameoff{\Theta}{p^+_\mlvl}}{\tetap{z}{N}}{U}}
-   {\foct{\Psi}{\tackon{\Theta}{z{:}\islvl{p^+_\mlvl}}}{N}{U}}$
-
+   {\foct{\Psi}{\tackon{\Theta}{z{:}\islvl{p^+_\mlvl}}}{N}{U}}
+  \]
+ 
 \medskip
 
 \item[--] $\etapa{z}{N}{{\downarrow}A^-} 
@@ -2515,8 +2521,10 @@ apply admissible weakening to the subderivation $N$.
   \smallskip
   $N$ is a derivation of 
   $\foc{\Psi}{\tackon{\Theta}{z{:}\istrue{\susp{{\downarrow}A^-}}}}{U}$. 
-  We construct a frame $\Theta^-$ that contains only the persistent
-  propositions from $\Delta$ and then derive:
+  We construct a context $\Xi$ that contains only the persistent
+  propositions from $\Delta$. This means that 
+  $\frameoff{\Theta}{\Xi, x{:}\istrue{A^-}}$ matches 
+  $\tackon{\Theta}{x{:}\istrue{A^-}}$. We can then derive:
   \[\footnotesize \infer[{\downarrow}_L]
   {\foct{\Psi}{\frameoff{\Theta}{{\downarrow}A^-}}
      {\tdownl{x}{([(\tdownr{(\etana{\tfocusl{x}{\tnil}}{A^-})})/z]N)}}
@@ -2526,38 +2534,38 @@ apply admissible weakening to the subderivation $N$.
       {[(\tdownr{(\etana{\tfocusl{x}{\tnil}}{A^-})})/z]N}
       {U}}
    {\infer[{\downarrow}_R]
-    {\foct{\Psi}{\tackon{\Theta^-}{x{:}\istrue{A^-}}}{\tdownr{(\etana{\tfocusl{x}{\tnil}}{A^-})}}{[{\downarrow}A^-]}}
+    {\foct{\Psi}{{\Xi}, {x{:}\istrue{A^-}}}{\tdownr{(\etana{\tfocusl{x}{\tnil}}{A^-})}}{[{\downarrow}A^-]}}
     {\infer-[{\eta}_{A^-}]
-     {\foct{\Psi}{\tackon{\Theta^-}{x{:}\istrue{A^-}}}{\etana{\tfocusl{x}{\tnil}}{A^-}}{\istrue{A^-}}}
-     {\infer[{\it focus}_R]
-      {\foct{\Psi}{\tackon{\Theta^-}{x{:}\istrue{A^-}}}{\tfocusl{x}{\tnil}}{\istrue{\susp{A^-}}}}
+     {\foct{\Psi}{{\Xi},{x{:}\istrue{A^-}}}{\etana{\tfocusl{x}{\tnil}}{A^-}}{\isconc{A^-}}}
+     {\infer[{\it focus}_L]
+      {\foct{\Psi}{{\Xi}, {x{:}\istrue{A^-}}}{\tfocusl{x}{\tnil}}{\isconc{\susp{A^-}}}}
       {\infer[{\it id}^-]
-       {\foct{\Psi}{\tackon{\Theta^-}{[A^-]}}{\tnil}{\istrue{\susp{A^-}}}}
+       {\foct{\Psi}{{\Xi}, {[A^-]}}{\tnil}{\isconc{\susp{A^-}}}}
        {}}}}
     &
     \foct{\Psi}{\tackon{\Theta}{z{:}\istrue{\susp{{\downarrow}A^-}}}}{N}{U}}}\]
 
 \item[--] $\etapa{z}{N}{{\scriptgnab}A^-}
            = \tgnabl{x}{([(\tgnabr{(\etana{\tfocusl{x}{\tnil}}{A^-})})/z]N)}$ 
-  \smallskip
+%   \smallskip
 
-  $N$ is a derivation of 
-  $\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{{\gnab}A^-}}}}{U}$, where
-  $\mlvl$ is $\mtrue$ or $\meph$.
-  By ${\gnab}_L$, it suffices to show 
-  $\foc{\Psi}{\tackon{\Theta}{x{:}\iseph{A^-}}}{U}$.
-  We construct a context $\Xi$ that matches $x{:}A^-$ such that
-  $\tackon{\Theta}{x{:}\iseph{A^-}}$ matches $\frameoff{\Theta}{\Xi}$
-  and $\Xi$ matches $\restrictto{\Xi}{\meph}$.
-  \smallskip
+%   $N$ is a derivation of 
+%   $\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{{\gnab}A^-}}}}{U}$, where
+%   $\mlvl$ is $\mtrue$ or $\meph$.
+%   By ${\gnab}_L$, it suffices to show 
+%   $\foc{\Psi}{\tackon{\Theta}{x{:}\iseph{A^-}}}{U}$.
+%   We construct a context $\Xi$ that matches $x{:}A^-$ such that
+%   $\tackon{\Theta}{x{:}\iseph{A^-}}$ matches $\frameoff{\Theta}{\Xi}$
+%   and $\Xi$ matches $\restrictto{\Xi}{\meph}$.
+%   \smallskip
 
-  $\tfocusl{x}{\tnil}$ (that is, ${\it focus}_L$ followed by
-  ${\it id}^-$) is a derivation of $\foc{\Psi}{\Xi}{\istrue{\susp{A^-}}}$. 
-  By the induction hypothesis, we have $\foc{\Psi}{\Xi}{A^-}$, 
-  and by ${\gnab}_R$ and the fact that $\Xi$ matches $\restrictto{\Xi}{\meph}$
-  we have $\foc{\Psi}{\Xi}{[{\gnab}A^-]}$. The result follows
-  by focal substitution on this derivation into $N$.
-  \smallskip
+%   $\tfocusl{x}{\tnil}$ (that is, ${\it focus}_L$ followed by
+%   ${\it id}^-$) is a derivation of $\foc{\Psi}{\Xi}{\istrue{\susp{A^-}}}$. 
+%   By the induction hypothesis, we have $\foc{\Psi}{\Xi}{A^-}$, 
+%   and by ${\gnab}_R$ and the fact that $\Xi$ matches $\restrictto{\Xi}{\meph}$
+%   we have $\foc{\Psi}{\Xi}{[{\gnab}A^-]}$. The result follows
+%   by focal substitution on this derivation into $N$.
+%   \smallskip
 
 \item[--] $\etapa{z}{N}{{!}A^-}
            = \tbangl{x}{([(\tbangr{(\etana{\tfocusl{x}{\tnil}}{A^-})})/z]N)}$ 
@@ -2565,73 +2573,107 @@ apply admissible weakening to the subderivation $N$.
 
   $N$ is a derivation of 
   $\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{{!}A^-}}}}{U}$, where
-  $\mlvl$ can be anything ($\mtrue$, $\meph$, or $\mpers$).
-  By ${!}_L$, it suffices to show 
-  $\foc{\Psi}{\tackon{\Theta}{x{:}\ispers{A^-}}}{U}$.
-  We construct a context $\Xi$ that matches $x{:}A^-$ such that
-  $\tackon{\Theta}{x{:}\ispers{A^-}}$ matches $\frameoff{\Theta'}{\Xi}$
-  and $\Xi$ matches $\restrictto{\Xi}{\mpers}$. The frame
-  $\Theta'$ is $\Theta$ plus an additional variable declaration 
-  $x{:}\ispers{A^-}$, and $N$ is also a derivation of 
-  $\foc{\Psi}{\tackon{\Theta'}{z{:}\islvl{\susp{{!}A^-}}}}{U}$
-  by admissible weakening.
-  \smallskip
+  $\mlvl$ can be anything ($\mtrue$, $\meph$, or $\mpers$). We construct
+  a context $\Xi$ that contains only the persistent propositions
+  from $\Delta$ and a frame $\Theta^+$ that is $\Theta$ plus an extra
+  variable declaration $x{:}\ispers{A^-}$. This means that
+  $\tackon{\Theta}{x{:}\ispers{A^-}}$ matches
+  $\frameoff{\Theta^+}{\restrictto{(\Xi, x{:}\ispers{A^-})}{\mlvl}}$. 
+  We can then derive:
+  \[\footnotesize \infer[{!}_L]
+  {\foct{\Psi}{\frameoff{\Theta}{{!}A^-}}
+     {\tbangl{x}{([(\tbangr{(\etana{\tfocusl{x}{\tnil}}{A^-})})/z]N)}}
+     {U}}
+  {\infer-[{\it subst}^+]
+   {\foct{\Psi}{\tackon{\Theta}{x{:}\ispers{A^-}}}
+      {[(\tbangr{(\etana{\tfocusl{x}{\tnil}}{A^-})})/z]N}
+      {U}}
+   {\infer[{!}_R]
+    {\foct{\Psi}{{\Xi},{x{:}\ispers{A^-}}}{\tbangr{(\etana{\tfocusl{x}{\tnil}}{A^-})}}{[{!}A^-]}}
+    {\infer-[{\eta}_{A^-}]
+     {\foct{\Psi}{{\Xi},{x{:}\ispers{A^-}}}{\etana{\tfocusl{x}{\tnil}}{A^-}}{\isconc{A^-}}}
+     {\infer[{\it focus}_L]
+      {\foct{\Psi}{{\Xi},{x{:}\ispers{A^-}}}{\tfocusl{x}{\tnil}}{\isconc{\susp{A^-}}}}
+      {\infer[{\it id}^-]
+       {\foct{\Psi}{{\Xi},{x{:}\ispers{A^-}}, {[A^-]}}{\tnil}{\isconc{\susp{A^-}}}}
+       {}}}}
+    &
+    \infer-[{\it weaken}]
+    {\foct{\Psi}{\tackon{\Theta^+}{z{:}\islvl{\susp{{\downarrow}A^-}}}}{N}{U}}
+    {\foct{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{{\downarrow}A^-}}}}{N}{U}}}}\]
 
-  $\tfocusl{x}{\tnil}$ (that is, ${\it focus}_L$ followed by
-  ${\it id}^-$) is a derivation of $\foc{\Psi}{\Xi}{\istrue{\susp{A^-}}}$. 
-  By the induction hypothesis, we have $\foc{\Psi}{\Xi}{A^-}$, 
-  and by ${!}_R$ and the fact that $\Xi$ matches $\restrictto{\Xi}{\mpers}$
-  we have $\foc{\Psi}{\Xi}{[{!}A^-]}$. The result follows
-  by focal substitution on this derivation into $N$.
-  \smallskip
 
 \item[--] $\etapa{z}{N}{\one} = \tonel{([\toner/z]N)}$ 
 \item[--] $\etapa{z}{N}{A^+_\mlvl \fuse B^+_\mlvl} =
-            \etapa{z_1}
+            \tfusel{\big(\etapa{z_1}
              {~\etapa{z_2}
               {~[(\tfuser{z_1}{z_2})/z]N}
               {B^+_\mlvl}}
-             {A^+_\mlvl}$
-  \smallskip
+             {A^+_\mlvl}\big)}$
 
+  \smallskip
   $N$ is a derivation of 
   $\foc{\Psi}{\tackon{\Theta}
-   {z{:}\islvl{\susp{A^+_\mlvl \fuse B^+_\mlvl}}}}{U}$. 
-  By ${\fuse}_L$, it suffices to
-  show $\foc{\Psi}{\tackon{\Theta}{A^+_\mlvl, B^+_\mlvl}}{U}$.
-  We construct a context $\Xi$ that matches 
-  $\matchconj{z_1{:}\susp{A^+_\mlvl}}{z_2{:}\susp{B^+_\mlvl}}$
-  such that $\tackon{\Theta}
-              {\mkconj{z_1{:}\islvl{\susp{A^+_\mlvl}}}
-                      {z_2{:}\islvl{\susp{B^+_\mlvl}}}}$
-  matches $\frameoff{\Theta'}{\Xi}$. The frame 
-  $\Theta'$ is either $\Theta$ (if $\mlvl$ is $\mtrue$ or $\meph$) 
+   {z{:}\islvl{\susp{A^+_\mlvl \fuse B^+_\mlvl}}}}{U}$, where $\mlvl$
+  can be anything ($\mtrue$, $\meph$, or $\mpers$). We construct a context
+  $\Xi$ that contains only the persistent propositions from $\Delta$
+  and a frame $\Theta^+$ that is either 
+  $\Theta$ (if $\mlvl$ is $\mtrue$ or $\meph$) 
   or it is $\Theta$ plus additional variable declarations
   $z_1{:}\islvl{\susp{A^+_\mlvl}}$ and 
-  $z_2{:}\islvl{\susp{B^+_\mlvl}}$ (if $\mlvl$ is $\mpers$). In either
-  case , $N$ is also a derivation of 
-  $\foc{\Psi}{\tackon{\Theta'}
-   {z{:}\islvl{\susp{A^+_\mlvl \fuse B^+_\mlvl}}}}{U}$, either
-  immediately or by admissible weakening.
-  \smallskip
-
-
-  $\tfuser{z_1}{z_2}$ (that is, ${\fuse}_R$ followed by two instances of 
-  ${\it id}^+$) is a derivation of 
-  $\foc{\Psi}{\Xi}{[A^+_\mlvl \fuse B^+_\mlvl]}$.
-  By focal substitution into $N$, we have
-  a derivation of 
-  $\foc{\Psi}{\tackon{\Theta}
-              {\mkconj{z_1{:}\islvl{\susp{A^+_\mlvl}}}
-                      {z_2{:}\islvl{\susp{B^+_\mlvl}}}}}{U}$,
-  by the induction hypothesis on $B^+_\mlvl$ we have
-  $\foc{\Psi}{\tackon{\Theta}
-              {\mkconj{z_1{:}\islvl{\susp{A^+_\mlvl}}}
-                      {B^+_\mlvl}}}{U}$, and by
-  the induction hypothesis on $A^+_\mlvl$ we have
-   $\foc{\Psi}{\tackon{\Theta}
-              {\mkconj{A^+_\mlvl}
-                      {B^+_\mlvl}}}{U}$ as required.
+  $z_2{:}\islvl{\susp{B^+_\mlvl}}$ (if $\mlvl$ is $\mpers$). This means that
+  $\tackon{\Theta}
+                  {x_1{:}\islvl{\susp{A^+_\mlvl}}, 
+                   x_2{:}\islvl{\susp{B^+_\mlvl}}}$ matches
+  $\frameoff{\Theta^+}{\restrictto{(\Xi, x_1{:}\islvl{\susp{A^+_\mlvl}}, 
+                   x_2{:}\islvl{\susp{B^+_\mlvl}})}{\mlvl}}$. 
+   We can then derive:
+  \[\footnotesize 
+  \infer[{\fuse}_L]
+  {\foct{\Psi}{\frameoff{\Theta}{A^+_\mlvl \fuse B^+_\mlvl}}{\tfusel{(\etapa{z_1}
+             {~\etapa{z_2}
+              {~[(\tfuser{z_1}{z_2})/z]N}
+              {B^+_\mlvl}}
+             {A^+_\mlvl})}}{U}}
+  {\infer-[\eta_{A^+_\mlvl}]
+   {\foct{\Psi}{\tackon{\Theta}{A^+_\mlvl, B^+_\mlvl}}{{\etapa{z_1}
+             {~\etapa{z_2}
+              {~[(\tfuser{z_1}{z_2})/z]N}
+              {B^+_\mlvl}}
+             {A^+_\mlvl}}}{U}}
+   {\infer-[\eta_{B^+_\mlvl}]
+    {\foct{\Psi}{\tackon{\Theta}{z_1{:}\islvl{\susp{A^+_\mlvl}}, B^+_\mlvl}}{{
+             {\etapa{z_2}
+              {~[(\tfuser{z_1}{z_2})/z]N}
+              {B^+_\mlvl}}}}{U}}
+    {\infer-[{\it subst}^+]
+     {\foct{\Psi}{\tackon{\Theta}
+                  {z_1{:}\islvl{\susp{A^+_\mlvl}}, 
+                   z_2{:}\islvl{\susp{B^+_\mlvl}}}}{{{
+              {[(\tfuser{z_1}{z_2})/z]N}}}}{U}}
+     {\infer[{\fuse}_R]
+      {\foct{\Psi}{\Xi, z_1{:}\islvl{\susp{A^+_\mlvl}}, 
+                   z_2{:}\islvl{\susp{B^+_\mlvl}}}
+             {\tfuser{z_1}{z_2}}{[A^+_\mlvl \fuse B^+_\mlvl]}}
+      {\infer[{\it id}^+]
+       {\foct{\Psi}{\Xi_1}{{z_1}}{[A^+_\mlvl]}}
+       {}
+       &
+       \infer[{\it id}^+]
+       {\foct{\Psi}{\Xi_2}{{z_2}}{[B^+_\mlvl]}}
+       {}}
+      &
+      \infer-[{\it weaken}]
+      {\foct{\Psi}{\tackon{\Theta^+}
+       {z{:}\islvl{\susp{A^+_\mlvl \fuse B^+_\mlvl}}}}{N}{U}}
+      {\foct{\Psi}{\tackon{\Theta}
+       {z{:}\islvl{\susp{A^+_\mlvl \fuse B^+_\mlvl}}}}{N}{U}}}}}}
+  \]
+  Either $\Xi_1$ and $\Xi_2$ are both $\Xi, z_1{:}\islvl{\susp{A^+_\mlvl}}, 
+                   z_2{:}\islvl{\susp{B^+_\mlvl}}$ (if $\mlvl$ is $\mpers$),
+  or $\Xi_1$ is $\Xi, z_1{:}\islvl{\susp{A^+_\mlvl}}$ and
+  $\Xi_2$ is $\Xi, z_2{:}\islvl{\susp{B^+_\mlvl}}$ (if $\mlvl$ is $\mtrue$
+  or $\meph$). 
   \smallskip
  
 
@@ -2641,90 +2683,90 @@ apply admissible weakening to the subderivation $N$.
            \toplusl
             {\etapa{z_1}{~[\tinl{z_1}/z]N}{A^+_\mlvl}}
             {\etapa{z_2}{~[\tinr{z_2}/z]N}{B^+_\mlvl}}$
-\smallskip
+% \smallskip
 
-$N$ is a derivation 
-$\foc{\Psi}{\tackon{\Theta}{z{:}\susp{A^+_\mlvl \oplus B^+_\mlvl}}}{U}$.
-By $\oplus_L$, it suffices to show 
-$\foc{\Psi}{\tackon{\Theta}{A^+_\mlvl}}{U}$
-and
-$\foc{\Psi}{\tackon{\Theta}{B^+_\mlvl}}{U}$; we will show the first, as the
-two cases are symmetric. 
-\smallskip
+% $N$ is a derivation 
+% $\foc{\Psi}{\tackon{\Theta}{z{:}\susp{A^+_\mlvl \oplus B^+_\mlvl}}}{U}$.
+% By $\oplus_L$, it suffices to show 
+% $\foc{\Psi}{\tackon{\Theta}{A^+_\mlvl}}{U}$
+% and
+% $\foc{\Psi}{\tackon{\Theta}{B^+_\mlvl}}{U}$; we will show the first, as the
+% two cases are symmetric. 
+% \smallskip
 
-We construct a context $\Xi_1$ that matches $z_1{:}\susp{A^+_\mlvl}$
-such that $\tackon{\Theta}{z_1{:}\islvl{\susp{A^+_\mlvl}}}$ matches
-$\frameoff{\Theta_1}{\Xi}$. The frame $\Theta_1$ is either 
-$\Theta$ (if $\mlvl$ is $\mtrue$ or $\meph$) or it is $\Theta$
-plus an additional variable declaration $z_1{:}\islvl{\susp{A^+_\mlvl}}$ (if
-$\mlvl$ is $\mpers$). In either case, $N$ is also a derivation
-of $\foc{\Psi}{\tackon{\Theta_1}{z{:}\susp{A^+_\mlvl \oplus B^+_\mlvl}}}{U}$,
-either immediately or by by admissible weakening.
-\smallskip
+% We construct a context $\Xi_1$ that matches $z_1{:}\susp{A^+_\mlvl}$
+% such that $\tackon{\Theta}{z_1{:}\islvl{\susp{A^+_\mlvl}}}$ matches
+% $\frameoff{\Theta_1}{\Xi}$. The frame $\Theta_1$ is either 
+% $\Theta$ (if $\mlvl$ is $\mtrue$ or $\meph$) or it is $\Theta$
+% plus an additional variable declaration $z_1{:}\islvl{\susp{A^+_\mlvl}}$ (if
+% $\mlvl$ is $\mpers$). In either case, $N$ is also a derivation
+% of $\foc{\Psi}{\tackon{\Theta_1}{z{:}\susp{A^+_\mlvl \oplus B^+_\mlvl}}}{U}$,
+% either immediately or by by admissible weakening.
+% \smallskip
 
-$\tinl{z_1}$ (that is, $\oplus_{R1}$ followed by ${\it id}^+$) is a
-derivation of $\foc{\Psi}{\Xi_1}{[A^+_\mlvl \oplus B^+_\mlvl]}$.  By
-focal substitution into $N$, we have 
-$\foc{\Psi}{\tackon{\Theta}{z_1{:}\islvl{\susp{A^+_\mlvl}}}}{U}$, and by the
-induction hypothesis on $A^+_\mlvl$ we have 
-$\foc{\Psi}{\tackon{\Theta}{A^+_\mlvl}}{U}$ as required.
-\smallskip
+% $\tinl{z_1}$ (that is, $\oplus_{R1}$ followed by ${\it id}^+$) is a
+% derivation of $\foc{\Psi}{\Xi_1}{[A^+_\mlvl \oplus B^+_\mlvl]}$.  By
+% focal substitution into $N$, we have 
+% $\foc{\Psi}{\tackon{\Theta}{z_1{:}\islvl{\susp{A^+_\mlvl}}}}{U}$, and by the
+% induction hypothesis on $A^+_\mlvl$ we have 
+% $\foc{\Psi}{\tackon{\Theta}{A^+_\mlvl}}{U}$ as required.
+% \smallskip
 
-\item[--] $\etapa{z}{N}{\exists a{:}\tau. A^+_\mlvl} 
-           = \texistsl{a}
+\item[--] $\etapa{z}{N}{\exists \lf a{:}\tau. A^+_\mlvl} 
+           = \texistsl{\lf a}
               {\etapa{z'}
-                {~[(\texistsr{a}{z'})/z]N}
+                {~[(\texistsr{\lf a}{z'})/z]N}
                 {A^+}}$ 
-\smallskip
+% \smallskip
 
-$N$ is a derivation of 
-$\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{\exists a{:}\tau. A^+_\mlvl}}}}
-  {U}$.
-By $\exists_L$, it suffices to show 
-$\foc{\Psi, a{:}\tau}{\tackon{\Theta}{A^+}}{U}$.
-We construct a context $\Xi$ that matches
-$z'{:}\susp{A^+_\mlvl}$ such that
-$\tackon{\Theta}{z'{:}\islvl{\susp{A^+_\mlvl}}}$ matches
-$\frameoff{\Theta'}{\Xi}$. The frame $\Theta'$ is either $\Theta$
-(if $\mlvl$ is $\mtrue$ or $\meph$) or it is $\Theta$ plus 
-an additional variable declaration $z'{:}\islvl{\susp{A^+_\mlvl}}$
-(if $\mlvl$ is $\mpers$). In either case,
-$N$ is a derivation of 
-$\foc{\Psi, a{:}\tau}
-  {\tackon{\Theta'}{z{:}\islvl{\susp{\exists a{:}\tau. A^+_\mlvl}}}}
-  {U}$ by variable weakening and (possibly) admissible weakening.
+% $N$ is a derivation of 
+% $\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{\exists a{:}\tau. A^+_\mlvl}}}}
+%   {U}$.
+% By $\exists_L$, it suffices to show 
+% $\foc{\Psi, a{:}\tau}{\tackon{\Theta}{A^+}}{U}$.
+% We construct a context $\Xi$ that matches
+% $z'{:}\susp{A^+_\mlvl}$ such that
+% $\tackon{\Theta}{z'{:}\islvl{\susp{A^+_\mlvl}}}$ matches
+% $\frameoff{\Theta'}{\Xi}$. The frame $\Theta'$ is either $\Theta$
+% (if $\mlvl$ is $\mtrue$ or $\meph$) or it is $\Theta$ plus 
+% an additional variable declaration $z'{:}\islvl{\susp{A^+_\mlvl}}$
+% (if $\mlvl$ is $\mpers$). In either case,
+% $N$ is a derivation of 
+% $\foc{\Psi, a{:}\tau}
+%   {\tackon{\Theta'}{z{:}\islvl{\susp{\exists a{:}\tau. A^+_\mlvl}}}}
+%   {U}$ by variable weakening and (possibly) admissible weakening.
 
-\smallskip
-$\texistsr{a}{z'}$ (that is, $\exists_R$ followed by 
-an instance of ${\it id}^+$) is a derivation of 
-$\foc{\Psi, a{:}\tau}{\Xi}{[A^+_\mlvl]}$. By focal 
-substitution into $N$, we have a derivation of 
-$\foc{\Psi, a{:}\tau}{\tackon{\Theta}{z'{:}\islvl{\susp{A^+_\mlvl}}}}{U}$,
-and by the induction hypothesis on $A^+_\mlvl$ we have
-$\foc{\Psi, a{:}\tau}{\tackon{\Theta}{A^+}}{U}$ as required.
+% \smallskip
+% $\texistsr{a}{z'}$ (that is, $\exists_R$ followed by 
+% an instance of ${\it id}^+$) is a derivation of 
+% $\foc{\Psi, a{:}\tau}{\Xi}{[A^+_\mlvl]}$. By focal 
+% substitution into $N$, we have a derivation of 
+% $\foc{\Psi, a{:}\tau}{\tackon{\Theta}{z'{:}\islvl{\susp{A^+_\mlvl}}}}{U}$,
+% and by the induction hypothesis on $A^+_\mlvl$ we have
+% $\foc{\Psi, a{:}\tau}{\tackon{\Theta}{A^+}}{U}$ as required.
 
-\smallskip
+% \smallskip
 
-\item[--] $\etapa{z}{N}{t \doteq s} 
-           = {\sf fn}~ \sigma \Rightarrow [\tunifr/z](\sigma{N})$
-\smallskip
+\item[--] $\etapa{z}{N}{\lf{t} \doteq_\tau \lf{s}} 
+           = \textsc{unif}\,({\sf fn}~ \lf\sigma \Rightarrow [\tunifr/z](\lf\sigma{N}))$
+% \smallskip
 
-$N$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{t
-        \doteq s}}}}{U}$, and by $\doteq_L$, it suffices to show, for
-an arbitrary $\Psi' \vdash \sigma : \Psi$ such that $\sigma{t} =
-\sigma{s}$, that
-$\foc{\Psi'}{\tackon{\sigma\Theta}{\cdot}}{\sigma{U}}$.  We construct
-a context $\Xi$ containing just the persistent variable declarations in
-$\tackon{\sigma\Theta}{\cdot}$ ($\Xi$ therefore matches $\cdot$), and
-have that $\tackon{\sigma\Theta}{\cdot}$ matches
-$\frameoff{\sigma\Theta}{\Xi}$.
+% $N$ is a derivation of $\foc{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{t
+%         \doteq s}}}}{U}$, and by $\doteq_L$, it suffices to show, for
+% an arbitrary $\Psi' \vdash \sigma : \Psi$ such that $\sigma{t} =
+% \sigma{s}$, that
+% $\foc{\Psi'}{\tackon{\sigma\Theta}{\cdot}}{\sigma{U}}$.  We construct
+% a context $\Xi$ containing just the persistent variable declarations in
+% $\tackon{\sigma\Theta}{\cdot}$ ($\Xi$ therefore matches $\cdot$), and
+% have that $\tackon{\sigma\Theta}{\cdot}$ matches
+% $\frameoff{\sigma\Theta}{\Xi}$.
 
-Because $\sigma{t} = \sigma{s}$, $\tunifr$ (that is, the derivation
-consisting of ${\doteq}_R$) is a derivation of
-$\foc{\Psi'}{\Xi}{[\sigma{t} \doteq \sigma{s}]}$.  The result then
-follows by focal substitution into $\sigma{N}$, the derivation of
-$\foc{\Psi}{\tackon{\sigma\Theta}{z{:}\islvl{\susp{\sigma{t} \doteq
-        \sigma{s}}}}}{U}$ obtained from $N$ by variable substitution.
+% Because $\sigma{t} = \sigma{s}$, $\tunifr$ (that is, the derivation
+% consisting of ${\doteq}_R$) is a derivation of
+% $\foc{\Psi'}{\Xi}{[\sigma{t} \doteq \sigma{s}]}$.  The result then
+% follows by focal substitution into $\sigma{N}$, the derivation of
+% $\foc{\Psi}{\tackon{\sigma\Theta}{z{:}\islvl{\susp{\sigma{t} \doteq
+%         \sigma{s}}}}}{U}$ obtained from $N$ by variable substitution.
 
 \end{itemize}
 
@@ -2756,94 +2798,94 @@ $\foc{\Psi}{\tackon{\sigma\Theta}{z{:}\islvl{\susp{\sigma{t} \doteq
 
 \item[--] $\etana{N}{{\ocircle}A^+} 
            = \tlaxr{[N](\tlaxl{\etapa{z}{\tfocusr{z}}{A^+}})}$
-\smallskip
+% \smallskip
 
-$N$ is a derivation of 
-$\foc{\Psi}{\Delta}{\islvl{\susp{{\ocircle}A^+}}}$, where
-$\mlvl$ is $\mtrue$ or $\mlax$.
-By ${\ocircle}_R$, it suffices to show $\foc{\Psi}{\Delta}{\islax{A^+}}$.
-We construct the empty (except for persistent resources) 
-frame $\Theta$ such that 
-$\tackon{\Theta}{z{:}\istrue{\susp{A^+}}}$ matches $z{:}\susp{A^+}$
-and $\Delta$ matches $\frameoff{\Theta}{\Delta}$. 
-\smallskip
+% $N$ is a derivation of 
+% $\foc{\Psi}{\Delta}{\islvl{\susp{{\ocircle}A^+}}}$, where
+% $\mlvl$ is $\mtrue$ or $\mlax$.
+% By ${\ocircle}_R$, it suffices to show $\foc{\Psi}{\Delta}{\islax{A^+}}$.
+% We construct the empty (except for persistent resources) 
+% frame $\Theta$ such that 
+% $\tackon{\Theta}{z{:}\istrue{\susp{A^+}}}$ matches $z{:}\susp{A^+}$
+% and $\Delta$ matches $\frameoff{\Theta}{\Delta}$. 
+% \smallskip
 
-$\tfocusr{z}$ (that is, ${\it focus}_R$ followed by ${\it id}^+$) is
-a derivation of 
-$\foc{\Psi}{\tackon{\Theta}{z{:}\istrue{\susp{A^+}}}}{\islax{A^+}}$. 
-By the induction hypothesis on $A^+$, we have
-$\foc{\Psi}{\tackon{\Theta}{A^+}}{\islax{A^+}}$, and 
-by rule ${\ocircle}_L$ we then have
-$\foc{\Psi}{\tackon{\Theta}{[{\ocircle}A^+]}}{\islax{A^+}}$.
-The result follows by focal substitution out of $N$.
-\smallskip
+% $\tfocusr{z}$ (that is, ${\it focus}_R$ followed by ${\it id}^+$) is
+% a derivation of 
+% $\foc{\Psi}{\tackon{\Theta}{z{:}\istrue{\susp{A^+}}}}{\islax{A^+}}$. 
+% By the induction hypothesis on $A^+$, we have
+% $\foc{\Psi}{\tackon{\Theta}{A^+}}{\islax{A^+}}$, and 
+% by rule ${\ocircle}_L$ we then have
+% $\foc{\Psi}{\tackon{\Theta}{[{\ocircle}A^+]}}{\islax{A^+}}$.
+% The result follows by focal substitution out of $N$.
+% \smallskip
 
 \item[--] $\etana{N}{A^+ \lefti B^-_\mlvl}
            = \tlaml{(\etapa{z}{~\etana{[N](\tappl{z}{\tnil})}{B^-_\mlvl}}{A^+})}$
 \item[--] $\etana{N}{A^+ \righti B^-_\mlvl}
            = \tlamr{(\etapa{z}{~\etana{[N](\tappr{z}{\tnil})}{B^-_\mlvl}}{A^+})}$
-\smallskip
-
-$N$ is a derivation of 
-$\foc{\Psi}{\Delta}{\islvl{\susp{A^+ \righti B^-_\mlvl}}}$. By 
-${\righti}_R$, it suffices to show $\foc{\Psi}{\Delta, A^+}{B^-_\mlvl}$.
-We construct a frame $\Theta$ with $\Delta$'s persistent resources and 
-a hole to the left of the variable declaration $z{:}\istrue{\susp{A^+}}$; therefore,
-$\mkconj{\Delta}{z{:}\istrue{\susp{A^+}}}$ matches 
-$\frameoff{\Theta}{\Delta}$.
-
-% empty (except for persistent resources)
-%frame $\Theta$ such that $\tackon{}{}$
 % \smallskip
+
+% $N$ is a derivation of 
+% $\foc{\Psi}{\Delta}{\islvl{\susp{A^+ \righti B^-_\mlvl}}}$. By 
+% ${\righti}_R$, it suffices to show $\foc{\Psi}{\Delta, A^+}{B^-_\mlvl}$.
+% We construct a frame $\Theta$ with $\Delta$'s persistent resources and 
+% a hole to the left of the variable declaration $z{:}\istrue{\susp{A^+}}$; therefore,
+% $\mkconj{\Delta}{z{:}\istrue{\susp{A^+}}}$ matches 
+% $\frameoff{\Theta}{\Delta}$.
+
+% % empty (except for persistent resources)
+% %frame $\Theta$ such that $\tackon{}{}$
+% % \smallskip
+
+% % $\tappr{z}{\tnil}$ (that is, ${\righti}_R$ followed by ${\it id}^+$ and
+% % ${\it id}^-$) is a derivation of 
+% % $\foc{\Psi}{[A^+ \righti B^-_\mlvl],\Xi}{\islvl{\susp{B^-_\mlvl}}}$.
+% % By focal substitution out of $N$, we have
+% % $\foc{\Psi}{\tackon{\Theta}{x{:}\istrue{\susp{A^+}}}}
+% % {\islvl{\susp{B^-_\mlvl}}}$
 
 % $\tappr{z}{\tnil}$ (that is, ${\righti}_R$ followed by ${\it id}^+$ and
 % ${\it id}^-$) is a derivation of 
-% $\foc{\Psi}{[A^+ \righti B^-_\mlvl],\Xi}{\islvl{\susp{B^-_\mlvl}}}$.
-% By focal substitution out of $N$, we have
-% $\foc{\Psi}{\tackon{\Theta}{x{:}\istrue{\susp{A^+}}}}
-% {\islvl{\susp{B^-_\mlvl}}}$
+% $\foc{\Psi}{\tackon{\Theta}{[A^+ \righti B^-_\mlvl]}}{\islvl{\susp{B^-_\mlvl}}}$.
+% By focal substitution out of $N$, we have a derivation of 
+% $\foc{\Psi}{\Delta, z{:}\istrue{\susp{A^+}}}{\islvl{\susp{B^-_\mlvl}}}$,
+% by the induction hypothesis on $B^-_\mlvl$ we have
+% $\foc{\Psi}{\Delta, z{:}\istrue{\susp{A^+}}}{B^-_\mlvl}$, and
+% by the induction hypothesis on $A^+$ we have
+% $\foc{\Psi}{\Delta, A^+}{B^-_\mlvl}$ as required.
 
-$\tappr{z}{\tnil}$ (that is, ${\righti}_R$ followed by ${\it id}^+$ and
-${\it id}^-$) is a derivation of 
-$\foc{\Psi}{\tackon{\Theta}{[A^+ \righti B^-_\mlvl]}}{\islvl{\susp{B^-_\mlvl}}}$.
-By focal substitution out of $N$, we have a derivation of 
-$\foc{\Psi}{\Delta, z{:}\istrue{\susp{A^+}}}{\islvl{\susp{B^-_\mlvl}}}$,
-by the induction hypothesis on $B^-_\mlvl$ we have
-$\foc{\Psi}{\Delta, z{:}\istrue{\susp{A^+}}}{B^-_\mlvl}$, and
-by the induction hypothesis on $A^+$ we have
-$\foc{\Psi}{\Delta, A^+}{B^-_\mlvl}$ as required.
-
-\smallskip
+% \smallskip
 
 \item[--] $\etana{N}{\top} = \top$ 
 \item[--] $\etana{N}{A^-_\mlvl \with B^-_\mlvl}
            = \twithr
               {(\etana{[N](\tpione{\tnil})}{A^-_\mlvl})}
               {(\etana{[N](\tpitwo{\tnil})}{B^-_\mlvl})}$
-\smallskip
+% \smallskip
 
-$N$ is a derivation of 
-$\foc{\Psi}{\Delta}{\islvl{\susp{A^-_\mlvl \with B^-_\mlvl}}}$. By 
-$\with_R$, it suffices to show $\foc{\Psi}{\Delta}{A^-_\mlvl}$
-and $\foc{\Psi}{\Delta}{B^-_\mlvl}$; we will show the first, as the two
-cases are symmetric.
-\smallskip
+% $N$ is a derivation of 
+% $\foc{\Psi}{\Delta}{\islvl{\susp{A^-_\mlvl \with B^-_\mlvl}}}$. By 
+% $\with_R$, it suffices to show $\foc{\Psi}{\Delta}{A^-_\mlvl}$
+% and $\foc{\Psi}{\Delta}{B^-_\mlvl}$; we will show the first, as the two
+% cases are symmetric.
+% \smallskip
 
-We construct the empty (except for persistent resources) frame
-$\Theta$ such that $\Delta$ matches $\frameoff{\Theta}{\Delta}$. 
-$\tpione{\tnil}$ (that is, ${\with}_{R1}$ followed by ${\it id}^-$) is
-a derivation of 
-$\foc{\Psi}{\tackon{\Theta}{[A^-_\mlvl \with B^-_\mlvl]}}
-  {\islvl{\susp{A^-_\mlvl}}}$.
-By focal substitution out of $N$, we have 
-a derivation of $\foc{\Psi}{\Delta}{\islvl{\susp{A^-_\mlvl}}}$, and
-by the induction 
-hypothesis on $A^-_\mlvl$ we have 
- $\foc{\Psi}{\Delta}{A^-_\mlvl}$ as required.
-\smallskip
+% We construct the empty (except for persistent resources) frame
+% $\Theta$ such that $\Delta$ matches $\frameoff{\Theta}{\Delta}$. 
+% $\tpione{\tnil}$ (that is, ${\with}_{R1}$ followed by ${\it id}^-$) is
+% a derivation of 
+% $\foc{\Psi}{\tackon{\Theta}{[A^-_\mlvl \with B^-_\mlvl]}}
+%   {\islvl{\susp{A^-_\mlvl}}}$.
+% By focal substitution out of $N$, we have 
+% a derivation of $\foc{\Psi}{\Delta}{\islvl{\susp{A^-_\mlvl}}}$, and
+% by the induction 
+% hypothesis on $A^-_\mlvl$ we have 
+%  $\foc{\Psi}{\Delta}{A^-_\mlvl}$ as required.
+% \smallskip
 
-\item[--] $\etana{N}{\forall x.A^-_\mlvl}
-           = \tforallr{a}{(\etana{[N](\tforalll{a}{\tnil})}{A^-_\mlvl})}$
+\item[--] $\etana{N}{\forall \lf{a}{:}\tau.A^-_\mlvl}
+           = \tforallr{\lf a}{(\etana{[N](\tforalll{\lf a}{\tnil})}{A^-_\mlvl})}$
 
 \end{itemize}
 
@@ -3286,7 +3328,7 @@ multiplicative, exponential fragment of \ollll}
 \[
 \infer-
 {\foct{\Psi}{\frameoff{\Theta}{x{:}{\uparrow}({\lf t \doteq \lf s})}}
-  {\tfocusl{x}{\tupl{({\sf fn}~ \lf \sigma \Rightarrow \phi(\lf \sigma))}}}
+  {\tfocusl{x}{\tupl{(\textsc{unif}\,({\sf fn}~ \lf \sigma \Rightarrow \phi(\lf \sigma)))}}}
   {U}}
 {\forall(\Psi' \vdash \lf\sigma : \Psi).
  &
@@ -3307,14 +3349,14 @@ multiplicative, exponential fragment of \ollll}
 \subsection{Unfocused admissibility}
 \label{sec:ord-unfocused-admissibility}
 
-Unfocused admissibility has a structure that is unchanged
-from the previous discussion in the proof of the completeness of
-focusing for linear logic (Theorem~\ref{thm:linfoccomplete} in
+Unfocused admissibility has a structure that is unchanged from the
+previous discussion in the proof of the completeness of focusing for
+linear logic (Theorem~\ref{thm:linfoccomplete} in
 Section~\ref{sec:lincorrectness}). In this presentation, as in the
 structural focalization development, we present unfocused
-admissibility primarily on the level of proof terms; the resulting
-presentation is quite dense and would greatly benefit from 
-mechanization, though we leave that for future work. 
+admissibility primarily on the level of proof terms. The resulting
+presentation is quite dense; proofs of this variety really ought to be
+mechanized, though we leave that for future work.
 
 For the most part, there is exactly one unfocused admissibility rule
 for each rule of unfocused \ollll. 
@@ -3417,7 +3459,7 @@ and right-permeable atomic propositions $p^+_\mpers$, $p^+_\meph$, and
 $p^-_\mlax$. Having done so, every positive proposition is mobile, and
 every negative proposition is right-permeable.
 
-Now we have a logical fragment where every positive proposition is is
+Now we have a logical fragment where every positive proposition is 
 mobile and every negative proposition is observed to be
 right-permeable. Consider a derivation
 $\foc{\Psi}{\Delta}{\islax{A^+}}$ where $\Delta$ is stable and
@@ -3502,7 +3544,7 @@ Since the advent of Watkins' observations about the existence of
 hereditary substitution and its application to logical frameworks
 \cite{watkins02concurrent}, the dominant approach to the metatheory of
 logical frameworks has to define proof terms $E$ that have little, if
-any, implicit type structure: just enough that it is possible so that
+any, implicit type structure: just enough so that
 it is possible to define the hereditary substitution function
 $\rsubst{M}{x}{E}$. The work by Martens and Crary goes further,
 treating hereditary substitution as a relation, not a function, so
@@ -3524,10 +3566,14 @@ rather than just an expression of the computational content of the
 theorem. Being able to comfortably conflate the computational content
 of a theorem with its operation on proof terms is the primary
 advantage of the approach taken in this chapter; it avoids a great
-deal of duplicated effort. (The cost is that we lose the ability to
-quantify over proof terms $E$ with the universal and existential
-quantifiers, which is a nontrivial, but hopefully acceptable, loss. This
-point is justified further in Section~\ref{sec:why-not-fully-dependent}.)
+deal of duplicated effort. The cost to this approach is that we cannot
+apply the modern Canonical LF methodology in which we define a proof
+term language that is intrinsically only simply well-typed and then
+overlay a dependent type system on top of it (this is discussed in
+Section~\ref{sec:lf-simpletypesandhsubst} in the context of LF). As we
+discuss further in Section~\ref{sec:why-not-fully-dependent}, this
+turns out not to be a severe limitation given the way we want to use
+\ollll.
 
 It is not obvious how the substitution 
 $\rsubst{M}{x}{E}$ could be defined without accounting for the 
@@ -3543,13 +3589,21 @@ unless $x$ is {\it actually free} in $E$. Therefore, when we try to
 substitute the same $M$ into $\tfuser{V_1}{V_2}$, we are forced to determine
 what judgment $x$ is associated with; if $x$ is associated with a
 linear or ephemeral judgment, we must track which subderivation 
-$x$ is assigned to in order to determine what is to be done next.
+$x$ is assigned to in order to determine what is to be done next. 
 
-It might be possible to bring our development more in line with other
-developments by introducing a new matching construct of substitution
-into contexts, the substitution construct $[\Delta/(x{:}\islvl{A^-})]\Xi$.
-If $\Xi = \tackon{\Theta}{x{:}\islvl{A^-}}$, then this would be the same 
-as $\frameoff{\Theta}{\Delta}$, but if $x$ is not in the variable domain
+Fine-grained tracking of variables during substitution is both very
+inefficient when type theories are implemented as logical frameworks
+and unnatural to represent for proof assistants like Twelf that
+implement a persistent notion of bound variables.  Therefore other
+developments have addressed this problem (see, for example, Cervesato
+et al.~\cite{cervesato99explicit}, Schack-Nielsen and
+Sch\"urmann~\cite{schacknielsen10curry}, and
+Crary~\cite{crary10higher}). It might be possible to bring our
+development more in line with these other developments by introducing
+a new matching construct of substitution into contexts, the
+substitution construct $[\Delta/(x{:}\islvl{A^-})]\Xi$.  If $\Xi =
+\tackon{\Theta}{x{:}\islvl{A^-}}$, then this would be the same as
+$\frameoff{\Theta}{\Delta}$, but if $x$ is not in the variable domain
 of $\Xi$, then $\Xi$ matches $[\Delta/(x{:}\islvl{A^-})]\Xi$.
 \[
 \infer-[{\it rcut}]
@@ -3568,20 +3622,24 @@ Using this formulation of {\it rcut}, it becomes unproblematic to
 define $\rsubst{M}{x}{(\tfuser{V_1}{V_2})}$ to be
 $\tfuser{(\rsubst{M}{x}{V_1})}{(\rsubst{M}{x}{V_2})}$, as we are
 allowed to substitute for $x$ even in terms where the variable cannot
-appear. Using this strategy, it could be possible to describe and
+appear. Using this strategy, it should be possible to describe and
 formalize the development in this chapter with proof terms that do
-nothing more than capture the binding structure of derivations, in the
-style of Crary's LF encoding of linear logic \cite{crary10higher}.
+nothing more than capture the binding structure of derivations.
 
 
-While the above argument suggests that the framing-off operation 
-is {\it inconvenient} to use for specifying the {\it rcut} part
-of cut admissibility, it is clearly adequate. That is not necessarily
-the case for every logic. For instance, to give a focused presentation
-of Reed's queue logic \cite{reed09queue}, we would need a matching construct
-$[\Delta/x]\Xi$ that is quite different from the framing-off operation
-$\frameoff{\Delta}{x{:}A^-}$ used to describe the logic's left rules.
-I conjecture that logics where the framing-off operation is adequate
-for the presentation of cut admissibility are the same as those
-logics which can be treated in Belnap's display logic \cite{belnap82display}.
+The above argument suggests that the framing-off operation is {\it
+  inconvenient} to use for specifying the {\it rcut} part of cut
+admissibility, because it forces us to track where the variable ends
+up and direct the computational content of cut admissibility
+accordingly. However, the development in this chapter shows that it is
+clearly possible to define cut admissibility in terms of the
+framing-off operation $\frameoff{\Theta}{\Delta}$. That is not
+necessarily the case for every logic. For instance, to give a focused
+presentation of Reed's queue logic \cite{reed09queue}, we would need a
+matching construct $[\Delta/x]\Xi$ that is quite different from the
+framing-off operation $\frameoff{\Delta}{x{:}A^-}$ used to describe
+the logic's left rules.  I conjecture that logics where the
+framing-off operation is adequate for the presentation of cut
+admissibility are the same as those logics which can be treated in
+Belnap's display logic \cite{belnap82display}.
 
