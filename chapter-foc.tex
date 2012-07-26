@@ -526,6 +526,7 @@ using the $(A)^{m+}$ polarization strategy
 Usually, focused logics are described as having multiple sequent
 forms. For intuitionistic logics, there need to be at least three
 sequent forms:
+\smallskip
 \begin{itemize}
 \item $\mildrfoc{\Gamma}{\Delta}{A^+}$ (the {\it right focus} sequent, where
 the proposition $A^+$ is in focus),
@@ -533,6 +534,7 @@ the proposition $A^+$ is in focus),
 \item $\mildlfoc{\Gamma}{\Delta}{A^-}{C}$ (the {\it left focus} sequent,
 where the proposition $A^-$ is in focus).
 \end{itemize}
+\smallskip
 It is also possible to distinguish a fourth sequent form, the {\it
   stable} sequents, inversion sequents $\mildinv{\Gamma}{\Delta}{C}$
 where no asynchronous inversion remains to be done. This is certainly
@@ -2619,44 +2621,45 @@ follow the judgmental methodology of Martin-L{\"o}f
 \cite{lof96meanings}, such as the analysis by Chang et al.
 \cite{chang03judgmental}, emphasize that the regular hypothetical
 sequent $\seq{\Gamma}{\Delta}{A}$ of linear logic is establishing the
-judgment that $A$ is ephemerally true: we can write
-$\seq{\Gamma}{\Delta}{\iseph{A}}$ to emphasize this. Persistent truth,
-represented by the judgment $\ispers{A}$, is defined as ephemeral
+judgment that $A$ is {\it true}: we can write
+$\seq{\Gamma}{\Delta}{\isconc{A}}$ to emphasize this. The judgment of
+{\it validiy},
+represented by the judgment $\isvalid{A}$, is defined as
 truth using no ephemeral resources, and ${!}A$ is understood as the
-internalization of persistent truth:
+internalization of validity truth:
 \[
-\infer[{\it pers}]
-{\pseq{\Gamma}{\ispers{A}}}
-{\seq{\Gamma}{\cdot}{\iseph{A}}}
+\infer[{\it valid}]
+{\pseq{\Gamma}{\isvalid{A}}}
+{\seq{\Gamma}{\cdot}{\isconc{A}}}
 \quad
 \infer[{!}'_R]
-{\seq{\Gamma}{\Delta}{\iseph{{!}A}}}
-{\Delta = \cdot ~~~ & \pseq{\Gamma}{\ispers{A}}}
+{\seq{\Gamma}{\Delta}{\isconc{{!}A}}}
+{\Delta = \cdot ~~~ & \pseq{\Gamma}{\isvalid{A}}}
 \]
-The ${\it pers}$ rule is invertible, so if we ever need to prove
-$\pseq{\Gamma}{\ispers{A}}$, we may asynchronously transition to proving
-$\seq{\Gamma}{\cdot}{\iseph{A}}$. This observation is used to explain
-why we don't normally consider persistent truth on the right in linear
-logic (we consider it on the left, of course, as all the propositions
-of $\Gamma$ are judged as being persistently true). Our more familiar
+The ${\it valid}$ rule is invertible, so if we ever need to prove
+$\pseq{\Gamma}{\isvalid{A}}$, we may asynchronously transition to proving
+$\seq{\Gamma}{\cdot}{\isconc{A}}$. This observation is used to explain
+why we don't normally consider validity on the right in linear
+logic. Our more familiar
 rule for ${!}_R$ is derivable using these two rules:
 \[
 \infer[{!}'_R]
-{\Gamma; \Delta \vdash {!}\iseph{A} \mathstrut}
+{\Gamma; \Delta \vdash {!}\isconc{A} \mathstrut}
 {\Delta = \cdot
  &
- \infer[{\it pers}]
- {\Gamma \vdash \ispers{A} \mathstrut}
- {\Gamma; \cdot \vdash \iseph{A}} \mathstrut}
+ \infer[{\it valid}]
+ {\Gamma \vdash \isvalid{A} \mathstrut}
+ {\Gamma; \cdot \vdash \isconc{A}} \mathstrut}
 \]
 
 Note that the ${!}'_R$ rule is not invertible,
 because it forces the linear context to be empty, which means ${!}$
-must be positive. The ${\it pers}$
+must be positive. The ${\it valid}$
 rule, on the other hand, is invertible and so naturally negative,
 because it represents the invertible step of deciding to prove that
-$A$ is {\it persistently} true by proving that it is {\it ephemerally}
-true (in a context with no ephemeral resources). This combination of
+$A$ is {\it valid} (true without recourse to any ephemeral resources)
+by proving that it is {\it true}
+(in a context with no ephemeral resources). This combination of
 positive and negative actions explains why ${!}A^-$ is a positive
 proposition with a negative subformula, and similarly explains why we
 must break focus when we reach ${!}A$ on the right and why we must
@@ -2701,12 +2704,15 @@ In adjoint logic, persistent propositions $X$ appear in the
 persistent context $\Gamma$ and as the succedents of sequents
 $\pseq{\Gamma}{X}$, whereas linear propositions $A$ appear in
 the linear context $\Delta$ and as the succedents of sequents
-$\seq{\Gamma}{\Delta}{A}$. A fragment of the logic is shown in
+$\seq{\Gamma}{\Delta}{A}$. Going back to our previous dicussion,
+this means that persistent propositions are only ever judged
+to be valid, and that linear propositions are only ever judged
+to be true. A fragment of the logic is shown in
 Figure~\ref{fig:fragment-adjoint}.  Note the similarity between the
 $G_L$ rule and our unfocused ${\it copy}$ rule, as well as the
 similarity between $F_R$ and $G_R$ in
 Figure~\ref{fig:fragment-adjoint} and the rules ${!}_R$ and ${\it
-  pers}$ in the previous discussion.  Linear logic is recovered as a
+  valid}$ in the previous discussion.  Linear logic is recovered as a
 fragment of adjoint logic by removing all of the persistent
 propositions except for $GA$; the usual ${!}A$ is then definable as
 $FGA$.\footnote{Lax logic, on the other hand, is recovered by removing

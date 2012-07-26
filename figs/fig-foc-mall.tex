@@ -21,8 +21,8 @@
 {\foct{\Psi}{\tackon{\Theta}{z{:}\islvl{\susp{p^+_\mlvl}}}}{N}{U}}
 \quad
 \infer[{\it id}^+]
-{\foct{\Psi}{z{:}\langle A^+ \rangle}{z}{[A^+]}}
-{}
+{\foct{\Psi}{\Delta}{z}{[A^+]}}
+{\Delta~\mbox{\it matches}~z{:}\langle A^+ \rangle \mathstrut}
 \]
 \vspace{-5pt}
 \[
@@ -31,8 +31,8 @@
 {\foct{\Psi}{\Delta}{N}{\islvl{\susp{p^-_\mlvl}}}}
 \quad
 \infer[{\it id}^-]
-{\foct{\Psi}{[A^-]}{\tnil}{\islvl{\susp{A^-}}}}
-{}
+{\foct{\Psi}{\Delta}{\tnil}{\islvl{\susp{A^-}}}}
+{\Delta~\mbox{\it matches}~[ A^- ] \mathstrut}
 \]
 
 \medskip
@@ -70,7 +70,7 @@
 \[
 \infer[{\uparrow}_R]
 {\foct{\Psi}{\Delta}{\tupr{N}}{{\uparrow}A^+}}
-{\foct{\Psi}{\Delta}{N}{\istrue{A^+}}}
+{\foct{\Psi}{\Delta}{N}{\isconc{A^+}}}
 \quad
 \infer[{\uparrow}_L]
 {\foct{\Psi}{\frameoff{\Theta}{[{\uparrow}A^+]}}{\tupl{N}}{U}}
@@ -93,8 +93,8 @@
 {\it Multiplicative connectives}
 \[
 \infer[{\one}_R]
-{\foct{\Psi}{\matchunit}{\toner}{[\one]}}
-{}
+{\foct{\Psi}{\Delta}{\toner}{[\one]}}
+{\Delta~\mbox{\it matches}~\matchunit \mathstrut}
 \quad
 \infer[{\one}_L]
 {\foct{\Psi}{\frameoff{\Theta}{\one}}{\tonel{N}}{U}}
@@ -122,7 +122,9 @@
 \infer[{\lefti}_L]
 {\foct{\Psi}{\frameoff{\Theta}{\matchconj{\Delta_A}{[A \lefti B]}}}
    {\tappl{V}{\Sp}}{U}}
-{\foct{\Psi}{\tackon{\Theta}{[B]}}{\Sp}{U}}
+{\foct{\Psi}{\Delta_A}{V}{[A^+]}
+ &
+ \foct{\Psi}{\tackon{\Theta}{[B]}}{\Sp}{U}}
 \]
 \vspace{-5pt}
 \[

@@ -3,43 +3,44 @@
 
 \[
 \infer[{\exists}_{R}]
-{\foct{\Psi}{\Delta}{\texistsr{t}{V}}{[\exists a{:}\tau.A^+]}}
-{\Psi \vdash t : \tau
+{\foct{\Psi}{\Delta}{\texistsr{t}{V}}{[\exists \lf{a}{:}\tau.A^+]}}
+{\Psi \vdash \lf{t} : \tau
  &
- \foct{\Psi}{\Delta}{V}{[[t/a]A^+]}}
+ \foct{\Psi}{\Delta}{V}{[\lf{[t/a]}A^+]}}
 \quad
 \infer[{\exists}_L]
-{\foct{\Psi}{\frameoff{\Theta}{\exists a{:}\tau.A^+}}{\texistsl{a}{N}}{U}}
-{\foct{\Psi, a{:}\tau}{\tackon{\Theta}{A^+}}{N}{U}}
+{\foct{\Psi}{\frameoff{\Theta}{\exists \lf{a}{:}\tau.A^+}}{\texistsl{a}{N}}{U}}
+{\foct{\Psi, \lf{a}{:}\tau}{\tackon{\Theta}{A^+}}{N}{U}}
 \]
 \vspace{-5pt}
 \[
 \infer[{\doteq}_R]
-{\foct{\Psi}{\cdot}{\phi}{t \doteq t}}
-{}
+{\foct{\Psi}{\Delta}{\tunifr}{\lf{t} \doteq_\tau \lf{t}}}
+{\Delta~\mbox{\it matches}~\cdot \mathstrut}
 \quad
 \infer[{\doteq}_L]
-{\foct{\Psi}{\frameoff{\Theta}{t \doteq s}}{\phi}{U}}
-{\forall(\Psi' \vdash \sigma : \Psi).
+{\foct{\Psi}{\frameoff{\Theta}{\lf{t} \doteq_\tau \lf{s}}}
+  {\textsc{unif}\,({\sf fn}\,\lf\sigma \Rightarrow \phi(\lf \sigma))}{U}}
+{\forall(\Psi' \vdash \lf\sigma : \Psi).
  &
- \sigma t = \sigma s
+ \lf{\sigma t} = \lf{\sigma s}
  &
  \longrightarrow
  &
- \foct{\Psi'}{\tackon{\sigma\Theta}{\cdot}}{\phi(\sigma)}{\sigma U}
+ \foct{\Psi'}{\tackon{\lf\sigma\Theta}{\cdot}}{\phi(\lf\sigma)}{\lf\sigma U}
  }
 \]
 \vspace{-5pt}
 \[
 \infer[\forall_R]
-{\foct{\Psi}{\Delta}{\tforallr{a}{N}}{\forall a{:}\tau.A^-}}
-{\foct{\Psi, a{:}\tau}{\Delta}{N}{A^-}}
+{\foct{\Psi}{\Delta}{\tforallr{\lf a}{N}}{\forall \lf a{:}\tau.A^-}}
+{\foct{\Psi, \lf a{:}\tau}{\Delta}{N}{A^-}}
 \quad
 \infer[{\forall}_L]
-{\foct{\Psi}{\frameoff{\Theta}{[\forall a{:}\tau.A^-]}}{\tforalll{t}{\Sp}}{U}}
-{\Psi \vdash t : \tau
+{\foct{\Psi}{\frameoff{\Theta}{[\forall \lf a{:}\tau.A^-]}}{\tforalll{\lf t}{\Sp}}{U}}
+{\Psi \vdash \lf t : \tau
  &
- \foct{\Psi}{\tackon{\Theta}{[[t/a]A^-]}}{\Sp}{U}}
+ \foct{\Psi}{\tackon{\Theta}{[\lf{[t/a]}A^-]}}{\Sp}{U}}
 \]
 
 

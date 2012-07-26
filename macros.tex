@@ -28,6 +28,8 @@
 
 % Provides a draft mark at the top of the document. 
 
+\definecolor{grayout}{rgb}{.8,.8,.8}
+
 \definecolor{lfblue}{rgb}{.5,.2,0}
 \newcommand{\lf}[1]{\textcolor{lfblue}{\ensuremath{{#1}}}}
 
@@ -47,6 +49,9 @@
 \newcommand{\rowan}{${\lambda}^{\ocircle}$}
 
 \newcommand{\mb}{Coq}
+
+\renewcommand{\labelitemi}{$\ast$}
+
 
 
 % Theorems
@@ -81,11 +86,17 @@
 \newcommand{\gnab}{\mbox{\textexclamdown}}
 \newcommand{\scriptgnab}{\mbox{\scriptsize{\textexclamdown}}}
 
+\newcommand{\mconc}{{\it true}}
+\newcommand{\mvalid}{{\it valid}}
+
 \newcommand{\mlax}{{\it lax}}
 \newcommand{\mtrue}{{\it ord}}
 \newcommand{\meph}{{\it eph}}
 \newcommand{\mpers}{{\it pers}}
 \newcommand{\mlvl}{{\it lvl}}
+
+\newcommand{\isconc}[1]{{#1}\,{\mconc}}
+\newcommand{\isvalid}[1]{{#1}\,{\mvalid}}
 
 \newcommand{\islax}[1]{{#1}\,{\mlax}}
 \newcommand{\istrue}[1]{{#1}\,{\mtrue}}
@@ -125,7 +136,7 @@
 
 
 \newcommand{\tfocusr}[1]{{#1}}
-\newcommand{\tfocusl}[2]{{#1} \circ {#2}}
+\newcommand{\tfocusl}[2]{{#1} \cdot {#2}}
 \newcommand{\tetan}[1]{\langle {#1} \rangle}
 \newcommand{\tetapp}[2]{\langle {#1} \rangle_p . {#2} }
 \newcommand{\tetapl}[2]{\langle {#1} \rangle_l . {#2} }
@@ -178,7 +189,7 @@
 \newcommand{\oiseq}[2]{\oseq{#1}{\cdot}{/{#2}/}{\islvl{#2}}}
 \newcommand{\orseq}[4]{\oseq{#1}{#2}{{#3}}{\islvl{#4}}}
 \newcommand{\orfseq}[4]{\ofirstseq{\Psi}{#1}{#2}{{#3}}{\islvl{#4}}}
-\newcommand{\otseq}[4]{\oseq{#1}{#2}{{#3}}{\istrue{#4}}}
+\newcommand{\otseq}[4]{\oseq{#1}{#2}{{#3}}{\isconc{#4}}}
 \newcommand{\olseq}[5]{\oseq{#1}{#2}{{#3}/{#4}/{#5}}{U}}
 \newcommand{\olfseq}[5]{\ofirstseq{\Psi}{#1}{#2}{{#3}/{#4}/{#5}}{U}}
 \newcommand{\opseq}[4]{\oseq{#1}{#2}{{#3},{#4}}{U}}
@@ -208,7 +219,7 @@
 \newcommand{\etana}[2]{\eta_{#2}({#1})}
 \newcommand{\etapa}[3]{\eta_{#3}({#1}.{#2})}
 
-\newcommand{\subst}[2]{{#1} \bullet {#2}}
+\newcommand{\subst}[2]{{#1} \circ {#2}}
 \newcommand{\rsubsta}[4]{\llbracket {#1}/{#2} \rrbracket^{#4} {#3}}
 \newcommand{\lsubsta}[3]{\llbracket {#1} \rrbracket^{#3} {#2}}
 \newcommand{\rsubst}[3]{\rsubsta{#1}{#2}{#3}{}}

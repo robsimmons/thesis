@@ -23,12 +23,12 @@
 \]
 \[
 \infer[{\doteq}_R]
-{\orfseq{\Gamma}{\Delta}{\Omega}{\lf{t} \doteq \lf{s}}}
+{\orfseq{\Gamma}{\Delta}{\Omega}{\lf{t} \doteq_\tau \lf{t}}}
 {}
 \]
 \[
 \infer[{\doteq}_L]
-{\olfseq{\Gamma}{\Delta}{\Omega_L}{\lf{t} \doteq \lf{s}}{\Omega_R}}
+{\olfseq{\Gamma}{\Delta}{\Omega_L}{\lf{t} \doteq_\tau \lf{s}}{\Omega_R}}
 {\forall(\Psi' \vdash \lf{\sigma} : \Psi). 
  &
  \lf{\sigma t} = \lf{\sigma s}
