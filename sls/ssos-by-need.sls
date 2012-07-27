@@ -13,4 +13,4 @@ ev/susp':   eval X * susp' X E
 ev/susp1':  retn V * cont (bind1' X) * $blackhole' X
              >-> {retn V * !bind' X V}.
 
-ev/bind':   eval E * !bind' E V >-> {retn V}.
+ev/bind':   eval X * !bind' X V >-> {retn V}.

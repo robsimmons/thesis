@@ -6,6 +6,7 @@ pdflatex thesis > /dev/null
 bibtex thesis
 pdflatex thesis > /dev/null
 pdflatex thesis > /dev/null
+scp thesis.pdf typesafety.net:/home/www/www/thesis/thesis.pdf
 
 # Page count
 scp typesafety.net:/home/www/www/thesis/pages.data pages-tmp.data > /dev/null
