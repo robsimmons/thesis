@@ -2,7 +2,7 @@
 \label{chapter-approx}
 
 The abstract interpretation of programs relates the exact semantics of
-a programming language to a finite approximation of those semantics. A
+a programming language to a finite approximation of the semantics. A
 general recipe for constructing a sound program analysis is to (1)
 specify the operational semantics of the underlying programming
 language via an interpreter, and (2) specify a terminating
@@ -12,7 +12,7 @@ techniques for constructing approximations (for example, by exhibiting
 a Galois connection between concrete and abstract domains). The
 correctness proof must establish the appropriate relationship between
 the concrete and abstract computations and show that the abstract
-computation terminations. We need to vary both the specification of
+computation terminates. We need to vary both the specification of
 the operational semantics and the form of the approximation in order
 to obtain various kinds of program analyses, sometimes with
 considerable ingenuity.
@@ -23,10 +23,28 @@ interpretation that is based on the approximation of SSOS
 specifications in \sls. We apply logically justified techniques for
 manipulating and approximating SSOS specifications to yield
 approximations that are correct by construction. The resulting
-persistent logical specifications can be interpreted as saturating
-logic programs, generalizing proposals of McAllester and Ganzinger
-\cite{mcallester02complexity,ganzinger02logical} to specifications
-that use higher-order abstract syntax.
+persistent logical specifications can be interpreted and executed as
+saturating logic programs, which makes derived specifications
+executable.
+%, generalizing proposals of McAllester and Ganzinger
+%\cite{mcallester02complexity,ganzinger02logical} to specifications
+%that use higher-order abstract syntax.
+
+The process described in this chapter does not claim to capture or be
+able to derive all possible interesting program analyses. For
+instance, the methadology we describe only derives overapproximations
+(or {\it may-} analyses) that ensure all possible behaviors will be
+reported by the analysis. There is a whole separate class of program
+underapproximations (or {\it must-} analyses) that ensure that if a
+behavior is reported by the analysis it is possible; these are more
+closely associated with bug-finding and we will not consider them here
+\cite{godefroid10compositional}. Instead, we argue for the utility of
+our methadology by deriving two fundamental and rather different
+overapproximation-based analyses: a context-insensitive control flow
+analysis (Section~\ref{sec:0cfa}) and an alias analysis
+(Section~\ref{sec:aliasanalysis}). Van Horn and Marison's related
+``abstracting abstract machines'' methadology, described in
+Section~\ref{sec:approximately-related}, suggests many more examples.
 
 \section{Saturating logic programming}
 
@@ -55,52 +73,74 @@ for any step $(\Psi; \Delta) \leadsto_\Sigma (\Psi'; \Delta')$, it is
 the case that $\Psi$ and $\Psi'$ are the same, $x{:}\susp{p^+_\mpers}
 \in \Delta'$ implies $x{:}\susp{p^+_\mpers} \in \Delta$, and
 $x{:}\ispers{A^-} \in \Delta'$ implies $x{:}\ispers{A^-} \in
-\Delta$. This means that a signatures with a rule that
-  produces new variables by existential quantification, like ${\sf a}
-  \lefti \{ \exists \lf{x}. {\sf b}\lf{(x)} \}$ has no saturated process states
-  where ${\sf a}$ is present. Notions of saturation that can cope with
-  existentially generated parameters are interesting, but are beyond
-  the scope of this thesis.
+\Delta$. This means that a signatures with a rule that produces new
+variables by existential quantification, like ${\sf a} \lefti \{
+\exists \lf{x}. {\sf b}\lf{(x)} \}$ has no saturated process states
+where ${\sf a}$ is present. Notions of saturation that can cope with
+existentially generated parameters are interesting, but are beyond the
+scope of this thesis.
 
-A {\it minimal} saturated process state
-is one with no duplicated propositions; we can compute a process state
-from any saturated process state by removing duplicates. For purely
-persistent specifications and process states, minimal saturated process
-states are unique when they exist: if $(\Psi; \Delta)
-\leadsto^*_\Sigma (\Psi_1; \Delta_1)$ and $(\Psi; \Delta)
-\leadsto^*_\Sigma (\Psi_2; \Delta_2)$ and both $(\Psi_1; \Delta_1)$
-and $(\Psi_2; \Delta_2)$ are saturated, then $(\Psi_1; \Delta_1)$
-and $(\Psi_2; \Delta_2)$ have minimal process states that differ only
-in the names of variables.
+A {\it minimal} saturated process state is one with no duplicated
+propositions; we can compute a minimal process state from any
+saturated process state by removing duplicates. For purely persistent
+specifications and process states, minimal saturated process states
+are unique when they exist: if $(\Psi; \Delta) \leadsto^*_\Sigma
+(\Psi_1; \Delta_1)$ and $(\Psi; \Delta) \leadsto^*_\Sigma (\Psi_2;
+\Delta_2)$ and both $(\Psi_1; \Delta_1)$ and $(\Psi_2; \Delta_2)$ are
+saturated, then $(\Psi_1; \Delta_1)$ and $(\Psi_2; \Delta_2)$ have
+minimal process states that differ only in the names of variables.
 
 Furthermore, if a saturated process state exists for a given initial
 process state, the minimal saturated process state can be computed by
 the usual forward-chaining semantics where only transitions that
-derive ${\it new}$ persistent atomic propositions or equalities $\lf{t}
-\doteq \lf{s}$ are allowed. This forward-chaining logic programming
-interpretation of persistent logic is extremely common; in fact, it is
-what is commonly meant by ``forward-chaining logic programming.'' Just
-as the term {\it persistent logic} was introduced in Chapter 2 to
+derive ${\it new}$ persistent atomic propositions or equalities
+$\lf{t} \doteq \lf{s}$ are allowed. This forward-chaining logic
+programming interpretation of persistent logic is extremely common,
+and is commonly associated with the logic programming language
+Datalog.  A generalization of Datalog formed the basis of McAllester
+and Ganzinger's meta-complexity results: they gave a cost semantics to
+their logic programming language, and then they used that cost
+semantics to argue that many program analyses could be {\it
+  efficiently} implemented as logic programs
+\cite{mcallester02complexity,ganzinger02logical}. Persistent
+\sls~specifications can be seen as an extension of McAllester and
+Ganzinger's language (and, transitively, as a generalization of
+Datalog). We will not deal with cost semantics or efficiency, however,
+as our use of higher-order abstract syntax complicates McAllester and
+Ganzinger's cost semantics substantially.
+
+Just as the term {\it persistent logic} was introduced in Chapter 2 to
 distinguish what is traditionally referred to as intuitionistic logic
 from intuitionistic ordered and linear logic, we will use the term
 {\it saturating logic programming} to distinguish what is
 traditionally referred to as forward-chaining logic programming from
 the forward-chaining logic programming interpretation that makes sense
-for ordered and linear logical specifications.
+for ordered and linear logical specifications. There is a useful
+variant of substructural forward chaining, forward chaining with {\it
+  quiescence} \cite{lopez05monadic}, that acts like saturating logic
+programming on purely-persistent speficiations and like simple
+committed-choice forward chaining on specifications with no persistent
+propositions. We refined this interpretation and gave it a cost
+semantics in \cite{simmons08linear}, but this hybrid interpretation is
+not relevant to the examples in this thesis.
 
 \section{Logical transformation: approximation}
 \label{sec:abstraction}
 
 Our approximation strategy is simple: a signature in an ordered or
 linear logical specification can be approximated by making all atomic
-propositions persistent, and a flat, persistent rule $\forall
-\lf{\overline{x}}. \,A^+ \lefti \{ B^+ \}$ can be further approximated by
-removing premises from $A^+$ and adding conclusions to $B^+$. Of
-particular practical importance are added conclusions that equate the
-parameters introduced by existential quantification with terms: all
-parameters introduced by existential quantification must be dealt with
-as a necessary condition for interpreting a persistent signature as a
-saturating logic program.
+propositions persistent, and a flat rule $\forall
+\lf{\overline{x}}. \,A^+ \lefti \{ B^+ \}$ containing only persistent
+atomic propositions can be further approximated by removing premises
+from $A^+$ and adding conclusions to $B^+$. Of particular practical
+importance are added conclusions that equate the variable introduced
+by existential quantification with concrete terms. The approximation
+procedure doesn't force us to neutralize all such variables in this
+way. However, as we explained above, failing to do so almost ensures
+that the specificiation cannot be run as a saturating logic program,
+and being able to interpret specifications as saturating logic
+programs is a prequesiate for applying the meta-approximation theorem
+(Theorem~\ref{thm:metapprox}).
 
 First, we define what it means for a specification to be an approximate
 version of another specification:
@@ -130,14 +170,15 @@ version of another specification:
 
 \noindent
 While approximation is a program transformation, it is not a
-deterministic one. Even the nondeterministic operationalization
-transformation was just a bit nondeterministic, giving several options
-for operationalizing any given deductive rule. The approximation
-transformation, in contrast, needs explicit information from the user:
-which premises should be removed, and what new conclusions should be
-introduced? While there is value in actually implementing the
-operationalization, defunctionalization, and destination-adding
-transformations, applying approximation requires
+deterministic one: Definition~\ref{def:approxversion} describes a
+whole family of potential approximations. Even the nondeterministic
+operationalization transformation was just a bit nondeterministic,
+giving several options for operationalizing any given deductive
+rule. The approximation transformation, in contrast, needs explicit
+information from the user: which premises should be removed, and what
+new conclusions should be introduced? While there is value in actually
+implementing the operationalization, defunctionalization, and
+destination-adding transformations, applying approximation requires
 intelligence. Borrowing a phrase from Danvy, approximation is a
 candidate for ``mechanization by graduate student'' rather than
 mechanization by computer.
@@ -148,7 +189,7 @@ or a family of states.
 
 \bigskip
 \begin{definition}
-  The persistent process state state $(\Psi_g; \Delta_g)$ is a {\em
+  The persistent process state $(\Psi_g; \Delta_g)$ is a {\em
     generalization} of the process state $(\Psi; \Delta)$ if there is
   a substitution $\Psi_g \vdash \lf{\sigma} : \Psi$ such that, for all
   suspended atomic propositions $p^+_\mlvl = {\sf a}\,\lf{t_1}\ldots \lf{t_n}$
@@ -160,7 +201,7 @@ or a family of states.
 
 One thing we might prove about the relationship between process states
 and their generalizations is that generalizations can {\it simulate}
-the process states they generalize: that is, that if $(\Psi_g;
+the process states they generalize: that is, if $(\Psi_g;
 \Delta_g)$ is a generalization of $(\Psi; \Delta)$ and $(\Psi; \Delta)
 \leadsto_\Sigma (\Psi'; \Delta')$ then $(\Psi_g; \Delta_g)
 \leadsto_{\Sigma_a} (\Psi'_g; \Delta'_g)$ where $(\Psi'_g; \Delta'_g)$
@@ -208,17 +249,11 @@ a saturated process state from that approximate specification
 and approximate initial state, then the saturated process state captures
 all possible future behaviors of the (non-approximate) initial state. 
 
-\begin{figure}
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/pda-pers.sls}
-\caption{Skolemized approximate version of the PDA specificaiton from
-Figure~\ref{fig:pda-lin}}
-\label{fig:pda-pers}
-\end{figure}
 
 
 
 \section{Using approximation}
+
 
 The meta-approximation theorem gives us a way of building abstractions
 from specifications and initial process states: we interpret the
@@ -227,34 +262,52 @@ that initial state. If we can obtain a saturated process state using
 the logic programming interpretation, it is an abstraction of the
 initial process state. It is not always possible to obtain a saturated
 process state using the logic programming interpretation, however:
-rules like 
-$\forall \lf{x}.\,{\sf a}\lf{(x)} \lefti \{ {\sf a}\lf{({\sf s}(x))} \}$ and 
-$\forall \lf{x}.\,{\sf
-  a}\lf{(x)} \lefti \{ \exists \lf{y}. {\sf a}\lf{(y)} \}$ 
-lead to non-termination
-when interpreted as saturating logic programs. Important classes 
-of programs are known to terminate in all cases, such as those in the
-so-called ``Datalog fragment'' where the only terms in the program
-are variables and constants. However, we want to consider programs
-that fall outside of this fragment, which means that we must 
-reason explicitly about termination.
+rules like $\forall \lf{x}.\,{\sf a}\lf{(x)} \lefti \{ {\sf
+  a}\lf{({\sf s}(x))} \}$ and $\forall \lf{x}.\,{\sf a}\lf{(x)} \lefti
+\{ \exists \lf{y}. {\sf a}\lf{(y)} \}$ lead to non-termination when
+interpreted as saturating logic programs. Important classes of
+programs are known to terminate in all cases, such as those in the
+Datalog fragment where the only terms in the program are variables and
+constants. Structured terms (like expressions encoded in the LF type
+${\sf exp}$) fall outside the Datalog fragment. 
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/pda-pers.sls}
+\caption{Skolemized approximate version of the PDA specificaiton from
+Figure~\ref{fig:pda-lin}}
+\label{fig:pda-pers}
+\end{figure}
 
 Consider the destination-passing PDA specification from
 Figure~\ref{fig:pda-lin}. If we simply turn all linear predicates
 persistent, then the ${\sf push}$ rule will lead to non-termination
-because the head $\exists \lf{m}. {\sf stack}\,\lf{x}\,\lf{l}\,\lf{m} \fuse {\sf
-  hd}\,\lf{m}\,\lf{r}$ introduces a new existential parameter $\lf{m}$. 
-We can cope
-by adding a new conclusion $\lf{m} \doteq \lf{t}$, but this means we 
-have to pick a $\lf{t}$.
-The most general starting point for selecting a $\lf{t}$ is to apply
-Skolemization to the rule. By moving the existential quantifier for
-$\lf{m}$ in front of the implicitly quantified $\lf{X}$, $\lf{L}$, $\lf{M}$, 
-and $\lf{R}$, we
-get a Skolem function $\lf{{\sf fm}\,X\,L\,M\,R}$ that takes four
-arguments. Letting $\lf{t} = \lf{{\sf fm}\,X\,L\,M\,R}$ results in the
-\sls~specification/logic program shown in
-Figure~\ref{fig:pda-pers}.
+because the head $\exists \lf{m}. {\sf stack}\,\lf{x}\,\lf{l}\,\lf{m}
+\fuse {\sf hd}\,\lf{m}\,\lf{r}$ introduces a new existential parameter
+$\lf{m}$.  We can cope by adding a new conclusion $\lf{m} \doteq
+\lf{t}$, but this means we have to pick a $\lf{t}$.  The most general
+starting point for selecting a $\lf{t}$ is to apply Skolemization to
+the rule. By moving the existential quantifier for $\lf{m}$ in front
+of the implicitly quantified $\lf{X}$, $\lf{L}$, $\lf{M}$, and
+$\lf{R}$, we get a Skolem function $\lf{{\sf fm}\,X\,L\,M\,R}$ that
+takes four arguments. Letting $\lf{t} = \lf{{\sf fm}\,X\,L\,M\,R}$
+results in the \sls~specification/logic program shown in
+Figure~\ref{fig:pda-pers}. (Remember that, because the specification in 
+Figure~\ref{fig:pda-pers} is purely persistent, we will omit the
+optional \verb|!| annotation described in Section~\ref{sec:prototype},
+writing \verb|hd L M| instead of \verb|!hd L M| and so on.)
+
+Notice that we have effectively taken a specification that freely
+introduces existential quantification (and that therefore {\it
+  definitely} will not terminate when interpreted as a saturating
+logic program) and produced a specification nested terms. But the
+introduction of nested terms takes us outside the Datalog fragment,
+which may also lead to non-termination! This is not as bad as it may
+seem: when we want to treat a specification with nested terms as a
+saturating logic program, it is simply necessary to reason explicitly
+about termination. Giving any finite upper bound on the number of
+derivable facts is a simple and sufficient critera for showing that a
+saturating logic program terminates.
 
 Skolem functions provide a natural starting point for approximations,
 even though the Skolem constant that arises directly from
@@ -281,7 +334,6 @@ the result is equivalent to this specification:
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/pda-pers-approx.sls}
 \smallskip
-
 
 If the initial process state contains a single atomic proposition
 ${\sf hd}\,\lf{d_0}\,\lf{d_1}$ in addition to all the ${\sf left}$ and ${\sf
@@ -324,72 +376,71 @@ can use the meta-approximation result to derive abstractions from
 initial expressions $\obj{e}$ using the saturating logic programming
 interpretation of persistent SSOS specifications.
 
-\begin{figure}
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/dest-env.sls}
-\caption{Alternate environment semantics for CBV evaluation}
-\label{fig:dest-env}
-\end{figure}
+A control flow analysis is a fundamental analysis on functional
+programs, attributed to Shivers \cite{shivers88control}. It is used
+for taking an expression and ``determining for each subexpression a
+hopefully small number of functions that it may evaluate to; thereby
+it will determine where the flow of control may be transferred to in
+the case where the subexpression is the operator of a function
+application'' \cite[p. 142]{nielson05principles}. That is, we want to
+take a program and find, for every subexpression $\obj{e}$ of that
+unevaluated program, all the values $\obj{v}$ that the subexpression
+may evaluate to over the course of evaluating the program to a
+value. Because we are talking about subexpressions of the unevaluated
+program, the answer might not be unique. Consider the evaluation of
+$\obj{(\lambda f\ldots (f\,(\lambda y\ldots)) \ldots (f\,(\lambda
+  z\ldots)) \ldots )\,(\lambda x.x)}$. The function $\obj{\lambda
+  x.x}$ gets bound to $\obj{f}$ and therefore may get called twice,
+once with the argument $\obj{(\lambda y\ldots)}$ and once with the
+argument $\obj{(\lambda z\ldots)}$. The subexpression $\obj{x}$ of
+$\obj{\lambda x.x}$ can therefore evaluate to $\obj{(\lambda
+  y\ldots)}$ in the context of the call $\obj{f\,(\lambda y\ldots)}$
+and to $\obj{(\lambda z\ldots)}$ in the context of the call
+$\obj{f\,(\lambda z\ldots)}$. As a {\it may}-analysis, the output of a
+control flow analysis is required to report both of these
+possibilities.\footnote{This statement assumes that both of the
+  calling sites $\obj{f\,(\lambda y\ldots)}$ and $\obj{f\,(\lambda
+    z\ldots)}$ are reachable: the control flow analysis we derive
+  performs some dead-code analysis, and it may not report that
+  $\obj{x}$ evaluates to $\obj{(\lambda y\ldots)}$, for instnace, if
+  the call $\obj{f\,(\lambda y\ldots)}$ is certain to never occur.}
 
-The starting point for deriving a control flow analysis is the
-environment semantics for call-by-value shown in
-Figure~\ref{fig:dest-env}. It differs from the environment semantics
-shown in Figure~\ref{fig:ssos-by-env} in three ways. First and
-foremost, it is a destination-passing specification instead of an
-ordered abstract machine specification, but that difference is
-accounted for by the destination-adding transformation in Chapter~7.
-A second difference is that the existentially generated parameter $\lf{x}$
-associated with the persistent proposition ${\sf bind}\,\lf{x}\,\lf{v}$ is
-introduced as late as possible (rule ${\sf ev/app2}$ in
-Figure~\ref{fig:dest-env}), not as early as possible (rule ${\sf
-  ev/app1}$ in Figure~\ref{fig:ssos-by-env}). The third difference is
-that there is an extra frame $\lf{\sf app3}$ and an extra rule ${\sf
-  ev/app3}$ that consumes such frames. The $\lf{\sf app3}$ frame is
-an important part of the control flow analysis we derive, but in
-\cite{simmons11logical} the addition of these frames was otherwise
-unmotivated. Based on our discussion of the logical correspondence in
-Chapter~6, we now have a principled account for this extra frame and
-rule: it is precisely the pattern we get from operationalizing a
-natural semantics {\it without} tail-recursion optimization and then
-applying defunctionalization.
+When we {\it use} a control flow analysis, it is relevant that the
+calculation of which subexpressions evaluate to which values is done
+in service of a different goal: namely, determining which functions
+may be called from which calling sites. However, the primary goal of
+control flow analysis is irrelevant to our discussion of deriving
+control flow analyses from SSOS specifications, so we will concentrate
+on the question of subexpressions evaluate to which values. Before we
+begin, however, we will address the issue of what it even means to be
+a (closed) subterm of an expression $\obj{e}$ that has been encoded
+with higher-order abstract syntax into the canonical forms of LF.
 
-In order for us to approximate Figure~\ref{fig:dest-env} to derive a
-finite control flow analysis, our first step is to deal with the
-variables introduced by existential quantification. The variable $\lf{x}$
-introduced in ${\sf ev/app2}$ will be equated with $\lf{{\sf var}(\lambda
-x.E\,x)}$. The new constructor $\lf{\sf var}$ is a greatly simplified
-Skolem function for $\lf{x}$ that only mentions the term $\lf{E}$ with LF type
-${\sf exp} \rightarrow {\sf exp}$ -- the most general Skolem function
-in this setting would have also been dependent on $\lf{V}$, $\lf{D}$, and
-$\lf{D_2}$. Adding $\lf{x} \doteq \lf{{\sf var}(\lambda x.E\,x)}$ 
-as a conclusion to
-the rule ${\sf ev/lam2}$ effectively causes us to associate all
-variables ever passed to an LF function with the {\it function into
-  which that parameter was passed}.
+\subsection{Subexpressions in higher-order abstract syntax}
 
-\begin{figure}[t]
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/dest-cfa-1.sls}
-\caption{A control-flow analysis derived from Figure~\ref{fig:dest-env}}
-\label{fig:dest-cfa-1}
-\end{figure}
-
-The pattern above is an important one in the design of saturating
-forward-chaining logic programs that use higher-order abstract syntax,
-because it is a simple way of getting a handle on the subterms of a
-higher-order term. When given a term $\lf{{\sf a}\,({\sf b}\,{\sf c}\,{\sf
-  c})}$, it is clear that there are three distinct subterms: the entire
-term, $\lf{{\sf b}\,{\sf c}\,{\sf c}}$, and $\lf{{\sf c}}$. Therefore, it is
+When given a term $\lf{{\sf a}\,({\sf b}\,{\sf c}\,{\sf c})}$, it is
+clear that there are three distinct subterms: the entire term,
+$\lf{{\sf b}\,{\sf c}\,{\sf c}}$, and $\lf{{\sf c}}$. Therefore, it is
 meaningful to bound the size of a saturated process state using some
 function that depends on the number of subterms of the original
 term. But what are the subterms of $\lf{{\sf lam}\,(\lambda x.\,{\sf
-  app}\,x\,x)}$?  Because we ensure that we {\it only} substitute terms
-of the form $\lf{{\sf var}(\lambda x.e\,x)}$ into functions of the form
-$\lf{\lambda x.e\,x}$ we can actually answer this question: there are three
-distinct subterms of $\lf{{\sf lam}\,(\lambda x.\,{\sf app}\,x\,x)}$: the
-entire term, $\lf{{\sf app}\,({\sf var}(\lambda x.\,{\sf
-  app}\,x\,x))\,({\sf var}(\lambda x.\,{\sf app}\,x\,x))}$, and $\lf{{\sf
-  var}(\lambda x.\,{\sf app}\,x\,x)}$.  The subterms of any closed term
+    app}\,x\,x)}$? The immediate subterm, $\lf{{\sf app}\,x\,x}$, is
+open; to represent this subterm as a closed LF expression we must
+substitutie an appropriate concrete term for $\lf{x}$ that is uniquely
+identifiable with the site $\lf{(\lambda x.\,{\sf app}\,x\,x)}$ where
+that variable was bound.  Our solution in this section is to create a
+new constant $\lf{\sf var}$ with type $({\sf exp} \rightarrow {\sf
+  exp}) \rightarrow {\sf exp}$ that represents the binding site by
+capturing the entire term as the expression $\lf{{\sf var}(\lambda
+  x.\,{\sf app}\,x\,x)}$. (Another solution, discussed in the next
+section, will be to uniquely tag the lambda expression with a label,
+which has the same effect of allowing us to associate the variable $x$
+with an expresion (the tag) representing the site where it was bound.)
+
+%Because we ensure that we {\it only} substitute terms
+%of the form $\lf{{\sf var}(\lambda x.e\,x)}$ into functions of the form
+%$\lf{\lambda x.e\,x}$ we can actually answer this question:
+The subterms of any closed term
 $\lf{e}$ of LF type ${\sf exp}$ can be enumerated by running this
 saturating logic program starting with the fact ${\sf subterms}\lf{(e)}$,
 where ${\sf subterms}$ is a persistent positive proposition.
@@ -410,19 +461,88 @@ where ${\sf subterms}$ is a persistent positive proposition.
       \{ {\sf subterms}\lf{(e({\sf var}(\lambda x.e\,x)))} \}
 \end{align*}
 The last rule, ${\sf sub/var}$, is redundant: if we ever derive a fact
-of the form ${\sf subterms}\lf{({\sf var}(\lambda x.e\,x))}$, we know that
-we previously derived ${\sf subterms}\lf{({\sf lam}(\lambda x.e\,x))}$ and
-therefore, by the first rule, we have already derived ${\sf
-  subterms}\lf{(e({\sf var}(\lambda x.e\,x))}$.
+of the form ${\sf subterms}\lf{({\sf var}(\lambda x.e\,x))}$, we know
+that we previously derived ${\sf subterms}\lf{({\sf lam}(\lambda
+  x.e\,x))}$ and therefore, by the first rule, we have already derived
+${\sf subterms}\lf{(e({\sf var}(\lambda x.e\,x))}$.  This means that
+we start counting subterms from the outside, and stop (because of
+saturation) when we reach a variable represented by a term $\lf{{\sf
+    var}(\lambda x.e)}$.  The logic program and discussion above imply
+that there are three distinct subterms of $\lf{{\sf lam}\,(\lambda
+  x.\,{\sf app}\,x\,x)}$: the entire term, $\lf{{\sf app}\,({\sf
+    var}(\lambda x.\,{\sf app}\,x\,x))\,({\sf var}(\lambda x.\,{\sf
+    app}\,x\,x))}$, and $\lf{{\sf var}(\lambda x.\,{\sf app}\,x\,x)}$.
 
 
+
+
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/dest-env.sls}
+\caption{Alternate environment semantics for CBV evaluation}
+\label{fig:dest-env}
+\end{figure}
+
+\subsection{Environment semantics}
+
+
+The starting point for deriving a control flow analysis is the
+environment semantics for call-by-value shown in
+Figure~\ref{fig:dest-env}. It differs from the environment semantics
+shown in Figure~\ref{fig:ssos-by-env} in three ways. First and
+foremost, it is a destination-passing specification instead of an
+ordered abstract machine specification, but that difference is
+accounted for by the destination-adding transformation in Chapter~7.
+A second difference is that the existentially generated parameter
+$\lf{x}$ associated with the persistent proposition ${\sf
+  bind}\,\lf{x}\,\lf{v}$ is introduced as late as possible in the
+multi-stage protocol for evaluating an application (rule ${\sf
+  ev/app2}$ in Figure~\ref{fig:dest-env}), not as early as possible
+(rule ${\sf ev/app1}$ in Figure~\ref{fig:ssos-by-env}). The third
+difference is that there is an extra frame $\lf{\sf app3}$ and an
+extra rule ${\sf ev/app3}$ that consumes such frames. The $\lf{\sf
+  app3}$ frame is an important part of the control flow analysis we
+derive, but in \cite{simmons11logical} the addition of these frames
+was otherwise unmotivated. Based on our discussion of the logical
+correspondence in Chapter~6, we now have a principled account for this
+extra frame and rule: it is precisely the pattern we get from
+operationalizing a natural semantics {\it without} tail-recursion
+optimization and then applying defunctionalization.
+
+\subsection{Approximation to 0CFA}
+
+In order for us to approximate Figure~\ref{fig:dest-env} to derive a
+finite control flow analysis, we turn all linear atomic propositions
+persistent and then must deal with the variables introduced by
+existential quantification. The variable $\lf{x}$ introduced in ${\sf
+  ev/app2}$ will be equated with $\lf{{\sf var}(\lambda x.E\,x)}$,
+which is consistent with making $\lf{E\,x}$ -- which is now equal to
+$\lf{E({\sf var}(\lambda x.E\,x))}$ -- a subterm of $\lf E$.  The new
+constructor $\lf{\sf var}$ is also a greatly simplified Skolem
+function for $\lf{x}$ that only mentions the LF term $\lf{E}$; the
+most general Skolem function in this setting would have also been
+dependent on $\lf{V}$, $\lf{D}$, and $\lf{D_2}$. The existentially
+generated variable $\lf x$ was also the first argument to ${\sf bind}$,
+so ${\sf bind}$, as a relation, will now associate binding sites
+and values instead of unique variables and values. 
+
+\begin{figure}[t]
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/dest-cfa-1.sls}
+\caption{A control-flow analysis derived from Figure~\ref{fig:dest-env}}
+\label{fig:dest-cfa-1}
+\end{figure}
 
 The discussion above pertains to the existentially generated variable
 $\lf{x}$ in rule ${\sf ev/app2}$, but we still need some method for
 handling destinations $\lf{d_1}$, $\lf{d_2}$, and $\lf{d_3}$ in ${\sf ev/app1}$,
 ${\sf ev/app2}$, and ${\sf ev/app3}$ (respectively). To this end, we
-need to have in mind the question that we intend to answer with
-control flow analysis. The primary question that such a flow analysis
+need recall the question that we intend to answer with
+control flow analysis. 
+
+
+The primary question that such a flow analysis
 is intended to answer is, ``for any given call site in the source
 program, what are the functions that may be invoked at that
 location?''\footnote{This kind of ``{\it may}-'' analysis, where the
@@ -499,6 +619,8 @@ labels would already be present in the form of source-code positions
 or line numbers. The alias analysis presented next demonstrates the
 use of such labels.
 
+\subsection{Acceptability as a control flow analysis}
+
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-monadic.sls}
@@ -507,6 +629,7 @@ use of such labels.
 \end{figure}
 
 \section{Alias analysis}
+\label{sec:aliasanalysis}
 
 The control flow analysis above was derived from the SSOS
 specification of a language that looked much like the Mini-ML-like
