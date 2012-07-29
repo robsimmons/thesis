@@ -641,6 +641,46 @@ call site $\lf{e}$ only if ${\sf cont}\,\lf{\sf app3}\,\lf{(e({\sf
 state that includes the persistent atomic proposition ${\sf
   eval}\lf{(e_{\it init})}$.
 
+
+The analysis above is a bit informal, however. Following Nielson et
+al., an {\it acceptable control flow analysis} takes the form of two
+functions. The first, $\widehat{\sf C}$, is a function from
+expressions $\obj{e}$ to sets of values $\{\obj{v_1},
+\ldots,\obj{v_n}\}$, and the second, $\widehat{\rho}$, is a function
+from variables $\obj{x}$ to sets of values $\{\obj{v_1},
+\ldots,\obj{v_n}\}$. $\widehat{\sf C}$ and $\widehat{\rho}$ are said
+to represent an acceptable control flow analysis for the expression
+$\obj{e}$ if a coinductively defined judgment $(\widehat{\sf
+  C},\widehat{\rho}) \models \obj{e}$ holds.
+
+We would like to interpret a saturated program state $\Delta$ as a
+(potentially acceptable) control flow analysis as follows (keeping in
+mind that, given our current interpretation of subterms, $\interp{x} =
+\lf{{\sf var}(\lambda x.\,E\,x)}$ for some $\lf{E}$):
+%
+\smallskip
+%
+\begin{itemize}
+\item $\widehat{\sf C}(\obj{e}) = \{ \obj{v} \mid {\sf retn}\,\interp{v}\,\interp{e} \}$, and
+\item $\widehat{\rho}(\obj{x}) = \{ \obj{v} \mid {\sf bind}\,\interp{x}\,\interp{v} \}$.
+\end{itemize}
+%
+\smallskip
+%
+Directly adapting Nielson et al.'s definition of an acceptable control
+flow analysis from \cite[Table 3.1]{nielson05principles} turns out not
+to work. The control flow analysis we derived in
+Figure~\ref{fig:dest-cfa-2} is rather sensitive to non-termination: if
+we let $\obj{\omega} = \obj{(\lambda x.\,x\,x)\,(\lambda x.\,x\,x)}$,
+then our derived control flow analysis will not analyze the argument
+$\obj{e_2}$ in an expression $\obj{\omega\,e_2}$, nor will it analyze
+the function body $\obj{e}$ in an expression $\obj{(\lambda
+  x.e)\,\omega}$. Nielson et al.'s definition, on the other hand,
+demands that both $\obj{e_2}$ in $\obj{\omega\,e_2}$ and $\obj{e}$ in
+$\obj{(\lambda x.e)\,\omega}$ analyzed. In Nielson et al.'s Exercise
+3.4, they then point out that a modified analysis, which takes order
+of evaluation into account, is possible.
+
 \begin{figure}
 \begin{align*}
 & [{\it var}] & (\widehat{\sf C}, \widehat{\rho}) & \models
@@ -653,97 +693,114 @@ state that includes the persistent atomic proposition ${\sf
   \mbox{~~iff~~} \{ \obj{(\lambda x.e)} \} 
     \subseteq \widehat{\sf C}(\obj{\lambda x.e})
 \\
-& [{\it app}] & (\widehat{\sf C}, \widehat{\rho}) & \models
+\qquad\qquad\qquad& [{\it app}] & (\widehat{\sf C}, \widehat{\rho}) & \models
   \obj{e_1\,e_2} \mbox{~~iff}
 \\
-& & & \qquad (\widehat{\sf C}, \widehat{\rho}) \models \obj{e_1} \wedge
-             (\widehat{\sf C}, \widehat{\rho}) \models \obj{e_2} \wedge ~
+& & & \qquad (\widehat{\sf C}, \widehat{\rho}) \models \obj{e_1} \wedge ~
 \\
 & & & \qquad (\forall(\obj{\lambda x.e_0}) \in \widehat{\sf C}(\obj{e_1}) : ~
 \\
-& & & \qquad\qquad (\widehat{\sf C}, \widehat{\rho}) \models \obj{e_0} \wedge ~
+& & & \qquad\qquad (\widehat{\sf C}, \widehat{\rho}) \models \obj{e_2} \wedge ~
 \\
 & & & \qquad\qquad (\widehat{\sf C}(\obj{e_2}) \subseteq \widehat{\rho}(\obj{x})) \wedge ~
 \\
-& & & \qquad\qquad (\widehat{\sf C}(\obj{e_0}) \subseteq \widehat{\sf C}(\obj{e_1\,e_2}))
+& & & \qquad\qquad (\forall(\obj{v}) \in \widehat{\sf C}(\obj{e_2}) : 
+\\
+& & & \qquad\qquad\qquad (\widehat{\sf C}, \widehat{\rho}) \models \obj{e_0} \wedge ~
+\\
+& & & \qquad\qquad\qquad(\widehat{\sf C}(\obj{e_0}) \subseteq \widehat{\sf C}(\obj{e_1\,e_2}))))\qquad\qquad\qquad
 \end{align*}
-\caption{Definition of an acceptable control flow analysis (adapted from
-  \cite[p.~146]{nielson05principles})}
+\caption{Coinductive definition of an acceptable control flow analysis}
 \label{fig:acceptablecontrolflowanalysis}
 \end{figure}
 
+We can carry out Nielson et al.'s Exercise 3.4 to get the definition
+of an acceptable control flow analysis given in
+Figure~\ref{fig:acceptablecontrolflowanalysis}. Relative to this
+definition, it is possible to prove that the abstractions computed by
+the derived \sls~specification in Figure~\ref{fig:dest-cfa-2} are
+acceptable control flow analyses.
 
-The analysis above is a bit informal, however. Following Nielson et
-al., an {\it acceptable control flow analysis} takes the form of two
-functions. The first, $\widehat{\sf C}$, is a function from
-expressions $\obj{e}$ to sets of values $\{\obj{v_1},
-\ldots,\obj{v_n}\}$, and the second, $\widehat{\rho}$, is a function
-from variables $\obj{x}$ to sets of values $\{\obj{v_1},
-\ldots,\obj{v_n}\}$. $\widehat{\sf C}$ and $\widehat{\rho}$ are said
-to represent an acceptable control flow analysis for the expression
-$\obj{e}$ if the judgment $(\widehat{\sf C},\widehat{\rho}) \models
-\obj{e}$, which is given a coinductive definition in
-Figure~\ref{fig:acceptablecontrolflowanalysis}, holds.
+\bigskip
+\begin{theorem}\label{thm:acceptablecfa}
+If $\Delta$ is a saturated process state that is well-formed according to
+the signature in Figure~\ref{fig:dest-cfa-2}, and if $\widehat{\sf C}$
+and $\widehat{\rho}$ are defined in terms of $\Delta$ as described above,
+then ${\sf eval}\,\interp{e} \in \Delta$ implies
+that $(\widehat{\sf C}, \widehat{\rho}) \models \obj{e}$. 
+\end{theorem}
 
-We would like to interpret a saturated program state $\Delta$ as an
-acceptable control flow analysis as follows (keeping in mind that,
-given our current interpretation of subterms, $\interp{x} = \lf{{\sf
-    var}(\lambda x.\,E\,x)}$ for some $\lf{E}$): \smallskip
-\begin{itemize}
-\item $\widehat{\sf C}(\obj{e}) = \{ \obj{v} \mid {\sf retn}\,\interp{v}\,\interp{e} \}$;
-\item $\widehat{\rho}(\obj{x}) = \{ \obj{v} \mid {\sf bind}\,\interp{x}\,\interp{e} \}$; and
-\item If ${\sf eval}\,\interp{e} \in \Delta$, then $(\widehat{\sf C},\widehat{\rho}) \models \obj{e}$.
-\end{itemize}
-\smallskip This is the right interpretation, but the analysis in
-Figure~\ref{fig:dest-cfa-2} does not quite line up correctly with the
-definition in Figure~\ref{fig:acceptablecontrolflowanalysis}. It is
-illustrative see where the proof that ${\sf eval}\,\interp{e} \in
-\Delta$ implies $(\widehat{\sf C},\widehat{\rho}) \models \obj{e}$
-fails.
+\begin{proof}
+  By coinduction on the definition of acceptability in
+  Figure~\ref{fig:acceptablecontrolflowanalysis}. 
+  
+  XXX more proof!
+\end{proof}
 
-The first two cases go correctly. If we have ${\sf eval}\,\interp{x}
-\in \Delta$, then rule ${\sf ev/bind}$ ensures that, if ${\sf
-  bind}\,\interp{x}\,\interp{v} \in \Delta$, then ${\sf
-  retn}\,\interp{v}\,\interp{x} \in \Delta$, which implies that
-$\widehat{\rho}(\obj{x}) \subseteq \widehat{\sf C}(\obj{x})$ as
-required.  Similarly, if we have ${\sf eval}\,\interp{\lambda x.e} \in
-\Delta$, then rule ${\sf ev/lam}$ means that ${\sf
-  retn}\,\interp{\lambda x.e}\,\interp{\lambda x.e}$, which is to say
-that $\{\obj{\lambda x.e} \} \subseteq \widehat{\sf C}(\obj{\lambda
-  x.e})$ as required. The third case is where trouble arises: if ${\sf
-  eval}\,\interp{e_1\,e_2} \in \Delta$, then by rule ${\sf ev/app}$ it
-must also be the case that ${\sf eval}\,\interp{e_1} \in \Delta$,
-allowing us to coinductively conclude that $(\widehat{\sf
-  C},\widehat{\rho}) \models \obj{e_1}$ as required, but if no values
-are returned from $\obj{e_1}$ (which can happen if, for example $\obj{e_1} =
-\obj{(\lambda x.\,x\,x)\,(\lambda x.\,x\,x)}$) then we will not
-necessarily have  ${\sf eval}\,\interp{e_1} \in \Delta$ by rule
-${\sf ev/app2}$. This means that we cannot conclude that 
-$(\widehat{\sf
-  C},\widehat{\rho}) \models \obj{e_2}$ as required. 
+We claim that, if we had started with an analysis that incorporated
+both parallel evaluation of functions and arguments (in the style of
+Figure~\ref{fig:dest-pair} from Section~\ref{sec:modular-parallelism})
+and the call-by-future functions discussed in
+Figure~\ref{fig:dest-futures} from Section~\ref{sec:dest-futures},
+then the derived analysis would have satisfied a faithful
+representation of Nielson et al.'s acceptability relation. The proof,
+in this case, would have followed the same lines as the proof of
+Theorem~\ref{thm:acceptablecfa}.
 
-The methodology of logical approximation is not at fault here;
-instead, we can place blame either on the SSOS semantics in
-Figure~\ref{fig:dest-env} or on the specification in
-Figure~\ref{fig:acceptablecontrolflowanalysis}. To place blame on the
-specification, we can observe that the specific point of failure above
-is due to the definition of an acceptable analysis not taking
-left-to-right evaluation order into account; Exercise 3.4 in
-\cite{nielson05principles} is to make the definition of an acceptable
-analysis more precise so that ``there is no need to analyze the
-operand if the operator cannot produce any closures.'' Alternatively,
-we place blame on the form of the SSOS specification. If we had
-evaluated both arguments $\lf{E_1}$ and $\lf{E_2}$ in parallel in
-Figure~\ref{fig:dest-env} (in the style of Figure~\ref{fig:dest-pair}
-from Section~\ref{sec:modular-parallelism}), then the resulting
-analysis would have placed ${\sf eval}\,\interp{e_1}$ and ${\sf
-  eval}\,\interp{e_2}$ into the context simultaneously, addressing the
-point where our proof failed above. To really get the SSOS semantics
-that corresponds to Nielson et al.'s specification in
-Figure~\ref{fig:acceptablecontrolflowanalysis}, we would have needed
-to use a semantics that incorporated both parallel evaluation of
-functions and arguments and the call-by-future functions discussed
-in Figure~\ref{fig:dest-futures} from Section~\ref{sec:dest-futures}.
+%  which is given a coinductive
+% definition in Figure~\ref{fig:acceptablecontrolflowanalysis}, holds.
+
+
+% \smallskip This is the right interpretation, but the analysis in
+% Figure~\ref{fig:dest-cfa-2} does not quite line up correctly with the
+% definition in Figure~\ref{fig:acceptablecontrolflowanalysis}. It is
+% illustrative see where the proof that ${\sf eval}\,\interp{e} \in
+% \Delta$ implies $(\widehat{\sf C},\widehat{\rho}) \models \obj{e}$
+% fails.
+
+% The first two cases go correctly. If we have ${\sf eval}\,\interp{x}
+% \in \Delta$, then rule ${\sf ev/bind}$ ensures that, if ${\sf
+%   bind}\,\interp{x}\,\interp{v} \in \Delta$, then ${\sf
+%   retn}\,\interp{v}\,\interp{x} \in \Delta$, which implies that
+% $\widehat{\rho}(\obj{x}) \subseteq \widehat{\sf C}(\obj{x})$ as
+% required.  Similarly, if we have ${\sf eval}\,\interp{\lambda x.e} \in
+% \Delta$, then rule ${\sf ev/lam}$ means that ${\sf
+%   retn}\,\interp{\lambda x.e}\,\interp{\lambda x.e}$, which is to say
+% that $\{\obj{\lambda x.e} \} \subseteq \widehat{\sf C}(\obj{\lambda
+%   x.e})$ as required. The third case is where trouble arises: if ${\sf
+%   eval}\,\interp{e_1\,e_2} \in \Delta$, then by rule ${\sf ev/app}$ it
+% must also be the case that ${\sf eval}\,\interp{e_1} \in \Delta$,
+% allowing us to coinductively conclude that $(\widehat{\sf
+%   C},\widehat{\rho}) \models \obj{e_1}$ as required, but if no values
+% are returned from $\obj{e_1}$ (which can happen if, for example $\obj{e_1} =
+% \obj{(\lambda x.\,x\,x)\,(\lambda x.\,x\,x)}$) then we will not
+% necessarily have  ${\sf eval}\,\interp{e_1} \in \Delta$ by rule
+% ${\sf ev/app2}$. This means that we cannot conclude that 
+% $(\widehat{\sf
+%   C},\widehat{\rho}) \models \obj{e_2}$ as required. 
+
+% The methodology of logical approximation is not at fault here;
+% instead, we can place blame either on the SSOS semantics in
+% Figure~\ref{fig:dest-env} or on the specification in
+% Figure~\ref{fig:acceptablecontrolflowanalysis}. To place blame on the
+% specification, we can observe that the specific point of failure above
+% is due to the definition of an acceptable analysis not taking
+% left-to-right evaluation order into account; Exercise 3.4 in
+% \cite{nielson05principles} is to make the definition of an acceptable
+% analysis more precise so that ``there is no need to analyze the
+% operand if the operator cannot produce any closures.'' Alternatively,
+% we place blame on the form of the SSOS specification. If we had
+% evaluated both arguments $\lf{E_1}$ and $\lf{E_2}$ in parallel in
+% Figure~\ref{fig:dest-env} (in the style of Figure~\ref{fig:dest-pair}
+% from Section~\ref{sec:modular-parallelism}), then the resulting
+% analysis would have placed ${\sf eval}\,\interp{e_1}$ and ${\sf
+%   eval}\,\interp{e_2}$ into the context simultaneously, addressing the
+% point where our proof failed above. To really get the SSOS semantics
+% that corresponds to Nielson et al.'s specification in
+% Figure~\ref{fig:acceptablecontrolflowanalysis}, we would have needed
+% to use a semantics that incorporated both parallel evaluation of
+% functions and arguments and the call-by-future functions discussed
+% in Figure~\ref{fig:dest-futures} from Section~\ref{sec:dest-futures}.
 
 \section{Alias analysis}
 \label{sec:aliasanalysis}

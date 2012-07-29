@@ -766,31 +766,45 @@ $\tackon{\Theta}{\Delta}$ introduced in Section~\ref{sec:contexts}. We
 will treat ${\ocircle}A^+$ and $\{ A^+ \}$ as synonyms in \sls, preferring the
 former in this chapter and the latter afterwards.
 
-Positive ordered atomic propositions
-$p^+$ are atomic classifiers ${\sf a}\,\lf{t_1}\ldots\lf{t_n}$ with
-kind ${\sf prop}\,{\sf ord}$, positive linear atomic propositions
-$p^+_\meph$ and $p^+_\mpers$ are (respectively) atomic classifiers
-with kind ${\sf prop}\,{\sf lin}$ and ${\sf prop}\,{\sf pers}$, and
-negative ordered atomic propositions $p^-$ are atomic classifiers
-with kind ${\sf prop}$.  From this point on,
-we will unambiguously refer to atomic propositions $p^-$ as negative
-atomic propositions, omitting ``ordered.'' Similarly, we will refer to
-atomic propositions $p^+$, $p^+_\meph$, and $p^+_\mpers$ collectively
-as positive atomic propositions but individually as ordered, linear,
-and persistent propositions, respectively, omitting ``positive.''
-(``Mobile'' and ``ephemeral'' will continue to be used as synonyms for
-``linear.'')
+Positive ordered atomic propositions $p^+$ are atomic classifiers
+${\sf a}\,\lf{t_1}\ldots\lf{t_n}$ with kind ${\sf prop}\,{\sf ord}$,
+positive linear and persistent atomic propositions $p^+_\meph$ and
+$p^+_\mpers$ are (respectively) atomic classifiers with kind ${\sf
+  prop}\,{\sf lin}$ and ${\sf prop}\,{\sf pers}$, and negative ordered
+atomic propositions $p^-$ are atomic classifiers with kind ${\sf
+  prop}$.  From this point on, we will unambiguously refer to atomic
+propositions $p^-$ as negative atomic propositions, omitting
+``ordered.'' Similarly, we will refer to atomic propositions $p^+$,
+$p^+_\meph$, and $p^+_\mpers$ collectively as positive atomic
+propositions but individually as ordered, linear, and persistent
+propositions, respectively, omitting ``positive.''  (``Mobile'' and
+``ephemeral'' will continue to be used as synonyms for ``linear.'')
+
+\subsection{Propositions}
 
 \input{figs/fig-sls-propform}
 
 The formation judgments for \sls~types are given in
-Figure~\ref{fig:sls-propform}. Much of the complexity of the
-presentation is needed to make sure that whenever we decompose a
-positive proposition $\lf{s} \doteq \lf{t}$ we have that $\lf{s} =
-\lf{a}$ for some variable $\lf{a}$ in the context. When this is the
-case, $\lf{[t/a]}$, is always a most general unifier of $\lf{s} =
-\lf{a}$ and $\lf{t}$, which in turn means that the higher-order
-unification rule from \ollll
+Figure~\ref{fig:sls-propform}.  As discussed in the introduciton to
+this chapter, the removal of ${\uparrow}A^+$ and $p^-_\mlax$ is
+fundamental to the separation of the deductive and concurrent
+fragments of \sls; all the other restrictions made to the language are
+for the purpose of giving partial proofs a linear structure.  In
+particular, all positive propositions whose left rules have more or
+less than one premise are restricted. The propositions $\zero$ and
+$A^+ \oplus B^+$ are excluded from \sls~to this end, and we must place
+rather draconian restrictions on the use of equality in order to ensure
+that $\doteq_L$ can always be treated as having exactly one premise.
+
+Much of the complexity of Figure~\ref{fig:sls-propform}, in particular
+the existance of an additional context $\mathcal S$ that is treated
+like a multiset, is thanks to the inclusion of equality \sls.  The
+restrictions ensure that, whenever we decompose a positive proposition
+$\lf{s} \doteq \lf{t}$, we have that $\lf{s} = \lf{a}$ for some
+variable $\lf{a}$ in the context. When this is the case, $\lf{[t/a]}$,
+is always a most general unifier of $\lf{s} = \lf{a}$ and $\lf{t}$,
+which in turn means that the left rule for equality in
+\ollll
 \[
 \infer[{\doteq}_L]
 {\foc{\Psi}{\frameoff{\Theta}{\lf{t} \doteq \lf{s}}}{U}}
@@ -809,12 +823,26 @@ is equivalent to a much simpler rule:
 {\foc{\Psi, \lf{a}{:}\tau, \Psi'}{\frameoff{\Theta}{\lf{a} \doteq \lf{t}}}{U}}
 {\foc{\Psi, \lf{[t/a]}\Psi'}{\tackon{\lf{[t/a]}\Theta}{\cdot}}{\lf{[t/a]} U}}
 \]
-
-XXX single premise - if you get 0 to work then standard most general
-unifiers will work as well. 
+Usually, when we require the ``existance of most general unifiers,''
+that signals that a most general unifier must exist if any unifier
+exists. The condition we are requiring is much stronger: for the
+unification problems we will encounter due to the $\doteq_L$ rule, a
+most general unifier {\it must} exist. Allowing unification problems
+that could fail would require us to consider positive inversion rules
+with zero premises, and the proposition $\zero$ was excluded from
+\sls~precisely to prevent us from needing to deal with positive
+inversion rules with zero premises.\footnote{The other side of this
+  observation is that, if we allow the proposition $\zero$ and adapt
+  the logical framework accordingly, it might be possible to reduce or
+  eliminate the restrictions we have placed on equality.}
 
 There are two distinct conditions under which we can be sure that
-unification problems always have a most general solution.  \smallskip
+unification problems always have a most general solution -- when
+equality is used as a {\it notational definition} and when it is used
+as
+
+
+ \smallskip
 \begin{enumerate}
 \item Equality at an atomic type $p$ that is {\it not subordinate
     to itself} ($p \not\prec_\subord p$) is always allowed.  This is
@@ -869,6 +897,8 @@ unification problems always have a most general solution.  \smallskip
 \end{enumerate}
 \smallskip
 
+\subsection{Substructural contexts}
+
 \input{figs/fig-sls-ctxform}
 
 The proposition formation judgments are used to specify the formation
@@ -877,6 +907,7 @@ Figure~\ref{fig:sls-ctxform}. The restrictions we make to contexts
 justify our continued practice of omitting the $\mtrue$ annotation
 when talking about inverting positive propositions $A^+$ or focused
 negative propositions $[A^-]$ in the context.
+
 
 We could stop here and use the refinement of \ollll~proof terms that
 corresponds to our refinement of propositions as the language of
@@ -1109,11 +1140,6 @@ then this judgment could have been omitted.
 % left rules for positive atomic propositions have exactly one 
 % premise. 
 
-In \ollll, the rules for well-formed positive \sls~propositions all
-have exactly one premise.  The propositions $\zero$ and $A^+ \oplus
-B^+$ are excluded from \sls~to this end, and this is also why
-unification is restricted so that there is always have a most general
-unifier.
 %
 A {\it pattern} is a syntactic entity that captures the linear
 structure of left inversion on positive propositions. The \ollll~proof

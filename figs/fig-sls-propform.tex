@@ -56,30 +56,27 @@
 \] 
 \[
 \infer
-{\Psi; \mathcal S \vdash_{\Sigma,\subord} \lf{t} \doteq_p \lf{s}\,{\sf prop}^+}
+{\Psi; \mathcal S \vdash_{\Sigma,\subord} \lf{a} \doteq_p \lf{b}\,{\sf prop}^+}
 {\Psi \vdash_{\Sigma,\subord} p\,{\sf type}
  &
- \Psi \vdash_{\Sigma,\subord} \lf{t} : p
+ \lf{a}{:}p \in \Psi
  &
- \Psi \vdash_{\Sigma,\subord} \lf{s} : p
+ \lf{b}{:}p \in \Psi
  & 
  p \not\prec_\subord p}
-\]
-\[
+\quad
 \infer
 {\Psi; \mathcal S \vdash_{\Sigma,\subord} \lf{a} \doteq_p \lf{s}\,{\sf prop}^+}
 {\Psi \vdash_{\Sigma,\subord} p\,{\sf type}
  &
- \Psi \vdash_{\Sigma,\subord} \lf{a} : p
+ \lf{a}{:}p \in \mathcal S
  &
- \Psi \vdash_{\Sigma,\subord} \lf{s} : p
- & 
- \lf{a}{:}p \in \mathcal S}
+ \Psi \vdash_{\Sigma,\subord} \lf{s} : p}
 \]
 
 
 \medskip
-\fbox{$\Psi \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-$} -- presumes
+\fbox{$\Psi; \mathcal S \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-$} -- presumes
   $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$ and the multiset
   $\mathcal S \subseteq \Psi$
 \[
