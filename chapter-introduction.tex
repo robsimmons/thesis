@@ -119,7 +119,7 @@ them. For example, the logical framework Coq is based on the Calculus
 of Inductive Constructions \cite{coq10coq}, the logical framework Agda
 is based on a variant of Martin-L\"of's type theory called ${\sf
   UTT}_\Sigma$ \cite{norell08towards}, and the logical Twelf is based
-off of the dependent type theory $\lambda^\Pi$, also known as LF
+on the dependent type theory $\lambda^\Pi$, also known as LF
 \cite{pfenning99system}. Twelf was the basis of Lee, Crary, and
 Harper's formalization of Standard ML.  % Specifications evolve
 % gradually from half-baked ideas scrawled on coffee-stained napkins to
@@ -240,11 +240,14 @@ rewriting system can take is shown in Figure~\ref{fig:pda-transitions}
 
 Because our goal is to use a framework that is both simple and
 logically motivated, we turn to a substructural logic called {\it
-  ordered logic} (originally presented by
-Lambek~\cite{lambek58mathematics}) where hypotheses have an
-intrinsic notion of order. The rewriting rules we considered above can
-be explained as propositions in ordered logic, where the tokens ${\sf
-  hd}$, $>$, and $<$ are all treated as {\it atomic propositions}:
+  ordered logic}, a fragment of which was originally proposed by
+Lambek for applications in computational
+linguistic~\cite{lambek58mathematics}. In ordered logic, hypotheses
+have an intrinsic notion their position relative to one another, and
+therefore they cannot be rearranged. The rewriting rules we considered
+above can be explained as propositions in ordered logic, where the
+tokens ${\sf hd}$, $>$, and $<$ are all treated as {\it atomic
+  propositions}:
 \begin{align*}
 {\sf push} &: ~~ {\sf hd} \fuse {<} ~\lefti~ \{ {<} \fuse {\sf hd} \}
 \\ 
@@ -257,7 +260,7 @@ braces $\{ \ldots \}$ can be ignored for now.
 
 The propositional fragment of ordered logic is
 Turing complete: it is a simple exercise to specify a Turing machine!
-Nevertheless, first-order quantification is helps us write
+Nevertheless, first-order quantification helps us write
 specifications that are short and clear. For example, by using
 first-order quantification we can describe a 
 a more general push-down automaton in a generic way. In
@@ -319,12 +322,12 @@ specify systems like the $\pi$-calculus, security protocols, and Petri
 nets that can be encoded in CLF \cite{cervesato02concurrent}. The
 addition of ordered logic allows us to easily incorporate systems that
 are naturally understood as string rewriting systems. An example from
-the verification domain, taken from Bouajjani and Esparsa
+the verification domain, taken from Bouajjani and Esparza
 \cite{bouajjani06rewriting}, is shown in Figure~\ref{fig:canonical}.
 The left-hand side of the figure is a simple Boolean program: the
 procedure ${\it foo}$ has one local variable and the procedure ${\it
   main}$ has no local variables but mentions a global variable $b$.
-Bouajjani and Esparsa represented Boolean programs like this one as
+Bouajjani and Esparza represented Boolean programs like this one as
 {\it canonical systems} like the one shown in the middle of
 Figure~\ref{fig:canonical}. Canonical systems are rewriting systems
 where only the left-most tokens are ever rewritten: the left-most
@@ -401,9 +404,9 @@ ${\sf eval}(\obj{e})$, carries an unevaluated expression $\obj{e}$,
 and another, ${\sf retn}(\obj{v})$, carries an evaluated value
 $\obj{v}$.  The third atomic proposition, ${\sf cont}(\obj{f})$,
 contains a {\it continuation frame} $\obj{f}$ that represents some
-partially evaluated value: $\obj{f} = \obj{\Box\,e_2}$ is state of an
+partially evaluated value: $\obj{f} = \obj{\Box\,e_2}$ represents an
 expression $\obj{e_1\,e_2}$ waiting on the evaluation of $\obj{e_1}$
-to a value, and $\obj{f} = \obj{(\lambda x.e)\,\Box}$ is the state of
+to a value, and $\obj{f} = \obj{(\lambda x.e)\,\Box}$ represents
 an expression $\obj{(\lambda x.e)\,e_2}$ waiting on the evaluation of
 $\obj{e_2}$ to a value. A list of these continuation frames forms a
 stack that grows off to the right (like the Boolean program's stack
@@ -785,11 +788,38 @@ following extension to the previous generative signature:
 
 The grammar above describes a very coarse invariant of our SSOS
 specification, and it is possible to prove that specifications
-preserve more specific invariants. A specific example are invariants
-about the types of expressions and process states, which will be
-considered in Chapter~9. For almost any SSOS specification more
-complicated than the one given above, type invariants are necessary
-for proving the {\it progress theorem}, which implies that the
-specification is safe -- that is, free from undefined behavior.
+preserve more specific invariants. An important class of examples are
+invariants about the types of expressions and process states, which
+will be considered in Chapter~9. For almost any SSOS specification
+more complicated than the one given above, type invariants are
+necessary for proving the {\it progress theorem}, which implies that
+the specification is safe -- that is, free from undefined behavior.
 Chapter~10 will consider the use of generative invariants for proving
 safety properties of specifications.
+
+\section{Contributions}
+
+\smallskip
+\begin{quote} {\bf Thesis Statement (Part I):} {\it The methodology of
+    structural focalization facilitates the derivation of logical
+    frameworks as fragments of focused logics.}
+\end{quote}
+
+\smallskip
+\begin{quote} 
+  {\bf Thesis (Part II):} A logical framework based on a rewriting
+  interpretation of substructural logic supports many styles of
+  programming language specification. These styles can be formally
+  classified and connected by considering general transformations on
+  logical specifications.
+\end{quote} 
+
+\smallskip
+\begin{quote} 
+  {\bf Thesis (Part III):} Specifications 
+A logical framework based on a rewriting
+  interpretation of substructural logic supports many styles of
+  programming language specification. These styles can be formally
+  classified and connected by considering general transformations on
+  logical specifications.
+\end{quote} 
