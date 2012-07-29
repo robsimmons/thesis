@@ -24,26 +24,26 @@ specifications in \sls. We apply logically justified techniques for
 manipulating and approximating SSOS specifications to yield
 approximations that are correct by construction. The resulting
 persistent logical specifications can be interpreted and executed as
-saturating logic programs, which makes derived specifications
-executable.
+saturating logic programs, which means that derived specifications
+are executable.
 %, generalizing proposals of McAllester and Ganzinger
 %\cite{mcallester02complexity,ganzinger02logical} to specifications
 %that use higher-order abstract syntax.
 
 The process described in this chapter does not claim to capture or be
 able to derive all possible interesting program analyses. For
-instance, the methadology we describe only derives overapproximations
+instance, the methodology we describe only derives over-approximations
 (or {\it may-} analyses) that ensure all possible behaviors will be
 reported by the analysis. There is a whole separate class of program
-underapproximations (or {\it must-} analyses) that ensure that if a
+under-approximations (or {\it must-} analyses) that ensure that if a
 behavior is reported by the analysis it is possible; these are more
 closely associated with bug-finding and we will not consider them here
 \cite{godefroid10compositional}. Instead, we argue for the utility of
-our methadology by deriving two fundamental and rather different
-overapproximation-based analyses: a context-insensitive control flow
+our methodology by deriving two fundamental and rather different
+over-approximation-based analyses: a context-insensitive control flow
 analysis (Section~\ref{sec:0cfa}) and an alias analysis
-(Section~\ref{sec:aliasanalysis}). Van Horn and Marison's related
-``abstracting abstract machines'' methadology, described in
+(Section~\ref{sec:aliasanalysis}). Might and Van Horn related
+``abstracting abstract machines'' methodology, described in
 Section~\ref{sec:approximately-related}, suggests many more examples.
 
 \section{Saturating logic programming}
@@ -118,7 +118,7 @@ the forward-chaining logic programming interpretation that makes sense
 for ordered and linear logical specifications. There is a useful
 variant of substructural forward chaining, forward chaining with {\it
   quiescence} \cite{lopez05monadic}, that acts like saturating logic
-programming on purely-persistent speficiations and like simple
+programming on purely-persistent specifications and like simple
 committed-choice forward chaining on specifications with no persistent
 propositions. We refined this interpretation and gave it a cost
 semantics in \cite{simmons08linear}, but this hybrid interpretation is
@@ -137,9 +137,9 @@ importance are added conclusions that equate the variable introduced
 by existential quantification with concrete terms. The approximation
 procedure doesn't force us to neutralize all such variables in this
 way. However, as we explained above, failing to do so almost ensures
-that the specificiation cannot be run as a saturating logic program,
+that the specification cannot be run as a saturating logic program,
 and being able to interpret specifications as saturating logic
-programs is a prequesiate for applying the meta-approximation theorem
+programs is a prerequisite for applying the meta-approximation theorem
 (Theorem~\ref{thm:metapprox}).
 
 First, we define what it means for a specification to be an approximate
@@ -274,7 +274,7 @@ ${\sf exp}$) fall outside the Datalog fragment.
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/pda-pers.sls}
-\caption{Skolemized approximate version of the PDA specificaiton from
+\caption{Skolemized approximate version of the PDA specification from
 Figure~\ref{fig:pda-lin}}
 \label{fig:pda-pers}
 \end{figure}
@@ -306,7 +306,7 @@ which may also lead to non-termination! This is not as bad as it may
 seem: when we want to treat a specification with nested terms as a
 saturating logic program, it is simply necessary to reason explicitly
 about termination. Giving any finite upper bound on the number of
-derivable facts is a simple and sufficient critera for showing that a
+derivable facts is a simple and sufficient criteria for showing that a
 saturating logic program terminates.
 
 Skolem functions provide a natural starting point for approximations,
@@ -402,7 +402,7 @@ possibilities.\footnote{This statement assumes that both of the
   calling sites $\obj{f\,(\lambda y\ldots)}$ and $\obj{f\,(\lambda
     z\ldots)}$ are reachable: the control flow analysis we derive
   performs some dead-code analysis, and it may not report that
-  $\obj{x}$ evaluates to $\obj{(\lambda y\ldots)}$, for instnace, if
+  $\obj{x}$ evaluates to $\obj{(\lambda y\ldots)}$, for instance, if
   the call $\obj{f\,(\lambda y\ldots)}$ is certain to never occur.}
 
 When we {\it use} a control flow analysis, it is relevant that the
@@ -417,6 +417,7 @@ a (closed) subterm of an expression $\obj{e}$ that has been encoded
 with higher-order abstract syntax into the canonical forms of LF.
 
 \subsection{Subexpressions in higher-order abstract syntax}
+\label{sec:hoas-subexpressions}
 
 When given a term $\lf{{\sf a}\,({\sf b}\,{\sf c}\,{\sf c})}$, it is
 clear that there are three distinct subterms: the entire term,
@@ -426,7 +427,7 @@ function that depends on the number of subterms of the original
 term. But what are the subterms of $\lf{{\sf lam}\,(\lambda x.\,{\sf
     app}\,x\,x)}$? The immediate subterm, $\lf{{\sf app}\,x\,x}$, is
 open; to represent this subterm as a closed LF expression we must
-substitutie an appropriate concrete term for $\lf{x}$ that is uniquely
+substitute an appropriate concrete term for $\lf{x}$ that is uniquely
 identifiable with the site $\lf{(\lambda x.\,{\sf app}\,x\,x)}$ where
 that variable was bound.  Our solution in this section is to create a
 new constant $\lf{\sf var}$ with type $({\sf exp} \rightarrow {\sf
@@ -435,7 +436,8 @@ capturing the entire term as the expression $\lf{{\sf var}(\lambda
   x.\,{\sf app}\,x\,x)}$. (Another solution, discussed in the next
 section, will be to uniquely tag the lambda expression with a label,
 which has the same effect of allowing us to associate the variable $x$
-with an expresion (the tag) representing the site where it was bound.)
+with an different concrete term, the tag, that represents the site
+where $x$ was bound.)
 
 %Because we ensure that we {\it only} substitute terms
 %of the form $\lf{{\sf var}(\lambda x.e\,x)}$ into functions of the form
@@ -518,7 +520,7 @@ persistent and then must deal with the variables introduced by
 existential quantification. The variable $\lf{x}$ introduced in ${\sf
   ev/app2}$ will be equated with $\lf{{\sf var}(\lambda x.E\,x)}$,
 which is consistent with making $\lf{E\,x}$ -- which is now equal to
-$\lf{E({\sf var}(\lambda x.E\,x))}$ -- a subterm of $\lf E$.  The new
+$\lf{E({\sf var}(\lambda x.E\,x))}$ -- a subterm of $\lf{{\sf lam}(\lambda x.\, E\,x)}$.  The new
 constructor $\lf{\sf var}$ is also a greatly simplified Skolem
 function for $\lf{x}$ that only mentions the LF term $\lf{E}$; the
 most general Skolem function in this setting would have also been
@@ -536,27 +538,18 @@ and values instead of unique variables and values.
 
 The discussion above pertains to the existentially generated variable
 $\lf{x}$ in rule ${\sf ev/app2}$, but we still need some method for
-handling destinations $\lf{d_1}$, $\lf{d_2}$, and $\lf{d_3}$ in ${\sf ev/app1}$,
-${\sf ev/app2}$, and ${\sf ev/app3}$ (respectively). To this end, we
-need recall the question that we intend to answer with
-control flow analysis. 
-
-
-The primary question that such a flow analysis
-is intended to answer is, ``for any given call site in the source
-program, what are the functions that may be invoked at that
-location?''\footnote{This kind of ``{\it may}-'' analysis, where the
-  intention is to over-approximate the events that might happen, is
-  the kind of analysis (as opposed to a ``{\it must}-'' analysis) that
-  maps easily onto the meta-approximation theorem.} Call sites
-correspond to expressions of the form $\lf{{\sf app}\,e_1\,e_2}$, and
-functions are expressions of the form $\lf{{\sf lam}(\lambda x.e\,x)}$;
-therefore, our next step is to equate the destinations introduced in
-the $\lf{\sf app}$ rules with the expressions we are evaluating at this
-point. One way to do this would be to introduce a new constructor
-$\lf{\sf d}: {\sf exp} \rightarrow {\sf dest}$, but we can equivalently
-conflate the two types to get the specification in
-Figure~\ref{fig:dest-cfa-1}. 
+handling destinations $\lf{d_1}$, $\lf{d_2}$, and $\lf{d_3}$ in 
+${\sf ev/app}$, ${\sf
+  ev/app1}$, and ${\sf ev/app2}$ (respectively). To
+this end, we need recall the question that we intend to answer with
+control flow analysis: what values may a given subexpression evaluate
+to? A destination passing specification attempts to return a value to
+a destination: we will instead return a {\it to an expression} by
+equating destinations $d$ with the expressions they represent. One way
+to do this would be to introduce a new constructor $\lf{\sf d}: {\sf
+  exp} \rightarrow {\sf dest}$, but we can equivalently conflate the
+two types ${\sf exp}$ and ${\sf dest}$ to get the specification in
+Figure~\ref{fig:dest-cfa-1}.
 
 
 The specification in Figure~\ref{fig:dest-cfa-1} has a point of
@@ -571,7 +564,8 @@ $\lf{d_2}$, and $\lf{d_3}$ by existential quantification just to equate them
 with expressions $\lf{e_1}$, $\lf{e_2}$, and $\lf{e}$, 
 we substitute in the equated
 expressions where the respective destinations appeared in
-Figure~\ref{fig:dest-cfa-1}. 
+Figure~\ref{fig:dest-cfa-1}; this modification does not change
+anything at the level of  synthetic inference rules.
 
 \begin{figure}[t]
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -581,52 +575,174 @@ Figure~\ref{fig:dest-cfa-1}.
 \label{fig:dest-cfa-2}
 \end{figure}
 
-This specification in Figure~\ref{fig:dest-cfa-2} is terminating when
-interpreted as a saturating logic program because the rules only break
-expressions $\lf{e}$ and values $\lf{v}$ 
-into their subexpressions in the sense
-we have described above. If the expressions in the original state of a
-program have $n$ subterms, the program can derive no more than $n$ new
-${\sf eval}$ facts, $n^2$ new ${\sf retn}$ facts, and $2n^2 + n$ ${\sf
-  cont}$ facts. This analysis combined with the meta-approximation
-theorem ensures that we have derived some sort of program analysis. To
-see that this program analysis is a control flow analysis, note that
-the third argument $\lf{e}$ to ${\sf comp}\,\lf{f}\,\lf{e'}\,\lf{e}$ 
-is always a term
-$\lf{{\sf app}\,e_1\,e_2}$ -- that is, a call site. The rule ${\sf
-  ev/app2}$ starts evaluating the function $\lf{{\sf lam}(\lambda
-x.e_0\,x)}$ and generates the fact ${\sf comp}\,\lf{\sf app3}\,\lf{(e({\sf
-  var}(\lambda x.e_0\,x)))}\,\lf{e}$. This means that, in the course of
-evaluating some initial expression $\lf{e_{\it init}}$, the function $\lf{{\sf
-  lam}(\lambda x.e_0\,x)}$ may be called from the call site $\lf{e}$ only if
-${\sf comp}\,\lf{\sf app3}\,\lf{(e({\sf var}(\lambda x.e_0\,x)))}\,\lf{e}$ appears
-in a saturated process state that includes the persistent 
-atomic proposition ${\sf eval}\lf{(e_{\it init})}$.
+Let's consider the termination of specification in
+Figure~\ref{fig:dest-cfa-2} interpreted as a saturating logic program.
+Fundamentally, the terms in the heads of rules are all subterms (in
+the generalized sense of Section~\ref{sec:hoas-subexpressions}), which
+is a sufficient condition for the termination of a saturating logic
+program. More specifically, consider that we start the database with a
+single fact ${\sf eval}\,\interp{e}$, where $\interp{e}$ has $n$
+subterms by the analysis in Section~\ref{sec:hoas-subexpressions}.  We
+can only ever derive $n$ new facts ${\sf eval}\,\lf{e}$ -- one for
+every subterm. If we deduced that every subexpression was a value that
+could be returned at every subexpression, there would still be only
+$n^2$ facts ${\sf retn}\,\lf{e}\,\lf{e'}$, and the same analysis holds
+for facts of the form ${\sf cont}\,\lf{\sf app3}\,\lf{e}\,\lf{e'}$.  A
+fact of the form ${\sf cont}\,\lf{({\sf
+    app1}\,e_2)}\,\lf{e_1}\,\lf{e}$ will only be derived when $\lf{e}
+= \lf{{\sf app}\,e_1\,e_2}$, so there are at most $n$ of these
+facts. A fact of the form ${\sf cont}\,\lf{{\sf app2}\,\lambda
+  x.\,e_0\,x}\,\lf{e_2}\,\lf{e}$ will only be derived when $\lf{e} =
+\lf{{\sf app}\,\lf{e_1}\,\lf{e_2}}$ for some $\lf{e_1}$ that is also a
+subterm, so there are most $n^2$ of these facts too. This means that
+we can derive no more than $2n + 3n^2$ facts starting from a database
+containing ${\sf eval}\,\interp{e}$, where $\obj{e}$ has $n$ subterms.
+We could give a much more precise analysis than this, but this
+imprecise analysis certainly bounds the size of the database, ensuring
+termination, which was our goal.
 
-There is one important caveat to this analysis. If for some value $\obj{v}$
-we consider the program $\interp{((\lambda x.x)\,(\lambda y.y))\,v}$,
-we might expect a reasonable control flow analysis to notice that only
-$\interp{\lambda y.y}$ is passed to the function $\interp{\lambda
-  x.x}$ and that only $\obj{v}$ is passed to the function $\interp{\lambda
-  y.y}$. Because of our use of higher-order abstract syntax, however,
-$\interp{\lambda y.y}$ and $\interp{\lambda x.x}$ are alpha-equivalent
-and therefore equal in the eyes of the logic programming
-interpreter. This is not a problem with correctness, but it means that
-our analysis may be less precise than expected. One solution would be
-to add distinct labels to terms. Adding a label on the inside of every
-lambda-abstraction would seem to suffice, and in any real example
-labels would already be present in the form of source-code positions
-or line numbers. The alias analysis presented next demonstrates the
-use of such labels.
+There is one important caveat to this analysis. If for some value
+$\obj{v}$ we consider the program $\interp{((\lambda x.x)\,(\lambda
+  y.y))\,v}$, we might expect a reasonable control flow analysis to
+notice that only $\interp{\lambda y.y}$ is passed to the function
+$\interp{\lambda x.x}$ and that only $\obj{v}$ is passed to the
+function $\interp{\lambda y.y}$. Because of our use of higher-order
+abstract syntax, however, $\interp{\lambda y.y}$ and $\interp{\lambda
+  x.x}$ are alpha-equivalent and therefore equal in the eyes of the
+logic programming interpreter. This is not a problem with correctness,
+but it means that our analysis may be less precise than expected. One
+solution would be to add distinct labels to terms. Adding a label on
+the inside of every lambda-abstraction would seem to suffice, and in
+any real example labels would already be present in the form of
+source-code positions or line numbers. The alias analysis presented in
+the next section demonstrates the use of such labels.
 
-\subsection{Acceptability as a control flow analysis}
+\subsection{Correctness}
+
+The termination analysis for to the derived specification in
+Figure~\ref{fig:dest-cfa-2}, together with the meta-approximation
+theorem (Theorem~\ref{thm:metapprox}), ensures that we have derived
+some sort of program analysis. How do we know that it is a control 
+flow analysis? 
+
+The easy option is to simply inspect the analysis and compare it to
+the behavior of the SSOS semantics whose behavior the analysis is
+approximating.  Note that the third argument $\lf{e}$ to ${\sf
+  cont}\,\lf{f}\,\lf{e'}\,\lf{e}$ is always a term $\lf{{\sf
+    app}\,e_1\,e_2}$ -- that is, a call site. The rule ${\sf ev/app2}$
+starts evaluating the function $\lf{{\sf lam}(\lambda x.e_0\,x)}$ and
+generates the fact ${\sf cont}\,\lf{\sf app3}\,\lf{(e({\sf
+    var}(\lambda x.e_0\,x)))}\,\lf{e}$. This means that, in the course
+of evaluating some initial expression $\lf{e_{\it init}}$, the
+function $\lf{{\sf lam}(\lambda x.e_0\,x)}$ may be called from the
+call site $\lf{e}$ only if ${\sf cont}\,\lf{\sf app3}\,\lf{(e({\sf
+    var}(\lambda x.e_0\,x)))}\,\lf{e}$ appears in a saturated process
+state that includes the persistent atomic proposition ${\sf
+  eval}\lf{(e_{\it init})}$.
 
 \begin{figure}
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/ssos-monadic.sls}
-\caption{Semantics of functions in the simple monadic language}
-\label{fig:ssos-monadic}
+\begin{align*}
+& [{\it var}] & (\widehat{\sf C}, \widehat{\rho}) & \models
+  \obj{x} 
+  \mbox{~~iff~~} \widehat{\rho}(\obj{x})
+    \subseteq \widehat{\sf C}(\obj{x})
+\\
+& [{\it lam}] & (\widehat{\sf C}, \widehat{\rho}) & \models
+  \obj{\lambda x.e}
+  \mbox{~~iff~~} \{ \obj{(\lambda x.e)} \} 
+    \subseteq \widehat{\sf C}(\obj{\lambda x.e})
+\\
+& [{\it app}] & (\widehat{\sf C}, \widehat{\rho}) & \models
+  \obj{e_1\,e_2} \mbox{~~iff}
+\\
+& & & \qquad (\widehat{\sf C}, \widehat{\rho}) \models \obj{e_1} \wedge
+             (\widehat{\sf C}, \widehat{\rho}) \models \obj{e_2} \wedge ~
+\\
+& & & \qquad (\forall(\obj{\lambda x.e_0}) \in \widehat{\sf C}(\obj{e_1}) : ~
+\\
+& & & \qquad\qquad (\widehat{\sf C}, \widehat{\rho}) \models \obj{e_0} \wedge ~
+\\
+& & & \qquad\qquad (\widehat{\sf C}(\obj{e_2}) \subseteq \widehat{\rho}(\obj{x})) \wedge ~
+\\
+& & & \qquad\qquad (\widehat{\sf C}(\obj{e_0}) \subseteq \widehat{\sf C}(\obj{e_1\,e_2}))
+\end{align*}
+\caption{Definition of an acceptable control flow analysis (adapted from
+  \cite[p.~146]{nielson05principles})}
+\label{fig:acceptablecontrolflowanalysis}
 \end{figure}
+
+
+The analysis above is a bit informal, however. Following Nielson et
+al., an {\it acceptable control flow analysis} takes the form of two
+functions. The first, $\widehat{\sf C}$, is a function from
+expressions $\obj{e}$ to sets of values $\{\obj{v_1},
+\ldots,\obj{v_n}\}$, and the second, $\widehat{\rho}$, is a function
+from variables $\obj{x}$ to sets of values $\{\obj{v_1},
+\ldots,\obj{v_n}\}$. $\widehat{\sf C}$ and $\widehat{\rho}$ are said
+to represent an acceptable control flow analysis for the expression
+$\obj{e}$ if the judgment $(\widehat{\sf C},\widehat{\rho}) \models
+\obj{e}$, which is given a coinductive definition in
+Figure~\ref{fig:acceptablecontrolflowanalysis}, holds.
+
+We would like to interpret a saturated program state $\Delta$ as an
+acceptable control flow analysis as follows (keeping in mind that,
+given our current interpretation of subterms, $\interp{x} = \lf{{\sf
+    var}(\lambda x.\,E\,x)}$ for some $\lf{E}$): \smallskip
+\begin{itemize}
+\item $\widehat{\sf C}(\obj{e}) = \{ \obj{v} \mid {\sf retn}\,\interp{v}\,\interp{e} \}$;
+\item $\widehat{\rho}(\obj{x}) = \{ \obj{v} \mid {\sf bind}\,\interp{x}\,\interp{e} \}$; and
+\item If ${\sf eval}\,\interp{e} \in \Delta$, then $(\widehat{\sf C},\widehat{\rho}) \models \obj{e}$.
+\end{itemize}
+\smallskip This is the right interpretation, but the analysis in
+Figure~\ref{fig:dest-cfa-2} does not quite line up correctly with the
+definition in Figure~\ref{fig:acceptablecontrolflowanalysis}. It is
+illustrative see where the proof that ${\sf eval}\,\interp{e} \in
+\Delta$ implies $(\widehat{\sf C},\widehat{\rho}) \models \obj{e}$
+fails.
+
+The first two cases go correctly. If we have ${\sf eval}\,\interp{x}
+\in \Delta$, then rule ${\sf ev/bind}$ ensures that, if ${\sf
+  bind}\,\interp{x}\,\interp{v} \in \Delta$, then ${\sf
+  retn}\,\interp{v}\,\interp{x} \in \Delta$, which implies that
+$\widehat{\rho}(\obj{x}) \subseteq \widehat{\sf C}(\obj{x})$ as
+required.  Similarly, if we have ${\sf eval}\,\interp{\lambda x.e} \in
+\Delta$, then rule ${\sf ev/lam}$ means that ${\sf
+  retn}\,\interp{\lambda x.e}\,\interp{\lambda x.e}$, which is to say
+that $\{\obj{\lambda x.e} \} \subseteq \widehat{\sf C}(\obj{\lambda
+  x.e})$ as required. The third case is where trouble arises: if ${\sf
+  eval}\,\interp{e_1\,e_2} \in \Delta$, then by rule ${\sf ev/app}$ it
+must also be the case that ${\sf eval}\,\interp{e_1} \in \Delta$,
+allowing us to coinductively conclude that $(\widehat{\sf
+  C},\widehat{\rho}) \models \obj{e_1}$ as required, but if no values
+are returned from $\obj{e_1}$ (which can happen if, for example $\obj{e_1} =
+\obj{(\lambda x.\,x\,x)\,(\lambda x.\,x\,x)}$) then we will not
+necessarily have  ${\sf eval}\,\interp{e_1} \in \Delta$ by rule
+${\sf ev/app2}$. This means that we cannot conclude that 
+$(\widehat{\sf
+  C},\widehat{\rho}) \models \obj{e_2}$ as required. 
+
+The methodology of logical approximation is not at fault here;
+instead, we can place blame either on the SSOS semantics in
+Figure~\ref{fig:dest-env} or on the specification in
+Figure~\ref{fig:acceptablecontrolflowanalysis}. To place blame on the
+specification, we can observe that the specific point of failure above
+is due to the definition of an acceptable analysis not taking
+left-to-right evaluation order into account; Exercise 3.4 in
+\cite{nielson05principles} is to make the definition of an acceptable
+analysis more precise so that ``there is no need to analyze the
+operand if the operator cannot produce any closures.'' Alternatively,
+we place blame on the form of the SSOS specification. If we had
+evaluated both arguments $\lf{E_1}$ and $\lf{E_2}$ in parallel in
+Figure~\ref{fig:dest-env} (in the style of Figure~\ref{fig:dest-pair}
+from Section~\ref{sec:modular-parallelism}), then the resulting
+analysis would have placed ${\sf eval}\,\interp{e_1}$ and ${\sf
+  eval}\,\interp{e_2}$ into the context simultaneously, addressing the
+point where our proof failed above. To really get the SSOS semantics
+that corresponds to Nielson et al.'s specification in
+Figure~\ref{fig:acceptablecontrolflowanalysis}, we would have needed
+to use a semantics that incorporated both parallel evaluation of
+functions and arguments and the call-by-future functions discussed
+in Figure~\ref{fig:dest-futures} from Section~\ref{sec:dest-futures}.
 
 \section{Alias analysis}
 \label{sec:aliasanalysis}
@@ -639,6 +755,13 @@ object-oriented alias analysis presented as a logic program in
 \cite[Chapter 12.4]{aho07compilers}.  When we try to reverse-engineer
 a source language from which this alias analysis can be derived, we
 get the monadic language presented below.
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/ssos-monadic.sls}
+\caption{Semantics of functions in the simple monadic language}
+\label{fig:ssos-monadic}
+\end{figure}
 
 \subsection{Monadic language}
 
@@ -713,20 +836,24 @@ This language specification bears some similarity to Harper's
 Modernized Algol with free assignables \cite[Chapter
 36]{harper12practical}. The {\it free assignables} addendum is
 critical: SSOS specifications do not have a mechanism for enforcing
-the stack discipline of Algol-like languages. The other major
-difference is that Harper's version of Algol does not allow
-expressions to access the state.  For our language to behave
-similarly, the expressions $\obj{\sf newpair}$, $\obj{x.{\sf fst}}$, 
-$\obj{x.{\sf
-  snd}}$, $\obj{x.{\sf fst} := y}$, and 
-$\obj{x.{\sf snd} := y}$ would need to be
-commands and not expressions; we make them expressions only for the
-convenience of a more regular presentation.
+the stack discipline of Algol-like languages.\footnote{It is, however,
+  possible to represent Algol-like languages that maintain a stack
+  discipline even though the machinery of \sls~does not enforce that
+  stack discipline. This is analogous to situation with pointer
+  equality discussed in Section~\ref{sec:mutable-storage}, as a stack
+  discipline is an invariant that can be maintained in \sls~even
+  though the framework's proof theory does not enforce the invariant.}
+The other major difference is that Harper's version of Algol does not
+allow expressions to access the state.  For our language to behave
+similarly, the expressions $\obj{\sf newpair}$, $\obj{x.{\sf fst}}$,
+$\obj{x.{\sf snd}}$, $\obj{x.{\sf fst} := y}$, and $\obj{x.{\sf snd}
+  := y}$ would need to be commands and not expressions; we make them
+expressions only for the convenience of a more regular presentation.
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-monadic-approx.sls}
-\caption{Alias analysis for the simple mondaic language}
+\caption{Alias analysis for the simple monadic language}
 \label{fig:ssos-monadic-approx}
 \end{figure}
 
@@ -768,7 +895,7 @@ done so, then the label $\obj{l}$ associated with $\obj{m}$ in the command
 $\interp{{\sf bnd}^l\, x \leftarrow \lambda x.m_0 \,{\sf in}\,m}$ would
 no longer be available when we needed it in rule ${\sf ev/call1}$.
 
-We deal with mutable locations $\lf{l}$ is a similar manner: we equate them
+We deal with mutable locations $\lf{l}$ in a similar manner: we equate them
 with the label $\lf{l}$ representing the line where that cell was
 generated.
 
