@@ -25,7 +25,7 @@ manipulating and approximating SSOS specifications to yield
 approximations that are correct by construction. The resulting
 persistent logical specifications can be interpreted and executed as
 saturating logic programs, which means that derived specifications
-are executable.
+are executable program analyses.
 %, generalizing proposals of McAllester and Ganzinger
 %\cite{mcallester02complexity,ganzinger02logical} to specifications
 %that use higher-order abstract syntax.
@@ -42,9 +42,10 @@ closely associated with bug-finding and we will not consider them here
 our methodology by deriving two fundamental and rather different
 over-approximation-based analyses: a context-insensitive control flow
 analysis (Section~\ref{sec:0cfa}) and an alias analysis
-(Section~\ref{sec:aliasanalysis}). Might and Van Horn related
-``abstracting abstract machines'' methodology, described in
-Section~\ref{sec:approximately-related}, suggests many more examples.
+(Section~\ref{sec:aliasanalysis}). Might and Van Horn's closely
+related ``abstracting abstract machines'' methodology, described in
+Section~\ref{sec:approximately-related} along with other related work,
+suggests many more examples.
 
 \section{Saturating logic programming}
 
