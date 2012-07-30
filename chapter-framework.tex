@@ -76,6 +76,17 @@ already-specified \ollll~outright as a logical framework.
   \sls~terms. Concurrent equality is a coarser equivalence relation
   than the alpha-equivalence of \ollll~terms.
 
+\item{\it Removal of $\top$.} The presence of $\top$ causes pervasive
+  problems in the design of substructural logical frameworks. May of
+  these problems arise at the level of implementation and type
+  reconstruction, which motivated Schack-Nielson to remove $\top$ from
+  the Celf implementation of CLF
+  \cite{schacknielsen11implementing}. Even though those considerations
+  are outside the scope of this thesis, the presence of $\top$ causes
+  other pervasive difficulties: for instance, the presence of $\top$
+  complicates the discussion of concurrent equality in CLF. We therefore
+  follow Schack-Nielson in removing $\top$ from \sls.
+
 \end{itemize}
 \smallskip
 \noindent
@@ -812,7 +823,7 @@ $\lf{s} = \lf{a}$ and $\lf{t}$, which in turn means that the left rule
 for equality in \ollll
 \[
 \infer[{\doteq}_L]
-{\foc{\Psi}{\frameoff{\Theta}{\lf{t} \doteq \lf{s}}}{U}}
+{\foc{\Psi}{\frameoff{\Theta}{\lf{t} \doteq_\tau \lf{s}}}{U}}
 {\forall(\Psi' \vdash \lf{\sigma} : \Psi).
  &
  \lf{\sigma t} = \lf{\sigma s}
@@ -825,7 +836,7 @@ for equality in \ollll
 is equivalent to a much simpler rule:
 \[
 \infer[{\doteq}_{\it yes}]
-{\foc{\Psi, \lf{a}{:}\tau, \Psi'}{\frameoff{\Theta}{\lf{a} \doteq \lf{t}}}{U}}
+{\foc{\Psi, \lf{a}{:}\tau, \Psi'}{\frameoff{\Theta}{\lf{a} \doteq_\tau \lf{t}}}{U}}
 {\foc{\Psi, \lf{[t/a]}\Psi'}{\tackon{\lf{[t/a]}\Theta}{\cdot}}{\lf{[t/a]} U}}
 \]
 Usually, when we require the ``existence of most general unifiers,''
@@ -990,7 +1001,7 @@ variables. Consider the following partial proof:
 \[
 \deduce
 {\foc{\lf{a}{:}p, \lf{b}{:}p}
-  {~~x{:}\iseph{{\ocircle}(\lf{a} \doteq \lf{b})}, ~~
+  {~~x{:}\iseph{{\ocircle}(\lf{a} \doteq_\tau \lf{b})}, ~~
    z{:}\iseph{\susp{{\sf foo}\,\lf{a}\,\lf{a}}}}
   {\islax{({\sf foo}\,\lf{a}\,\lf{b})}}\mathstrut}
 {\deduce{\vdots\mathstrut}
@@ -1002,7 +1013,7 @@ This partial proof can be constructed in one focusing stage by a left
 focus on $x$. It is insufficient to capture the first process
 state as 
 $\left({\lf{a}{:}p, \lf{b}{:}p}; ~~
- {x{:}{\ocircle}(\lf{a} \doteq \lf{b}), ~~
+ {x{:}{\ocircle}(\lf{a} \doteq_\tau \lf{b}), ~~
   z{:}\iseph{\susp{{\sf foo}\,\lf{a}\,\lf{a}}}}\right)$
 and the second process state as
 $\left({\lf{b}{:}p};~~
@@ -1043,7 +1054,7 @@ thus be represented as a step (Section~\ref{sec:framework-concurrent})
 between these two process states:
 \[
 \left({\lf{a}{:}p, \lf{b}{:}p}; ~~
- {x{:}{\ocircle}(\lf{a} \doteq \lf{b}),  ~~
+ {x{:}{\ocircle}(\lf{a} \doteq_\tau \lf{b}),  ~~
   z{:}\iseph{\susp{{\sf foo}\,\lf{a}\,\lf{a}}}}\right)_{\lf{(a/a,\,b/b)}}
 \leadsto_{\Sigma,\subord}
 \left({\lf{b}{:}p}; ~~
@@ -1151,7 +1162,7 @@ could have been omitted.
 \[
 \infer[{\doteq}_L]
 {\lf{t/a},P :: 
-  (\Psi, \lf{a}{:}\tau, \Psi'; \frameoff{\Theta}{\lf{a} \doteq \lf{t}}
+  (\Psi, \lf{a}{:}\tau, \Psi'; \frameoff{\Theta}{\lf{a} \doteq_\tau \lf{t}}
    )_{\lf{\sigma}}
            \Longrightarrow_{\Sigma,\subord}
         (\Psi'; \Delta')_{\lf{\sigma'}}}
@@ -1197,9 +1208,9 @@ The grammar of patterns is straightforward.
 Inversion on positive propositions
 can only have the effect of introducing new bindings (either LF
 variables $\lf{a}$ or \sls~variables $x$) or handling a unification
-$\lf{a} \doteq \lf{t}$, which by our discussion above can always be
+$\lf{a} \doteq_p \lf{t}$, which by our discussion above can always be
 resolved by the most general unifier $\lf{[t/a]}$, so the pattern associated
-with a proposition $\lf{a} \doteq \lf{t}$ is $\lf{t/a}$. 
+with a proposition $\lf{a} \doteq_p \lf{t}$ is $\lf{t/a}$. 
 \[
 P ::= () \mid x, P \mid \lf{a}, P \mid \lf{t/a}, P
 \] 
@@ -1232,8 +1243,6 @@ view patterns as being intrinsically typed -- that is, to view them as
 actual representatives of (incomplete) derivations -- we must think of
 patterns as carrying extra annotations that allow them to continue
 matching the structure of proof rules.
-
-XXX
 
 \subsection{Values, terms, and spines}
 \label{sec:framework-deductive}
@@ -1585,12 +1594,12 @@ coarser than the equivalence relation we would derive from partial
 \ollll~proofs. Consider the following \sls~signature:
 \begin{align*}
  \Sigma = \cdot, 
-~&{\sf a} : {\sf prop}\,{\sf ord},
-~ {\sf b} : {\sf prop}\,{\sf ord},
-~ {\sf c} : {\sf prop}\,{\sf ord},
-~ {\sf d} : {\sf prop}\,{\sf ord},
-~ {\sf e} : {\sf prop}\,{\sf ord},
-~ {\sf f} : {\sf prop}\,{\sf ord},
+~&{\sf a} : {\sf prop}\,{\sf lin},
+~ {\sf b} : {\sf prop}\,{\sf lin},
+~ {\sf c} : {\sf prop}\,{\sf lin},
+~ {\sf d} : {\sf prop}\,{\sf lin},
+~ {\sf e} : {\sf prop}\,{\sf lin},
+~ {\sf f} : {\sf prop}\,{\sf lin},
 \\ & 
   {\sf first}  : {\sf a} \lefti {\ocircle}({\sf b} \fuse {\sf c}), 
 \\ &
@@ -1655,93 +1664,78 @@ our strategy will be to take a particular well-typed trace $T$ and
 define a set $I$ of pairs of states $(S_1, S_2)$ with the property
 that, if $S_1; S_2$ is a well-typed trace, then $S_2; S_1$ is a
 concurrently equivalent and well-typed trace.  This {\it independency
-  relation} allows us to treat the trace $T$ as a {\it trace monoid}
-\cite{diekert90combinatorics}, which implies that concurrent equality
-is decidable.
+  relation} allows us to treat the trace $T$ as a {\it trace
+  monoid}. Concurrent equality, in turn, is just $\alpha$-equality of
+\sls~proof terms combined with treating $\tlet{T}{V}$ and
+$\tlet{T'}{V}$ as equivalent if $T$ and $T'$ are equivalent
+according to the equivalence relation imposed by treating $T$ and $T'$
+as trace monoids.
 
-\subsection{Interfaces}
+This formulation of concurrent equality facilitates applying the rich
+theory developed around trace monoids to \sls~traces.  For example, it
+is decidable whether two traces $T$ and $T'$ are equivalent as trace
+monoids, and there are algorithms for determining whether $T'$ is a
+subtrace of $T$ (that is, whether there exist $T_{\it pre}$ and
+$T_{\it post}$ such that $T$ is equivalent $T_{\it pre}; T'; T_{\it
+  post}$) \cite{diekert90combinatorics}. A different sort of matching
+problem, in which we are given $T$, $T_{\it pre}$, and $T_{\it post}$
+and must determine whether there exists a $T'$ such that $T$ is
+equivalent $T_{\it pre}; T'; T_{\it post}$, was considered in
+\cite{cervesato12trace}. However, this treatment is complicated by 
 
-
-We define the independency relation in terms of three functions on
-steps $S = (\trstep{P}{R})$: the input variables ${\bullet}S$,
-the output variables $S{\bullet}$, and the unified variables
-${\ast}S$. Together, the input, output, and unified variables make
-up the step's {\it interface}. 
-
-\smallskip
+Unfortunately, the presence of equality in \sls~complicates our
+treatment of independency. The {\it interface} of a step is used to
+define independency on steps $S = (\trstep{P}{R})$. Two components of
+the interface, the input variables ${^\bullet}S$ and the output
+variables $S{^\bullet}$ are standard in the literature on Petri nets
+-- see, for example, \cite[p.~553]{murata89petri}. The third component
+(unified variables ${^\circledast}S$) is unique to our presentation.
+\bigskip
+\begin{definition}[Interface of a step]~
 \begin{itemize}
-\item The {\it input variables} of a step, denoted ${\bullet}S$, are
-  intuitively the set of LF and \sls~variables free in the step. The
-  notion of what it means to be a free variable is mostly standard,
-  but \sls~has one unusual corner case. Our use of equality, and
-  the corresponding pattern form $\lf{t/a}, P$, means that
-  \sls~patterns can contain free LF variables, as defined in
-  Figure~\ref{fig:freevarspat}.  Therefore, the input interface of a
-  step ${\bullet}(\trstep{P}{R}) =  {\it FV}(P) \cup
-  {\it FV}(R)$.
+\item The {\em input variables} of a step, denoted ${^\bullet}S$, are
+  all the LF variables $\lf{a}$ and \sls~variables $x$ free in the
+  normal term $R$.
 
-\begin{figure}
-\begin{align*}
-{\it FV}(()) & = \emptyset
-\\
-{\it FV}(\lf{a}, P) & = {\it FV}(P)/\{\lf{a}\} 
-\\
-{\it FV}(x, P) & = {\it FV}(P)
-\\
-{\it FV}(\lf{t/a}, P) & =  {\it FV}(P) \cup {\it FV}(\lf{t}) \cup \{ \lf{a} \}
-\end{align*}
-\caption{Free variables of a pattern}
-\label{fig:freevarspat}
-\end{figure}
+\item The {\em output variables} of a step $S = (\trstep{P}{R})$,
+  denoted by $S{^\bullet}$, are all the LF variables $\lf{a}$ and
+  \sls~variables $x$ bound by the pattern $P$ that are not
+  subsequently consumed by a substitution $\lf{t/a}$ in the same
+  pattern.
 
-% The {\it consumed variables} of a step $S = (\tstep{P}{x}{\Sp})$,
-% denoted by ${\ast}S$, are the subset of the input variables that no
-% longer appear in the process state after a step. Every \sls~variable
-% in ${\bullet}S$ associated with a judgment $\istrue{T}$ or $\iseph{T}$
-% is a consumed variable. Any LF variable $\lf{a}$ that is subject to
-% unification $\lf{t/a}$ in the pattern $P$ is also a consumed variable
-% if $\lf{a}$ is a free variable of the pattern. If $\lf{a}$ is free in
-% $P$, then $\lf{t}$ must also be a variable $\lf{b}$, and if $\lf{b}$
-% is likewise free in $P$ it is included in the set of consumed
-% variables.
-
-\item The {\it output variables} of a step $S = (\trstep{P}{R})$,
-  denoted by $S{\bullet}$, are all the variables $\lf{a}$ or $x$ bound
-  by the pattern $P$ that are not subsequently consumed by a
-  substitution $\lf{t/a}$ in the same pattern.
-
-\item The {\it unified variables} of a step, denoted by ${\ast}S$, are
+\item The {\em unified variables} of a step, denoted by ${^\circledast}S$, are
   the free variables of a step that are modified by unification. If
   $\lf{t/a}$ appears in a pattern and $\lf{a}$ is free in the pattern,
   then $\lf{t} = \lf{b}$ for some other variable $\lf{b}$; both
   $\lf{a}$ and $\lf{b}$ (if the latter is free in the pattern) are
   included in the step's unified variables.
 \end{itemize}
-\smallskip
-
-\subsection{Independency}
-\label{sec:independency}
-
-\label{sec:constraint-store-solution}
+\end{definition}
+\bigskip
 
 Consider a well-typed trace $S_1; S_2$ with two steps. It is possible,
-by renaming bound variables, to ensure that $\emptyset = {\bullet}S_1
-\cap S_2{\bullet} = {\bullet}S_1 \cap S_1{\bullet} = {\bullet}S_2 \cap
-S_2{\bullet}$, so we will generally assume that this is the case.  The
-order of $S_1$ and $S_2$ is fixed if $S_1$ introduces variables that
-are used by $S_2$ -- that is, if $\emptyset \neq S_1{\bullet} \cap
-{\bullet}S_2$. For example, if $S_1 = (\trstep{x_b, x_c}{\sf
-  first}\,x_a)$ and $S_2 = (\trstep{x_d}{\sf left}\,x_b)$, then
-$\{x_b\} = S_1{\bullet} \cap {\bullet}S_2$, and the two steps cannot
-be reordered relative to one another. 
+by renaming variables bound in patterns, to ensure that $\emptyset =
+{^\bullet}S_1 \cap S_2{^\bullet} = {^\bullet}S_1 \cap S_1{^\bullet} =
+{^\bullet}S_2 \cap S_2{^\bullet}$. We will generally assume that, in the
+traces we consider, the variables introduced in each step are renamed
+to be distinct from variables bound or free in all previous steps.
 
-Conversely, the condition that $\emptyset = S_1{\bullet} \cap
-{\bullet}S_2$ is sufficient to allow reordering in a CLF-like framework
-\cite{cervesato12trace}. In \sls, however, unification can have subtle
+If $S_1; S_2$ is a well-typed trace, then the order of $S_1$ and $S_2$
+is fixed if $S_1$ introduces variables that are used by $S_2$ -- that
+is, if $\emptyset \neq S_1{^\bullet} \cap {^\bullet}S_2$. For example,
+if $S_1 = (\trstep{x_b, x_c}{\sf first}\,x_a)$ and $S_2 =
+(\trstep{x_d}{\sf left}\,x_b)$, then $\{x_b\} = S_1{^\bullet} \cap
+{^\bullet}S_2$, and the two steps cannot be reordered relative to one
+another.  Conversely, the condition that $\emptyset = S_1{^\bullet}
+\cap {^\bullet}S_2$ is sufficient to allow reordering in a CLF-like
+framework \cite{cervesato12trace}, and is also sufficient to allow
+reordering in \sls~when neither step contain no unified variables
+(that is, when $\emptyset = {^\circledast}S_1 = {^\circledast}S_2$).
+The unification driven by equality, however, can have subtle
 effects. Consider the following two-step trace:
 \begin{align*}
 & \qquad\qquad
-(\lf{a}{:}p, \lf{b}{:}p; ~~ x{:}\iseph{\left({\ocircle}(\lf{b} \doteq \lf{a})\right)}, ~~
+(\lf{a}{:}p, \lf{b}{:}p; ~~ x{:}\iseph{\left({\ocircle}(\lf{b} \doteq_p \lf{a})\right)}, ~~
  y{:}\iseph{\left({\sf foo}\,\lf{b} 
                  \lefti {\ocircle}({\sf bar}\, \lf{a})\right)}, ~~
  z{:}\iseph{\susp{{\sf foo}\,\lf{a}}})
@@ -1758,28 +1752,71 @@ effects. Consider the following two-step trace:
 \\
 & \qquad\qquad
 (\lf{b}{:}p; ~~ w{:}\iseph{\susp{{\sf bar}\,\lf{b}}})
-\intertext{This
-%
-  trace cannot be reordered even though $\emptyset = \emptyset \cap \{
-  y, z \} = (\trstep{\lf{b/a}}{x}){\bullet} \cap
-  {\bullet}(\trstep{w}{y\,z})$, because the atomic term $y\,z$ is only
-  well typed after the LF variables $\lf{a}$ and $\lf{b}$ are unified.
-  To avoid this situation, it is sufficient to require that $\emptyset
-  = {\ast}S_1 \cap {\bullet}S_2$. In the other direction, consider the
-  following similar trace:
-%
-}
+\end{align*}
+This trace cannot be reordered even though $\emptyset = \emptyset \cap
+\{ y, z \} = (\trstep{\lf{b/a}}{x}){^\bullet} \cap
+{^\bullet}(\trstep{w}{y\,z})$, because the atomic term $y\,z$ is only
+well typed after the LF variables $\lf{a}$ and $\lf{b}$ are unified.
+It is not even sufficient to compare the free and unified variables
+(requiring that $\emptyset = {^\circledast}S_1 \cap {^\bullet}S_2$),
+as in the example above ${^\circledast}(\trstep{\lf{b/a}}{x}) = \{
+\lf{a},\lf{b} \}$ and ${^\bullet}(\trstep{w}{y\,z}) = \{ y, z \}$ --
+and obviously $\emptyset = \{ \lf{a},\lf{b} \} \cap \{ y, z \}$.
+
+
+The simplest solution is to forbid steps with unified variables from
+being reordered at all: we can say that $(S_1,S_2) \in I$ if
+$\emptyset = S_1{^\bullet} \cap {^\bullet}S_2 = {^\circledast}S_1 =
+{^\circledast}S_2$. It is unlikely that this condition is satisfying
+in general, but it is sufficient for all the examples in this
+thesis. In the remainder of this thesis, we will define concurrent
+equality on the basis of this simple solution.  Nevertheless, three
+other possibilities are worth considering; all three are
+equivalent to this simple solution as far as the examples in this
+thesis are concerned.
+
+\paragraph{Restricting open propositions} Part of the problem with the
+example above was that there were variables free in the {\it type} of
+a transition that were not free in the {\it term}.  A solution is to
+restrict propositions so that negative propositions in the context are
+always {\it closed} relative to the LF context (or at least relative
+to the part of the LF context that mentions types subject to pure
+variable equality, which would be simple enough to determine with a
+subordination-based analysis). This restriction means that a step $S =
+\trstep{P}{R}$ can only have the parameter $\lf{a}$ free in $R$'s type
+if $\lf{a}$ is free in $R$, allowing us to declare that $S_1$ and
+$S_2$ are reorderable -- meaning $(S_1,S_2)$ and $(S_2,S_1)$ are in the
+independency relation $I$ -- whenever
+$\emptyset = S_1{^\bullet} \cap {^\bullet}S_2 = {^\circledast}S_1 \cap
+{^\bullet}S_2 = {^\bullet}S_1 \cap {^\circledast}S_2$. 
+
+While this
+restriction would be sufficient for the examples in this thesis, it
+would preclude a conjectured extension of the destination-adding
+transformation given in Chapter~\ref{chapter-destinations} to nested
+specifications (nested versus flat specifications are discussed in
+Section~\ref{section-introtologicalcorrespondence}).
+
+\paragraph{Re-typing}
+Another alternate solution would be to follow CLF and allow
+any reordering permitted by the input and output interfaces, but then
+forbid those that cannot be re-typed. (This was necessary in CLF to
+deal with the presence of $\top$.) This is very undesirable, however, 
+because it leads to strange asymmetries. The following trace would be 
+reorderable by this definition, for example, but a symmetric case where
+the equality was $\lf{b} \doteq_p \lf{a}$ instead of  
+$\lf{a} \doteq_p \lf{b}$, that would no longer be the case.
+\begin{align*}
 & \qquad\qquad
-(\lf{a}{:}p, \lf{b}{:}p; ~~ x{:}\iseph{\left({\ocircle}(\lf{a} \doteq \lf{b})\right)}, ~~
- y{:}\iseph{\left(\forall{\lf{a'}}{:}p.\,
-                {\sf foo}\,\lf{a'} 
-                 \lefti {\ocircle}({\sf bar}\, \lf{a'})\right)}, ~~
- z{:}\iseph{\susp{{\sf foo}\,\lf{a}}})
+(\lf{a}{:}p, \lf{b}{:}p; ~~ x{:}\iseph{\left({\ocircle}(\lf{a} \doteq_p \lf{b})\right)}, ~~
+ y{:}\iseph{\left(\forall \lf{w}.\,{\sf foo}\,\lf{w} 
+                 \lefti {\ocircle}({\sf bar}\, \lf{w})\right)}, ~~
+ z{:}\iseph{\susp{{\sf foo}\,\lf{b}}})
 \\
-& \trstep{w}{y\,\lf{a}\,z};
+& \trstep{w}{y\,\lf{b}\,z};
 \\
 & \qquad\qquad
-(\lf{a}{:}p, \lf{b}{:}p; ~~ x{:}\iseph{\left({\ocircle}(\lf{a} \doteq \lf{b})\right)}, ~~
+(\lf{a}{:}p, \lf{b}{:}p; ~~ x{:}\iseph{\left({\ocircle}(\lf{a} \doteq_p \lf{b})\right)}, ~~
  w{:}\iseph{\susp{{\sf bar}\,\lf{a}}})
 \\
 & \trstep{\lf{b/a}}{x}
@@ -1787,30 +1824,131 @@ effects. Consider the following two-step trace:
 & \qquad\qquad
 (\lf{b}{:}p; ~~ w{:}\iseph{\susp{{\sf bar}\,\lf{b}}})
 \end{align*}
-The reordered trace $\trstep{\lf{b/a}}{x}; \trstep{w}{y\,\lf{a}\,z}$
-is not well-typed: the second step has $\lf{a}$ free, and after
-$\lf{a}$ and $\lf{b}$ are unified $\lf{a}$ is no longer free in the
-process state.  We could consider applying the substitution
-$\lf{[b/a]}$ to the second process state to restore its well-typedness
-when the two steps are reordered, but it is much simpler to just
-preclude reordering in this instance by requiring that 
-$\emptyset = {\bullet}S_1 \cap {\ast}S_2$.
 
-These three conditions establish independency: given a well-typed
-trace $S_1; S_2$ where $\emptyset = {\bullet}S_1 \cap S_2{\bullet} =
-{\bullet}S_1 \cap S_1{\bullet} = {\bullet}S_1 \cap S_1{\bullet}$
-(which is always possible by renaming bound variables), if $\emptyset
-= S_1{\bullet} \cap {\bullet}S_2 = {\bullet}S_1 \cap {\ast}S_2 =
-{\ast}S_1 \cap {\bullet}S_2$, then $S_2; S_1$ is also a well-typed
-trace.  We can calculate all these sets for any two steps in the same
-trace, even if their composition is not well-typed. Therefore, given a
-well-typed and sufficiently-renamed trace $T$, we can let the
-independency relation $I$ be the set of pairs of steps $(S, S')$ in
-$T$ where $\emptyset = S_1{\bullet} \cap {\bullet}S_2 = {\bullet}S_1
-\cap {\ast}S_2 = {\ast}S_1 \cap {\bullet}S_2$. Letting $I$ be the
-independency relation of a trace monoid, we get the set of traces that
-are concurrently equal to $T$: all traces $T'$ that are concurrently
-equal to $T$ are well-typed with the same type as $T$.
+\paragraph{Process states with equality constraints}
+A third possible solution is be to change the way we handle the
+interaction of process states and unification. In this formulation of
+\sls, the process state $(\Psi; \Delta)_{\lf\sigma}$ uses $\lf\sigma$
+to capture the constraints that have been introduced by equality. As
+an alternative, we could have process states mention an explicit
+constraint store of equality propositions that have been encountered,
+as in Jagadeesan et al.'s formulation of concurrent constraint
+programming \cite{jagadeesan05testing}. Process states with equality
+constraints might facilitate talking about the interaction of equality
+and typing, which in our current formulation is left rather implicit. 
+
+\subsection{Multifocusing}
+
+Concurrent equality is related to the equivalence relation induced by
+{\it multifocusing} \cite{chaudhuri08canonical}. Like concurrent
+equality, multifocusing imposes a coarser equivalence relation on
+focused proofs. The coarser equivalence relation is enabled by a
+somewhat different mechanism: we are allowed to begin focus on
+multiple propositions simultaneously.
+
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}
+\draw[->] (0,20) -- node[above]{$u_1{:}\susp{\sf a}$} (1,20);
+\draw (1,20) node[right]
+{\footnotesize \gr{\trstep{v_1,w_1}{{\sf first}\,u_1}}};
+%
+\draw[->] (4,20.3) -- node[above]{$v_1{:}\susp{\sf b}$\qquad~} (5,21);
+\draw (5,21) node[right]
+{\footnotesize \gr{\trstep{x_1}{{\sf left}\,v_1}}};
+\draw[->] (4,19.7) -- node[below]{$w_1{:}\susp{\sf c}$\qquad~} (5,19);
+\draw (5,19) node[right]
+{\footnotesize \gr{\trstep{y_1}{{\sf right}\,w_1}}};
+%
+\draw[->] (7.4,21) -- node[above]{~\qquad$x_1{:}\susp{\sf d}$} (8.7,20.3) ;
+\draw[->] (7.7,19) -- node[below]{~\qquad$y_1{:}\susp{\sf e}$} (8.7,19.7) ;
+\draw (8.7,20) node[right]
+{\footnotesize \gr{\trstep{z_1}{{\sf last}\,(\tfuser{x_1}{y_1})}}};
+%
+\draw[->] (12.1,20) -- node[above]{$z_1{:}\susp{\sf f}$} (13.1,20);
+%%%
+%%%
+%%%
+\draw[->] (0,17) -- node[above]{$u_2{:}\susp{\sf a}$} (1,17);
+\draw (1,17) node[right]
+{\footnotesize \gr{\trstep{v_2,w_2}{{\sf first}\,u_2}}};
+%
+\draw[->] (4,17.3) -- node[above]{$v_2{:}\susp{\sf b}$\qquad~} (5,18);
+\draw (5,18) node[right]
+{\footnotesize \gr{\trstep{x_2}{{\sf left}\,v_2}}};
+\draw[->] (4,16.7) -- node[below]{$w_2{:}\susp{\sf c}$\qquad~} (5,16);
+\draw (5,16) node[right]
+{\footnotesize \gr{\trstep{y_2}{{\sf right}\,w_2}}};
+%
+\draw[->] (7.4,18) -- % node[above]{\quad\qquad$x_2{:}\susp{\sf d}$}
+ (8.7,14.3) ;
+\draw[->] (7.7,16) -- %node[above, near end]{$y_2{:}\susp{\sf e}$} 
+(8.7,17) ;
+\draw (8.7,17) node[right]
+{\footnotesize \gr{\trstep{z_2}{{\sf last}\,(\tfuser{x_3}{y_2})}}};
+%
+\draw[->] (12.1,17) -- node[above]{$z_2{:}\susp{\sf f}$} (13.1,17);
+%%%
+%%%
+%%%
+\draw[->] (0,14) -- node[above]{$u_3{:}\susp{\sf a}$} (1,14);
+\draw (1,14) node[right]
+{\footnotesize \gr{\trstep{v_3,w_3}{{\sf first}\,u_3}}};
+%
+\draw[->] (4,14.3) -- node[above]{$v_3{:}\susp{\sf b}$\qquad~} (5,15);
+\draw (5,15) node[right]
+{\footnotesize \gr{\trstep{x_3}{{\sf left}\,v_3}}};
+\draw[->] (4,13.7) -- node[below]{$w_3{:}\susp{\sf c}$\qquad~} (5,13);
+\draw (5,13) node[right]
+{\footnotesize \gr{\trstep{y_3}{{\sf right}\,w_3}}};
+%
+\draw[->] (7.4,15) -- %node[below, near end]{\quad\qquad$x_3{:}\susp{\sf d}$} 
+(8.7,16.7) ;
+\draw (8.5,17.4) node{$y_2{:}\susp{\sf e}$};
+\draw (8.5,16.4) node[right]{$x_3{:}\susp{\sf d}$};
+\draw (8.5,15) node[right]{$x_2{:}\susp{\sf d}$};
+\draw[->] (7.7,13) -- node[below]{~\qquad$y_3{:}\susp{\sf e}$} (8.7,13.7) ;
+\draw (8.7,14) node[right]
+{\footnotesize \gr{\trstep{z_3}{{\sf last}\,(\tfuser{x_2}{y_3})}}};
+%
+\draw[->] (12.1,14) -- node[above]{$z_3{:}\susp{\sf f}$} (13.1,14);
+\end{tikzpicture}
+\end{center}
+\caption{Interaction diagram for a trace $(u_1{:}\susp{\sf a}, u_2{:}\susp{\sf a},u_3{:}\susp{\sf a}) \leadsto^*_{\Sigma} (z_1{:}\susp{\sf f}, z_2{:}\susp{\sf f},z_3{:}\susp{\sf f})$}
+\label{fig:trace-dag}
+\end{figure}
+
+Both multifocusing and concurrent equality seek to address the
+sequential structure of focused proofs. The sequential structure of
+a computation obscures the fact that the interaction between resources
+has the structure of a directed acyclic graph (DAG), not a list. We
+sketch a radically different way of presenting traces in
+Figure~\ref{fig:trace-dag}, where resources are the edges in the DAG
+and steps or synthetic inference rules are the vertexes. (The crossed
+edges that exchange $x_2$ and $x_3$ are only well-typed because, in
+our example trace, ${\sf e}$ and ${\sf d}$ were both declared to be
+ephemeral propositions.) Multifocusing gives a unique normal form to
+proofs by gathering all the focusing steps that can be rotated all the
+way to the beginning, then all the focusing steps that can happen as
+soon as those first steps have been rotated all the way to the
+beginning, etc. In \sls, by contrast, we are content to represent the
+DAG structure as a list combined with the equivalence relation given
+by concurrent equality.
+
+Multifocusing has only been explored carefully in the context of
+classical linear logic. We conjecture that a suitably-defined notion
+of multifocusing for \ollll~would be in bijective correspondence with
+\sls~terms modulo concurrent equivalence, at least if we omit
+equality. Of course, without a formal notion of multifocusing for
+intuitionistic logic, this conjecture is impossible to state
+explicitly. The analogy with multifocusing may be able shed light on
+our difficulties in integrating concurrent equality and unification
+of pure variable types, because multifocusing has an independent
+notion of correctness: the equivalence relation given by multifocusing
+coincides with the the least equivalence relation that includes all
+permutations of independent rules in an unfocused sequent calculus
+proof \cite{chaudhuri08canonical}.
 
 \section{Adequate encoding}
 \label{sec:sls-adequate}
@@ -1822,25 +1960,27 @@ LF (LLF) by Cervesato and Pfenning \cite{cervesato02linear} and was
 extended to Ordered LF (OLF) by Polakow \cite{polakow01ordered}. The
 deductive fragment of \sls~approximately extends both LLF and OLF, and
 the adequacy arguments made by Cervesato and Polakow extend
-straightforwardly to \sls. These adequacy arguments do not extend to
-the systems we want to encode in \sls, however. The more general
-techniques we consider in this section will be explored further in
-Chapter~9 as a general technique for capturing invariants of
-\sls~specifications.
+straightforwardly to the deductive fragment of \sls. These adequacy
+arguments do not extend to the systems we want to encode in the
+non-deductive fragment of \sls, however. The more general techniques
+we consider in this section will be explored further in Chapter~9 as a
+general technique for capturing invariants of \sls~specifications.
 
 The example that we will give to illustrate adequate encoding is the
 following signature, the \sls~encoding of the push-down automata 
-for parentheses matching from the introduction. 
+for parentheses matching from the introduction; we replace the atomic
+proposition ${\sf <}$ with ${\sf L}$ and the proposition ${\sf >}$ with
+${\sf R}$: 
 \begin{align*}
  \Sigma_{\it PDA} = \cdot, 
-~&{\sf <} : {\sf prop}\,{\sf ord},\\
-~&{\sf >} : {\sf prop}\,{\sf ord},\\
+~&{\sf L} : {\sf prop}\,{\sf ord},\\
+~&{\sf R} : {\sf prop}\,{\sf ord},\\
 ~&{\sf hd} : {\sf prop}\,{\sf ord},\\
 ~&{\sf push} : 
-     {\sf hd} \fuse {\sf <}
-       \lefti {\ocircle}({\sf <} \fuse {\sf hd}),\\
+     {\sf hd} \fuse {\sf L}
+       \lefti {\ocircle}({\sf L} \fuse {\sf hd}),\\
 ~&{\sf pop} : 
-     {\sf <} \fuse {\sf hd} \fuse {\sf >}
+     {\sf L} \fuse {\sf hd} \fuse {\sf R}
        \lefti {\ocircle}({\sf hd})
 \end{align*}
 We will relate this specification to a push-down automata defined in
@@ -1857,7 +1997,7 @@ has two transitions:
 \obj{((k{\sf <}) \rhd ({\sf >}s))} & \mapsto \obj{(k \rhd s)}
 \end{align*}
 
-Existing adequacy arguments for \sls~specifications by Cervesato et
+Existing adequacy arguments for CLF specifications by Cervesato et
 al.~\cite{cervesato02concurrent} and by
 Schack-Nielsen~\cite{schacknielsen07induction} have a three-part
 structure structure.  The first step is to define an encoding
@@ -1866,13 +2006,13 @@ function $\ctxinterp{k \rhd s} = \Delta$ from PDA states $\obj{k \rhd
 $\obj{(\cdot{\sf <<}) \rhd ({\sf >>><}\cdot)}$ is encoded as the
 process state
 \[
-x_2{:}\istrue{\susp{\sf <}}, ~~
-x_1{:}\istrue{\susp{\sf <}}, ~~
+x_2{:}\istrue{\susp{\sf L}}, ~~
+x_1{:}\istrue{\susp{\sf L}}, ~~
 h{:}\istrue{\susp{\sf hd}}, ~~
-y_1{:}\istrue{\susp{\sf >}}, ~~
-y_2{:}\istrue{\susp{\sf >}}, ~~
-y_3{:}\istrue{\susp{\sf >}}, ~~
-y_4{:}\istrue{\susp{\sf <}}
+y_1{:}\istrue{\susp{\sf R}}, ~~
+y_2{:}\istrue{\susp{\sf R}}, ~~
+y_3{:}\istrue{\susp{\sf R}}, ~~
+y_4{:}\istrue{\susp{\sf L}}
 \]
 The second step is to prove a preservation-like property: if
 $\ctxinterp{\obj{k \rhd s}} \leadsto_{\Sigma_{\it PDA}}
@@ -1911,9 +2051,11 @@ straightforward and follows other developments.
 \subsection{Regular and generated worlds}
 
 A critical aspect of any adequacy argument is an understanding of the
-structure of the LF context. In the statement of adequacy for untyped
-$\lambda$-calculus terms, for instance, it was necessary to require
-that the context $\Psi$ take the form $\lf{a_1}{:}{\sf
+structure of the relevant context(s) (the LF context in LF encodings,
+the substructural context in CLF encodings, both in \sls~encodings).
+In the statement of adequacy for untyped $\lambda$-calculus terms
+(Section~\ref{sec:lf-adequacy}), for instance, it was necessary to
+require that the LF context $\Psi$ take the form $\lf{a_1}{:}{\sf
   exp},\ldots,\lf{a_n}{:}{\sf exp}$. In the adequacy theorems that
 have been presented for deductive logical frameworks, the structure of
 the context is always {\it regular} -- we can describe a set of
@@ -1921,10 +2063,13 @@ building blocks that build small pieces of the context, and then
 define the set of valid contexts (the {\it world}) to be any context
 that can be built from a particular set of building blocks.  The
 simplest {\it regular worlds} are those that forbid the presence of
-any LF variables. This is the {\it closed world assumption}, and
-regular worlds can be presented as a generalization of closed worlds.
-Twelf contains both
-a syntax for declaring regular worlds and facilities for checking that a
+any LF variables -- when we adequately encode unary natural numbers
+$\obj{n}$ as LF terms of type ${\sf nat}$, letting $\interp{\sf z} =
+\lf{\sf z}$ and letting $\interp{{\sf s} n} = \lf{s}\,\interp{n}$, we
+assume there aren't any free LF variables of type ${\sf nat}$! This is
+the {\it closed world assumption}, and regular worlds can be presented
+as a generalization of closed worlds.  Twelf contains both a syntax
+for declaring regular worlds and facilities for checking that a
 signature respects a particular regular world structure
 \cite{schurmann00automating}.
 
@@ -1940,9 +2085,10 @@ variable.
 
 Regular worlds remain sufficient for the encoding of stores in Linear
 LF \cite{cervesato02linear} and stacks in Ordered LF
-\cite{polakow01ordered}. Our PDA states, on the other hand, do not have
-a regular structure: the process state is organized into three
-zones:
+\cite{polakow01ordered}. Our PDA states, on the other hand, do not
+have the structure that can be described by Sch\"urmann's regular
+worlds language, because the process state is organized into three
+distinct zones:
 \[
 [~\mbox{the stack}~]
 ~
@@ -1950,25 +2096,30 @@ zones:
 ~
 [~\mbox{the string being read}~]
 \]
-The generalization we propose is a move from a description
-of worlds based on regular expressions to a description of worlds
-based on (something like) context-free grammars. 
-Conveniently, the something-like-context-free grammars we are interested
-in can be
+This structure {\it can} be described with a regular expression, but
+the structures that can be described by regular expressions are richer
+than those that can be described by the language of regular worlds
+given by Sch\"urmann and implemented in Twelf
+\cite{schurmann00automating}.
+
+The generalization we propose is a move from a description of worlds
+based on regular worlds descriptions to a description of worlds based
+on (something like) context-free grammars.  Conveniently, the
+something-like-context-free grammars we are interested in can be
 characterized within the machinery of \sls~itself by describing {\it
-  generative signatures} that can generate the set of process states we
-are interested in from a single seed context.  The signature
+  generative signatures} that can generate the set of process states
+we are interested in from a single seed context.  The signature
 $\Sigma_{\it Gen}$ in Figure~\ref{fig:pda-gen} treats all the atomic
 propositions of $\Sigma_{\it PDA}$ -- the atomic propositions ${\sf
-  <}$, ${\sf >}$ and ${\sf hd}$ -- as {\it terminals}, and introduces
+  L}$, ${\sf R}$ and ${\sf hd}$ -- as {\it terminals}, and introduces
 three {\it nonterminals} ${\sf gen}$, ${\sf gen\_stack}$, and ${\sf
   gen\_string}$.
 
 \begin{figure}
 \begin{align*}
  \Sigma_{\it Gen} = \cdot, 
-~&{\sf <} : {\sf prop}\,{\sf ord},\\
-~&{\sf >} : {\sf prop}\,{\sf ord},\\
+~&{\sf L} : {\sf prop}\,{\sf ord},\\
+~&{\sf R} : {\sf prop}\,{\sf ord},\\
 ~&{\sf hd} : {\sf prop}\,{\sf ord},\\
 ~&{\sf gen} : {\sf prop}\,{\sf ord},\\
 ~&{\sf gen\_stack} : {\sf prop}\,{\sf ord},\\
@@ -1978,17 +2129,17 @@ three {\it nonterminals} ${\sf gen}$, ${\sf gen\_stack}$, and ${\sf
                          \fuse {\sf gen\_string})
 && G \rightarrow G_k\,{\sf hd}\,G_s\\
 ~&{\sf stack/left} : {\sf gen\_stack} 
-       \lefti {\ocircle}({\sf <} \fuse {\sf gen\_stack})
+       \lefti {\ocircle}({\sf L} \fuse {\sf gen\_stack})
 && G_k \rightarrow {\sf <}\,G_k \\
 ~&{\sf stack/done} : {\sf gen\_stack} \lefti {\ocircle}(\one)
 && G_k \rightarrow \epsilon\\
 ~&{\sf string/left} : 
      {\sf gen\_string} 
-       \lefti {\ocircle}({\sf gen\_string} \fuse {\sf <})
+       \lefti {\ocircle}({\sf gen\_string} \fuse {\sf L})
 && G_s \rightarrow G_s\,{\sf <}\\
 ~&{\sf string/right} : 
      {\sf gen\_string} 
-       \lefti {\ocircle}({\sf gen\_string} \fuse {\sf >})
+       \lefti {\ocircle}({\sf gen\_string} \fuse {\sf R})
 && G_s \rightarrow G_s\,{\sf >}\\
 ~&{\sf string/done} : 
      {\sf gen\_string} 
@@ -2003,23 +2154,54 @@ three {\it nonterminals} ${\sf gen}$, ${\sf gen\_stack}$, and ${\sf
 An informal translation of the signature $\Sigma_{\it Gen}$ as a
 context-free grammar is given on the right-hand side of
 Figure~\ref{fig:pda-gen}. Observe that the sentences in the language
-$G$ encode the states of our PDA as a string. To formalize this
-statement in terms of \sls, we first note that process states $\Delta$
+$G$ encode the states of our PDA as a string. 
+
+\subsection{Restriction}
+
+The operation of {\it restriction} adapts the concept of ``terminal''
+and ``non-terminal'' to \sls. Note that process states $\Delta$
 such that $(x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}}
 \Delta$ are only well-formed under the signature $\Sigma_{\it PDA}$ if
-they are free of nonterminals. We capture this property by defining a
-partial function for {\it restriction} of process states,
-$\restrictsig{(\Psi; \Delta)}{\Sigma}$. Restriction is only defined if
+they are free of nonterminals; we can define an operation of {\it
+  restriction} that filters out the non-terminal process states by
+checking whether they are well-formed in a signature that only
+declares the terminals.
+
+\bigskip
+\begin{definition}[Restriction]~
+\begin{itemize}
+\item
+  $\restrictsig{\Psi}{\Sigma}$ is a total function that returns the
+  largest context $\Psi' \subseteq \Psi$ such that $\vdash_\Sigma
+  \Psi\,{\sf ctx}$ (defined in Figure~\ref{fig:lf-form}) by removing
+  all the LF variables in $\Psi$ whose types are not-well-formed in
+  the context $\Sigma$.
+
+\item
+  $\restrictsig{(\Psi; \Delta)}{\Sigma}$ is a partial function that is
+  defined exactly when, for every variable declaration
+  $x{:}\istrue{T}$ or $x{:}\iseph{T}$ in $\Delta$, we have that
+  $(\restrictsig{\Psi}{\Sigma}) \vdash_\Sigma T\,{\sf left}$ (defined
+  in Figure~\ref{fig:sls-ctxform}). When it is defined,
+  $\restrictsig{(\Psi; \Delta)}{\Sigma} = ((\restrictsig{}{\Sigma});
+  \Delta')$, where $\Delta'$ is $\Delta$ except for the variable
+  declarations $x{:}\ispers{T}$ in $\Delta$ for which it was not the
+  case that $(\restrictsig{\Psi}{\Sigma}) \vdash_\Sigma T\,{\sf
+    left}$.
+
+\item
+  We will also use $\restrictsig{(\Psi; \Delta)}{\Sigma}$ as a
+  judgment which expresses that the function as defined.
+
+\end{itemize}
+\end{definition}
+\bigskip
+
+Because 
+restriction is only defined if
 all the ordered and linear propositions in $\Delta$ are well-formed
 in $\Sigma$; this means that $\restrictsig{(x{:}\istrue{\susp{\sf
-      gen}})}{\Sigma_{\it PDA}}$ is not defined. When all ordered and
-linear atomic propositions are defined, then $\restrictsig{(\Psi;
-  \Delta)}{\Sigma} = (\Psi'; \Delta')$, where $\Psi'$ contains every
-LF variable from $\Psi$ whose type is well-formed in $\Sigma$ and
-$\Delta'$ contains every mapping $x{:}\islvl{A^-}$ or
-$x{:}\islvl{\susp{p^+_\mlvl}}$ from $\Delta$ that is well-formed in
-the $\Sigma$.
-
+      gen}})}{\Sigma_{\it PDA}}$ is not defined.
 Restriction acts as a semi-permeable membrane on process states: some
 process states cannot pass through at all, and others pass through
 with some of their LF variables and persistent propositions
@@ -2062,21 +2244,26 @@ an encoding function from PDA states to process states:
   h{:}\istrue{\susp{\sf hd}}, ~~
   \ctxinterp{s}$
 \item $\ctxinterp{\cdot} = \cdot$
-\item $\ctxinterp{k{\sf <}} = \ctxinterp{k}, ~~ x{:}\istrue{\susp{\sf <}}$
-\item $\ctxinterp{{\sf <}s} = y{:}\istrue{\susp{\sf <}}, ~~ \ctxinterp{s}$
-\item $\ctxinterp{{\sf >}s} = y{:}\istrue{\susp{\sf >}}, ~~ \ctxinterp{s}$
+\item $\ctxinterp{k{\sf <}} = \ctxinterp{k}, ~~ x{:}\istrue{\susp{\sf L}}$
+\item $\ctxinterp{{\sf <}s} = y{:}\istrue{\susp{\sf L}}, ~~ \ctxinterp{s}$
+\item $\ctxinterp{{\sf >}s} = y{:}\istrue{\susp{\sf R}}, ~~ \ctxinterp{s}$
 \end{itemize}
-\smallskip It is always the case that $\restrictsig{\ctxinterp{k \rhd
+\smallskip 
+It is always the case that $\restrictsig{\ctxinterp{k \rhd
     s}}{\Sigma_{\it PDA}}$ -- the encoding only includes terminals.
-To show that the encoding function is injective we must show that, for
-any $\obj{k \rhd s}$, there exists a trace $T ::
-(x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\it Gen} \ctxinterp{k \rhd
-  s}$. To show that the encoding function is surjective, we must show
-that if $T :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it
-    Gen}} \Delta$ and $\restrictsig{\Delta}{\Sigma_{\it PDA}}$ then
-$\Delta = \ctxinterp{k \rhd s}$ for some $\obj{k}$ and $\obj{s}$. This
-will complete the proof: an injective and surjective function is
-bijective.
+
+It is straightforward to observe that if $\ctxinterp{k \rhd s} =
+\ctxinterp{k' \rhd s'}$ if an only if $\obj{k} = \obj{k'}$ and
+$\obj{s} = \obj{s'}$. The interesting part of showing that context
+interpretation is an injective function is mostly just showing that it
+is a function: that is, showing that, for any $\obj{k \rhd s}$, there
+exists a trace $T :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\it
+  Gen} \ctxinterp{k \rhd s}$. To show that the encoding function is
+surjective, we must show that if $T :: (x{:}\istrue{\susp{\sf gen}})
+\leadsto^*_{\Sigma_{\it Gen}} \Delta$ and
+$\restrictsig{\Delta}{\Sigma_{\it PDA}}$ then $\Delta = \ctxinterp{k
+  \rhd s}$ for some $\obj{k}$ and $\obj{s}$. This will complete the
+proof: an injective and surjective function is bijective.
 
 \subsubsection{Encoding is injective}
 
@@ -2100,34 +2287,34 @@ $T' :: ({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}}
 ({\ctxinterp{k'}, x''{:}\istrue{\susp{\sf gen\_stack}}})$ by the induction
 hypothesis, so $T = (T'; \trstep{x_1, x_2}{{\sf stack/left}\,x'}) :: 
 ({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
-({\ctxinterp{k'}, x_1{:}\istrue{\susp{\sf <}}, x_2{:}\istrue{\susp{\sf gen\_stack}}})$
+({\ctxinterp{k'}, x_1{:}\istrue{\susp{\sf L}}, x_2{:}\istrue{\susp{\sf gen\_stack}}})$
 \end{itemize}
 
 \begin{lemma} For all $\obj{s}$, there exists
 $T :: ({y{:}\istrue{\susp{\sf gen\_string}}}) \leadsto^*_{\Sigma_{\it Gen}} 
-({x'{:}\istrue{\susp{\sf gen\_string}}, \ctxinterp{s}})$.
+({y'{:}\istrue{\susp{\sf gen\_string}}, \ctxinterp{s}})$.
 \end{lemma}
 \noindent
 By induction on $\obj{s}$.
 \begin{itemize}
 \item If $\obj{s} = \cdot$, $T = \emptytrace ::
-({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
-(x{:}\istrue{\susp{\sf gen\_stack}})$
+({y{:}\istrue{\susp{\sf gen\_string}}}) \leadsto^*_{\Sigma_{\it Gen}} 
+(y{:}\istrue{\susp{\sf gen\_string}})$
 \item If $\obj{s} = \obj{{\sf <}s' }$, we have 
-$T' :: ({x{:}\istrue{\susp{\sf gen\_string}}}) \leadsto^*_{\Sigma_{\it Gen}} 
-(x'{:}\istrue{\susp{\sf gen\_string}}, \ctxinterp{s'})$ by the induction
-hypothesis, so $T = (T'; \trstep{x_1, x_2}{{\sf string/left}\,x'}) :: 
-({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
-(x_1{:}\istrue{\susp{\sf gen\_stack}},
- x_2{:}\istrue{\susp{\sf <}},
+$T' :: ({y{:}\istrue{\susp{\sf gen\_string}}}) \leadsto^*_{\Sigma_{\it Gen}} 
+(y'{:}\istrue{\susp{\sf gen\_string}}, \ctxinterp{s'})$ by the induction
+hypothesis, so $T = (T'; \trstep{y_1, y_2}{{\sf string/left}\,y'}) :: 
+({y{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
+(y_1{:}\istrue{\susp{\sf gen\_stack}},
+ y_2{:}\istrue{\susp{\sf L}},
 \ctxinterp{s'})$
 \item If $\obj{s} = \obj{{\sf >}s' }$, we have 
-$T' :: ({x{:}\istrue{\susp{\sf gen\_string}}}) \leadsto^*_{\Sigma_{\it Gen}} 
-(x'{:}\istrue{\susp{\sf gen\_string}}, \ctxinterp{s'})$ by the induction
-hypothesis, so $T = (T'; \trstep{x_1, x_2}{{\sf string/right}\,x'}) :: 
-({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
-(x_1{:}\istrue{\susp{\sf gen\_stack}},
- x_2{:}\istrue{\susp{\sf >}},
+$T' :: ({y{:}\istrue{\susp{\sf gen\_string}}}) \leadsto^*_{\Sigma_{\it Gen}} 
+(y'{:}\istrue{\susp{\sf gen\_string}}, \ctxinterp{s'})$ by the induction
+hypothesis, so $T = (T'; \trstep{y_1, y_2}{{\sf string/right}\,y'}) :: 
+({y{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
+(y_1{:}\istrue{\susp{\sf gen\_stack}},
+ y_2{:}\istrue{\susp{\sf R}},
 \ctxinterp{s'})$
 \end{itemize}
 
@@ -2198,7 +2385,7 @@ are four possibilities:
 \smallskip
 \begin{itemize}
 \item $T = (\trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
-      state/done}\,y})$ -- this is a base case, and we can finish by
+      string/done}\,y})$ -- this is a base case, and we can finish by
   letting $\obj{k'} = \obj{k}$ and $\obj{s'} = \obj{s}$.
 \item $T = (\trstep{x_1,x_2}{{\sf stack/left}\,x}; T')$ -- apply 
   the ind.~hyp.~(letting $x = x_2$, $\obj{k} =
@@ -2243,7 +2430,7 @@ completes the proof.
 
 Theorem~\ref{thm:pda-encoding} establishes that the generative
 signature $\Sigma_{\it Gen}$ describes a world -- a set of
-\sls~process states -- that precisely correspond to the states of a
+\sls~process states -- that precisely corresponds to the states of a
 push-down automata.  We can (imperfectly) illustrate the content of
 this theorem in our two-dimensional notation as follows, where 
 $\Delta \Leftrightarrow \obj{k \rhd s}$ indicates the presence of a
@@ -2254,7 +2441,7 @@ bijection:
 \draw [->,decorate, 
 decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}] 
 (0.8,2) -- (.8,.8); 
-\draw (.9,.8) node{$_*$};
+\draw (.95,.8) node{$_*$};
 \draw (.3,1.4) node{$\Sigma_{\it Gen}$};
 \draw (.8,.5) node{$\Delta$};
 \draw (-.2, .1) node{$\Sigma_{\it PDA}$};
@@ -2296,7 +2483,7 @@ $T_2 :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} \Delta_2$.
 \bigskip
 
 \noindent
-If we illustrate given elements as solid lines and elements that we have
+If we illustrate the given elements as solid lines and elements that we have
 to prove as dashed lines, the big picture of the encoding and preservation
 theorems is the following:
 
@@ -2306,7 +2493,7 @@ theorems is the following:
 \draw [->,decorate, 
 decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}] 
 (0.8,2) -- (.8,.8); 
-\draw (.9,.8) node{$_*$};
+\draw (.95,.8) node{$_*$};
 \draw (.3,1.4) node{$\Sigma_{\it Gen}$};
 \draw (.8,.5) node{$\Delta$};
 \draw [thick,dash pattern = on 2.82842842712mm off 2mm,decorate,decoration={saw,amplitude=2mm,segment length=2mm}] 
@@ -2319,7 +2506,7 @@ decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}]
 \draw [->,densely dotted,decorate, 
 decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}] 
 (4.8,2) -- (4.8,.8); 
-\draw (4.9,.8) node{$_*$};
+\draw (4.95,.8) node{$_*$};
 \draw (4.3,1.4) node{$\Sigma_{\it Gen}$};
 \draw (4.8,.5) node{$\Delta'$};
 \draw (2.8, 0) node{$\Sigma_{\it PDA}$};
@@ -2345,16 +2532,54 @@ traces modulo concurrent equality is critical in both cases.
 \bigskip
 \begin{lemma}
   Let $\Delta = \tackon{\Theta}{x{:}\istrue{\susp{\sf gen\_stack}},
-    h{:}\istrue{\susp{\sf hd}}, y{:}\istrue{\susp{\sf gen\_state}}}$.
+    h{:}\istrue{\susp{\sf hd}}, y{:}\istrue{\susp{\sf gen\_string}}}$.
   If $T :: \Delta \leadsto^*_{\Sigma_{\it Gen}} \Delta'$ and
   $\restrictsig{\Delta'}{\Sigma_{\it PDA}}$, then $T = (T';
-  \trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
-      string/done}\,y})$, where $T' ::
+  \trstep{()}{{\sf stack/done}\,x'}; \trstep{()}{{\sf
+      string/done}\,y'})$, where $T' ::
   \Delta \leadsto^*_{\Sigma_{\it Gen}}
   \tackon{\Theta'}{x'{:}\istrue{\susp{\sf gen\_stack}},
-    h{:}\istrue{\susp{\sf hd}}, y'{:}\istrue{\susp{\sf gen\_state}}}$
+    h{:}\istrue{\susp{\sf hd}}, y'{:}\istrue{\susp{\sf gen\_string}}}$
   and $\Delta' = \tackon{\Theta'}{h{:}\istrue{\susp{\sf hd}}}$.
+Or, as a picture: 
+
+\begin{center}
+\begin{tikzpicture} 
+\draw (0,2.3) 
+  node{$\Delta = \tackon{\Theta}{x{:}\istrue{\susp{\sf gen\_stack}},
+    h{:}\istrue{\susp{\sf hd}}, y{:}\istrue{\susp{\sf gen\_string}}}$};
+\draw [->,decorate, 
+decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}] 
+(-2.7,2) -- (-2.7,-1.3); 
+\draw (-2.55,-1.3) node{$_*$};
+\draw (-2.7,1.65) node[left]{$T$};
+\draw (-2.7,-1.6) node{$\Delta' \mathstrut$};
+%
+\draw (-2.2,1.65) node{$=$};
+%
+\draw [->,densely dotted,decorate, 
+decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}] 
+(2.2,2) -- (2.2,1.3); 
+\draw (2.2,1.65) node[left]{$T'$};
+\draw [->,densely dotted,decorate, 
+decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}] 
+(2.2,.7) -- (2.2,0); 
+\draw (2.2,.35) node[left]{$\trstep{()}{{\sf stack/done}\,x'}$};
+\draw [->,densely dotted,decorate, 
+decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}] 
+(2.2,-.6) -- (2.2,-1.3); 
+\draw (2.2,-.95) node[left]{$\trstep{()}{{\sf string/done}\,y'}$};
+\draw (2.35,1.3) node{$_*$};
+%\draw (2.2,2.3) node{$\Delta$};
+\draw (1.9,1) node[right]{$\tackon{\Theta'}{x'{:}\istrue{\susp{\sf gen\_stack}},
+    h{:}\istrue{\susp{\sf hd}}, y'{:}\istrue{\susp{\sf gen\_string}}}$};
+\draw (1.9,-.3) node[right]{$\tackon{\Theta'}{
+    h{:}\istrue{\susp{\sf hd}}, y'{:}\istrue{\susp{\sf gen\_string}}}$};
+\draw (1.9,-1.6) node[right]{$\Delta' = \tackon{\Theta'}{h{:}\istrue{\susp{\sf hd}}} \mathstrut$};
+\end{tikzpicture} 
+\end{center}
 \end{lemma}
+
 \begin{proof}
 By induction on the structure of $T$ and case analysis on the first
 steps in $T$. Up to concurrent equality, there are five possibilities:
@@ -2363,19 +2588,19 @@ steps in $T$. Up to concurrent equality, there are five possibilities:
       string/done}\,y})$. Immediate, letting $T' = \emptytrace$.
 \item $T = (\trstep{x_1,x_2}{{\sf stack/left}\,x}; T'')$. By the
   induction hypothesis (where the new frame incorporates
-  $x_1{:}\istrue{\susp{\sf <}}$), we have $T'' = (T''';
+  $x_1{:}\istrue{\susp{\sf L}}$), we have $T'' = (T''';
   \trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
       string/done}\,y})$. Let $T' = (\trstep{x_1,x_2}{{\sf
       stack/left}\,x}; T''')$.
 \item $T = (\trstep{y_1,y_2}{{\sf string/left}\,y}; T'')$. By the
   induction hypothesis (where the new frame incorporates
-  $y_1{:}\istrue{\susp{\sf <}}$), we have $T'' = (T''';
+  $y_1{:}\istrue{\susp{\sf L}}$), we have $T'' = (T''';
   \trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
       string/done}\,y})$. Let $T' = (\trstep{x_1,x_2}{{\sf
       string/left}\,y}; T''')$.
 \item $T = (\trstep{y_1,y_2}{{\sf string/right}\,y}; T'')$. By the
   induction hypothesis (where the new frame incorporates
-  $y_2{:}\istrue{\susp{\sf >}}$), we have $T'' = (T''';
+  $y_2{:}\istrue{\susp{\sf R}}$), we have $T'' = (T''';
   \trstep{()}{{\sf stack/done}\,x}; \trstep{()}{{\sf
       string/done}\,y})$. Let $T' = (\trstep{x_1,x_2}{{\sf
       string/right}\,y}; T''')$.
@@ -2399,7 +2624,7 @@ $T :: (g{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} \Delta$ and
 where $T' ::
   (g{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}}
   \tackon{\Theta}{x'{:}\istrue{\susp{\sf gen\_stack}},
-    h{:}\istrue{\susp{\sf hd}}, y'{:}\istrue{\susp{\sf gen\_state}}}$
+    h{:}\istrue{\susp{\sf hd}}, y'{:}\istrue{\susp{\sf gen\_string}}}$
   and $\Delta = \tackon{\Theta}{h{:}\istrue{\susp{\sf hd}}}$. To prove
 the corollary, we observe
 that $T = (\trstep{x,h,r}{{\sf state}\,g\,}; T'')$ and apply the lemma
@@ -2409,18 +2634,47 @@ to $T''$.
 \begin{lemma} The following all hold:
 \begin{itemize}
 \item If $T :: (g{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} 
-       \tackon{\Theta}{x_1{:}\istrue{\susp{\sf <}}, 
+       \tackon{\Theta}{x_1{:}\istrue{\susp{\sf L}}, 
           x_2{:}\istrue{\susp{\sf gen\_stack}}}$, \\then 
-$T = (T'; \trstep{x_1,x_2}{{\sf stack/left}\,x'})$. 
+$T = (T'; \trstep{x_1,x_2}{{\sf stack/left}\,x'})$ for some $x'$.
 \item If $T :: (g{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} 
-       \tackon{\Theta}{y_1{:}\istrue{\susp{\sf gen\_stack}},
-           y_2{:}\istrue{\susp{\sf <}}}$, \\then 
-$T = (T'; \trstep{x_1,x_2}{{\sf string/left}\,y'})$. 
+       \tackon{\Theta}{y_1{:}\istrue{\susp{\sf gen\_string}},
+           y_2{:}\istrue{\susp{\sf L}}}$, \\then 
+$T = (T'; \trstep{y_1,y_2}{{\sf string/left}\,y'})$ for some $y'$.
 \item If $T :: (g{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}} 
-       \tackon{\Theta}{y_1{:}\istrue{\susp{\sf gen\_stack}},
-           y_2{:}\istrue{\susp{\sf >}}}$, \\then 
-$T = (T'; \trstep{x_1,x_2}{{\sf string/right}\,y'})$. 
+       \tackon{\Theta}{y_1{:}\istrue{\susp{\sf gen\_string}},
+           y_2{:}\istrue{\susp{\sf R}}}$, \\then 
+$T = (T'; \trstep{y_1,y_2}{{\sf string/right}\,y'})$ for some $y'$.
 \end{itemize}
+To give the last of the three statements as a picture:
+\begin{center}
+\begin{tikzpicture} 
+\draw [->,decorate, 
+decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}] 
+(-4.7,2) -- (-4.7,0); 
+\draw (-4.55,0) node{$_*$};
+\draw (-4.7,1.65) node[left]{$T$};
+\draw (-4.7,2.3) node{$g{:}\istrue{\susp{\sf gen}}$};
+\draw (-4.7,-.3) node{$\tackon{\Theta'}{y_1{:}\istrue{\susp{\sf gen\_string}},
+           y_2{:}\istrue{\susp{\sf R}}}$};
+%
+\draw (-4.2,1.65) node{$=$};
+%
+\draw [->,densely dotted,decorate, 
+decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}] 
+(2.2,2) -- (2.2,1.3); 
+\draw (2.35,1.3) node{$_*$};
+\draw (2.2,1.65) node[left]{$T'$};
+\draw [->,densely dotted,decorate, 
+decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}] 
+(2.2,.7) -- (2.2,0); 
+\draw (2.2,2.3) node{$g{:}\istrue{\susp{\sf gen}}$};
+\draw (2.2,.35) node[left]{$\trstep{y_1,y_2}{{\sf string/right}\,y'}$};
+\draw (2.2,1) node{$\tackon{\Theta'}{y'{:}\istrue{\susp{\sf gen\_string}}}$};
+\draw (2.2,-.3) node{$\tackon{\Theta'}{y_1{:}\istrue{\susp{\sf gen\_string}},
+           y_2{:}\istrue{\susp{\sf R}}}$};
+\end{tikzpicture} 
+\end{center}
 \end{lemma}
 \begin{proof}
 The proofs are all by induction on the structure of $T$ and case
@@ -2429,7 +2683,7 @@ the other two are similar. Up to concurrent equality, there are two
 possibilities:
 \begin{itemize}
 \item $T = (T'; \trstep{y_1, y_2}{{\sf string/right}\,y'})$ -- Immediate.
-\item $T = (T''; S)$, where $y_1$ and $y_2$ are not bound by $S$. By the 
+\item $T = (T''; S)$, where $y_1$ and $y_2$ are not among the output variables $S{^\bullet}$. By the 
 induction hypothesis, $T'' = (T'''; \trstep{y_1,y_2}{{\sf string/right}\,y'})$.
 Let $T' = (T''; S)$. 
 \end{itemize}
@@ -2456,17 +2710,17 @@ generative trace in $\Sigma_{\it Gen}$:
 & \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
 & T\\
 & \qquad \tackon{\Theta}{h{:}\istrue{\susp{\sf hd}}, ~~
-                   y{:}\istrue{\susp{\sf <}}}
+                   y{:}\istrue{\susp{\sf L}}}
 \intertext{and we must construct a trace 
 $({g{:}\istrue{\susp{\sf gen}}}) \leadsto^*_{\Sigma_{\it Gen}} 
-\tackon{\Theta}{x'{:}\istrue{\susp{\sf <}},
+\tackon{\Theta}{x'{:}\istrue{\susp{\sf L}},
                    h'{:}\istrue{\susp{\sf hd}}}$. Changing
 $h$ to $h'$ is just renaming a bound variable, so we have}
 & \qquad 
 ({g{:}\istrue{\susp{\sf gen}}})\\
 & T'\\
 & \qquad \tackon{\Theta}{h'{:}\istrue{\susp{\sf hd}}, ~~
-                   y{:}\istrue{\susp{\sf <}}}
+                   y{:}\istrue{\susp{\sf L}}}
 \intertext{
 The corollary 
 to the first inversion lemma above on $T'$ gives us}
@@ -2477,11 +2731,11 @@ T' = & \qquad
                    x_g{:}\istrue{\susp{\sf gen\_stack}}, ~~
                    h'{:}\istrue{\susp{\sf hd}}, ~~
                    y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
-                   y{:}\istrue{\susp{\sf <}}}\\
+                   y{:}\istrue{\susp{\sf L}}}\\
 & \trstep{()}{{\sf stack/done}\,x_g};\\
 & \trstep{()}{{\sf string/done}\,y_g}\\
 & \qquad \tackon{\Theta}{h'{:}\istrue{\susp{\sf hd}}, ~~
-                   y{:}\istrue{\susp{\sf <}}}
+                   y{:}\istrue{\susp{\sf L}}}
 \intertext{The second inversion lemma (second part) on $T''$ gives us}
 T'' = & \qquad 
 ({g{:}\istrue{\susp{\sf gen}}})\\
@@ -2495,7 +2749,7 @@ T'' = & \qquad
                    x_g{:}\istrue{\susp{\sf gen\_stack}}, ~~
                    h'{:}\istrue{\susp{\sf hd}}, ~~
                    y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
-                   y{:}\istrue{\susp{\sf <}}}\\
+                   y{:}\istrue{\susp{\sf L}}}\\
 \intertext{Now, we can construct the trace we need using $T'''$:}
 & \qquad 
 ({g{:}\istrue{\susp{\sf gen}}})\\
@@ -2506,14 +2760,14 @@ T'' = & \qquad
                    y_g'{:}\istrue{\susp{\sf gen\_string}}}\\
 & \trstep{x', x_g'}{{\sf stack/left}\,x_g};\\
 & \qquad \tackon{\Theta}{
-                   x'{:}\istrue{\susp{\sf <}}, ~~
+                   x'{:}\istrue{\susp{\sf L}}, ~~
                    x_g'{:}\istrue{\susp{\sf gen\_stack}}, ~~
                    h'{:}\istrue{\susp{\sf hd}}, ~~
                    y_g'{:}\istrue{\susp{\sf gen\_string}}}\\
 & \trstep{()}{{\sf stack/done}\,x_g'};\\
 & \trstep{()}{{\sf string/done}\,y_g'}\\
 & \qquad \tackon{\Theta}{
-                   x'{:}\istrue{\susp{\sf <}}, ~~
+                   x'{:}\istrue{\susp{\sf L}}, ~~
                    h'{:}\istrue{\susp{\sf hd}}}
 \end{align*}
 
@@ -2525,44 +2779,44 @@ generative trace in $\Sigma_{\it Gen}$:
 \begin{align*}
 & \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
 & T\\
-& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf <}}, ~~
+& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf L}}, ~~
                    h{:}\istrue{\susp{\sf hd}}, ~~
-                   y{:}\istrue{\susp{\sf >}}}
+                   y{:}\istrue{\susp{\sf R}}}
 \intertext{and we must construct a trace 
 $({g{:}\istrue{\susp{\sf gen}}}) \leadsto^*_{\Sigma_{\it Gen}} 
 \tackon{\Theta}{h'{:}\istrue{\susp{\sf hd}}}$. Changing
 $h$ to $h'$ is just renaming a bound variable, so we have}
 & \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
 & T'\\
-& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf <}}, ~~
+& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf L}}, ~~
                    h'{:}\istrue{\susp{\sf hd}}, ~~
-                   y{:}\istrue{\susp{\sf >}}}
+                   y{:}\istrue{\susp{\sf R}}}
 \intertext{The corollary to the first inversion lemma above on $T'$ gives us}
 T' = & \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
 & T'';\\
-& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf <}}, ~~
+& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf L}}, ~~
                    x_g{:}\istrue{\susp{\sf gen\_stack}}, ~~
                    h'{:}\istrue{\susp{\sf hd}}, ~~
                    y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
-                   y{:}\istrue{\susp{\sf >}}}\\
+                   y{:}\istrue{\susp{\sf R}}}\\
 & \trstep{()}{{\sf stack/done}\,x_g};\\
 & \trstep{()}{{\sf string/done}\,y_g}\\
-& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf <}}, ~~
+& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf L}}, ~~
                    h'{:}\istrue{\susp{\sf hd}}, ~~
-                   y{:}\istrue{\susp{\sf >}}}
+                   y{:}\istrue{\susp{\sf R}}}
 \intertext{The second inversion lemma (first part) on $T''$ gives us}
 T'' = & \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
 & T''';\\
 & \qquad \tackon{\Theta}{x_g'{:}\istrue{\susp{\sf gen\_stack}}, ~~
                    h'{:}\istrue{\susp{\sf hd}}, ~~
                    y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
-                   y{:}\istrue{\susp{\sf >}}}\\
+                   y{:}\istrue{\susp{\sf R}}}\\
 & \trstep{x, x_g}{{\sf stack/left}\,x_g'};\\
-& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf <}}, ~~
+& \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf L}}, ~~
                    x_g{:}\istrue{\susp{\sf gen\_stack}}, ~~
                    h'{:}\istrue{\susp{\sf hd}}, ~~
                    y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
-                   y{:}\istrue{\susp{\sf >}}}\\
+                   y{:}\istrue{\susp{\sf R}}}\\
 \intertext{The second inversion lemma (third part) on $T'''$ gives us}
 T''' = & \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
 & T'''';\\
@@ -2573,7 +2827,7 @@ T''' = & \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
 & \qquad \tackon{\Theta}{x_g'{:}\istrue{\susp{\sf gen\_stack}}, ~~
                    h'{:}\istrue{\susp{\sf hd}}, ~~
                    y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
-                   y{:}\istrue{\susp{\sf >}}}\\
+                   y{:}\istrue{\susp{\sf R}}}\\
 \intertext{Now, we can construct the trace we need using $T''''$:}
 & \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
 & T'''';\\
@@ -2618,6 +2872,11 @@ the actual adequacy theorem is just an enumeration in both directions.
   of $\obj{k}$ and $\obj{s}$.
 \end{proof}
 
+As an immediate corollary of this theorem and preservation
+(Theorem~\ref{thm:pda-preservation}), we have the stronger adequacy
+property that $\ctxinterp{k \rhd s} \leadsto_{\Sigma_{\it PDA}}
+\Delta'$, then $\Delta' = \ctxinterp{k' \rhd s'}$ for some $\obj{k}$
+and $\obj{s'}$ such that $\obj{k \rhd s} \mapsto \obj{k' \rhd s'}$.
 In our two-dimensional notation, the complete discussion of adequacy
 for \sls~is captured by the following picture:
 
@@ -2701,35 +2960,37 @@ A^+ \fuse B^+ & \thingamajig \mbox{\Verb|A * B|}
 \end{figure}
 
 
-The checked \sls~code differs slightly from mathematical \sls~code in
-a few ways -- the
-translation between the mathematical notation we use for
-\sls~propositions and the ASCII representation used in the
-implementation is outlined in Figure~\ref{fig:translate-types}.
-Following CLF and the Celf implementation, we write the
-lax modality ${\ocircle}A$ in ASCII as \verb|{A}| -- recall that in
-Section~\ref{sec:slsframework} we introduced the $\{ A^+ \}$ notation
-from CLF as a synonym for Fairtlough and Mendler's ${\ocircle}A^+$.
-The exponential ${\gnab}A$ doesn't have an ASCII
-representation, so write \verb|$A| when $A$ is mobile. Upshifts and
-downshifts are always inferred: this means that we can't write down
-${\uparrow}{\downarrow}A$ or ${\downarrow}{\uparrow}A$, but neither of
-these \ollll~propositions are part of the \sls~fragment anyway. 
+The checked \sls~code differs slightly from mathematical
+\sls~specifications in a few ways -- the translation between the
+mathematical notation we use for \sls~propositions and the ASCII
+representation used in the implementation is outlined in
+Figure~\ref{fig:translate-types}.  Following CLF and the Celf
+implementation, we write the lax modality ${\ocircle}A$ in ASCII as
+\verb|{A}| -- recall that in Section~\ref{sec:slsframework} we
+introduced the $\{ A^+ \}$ notation from CLF as a synonym for
+Fairtlough and Mendler's ${\ocircle}A^+$.  The exponential ${\gnab}A$
+doesn't have an ASCII representation, so we write \verb|$A| when $A$
+is mobile. Upshifts and downshifts are always inferred: this means
+that we can't write down ${\uparrow}{\downarrow}A$ or
+${\downarrow}{\uparrow}A$, but neither of these \ollll~propositions
+are part of the \sls~fragment anyway.
 
 The \sls~implementation also supports conventional abbreviations for
-arrows that we will won't use in mathematical notation: ${\gnab}A^-
-\lefti B^-$ can be written as \verb|A -o B| or \verb|$A >-> B| in the
+arrows that we won't use in mathematical notation: ${\gnab}A^- \lefti
+B^-$ can be written as \verb|A -o B| or \verb|$A >-> B| in the
 \sls~implementation, and ${!}A^- \lefti B^-$ can be written as
-\verb|A -> B| or \verb|!A >-> B|.  (This final proposition is
+\verb|A -> B| or \verb|!A >-> B|.  This final proposition is
 ambiguous, because \verb|X -> Y| can be an abbreviation for ${!}X
 \lefti Y$ or $\Pi \lf{a}{:}X. Y$, but \sls~can figure out whether the
 proposition or classifier was intended by analyzing the structure of
-\verb|Y|.)  All arrows can also be written backwards: \verb|B <-< A|
-is equivalent to \verb|A >-> B|, \verb|B o- A| is equivalent to
-\verb|A -o B|, and so on. Also following traditional conventions,
-upper-case variables that are free in a rule will be treated as
-implicitly quantified. Therefore, the line
-\bigskip
+\verb|Y|. Also note that we could have just as easily made
+\verb|A -o B| an abbreviation for \verb|$A -o B|, but we had to pick
+one and the choice absolutely doesn't matter.  All arrows can also be
+written backwards: \verb|B <-< A| is equivalent to \verb|A >-> B|,
+\verb|B o- A| is equivalent to \verb|A -o B|, and so on. Also
+following traditional conventions, upper-case variables that are free
+in a rule will be treated as implicitly quantified. Therefore, the
+line \bigskip
 \begin{verbatim}
 rule: foo X <- (bar Y -> baz Z).
 \end{verbatim}
@@ -2776,9 +3037,10 @@ linear (and likewise when specifications are entirely persistent).
 
 One logic programming interpretation of CLF was explored by the
 Lollimon implementation \cite{lopez05monadic} and adapted by the Celf
-implementation \cite{schacknielsen08celf}. Logic programming
-interpretations of \sls~are not a focus this thesis, but we will touch
-on a few points in this section. 
+implementation
+\cite{schacknielsen08celf,schacknielsen11implementing}. Logic
+programming interpretations of \sls~are not a focus this thesis, but
+we will touch on a few points in this section.
 
 Logic programming is important because it provides us with operational
 intuitions about the intended behavior of the systems we specify in
@@ -2809,35 +3071,34 @@ $\foc{\Psi}{\Delta_1}{\istrue{\susp{p_1^-}}}$ \ldots
 $\foc{\Psi}{\Delta_n}{\istrue{\susp{p_n^-}}}$, where $\Delta$ matches
 $\Delta_1,\ldots,\Delta_n$.
 
-When goal-directed search only tries to build one derivation at a
-time, it is called {\it backward chaining}, because we're working
-backwards from the goal we want to prove.\footnote{The alternative is
-  to try and derive the same sequent in multiple ways simultaneously,
-  succeeding whenever some way of proving the sequent is
-  discovered. Unlike backward chaining, this strategy of breadth-first
-  search is complete: if a proof exists, it will be found.  Backward
-  chaining as we define it is only nondeterministically or 
-  partially complete,
-  because it can fail to terminate when a proof exists. We will call
-  this alternative to backtracking {\it breadth-first theorem
-    proving}, as it amounts to taking a breadth-first, instead of
-  depth-first, view of the so-called {\it failure continuation}
-  \cite{pfenning06backtracking}.} The term {\it top-down logic
-  programming} is also used, and refers to the fact that, in the
-concrete syntax of Prolog, the rule ${\downarrow}p_n^- \lefti \ldots
-\lefti {\downarrow}p_1^- \lefti p^-$ would be written with $p^-$ on
-the first line, $p_1^-$ on the second, etc. This is exactly backwards
-from a proof-construction perspective, as we think of backward
-chaining as building partial proofs from the bottom up, the
-root towards the leaves, so we will
-avoid this terminology.  
+When goal-directed search only deals with the unproved subgoals of a
+single coherent derivation at a time, it is called {\it backward
+  chaining}, because we're working backwards from the goal we want to
+prove.\footnote{The alternative is to try and derive the same sequent
+  in multiple ways simultaneously, succeeding whenever some way of
+  proving the sequent is discovered. Unlike backward chaining, this
+  strategy of breadth-first search is complete: if a proof exists, it
+  will be found.  Backward chaining as we define it is only
+  nondeterministically or partially complete, because it can fail to
+  terminate when a proof exists. We will call this alternative to
+  backtracking {\it breadth-first theorem proving}, as it amounts to
+  taking a breadth-first, instead of depth-first, view of the
+  so-called {\it failure continuation} \cite{pfenning06backtracking}.}
+The term {\it top-down logic programming} is also used, and refers to
+the fact that, in the concrete syntax of Prolog, the rule
+${\downarrow}p_n^- \lefti \ldots \lefti {\downarrow}p_1^- \lefti p^-$
+would be written with $p^-$ on the first line, $p_1^-$ on the second,
+etc. This is exactly backwards from a proof-construction perspective,
+as we think of backward chaining as building partial proofs from the
+bottom up, the root towards the leaves, so we will avoid this
+terminology.
 
 The backward-chaining interpretation of intuitionistic logics dates
 back to the work by Miller et al.~on uniform proofs
 \cite{miller91uniform}.  An even older concept, Clark's {\it
   negation-as-failure} \cite{clark87negation}, is based on a {\it
   partial completeness} criteria for logic programming interpreters.
-Partial soundness (or partial correctness) demands that if the
+Partial correctness demands that if the
 interpreter reports that it has found a proof of a goal-directed
 sequent, such a proof should exist. Partial completeness, on the other
 hand, demands that if the interpreter gives up up on finding a proof,
@@ -2857,10 +3118,13 @@ computation is called {\it flat resolution} \cite{aitkaci99warrens}.
 
 One feature of backward chaining and goal directed search is that it
 usually allows for terms that are not completely specified -- these
-unspecified pieces are are traditionally called {\it existential
-  variables}, but as they bear no relation to the variables introduced
+unspecified pieces are are traditionally called {\it logic
+  variables}. Because LF variables are also ``logic variables,''
+the literature on $\lambda$Prolog and Twelf calls unspecified
+pieces of terms {\it existential variables}, 
+but as they bear no relation to the variables introduced
 by the left rule for $\exists \lf{a}{:}\tau. A^+$, 
-that terminology is unhelpful
+that terminology is also unhelpful
 here. Consider the following \sls~signature:
 \begin{align*}
  \Sigma_{\it Add} = \cdot, 
@@ -2871,7 +3135,7 @@ here. Consider the following \sls~signature:
                  \rightarrow {\sf prop},\\
 ~&{\sf plus/z} : \forall \lf{N}{:}{\sf nat}.\,
 ({\sf plus}\,\lf{\sf z}\,\lf{N}\,\lf{N}),\\
-~&{\sf plus/z} : \forall \lf{N}{:}{\sf nat}.\, 
+~&{\sf plus/s} : \forall \lf{N}{:}{\sf nat}.\, 
                  \forall \lf{M}{:}{\sf nat}.\, 
                  \forall \lf{P}{:}{\sf nat}.\,
 {!}({\sf plus}\,\lf{N}\,\lf{M}\,\lf{P})
@@ -3016,21 +3280,17 @@ chaining with partially-unspecified terms variables, it is called {\it
 The presence of ephemeral or ordered resources in substructural logic
 means that a process state may evolve in multiple
 mutually-incompatible ways. {\it Committed choice} is a version of
-forward chaining that never goes back and reconsiders alternate
+forward chaining that never goes back and reconsiders alternative
 evolutions from the initial state. Just as the default interpretation
 of backward chaining includes backtracking, we will consider the
 default interpretation of forward chaining to be committed choice,
-following \cite{lopez05monadic}.  An
-alternate interpretation of forward chaining would consider multiple
-evolutionary paths, which is a version of {\it model checking}.  The
-model checking problem takes an initial process state $(\Psi;\Delta)$
-or a set of initial states and attempts to enumerate or otherwise
-characterize the entire set of states $(\Psi'; \Delta')$ such that
-$(\Psi; \Delta) \leadsto^* (\Psi'; \Delta')$. Trace computation that
-works backwards from a final state instead of forward from an initial
-state can also be considered, and {\it planning} can be seen as
-specifying both the initial and final process states and trying to
-extrapolate a trace between them by working in both directions.
+following \cite{lopez05monadic}.  An alternate interpretation of
+forward chaining would consider multiple evolutionary paths, which is
+a version of {\it exhaustive search}.  Trace computation that works backwards
+from a final state instead of forward from an initial state can also
+be considered, and {\it planning} can be seen as specifying both the
+initial and final process states and trying to extrapolate a trace
+between them by working in both directions.
 
 Outside of this work and Saurin's work on Ludics programming
 \cite{saurin08towards}, there is not much work on explicitly
@@ -3042,9 +3302,14 @@ as trace computation, however.  Multiset rewriting and languages like
 GAMMA can be partially or completely understood in terms of forward
 chaining in linear logic \cite{cervesato09relating,paola96linear}, and
 the ordered aspects of \sls~allow it to capture fragments of rewriting
-logic. Multiset rewriting and rewriting logic both have
-implementations that correspond to the committed choice interpretation
-and to the model checking interpretations.  
+logic. Rewriting logic, and in particular the Maude implementation of
+rewriting logic \cite{clavel11ltl}, implements the committed choice
+interpretation and exhaustive search interpretations, as well as a
+{\it model checking} interpretation that characterize sets of process
+states or traces using logical formulas. Constraint handling
+rules \cite{betz10complete} and concurrent constraint programming
+\cite{jagadeesan05testing} are other logic programming models can be 
+characterized as forms of concurrent computation.
 
 
 % not consider unspecified variables and is largely free of the resource
@@ -3085,7 +3350,7 @@ under this signature: it is represented by the proof term ${\sf
 backward chaining stipulates that an interpreter tasked with finding a
 proof of ${\sf negD}$ should either find this proof or never
 terminate, but LCI only admits this interpretation for purely
-deductive-proofs. To see why, consider backward-chaining search
+deductive proofs. To see why, consider backward-chaining search
 attempting to prove ${\sf negD}$ in a closed context.  This can only
 be done with the rule ${\sf bwdrule}$, generating the subgoal ${\sf
   posA} \lefti {\ocircle}{\sf posB}$.  At this point, LCI will switch
@@ -3137,13 +3402,14 @@ choices could have been made differently.
 \subsection{Pseudo-positive atoms}
 \label{sec:pseudopositive}
 
-Unlike \sls, the CLF framework does not include positive
-atomic propositions. Positive atomic propositions make it easy to
+Unlike \sls, the CLF framework does not include positive atomic
+propositions. Positive atomic propositions make it easy to
 characterize the synthetic transitions associated with a particular
 rule. For example, if ${\sf foo}$, ${\sf bar}$, and ${\sf baz}$ are
-all linear atomic propositions, then the presence of a rule $\left({\sf foo}
-\fuse {\sf bar} \lefti {\ocircle}{\sf baz}\right)$ in the signature is associated
-with synthetic transitions of the form
+all linear atomic propositions, then the presence of a rule ${\sf
+  somerule} : \left({\sf foo} \fuse {\sf bar} \lefti {\ocircle}{\sf
+    baz}\right)$ in the signature is associated with synthetic
+transitions of the form
 %
 $(\Psi; \matchconj{\Delta}{\matchconj{x{:}\iseph{\susp{\sf
         foo}}}{y{:}\iseph{\susp{\sf bar}}}})
@@ -3151,7 +3417,7 @@ $(\Psi; \matchconj{\Delta}{\matchconj{x{:}\iseph{\susp{\sf
  (\Psi; \mkconj{\Delta}{z{:}\iseph{\susp{\sf baz}}})$.
 %
 The presence of the
-rule $\sf r$ enables steps of this form, and every step made by
+rule $\sf somerule$ enables steps of this form, and every step made by
 focusing on the rule has this form.
 
 CLF has no positive propositions, so the closest analogue that we can
@@ -3172,7 +3438,7 @@ $x{:}\sf{foo}$; we must simply ensure that there are no propositions
 of the form $\ldots \lefti {\sf foo}$ or $\ldots \righti {\sf foo}$ in
 the signature or context. (In fact, this is essentially the
 \sls~version of the subordination criteria that allows us to conclude
-that an LF type was only inhabited by variables
+that an LF type was only inhabited by variables in 
 Section~\ref{sec:slsframework}.)  Note that, in full \ollll, this task
 would not be so easy: we might prove $\istrue{\susp{\sf foo}}$
 indirectly by forward chaining. This is one reason why association of
@@ -3255,7 +3521,7 @@ $\lambda P.\,\tlet{T}{V}$ of the proposition $(\exists
   \lf{a_1}{:}\tau_1,\ldots,\lf{a_n}{:}\tau_n$ into existential
   bindings $\exists \lf{a_1}{:}\tau_1\ldots\exists
   \lf{a_n}{:}\tau_n.A^+$.}  where the pattern $P$ re-creates the initial
-process state $(\Psi; \Delta)$ and the all the components of the final
+process state $(\Psi; \Delta)$ and all the components of the final
 state are captured in the value $V$.  The problem with this approach
 is that the final proposition is under no particular obligation to
 faithfully
@@ -3338,7 +3604,7 @@ could have used an even simpler term language of simply-typed LF
 of \sls-like frameworks, Lollimon \cite{lopez05monadic} and Ollibot
 \cite{pfenning09substructural}, are in fact based on simply-typed term
 languages. Canonical LF and Spine Form LF are, at this point,
-well-understood enough that the additional overhead of fully
+sufficiently well understood that the additional overhead of fully
 dependently-typed terms is not a significant burden, and there are
 many examples beyond the scope of this thesis where dependent types are
 useful.
@@ -3387,8 +3653,9 @@ about the programming languages and logics we have encoded, like
 progress and preservation for a programming language or cut
 admissibility for a logic. Substructural logical frameworks like LLF
 and CLF, in contrast, have not been successful in capturing
-metatheorems with dependent types. Instead, metatheorems have been
-done in persistent frameworks. Crary proved theorems about linear
+metatheorems with dependent types. Instead, metatheorems about
+substructural logics have thus far generally been performed in logical
+frameworks based on persistent logics. Crary proved theorems about linear
 logics and languages in LF using the technique of explicit contexts
 \cite{crary10higher}. Reed was able to prove cut admissibility for
 linear logic and preservation for the LLF encoding of Mini-ML in HLF,
@@ -3407,27 +3674,19 @@ the structure of substructural contexts \cite{reed09hybrid}.
 
 
 
-\subsection{Variations on concurrent equality}
+% \subsection{Variations on concurrent equality}
 
-Concurrent equality is related to the equivalence relation induced by
-{\it multifocusing} \cite{chaudhuri08canonical}. Multifocusing has
-only been explored carefully in the context of classical linear
-logic. We conjecture that a suitably-defined notion of multifocusing
-for \ollll~would be in bijective correspondence with \sls~terms modulo
-concurrent equivalence, at least if we omit unification. Of course,
-without a formal notion of multifocusing for intuitionistic logic, this
-conjecture is impossible to state explicitly.
 
-The interactions between unification and concurrent equality are
-delicate, and we do not claim that the answers we give here are
-final. In Section~\ref{sec:independency}, we motivated both the
-independency requirement that $\emptyset = {\bullet}S_1 \cap
-{\ast}S_2$ and the requirement that $\emptyset = {\ast}S_1 \cap
-{\bullet}S_2$ by giving ill-typed counterexamples. The violation of
-either condition does not, in general, imply that $S_2; S_1$ will be
-ill-typed, however. This indicates that it might be possible to give a
-more precise condition that admits a coarser notion of concurrent
-equality.
+% The interactions between unification and concurrent equality are
+% delicate, and we do not claim that the answers we give here are
+% final. In Section~\ref{sec:independency}, we motivated both the
+% independency requirement that $\emptyset = {\bullet}S_1 \cap
+% {\ast}S_2$ and the requirement that $\emptyset = {\ast}S_1 \cap
+% {\bullet}S_2$ by giving ill-typed counterexamples. The violation of
+% either condition does not, in general, imply that $S_2; S_1$ will be
+% ill-typed, however. This indicates that it might be possible to give a
+% more precise condition that admits a coarser notion of concurrent
+% equality.
 
 % For both
 % conditions, however, there are steps $S_1$ and $S_2$ where the
