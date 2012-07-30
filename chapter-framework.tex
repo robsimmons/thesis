@@ -205,7 +205,11 @@ $\lf{h\,t_1\ldots t_n}$ as a convenient shorthand for the atomic term
 $\lf{\lfroot{h}{(t_1; \ldots; (t_n;())\ldots)}}$; similarly, we will
 write ${\sf a}\,\lf{t_1\ldots t_n}$ as a shorthand for atomic
 classifiers $\lfroot{\sf a}{(t_1;
-  (\ldots; (t_n;())\ldots))}$. % This shorthand evokes a canonical-forms
+  (\ldots; (t_n;())\ldots))}$. This shorthand is given a formal justification
+in \cite{cervesato02linear}; we will use the same shorthand for 
+\sls~proof terms in Section~\ref{sec:framework-deductive}.
+
+% This shorthand evokes a canonical-forms
 % presentation, as an atomic term, type, or proposition is a head
 % $\lf{h}$ or ${\sf a}$ with the terms $\lf{t_1\ldots t_n}$ applied to
 % it.
@@ -785,7 +789,7 @@ propositions, respectively, omitting ``positive.''  (``Mobile'' and
 \input{figs/fig-sls-propform}
 
 The formation judgments for \sls~types are given in
-Figure~\ref{fig:sls-propform}.  As discussed in the introduciton to
+Figure~\ref{fig:sls-propform}.  As discussed in the introduction to
 this chapter, the removal of ${\uparrow}A^+$ and $p^-_\mlax$ is
 fundamental to the separation of the deductive and concurrent
 fragments of \sls; all the other restrictions made to the language are
@@ -796,15 +800,16 @@ $A^+ \oplus B^+$ are excluded from \sls~to this end, and we must place
 rather draconian restrictions on the use of equality in order to ensure
 that $\doteq_L$ can always be treated as having exactly one premise.
 
-Much of the complexity of Figure~\ref{fig:sls-propform}, in particular
-the existance of an additional context $\mathcal S$ that is treated
-like a multiset, is thanks to the inclusion of equality \sls.  The
-restrictions ensure that, whenever we decompose a positive proposition
-$\lf{s} \doteq \lf{t}$, we have that $\lf{s} = \lf{a}$ for some
-variable $\lf{a}$ in the context. When this is the case, $\lf{[t/a]}$,
-is always a most general unifier of $\lf{s} = \lf{a}$ and $\lf{t}$,
-which in turn means that the left rule for equality in
-\ollll
+The formation rules for propositions are given in
+Figure~\ref{fig:sls-propform}. Much of the complexity of this
+presentation, such as the existence of an additional context $\mathcal
+S$ that is treated like a multiset, is needed to support the inclusion
+of equality \sls.  The restrictions ensure that, whenever we decompose
+a positive proposition $\lf{s} \doteq \lf{t}$ on the left, we have
+that $\lf{s} = \lf{a}$ for some variable $\lf{a}$ in the context. When
+this is the case, $\lf{[t/a]}$, is always a most general unifier of
+$\lf{s} = \lf{a}$ and $\lf{t}$, which in turn means that the left rule
+for equality in \ollll
 \[
 \infer[{\doteq}_L]
 {\foc{\Psi}{\frameoff{\Theta}{\lf{t} \doteq \lf{s}}}{U}}
@@ -823,7 +828,7 @@ is equivalent to a much simpler rule:
 {\foc{\Psi, \lf{a}{:}\tau, \Psi'}{\frameoff{\Theta}{\lf{a} \doteq \lf{t}}}{U}}
 {\foc{\Psi, \lf{[t/a]}\Psi'}{\tackon{\lf{[t/a]}\Theta}{\cdot}}{\lf{[t/a]} U}}
 \]
-Usually, when we require the ``existance of most general unifiers,''
+Usually, when we require the ``existence of most general unifiers,''
 that signals that a most general unifier must exist if any unifier
 exists. The condition we are requiring is much stronger: for the
 unification problems we will encounter due to the $\doteq_L$ rule, a
@@ -838,82 +843,109 @@ inversion rules with zero premises.\footnote{The other side of this
 
 There are two distinct conditions under which we can be sure that
 unification problems always have a most general solution -- when
-equality is used as a {\it notational definition} and when it is used
-as
+equality is performed over {\it pure variables} and when equality is
+used as a {\it notational definition}
+\cite{pfenning99algorithms}. Equality of pure variable types is
+necessary for the destination-adding transformation in
+Chapter~\ref{chapter-destinations}, and notational definitions are
+used extensively Chapter~\ref{chapter-approx}.
+
+\paragraph{Pure variables} Equality at an atomic type $p$ that is {\it
+  not subordinate to itself} ($p \not\prec_\subord p$) is always
+allowed.  This is reflected in the first formation rule for $\lf{t}
+\doteq \lf{s}$ in Figure~\ref{fig:sls-propform}.
+
+Types that are not self-subordinate can only be inhabited by
+variables: that is, if $p \not\prec_\subord p$ and $\Psi
+\vdash_{\Sigma,\subord} \lf{t} : p$, then $\lf{t} = \lf{{a}}$ where
+$\lf{a}:p \in \Psi$. For any unification problem $\lf{{a}} \doteq
+\lf{{b}}$, both $\lf{[{a}/b]}$ and $\lf{[{b}/a]}$ are most general
+unifiers.
 
 
- \smallskip
-\begin{enumerate}
-\item Equality at an atomic type $p$ that is {\it not subordinate
-    to itself} ($p \not\prec_\subord p$) is always allowed.  This is
-  reflected in the first formation rule for $\lf{t} \doteq
-  \lf{s}$ in Figure~\ref{fig:sls-propform}. 
-
-  Types that are not self-subordinate can only be inhabited by
-  variables: that is, if $p \not\prec_\subord p$ and $\Psi
-  \vdash_{\Sigma,\subord} \lf{t} : p$, then $\lf{t} = \lf{{a}}$ where
-  $\lf{a}:p \in \Psi$. For any unification problem $\lf{{a}}
-  \doteq \lf{{b}}$, both $\lf{[{a}/b]}$ and $\lf{[{b}/a]}$ are most
-  general unifiers.
-
-\item The second condition under which equality is allowed is when it
-  is used as a {\it notational definition}
-  \cite{pfenning99algorithms}. The subset $\mathcal S$ of the LF
-  context is treated as an a multiset. The result of this treatment is
-  that each variable bound by an existential quantifier $\exists
-  \lf{a}{:}p.\,A^+$ or a universal quantifier $\forall
-  \lf{a}{:}p.\,A^-$ can be associated with at most one proposition
-  $\lf{a} \doteq \lf{t}$, where $\lf{t}$ is arbitrary. This condition
-  is handled by the second formation rule for $\lf{t} \doteq \lf{s}$
-  in Figure~\ref{fig:sls-propform}. The
-  rule ${\ocircle}(\exists \lf{a}.\, \lf{a} \doteq \lf{t} \fuse
-  \lf{a} \doteq \lf{s})$ does not satisfy this condition because the
-  introduced variable $\lf{a}$ is associated with the left-hand side
-  of two different equalities, $\lf{a} \doteq \lf{t}$ and $\lf{a}
-  \doteq \lf{s}$, that together encode an arbitrary unification
-  problem $\lf{t} \doteq \lf{s}$.
+\paragraph{Notational definitions} Using equality as a notational
+definition allows us manipulate propositions in ways that have no
+effect on the structure of synthetic inference rules. The subset
+$\mathcal S$ of the LF context, which is treated as an a multiset,
+enforces that each variable bound by an existential quantifier
+$\exists \lf{a}{:}p.\,A^+$ or a universal quantifier $\forall
+\lf{a}{:}p.\,A^-$ can be associated with at most one proposition
+$\lf{a} \doteq \lf{t}$, where $\lf{t}$ is arbitrary. This condition is
+handled by the second formation rule for $\lf{t} \doteq \lf{s}$ in
+Figure~\ref{fig:sls-propform}. The rule ${\ocircle}(\exists \lf{a}.\,
+\lf{a} \doteq \lf{t} \fuse \lf{a} \doteq \lf{s})$ does not satisfy
+this condition because the introduced variable $\lf{a}$ is associated
+with the left-hand side of two different equalities, $\lf{a} \doteq
+\lf{t}$ and $\lf{a} \doteq \lf{s}$, that together encode an arbitrary
+unification problem $\lf{t} \doteq \lf{s}$.
 
 
-  The proposition $\lf{a} \doteq \lf{t}$ must be reachable from its
-  associated quantifier without crossing a shift or an exponential --
-  in Andreoli's terms, it must be in the same {\it monopole}
-  (Section~\ref{sec:linsynthetic}).
-  This is enforced by the formation rules for shifts and exponentials,
-  which clear the subset $\mathcal S$ in their premise.  The
-  proposition $\forall \lf{a}.\, {\downarrow}({\sf
-    p}\,\lf{a}) \lefti \lf{a} \doteq \lf{t} \lefti {\sf p}\,\lf{t}$
-  satisfies this condition but $\forall \lf{a}.\,\forall
-  \lf{b}.\,{\ocircle}(\lf{a} \doteq \lf{b})$ does not ($\ocircle$
-  breaks focus), and the proposition ${\ocircle}(\exists
-  \lf{a}. \lf{a} \doteq \lf{t})$ satisfies this condition but
-  ${\ocircle}(\exists \lf{a}.  {\uparrow}(\lf{a} \doteq \lf{t} \lefti
-  {\sf p}\,\lf{a}))$ does not (${\uparrow}$ breaks focus).  
+The proposition $\lf{a} \doteq \lf{t}$ must be reachable from its
+associated quantifier without crossing a shift or an exponential -- in
+Andreoli's terms, it must be in the same {\it monopole}
+(Section~\ref{sec:linsynthetic}).  This is enforced by the formation
+rules for shifts and exponentials, which clear the subset $\mathcal S$
+in their premise.  The proposition $\forall \lf{a}.\,
+{\downarrow}({\sf p}\,\lf{a}) \lefti \lf{a} \doteq \lf{t} \lefti {\sf
+  p}\,\lf{t}$ satisfies this condition but $\forall \lf{a}.\,\forall
+\lf{b}.\,{\ocircle}(\lf{a} \doteq \lf{b})$ does not ($\ocircle$ breaks
+focus), and the proposition ${\ocircle}(\exists \lf{a}. \lf{a} \doteq
+\lf{t})$ satisfies this condition but ${\ocircle}(\exists \lf{a}.
+{\uparrow}(\lf{a} \doteq \lf{t} \lefti {\sf p}\,\lf{a}))$ does not
+(${\uparrow}$ breaks focus).
 
 %   This restriction ensures that, if the unification appears on the
 %   left, the left-hand side of the unification will always be a
 %   variable $\lf{a}$, meaning that $\lf{[t/a]}$ is always a most
 %   general unifier.  This usage of unification is essentially just a
 %   notational definition \cite{pfenning99algorithms}.
-\end{enumerate}
-\smallskip
+
 
 \subsection{Substructural contexts}
 
 \input{figs/fig-sls-ctxform}
 
-The proposition formation judgments are used to specify the formation
-of stable, inverting, and in-focus \sls~contexts in
-Figure~\ref{fig:sls-ctxform}. The restrictions we make to contexts
-justify our continued practice of omitting the $\mtrue$ annotation
-when talking about inverting positive propositions $A^+$ or focused
-negative propositions $[A^-]$ in the context.
+Figure~\ref{fig:sls-ctxform} describes the well-formed substructural
+contexts in \sls. The judgment $\Psi \vdash_{\Sigma,\subord} T\,{\sf
+  left}$ is used to check stable bindings $x{:}\islvl{A^-}$ and
+$z{:}\islvl{p^+_\mlvl}$ that can appear as a part of stable,
+inverting, or focused sequents; the judgment $\Psi
+\vdash_{\Sigma,\subord} \Delta\,{\sf stable}$ just maps this judgment
+over the context. The judgment $\Psi \vdash_{\Sigma,\subord}
+\Delta\,{\sf inv}$ describes contexts during the inversion phase,
+which can also contain inverting positive propositions $A^+$. The
+judgment $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf infoc}$ describes
+a context that is stable aside from the one negative proposition in
+focus. 
 
+The last rule in Figure~\ref{fig:sls-ctxform} is strange because it
+appears to make up a substitution $\lf\sigma$ out of thin air.  This
+is necessary because the property of being a well-formed proposition
+is not stable under substitution. Therefore, even though
+$\forall\lf{a}{:}p.\,(\lf{a} \doteq_p \lf{\sf c}) \lefti A^-$ is a
+well-formed negative type according to Figure~\ref{fig:sls-propform},
+$(\lf{\sf c} \doteq_p \lf{\sf c}) \lefti \lf{[{\sf c}/a]}A^-$ is not.
+Therefore, to explain why the intermediate states of a focusing phase
+are well-formed, we need to keep track of the substitutions that we
+have applied to the negative proposition; the proposition only needs
+to be well-formed prior to applying that substitution for the logic to
+behave correctly. The same trick will need to be played with the rules
+for right-focus in Figure~\ref{fig:sls-values}.
 
-We could stop here and use the refinement of \ollll~proof terms that
-corresponds to our refinement of propositions as the language of
-\sls~proof terms. This is not desirable for two reasons. First,
-the proof terms of focused \ollll~make it inconvenient (though not
-impossible) to talk about concurrent equality
+The restrictions we make to contexts justify our continued practice of
+omitting the $\mtrue$ annotation when talking about inverting positive
+propositions $A^+$ or focused negative propositions $[A^-]$ in the
+context, since these context constituents only appear in conjunction
+with the $\mtrue$ judgment. 
+
+This discussion of well-formed propositions and contexts takes care of
+any issues dealing with variables that were swept under the rug in
+Chapter~\ref{chapter-order}.  We could stop here and use the
+refinement of \ollll~proof terms that corresponds to our refinement of
+propositions as the language of \sls~proof terms. This is not
+desirable for two main reasons. First, the proof terms of
+focused \ollll~make it inconvenient (though not impossible) to talk
+about concurrent equality
 (Section~\ref{sec:framework-concurrenteq}). Second, one of our primary
 uses of \sls~in this thesis will be to talk about {\it traces}, which
 correspond roughly to partial proofs
@@ -951,10 +983,10 @@ process states. As a first cut, we can represent the initial state as
 $(\Psi; \Delta)$ and the final state as $(\Psi'; \Delta')$, and we can
 omit $\Psi$ and just write $\Delta$ when that is sufficiently clear.
 
-The first cut insufficient due to the presence of unification
-in \sls~-- in particular, the first use-case of unification where we
-unify members of a type only inhabited by variables. Consider the
-following partial proof:
+Representing a process state as merely an LF context $\Psi$ and a
+substructural context $\Delta$ is insufficient because of the way
+equality -- pure variable equality in particular -- can unify distinct
+variables. Consider the following partial proof:
 \[
 \deduce
 {\foc{\lf{a}{:}p, \lf{b}{:}p}
@@ -976,30 +1008,29 @@ and the second process state as
 $\left({\lf{b}{:}p};~~
  {z{:}\iseph{\susp{{\sf foo}\,\lf{b}\,\lf{b}}}}\right)$, as this would fail to 
 capture that the succedent $\islax{({\sf foo}\,\lf{b}\,\lf{b})}$
-that shares a sequent 
-with the second process state is a substitution instance of
+is a substitution instance of
 the succedent
-$\islax{({\sf foo}\,\lf{a}\,\lf{b})}$ that shares
-a sequent with the first process state. 
+$\islax{({\sf foo}\,\lf{a}\,\lf{b})}$. 
 %
-In general, if the derivation in above proves some arbitrary
+In general, if the derivation above proved some arbitrary
 succedent $\islax{A^+}$ instead of $\islax{({\sf
     foo}\,\lf{a}\,\lf{b})}$, then the missing subproof has the succedent
 $\islax{\lf{[b/a]}A^+}$.
 
-A process state is therefore written as $(\Psi; \Delta)_{\lf{\sigma}}$ 
-and is well-formed under
-signature $\Sigma$ and subordination relation $\subord$ if 
-$\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$ (which presumes that
-$\vdash_{\Sigma,\subord} \Psi\,{\sf sctx}$) and if 
-$\Psi \vdash \lf{\sigma} : \Psi_0$, where $\Psi_0$ is some other
-context that represents the starting point. 
+A process state is therefore written as $(\Psi; \Delta)_{\lf{\sigma}}$
+and is well-formed under signature $\Sigma$ and subordination relation
+$\subord$ if $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf inv}$
+(which presumes that $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$, as
+defined in Figure~\ref{fig:lf-form}) and if $\Psi \vdash \lf{\sigma} :
+\Psi_0$, where $\Psi_0$ is some other context that represents the
+starting point, the context in which the disconnected succedent
+$\islax{A^+}$ is well-formed.
 \[
 \infer
 {\vdash_{\Sigma,\subord} (\Psi; \Delta)_{\lf{\sigma}}\,{\sf state}
  \mathstrut}
-{\vdash_{\Sigma,\subord} \Psi : {\sf ctx}
- &
+{%\vdash_{\Sigma,\subord} \Psi : {\sf ctx}
+ %&
  \Psi \vdash_{\Sigma,\subord} \Delta\,{\sf inv}
  &
  \vdash_{\Sigma,\subord} \Psi_0 : {\sf ctx}
@@ -1019,24 +1050,26 @@ between these two process states:
  {z{:}\iseph{\susp{{\sf foo}\,\lf{b}\,\lf{b}}}}\right)_{\lf{(b/a,\,b/b)}}
 \]
 
-Substitutions are necessary to describe process states as an integral
-part of the \sls~framework. When we consider traces in
-isolation, on the other hand,
-we will generally let $\Psi_0 = \cdot$ and $\lf{\sigma} =
-\cdot$, which corresponds to the case where the parametric conclusion
-$A^+$ is a closed proposition. When the substitution is not mentioned,
-it can therefore be presumed to be empty. Additionally, when the LF
-context $\Psi$ is empty or clear from the context, we will omit it as
-well. One further simplification is that we will occasionally omit the
-judgment $\mlvl$ associated with a suspended positive atomic
-proposition $\islvl{\susp{p^+_\mlvl}}$, but only when it is
-unambiguous from the current signature that $p^+_\mlvl$ is an ordered,
-linear, or persistent positive atomic proposition. In the examples
-above, we tacitly assumed that ${\sf foo}$ was given kind $p
-\rightarrow p \rightarrow {\sf prop}\,{\sf lin}$ in the signature
-$\Sigma$ when we tagged the suspended atomic propositions with the
-judgment $\meph$. If it had been clear that ${\sf foo}$ was linear,
-then this judgment could have been omitted.
+Substitutions are just one of several ways that we could cope with
+free variables in succedents; another option, discussed in
+Section~\ref{sec:constraint-store-solution}, is to track the set of
+constraints $\lf{a} = \lf{b}$ that have been encountered by
+unification.  When we consider traces in isolation, we will generally
+let $\Psi_0 = \cdot$ and $\lf{\sigma} = \lf \cdot$, which corresponds
+to the case where the parametric conclusion $A^+$ is a closed
+proposition. When the substitution is not mentioned, it can therefore
+be presumed to be empty. Additionally, when the LF context $\Psi$ is
+empty or clear from the context, we will omit it as well. One further
+simplification is that we will occasionally omit the judgment $\mlvl$
+associated with a suspended positive atomic proposition
+$\islvl{\susp{p^+_\mlvl}}$, but only when it is unambiguous from the
+current signature that $p^+_\mlvl$ is an ordered, linear, or
+persistent positive atomic proposition. In the examples above, we
+tacitly assumed that ${\sf foo}$ was given kind $p \rightarrow p
+\rightarrow {\sf prop}\,{\sf lin}$ in the signature $\Sigma$ when we
+tagged the suspended atomic propositions with the judgment $\meph$. If
+it had been clear that ${\sf foo}$ was linear, then this judgment
+could have been omitted.
 
 %In almost all cases, the substitution $\lf\sigma$ associated with a process
 %state is the identity and will be omitted, and the LF context $\Psi$
@@ -1045,7 +1078,7 @@ then this judgment could have been omitted.
 \begin{figure}
 \fbox{$P :: (\Psi; \Delta)_{\lf{\sigma}}
          \Longrightarrow_{\Sigma,\subord}
-           (\Psi'; \Delta')_{\lf{\sigma}}$}
+           (\Psi'; \Delta')_{\lf{\sigma'}}$}
  -- presumes
  $\vdash_{\Sigma,\subord} (\Psi; \Delta)_{\lf{\sigma}}\,{\sf state}$
 \[
@@ -1174,19 +1207,24 @@ For sequences with one or more elements, we omit the trailing
 comma and $()$, writing $x, \ldots, z$ 
 instead of $x, \ldots, z, ()$. 
 
-\sls~patterns are associated with a decomposition judgment which takes
-two process states: $P :: (\Psi; \Delta)_{\lf{\sigma}}
-\Longrightarrow_{\Sigma,\subord} (\Psi'; \Delta')_{\lf{\sigma'}}$.
-The typing rules for \sls~patterns are given in
+\sls~patterns have a linear structure (the comma is right associative)
+because they capture the linear structure of proofs. The associated
+decomposition judgment which takes two process states: $P :: (\Psi;
+\Delta)_{\lf{\sigma}} \Longrightarrow_{\Sigma,\subord} (\Psi';
+\Delta')_{\lf{\sigma'}}$, and operates a bit like the spine typing
+judgment from Figure~\ref{fig:lf-form} in that the process state
+$(\Psi; \Delta)_{\lf{\sigma}}$ (and the pattern $P$) are treated as an
+input and the process state $(\Psi'; \Delta')_{\lf{\sigma'}}$ is
+treated as an output.  The typing rules for \sls~patterns are given in
 Figure~\ref{fig:sls-patterns}. We preserve the side conditions from
 the previous chapter: when we frame off a inverting positive
 proposition in the process state, it is required to be the left-most
 one. As in focused \ollll, this justifies our omission of the
 variables associated with positive propositions: the positive
 proposition we frame off is always uniquely identified not by its
-associated variable but by its position in the context. 
+associated variable but by its position in the context.
 
-Note that, with patterns, there no longer appears to be a one-to-one
+Note that there no longer appears to be a one-to-one
 correspondence between proof terms and rules: ${\downarrow}_L$,
 ${\gnab}_L$, and ${!}_L$ appear to have the same proof term, and
 ${\one}_L$ and ${\fuse}_L$ appear to have no proof term at all. To
@@ -1194,6 +1232,8 @@ view patterns as being intrinsically typed -- that is, to view them as
 actual representatives of (incomplete) derivations -- we must think of
 patterns as carrying extra annotations that allow them to continue
 matching the structure of proof rules.
+
+XXX
 
 \subsection{Values, terms, and spines}
 \label{sec:framework-deductive}
@@ -1231,7 +1271,7 @@ N & ::= R
    \mid \lambda P.N 
    \mid N_1 \with N_2
    \mid \tforallr{\lf{a}}{N}
-   \mid 
+   \mid \tlet{T}{V}
 \\
 &\mbox{\sls~spines (Figure~\ref{fig:sls-spines})}&
 \Sp & ::= \tnil 
@@ -1254,8 +1294,10 @@ $\lambda^<$) that we have omitted.  Without these annotations, proof
 terms carry less information than derivations, and the rules for
 values, terms, and spines in
 Figures~\ref{fig:sls-values}--\ref{fig:sls-spines} must be seen as
-typing rules. With these extra implicit annotations, values, terms,
-and spines can continue to be seen as representatives of derivations.
+typing rules. With these extra implicit annotations (or, possibly,
+with some of the technology of bidirectional typechecking), values,
+terms, and spines can continue to be seen as representatives of
+derivations.
 
 \input{figs/fig-sls-deductive}
 
@@ -1279,7 +1321,6 @@ fact that atomic terms consist of a variable and a spine.
 
 \subsection{Steps and traces}
 \label{sec:framework-concurrent}
-\label{sec:framework-substprop}
 
 The deductive fragment of \sls~presented in
 Figures~\ref{fig:sls-patterns}--\ref{fig:sls-spines} covers every
@@ -1327,18 +1368,27 @@ admissible focal substitution lemma in \ollll:
 \]
 The spine $\Sp$ corresponds to the complete proof of
 $\foc{\Psi}{\tackon{\Theta'}{[A^-]}}{\istrue{\susp{{\ocircle}B^+}}}$,
-and the pattern $P$ corresponds to the partial proof of $\foc{\Psi}
+and the pattern $P$ corresponds to the partial proof from $\foc{\Psi'}
+{\Delta'} {\islax{\lf{\sigma'}A^+}}$ to $\foc{\Psi}
 {\tackon{\Theta}{B^+}} {\islax{\lf{\sigma}A^+}}$. The typing rules for
 steps are given in Figure~\ref{fig:sls-steps}.  Because we understand
 these synthetic inference rules as relations between process states,
-we call the type of a step a {\it synthetic transition}. Traces $T$ are
-monoids over steps -- $\emptytrace$ is an empty trace, $S$ is a trace
-consisting of a single step, and $T_1; T_2$ is the sequential
+we call the type of a step a {\it synthetic transition}. Traces $T$
+are monoids over steps -- $\emptytrace$ is an empty trace, $S$ is a
+trace consisting of a single step, and $T_1; T_2$ is the sequential
 composition of traces. The typing rules for traces in
-Figure~\ref{fig:sls-traces} straightforwardly reflect this monoid structure.
+Figure~\ref{fig:sls-traces} straightforwardly reflect this monoid
+structure. Both of the judgments $S :: (\Psi; \Delta)_{\lf{\sigma}} 
+   \leadsto_{\Sigma,\subord}
+  (\Psi'; \Delta')_{\lf{\sigma'}}$ and $T :: (\Psi; \Delta)_{\lf{\sigma}} 
+   \leadsto^*_{\Sigma,\subord}
+  (\Psi'; \Delta')_{\lf{\sigma'}}$ work like the rules for patterns,
+in that the step $S$ or trace $T$ is treated as an input along with
+the initial process state $(\Psi; \Delta)_{\lf{\sigma}}$, whereas the final
+process state $(\Psi'; \Delta')_{\lf{\sigma'}}$ is treated as an output.
 
 \begin{figure}
-\fbox{$P :: (\Psi; \Delta)_{\lf{\sigma}} 
+\fbox{$S :: (\Psi; \Delta)_{\lf{\sigma}} 
    \leadsto_{\Sigma,\subord}
   (\Psi'; \Delta')_{\lf{\sigma'}}$} -- presumes
   $\vdash_{\Sigma,\subord} (\Psi; \Delta)_{\lf{\sigma}}\,{\sf state}$
@@ -1439,7 +1489,7 @@ associated with this type will be written as $\lambda P.T$, where $P :: (\Psi;
 \Delta)_{\lf\sigma} \Longrightarrow_{\Sigma,\subord} (\Psi'';
 \Delta'')_{\lf{\sigma''}}$ and $T :: (\Psi'';
 \Delta'')_{\lf{\sigma''}} \leadsto^*_{\Sigma,\subord} (\Psi';
-\Delta')_{\lf{\sigma'}}$.
+\Delta')_{\lf{\sigma'}}$. 
 
 
 \subsection{Presenting traces}
@@ -1481,12 +1531,12 @@ This evolution can now be precisely captured as a trace in \sls:
 
 \subsection{Frame properties}
 
-The {\it frame rule} is a concept from separation logic.  It
-states that if a property holds of some program, then it holds of that
-property under any extension of the mutable state. The frame rule
-increases the modularity of separation logic proofs, because two
-program fragments that reason about different parts of the state can
-be reasoned about independently. 
+The {\it frame rule} is a concept from separation logic
+\cite{reynolds02separation}.  It states that if a property holds of
+some program, then the property holds under any extension of the
+mutable state. The frame rule increases the modularity of separation
+logic proofs, because two program fragments that reason about
+different parts of the state can be reasoned about independently.
 
 Similar frame properties hold for \sls~traces. The direct analogue of
 the frame rule is the observation that a trace can always have some
@@ -1499,7 +1549,10 @@ If $T :: (\Psi; \Delta) \leadsto^*_{\Sigma, \subord} (\Psi'; \Delta')$, then
 $T :: (\Psi, \Psi''; \tackon{\Theta}{\Delta})
        \leadsto^*_{\Sigma, \subord} (\Psi', \Psi''; \tackon{\Theta}{\Delta})$.
 \end{theorem}
-\bigskip
+\begin{proof}
+Induction on $T$ and case analysis on the first steps of $T$, using admissible
+weakening and the properties of matching constructs at each step.
+\end{proof}
 
 The frame rule is a weakening property which ensures that new,
 irrelevant state can can always be added to a state. Conversely, any
@@ -1515,12 +1568,19 @@ is a generalization of strengthening to \sls~traces.
   \tackon{\Theta}{\cdot}) \leadsto^*_{\Sigma, \subord} (\Psi';
   \tackon{\Theta}{\cdot})$.
 \end{theorem}
+\begin{proof}
+  Induction on $T$ and case analysis on the first steps of $T$, using
+  a lemma to enforce that, if $x$ is not free in an individual step,
+  it is either not present in the context of the subderivation 
+  (if $\mlvl = \mtrue$ or $\meph$) or else
+  it can be strengthened away (if $\mlvl = \mpers$).
+\end{proof}
 
 \section{Concurrent equality}
 \label{sec:linconcurrenteq}
 \label{sec:framework-concurrenteq}
 
-Concurrent equality is a notion of equivalence that on traces that is
+Concurrent equality is a notion of equivalence on traces that is
 coarser than the equivalence relation we would derive from partial
 \ollll~proofs. Consider the following \sls~signature:
 \begin{align*}
@@ -1540,7 +1600,7 @@ coarser than the equivalence relation we would derive from partial
 \\ &
   {\sf last} : {\sf d} \fuse {\sf e} \lefti {\ocircle}{\sf f}
 \end{align*}
-With the signature $\Sigma$ and a suitable subordination relation $\subord$, 
+Under the signature $\Sigma$,
 we can create two traces with the type
 $x_a{:}\susp{\sf a} \leadsto^*_{\Sigma,\subord} x_f{:}\susp{\sf f}$:
 \[
@@ -1661,6 +1721,8 @@ up the step's {\it interface}.
 
 \subsection{Independency}
 \label{sec:independency}
+
+\label{sec:constraint-store-solution}
 
 Consider a well-typed trace $S_1; S_2$ with two steps. It is possible,
 by renaming bound variables, to ensure that $\emptyset = {\bullet}S_1

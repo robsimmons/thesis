@@ -61,8 +61,7 @@
 {\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf inv}
  &
  \Psi \vdash_{\Sigma,\subord} T\,{\sf left}}
-\]
-\[
+\quad
 \infer
 {\Psi \vdash_{\Sigma,\subord} (\Delta, x{:}\istrue{A^+})\,{\sf inv} \mathstrut}
 {\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf inv}
@@ -77,10 +76,6 @@
   $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$
 \[
 \infer
-{\Psi \vdash_{\Sigma,\subord} \cdot\,{\sf infoc} \mathstrut}
-{}
-\quad
-\infer
 {\Psi \vdash_{\Sigma,\subord} (\Delta, x{:}T)\,{\sf infoc} \mathstrut}
 {\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf infoc}
  &
@@ -92,9 +87,9 @@
  \mathstrut}
 {\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}
  &
- \Psi, \mathcal S; \mathcal S \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-
+ \Psi, \Psi'; \Psi' \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-
  &
- \Psi \vdash_{\Sigma,\subord} \lf{\sigma} : \Psi, \mathcal S}
+ \Psi \vdash_{\Sigma,\subord} \lf{\sigma} : \Psi, \Psi'}
 \]
 \caption{\sls~contexts}
 \label{fig:sls-ctxform}

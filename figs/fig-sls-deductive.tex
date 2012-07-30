@@ -1,11 +1,14 @@
 \begin{figure}
 \fbox{$\foctx{\Psi}{\Delta}{V}{[A^+]}$} -- presumes
-  $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$ and
-  $\Psi \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+$
+  $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$, $A^+ = \lf\sigma B^+$,
+  and  $\Psi, \Psi'; \Psi' \vdash_{\Sigma,\subord} B^+\,{\sf prop}^+$
+
+  ~\qquad\qquad\qquad\qquad\qquad (for some $\lf\sigma$ where $\Psi
+  \vdash_{\Sigma,\subord} \lf\sigma : \Psi, \Psi'$)
 \[
 \infer[{\it id}^+]
-{\foctx{\Psi}{z{:}\susp{A^+}}{z}{[A^+]}}
-{}
+{\foctx{\Psi}{\Delta}{z}{[A^+]}}
+{\Delta \mbox{\it ~matches~} z{:}\susp{A^+}}
 \]
 \[
 \infer[{\downarrow}_R]
@@ -22,8 +25,8 @@
 \]
 \[
 \infer[{\one}_R]
-{\foctx{\Psi}{\cdot}{\toner}{[\one]}}
-{}
+{\foctx{\Psi}{\Delta}{\toner}{[\one]}}
+{\Delta \mbox{\it ~matches~} \cdot}
 \quad
 \infer[{\fuse}_R]
 {\foctx{\Psi}
@@ -37,11 +40,11 @@
 {\foctx{\Psi}{\Delta}{\texistsr{\lf{t}}{V}}{[\exists \lf{a}{:}\tau. A^+]}}
 {\Psi; \Delta \vdash_{\Sigma,\subord} \lf{t} : \tau
  &
- \foctx{\Psi}{\Delta}{V}{[A^+]}}
+ \foctx{\Psi}{\Delta}{V}{[\lf{[t/a]}A^+]}}
 \quad
 \infer[{\doteq}_R]
 {\foctx{\Psi}{\cdot}{\tunifr}{\lf{t} \doteq \lf{t}}}
-{}
+{\Delta \mbox{\it ~matches~} \cdot}
 \]
 \caption{\sls~values}
 \label{fig:sls-values}
@@ -126,8 +129,8 @@
   $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf infoc}$
 \[
 \infer[{\it id}^-]
-{\foctx{\Psi}{{[A^-]}}{\tnil}{\istrue{\susp{A^-}}}}
-{}
+{\foctx{\Psi}{{\Delta}}{\tnil}{\istrue{\susp{A^-}}}}
+{\Delta \mbox{\it ~matches~} [A^-] \mathstrut}
 \]
 \[
 \infer[{\lefti}_L]
