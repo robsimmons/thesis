@@ -160,15 +160,17 @@ interpretation as rewriting rules as detailed by Cervesato and Scedrov
 % rewriting frameworks. With this synthesis, 
 We seek to support the
 following:
+\smallskip
 \begin{quote} {\bf Thesis Statement:} {\it Logical frameworks based on
     a rewriting interpretation of substructural logics are suitable
     for modular specification of programming languages and formal
-    reasoning about their properties}.\footnote{The original thesis
+    reasoning about their properties.}\footnote{The original thesis
     proposal used the phrase ``forward reasoning in substructural
     logics'' instead of the phrase ``a rewriting interpretation of
     substructural logics,'' but these are synonymous, as discussed in
     Section~\ref{sec:framework-logicprog}.}
 \end{quote}
+\smallskip
 
 \noindent
 Part~1 of the thesis covers the design of logical frameworks 
@@ -358,11 +360,13 @@ principal contribution of these three chapters is the development of
 {\it structural focalization} \cite{simmons11structural}, which
 unifies Andreoli's work on focused logics \cite{andreoli92logic} with
 the {\it hereditary substitution} technique that Watkins developed in
-the context of CLF \cite{watkins02concurrent}. Chapter~2 explains
-structural focalization in the context of linear logic, Chapter~3
-establishes focalization for a richer substructural logic \ollll, and
-Chapter~4 takes focused \ollll~and carves out the \sls~framework as a
-fragment of the focused logic.
+the context of CLF
+\cite{watkins02concurrent}. Chapter~\ref{chapter-foc} explains
+structural focalization in the context of linear logic,
+Chapter~\ref{chapter-order} establishes focalization for a richer
+substructural logic \ollll, and Chapter~\ref{chapter-framework} takes
+focused \ollll~and carves out the \sls~framework as a fragment of the
+focused logic.
 
 \section{Substructural operational semantics}
 \label{sec:intro-ssos}
@@ -512,7 +516,7 @@ propositions ${\sf eval}(e)$ and ${\sf eval}(e')$ that will evaluate
 to values concurrently, side-by-side in the process state.)
 Specifications in the concurrent fragment of \sls~can take many
 different forms, a point that we will discuss further further in
-Chapter~5.
+Chapter~\ref{chapter-correspondence}.
 
 On the other end of the spectrum, the {\it deductive} fragment of
 \sls~supports the specification of inductive definitions by the same
@@ -664,26 +668,30 @@ programming language features.
 An overarching theme of Part~2 is that we can have our cake and eat it
 too by deploying the {\it logical correspondence}, an idea that was
 developed jointly with Ian Zerny in unpublished work and is explained
-in Chapter~5. In Chapter~6, we show how we can use the logical
+in Chapter~\ref{chapter-correspondence}. In Chapter~\ref{chapter-absmachine}, 
+we show how we can use the logical
 correspondence to directly connect the big-step semantics and SSOS
 specifications above; in fact, we can automatically and mechanically
 derive the latter from the former. As our example above showed,
-natural semantics do not support combining the specification of a pure
+big-step operational
+semantics do not support combining the specification of a pure
 feature like call-by-value evaluation with the specification of a
 stateful feature like counters by concatenating the specifications,
 but SSOS specifications in ordered logic do support this form of
 combination. Using the automatic transformations described in
-Chapter~6, we can specify pure features (like call-by-value
+Chapter~\ref{chapter-absmachine}, 
+we can specify pure features (like call-by-value
 evaluation) as a simpler big-step semantics specification, and then we
 can compose that specification with an SSOS specification of stateful
 features (like the counter) by mechanically transforming the big-step
 semantics part of the specification into SSOS. Further
 transformations, developed in joint work with Pfenning
 \cite{simmons11logical}, create new opportunities for modular
-extension; this is the topic of Chapter~7. These transformations also
+extension; this is the topic of Chapter~\ref{chapter-destinations}. 
+These transformations also
 allow for the derivation of abstract analyses (such as control flow
 and alias analysis) from SSOS specifications, which is the focus of
-Chapter~8.
+Chapter~\ref{chapter-approx}.
 
 \section{Invariants in substructural logic}
 
@@ -799,27 +807,67 @@ safety properties of specifications.
 
 \section{Contributions}
 
+We support our central thesis in the three
+
 \smallskip
-\begin{quote} {\bf Thesis Statement (Part I):} {\it The methodology of
+\begin{quote} {\bf Thesis (Part I):} {\it The methodology of
     structural focalization facilitates the derivation of logical
     frameworks as fragments of focused logics.}
 \end{quote}
+\smallskip
+
+\noindent
+The first major contribution of Part 1 of the thesis are the
+development of {\it structural focalization}
+\cite{simmons11structural}, the application of structural focalization
+to linear logic (Chapter~\ref{chapter-foc}) and ordered linear lax
+logic (Chapter~\ref{chapter-order}). The second major contribution is
+the justification of the logical framework \sls~as a fragment of a
+focused logic, generalizing the {\it hereditary substitution}
+methodology of Watkins \cite{watkins02concurrent}.
 
 \smallskip
 \begin{quote} 
-  {\bf Thesis (Part II):} A logical framework based on a rewriting
+  {\bf Thesis (Part II):} {\it A logical framework based on a rewriting
   interpretation of substructural logic supports many styles of
   programming language specification. These styles can be formally
   classified and connected by considering general transformations on
-  logical specifications.
+  logical specifications.}
 \end{quote} 
+\smallskip
+
+\noindent
+The major contribution of Part 2 is the development of the {\it
+  logical correspondence}, a methodology for extending, classifying,
+inter-deriving, and modularly extending operational semantics
+specifications that are encoded in \sls, with an emphasis on SSOS
+specifications. The transformations in
+Chapter~\ref{chapter-absmachine} connect big-step operational
+semantics specifications and the ordered abstract machine-style SSOS
+semantics that we introduced in Section~\ref{sec:intro-ssos}, and the
+destination-adding transformation given in
+Chapter~\ref{chapter-destinations} connects these specifications with
+the older {\it destination-passing style} SSOS specification. The
+transformations in both chapters add new opportunities for modular
+extension -- that is, our ability to add new features to the language
+specification without revising existing rules.
 
 \smallskip
 \begin{quote} 
-  {\bf Thesis (Part III):} Specifications 
-A logical framework based on a rewriting
-  interpretation of substructural logic supports many styles of
-  programming language specification. These styles can be formally
-  classified and connected by considering general transformations on
-  logical specifications.
+  {\bf Thesis (Part III):} {\it \sls~specifications of the operational
+    semantics of programming language are a suitable basis for formal
+    reasoning about the properties of those programming languages.}
 \end{quote} 
+\smallskip 
+
+\noindent
+We discuss two techniques for formal reasoning about the properties of
+SSOS specifications in \sls. The use of generative signatures to
+describe invariants is discussed in Chapter~\ref{chapter-gen}, and the
+use of these invariants to prove safety properties of programming
+languages is discussed in Chapter~10. Abstract interpretation is
+a different kind of formal reasoning about operational semantics
+specifications. In Chapter~\ref{chapter-approx} we discuss the logical
+approximation methodology and show that it can be used to take SSOS
+specifications and derive known control flow and alias analyses that
+are correct by construction.
