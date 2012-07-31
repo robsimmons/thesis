@@ -5,13 +5,14 @@ In this chapter, we design a logical framework of substructural
 logical specifications (\sls), a framework heavily inspired by the
 Concurrent Logical Framework (CLF) \cite{watkins02concurrent}. The
 framework is justified as a fragment of the logic \ollll~from
-Chapter~3. There are a number of reasons why we do not just use the
+Chapter~\ref{chapter-order}. 
+There are a number of reasons why we do not just use the
 already-specified \ollll~outright as a logical framework.
 %
 \smallskip
 \begin{itemize}
 \item{\it Formality.} The specifics of the domain of first-order
-  quantification in \ollll~were omitted in Chapter~3, so in
+  quantification in \ollll~were omitted in Chapter~\ref{chapter-order}, so in
   Section~\ref{sec:sls-termlanguage} we give a careful presentation of
   the term language for \sls, Spine Form LF.
 
@@ -128,7 +129,8 @@ the domain of quantification the {\it object terms} when ``terms''
 would be ambiguous). The logical framework \sls~presented in this
 chapter breaks from this tradition -- a choice we discuss further in
 Section~\ref{sec:why-not-fully-dependent}. The domain of first-order
-quantification, which was left unspecified in Chapter 3, will be
+quantification, which was left unspecified in Chapter~\ref{chapter-order}, 
+will be
 presently described as Spine Form LF, a well-understood logical
 framework derived from the normal forms of the purely persistent type
 theory LF \cite{harper93framework}.
@@ -615,7 +617,8 @@ defined in the context $\Psi'$ to objects defined in $\Psi$.
 The judgment $\Psi, [\nu] \vdash_{\Sigma,\subord} \lf\spi : \nu_0$ is
 read a bit differently than these other judgments. The notation, first
 of all, is meant to evoke the (exactly analogous) left-focus judgments
-from Chapters~2~and~3. In most other sources (for example, in
+from Chapters~\ref{chapter-foc}~and~\ref{chapter-order}. 
+In most other sources (for example, in
 \cite{cervesato02linear}) this judgment is instead written as $\Psi
 \vdash_{\Sigma,\subord} \lf\spi : \nu > \nu_0$. In either case, we
 read this judgment as checking a spine $\lf\spi$ against a classifier
@@ -1963,7 +1966,8 @@ the adequacy arguments made by Cervesato and Polakow extend
 straightforwardly to the deductive fragment of \sls. These adequacy
 arguments do not extend to the systems we want to encode in the
 non-deductive fragment of \sls, however. The more general techniques
-we consider in this section will be explored further in Chapter~9 as a
+we consider in this section will be explored further in 
+Chapter~\ref{chapter-gen} as a
 general technique for capturing invariants of \sls~specifications.
 
 The example that we will give to illustrate adequate encoding is the
@@ -2035,7 +2039,7 @@ replacing the second step with a general statement about transitions
 in $\Sigma_{\it PDA}$ preserving a well-formedness invariant. The 
 invariant we discuss is a simple instance of
 the well-formedness invariants that we will explore
-further in Chapter~9. 
+further in Chapter~\ref{chapter-gen}. 
 
 The first step in our revised methodology is to describe a generative
 signature $\Sigma_{\it Gen}$ that precisely captures the set of
@@ -2847,7 +2851,8 @@ under the signature $\Sigma_{\it PDA}$, so we are done.
 Proving that generation under a generative signature like $\Sigma_{\it
   Gen}$ is invariant under transitions in a signature like
 $\Sigma_{\it PDA}$ is something we will consider further
-in Chapter 9.  All such proofs essentially follow the structure of
+in Chapter~\ref{chapter-gen}.  
+All such proofs essentially follow the structure of
 Theorem~\ref{thm:pda-preservation}. First, we enumerate the synthetic
 transitions associated with a given signature. Second, in each of those
 cases, we use the type of the synthetic transition to perform
@@ -3046,7 +3051,8 @@ Logic programming is important because it provides us with operational
 intuitions about the intended behavior of the systems we specify in
 \sls. One specific set of these intuitions will form the basis of the
 operationalization transformations on \sls~specifications considered
-in Chapter~6. Additionally, logic programming intuitions are relevant
+in Chapter~\ref{chapter-absmachine}. 
+Additionally, logic programming intuitions are relevant
 because they motivated the design of \sls, in particular the
 presentation of the concurrent fragment in terms of partial, rather
 than complete, proofs. We discuss this point in
@@ -3271,8 +3277,9 @@ anything).\footnote{Incidentally, Lollimon implements this restriction
   and Celf does not.} Forward chaining with this restriction in a
 purely-persistent logic is strongly associated with the Datalog
 language and its implementations; we will refer to forward chaining in
-persistent logics as {\it saturating logic programming} in Chapter
-8. Forward chaining does not always deal with partially-unspecified
+persistent logics as {\it saturating logic programming} in 
+Chapter~\ref{chapter-approx}.
+Forward chaining does not always deal with partially-unspecified
 terms; when persistent logic programming languages support forward
 chaining with partially-unspecified terms variables, it is called {\it
   hyperresolution} \cite{fermuller01resolution}.
@@ -3498,7 +3505,7 @@ money-store-battery-robot example as a trace with this type:
  g{:}\ispers{({\sf 6bucks} \lefti {\ocircle}{\sf battery})}
 \right)
 \end{align*}
-It is also possible to translate the example from Chapter~2
+It is also possible to translate the example from Chapter~\ref{chapter-foc}
 as a {\it complete} proof of the following proposition:
 \[
   {\sf 6bucks} 
@@ -3800,9 +3807,11 @@ the structure of substructural contexts \cite{reed09hybrid}.
 % same multifocused proof.
 
 % CLF's restricted form of concurrent equality will be sufficient for
-% the logical framework in Chapter 4. In fact, for the fragment of the
-% the logic in Chapter 3 that comprises our logical framework in Chapter
-% 4, I conjecture that concurrent equality and the equality given by
+% the logical framework in Chapter~\ref{chapter-framework}. 
+% In fact, for the fragment of the
+% the logic in Chapter~\ref{chapter-order} 
+% that comprises our logical framework in Chapter~\ref{chapter-framework},
+% I conjecture that concurrent equality and the equality given by
 % multifocusing coincide.\footnote{This obviously means that the example
 %   above will be outside the logical fragment that comprises the logical
 %   framework.}  This conjecture is obviously difficult to make precise,
@@ -3868,7 +3877,8 @@ the structure of substructural contexts \cite{reed09hybrid}.
 % This example illustrates why we must be careful, but it is not a fatal
 % flaw for two reasons. The first reason is the aforementioned
 % conjecture that, for the restricted logical fragment defined in
-% Chapter 4 as the basis of our logical framework, the focalizations of
+% Chapter~\ref{chapter-framework} 
+% as the basis of our logical framework, the focalizations of
 % two proofs are concurrently equal if and only if the original proofs
 % are convertible by local permutations of rules, the same condition
 % that multifocusing satisfies. If this conjecture holds, it ought to be
