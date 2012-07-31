@@ -18,7 +18,7 @@ Figure~\ref{fig:pda-ord} as an \sls~specification.
 \noindent
 Tree structures were reasonably straightforward to encode in the
 ordered context as well, as we saw from the SSOS specifications for
-parallel pairs in Chapter~6. 
+parallel pairs in Chapter~\ref{chapter-absmachine}. 
 
 At some point, however, the simple data structures that can be
 naturally encoded in an ordered context become too limiting. When we
@@ -34,15 +34,19 @@ expressive structures in the linear context of \sls. Instead of using
 order to capture the local relationships between different propositions,
 we use destinations. 
 
-In a way that we will make precise in this chapter, ordered logic does
-not actually add any {\it expressiveness} to concurrent specifications
-relative to linear logic. In Chapter~5, we argued that ordered
-abstract machines were at least as expressive as (moded) natural
-semantics by giving a transformation, operationalization, from the
-latter to the former. Analogously, in this chapter we will argue that
-concurrent specifications in linear logic are just as expressive as
-concurrent specifications in ordered logic by giving a transformation,
-{\it destination-adding}, from the latter to the former. This
+Ordered logic does
+allow us to express any (flat, concurrent) specifications that 
+we could not express with linear logic alone. 
+We will demonstrate that fact in this chapter by 
+% In Chapter~\ref{chapter-absmachine}, we showed that ordered
+% abstract machines were at least as expressive as (moded) natural
+% semantics by giving a transformation, operationalization, from the
+% latter to the former. Analogously, in this chapter we will argue that
+% concurrent specifications in linear logic are just as expressive as
+% concurrent specifications in ordered logic by 
+describing a transformation,
+{\it destination-adding}, from specifications in ordered logic
+to specifications in linear logic. This
 destination-adding transformation, which we originally presented in
 \cite{simmons11logical}, turns all ordered atomic propositions into
 linear atomic propositions, and tags them with two new arguments (the
@@ -174,7 +178,7 @@ follows:
   \forall \lf l{:}{\sf dest}.\,
   \forall \lf r{:}{\sf dest}.\,
   \\
-  & \qquad (\exists \lf{m_1}{:}{\sf dest}.\, {\sf stack}\,\lf{x}\,\lf{l}\,\lf{m} \fuse
+  & \qquad (\exists \lf{m_1}{:}{\sf dest}.\, {\sf stack}\,\lf{x}\,\lf{l}\,\lf{m_1} \fuse
    (\exists \lf{m_2}{:}{\sf dest}.\, {\sf hd}\,\lf{m_1}\,\lf{m_2} \fuse
      {\sf right}\,\lf{x}\,\lf{m_2}\,\lf{r}))
   \\ 
@@ -215,7 +219,7 @@ Section~\ref{sec:correspondence-related}, and transformation as given
 simplifies the correctness proof (Theorem~\ref{thm:destcorrect}).
 Pragmatically, the additional existential quantifiers also give us
 more structure to work with when considering program abstraction in
-Chapter 8. Finally, if we apply both the transformation in
+Chapter~\ref{chapter-approx}. Finally, if we apply both the transformation in
 Figure~\ref{fig:destadd-pos} and a transformation that reuses
 destinations to an ordered abstract machine SSOS specification, the
 former transformation produces results that are more in line with
@@ -267,12 +271,38 @@ $\llbracket \Psi; \Delta \rrbracket \leadsto_{{\it Dest}(\Sigma)}
 $(\Psi; \Delta) \leadsto_\Sigma (\Psi_o; \Delta_o)$ and
 $(\Psi_l; \Delta_l) = \llbracket \Psi_o, \Psi''; \Delta_o \rrbracket$ 
 for some variable 
-context $\Psi''$ containing destinations free in the first translated
-context but not the second.
+context $\Psi''$ containing destinations free in the translation of
+$\Delta$ but not in the translation of $\Delta_o$.
 \end{theorem}
 
 \begin{proof}
-As in \cite[Theorem 2]{simmons11logical}.
+  This proof is given in detail as \cite[Theorem 2]{simmons11logical};
+  we will sketch the outlines here. The transformation $\llbracket
+  \Psi; \Delta \rrbracket$ on process states introduces a leftmost
+  destination $d_L$ and a rightmost destination $d_R$ -- these two
+  will be the same if the context contains no destinations. Let
+  $\llbracket \Psi; \Delta \rrbracket^{d_L}_{d_R}$ indicate that the
+  leftmost and rightmost destinations resulting from the translation
+  were $d_L$ and $d_R$, respectively.
+
+First, we need to prove a number of theorems by induction over right-focused
+derivations (Lemma 1, \cite{simmons11logical}):
+\begin{itemize}
+\item If  $\llbracket \Psi; \Delta \rrbracket^{d_L}_{d_R} \vdash_\Sigma [\llbracket S \rrbracket^{d_L}_{d_R}]$
+\item If $\Psi; \Delta \vdash_\Sigma [S]$ and $S$ contains no ordered
+  atomic propositions, then $\restrictto{\Delta}{\meph}$.
+\end{itemize}
+The first lemma, relates destination passing in right focus. It is 
+easy to prove by induction that $\Psi; \Delta \vdash_\Sigma [S]$
+implies 
+
+The
+transformation $\llbracket \Psi; \Delta \rrbracket$ on process states
+introduces a leftmost destination $d_L$ and a rightmost destination
+$d_R$; these two will be the same if the context contains no
+destinations.
+ 
+proving that $\llbracket \Psi; \Delta \rrbracket$
 \end{proof}
 
 
@@ -309,12 +339,13 @@ for emphasis):
 \leadsto ~ & y_4{:}\susp{\underline{\sf hd}\,\lf{d_0}\,\lf{d_5}}
 \end{align*}
 One reason for leaving off the variable context $\Psi$ in this example
-is that by the end it contains the LF variables 
-$\lf{d_1}$, $\lf{d_2}$, $\lf{d_3}$, $\lf{d_4}$, $\lf{d_5}$, $\lf{d_6}$, and 
-$\lf{d_7}$, none of which are actually present in the substructural context
-$y_4{:}\susp{\underline{\sf hd}\,\lf{d_0}\,\lf{d_5}}$. We can informally
-think of these destinations as having been ``garbage collected,'' but this
-notion is not supported by the formal system we described in Chapter~4. 
+is that by the end it contains the LF variables $\lf{d_1}$,
+$\lf{d_2}$, $\lf{d_3}$, $\lf{d_4}$, $\lf{d_5}$, $\lf{d_6}$, and
+$\lf{d_7}$, none of which are actually present in the substructural
+context $y_4{:}\susp{\underline{\sf hd}\,\lf{d_0}\,\lf{d_5}}$. We can
+informally think of these destinations as having been ``garbage
+collected,'' but this notion is not supported by the formal system we
+described in Chapter~\ref{chapter-framework}.
 
 
 \begin{figure}[t]
@@ -472,13 +503,16 @@ condition, it is still straightforward to see that performing
 destination-passing and then turning some propositions persistent is
 an {\it abstraction}: if the original system can make a series of
 transitions, the transformed system can simulate those transitions,
-but the reverse may not be true. For systems we are interested in
-(like push-down automata with persistent ${\sf stack}$, ${\sf left}$,
-and ${\sf right}$ or the sequential ordered abstract machines with
-persistent ${\sf cont}$), it happens to be the case that the
-abstraction is precise: the partially-persistent destination-passing
-specification can only make transitions that were possible in the
-ordered specification.
+but the reverse may not be true. In any case, we can observe that, for
+many of systems we are interested in, the partially-persistent
+destination-passing specification can only make transitions that were
+possible in the ordered specification.  The push-down automata with
+persistent ${\sf stack}$, ${\sf left}$, and ${\sf right}$ is one
+example of this, and we can similarly make the ${\sf cont}$ predicate
+persistent in SSOS~specifications without introducing any new
+transitions. Turing the ${\sf cont}$ predicate persistent will in
+fact be necessary for the discussion of first-class
+continuations in Section~\ref{sec:dest-continuations}.
 
 \section{Exploring the richer fragment}
 
@@ -642,13 +676,13 @@ with ${\sf await}\,\lf{C}\,\lf{D}$.
 
 \subsubsection{Labeled transitions}
 
-Substructural operational semantics specifications are generally very
-abstract machine-like, in that we are usually manipulating expressions
-along with their continuations. In ordered specifications,
+Substructural operational semantics specifications retain much of the
+flavor of abstract machines, in that we are usually manipulating
+expressions along with their continuations. In ordered specifications,
 continuations are connected to evaluating expressions and returning
 values only by their relative positions in the ordered context; in
-destination-passing specifications, expressions and values are connected
-to continuations by the threading of destinations. 
+destination-passing specifications, expressions and values are
+connected to continuations by the threading of destinations.
 
 Abstract machines are not always the most natural
 way to express a semantics. This observation is part of what
@@ -656,7 +690,8 @@ motivated our discussion of the operationalization transformation from
 natural semantics (motto: ``natural'' is our first name!) 
 and our informal
 discussion of statefully-modular natural semantics in
-Section~\ref{sec:enriching-natsem}.  In Chapter~6, we showed that the
+Section~\ref{sec:enriching-natsem}.  In Chapter~\ref{chapter-absmachine}, 
+we showed that the
 continuation-focused perspective of SSOS allowed us to expose
 computation to the ambient state. With the example of synchronization
 above, we see that destination-passing SSOS specifications also expose
@@ -754,10 +789,10 @@ the black hole in our specification of lazy call-by-need.
 \draw (0,-6.3) node[right]{\small $
    x_{13}{:}\susp{{\sf retn}\,\interp{\sf s\,z}\,\lf{d_5}}, ~~ 
    x_9{:}\susp{{\sf cont}\,\lf{\sf succ1}\,\lf{d_5}\,\lf{d_1}}, ~~
-   x_{12}{:}\susp{{\sf bind}\,\lf{x}\,\interp{\sf s\,z}}$};
+   x_{12}{:}\ispers{\susp{{\sf bind}\,\lf{x}\,\interp{\sf s\,z}}}$};
 \draw (0,-7.0) node[right]{\small $
    x_{14}{:}\susp{{\sf retn}\,\interp{\sf s\,(s\,z)}\,\lf{d_1}}, ~~ 
-   x_{12}{:}\susp{{\sf bind}\,\lf{x}\,\interp{\sf s\,z}}$};
+   x_{12}{:}\ispers{\susp{{\sf bind}\,\lf{x}\,\interp{\sf s\,z}}}$};
 %
 \draw (6.2,-2.1) node[right]{\small $x_5{:}\susp{{\sf eval}\,\interp{\sf s\,z}\,\lf{d_3}}, ~~ x_6{:}\susp{{\sf promise}\,\lf{d_3}\,\lf{x}}$};
 \draw (6.2,-2.8) node[right]{\small $
@@ -776,7 +811,7 @@ the black hole in our specification of lazy call-by-need.
    x_{11}{:}\susp{{\sf retn}\,\interp{\sf s\,z}\,\lf{d_3}}, ~~ 
    x_6{:}\susp{{\sf promise}\,\lf{d_3}\,\lf{x}}$};
 \draw (6.2,-5.6) node[right]{\small $
-   x_{12}{:}\susp{{\sf bind}\,\lf{x}\,\interp{\sf s\,z}}$};
+   x_{12}{:}\ispers{\susp{{\sf bind}\,\lf{x}\,\interp{\sf s\,z}}}$};
 %
 \draw[dashed] (15.8, -3.8) -- (0, -3.8) -- (0,-1.8) -- (15.8, -1.8) -- (15.8, -3.8);
 \draw[dashed] (15.8, -3.9) -- (0, -3.9) -- (0,-5.9) -- (15.8, -5.9) -- (15.8, -3.9);
@@ -790,6 +825,10 @@ the black hole in our specification of lazy call-by-need.
 \draw (15.5,-7) node[left]{\small \it the primary computation is stuck};
 \draw (15.5,-7.5) node[left]{\small \it while it waits on the promise};
 \draw[->] (11.8,-6.8) -- (11,-6.0);
+%
+\draw (.5,-7.7) node[right]{\small \it Remember: ${\sf bind}$ is persistent, all other propositions are linear};
+\draw[->] (8,-7.4) -- (9.7,-6.6);
+\draw[->] (7.8,-7.4) -- (7.5,-7.2);
 \end{tikzpicture}
 \end{center}
 \caption{Series of process states in an example call-by-future evaluation}
@@ -832,16 +871,17 @@ about what to do when a future signals failure.
 \subsection{First-class continuations}
 \label{sec:dest-continuations}
 
-First-class continuations are a sophisticated control feature.
-{\it Continuations} are another name for the stacks $\obj{k}$ 
-in abstract machine
-semantics with states $\obj{k \rhd e}$ and $\obj{k \lhd v}$ (and also,
-potentially, $\obj{k {\blacktriangleleft}}$). First-class continuations
-introduce a new value, $\obj{{\sf contn}\,k}$, to the language. Programmers
-cannot write continuations $\obj{k}$ directly, just as they cannot write
+First-class continuations are a sophisticated control feature.  {\it
+  Continuations} are another name for the stacks $\obj{k}$ in abstract
+machine semantics with states $\obj{k \rhd e}$ and $\obj{k \lhd v}$
+(and also, potentially, $\obj{k {\blacktriangleleft}}$ if we want to
+be able to return errors, as discussed in
+Section~\ref{sec:failure}). First-class continuations introduce a new
+value, $\obj{{\sf contn}\,k}$, to the language. Programmers cannot
+write continuations $\obj{k}$ directly, just as they cannot write
 locations $\obj{l}$ directly; rather, the expression $\interp{{\sf
-    letcc}\,x.e} = \lf{{\sf letcc}\,\lambda x.\interp{e}}$ captures the
-current expression as a continuation:
+    letcc}\,x.e} = \lf{{\sf letcc}\,\lambda x.\interp{e}}$ captures
+the current expression as a continuation:
 \begin{align*}
   \obj{k \rhd {\sf letcc}\,x.e} ~~&\obj{\mapsto}~~ \obj{k \rhd [{\sf contn}\,k/x]e}
   \intertext{There is a third construct, $\interp{{\sf
@@ -896,3 +936,13 @@ persistent. As discussed in Section~\ref{sec:persistentdestpass}, it
 does not change the behavior of any SSOS specifications we have
 discussed if linear ${\sf cont}$ predicates are turned into persistent
 ${\sf cont}$ predicates.
+
+Turning ${\sf cont}$ into a persistent predicate does not greatly
+influence the transitions that are possible, so in a sense we have not
+changed our SSOS semantics very much in order to add first-class
+continuations. However, the implicit representation of stacks in the
+context does complicate adequacy arguments for the semantics in
+Figure~\ref{fig:dest-letcc} relative to the transition rules given
+above. We will return to this point in Section~\ref{sec:gen-letcc}
+when we discuss generative invariants that apply to specifications using
+first-class continuations.
