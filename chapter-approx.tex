@@ -115,7 +115,8 @@ Datalog). We will not deal with cost semantics or efficiency, however,
 as our use of higher-order abstract syntax complicates McAllester and
 Ganzinger's cost semantics substantially.
 
-Just as the term {\it persistent logic} was introduced in Chapter 2 to
+Just as the term {\it persistent logic} was introduced in 
+Chapter~\ref{chapter-foc} to
 distinguish what is traditionally referred to as intuitionistic logic
 from intuitionistic ordered and linear logic, we will use the term
 {\it saturating logic programming} to distinguish what is
@@ -161,13 +162,13 @@ Figure~\ref{fig:pda-lin}}
 
 Consider the destination-passing PDA specification from
 Figure~\ref{fig:pda-lin}. If we simply turn all linear predicates
-persistent, the first step in the approximation methadology, then the
+persistent, the first step in the approximation methodology, then the
 ${\sf push}$ rule will lead to non-termination because the head
 $\exists \lf{m}. {\sf stack}\,\lf{x}\,\lf{l}\,\lf{m} \fuse {\sf
   hd}\,\lf{m}\,\lf{r}$ introduces a new existential parameter
 $\lf{m}$.  We can cope by adding a new conclusion $\lf{m} \doteq
 \lf{t}$, as adding new conclusions is the second step in the
-approximation methadology. This, however, means we have to pick a
+approximation methodology. This, however, means we have to pick a
 $\lf{t}$.  The most general starting point for selecting a $\lf{t}$ is
 to apply Skolemization to the rule. By moving the existential
 quantifier for $\lf{m}$ in front of the implicitly quantified
@@ -282,7 +283,7 @@ $(h{:}\ispers{\susp{{\sf hd}\,\lf{\sf d_1}}}, x_1{:}\ispers{\susp{{\it
       ptok}_1}}, \ldots, x_n{:}\ispers{\susp{{\it ptok}_n}})$ and
 ${\sf hd}\,\lf{\sf d_{n+1}}$ appears in the saturated process
 state. Again, the meta-approximation theorem ensures that any string
-accepted by the orignal PDA will also be accepted by any
+accepted by the original PDA will also be accepted by any
 approximation. This approximation will additionally accept every
 string where, for every form of bracket $\lf{tok}$, at least one left
 $\lf{tok}$ appears before any of the right $\lf{tok}$. The string
@@ -507,7 +508,7 @@ will, as we have discussed, lead to nontermination when we interpret
 the rules as a saturating logic program. The solution is to apply
 Skolemization as described in Section~\ref{sec:pda-approxme}, which
 introduces a new constant we will call ${\sf var}$. The rule ${\sf
-  sub/lam/ohono}$ can then be approximatied as a terminating rule:}
+  sub/lam/ohono}$ can then be approximated as a terminating rule:}
 %
 {\sf sub/lam} &: ~~ 
   \forall \lf{e}{:}{\sf exp} \rightarrow {\sf exp}.\,
@@ -563,7 +564,8 @@ Figure~\ref{fig:dest-env}. It differs from the environment semantics
 shown in Figure~\ref{fig:ssos-by-env} in three ways. First and
 foremost, it is a destination-passing specification instead of an
 ordered abstract machine specification, but that difference is
-accounted for by the destination-adding transformation in Chapter~7.
+accounted for by the destination-adding transformation in 
+Chapter~\ref{chapter-destinations}.
 A second difference is that the existentially generated parameter
 $\lf{x}$ associated with the persistent proposition ${\sf
   bind}\,\lf{x}\,\lf{v}$ is introduced as late as possible in the
@@ -575,7 +577,9 @@ extra rule ${\sf ev/app3}$ that consumes such frames. The $\lf{\sf
   app3}$ frame is an important part of the control flow analysis we
 derive, but in \cite{simmons11logical} the addition of these frames
 was otherwise unmotivated. Based on our discussion of the logical
-correspondence in Chapter~6, we now have a principled account for this
+correspondence in 
+Chapters~\ref{chapter-correspondence}~and~\ref{chapter-absmachine}, 
+we now have a principled account for this
 extra frame and rule: it is precisely the pattern we get from
 operationalizing a natural semantics {\it without} tail-recursion
 optimization and then applying defunctionalization.
@@ -679,8 +683,8 @@ abstract syntax, however, $\interp{\lambda y.y}$ and $\interp{\lambda
   x.x}$ are $\alpha$-equivalent and therefore equal in the eyes of the
 logic programming interpreter. This is not a problem with correctness,
 but it means that our analysis may be less precise than expected,
-becuase it distinguishes only subterms, not {\it subterm
-  occurances}. One solution would be to add distinct labels to terms,
+because it distinguishes only subterms, not {\it subterm
+  occurrences}. One solution would be to add distinct labels to terms,
 marking the $\alpha$-equivalent $\obj{\lambda x.x}$ and $\obj{\lambda
   y.y}$ with their distinct positions in the overall term. Adding a
 label on the inside of every lambda-abstraction would seem to suffice,
@@ -802,9 +806,84 @@ that $(\widehat{\sf C}, \widehat{\rho}) \models \obj{e}$.
 
 \begin{proof}
   By coinduction on the definition of acceptability in
-  Figure~\ref{fig:acceptablecontrolflowanalysis}. 
+  Figure~\ref{fig:acceptablecontrolflowanalysis}, and case analysis on 
+  the form of $\obj{e}$. 
+
+  \begin{itemize}
+  \item[--] $\obj{e} = \obj{x}$, 
+  so $\interp{e} = \interp{x} = \lf{{\sf var}(\lambda x.\,E_0\,x)}$
+
+  We have to show $\widehat{\rho}(\obj{x}) \subseteq \widehat{\sf
+    C}(\obj{x})$. In other words, if ${\sf
+    bind}\,\interp{x}\,\interp{v} \in \Delta$, then ${\sf
+    retn}\,\interp{v}\,\interp{x} \in \Delta$. Because ${\sf
+    eval}\,\interp{e} \in \Delta$, this follows by the presence of
+  rule ${\sf ev/bind}$ -- if ${\sf eval}\,\interp{e} \in \Delta$ and
+  ${\sf bind}\,\interp{x}\,\interp{v} \in \Delta$, then ${\sf
+    retn}\,\interp{v}\,\interp{x} \in \Delta$ as well; if it were not,
+  the process state would not be saturated!
+
+  \bigskip
+
+  \item[--] $\obj e = \obj{\lambda x.e}$, so 
+   $\interp{e} = \interp{\lambda x.e_0} = \lf{{\sf lam}(\lambda x.\,E_0\,x)}$
+
+    We have to show $\{ \obj{(\lambda x.e)} \} \subseteq \widehat{\sf
+      C}(\obj{\lambda x.e})$. In other words,
+    ${\sf retn}\,\interp{\lambda x.e}\,\interp{\lambda x.e} \in
+    \Delta$. This follows by rule ${\sf ev/lam}$ by the same reasoning given 
+   in more detail above. 
   
-  XXX more proof!
+  \bigskip  
+
+  \item[--] $\obj{e} = \obj{e_1\,e_2}$, so 
+  $\interp{e} = \interp{e_1\,e_2} = \lf{{\sf app}\,E_1\,E_2}$
+ 
+  We have to show several things. The first, that $(\widehat{\sf C},
+  \widehat{\rho}) \models \obj{e_1}$, follows from the coinduction
+  hypothesis -- by rule ${\sf ev/app}$, ${\sf eval}\,\interp{e_1} \in
+  \Delta$. That rule also allows us to conclude that ${\sf
+    cont}\,\lf{{\sf app1}\,\interp{e_2}}\,\interp{e_1}\,\interp{e_1\,e_2} \in
+  \Delta$.
+
+  \medskip Second, given a $\obj{(\lambda x.e_0}) \in \widehat{\sf
+    C}(\obj{e_1})$ (meaning ${\sf retn}\,\interp{\lambda
+    x.e_0}\,\interp{e_1} \in \Delta$) we have to show that
+  $(\widehat{\sf C}, \widehat{\rho}) \models \obj{e_2}$. This follows
+  from the coinduction hypothesis: by rule ${\sf ev/app1}$, because
+  ${\sf retn}\,\interp{\lambda x.e_0}\,\interp{e_1} \in \Delta$ and
+  ${\sf cont}\,\lf{({\sf
+      app1}\,\interp{e_2})}\,\interp{e_1}\,\interp{e_1\,e_2} \in \Delta$,
+  ${\sf eval}\,\interp{e_2} \in \Delta$. This same reasoning allows us
+  to conclude that ${\sf cont}\,\lf{({\sf app2}\,(\lf \lambda
+    x.\,\interp{e_0}))}\,\interp{e_2}\,\interp{e_1\,e_2} \in \Delta$ given
+  that $\obj{\lambda x.e_0}) \in \widehat{\sf
+    C}(\obj{e_1})$. 
+
+  \medskip Third, given a $\obj{(\lambda x.e_0}) \in \widehat{\sf
+    C}(\obj{e_1})$, we have to show that $(\widehat{\sf C}(\obj{e_2})
+  \subseteq \widehat{\rho}(\obj{x}))$: in other words, that ${\sf
+    retn}\,\interp{v_2}\,\interp{e_2} \in \Delta$ implies ${\sf
+    bind}\,\lf{({\sf var}(\lambda x.\,\interp{e_0}))}\,\interp{v_2}
+  \in \Delta$.  Because we know by the reasoning above that ${\sf
+    cont}\,\lf{({\sf app2}\,(\lf \lambda
+    x.\,\interp{e_0}))}\,\interp{e_2}\,\interp{e_1\,e_2} \in \Delta$, this
+  follows by rule ${\sf ev/app2}$. 
+
+  \medskip The same reasoning allows us to conclude that $\obj{(\lambda
+    x.e_0}) \in \widehat{\sf C}(\obj{e_1})$ and ${\sf
+    retn}\,\interp{v_2}\,\interp{e_2} \in \Delta$ together imply ${\sf
+    eval}\,\interp{e_0} \in \Delta$ (and therefore that $(\widehat{\sf
+    C}, \widehat{\rho}) \models \obj{e_0}$ by the coinduction
+  hypothesis, the fourth thing we needed to prove) and that ${\sf
+    cont}\,\lf{\sf app3}\,\interp{e_0}\,\interp{e_1\,e_2} \in \Delta$ (which
+  with ${\sf ev/app3}$ implies $\widehat{\sf C}(\obj{e_0}) \subseteq
+  \widehat{\sf C}(\obj{e_1\,e_2})$, the last thing we needed to
+  prove).
+  \end{itemize}
+
+\noindent
+This completes the proof.
 \end{proof}
 
 We claim that, if we had started with an analysis that incorporated
@@ -814,7 +893,7 @@ and the call-by-future functions discussed in
 Figure~\ref{fig:dest-futures} from Section~\ref{sec:dest-futures},
 then the derived analysis would have satisfied a faithful
 representation of Nielson et al.'s acceptability relation. The proof,
-in this case, would have followed the same lines as the proof of
+in this case, should the same lines as the proof of
 Theorem~\ref{thm:acceptablecfa}.
 
 %  which is given a coinductive
@@ -877,12 +956,21 @@ Theorem~\ref{thm:acceptablecfa}.
 
 The control flow analysis above was derived from the SSOS
 specification of a language that looked much like the Mini-ML-like
-languages considered in Chapters~6~and~7.  In this section, we try to
-derive an alias analysis that matches the interprocedural
-object-oriented alias analysis presented as a logic program in
-\cite[Chapter 12.4]{aho07compilers}.  When we try to reverse-engineer
-a source language from which this alias analysis can be derived, we
-get the monadic language presented below.
+languages considered in
+Chapters~\ref{chapter-absmachine}~and~\ref{chapter-destinations}, and
+we described how to justify such an analysis in terms of coinductive
+specifications of what comprises a well-designed control flow
+analysis.
+
+In this section, we work in the other direction: the starting point
+for this specification was the interprocedural object-oriented alias
+analysis presented as a saturating logic program in \cite[Chapter
+12.4]{aho07compilers}. We then worked backwards to get a SSOS
+semantics that allowed us to derive that logic program as closely as
+possible; the result was a monadic SSOS semantics. There should
+not, however, be any obstacle to deriving an alias analysis from a
+semantics that looks more like the specifications elsewhere in this
+thesis.
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -991,7 +1079,7 @@ expressions only for the convenience of a more regular presentation.
 
 
 To approximate the semantics of our monadic language, we can follow the
-methodology from before and turn the program persistent. A further
+methodology from before and turn the specification persistent. A further
 approximation is to remove the last premise from ${\sf ev/set}$, as
 the meta-approximation theorem allows -- the only purpose of this
 premise in Figure~\ref{fig:ssos-monadic2} was to consume the ephemeral

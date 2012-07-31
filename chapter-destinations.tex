@@ -245,20 +245,27 @@ with only linear and persistent atomic propositions:
 \begin{align*}
 \llbracket \Psi; \cdot \rrbracket & = (\Psi, \lf{d_L}{:}{\sf dest}; \cdot) 
 \\
-\llbracket \Psi; \Delta, x{:}\susp{{\sf a}\,\lf{t_1}\ldots \lf{t_n}} \rrbracket 
+\llbracket \Psi; \Delta, x{:}\istrue{\susp{{\sf a}\,\lf{t_1}\ldots \lf{t_n}}} \rrbracket 
 & = (\Psi', \lf{d_L}{:}{\sf dest}, \lf{d_R}{:}{\sf dest}; 
      \Delta', x{:}\susp{{\sf a}\,\lf{t_1}\ldots \lf{t_n}\,\lf{d_L}\,\lf{d_R}})\\
 & \qquad\qquad\qquad
   \mbox{(where $\sf a$ is ordered and
   $\llbracket \Psi; \Delta \rrbracket = (\Psi', \lf{d_L}{:}{\sf dest}; \Delta') $)}
 \\
-\llbracket \Psi; \Delta, x{:}\susp{p^+_\meph} \rrbracket 
+\llbracket \Psi; \Delta, x{:}\istrue{S} \rrbracket 
+& = (\Psi', \lf{d_L}{:}{\sf dest}, \lf{d_R}{:}{\sf dest}; 
+     \Delta', x{:}\istrue{\llbracket S \rrbracket^{\lf{d_L}}_{\lf{d_R}}})\\
+& \qquad\qquad\qquad
+  \mbox{(where $\sf a$ is ordered and
+  $\llbracket \Psi; \Delta \rrbracket = (\Psi', \lf{d_L}{:}{\sf dest}; \Delta') $)}
+\\
+\llbracket \Psi; \Delta, x{:}\iseph{\susp{p^+_\meph}} \rrbracket 
 & = (\Psi'; \Delta', x{:}\susp{p^+_\meph})
 \\ &
  \qquad\qquad\qquad \mbox{(where
        $\llbracket \Psi; \Delta \rrbracket = (\Psi'; \Delta') $)}
 \\
-\llbracket \Psi; \Delta, x{:}\susp{p^+_\mpers} \rrbracket 
+\llbracket \Psi; \Delta, x{:}\ispers{\susp{p^+_\mpers}} \rrbracket 
 & = (\Psi'; \Delta', x{:}\susp{p^+_\mpers})
 \\ &
   \qquad\qquad\qquad \mbox{(where 
@@ -276,33 +283,48 @@ $\Delta$ but not in the translation of $\Delta_o$.
 \end{theorem}
 
 \begin{proof}
-  This proof is given in detail as \cite[Theorem 2]{simmons11logical};
-  we will sketch the outlines here. The transformation $\llbracket
-  \Psi; \Delta \rrbracket$ on process states introduces a leftmost
-  destination $d_L$ and a rightmost destination $d_R$ -- these two
-  will be the same if the context contains no destinations. Let
-  $\llbracket \Psi; \Delta \rrbracket^{d_L}_{d_R}$ indicate that the
-  leftmost and rightmost destinations resulting from the translation
-  were $d_L$ and $d_R$, respectively.
+  This proof is given in detail in \cite[Appendix
+  A]{simmons11logical}, it involves a great deal of tedious tracking
+  of destinations, but the intuition behind that tedious development
+  is reasonably straightforward.
 
-First, we need to prove a number of theorems by induction over right-focused
-derivations (Lemma 1, \cite{simmons11logical}):
-\begin{itemize}
-\item If  $\llbracket \Psi; \Delta \rrbracket^{d_L}_{d_R} \vdash_\Sigma [\llbracket S \rrbracket^{d_L}_{d_R}]$
-\item If $\Psi; \Delta \vdash_\Sigma [S]$ and $S$ contains no ordered
-  atomic propositions, then $\restrictto{\Delta}{\meph}$.
-\end{itemize}
-The first lemma, relates destination passing in right focus. It is 
-easy to prove by induction that $\Psi; \Delta \vdash_\Sigma [S]$
-implies 
+  First, we need to prove that a right-focused proof of $\Delta
+  \vdash_{\Sigma} S$ implies that there is an analogous proof of
+  $\llbracket \Delta \rrbracket \vdash_{{\it Dest}(\Sigma)} [
+  \llbracket S \rrbracket^{\lf{d_L}}_{\lf{d_R}} ]$, and conversely
+  that if we can prove $\Delta \vdash_{{\it Dest}(\Sigma)} [\llbracket
+  S \rrbracket^{\lf{d_L}}_{\lf{d_R}}]$ in right focus under then
+  linear translation, then it is possible to reconstruct an ordered
+  context $\Delta'$ such that $\llbracket \Delta'
+  \rrbracket^{\lf{d_L}}_{\lf{d_R}} = \Delta$ and $\Delta'
+  \vdash_{\Sigma} [S]$ by threading together the destinations from
+  $\lf{d_L}$ to $\lf{d_R}$ in $\Delta$. Both directions are by
+  structural induction on the given derivation. The critical property
+  it that it is possible to reconstruct the ordered context from the
+  context of any right-focus sequent that arises during translation.
+  Proving that property is where the flat structure of rules is
+  particularly helpful; the use of positive atomic propositions comes
+  in handy too \cite[Lemma 1]{simmons11logical}.
 
-The
-transformation $\llbracket \Psi; \Delta \rrbracket$ on process states
-introduces a leftmost destination $d_L$ and a rightmost destination
-$d_R$; these two will be the same if the context contains no
-destinations.
- 
-proving that $\llbracket \Psi; \Delta \rrbracket$
+  Second, we need to prove that patterns can be translated in both
+  directions: that if $(\Psi; \Delta) \Longrightarrow (\Psi';
+  \Delta_o)$ under the original signature then $P :: \llbracket \Psi;
+  \Delta \rrbracket \Longrightarrow \llbracket \Psi'; \Delta_o \rrbracket$
+  under the translated signature  \cite[Lemma 4]{simmons11logical}, and that if 
+  $P :: \llbracket \Psi;
+  \Delta \rrbracket \Longrightarrow (\Psi'; \Delta_l)$ then there 
+  exists $\Delta_o$ such that 
+  $(\Psi'; \Delta_o) = \llbracket \Psi'; \Delta'' \rrbracket$
+  \cite[Lemma 5]{simmons11logical}. Both directions are again by induction
+  over the structure of the given pattern.
+
+  The theorem then follows from directly from these two lemmas.  There
+  is a trivial induction on spines to handle the sequence of
+  quantifiers, but the core of a flat rule is a proposition $S_1
+  \lefti \{ S_2 \}$ -- we reconstruct the ordered context from the
+  value used to prove $S_1$ (the first set of lemmas), and then begin
+  inverting with the positive proposition $S_2$ in the context (the
+  second set of lemmas).
 \end{proof}
 
 
