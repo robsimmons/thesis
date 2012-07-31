@@ -51,7 +51,7 @@ suggests many more examples.
 
 Concurrent \sls~specifications where all positive atomic propositions
 are persistent (and where all inclusions of negative propositions in
-positive propositions -- if there are any -- have the form ${!}A$, not
+positive propositions -- if there are any -- have the form ${!}A^-$, not
 ${\downarrow}A^-$ or ${\gnab}A^-$) have a distinct logical and
 operational character. Logically, by the discussion in
 Section~\ref{sec:perm-fragments} we are justified in reading such
@@ -71,14 +71,19 @@ The way we will understand the meaning of persistent and concurrent
 \sls~specifications is in terms of {\it saturation}. A process state
 $(\Psi; \Delta)$ is saturated relative to the signature $\Sigma$ if,
 for any step $(\Psi; \Delta) \leadsto_\Sigma (\Psi'; \Delta')$, it is
-the case that $\Psi$ and $\Psi'$ are the same, $x{:}\susp{p^+_\mpers}
-\in \Delta'$ implies $x{:}\susp{p^+_\mpers} \in \Delta$, and
-$x{:}\ispers{A^-} \in \Delta'$ implies $x{:}\ispers{A^-} \in
-\Delta$. This means that a signatures with a rule that produces new
+the case that $\Psi$ and $\Psi'$ are the same (the step unified no
+distinct variables and introduced no new variables),
+$x{:}\susp{p^+_\mpers} \in \Delta'$ implies $x{:}\susp{p^+_\mpers} \in
+\Delta$, and $x{:}\ispers{A^-} \in \Delta'$ implies $x{:}\ispers{A^-}
+\in \Delta$. This means that a signature with a rule that produces new
 variables by existential quantification, like ${\sf a} \lefti \{
 \exists \lf{x}. {\sf b}\lf{(x)} \}$ has no saturated process states
-where ${\sf a}$ is present. Notions of saturation that can cope with
-existentially generated parameters are interesting, but are beyond the
+where ${\sf a}$ is present. We will cope with rules of this form by
+turning them into rules of the form ${\sf a} \lefti \{ \exists
+\lf{x}. {\sf b}\lf{(x)} \fuse \lf{x} \doteq \lf{t} \}$ for some
+$\lf{t}$, neutralizing the free existential variable as a notational
+definition. Notions of saturation that can cope with {\it free}
+existentially generated variables are interesting, but are beyond the
 scope of this thesis.
 
 A {\it minimal} saturated process state is one with no duplicated
@@ -97,7 +102,7 @@ the usual forward-chaining semantics where only transitions that
 derive ${\it new}$ persistent atomic propositions or equalities
 $\lf{t} \doteq \lf{s}$ are allowed. This forward-chaining logic
 programming interpretation of persistent logic is extremely common,
-and is commonly associated with the logic programming language
+usually associated with the logic programming language
 Datalog.  A generalization of Datalog formed the basis of McAllester
 and Ganzinger's meta-complexity results: they gave a cost semantics to
 their logic programming language, and then they used that cost
@@ -122,21 +127,183 @@ variant of substructural forward chaining, forward chaining with {\it
 programming on purely-persistent specifications and like simple
 committed-choice forward chaining on specifications with no persistent
 propositions. We refined this interpretation and gave it a cost
-semantics in \cite{simmons08linear}, but this hybrid interpretation is
-not relevant to the examples in this thesis.
+semantics in \cite{simmons08linear}, but this more sophisticated
+interpretation is not relevant to the examples in this thesis.
+
+\section{Using approximation}
+\label{sec:pda-approxme}
+
+
+The meta-approximation theorem that we present in the next section
+gives us a way of building abstractions from specifications and
+initial process states: we interpret the approximate version of the
+program as a saturating logic program over that initial state. If we
+can obtain a saturated process state using the logic programming
+interpretation, it is an abstraction of the initial process state. It
+is not always possible to obtain a saturated process state using the
+logic programming interpretation, however: rules like $\forall
+\lf{x}.\,{\sf a}\lf{(x)} \lefti \{ {\sf a}\lf{({\sf s}(x))} \}$ and
+$\forall \lf{x}.\,{\sf a}\lf{(x)} \lefti \{ \exists \lf{y}. {\sf
+  a}\lf{(y)} \}$ lead to non-termination when interpreted as
+saturating logic programs. Important classes of programs are known to
+terminate in all cases, such as those in the Datalog fragment where
+the only terms in the program are variables and constants. Structured
+terms (like expressions encoded in the LF type ${\sf exp}$) fall
+outside the Datalog fragment.
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/pda-pers.sls}
+\caption{Skolemized approximate version of the PDA specification from
+Figure~\ref{fig:pda-lin}}
+\label{fig:pda-pers}
+\end{figure}
+
+Consider the destination-passing PDA specification from
+Figure~\ref{fig:pda-lin}. If we simply turn all linear predicates
+persistent, the first step in the approximation methadology, then the
+${\sf push}$ rule will lead to non-termination because the head
+$\exists \lf{m}. {\sf stack}\,\lf{x}\,\lf{l}\,\lf{m} \fuse {\sf
+  hd}\,\lf{m}\,\lf{r}$ introduces a new existential parameter
+$\lf{m}$.  We can cope by adding a new conclusion $\lf{m} \doteq
+\lf{t}$, as adding new conclusions is the second step in the
+approximation methadology. This, however, means we have to pick a
+$\lf{t}$.  The most general starting point for selecting a $\lf{t}$ is
+to apply Skolemization to the rule. By moving the existential
+quantifier for $\lf{m}$ in front of the implicitly quantified
+$\lf{X}$, $\lf{L}$, $\lf{M}$, and $\lf{R}$, we get a Skolem function
+$\lf{{\sf fm}\,X\,L\,M\,R}$ that takes four arguments. Letting $\lf{t}
+= \lf{{\sf fm}\,X\,L\,M\,R}$ results in the \sls~specification/logic
+program shown in Figure~\ref{fig:pda-pers}. (Remember that, because
+the specification in Figure~\ref{fig:pda-pers} is purely persistent,
+we will omit the optional \verb|!| annotation described in
+Section~\ref{sec:prototype}, writing \verb|hd L M| instead of
+\verb|!hd L M| and so on.)
+
+Notice that we have effectively taken a specification that freely
+introduces existential quantification (and that therefore {\it
+  definitely} will not terminate when interpreted as a saturating
+logic program) and produced a specification that uses structured terms
+$\lf{{\sf fm}\,X\,L\,R\,M}$. But the
+introduction of structured terms takes us outside the Datalog fragment,
+which may also lead to non-termination! This is not as bad as it may
+seem: when we want to treat a specification with structured terms as a
+saturating logic program, it is simply necessary to reason explicitly
+about termination. Giving any finite upper bound on the number of
+derivable facts is a simple and sufficient criteria for showing that a
+saturating logic program terminates.
+
+Skolem functions provide a natural starting point for approximations,
+even though the Skolem constant that arises directly from
+Skolemization is usually more precise than we want. From the starting
+point in Figure~\ref{fig:pda-pers}, however, we can define
+approximations simply by instantiating the Skolem constant.  For
+instance, we can equate the existentially generated destination in the
+conclusion with the one given in the premise (letting $\lf{\sf fm} =
+\lf{\lambda X. \lambda L. \lambda M. \lambda R.\, M}$). The result is
+equivalent to this specification:
+
+\smallskip
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/pda-pers-precise.sls}
+\smallskip
+
+\noindent This substitution yields a precise approximation that
+exactly captures the behavior of the original PDA as a saturating
+logic program. 
+
+To be concrete about what this means, let us recall how the PDA works
+and what it means for it to accept a string.  To use the linear PDA
+specification in Figure~\ref{fig:pda-lin}, we encode a string as a
+sequence of linear atomic propositions ${\it ptok}_1\ldots {\it
+  ptok}_n$, where each ${\it ptok}_i$ either has the form ${\sf
+  left}\,\lf{tok_i}\,{\sf d_i}\,{\sf d_{i+1}}$ or the form ${\sf
+  right}\,\lf{tok_i}\,{\sf d_i}\,{\sf d_{i+1}}$. The term $\lf{tok_i}$
+that indicates whether we're talking about a left/right parenthesis,
+curly brace, square brace, etc., and $\lf{{\sf d_0}\ldots{\sf
+    d_{n+1}}}$ are $n+2$ constants of type {\it dest}.\footnote{We
+  previously saw destinations as only inhabited by parameters, but the
+  guarantees given by the meta-approximation theorem are clearer when
+  the initial state contains destinations that are constants.}  Let
+$\Delta = (h{:}\iseph{\susp{{\sf hd}\,\lf{\sf d_0}\,\lf{\sf d_1}}},
+x_1{:}{\iseph{\susp{{\it ptok}_1}}}, \ldots,
+x_n{:}{\iseph{\susp{{\it ptok}_n}}})$. The PDA
+accepts the string encoded as ${\it ptok}_1\ldots {\it ptok}_n$ if and
+only if there is a trace under the signature in
+Figure~\ref{fig:pda-lin} where $\Delta \leadsto^* (\Psi';
+x{:}\iseph{\susp{{{\sf hd}\,\lf{\sf d_0}\,\lf{\sf d_{n+1}}}}})$.
+
+Now, say that we turn the predicates persistent and  run the program
+described by the ${\sf push}$ and ${\sf pop}$ rules above as a
+saturating logic program, obtaining a saturated process state
+$\Delta_{\it sat}$ from the initial process state $(h{:}\ispers{\susp{{\sf
+      hd}\,\lf{d_0}\,\lf{d_1}}}, x_1{:}\ispers{\susp{{\it ptok}_1}}, \ldots,
+x_n{:}\ispers{\susp{{\it ptok}_n}})$. (We can see from the
+structure of the program that LF context will remain empty.)  The
+meta-approximation theorem {\it ensures} that, if the original PDA
+accepted, then the proposition ${\sf hd}\,\lf{\sf d_0}\,\lf{\sf d_{n+1}}$ is
+in $\Delta_{\it sat}$. It just so happens to be the case that the
+converse is also true -- if ${\sf hd}\,\lf{\sf d_0}\,\lf{\sf d_{n+1}}$ is in
+$\Delta_{\it sat}$, the original PDA specification accepts the string. 
+That is why we say we have
+a precise approximation.
+
+On the other hand, if we set $\lf{m}$ equal to $\lf{l}$ 
+(letting $\lf{\sf fm} = \lf{\lambda X. \lambda L. \lambda M. \lambda R.\, L}$), 
+the result is equivalent to this specification:
+
+\smallskip
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/pda-pers-approx.sls}
+\smallskip
+
+\noindent
+If the initial process state contains a single atomic proposition
+${\sf hd}\,\lf{\sf d_0}\,\lf{\sf d_1}$ in addition to all the ${\sf
+  left}$ and ${\sf right}$ facts, then the two rules above maintain
+the invariant that, as new facts are derived, the first argument of
+${\sf hd}$ and the second and third arguments of ${\sf stack}$ will
+{\it always} be $\lf{\sf d_0}$.  These arguments are therefore vestigial,
+like the extra arguments to ${\sf eval}$ and ${\sf retn}$ discussed in
+Section~\ref{sec:vestigial}, and we can remove them from the
+approximate specification, resulting in the specification in
+Figure~\ref{fig:pda-pers-approx2}.
+
+\begin{figure}[ht]
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/pda-pers-approx2.sls}
+\caption{Approximated PDA specification}
+\label{fig:pda-pers-approx2}
+\end{figure}
+
+This logical approximation of the original PDA accepts if we run
+saturating logic programming from the initial process state
+$(h{:}\ispers{\susp{{\sf hd}\,\lf{\sf d_1}}}, x_1{:}\ispers{\susp{{\it
+      ptok}_1}}, \ldots, x_n{:}\ispers{\susp{{\it ptok}_n}})$ and
+${\sf hd}\,\lf{\sf d_{n+1}}$ appears in the saturated process
+state. Again, the meta-approximation theorem ensures that any string
+accepted by the orignal PDA will also be accepted by any
+approximation. This approximation will additionally accept every
+string where, for every form of bracket $\lf{tok}$, at least one left
+$\lf{tok}$ appears before any of the right $\lf{tok}$. The string
+\obj{\mbox{\sf [ ] ] ] ( ( )}} would be accepted by this approximated
+PDA, but the string \obj{\mbox{\sf ( ) ] [ [ ]}} would not, as the
+first right square bracket appears before any left square
+bracket. 
 
 \section{Logical transformation: approximation}
 \label{sec:abstraction}
 
-Our approximation strategy is simple: a signature in an ordered or
-linear logical specification can be approximated by making all atomic
-propositions persistent, and a flat rule $\forall
-\lf{\overline{x}}. \,A^+ \lefti \{ B^+ \}$ containing only persistent
-atomic propositions can be further approximated by removing premises
-from $A^+$ and adding conclusions to $B^+$. Of particular practical
-importance are added conclusions that equate the variable introduced
-by existential quantification with concrete terms. The approximation
-procedure doesn't force us to neutralize all such variables in this
+The approximation strategy demonstrated in the previous section is
+quite simple: a signature in an ordered or linear logical
+specification can be approximated by making all atomic propositions
+persistent, and a flat rule $\forall \lf{\overline{x}}. \,A^+ \lefti
+\{ B^+ \}$ containing only persistent atomic propositions can be
+further approximated by removing premises from $A^+$ and adding
+conclusions to $B^+$. Of particular practical importance are added
+conclusions that neutralize an existential
+quantification with a notational definition. The approximation procedure
+doesn't force us to neutralize all such variables in this
 way. However, as we explained above, failing to do so almost ensures
 that the specification cannot be run as a saturating logic program,
 and being able to interpret specifications as saturating logic
@@ -193,8 +360,8 @@ or a family of states.
   The persistent process state $(\Psi_g; \Delta_g)$ is a {\em
     generalization} of the process state $(\Psi; \Delta)$ if there is
   a substitution $\Psi_g \vdash \lf{\sigma} : \Psi$ such that, for all
-  suspended atomic propositions $p^+_\mlvl = {\sf a}\,\lf{t_1}\ldots \lf{t_n}$
-  in $\Delta$, there exists a suspended persistent proposition
+  atomic propositions $p^+_\mlvl = {\sf a}\,\lf{t_1}\ldots \lf{t_n}$
+  in $\Delta$, there exists a persistent proposition
   $p^+_\mpers = {\sf a}\,\lf{(\sigma t_1)}\ldots\lf{(\sigma t_n)}$ in
   $\Delta_g$.
 \end{definition}
@@ -202,13 +369,15 @@ or a family of states.
 
 One thing we might prove about the relationship between process states
 and their generalizations is that generalizations can {\it simulate}
-the process states they generalize: that is, if $(\Psi_g;
-\Delta_g)$ is a generalization of $(\Psi; \Delta)$ and $(\Psi; \Delta)
+the process states they generalize: that is, if $(\Psi_g; \Delta_g)$
+is a generalization of $(\Psi; \Delta)$ and $(\Psi; \Delta)
 \leadsto_\Sigma (\Psi'; \Delta')$ then $(\Psi_g; \Delta_g)
 \leadsto_{\Sigma_a} (\Psi'_g; \Delta'_g)$ where $(\Psi'_g; \Delta'_g)$
-is a generalization of $(\Psi'; \Delta')$. This is true, but we're not
-interested in generalization per se; rather, we're interested in a
-stronger property, {\em abstraction}, that is defined in terms of
+is a generalization of $(\Psi'; \Delta')$. This is true, and we will
+prove it as a corollary on the way to the proof of
+Theorem~\ref{thm:metapprox}.  However, we are not interested in
+generalization per se; rather, we're interested in a stronger
+property, {\em abstraction}, that is defined in terms of
 generalization:
 
 \bigskip
@@ -253,116 +422,6 @@ all possible future behaviors of the (non-approximate) initial state.
 
 
 
-\section{Using approximation}
-
-
-The meta-approximation theorem gives us a way of building abstractions
-from specifications and initial process states: we interpret the
-approximate version of the program as a saturating logic program over
-that initial state. If we can obtain a saturated process state using
-the logic programming interpretation, it is an abstraction of the
-initial process state. It is not always possible to obtain a saturated
-process state using the logic programming interpretation, however:
-rules like $\forall \lf{x}.\,{\sf a}\lf{(x)} \lefti \{ {\sf
-  a}\lf{({\sf s}(x))} \}$ and $\forall \lf{x}.\,{\sf a}\lf{(x)} \lefti
-\{ \exists \lf{y}. {\sf a}\lf{(y)} \}$ lead to non-termination when
-interpreted as saturating logic programs. Important classes of
-programs are known to terminate in all cases, such as those in the
-Datalog fragment where the only terms in the program are variables and
-constants. Structured terms (like expressions encoded in the LF type
-${\sf exp}$) fall outside the Datalog fragment. 
-
-\begin{figure}
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/pda-pers.sls}
-\caption{Skolemized approximate version of the PDA specification from
-Figure~\ref{fig:pda-lin}}
-\label{fig:pda-pers}
-\end{figure}
-
-Consider the destination-passing PDA specification from
-Figure~\ref{fig:pda-lin}. If we simply turn all linear predicates
-persistent, then the ${\sf push}$ rule will lead to non-termination
-because the head $\exists \lf{m}. {\sf stack}\,\lf{x}\,\lf{l}\,\lf{m}
-\fuse {\sf hd}\,\lf{m}\,\lf{r}$ introduces a new existential parameter
-$\lf{m}$.  We can cope by adding a new conclusion $\lf{m} \doteq
-\lf{t}$, but this means we have to pick a $\lf{t}$.  The most general
-starting point for selecting a $\lf{t}$ is to apply Skolemization to
-the rule. By moving the existential quantifier for $\lf{m}$ in front
-of the implicitly quantified $\lf{X}$, $\lf{L}$, $\lf{M}$, and
-$\lf{R}$, we get a Skolem function $\lf{{\sf fm}\,X\,L\,M\,R}$ that
-takes four arguments. Letting $\lf{t} = \lf{{\sf fm}\,X\,L\,M\,R}$
-results in the \sls~specification/logic program shown in
-Figure~\ref{fig:pda-pers}. (Remember that, because the specification in 
-Figure~\ref{fig:pda-pers} is purely persistent, we will omit the
-optional \verb|!| annotation described in Section~\ref{sec:prototype},
-writing \verb|hd L M| instead of \verb|!hd L M| and so on.)
-
-Notice that we have effectively taken a specification that freely
-introduces existential quantification (and that therefore {\it
-  definitely} will not terminate when interpreted as a saturating
-logic program) and produced a specification nested terms. But the
-introduction of nested terms takes us outside the Datalog fragment,
-which may also lead to non-termination! This is not as bad as it may
-seem: when we want to treat a specification with nested terms as a
-saturating logic program, it is simply necessary to reason explicitly
-about termination. Giving any finite upper bound on the number of
-derivable facts is a simple and sufficient criteria for showing that a
-saturating logic program terminates.
-
-Skolem functions provide a natural starting point for approximations,
-even though the Skolem constant that arises directly from
-Skolemization is usually more precise than we want. From the starting
-point in Figure~\ref{fig:pda-pers}, however, we can define
-approximations simply by instantiating the Skolem constant.  For
-instance, we can equate the existentially generated destination in the
-conclusion with the one given in the premise (letting $\lf{\sf fm} =
-\lf{\lambda X. \lambda L. \lambda M. \lambda R.\, M}$). The result is
-equivalent to this specification:
-
-\smallskip
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/pda-pers-precise.sls}
-\smallskip
-
-\noindent This substitution yields a precise approximation
-that exactly captures the behavior of the original PDA as a saturating
-logic program. On the other hand, if we set $\lf{m}$ equal to $\lf{l}$ 
-(letting $\lf{\sf fm} = \lf{\lambda X. \lambda L. \lambda M. \lambda R.\, L}$), 
-the result is equivalent to this specification:
-
-\smallskip
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/pda-pers-approx.sls}
-\smallskip
-
-If the initial process state contains a single atomic proposition
-${\sf hd}\,\lf{d_0}\,\lf{d_1}$ in addition to all the ${\sf left}$ and ${\sf
-  right}$ facts, then the two rules above maintain the invariant that,
-as new facts are derived, the first argument of ${\sf hd}$ and the
-second and third arguments of ${\sf stack}$ will {\it always} be
-$\lf{d_0}$.  These arguments are therefore vestigial, like the extra
-arguments to ${\sf eval}$ and ${\sf retn}$ discussed in
-Section~\ref{sec:vestigial}, and we can remove them from the
-approximate specification, resulting in the specification in
-Figure~\ref{fig:pda-pers-approx2}. 
-
-\begin{figure}[ht]
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/pda-pers-approx2.sls}
-\caption{Approximated PDA specification}
-\label{fig:pda-pers-approx2}
-\end{figure}
-
-This logical approximation of the
-original PDA accepts every string where, for every form of bracket
-$\lf{x}$, at least one left $\lf{x}$ appears before any of the right 
-$\lf{x}$. The
-string \obj{\mbox{\sf [ ] ] ] ( ( )}} 
-would be accepted by this approximated PDA,
-but the string \obj{\mbox{\sf ( ) ] [ [ ]}} 
-would not, as the first right square
-bracket appears before any left square bracket.
 
 
 \section{Control flow analysis}
@@ -426,55 +485,63 @@ $\lf{{\sf b}\,{\sf c}\,{\sf c}}$, and $\lf{{\sf c}}$. Therefore, it is
 meaningful to bound the size of a saturated process state using some
 function that depends on the number of subterms of the original
 term. But what are the subterms of $\lf{{\sf lam}\,(\lambda x.\,{\sf
-    app}\,x\,x)}$? The immediate subterm, $\lf{{\sf app}\,x\,x}$, is
-open; to represent this subterm as a closed LF expression we must
-substitute an appropriate concrete term for $\lf{x}$ that is uniquely
-identifiable with the site $\lf{(\lambda x.\,{\sf app}\,x\,x)}$ where
-that variable was bound.  Our solution in this section is to create a
-new constant $\lf{\sf var}$ with type $({\sf exp} \rightarrow {\sf
-  exp}) \rightarrow {\sf exp}$ that represents the binding site by
-capturing the entire term as the expression $\lf{{\sf var}(\lambda
-  x.\,{\sf app}\,x\,x)}$. (Another solution, discussed in the next
-section, will be to uniquely tag the lambda expression with a label,
-which has the same effect of allowing us to associate the variable $x$
-with an different concrete term, the tag, that represents the site
-where $x$ was bound.)
-
-%Because we ensure that we {\it only} substitute terms
-%of the form $\lf{{\sf var}(\lambda x.e\,x)}$ into functions of the form
-%$\lf{\lambda x.e\,x}$ we can actually answer this question:
-The subterms of any closed term
-$\lf{e}$ of LF type ${\sf exp}$ can be enumerated by running this
-saturating logic program starting with the fact ${\sf subterms}\lf{(e)}$,
-where ${\sf subterms}$ is a persistent positive proposition.
+    app}\,x\,x)}$, and how can we write a saturating logic program
+that derives all those subterms? The rule for application is easy:
 \begin{align*}
-{\sf sub/lam} &: ~~
-  \forall \lf{e}{:}{\sf exp} \rightarrow {\sf exp}.\,
-    {\sf subterms}\lf{({\sf lam}(\lambda x.e\,x))} \lefti
-      \{ {\sf subterms}\lf{(e({\sf var}(\lambda x.e\,x)))} \}
-\\
 {\sf sub/app} &: ~~
   \forall \lf{e_1}{:}{\sf exp}.\, \forall \lf{e_2}{:}{\sf exp}.\,
     {\sf subterms}\lf{({\sf app}\,e_1\,e_2)} \lefti
       \{ {\sf subterms}\,\lf{e_1} \fuse {\sf subterms}\,\lf{e_2} \}
-\\
-{\sf sub/var} &: ~~ 
+\intertext{What about the rule for lambda abstractions?
+Experience with LF says that, when we
+open up a binder, we should substitute a fresh variable into that
+binder. This would correspond to the following rule:}
+{\sf sub/lam/ohno} &: ~~
   \forall \lf{e}{:}{\sf exp} \rightarrow {\sf exp}.\,
-    {\sf subterms}\lf{({\sf var}(\lambda x.e\,x))} \lefti
+    {\sf subterms}\lf{({\sf lam}(\lambda x.e\,x))} \lefti
+      \{ \exists \lf{x}.\,{\sf subterms}\lf{(e\,x)} \}
+\intertext{The rule 
+${\sf sub/lam/ohno}$ 
+%
+will, as we have discussed, lead to nontermination when we interpret
+the rules as a saturating logic program. The solution is to apply
+Skolemization as described in Section~\ref{sec:pda-approxme}, which
+introduces a new constant we will call ${\sf var}$. The rule ${\sf
+  sub/lam/ohono}$ can then be approximatied as a terminating rule:}
+%
+{\sf sub/lam} &: ~~ 
+  \forall \lf{e}{:}{\sf exp} \rightarrow {\sf exp}.\,
+    {\sf subterms}\lf{({\sf lam}(\lambda x.e\,x))} \lefti
       \{ {\sf subterms}\lf{(e({\sf var}(\lambda x.e\,x)))} \}
 \end{align*}
-The last rule, ${\sf sub/var}$, is redundant: if we ever derive a fact
-of the form ${\sf subterms}\lf{({\sf var}(\lambda x.e\,x))}$, we know
-that we previously derived ${\sf subterms}\lf{({\sf lam}(\lambda
-  x.e\,x))}$ and therefore, by the first rule, we have already derived
-${\sf subterms}\lf{(e({\sf var}(\lambda x.e\,x))}$.  This means that
-we start counting subterms from the outside, and stop (because of
-saturation) when we reach a variable represented by a term $\lf{{\sf
+
+The subterms of any closed term
+$\lf{e}$ of LF type ${\sf exp}$ can then be enumerated by running this
+saturating logic program starting with the fact ${\sf subterms}\lf{(e)}$,
+where ${\sf subterms}$ is a persistent positive proposition.
+%The last rule, ${\sf sub/var}$, is redundant: if we ever derive a fact
+%of the form ${\sf subterms}\lf{({\sf var}(\lambda x.e\,x))}$, we know
+%that we previously derived ${\sf subterms}\lf{({\sf lam}(\lambda
+%  x.e\,x))}$ and therefore, by the first rule, we have already derived
+%${\sf subterms}\lf{(e({\sf var}(\lambda x.e\,x))}$.  This means that
+We start counting subterms from the outside, and stop 
+%(because of saturation) 
+when we reach a variable represented by a term $\lf{{\sf
     var}(\lambda x.e)}$.  The logic program and discussion above imply
 that there are three distinct subterms of $\lf{{\sf lam}\,(\lambda
   x.\,{\sf app}\,x\,x)}$: the entire term, $\lf{{\sf app}\,({\sf
     var}(\lambda x.\,{\sf app}\,x\,x))\,({\sf var}(\lambda x.\,{\sf
     app}\,x\,x))}$, and $\lf{{\sf var}(\lambda x.\,{\sf app}\,x\,x)}$.
+
+Another solution, discussed in the next
+section, is to uniquely tag the lambda expression with a label. This
+has the same effect of allowing us to associate the variable $x$
+with an different concrete term, the tag, that represents the site
+where $x$ was bound.
+
+%Because we ensure that we {\it only} substitute terms
+%of the form $\lf{{\sf var}(\lambda x.e\,x)}$ into functions of the form
+%$\lf{\lambda x.e\,x}$ we can actually answer this question:
 
 
 
@@ -522,7 +589,7 @@ existential quantification. The variable $\lf{x}$ introduced in ${\sf
   ev/app2}$ will be equated with $\lf{{\sf var}(\lambda x.E\,x)}$,
 which is consistent with making $\lf{E\,x}$ -- which is now equal to
 $\lf{E({\sf var}(\lambda x.E\,x))}$ -- a subterm of $\lf{{\sf lam}(\lambda x.\, E\,x)}$.  The new
-constructor $\lf{\sf var}$ is also a greatly simplified Skolem
+constructor $\lf{\sf var}$ is also a simplified Skolem
 function for $\lf{x}$ that only mentions the LF term $\lf{E}$; the
 most general Skolem function in this setting would have also been
 dependent on $\lf{V}$, $\lf{D}$, and $\lf{D_2}$. The existentially
@@ -545,7 +612,7 @@ ${\sf ev/app}$, ${\sf
 this end, we need recall the question that we intend to answer with
 control flow analysis: what values may a given subexpression evaluate
 to? A destination passing specification attempts to return a value to
-a destination: we will instead return a {\it to an expression} by
+a destination: we will instead return {\it to an expression} by
 equating destinations $d$ with the expressions they represent. One way
 to do this would be to introduce a new constructor $\lf{\sf d}: {\sf
   exp} \rightarrow {\sf dest}$, but we can equivalently conflate the
@@ -609,12 +676,15 @@ notice that only $\interp{\lambda y.y}$ is passed to the function
 $\interp{\lambda x.x}$ and that only $\obj{v}$ is passed to the
 function $\interp{\lambda y.y}$. Because of our use of higher-order
 abstract syntax, however, $\interp{\lambda y.y}$ and $\interp{\lambda
-  x.x}$ are alpha-equivalent and therefore equal in the eyes of the
+  x.x}$ are $\alpha$-equivalent and therefore equal in the eyes of the
 logic programming interpreter. This is not a problem with correctness,
-but it means that our analysis may be less precise than expected. One
-solution would be to add distinct labels to terms. Adding a label on
-the inside of every lambda-abstraction would seem to suffice, and in
-any real example labels would already be present in the form of
+but it means that our analysis may be less precise than expected,
+becuase it distinguishes only subterms, not {\it subterm
+  occurances}. One solution would be to add distinct labels to terms,
+marking the $\alpha$-equivalent $\obj{\lambda x.x}$ and $\obj{\lambda
+  y.y}$ with their distinct positions in the overall term. Adding a
+label on the inside of every lambda-abstraction would seem to suffice,
+and in any real example labels would already be present in the form of
 source-code positions or line numbers. The alias analysis presented in
 the next section demonstrates the use of such labels.
 
