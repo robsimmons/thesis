@@ -1,4 +1,4 @@
-\begin{figure}
+\begin{figure}[t]
 \fbox{$\Psi \vdash_{\Sigma,\subord} T\,{\sf left} \mathstrut$} -- presumes
   $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$
 \[
@@ -66,9 +66,7 @@
 {\Psi \vdash_{\Sigma,\subord} (\Delta, x{:}\istrue{A^+})\,{\sf inv} \mathstrut}
 {\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf inv}
  &
- \Psi; \mathcal S \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+
- &
- \mathcal S \subseteq \Psi}
+ \Psi; \mathcal C \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+}
 \]
 
 \medskip
@@ -80,16 +78,16 @@
 {\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf infoc}
  &
  \Psi \vdash_{\Sigma,\subord} T\,{\sf left}}
-\]
-\[
+\quad
 \infer
-{\Psi \vdash_{\Sigma,\subord} (\Delta, x{:}\istrue{[\lf{\sigma}A^-]})\,{\sf infoc} 
+{\Psi \vdash_{\Sigma,\subord} (\Delta, x{:}\istrue{[A^-]})\,{\sf infoc} 
  \mathstrut}
 {\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}
  &
- \Psi, \Psi'; \Psi' \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-
- &
- \Psi \vdash_{\Sigma,\subord} \lf{\sigma} : \Psi, \Psi'}
+ \Psi; \mathcal C \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-
+ %&
+ %\Psi \vdash_{\Sigma,\subord} \lf{\sigma} : \Psi, \Psi'
+ }
 \]
 \caption{\sls~contexts}
 \label{fig:sls-ctxform}

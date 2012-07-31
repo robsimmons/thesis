@@ -1,0 +1,59 @@
+\begin{figure}
+\fbox{$S :: (\Psi; \Delta)_{\lf{\sigma}} 
+   \leadsto_{\Sigma,\subord}
+  (\Psi'; \Delta')_{\lf{\sigma'}}$} -- presumes
+  $\vdash_{\Sigma,\subord} (\Psi; \Delta)_{\lf{\sigma}}\,{\sf state}$
+  and $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$
+\[
+\infer
+{\trstep{P}{R} :: 
+  (\Psi; \frameoff{\Theta}{\Delta})_{\lf{\sigma}} 
+   \leadsto_{\Sigma,\subord}
+  (\Psi'; \Delta')_{\lf{\sigma'}}}
+{\foctx{\Psi}{\Delta}{R}{\istrue{\susp{{\ocircle}{B^+}}}}
+ &
+ P :: (\Psi,\tackon{\Theta}{B^+})_{\lf{\sigma}}
+   \Longrightarrow_{\Sigma,\subord}
+      (\Psi'; \Delta')_{\lf{\sigma'}}}
+\]
+\caption{\sls~steps}
+\label{fig:sls-steps}
+\end{figure}
+
+\begin{figure}
+\fbox{$T :: (\Psi; \Delta)_{\lf{\sigma}} 
+   \leadsto^*_{\Sigma,\subord}
+  (\Psi'; \Delta')_{\lf{\sigma'}}$} -- presumes
+  $\vdash_{\Sigma,\subord} (\Psi; \Delta)_{\lf{\sigma}}\,{\sf state}$
+  and $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$
+\[
+\infer
+{\emptytrace :: (\Psi; \Delta)_{\lf{\sigma}} 
+               \leadsto^*_{\Sigma,\subord}
+             (\Psi; \Delta)_{\lf{\sigma}}}
+{}
+\quad
+\infer
+{S :: (\Psi; \Delta)_{\lf{\sigma}}
+               \leadsto^*_{\Sigma,\subord}
+             (\Psi'; \Delta')_{\lf{\sigma'}}}
+{S :: (\Psi; \Delta)_{\lf{\sigma}}
+               \leadsto_{\Sigma,\subord}
+             (\Psi'; \Delta')_{\lf{\sigma'}}}
+\]
+\[
+\infer
+{T; T' :: (\Psi_1; \Delta_1)_{\lf{\sigma_1}}
+               \leadsto^*_{\Sigma,\subord}
+             (\Psi_3; \Delta_3)_{\lf{\sigma_3}}}
+{T :: (\Psi_1; \Delta_1)_{\lf{\sigma_1}}
+               \leadsto^*_{\Sigma,\subord}
+             (\Psi_2; \Delta_2)_{\lf{\sigma_2}}
+&
+T' :: (\Psi_2; \Delta_2)_{\lf{\sigma_2}}
+               \leadsto^*_{\Sigma,\subord}
+             (\Psi_3; \Delta_3)_{\lf{\sigma_3}}}
+\]
+\caption{\sls~traces}
+\label{fig:sls-traces}
+\end{figure}

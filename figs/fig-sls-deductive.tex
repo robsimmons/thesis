@@ -1,10 +1,7 @@
 \begin{figure}
 \fbox{$\foctx{\Psi}{\Delta}{V}{[A^+]}$} -- presumes
-  $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$, $A^+ = \lf\sigma B^+$,
-  and  $\Psi, \Psi'; \Psi' \vdash_{\Sigma,\subord} B^+\,{\sf prop}^+$
-
-  ~\qquad\qquad\qquad\qquad\qquad (for some $\lf\sigma$ where $\Psi
-  \vdash_{\Sigma,\subord} \lf\sigma : \Psi, \Psi'$)
+  $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$, 
+  and  $\Psi; \mathcal C \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+$
 \[
 \infer[{\it id}^+]
 {\foctx{\Psi}{\Delta}{z}{[A^+]}}
@@ -72,7 +69,7 @@
 \begin{figure}
 \fbox{$\foctx{\Psi}{\Delta}{N}{\istrue{A^-}}$} -- presumes
   $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$ and
-  $\Psi \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-$
+  $\Psi; \mathcal C \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-$
 \[
 \infer[\eta^-]
 {\foctx{\Psi}{\Delta}{R}{\istrue{p^-}}}

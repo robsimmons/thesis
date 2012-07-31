@@ -1,16 +1,49 @@
 \begin{figure}
-\fbox{$\Psi; \mathcal S \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+$} -- presumes
-  $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$ and the multiset $\mathcal S \subseteq \Psi$
+\fbox{$\Psi \vdash_{\Sigma,\subord} \mathcal C\,{\sf satisfiable}$} -- presumes
+  $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$, that the terms in 
 \[
 \infer
-{\Psi; \mathcal S
+{\Psi \vdash_{\Sigma,\subord} \cdot \,{\sf satisfiable}\mathstrut}
+{}
+\qquad
+\infer
+{\Psi \vdash_{\Sigma,\subord}
+   (\mathcal C, \lf{t} \doteq_\tau \lf{t})\,{\sf satisfiable}\mathstrut}
+{\Psi \vdash_{\Sigma,\subord} \lf{t}{:}\tau
+ &
+ \Psi \vdash_{\Sigma,\subord} 
+   \mathcal C\,{\sf satisfiable}\mathstrut}
+\]
+\[
+\infer
+{\Psi \vdash_{\Sigma,\subord}
+   (\mathcal C, \lf{a} \doteq_p \lf{t})\,{\sf satisfiable}\mathstrut}
+{\lf{a}{:}p \in \Psi
+ &
+ \Psi \vdash_{\Sigma,\subord} \lf{t} : p
+ &
+ \Psi' \vdash_{\Sigma,\subord} \lf{[t/a]} : \Psi
+ &
+ \Psi' \vdash_{\Sigma,\subord} \lf{[t/a]}\mathcal C\,{\sf satisfiable}}
+\]
+\caption{Equality constraints (used to support notational definitions)}
+\label{fig:ohnoconstraints}
+\end{figure}
+
+\begin{figure}
+\fbox{$\Psi; \mathcal C \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+$} -- presumes
+  $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$ and that 
+  $\Psi \vdash \mathcal C\,{\sf satisfiable}$.
+\[
+\infer
+{\Psi; \mathcal C
    \vdash_{\Sigma,\subord} \lfroot{\sf a}{\spi}\,{\sf prop}^+ \mathstrut}
 {{\sf a}{:}\kappa \in \Sigma
  &
  \Psi, [\kappa] \vdash_{\Sigma,\subord} \lf{\spi} : {\sf prop}\,{\sf ord} \mathstrut}
 \quad
 \infer
-{\Psi; \mathcal S
+{\Psi; \mathcal C
    \vdash_{\Sigma,\subord} \lfroot{\sf a}{\spi}\,{\sf prop}^+ \mathstrut}
 {{\sf a}{:}\kappa \in \Sigma
  &
@@ -18,7 +51,7 @@
 \]
 \[
 \infer
-{\Psi; \mathcal S
+{\Psi; \mathcal C
    \vdash_{\Sigma,\subord} \lfroot{\sf a}{\spi}\,{\sf prop}^+ \mathstrut}
 {{\sf a}{:}\kappa \in \Sigma
  &
@@ -26,37 +59,50 @@
 \]
 \[
 \infer
-{\Psi; \mathcal S \vdash_{\Sigma,\subord} {\downarrow}A^-\,{\sf prop}^+ \mathstrut}
+{\Psi; \mathcal C 
+   \vdash_{\Sigma,\subord} {\downarrow}A^-\,{\sf prop}^+ \mathstrut}
 {\Psi; \cdot \vdash_{\Sigma,\subord} A^-\,{\sf prop}^- \mathstrut}
 \quad
 \infer
-{\Psi; \mathcal S \vdash_{\Sigma,\subord} {\gnab}A^-\,{\sf prop}^+ \mathstrut}
+{\Psi; \mathcal C 
+   \vdash_{\Sigma,\subord} {\gnab}A^-\,{\sf prop}^+ \mathstrut}
 {\Psi; \cdot \vdash_{\Sigma,\subord} A^-\,{\sf prop}^- \mathstrut}
 \quad
 \infer
-{\Psi; \mathcal S \vdash_{\Sigma,\subord} {!}A^-\,{\sf prop}^+ \mathstrut}
+{\Psi; \mathcal C 
+   \vdash_{\Sigma,\subord} {!}A^-\,{\sf prop}^+ \mathstrut}
 {\Psi; \cdot \vdash_{\Sigma,\subord} A^-\,{\sf prop}^- \mathstrut}
 \quad
 \infer
-{\Psi; \mathcal S \vdash_{\Sigma,\subord} \one\,{\sf prop}^+ \mathstrut}
+{\Psi; \mathcal C 
+   \vdash_{\Sigma,\subord} \one\,{\sf prop}^+ \mathstrut}
 {}
 \] 
 \[
 \infer
-{\Psi; \mathcal S_1, \mathcal S_2 \vdash_{\Sigma,\subord} A^+ \fuse B^+\,{\sf prop}^+ \mathstrut}
-{\Psi; \mathcal S_1 \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+ 
+{\Psi; \mathcal C \vdash_{\Sigma,\subord} A^+ \fuse B^+\,{\sf prop}^+ \mathstrut}
+{\Psi; \mathcal C \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+ 
  &
- \Psi; \mathcal S_2 \vdash_{\Sigma,\subord} B^+\,{\sf prop}^+  \mathstrut}
-\quad
+ \Psi; \mathcal C \vdash_{\Sigma,\subord} B^+\,{\sf prop}^+  \mathstrut}
+\]
+\[
 \infer
-{\Psi; \mathcal S \vdash_{\Sigma,\subord} \exists \lf{a}{:}\tau. A^+\,{\sf prop}^+ \mathstrut}
+{\Psi; \mathcal C 
+   \vdash_{\Sigma,\subord} \exists \lf{a}{:}\tau. A^+\,{\sf prop}^+ \mathstrut}
 {\Psi \vdash_{\Sigma,\subord} \tau\,{\sf type}
  &
- \Psi, \lf{a}{:}\tau; \mathcal S, \lf{a}{:}\tau \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+ \mathstrut}
+ \left(
+   \lf{t} = \lf{a} 
+   \mbox{~or~} 
+   \Psi \vdash_{\Sigma,\subord} \lf{t} : \tau
+ \right)
+ &
+ \Psi, \lf{a}{:}\tau; \mathcal C, \lf{a} \doteq_\tau \lf{t} 
+   \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+ \mathstrut}
 \] 
 \[
 \infer
-{\Psi; \mathcal S \vdash_{\Sigma,\subord} \lf{a} \doteq_p \lf{b}\,{\sf prop}^+}
+{\Psi; \mathcal C \vdash_{\Sigma,\subord} \lf{a} \doteq_p \lf{b}\,{\sf prop}^+}
 {\Psi \vdash_{\Sigma,\subord} p\,{\sf type}
  &
  \lf{a}{:}p \in \Psi
@@ -66,56 +112,62 @@
  p \not\prec_\subord p}
 \quad
 \infer
-{\Psi; \mathcal S \vdash_{\Sigma,\subord} \lf{a} \doteq_p \lf{s}\,{\sf prop}^+}
-{\Psi \vdash_{\Sigma,\subord} p\,{\sf type}
- &
- \lf{a}{:}p \in \mathcal S
+{\Psi; \mathcal C \vdash_{\Sigma,\subord} \lf{t} \doteq_p \lf{s}\,{\sf prop}^+}
+{\lf{t} \doteq_p \lf{s} \in \mathcal C
  &
  \Psi \vdash_{\Sigma,\subord} \lf{s} : p}
 \]
 
 
 \medskip
-\fbox{$\Psi; \mathcal S \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-$} -- presumes
+\fbox{$\Psi; \mathcal C \vdash_{\Sigma,\subord} A^-\,{\sf prop}^-$} -- presumes
   $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$ and the multiset
-  $\mathcal S \subseteq \Psi$
+  $\mathcal C \subseteq \Psi$
 \[
 \infer
-{\Psi; \mathcal S
+{\Psi; \mathcal C
    \vdash_{\Sigma,\subord} \lfroot{\sf a}{\spi}\,{\sf prop}^- \mathstrut}
 {{\sf a}{:}\kappa \in \Sigma
  &
  \Psi, [\kappa] \vdash_{\Sigma,\subord} \lf{\spi} : {\sf prop} \mathstrut}
 \quad
 \infer
-{\Psi; \mathcal S \vdash_{\Sigma,\subord} {\ocircle}A^+\,{\sf prop}^- \mathstrut}
+{\Psi; \mathcal C \vdash_{\Sigma,\subord} {\ocircle}A^+\,{\sf prop}^- \mathstrut}
 {\Psi; \cdot \vdash_{\Sigma,\subord} A^+ : {\sf prop}^+ \mathstrut}
 \]
 \[
 \infer
-{\Psi; \mathcal S_1, \mathcal S_2 \vdash_{\Sigma,\subord} A^+ \lefti B^-\,{\sf prop}^- \mathstrut}
-{\Psi; \mathcal S_1 \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+ 
+{\Psi; \mathcal C \vdash_{\Sigma,\subord} A^+ \lefti B^-\,{\sf prop}^- \mathstrut}
+{\Psi; \mathcal C \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+ 
  &
- \Psi; \mathcal S_2 \vdash_{\Sigma,\subord} B^-\,{\sf prop}^-  \mathstrut}
+ \Psi; \mathcal C \vdash_{\Sigma,\subord} B^-\,{\sf prop}^-  \mathstrut}
 \quad
 \infer
-{\Psi; \mathcal S_1, \mathcal S_2 \vdash_{\Sigma,\subord} A^+ \righti B^-\,{\sf prop}^- \mathstrut}
-{\Psi; \mathcal S_1 \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+ 
+{\Psi; \mathcal C
+   \vdash_{\Sigma,\subord} A^+ \righti B^-\,{\sf prop}^- \mathstrut}
+{\Psi; \mathcal C \vdash_{\Sigma,\subord} A^+\,{\sf prop}^+ 
  &
- \Psi; \mathcal S_2 \vdash_{\Sigma,\subord} B^-\,{\sf prop}^-  \mathstrut}
+ \Psi; \mathcal C \vdash_{\Sigma,\subord} B^-\,{\sf prop}^-  \mathstrut}
 \] 
 \[
 \infer
-{\Psi; \mathcal S \vdash_{\Sigma,\subord} A^- \with B^-\,{\sf prop}^- \mathstrut}
-{\Psi; \mathcal S \vdash_{\Sigma,\subord} A^-\,{\sf prop}^- 
- &
- \Psi; \mathcal S \vdash_{\Sigma,\subord} B^-\,{\sf prop}^-  \mathstrut}
-\quad
+{\Psi; \mathcal C \vdash_{\Sigma,\subord} A^- \with B^-\,{\sf prop}^- \mathstrut}
+{\Psi; \mathcal C \vdash_{\Sigma,\subord} A^-\,{\sf prop}^- 
+ & 
+ \Psi; \mathcal C \vdash_{\Sigma,\subord} B^-\,{\sf prop}^-  \mathstrut}
+\]
+\[
 \infer
-{\Psi; \mathcal S \vdash_{\Sigma,\subord} \forall \lf{a}{:}\tau. A^-\,{\sf prop}^- \mathstrut}
-{\Psi; \mathcal S \vdash_{\Sigma,\subord} \tau\,{\sf type}
+{\Psi; \mathcal C \vdash_{\Sigma,\subord} \forall \lf{a}{:}\tau. A^-\,{\sf prop}^- \mathstrut}
+{\Psi; \mathcal C \vdash_{\Sigma,\subord} \tau\,{\sf type}
  &
- \Psi, \lf{a}{:}\tau; \mathcal S, \lf{a}{:}\tau \vdash_{\Sigma,\subord} A^-\,{\sf prop}^- \mathstrut}
+ \left(
+   \lf{t} =  \lf{a} 
+   \mbox{~or~}
+   \Psi \vdash_{\Sigma,\subord} \lf{t} : \tau
+ \right)
+ &
+ \Psi, \lf{a}{:}\tau; \mathcal C, \lf{a} \doteq_\tau \lf{t} \vdash_{\Sigma,\subord} A^-\,{\sf prop}^- \mathstrut}
 \] 
 \caption{\sls~propositions}
 \label{fig:sls-propform}

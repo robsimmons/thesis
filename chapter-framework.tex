@@ -816,12 +816,15 @@ that $\doteq_L$ can always be treated as having exactly one premise.
 
 The formation rules for propositions are given in
 Figure~\ref{fig:sls-propform}. Much of the complexity of this
-presentation, such as the existence of an additional context $\mathcal
-S$ that is treated like a multiset, is needed to support the inclusion
-of equality \sls.  The restrictions ensure that, whenever we decompose
+presentation, such as the existence of an additional constraint
+context $\mathcal C$, described in Figure~\ref{fig:ohnoconstraints},
+is aimed at allowing the inclusion of equality in \sls~in a sufficiently
+restricted form. The intent of these restrictions is to 
+ensure that, whenever we decompose
 a positive proposition $\lf{s} \doteq \lf{t}$ on the left, we have
-that $\lf{s} = \lf{a}$ for some variable $\lf{a}$ in the context. When
-this is the case, $\lf{[t/a]}$, is always a most general unifier of
+that $\lf{s} = \lf{a}$ for some variable $\lf{a}$ in the context
+and $\lf{a}$ is not free in $\lf{t}$. When
+this is the case, $\lf{[t/a]}$ is always a most general unifier of
 $\lf{s} = \lf{a}$ and $\lf{t}$, which in turn means that the left rule
 for equality in \ollll
 \[
@@ -879,34 +882,40 @@ unifiers.
 
 \paragraph{Notational definitions} Using equality as a notational
 definition allows us manipulate propositions in ways that have no
-effect on the structure of synthetic inference rules. The subset
-$\mathcal S$ of the LF context, which is treated as an a multiset,
-enforces that each variable bound by an existential quantifier
-$\exists \lf{a}{:}p.\,A^+$ or a universal quantifier $\forall
-\lf{a}{:}p.\,A^-$ can be associated with at most one proposition
-$\lf{a} \doteq \lf{t}$, where $\lf{t}$ is arbitrary. This condition is
-handled by the second formation rule for $\lf{t} \doteq \lf{s}$ in
-Figure~\ref{fig:sls-propform}. The rule ${\ocircle}(\exists \lf{a}.\,
-\lf{a} \doteq \lf{t} \fuse \lf{a} \doteq \lf{s})$ does not satisfy
-this condition because the introduced variable $\lf{a}$ is associated
-with the left-hand side of two different equalities, $\lf{a} \doteq
-\lf{t}$ and $\lf{a} \doteq \lf{s}$, that together encode an arbitrary
-unification problem $\lf{t} \doteq \lf{s}$.
+effect on the structure of synthetic inference rules. The constraints
+$\mathcal C$ allow us to introduce up a single term $\lf{t}$ that will
+be unified with the variable introduced by existential quantification
+on the left or universal quantification on the right and then mention
+that equality later on as an equality $\lf{a} \doteq_p \lf{t}$.  This
+condition is handled by the second formation rule for $\lf{t} \doteq
+\lf{s}$ in Figure~\ref{fig:sls-propform}.
 
-
-The proposition $\lf{a} \doteq \lf{t}$ must be reachable from its
+The notational definition $\lf{a} \doteq_p \lf{t}$ 
+must be reachable from its
 associated quantifier without crossing a shift or an exponential -- in
 Andreoli's terms, it must be in the same {\it monopole}
-(Section~\ref{sec:linsynthetic}).  This is enforced by the formation
-rules for shifts and exponentials, which clear the subset $\mathcal S$
-in their premise.  The proposition $\forall \lf{a}.\,
+(Section~\ref{sec:linsynthetic}).  This condition,
+which it might be possible to relax at the cost of further
+complexity elsewhere in the presentation, is enforced by the formation
+rules for shifts and exponentials, which clear the context $\mathcal C$
+in their premise. 
+%
+The proposition $\forall \lf{a}.\,
 {\downarrow}({\sf p}\,\lf{a}) \lefti \lf{a} \doteq \lf{t} \lefti {\sf
   p}\,\lf{t}$ satisfies this condition but $\forall \lf{a}.\,\forall
 \lf{b}.\,{\ocircle}(\lf{a} \doteq \lf{b})$ does not ($\ocircle$ breaks
-focus), and the proposition ${\ocircle}(\exists \lf{a}. \lf{a} \doteq
+focus), and the proposition ${\ocircle}(\exists \lf{a}. \lf{a} \doteq_p
 \lf{t})$ satisfies this condition but ${\ocircle}(\exists \lf{a}.
 {\uparrow}(\lf{a} \doteq \lf{t} \lefti {\sf p}\,\lf{a}))$ does not
 (${\uparrow}$ breaks focus).
+%
+The rule ${\ocircle}(\exists \lf{a}.\,
+\lf{a} \doteq \lf{t} \fuse \lf{a} \doteq \lf{s})$ is not well-formed 
+if $\lf{t}$ and $\lf{s}$ are syntactically distinct.
+Each variable can only be notationally defined to be one 
+term; otherwise we could encode an arbitrary
+unification problem $\lf{t} \doteq \lf{s}$.
+
 
 %   This restriction ensures that, if the unification appears on the
 %   left, the left-hand side of the unification will always be a
@@ -932,19 +941,29 @@ judgment $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf infoc}$ describes
 a context that is stable aside from the one negative proposition in
 focus. 
 
-The last rule in Figure~\ref{fig:sls-ctxform} is strange because it
-appears to make up a substitution $\lf\sigma$ out of thin air.  This
+The rules for inverting and focusing on propositions in
+Figure~\ref{fig:sls-ctxform} may have a non-empty constraint context. 
+%
+This
 is necessary because the property of being a well-formed proposition
-is not stable under substitution. Therefore, even though
+is not stable under arbitrary substitutions.
+%
+Even though 
 $\forall\lf{a}{:}p.\,(\lf{a} \doteq_p \lf{\sf c}) \lefti A^-$ is a
-well-formed negative type according to Figure~\ref{fig:sls-propform},
-$(\lf{\sf c} \doteq_p \lf{\sf c}) \lefti \lf{[{\sf c}/a]}A^-$ is not.
-Therefore, to explain why the intermediate states of a focusing phase
-are well-formed, we need to keep track of the substitutions that we
-have applied to the negative proposition; the proposition only needs
-to be well-formed prior to applying that substitution for the logic to
-behave correctly. The same trick will need to be played with the rules
-for right-focus in Figure~\ref{fig:sls-values}.
+well-formed negative proposition according to Figure~\ref{fig:sls-propform},
+$(\lf{a} \doteq_p \lf{\sf c}) \lefti A^-$ is only
+a well-formed proposition if we add $\lf{a} \doteq_p \lf{\sf c}$ to the
+set of constraints, and 
+$(\lf{\sf c} \doteq_p \lf{\sf c}) \lefti \lf{[{\sf c}/a]}A^-$ is only
+a well-formed proposition if we add $\lf{\sf c} \doteq_p \lf{\sf c}$ to the
+set of constraints.
+%
+%Therefore, to explain why the intermediate states of a focusing phase
+%are well-formed, we need to keep track of the substitutions that we
+%have applied to the negative proposition; the proposition only needs
+%to be well-formed prior to applying that substitution for the logic to
+%behave correctly. The same trick will need to be played with the rules
+%for right-focus in Figure~\ref{fig:sls-values}.
 
 The restrictions we make to contexts justify our continued practice of
 omitting the $\mtrue$ annotation when talking about inverting positive
@@ -1247,6 +1266,8 @@ actual representatives of (incomplete) derivations -- we must think of
 patterns as carrying extra annotations that allow them to continue
 matching the structure of proof rules.
 
+\input{figs/fig-sls-deductive}
+
 \subsection{Values, terms, and spines}
 \label{sec:framework-deductive}
 
@@ -1311,7 +1332,6 @@ with some of the technology of bidirectional typechecking), values,
 terms, and spines can continue to be seen as representatives of
 derivations.
 
-\input{figs/fig-sls-deductive}
 
 Aside from ${\ocircle}_R$ and it's associated term $\tlet{T}{V}$,
 which belong to the concurrent fragment of \sls, there is one rules in
@@ -1330,6 +1350,8 @@ $\tfocusl{x}{\Sp}$ and $\tfocusl{\sf r}{\Sp}$, writing $({\sf
   foo}\,\lf{t}\,\lf{s}\,V\,V')$ instead of $\tfocusl{\sf
   foo}{(\lf{t};\lf{s};V;V';\tnil)}$ when we are not concerned with the
 fact that atomic terms consist of a variable and a spine.
+
+\input{figs/fig-sls-concurrent}
 
 \subsection{Steps and traces}
 \label{sec:framework-concurrent}
@@ -1399,71 +1421,11 @@ in that the step $S$ or trace $T$ is treated as an input along with
 the initial process state $(\Psi; \Delta)_{\lf{\sigma}}$, whereas the final
 process state $(\Psi'; \Delta')_{\lf{\sigma'}}$ is treated as an output.
 
-\begin{figure}
-\fbox{$S :: (\Psi; \Delta)_{\lf{\sigma}} 
-   \leadsto_{\Sigma,\subord}
-  (\Psi'; \Delta')_{\lf{\sigma'}}$} -- presumes
-  $\vdash_{\Sigma,\subord} (\Psi; \Delta)_{\lf{\sigma}}\,{\sf state}$
-  and $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$
-\[
-\infer
-{\trstep{P}{R} :: 
-  (\Psi; \frameoff{\Theta}{\Delta})_{\lf{\sigma}} 
-   \leadsto_{\Sigma,\subord}
-  (\Psi'; \Delta')_{\lf{\sigma'}}}
-{\foctx{\Psi}{\Delta}{R}{\istrue{\susp{{\ocircle}{B^+}}}}
- &
- P :: (\Psi,\tackon{\Theta}{B^+})_{\lf{\sigma}}
-   \Longrightarrow_{\Sigma,\subord}
-      (\Psi'; \Delta')_{\lf{\sigma'}}}
-\]
-\caption{\sls~steps}
-\label{fig:sls-steps}
-\end{figure}
-
-\begin{figure}
-\fbox{$T :: (\Psi; \Delta)_{\lf{\sigma}} 
-   \leadsto^*_{\Sigma,\subord}
-  (\Psi'; \Delta')_{\lf{\sigma'}}$} -- presumes
-  $\vdash_{\Sigma,\subord} (\Psi; \Delta)_{\lf{\sigma}}\,{\sf state}$
-  and $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$
-\[
-\infer
-{\emptytrace :: (\Psi; \Delta)_{\lf{\sigma}} 
-               \leadsto^*_{\Sigma,\subord}
-             (\Psi; \Delta)_{\lf{\sigma}}}
-{}
-\quad
-\infer
-{S :: (\Psi; \Delta)_{\lf{\sigma}}
-               \leadsto^*_{\Sigma,\subord}
-             (\Psi'; \Delta')_{\lf{\sigma'}}}
-{S :: (\Psi; \Delta)_{\lf{\sigma}}
-               \leadsto_{\Sigma,\subord}
-             (\Psi'; \Delta')_{\lf{\sigma'}}}
-\]
-\[
-\infer
-{T; T' :: (\Psi_1; \Delta_1)_{\lf{\sigma_1}}
-               \leadsto^*_{\Sigma,\subord}
-             (\Psi_3; \Delta_3)_{\lf{\sigma_3}}}
-{T :: (\Psi_1; \Delta_1)_{\lf{\sigma_1}}
-               \leadsto^*_{\Sigma,\subord}
-             (\Psi_2; \Delta_2)_{\lf{\sigma_2}}
-&
-T' :: (\Psi_2; \Delta_2)_{\lf{\sigma_2}}
-               \leadsto^*_{\Sigma,\subord}
-             (\Psi_3; \Delta_3)_{\lf{\sigma_3}}}
-\]
-\caption{\sls~traces}
-\label{fig:sls-traces}
-\end{figure}
 
 Steps incorporate left focus and the left rule for ${\ocircle}$, and
 {\it let-expressions} $\tlet{T}{V}$, which include traces in deductive
 terms, incorporate right focus and the right rule for
 the lax modality in \ollll:
-
 \[
 \infer[{\ocircle}_R]
 {\foc{\Psi}{\Delta}{{\ocircle}A^-}}
