@@ -18,7 +18,7 @@ allow us to both {\it classify} different styles of presentation and
 {\it predict} what style(s) we should adopt based on what our goals
 are. In this chapter, we sketch out a classification scheme for
 substructural operational semantics based on three major specification
-styles of specification:
+styles:
 
 % Ignoring \smallskip to fit thesis on page nicely
 \begin{itemize}
@@ -67,11 +67,11 @@ for SSOS specifications. We call this idea the {\it logical
 \end{quote} 
 \smallskip
 
-\noindent
-A secondary thesis discussed in Chapter~8 is that generally
-applicable transformations on logical specifications are also useful
-for deriving manifestly correct {\it program analyses} from
-substructural operational semantics specifications.
+% \noindent
+% A secondary thesis discussed in Chapter~\ref{chapter-approx} is that generally
+% applicable transformations on logical specifications are also useful
+% for deriving manifestly correct {\it program analyses} from
+% substructural operational semantics specifications.
 
 
 In this introductory chapter, we will outline our use of logical
@@ -91,10 +91,10 @@ languages. The two styles of SSOS semantics, ordered abstract machines
 and destination-passing semantics, are considered because they do a
 good job of subsuming existing work on substructural operational
 semantics, a point we will return to at the end of this
-section. Natural semantics, a high-level, declarative style of
+section. We consider natural semantics, a high-level, declarative style of
 specification that was inspired by Plotkin's structural operational
-semantics (SOS) \cite{plotkin04structural,kahn87natural}, are used
-because natural semantics specifications are the simplest to connect
+semantics (SOS) \cite{plotkin04structural,kahn87natural},
+because natural semantics specifications are the easiest style to connect
 to substructural operational semantics. While we hope to extend the
 logical correspondence to other specification styles, such extensions
 are outside the scope of this thesis.
@@ -195,8 +195,8 @@ Destination-passing specifications can then be transformed into a
 collecting semantics by {\it approximation}, which lets us obtain
 program analyses like control flow analysis. The operationalization
 and destination-adding transformations have been implemented within
-the \sls~prototype;\robnote{Finish implement destination-adding or
-  don't say that you did.} approximation, on the other hand, requires
+the \sls~prototype.\robnote{Finish implement destination-adding or
+  don't say that you did.} Approximation, on the other hand, requires
 significant input from the user and so is less reasonable to implement
 as an automatic transformation.
 
@@ -283,7 +283,7 @@ contain {\it rules} in the conclusions of rules; when the rule fires,
 the resulting process state contains the rule. 
 A rule $A^+ \lefti \{ B^+ \}$ in the context can only fire if a piece 
 of the context
-matching $A^+$ appears to its right, so  $\left(x{:}\susp{\sf p_1(\lf{c})}, ~
+matching $A^+$ appears to its left, so  $\left(x{:}\susp{\sf p_1(\lf{c})}, ~
 y{:}\istrue{\left( {\sf p_1(\lf{c})} \lefti \{ {\sf p_2(\lf{c})} \} \right)}\right)
 \leadsto \left(z{:}\susp{\sf p_2(\lf{c})}\right)$, whereas 
 $\left(y{:}\istrue{\left( {\sf p_1(\lf{c})} \lefti \{ {\sf p_2(\lf{c})} \} \right)},~
@@ -299,7 +299,8 @@ as our ability to reason about specifications. The methodology of
 describing the invariants of substructural logical specifications with
 {\it generative signatures}, which we introduced in
 Section~\ref{sec:sls-adequate} and which we will consider further in
-Chapter~9, seems better-adapted to describing the invariants of flat
+Chapter~\ref{chapter-gen}, 
+seems better-adapted to describing the invariants of flat
 specifications.
 
 \begin{figure}[t]
@@ -336,9 +337,9 @@ transformation then acts as a simple proof of the equivalence of the
 several target specifications. (The prototype implementations of these
 transformations only do one thing, but the nondeterministic
 transformations we prove correct would justify giving the user a set
-additional controls -- for instance, the user could make the
+of additional controls -- for instance, the user could make the
 operationalization transformation be tail-call-optimizing or
-not and paralleling or not.)
+not and parallelism-enabling or not.)
 
 The nondeterministic choices that transformations can make give us a
 rigorous vocabulary for describing choices that otherwise seem
@@ -346,7 +347,8 @@ ad hoc. An example of this can be found in the paper that introduced
 the destination-adding and approximation transformations
 \cite{simmons11logical}. In that article, we had to motivate an ad-hoc
 change to the usual abstract machine semantics. In this thesis, by the
-time we encounter a similar specification in Chapter~8, we will be
+time we encounter a similar specification in Chapter~\ref{chapter-approx}, 
+we will be
 able to see that this change corresponds to omitting tail-recursion
 optimization in the process of operationalization.
 
@@ -430,7 +432,8 @@ existing work.
 \subsection*{Partiality in deductive computation}
 
 The genesis of the operationalization transformation discussed in
-Chapter~6 can be found in the treatment of the operational semantics
+Chapter~\ref{chapter-absmachine} 
+can be found in the treatment of the operational semantics
 of LF in Tom Murphy VII's thesis~\cite{murphy08modal}; this treatment
 can be seen as a synthesis of the operational interpretation of
 natural semantics explored in Cl\'ement's et al.'s early work on
@@ -455,11 +458,11 @@ this the {\it flat resolution} interpretation in
 Section~\ref{sec:framework-logicprog-deductive}).  Murphy was able to
 use the checks Twelf performs on proofs to describe a special purpose
 partiality directive. If a logic program passed his series of checks,
-Murphy could conclude that well-moded, flat resolution search would
+Murphy could conclude that well-moded, flat resolution would
 never fail and never backtrack, though it might diverge. This check
 amounted to a proof of safety (progress and preservation) for the
 operational interpretation of his natural semantics via flat
-resolution. I believe that every other existing proof of
+resolution. It seems that every other existing proof of
 safety\footnote{Progress in particular is the theorem of concern:
   proving preservation for a big-step operational semantics is
   straightforward.} for a big-step operational semantics is either
@@ -485,7 +488,7 @@ tools than the limited set Murphy successfully utilized.
 
 Murphy proved safety for a natural semantics specification by
 recovering the original operational interpretation of natural semantics
-specifications as logic programs and using Twelf's facilities for
+specifications as logic programs and then using Twelf's facilities for
 reasoning about logic programs.  Leroy and Grall, in
 \cite{leroy09coinductive}, suggest a novel {\it coinductive}
 interpretation of natural semantics specifications. Coevaluation $\obj{e
@@ -562,7 +565,7 @@ Grall.
 We suggest that the operationalization transformation, seen as a
 logical extension to Murphy's methodology, is superior to the
 coinductive (re)interpretation as a way of understanding the behavior
-of infinite terms in the natural semantics. Both approaches
+of diverging evaluations in the natural semantics. Both approaches
 reinterpret natural semantics in an operational way, but the
 operationalization transformation gives us a satisfactory treatment of
 diverging terms without requiring the definition of an additional
@@ -594,7 +597,7 @@ is that the functional correspondence acts on functional programs,
 whereas the logical correspondence acts on specifications encoded in a
 logical framework (in our case, the logical framework \sls).
 
-However, the functional correspondence as given assumes that semantic
+The functional correspondence as given assumes that semantic
 specifications are adequately represented as functional programs; the
 equivalence of the encoding and the ``on paper'' semantics is an
 assumed prerequisite. In contrast, by basing the logical
@@ -603,7 +606,7 @@ formally and precisely about adequate representation by the
 methodology outlined in Section~\ref{sec:sls-adequate}. The functional
 correspondence also shares some of the coinductive reinterpretation's
 difficulties in dealing with nondeterministic and parallel execution.
-The language that we can use to express the semantics is heavily
+The tools we can use to express the semantics are heavily
 influenced by the semantics of the host programming language, and so
 the specifics of the host language can make it dramatically more or
 less convenient to encode nondeterministic or parallel programming
@@ -659,7 +662,8 @@ uniform logical fragment, whereas the transformation we describe
 handles a specific (though useful) fragment of the much richer logic
 of \sls~propositions.
 
-Related work for program analyses methodology covered in Chapter~8 is
+Related work for program analyses methodology covered in 
+Chapter~\ref{chapter-approx} is
 discussed further in Section~\ref{sec:approximately-related}.
 
 \section{Transformation and modular extension}
@@ -712,7 +716,7 @@ discussed further in Section~\ref{sec:approximately-related}.
 \draw[->,thick,rounded corners=.45cm] (8.2, -5.2) -- (8.7, -5.2) -- (8.7,-4.7);
 \end{tikzpicture} 
 \end{center}
-\caption{Using the logical correspondence for the modular language extension}
+\caption{Using the logical correspondence for modular language extension}
 \label{fig:modularcompose}
 \end{figure}
 
@@ -722,7 +726,7 @@ of transforming natural semantics into abstract machines and in the
 study of abstract machines that are in the image of this
 translation. It is possible to view the logical correspondence in the
 same light, but that is not how logical correspondence will be used in
-this thesis.  Indeed, it is not my intent to advocate strongly for the
+this thesis.  Indeed, it is not our intent to advocate strongly for the
 use of natural semantics specifications at all; recall that natural
 semantics were used to illustrate problems with {\it non}-modularity
 in language specification in Section~\ref{sec:intro-ssos}.
@@ -735,7 +739,8 @@ semantics without giving too much thought to the opposite
 direction. In the context of this thesis, the reason that
 transformations are important is that they {\it expose more of the
   semantics to manipulation and modular extension}.  The
-operationalization transformation in Chapter 7 exposes the order of
+operationalization transformation in Chapter~\ref{chapter-destinations} 
+exposes the order of
 evaluation, and the \sls~framework then makes it possible to modularly
 extend the language with stateful features: this is exactly what we
 demonstrated in Section~\ref{sec:intro-ssos} and will
@@ -746,7 +751,7 @@ as well as the interaction of parallelism and failure (though not
 necessarily at the same time, as discussed in
 Section~\ref{sec:dest-continuations}).  The control structure exposed
 by the destination-adding transformation is the basis of the control
-flow analysis in Chapter 8.
+flow analysis in Chapter~\ref{chapter-approx}.
 % This is also what
 % ultimately distinguishes this work from the work of Hannan, Miller,
 % and Ager, as the abstract machine semantics they derive from natural
