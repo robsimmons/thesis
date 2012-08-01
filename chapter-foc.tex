@@ -544,10 +544,11 @@ where the proposition $A^-$ is in focus).
 \smallskip
 It is also possible to distinguish a fourth sequent form, the {\it
   stable} sequents, inversion sequents $\mildinv{\Gamma}{\Delta}{C}$
-where no asynchronous inversion remains to be done. This is certainly
-the case when the context $\Delta$ contains only negative propositions
+where no asynchronous inversion remains to be done. A sequent 
+is stable when the context $\Delta$ contains only negative propositions
 $A^-$ and the succedent $C$ is a positive proposition $A^+$, but that
-is not enough: if the process of inversion reaches a positive atomic
+is a sufficient condition for stability and cannot be
+a necessary one. If the process of inversion reaches a positive atomic
 proposition $p^+$ on the left or a negative atomic proposition $p^-$
 on the right, the proposition can be decomposed no further. When we
 reach an atomic proposition, we are therefore forced to {\it suspend}
@@ -555,7 +556,7 @@ decomposition, either placing a suspended positive atomic proposition
 $\susp{p^+}$ in $\Delta$ or placing a suspended negative proposition
 $\susp{p^-}$ as the succedent. For technical reasons discussed below
 in Section~\ref{sec:lin-suspended}, our sequent calculus can handle
-arbitrary suspended propositions, not just atomic suspended
+arbitrary suspended propositions, not just  suspended atomic
 propositions, and suspended propositions are always treated as stable,
 so $\mildseq{\Gamma}{A^-, B^-, C^-}{D^+}$ and
 $\mildseq{\Gamma}{\susp{A^+}, B^-, \susp{C^+}}{\susp{D^-}}$ are both
@@ -570,12 +571,12 @@ this interpretation to understand the logic described in
 Figure~\ref{fig:kaustuv-focused}. In addition to propositions $A^+$,
 $A^-$ and positive suspended positive propositions $A^+$, the grammar
 of contexts $\underline{\Delta}$ allows them to contain left focuses
-$[ A^- ]$.  Likewise, a succedent $\underline{U}$ can be a negative
-proposition $A^-$, a positive proposition $A^+$, a suspended negative
-proposition $\susp{A^-}$, or a right focus $[ A^+ ]$. We will
-henceforth write $\Delta$ and $U$ to indicate the refinements of
-$\underline{\Delta}$ and $\underline{U}$ that do not contain any
-focus.
+$[ A^- ]$.  Likewise, a succedent $\underline{U}$ can be a stable
+positive proposition $A^+$, a suspended negative proposition
+$\susp{A^-}$, a focused positive proposition $[ A^+ ]$, or an
+inverting negative proposition $A^-$. We will henceforth write
+$\Delta$ and $U$ to indicate the refinements of $\underline{\Delta}$
+and $\underline{U}$ that do not contain any focus.
 
 \input{figs/fig-kaustuv-focused.tex}
 
@@ -588,11 +589,11 @@ the situation in which there are three distinct
 judgments. %\footnote{Treating these extra conditions as a side
 %  condition is strictly a cosmetic matter; we don't want to have to
 %  write them constantly when we .}  
-Therefore, from this point on, we
-will only consider sequents
+Therefore, from this point on, we will only consider sequents
 $\mildseq{\Gamma}{\underline{\Delta}}{\underline{U}}$ with at most one
 focus. Pfenning, who developed this construction in
-\cite{pfenning12chaining}, calls this the {\it focusing constraint}.
+\cite{pfenning12chaining}, calls this invariant the {\it focusing
+  constraint}.
 % and writes $\delta$ and $\gamma$ instead of $\underline{\Delta}$ and
 % $\underline{U}$.
 The focusing constraint alone gives us what Pfenning calls a {\it
@@ -716,7 +717,7 @@ then $\mildseq{\Gamma}{\underline{\Delta'}, \Delta}{\underline{U}}$.
 
 \noindent
 As discussed above in Section~\ref{sec:linfocseqcalcdef}, because we
-only consider focused sequents that are otherwise stable we assume
+only consider focused sequents that are otherwise stable, we assume
 that $\Delta$ in the statement of Theorem~\ref{thm:fsubst-pos} is
 stable by virtue of it appearing in the focused sequent
 $\mildseq{\Gamma}{\Delta}{[A^+]}$. The second premise
@@ -829,7 +830,7 @@ atomic suspension rules $\eta^+$ and $\eta^-$ are instances of an admissible
 In other words, the admissible identity expansion rules allow us to
 act as if the $\eta^+$ and $\eta^-$ rules apply to {\it arbitrary}
 propositions, not just atomic propositions. The atomic propositions
-must be handled by an explicit rule, but the general principle is the
+must be handled by an explicit rule, but the general principle is 
 admissible.
 
 The two admissible identity expansion rules above can be rephrased
@@ -864,7 +865,7 @@ context.)
 The admissible identity expansion rules fit with an interpretation of
 positive atomic propositions as stand-ins for arbitrary positive
 propositions and of negative atomic propositions as stand-ins for
-negative atomic propositions: if we substitute a proposition in for
+negative atomic propositions: if we substitute a proposition for
 some atomic proposition, all the instances of atomic suspension
 corresponding to that rule become admissible instances of identity
 expansion. 
@@ -1139,7 +1140,8 @@ do not contain any non-atomic suspended propositions:
 All the cases of the proof are written out in \cite{simmons12cut}.
 \end{proof}
 
-The core cut admissibility proof, in a sense, is parts 3, 4, and 5 --
+The core cut admissibility property, in a sense, is contained in
+structure of parts 3, 4, and 5 --
 these are the cases used to prove the completeness of focusing
 (Theorem~\ref{thm:linfoccomplete}) below. Each of these cases handles
 a derivation with exactly one non-stable proposition; in part 3 this
@@ -1150,7 +1152,8 @@ all three parts, the action of the proof is to induct on the
 derivation where the principal cut formula is stable to find every
 place where that principal cut formula ($A^+$ or $A^-$) is put in
 focus: at each of these points, principal cut admissibility (part 1 or
-2) is invoked. 
+2) is invoked. Parts 1 and 2 of cut admissibility are where most of the
+action happens.
 
 There is a notable asymmetry between part 1 of the theorem, which does
 not require stability of $\Delta'$ and $U$ in the second given
@@ -1223,7 +1226,7 @@ then $\mildseq{\Gamma}{\Delta}{U}$.
   $C_2^+$). But then $C_2^+$ can be either ${!}B_2^-$ or
   ${\downarrow}C_3^-$; in the latter case $C^+ =
   {\downarrow}{\uparrow}{\downarrow}C_3^-$, and this can go on
-  arbitrarily long (but not forever, because $C^-$ is a finitely-sized
+  arbitrarily long (but not forever, because $C^-$ is a finite
   term). So we say that, by induction on the structure of $C^+$, there
   exists an $A^-$ such that $C^+ =
   {\downarrow}{\uparrow}\ldots{\downarrow}{\uparrow}{!}A^-$ and $A =
@@ -1602,11 +1605,11 @@ ${\lolli}_R$, and ${\otimes}_L$, which required the use of
 doubly-shifted side derivations in our presentation, are trivial in this
 alternate presentation.  Unfortunately, the proof of unfocused cut,
 while simple, is tedious and long. Gentzen's original proof of cut
-admissibility \cite{gentzen35untersuchungen}, Pfenning's mechanization
-\cite{pfenning00structural}, and the proofs of identity expansion, cut
+admissibility \cite{gentzen35untersuchungen} and Pfenning's mechanization
+\cite{pfenning00structural} all scale linearly with the number of
+connectives and rules in the logic; the proofs of identity expansion, cut
 admissibility, soundness of focusing, and completeness of focusing
-presented in this chapter, all scale linearly with the number of
-connectives and rules in the logic. There is no known proof of the
+presented in this chapter do too. There is no known proof of the
 unfocused admissibly of the rule ${\it cut}$ above that scales
 linearly in this way: all known proofs grow quadratically with the
 number of connectives and rules in the logic.
@@ -1713,10 +1716,10 @@ Synthetic inference rules were introduced by Andreoli as the
 derivation fragments associated with a positive propositions {\it
   bipoles}. A monopole is the outermost negative (or positive)
 structure of a proposition, and a bipole is a monopole surrounded by
-positive (or, respectively, negative) propositions. In a polarized
-setting, bipoles capture the outermost structure of a proposition up
-to the second occurrence of a shift or an exponential
-\cite{andreoli01focussing}. 
+positive (or, respectively, negative) propositions
+\cite{andreoli01focussing}. In a polarized setting, bipoles capture
+the outermost structure of a proposition up to the second occurrence
+of a shift or an exponential.
 
 The first idea behind synthetic inference rules is that the most
 important sequents in a polarized sequent calculus are stable sequents
@@ -1808,7 +1811,7 @@ branches of the proof.  If we also consider additive connectives, we
 can identify some number of synthetic rules for each right focus, left
 focus, or copy. This may be zero, as there's no way to successfully
 right focus on a proposition like $\zero \otimes
-{\uparrow}{\downarrow}A^+$, and therefore zero synthetic inference rules
+{\downarrow}{\uparrow}A^+$, and therefore zero synthetic inference rules
 are associated with this proposition. It may be more than one: there are
 three ways to successfully right focus on the proposition $a^+ \oplus
 b^+ \oplus c^+$, and so three synthetic inference rules are associated
@@ -1916,8 +1919,9 @@ ${!}A$, and the interaction between them.
   class of permeable propositions.
 \end{itemize}
 
-The reason why we survey these different systems is that they all
-provide a solution to a pervasive problem in focused sequent calculi:
+The reason we survey these different systems is that they all
+provide a solution to a pervasive problem encountered when using 
+focused sequent calculi as logical frameworks:
 the need to allow for synthetic inference rules of the form
 \[
 \infer
@@ -1974,10 +1978,13 @@ inference rule:
 If we can prove a general theorem that the sequent
 $\mildseq{\Gamma}{\Delta}{\susp{a^-}}$ can only be proven if $\Delta =
 a^-$ or if $\Delta = \cdot$ and $a^- \in \Gamma$, then $a^-$ is a {\it
-  pseudo-positive} atomic proposition. Proving the succedent
+  pseudo-positive} atomic proposition.  Proving the succedent
 $\susp{a^-}$ where $a^-$ is pseudo-positive is functionally very
-similar to proving the succedent $\susp{[a^+]}$ for a positive atomic
-proposition. If $a^-$ is pseudo-positive, the persistent
+similar to proving ${[a^+]}$ in focus for a positive atomic
+proposition. This gives us license to treat stable sequents that prove
+a pseudo-positive proposition not as a stable sequent that appears in
+synthetic inference rules but as an immediate subgoal that gets folded
+into the subgoal. If $a^-$ is pseudo-positive, the persistent
 proposition ${\downarrow}a^- \lolli {\downarrow}b^- \lolli c^-$ can be
 associated with these two synthetic inference rules:
 \[
@@ -2009,7 +2016,7 @@ proposition out of the context and into left focus, but the focus
 immediately blurs, as in this (intuitionistic) proof
 fragment:\footnote{We will use the sequent form
   $\andseq{\Gamma}{\Delta}{C}$ in this section for focused but
-  unpolarized systems, and will frequently reference Pfenning's
+  unpolarized systems. Again, we frequently reference Pfenning's
   presentation of focused linear logic \cite{pfenning12chaining} as a
   faithful intuitionistic analogue of Andreoli's system.}
 \[
@@ -2403,11 +2410,11 @@ positive proposition $\langle p^+ \rangle$.
 
 \begin{proof}
 Induction on the second given derivation; whenever ${\it focus}_R$,
-${\it focus}_L$ or ${\it copy}$ are the last rule in part 6b, we need
+${\it focus}_L$ or ${\it copy}$ are the last rule in part $6b$, we need
 to make $n$ calls to part 3 of the cut admissibility lemma, each one
 followed by a use of the $\eta^+$ rule, where
-$n$ is determined by the inductive call to part {\it 6a} (for ${\it focus}_R$) 
-or {\it 6c} (for ${\it focus}_L$ and ${\it copy}$). 
+$n$ is determined by the inductive call to part $6a$ (for ${\it focus}_R$) 
+or $6c$ (for ${\it focus}_L$ and ${\it copy}$). 
 
 The calls to part 3 are justified by the existing induction metric: the 
 principal cut formula $p^+$ stays the same and the part number gets smaller.
@@ -2540,7 +2547,7 @@ the cut reduces to an admissible instance of contraction.
 {\mildseq{\Gamma', \langle p^+ \rangle}{\Delta}{U}}
 {\mildseq{\Gamma', \langle p^+ \rangle, \langle p^+ \rangle}{\Delta}{U}}
 \]
-Thus, we no longer need the complicated extra parts {\it 6a - 6c} of cut 
+Thus, we no longer need the complicated extra parts $6a$ - $6c$ of cut 
 admissibility in order to prove cut admissibility for a focused system
 with the exponential optimization. 
 
@@ -2628,10 +2635,10 @@ follow the judgmental methodology of Martin-L{\"o}f
 sequent $\seq{\Gamma}{\Delta}{A}$ of linear logic is establishing the
 judgment that $A$ is {\it true}: we can write
 $\seq{\Gamma}{\Delta}{\isconc{A}}$ to emphasize this. The judgment of
-{\it validiy},
+{\it validity},
 represented by the judgment $\isvalid{A}$, is defined as
 truth using no ephemeral resources, and ${!}A$ is understood as the
-internalization of validity truth:
+internalization of judgmental validity:
 \[
 \infer[{\it valid}]
 {\pseq{\Gamma}{\isvalid{A}}}
@@ -2660,7 +2667,8 @@ rule for ${!}_R$ is derivable using these two rules:
 Note that the ${!}'_R$ rule is not invertible,
 because it forces the linear context to be empty, which means ${!}$
 must be positive. The ${\it valid}$
-rule, on the other hand, is invertible and so naturally negative,
+rule, on the other hand, is invertible and naturally has an
+asynchronous or negative character,
 because it represents the invertible step of deciding to prove that
 $A$ is {\it valid} (true without recourse to any ephemeral resources)
 by proving that it is {\it true}
@@ -2709,7 +2717,7 @@ In adjoint logic, persistent propositions $X$ appear in the
 persistent context $\Gamma$ and as the succedents of sequents
 $\pseq{\Gamma}{X}$, whereas linear propositions $A$ appear in
 the linear context $\Delta$ and as the succedents of sequents
-$\seq{\Gamma}{\Delta}{A}$. Going back to our previous dicussion,
+$\seq{\Gamma}{\Delta}{A}$. Going back to our previous discussion,
 this means that persistent propositions are only ever judged
 to be valid, and that linear propositions are only ever judged
 to be true. A fragment of the logic is shown in
@@ -2750,7 +2758,7 @@ propositions $a^+$. The proposition ${\pbang}p^+$ can then be
 translated as $F x^+$, where $x^+$ is the translation of $p^+$ as a
 persistent positive atomic proposition.
 
-In this way, adjoint logic gives one answer to why, in Andreoli-style
+Adjoint logic gives one answer to why, in Andreoli-style
 presentations of linear logic, we can't naturally substitute positive
 propositions for positive atomic propositions when those positive
 atomic propositions appear suspended in the persistent linear context:
@@ -2848,9 +2856,11 @@ and we know, by the syntactic structure of $\Delta$, that inversion
 will empty the linear context. One instance of this pattern is the 
 sequent
 $\mildseq{\Gamma}{G(n)}{{!}G(n)}$ where $G(n) = {!}p_1^+ \otimes
-\ldots \otimes {!}p_n^+$. We will can prove such a sequent succinctly 
+\ldots \otimes {!}p_n^+$. Our goal will be to 
+prove such a sequent succinctly 
 by suspending the proposition $G(n)$
-directly in the persistent context. To use these suspended
+directly in the persistent context just as we did with the proof
+involving $F(n)$ above. To use these suspended
 propositions, we introduce a hypothesis rule for positive propositions
 suspended in the persistent context.
 \[
@@ -3016,7 +3026,7 @@ none of the changes are too severe; we consider each in turn.
 
 \paragraph{Identity expansion}
 The new addition to the language of positive propositions requires us to 
-extend eta expansion with one additional case:
+extend identity expansion with one additional case:
 \[
 \infer-[\eta^+_p]
 {\mildseq{\Gamma}{\Delta, p^+_p}{U}}
@@ -3114,7 +3124,7 @@ conclusion $\mildseq{\Gamma}{\Delta_1, \Delta_2}{[A \otimes B]}$ of
 the ${\tensor}_R$ rule indicates the condition that the context can be
 split into two parts. In other words, both the conclusion of the
 ${\one}_R$ rule and ${\otimes}_R$ rule, as we normally write them, can
-be seen as a special {\it matching construct} that constrain the
+be seen as having special {\it matching constructs} that constrain the
 shape of the context $\Delta$.\footnote{More than anything else we have
   discussed so far, this is a view of inference rules that emphasizes
   {\it bottom-up} proof search and proof construction. A view of
