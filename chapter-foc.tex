@@ -3,8 +3,10 @@
 
 In this chapter, we present linear logic as a logic with the ability
 to express aspects of state and state transition in a natural way.  In
-Chapter~3 we will repeat the development in this chapter in a much
-richer and more expressive setting, and in Chapter~4 we will carve out
+Chapter~\ref{chapter-order} 
+we will repeat the development in this chapter in a much
+richer and more expressive setting, and in Chapter~\ref{chapter-framework} 
+we will carve out
 a fragment of this logic to use as the basis of \sls, our logical
 framework of substructural logical specifications. This part of the
 document contributes to the overall thesis by focusing on the design
@@ -23,7 +25,7 @@ structural focalization as developed in \cite{simmons11structural};
 this development is one of the major contributions of this thesis.
 Linear logic is a fairly simple logic that nevertheless allows us to
 consider many of the issues that will arise in richer substructural
-logics like the one considered in Chapter~3.
+logics like the one considered in Chapter~\ref{chapter-order}.
 
 In Section~\ref{sec:introlinlog} we motivate and discuss a traditional
 account of linear logic, and in
@@ -43,13 +45,15 @@ number of ways of modifying the design of our focused logic to
 increase the expressiveness of synthetic inference rules; one of the
 alternatives we present, the introduction of {\it permeable atomic
   propositions}, will be generalized and incorporated into the focused
-presentation of ordered linear lax logic that we discuss in Chapter 3.
+presentation of ordered linear lax logic that we discuss in 
+Chapter~\ref{chapter-order}.
 
 % In Section~\ref{sec:linconcurrenteq}, we describe {\it concurrent
 %   equality}, an equivalence relation on focused derivations introduced
 % by Watkins et al.~that is motivated by the desire to capture
 % independent concurrent transitions. We also discuss the limitations of
-% concurrent equality in a fully focused setting.  In Chapter 4, when we
+% concurrent equality in a fully focused setting.  
+% In Chapter~\ref{chapter-framework}, when we
 % select a fragment of ordered linear lax logic to form \sls, we will
 % incorporate a similar notion of concurrent equality.
 
@@ -108,7 +112,7 @@ intuitionistic linear logic.\footnote{In this chapter we will mostly
   x.A$. The ``why not'' connective $\mbox{?}A$ from classical linear
   logic is sometimes treated as a second exponential connective in
   intuitionistic linear logic \cite{chang03judgmental}, but we will
-  not consider that connective in this thesis.} It corresponds most
+  never ask ``why not?'' in the context of this thesis.} It corresponds most
 closely to Barber's dual intuitionistic linear logic
 \cite{barber96dual}, but also to Andreoli's dyadic system
 \cite{andreoli92logic} and Chang et al.'s judgmental analysis of
@@ -142,15 +146,15 @@ of the proposition
 \[{!}({\sf 6bucks} \lolli {\sf battery}) \otimes {\sf 6bucks} \otimes
 ({\sf battery} \lolli {\sf robot}) \lolli {\sf robot}.\] A derivation
 of this proposition is given in
-Figure~\ref{fig:unfocused-robot}.\footnote{In Chapter~4 (and
-  Section~\ref{sec:whytraces} in particular) we see that this view
-  isn't quite precise enough, and that the most natural representation
-  of state change from the state $A$ to the state $B$ isn't really
-  captured by derivations of the proposition $A \lolli B$ or by
-  derivations of the sequent $\seq{\cdot}{A}{B}$.  However, this view
-  remains a simple and useful one; Cervesato and Scedrov cover it
-  thoroughly in the context of intuitionistic linear logic
-  \cite{cervesato09relating}.}
+Figure~\ref{fig:unfocused-robot}.\footnote{In
+  Chapter~\ref{chapter-framework} (and Section~\ref{sec:whytraces} in
+  particular) we see that this view isn't quite precise enough, and
+  that the most natural representation of state change from the state
+  $A$ to the state $B$ isn't really captured by derivations of the
+  proposition $A \lolli B$ or by derivations of the sequent
+  $\seq{\cdot}{A}{B}$.  However, this view remains a simple and useful
+  one; Cervesato and Scedrov cover it thoroughly in the context of
+  intuitionistic linear logic \cite{cervesato09relating}.}
 
 \input{figs/fig-unfocused-robot}
 
@@ -167,8 +171,8 @@ Chirmar's 1995 Ph.D. thesis, has sought to use linear logic as a {\it
 
 Generally speaking, logical frameworks use the {\it structure} of
 proofs in a logic (like linear logic) to describe the structures we're
-interested in (like the process of obtaining a robot).  There
-are two related reasons why linear logic as described in
+interested in (like the process of obtaining a robot).  There are two
+related reasons why linear logic as described in
 Figure~\ref{fig:linear} is not immediately useful as a logical
 framework. First, the structure of the derivation in
 Figure~\ref{fig:unfocused-robot} doesn't really match the intuitive
@@ -179,8 +183,8 @@ rules in Figure~\ref{fig:linear}, even though there's only one
 of ${!}L$, for instance, could be permuted up past the ${\otimes}L$
 and then past the ${\lolli}L$ into the left branch of the proof. These
 differences represent inessential nondeterminism in proof construction
-or in proof search -- they just get in the way of the structure that
-we are trying to capture. 
+-- they just get in the way of the structure that we are trying to
+capture.
 
 This is a general problem in the construction of logical frameworks.
 We'll discuss two solutions in the context of LF, a logical
@@ -243,7 +247,8 @@ of LF, a deductive system is said to be {\it adequately encoded} as
 an LF type family in the case that there is a compositional bijection
 between the formal objects in the deductive system and these
 $\beta$-normal, $\eta$-long representatives of equivalence classes
-\cite{harper93framework}.
+\cite{harper93framework}, a topic we will return to in 
+Section~\ref{sec:lf-adequacy}.
 
 More modern presentations of LF, such as Harper and Licata's
 \cite{harper07mechanizing}, follow the approach developed by Watkins
@@ -311,7 +316,7 @@ be applied eagerly; we first have to decompose $A \tensor B$ on the
 left using the ${\tensor}L$ rule.  The terms asynchronous and
 synchronous make a bit more sense in a one-sided classical sequent
 calculus; in intuitionistic logics, it is common to call asynchronous
-or negative connectives {\it right}-asynchronous and {\it
+connectives {\it right}-asynchronous and {\it
   left}-synchronous. Similarly, it is common to call synchronous
 connectives {\it right}-synchronous and {\it left}-asynchronous.  We
 will instead use a different designation, calling the
@@ -345,7 +350,7 @@ rules.\footnote{Synchronicity or polarity, a property of connectives,
 {\it in focus}, which is either a positive proposition in right focus
 or a negative proposition in left focus). This
 proposition is then is decomposed repeatedly and
-exhaustively using generally non-invertible rules.
+exhaustively using rules that are mostly non-invertible.
 
 If we consider this discipline applied to our robot example where all
 atoms have been assigned positive polarity, we would begin with an
@@ -408,7 +413,7 @@ Section~\ref{sec:linsynthetic}.
 \subsection{Polarization}
 
 At this point, there is an important choice to make. One way forward
-is to treat positive and negative propositions as a syntactic
+is to treat positive and negative propositions as syntactic
 refinements of the set of all propositions, and to develop a focused
 presentation for intuitionistic linear logic with the connectives and
 propositions that we have already considered, as Chaudhuri did in
@@ -432,7 +437,7 @@ given by two erasure functions $(A^+)^\circ$ and $(A^-)^\circ$ that
 wipe away all the shifts; this function is defined in
 Figure~\ref{fig:lin-shift}. In the other direction, every proposition
 in unpolarized linear logic has an polarized analogue with a minimal
-number of shifts, given by by the functions $A^\oplus$ and $A^\ominus$
+number of shifts, given by the functions $A^\oplus$ and $A^\ominus$
 in Figure~\ref{fig:lin-shift}.  Both of these functions are partial
 inverses of erasure, since $(A^\oplus)^\circ = (A^\ominus)^\circ = A$;
 we will generally refer to partial inverses of erasure as {\it
@@ -489,7 +494,7 @@ logic as described in Figure~\ref{fig:linear}. Other polarization
 strategies correspond to different focused logics, as explored by
 Liang and Miller in \cite{liang09focusing}, so the presentation of
 polarized linear logic below, like Liang and Miller's LJF, can be seen
-in two ways: as a focused logic in its own right, and as a a framework
+in two ways: as a focused logic in its own right, and as a framework
 for defining many focused logics (one per polarization strategy). As
 such, the strongest statement of the correctness of focusing is based
 on erasure: there is an unfocused derivation of $(A^+)^\circ$ or
@@ -507,13 +512,13 @@ In this thesis, we will be interested only in the structure of focused
 proofs, which corresponds to using the polarization strategy given by
 $A^\oplus$ and $A^\ominus$. Therefore, following Chaudhuri, it would
 be possible to achieve our objectives without the use of polarization.
-Our use of a polarization is largely based on practical
+Our choice is largely based on practical
 considerations: the use of polarized logic simplifies the proof of
 identity expansion in Section~\ref{sec:linindentity} and the proof of
 completeness in Section~\ref{sec:lincorrectness}. That said, polarized
 logic is an independently significant and currently active area of
-research. As an internally sensible logic, the Curry-Howard
-interpretation of polarised persistent logic has been studied by Levy
+research. For instance, the Curry-Howard
+interpretation of polarized persistent logic has been studied by Levy
 as Call-by-Push-Value \cite{levy04call}. The erasable influence of the
 shifts on the structure (but not the existence) of proofs is also
 important in the context of theorem proving. For instance, a theorem
@@ -1986,10 +1991,10 @@ associated with these two synthetic inference rules:
     {\downarrow}b^- \lolli c^-}{\susp{c^-}}}
 {\mildseq{\Gamma, a^-}{\Delta}{\susp{b^-}}}
 \]
-The machinery of lax logic introduced in Chapter~3 and the fragment
-of this logic that forms a logical framework in Chapter~4 make
-it feasible, in practice, to observe when negative atomic propositions 
-are pseudo-positive.
+The machinery of lax logic introduced in Chapter~\ref{chapter-order}
+and the fragment of this logic that forms a logical framework in
+Chapter~\ref{chapter-framework} make it feasible, in practice, to
+observe when negative atomic propositions are pseudo-positive.
 
 \subsection{Atom optimization}
 \label{sec:atomopt}
@@ -2813,7 +2818,7 @@ syntactic refinement of the positive propositions.\footnote{Permeable
   but the asymmetry of intuitionistic linear logic means that, for
   now, it is reasonable to consider permeability exclusively as a
   property of positive propositions. We will consider a certain kind
-  of right-permeable propositions in Chapter 3.}
+  of right-permeable propositions in Chapter~\ref{chapter-order}.}
 
 The admissible identity expansion rules, like the admissible identity
 rule present in most unfocused sequent calculus systems, help us
