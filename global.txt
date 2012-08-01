@@ -34,7 +34,7 @@ Realization: inductive definitions aren't partial, proofs are partial
 
 CHANGES TO CONSIDER MAKING:
 
-Springer LNCS not fully consistent. Editors? Location?
+springer LNCS not fully consistent. Editors? Location?
 
 "Only" seems to be a pretty common weasel word for me: global check.
 
