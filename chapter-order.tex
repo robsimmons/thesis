@@ -38,13 +38,16 @@ expansion (Section~\ref{sec:ord-identity}) for focused~\ollll; with
 these results, it is possible to prove the soundness and completeness
 of focusing (Section~\ref{sec:ord-correctness}) for \ollll.  A
 fragment of this system will form the basis of the logical framework
-in Chapter 4, and that framework will, in turn, underpin the rest of
+in Chapter~\ref{chapter-framework}, 
+and that framework will, in turn, underpin the rest of
 this thesis.
 
 It is worth clarifying why I am presenting the much richer \ollll~here
-if only the fragment detailed in Chapter~4 is needed. There are two
+if only the fragment detailed in Chapter~\ref{chapter-framework} 
+is needed. There are two
 main reasons.  First, while we will use only a fragment of this logic
-in Chapter 4, other fragments of the logic may well be interesting and
+in Chapter~\ref{chapter-framework}, 
+other fragments of the logic may well be interesting and
 useful for other purposes. Second, the presentation in this chapter,
 and in particular the discussion of substructural contexts in
 Section~\ref{sec:contexts}, introduces a presentation style and
@@ -63,7 +66,7 @@ logic \ollll~and the general methodology followed in this chapter are
 general, foundational paradigms within which it is possible to
 instantiate families of logic programming languages and logical
 frameworks, even though we will focus on a particular logical
-framework starting in Chapter~4.
+framework starting in Chapter~\ref{chapter-framework}.
 
 \section{Ordered linear lax logic}
 \label{sec:ord-unfocused}
@@ -223,8 +226,10 @@ The equality proposition $\lf{t} \doteq_\tau \lf{s}$ is an interesting
 addition to our presentation of the logic, and will be present in the
 framework \sls~defined in the next chapter, albeit in a highly
 restricted form. Equality in \sls~will be used primarily in the
-logical transformations presented in Chapter~7 and in the program
-analysis methodology in Chapter~8. The left rule for equality $\lf{t}
+logical transformations presented in Chapter~\ref{chapter-destinations} 
+and in the program
+analysis methodology in Chapter~\ref{chapter-approx}. 
+The left rule for equality $\lf{t}
 \doteq_\tau \lf{s}$, has a higher-order premise, in the sense that it
 reflects over the definition of simultaneous term substitutions $\Psi'
 \vdash \lf{\sigma} : \Psi$ and over the syntactic equality judgment
@@ -825,7 +830,8 @@ A sequent $\foc{\Psi}{\Delta}{U}$ is {\it stable} when the context
 $\Delta$ and succedent $U$ contain only stable propositions ($A^-$ in
 the context, $A^+$ in the succedent) and suspended propositions
 ($\susp{A^+}$ in the context, $\susp{A^-}$ in the succedent). We adopt
-the focusing constraint discussed in Chapter 2: there is only ever at
+the focusing constraint discussed in Chapter~\ref{chapter-foc}: 
+there is only ever at
 most one focused proposition in a sequent, and if there is focused
 proposition in the sequent, then the sequent is otherwise stable. A
 restriction on the rules ${\it focus}_L$ and ${\it focus}_R$
@@ -850,7 +856,8 @@ $[A^+]$ and $A^-$ instead of $\isconc{[A^+]}$ and $\isconc{A^-}$ for
 $U$.
 
 In a confluent presentation of focused logic like the one given for
-linear logic in Chapter 2, that would be as far as we could take our
+linear logic in Chapter~\ref{chapter-foc}, 
+that would be as far as we could take our
 simplifications. However, this presentation will match the fixed
 presentation of logic from the structural focalization development
 \cite{simmons11structural}. Specifically, if there is more than one
@@ -959,7 +966,8 @@ it into our development, but the meaning of this class, as well as the
 meaning of right-permeable atomic propositions $p^-_\mlax$, is
 unclear.  Certainly we do {\it not} want to include such propositions
 in our logical framework, as to do so would interfere with our
-development of traces as a syntax for partial proofs in Chapter~4.
+development of traces as a syntax for partial proofs in
+Chapter~\ref{chapter-framework}.
 
 The presentation of the exponentials, and the logic that we now
 present, emphasizes the degree to which the shifts ${\uparrow}$ and
@@ -1460,7 +1468,8 @@ constructs $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$ and
 $\restrictfrom{U}{\mlvl}$. Without that notation, part 3 would split
 into two parts for $\mtrue$ and $\mlax$ and part 4 would split into
 three parts for $\mtrue$, $\meph$, and $\mpers$. The fifth part of the
-cut admissibility theorem in Chapter 2 (Theorem~\ref{thm:lincut}),
+cut admissibility theorem in Section~\ref{sec:lincut} 
+(Theorem~\ref{thm:lincut}),
 which is computationally a near-duplicate of the fourth part of the
 same theorem, is due to the lack of this device.
 
@@ -2896,7 +2905,8 @@ mostly borne by the part of the context we leave implicit.
 \label{sec:ord-correctness}
 
 Our proof of the correctness of focusing is based on erasure as
-described in Chapter 2. The argument follows the one from the
+described in Section~\ref{sec:lincorrectness}. 
+The argument follows the one from the
 structural focalization development, and the key component is {\it
   unfocused admissibility lemmas}, lemmas that establish that each of
 the reasoning steps that can be made in unfocused \ollll~are
@@ -2915,7 +2925,8 @@ admissible inferences made on stable sequents in focused \ollll.
 
 \subsection{Erasure}
 
-As in Chapter 2, we define erasure only on stable, suspension-normal
+As in Section~\ref{sec:lincorrectness}, 
+we define erasure only on stable, suspension-normal
 sequents. Erasure for propositions is defined as in
 Figure~\ref{fig:ord-erasure}. As discussed in
 Section~\ref{sec:permable-atomic}, even though we have not
