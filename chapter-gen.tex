@@ -1,56 +1,56 @@
 \chapter{Generative specifications as invariants}
 \label{chapter-gen}
 
-The relevant building blocks in our $\lambda$-calculus encoding are
-just LF variables of type $\lf{a}{:}{\sf exp}$. It is sometimes
-desirable to consider closed expressions, 
+% The relevant building blocks in our $\lambda$-calculus encoding are
+% just LF variables of type $\lf{a}{:}{\sf exp}$. It is sometimes
+% desirable to consider closed expressions, 
 
 
 
-but in other examples they
-involve multiple context elements that must appear in tandem. In
-proving adequacy for typing derivations, for instance, we must
-frequently prove that a variable $\lf{a}{:}{\sf exp}$ always appears
-in tandem with a variable $\lf{d}{:}({\sf of}\,\lf{a}\,\lf{tp})$ that
-associates the variable with some closed LF term $\lf{tp}$ of type
-${\sf typ}$ that encodes the type of that variable.
+% but in other examples they
+% involve multiple context elements that must appear in tandem. In
+% proving adequacy for typing derivations, for instance, we must
+% frequently prove that a variable $\lf{a}{:}{\sf exp}$ always appears
+% in tandem with a variable $\lf{d}{:}({\sf of}\,\lf{a}\,\lf{tp})$ that
+% associates the variable with some closed LF term $\lf{tp}$ of type
+% ${\sf typ}$ that encodes the type of that variable.
 
-These {\it regular worlds} are not just important for proving adequacy
-theorems. They are a critical part of reasoning about LF terms: when
-we quantify over the set of LF terms of a particular type, it is
-always necessary to specify what world we are working with. In the
-case of $\lambda$-calculus terms encoded in the type ${\sf exp}$, we
-sometimes want to consider open expressions in the world of contexts
-that take the form $\lf{a_1}{:}{\sf exp},\ldots,\lf{a_n}{:}{\sf exp}$
-(for instance, when we are describing typing rules for open terms or
-defining $\beta$-reduction under binders). We also sometimes want to
-consider closed terms in the empty context (for instance, when we are
-describing call-by-value evaluation of closed expressions).  This
-choice affects the structure of case analysis: when reasoning
-about closed expressions, we do not need to provide a base case for
-when the expression is a variable, but when reasoning about open
-expressions, we obviously do.
+% These {\it regular worlds} are not just important for proving adequacy
+% theorems. They are a critical part of reasoning about LF terms: when
+% we quantify over the set of LF terms of a particular type, it is
+% always necessary to specify what world we are working with. In the
+% case of $\lambda$-calculus terms encoded in the type ${\sf exp}$, we
+% sometimes want to consider open expressions in the world of contexts
+% that take the form $\lf{a_1}{:}{\sf exp},\ldots,\lf{a_n}{:}{\sf exp}$
+% (for instance, when we are describing typing rules for open terms or
+% defining $\beta$-reduction under binders). We also sometimes want to
+% consider closed terms in the empty context (for instance, when we are
+% describing call-by-value evaluation of closed expressions).  This
+% choice affects the structure of case analysis: when reasoning
+% about closed expressions, we do not need to provide a base case for
+% when the expression is a variable, but when reasoning about open
+% expressions, we obviously do.
 
-The {\it closed world assumption} -- considering terms in the absence
-of any LF variables -- is the simplest one. 
-
-
-The world affects the reasoning we have to do when we perform case
-analysis: when we reason about terms of type ${\sf exp}$ defined in
-the world that allows variables of type ${\sf exp}$, we have to
-consider an extra case (the term is a variable $\lf{a_i}$ from the
-context) that is not possible in the closed world. 
-
-\section{Types}
-
-\section{State}
-
-\subsection{Store typing}
+% The {\it closed world assumption} -- considering terms in the absence
+% of any LF variables -- is the simplest one. 
 
 
-\subsection{Environment semantics}
+% The world affects the reasoning we have to do when we perform case
+% analysis: when we reason about terms of type ${\sf exp}$ defined in
+% the world that allows variables of type ${\sf exp}$, we have to
+% consider an extra case (the term is a variable $\lf{a_i}$ from the
+% context) that is not possible in the closed world. 
 
-\section{Destinations}
+\section{Well-formed versus well-typed states}
+
+\section{Ambient state}
+
+% \subsection{Store typing}
+
+
+% \subsection{Environment semantics}
+
+\section{Destinations-passing}
 \label{sec:gen-destinations}
 
 
@@ -59,9 +59,9 @@ context) that is not possible in the closed world.
 
 \section{Counting invariants}
 
-\subsection{Parity}
+% \subsection{Parity}
 
-\subsection{}
+% \subsection{}
 
-\subsection{Pointer inequality}
+% \subsection{Pointer inequality}
 \label{sec:pointer-inequality}

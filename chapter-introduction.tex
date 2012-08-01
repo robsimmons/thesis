@@ -62,7 +62,7 @@ Specifications must be {\it formal}, because any room for
 misinterpretation could (respectively) lead to incorrect calculations,
 accusations of cheating, a robot uprising, a security breach, or
 bankruptcy. At the same time, specifications must be {\it clear}:
-while clarity is obviously in the eye of the beholder, a specification
+while clarity is in the eye of the beholder, a specification
 that one finds hopelessly confusing or complex is no more useful than
 one that is hopelessly vague.
 %
@@ -118,7 +118,8 @@ satisfy certain internal coherence properties, and we study many of
 them. For example, the logical framework Coq is based on the Calculus
 of Inductive Constructions \cite{coq10coq}, the logical framework Agda
 is based on a variant of Martin-L\"of's type theory called ${\sf
-  UTT}_\Sigma$ \cite{norell08towards}, and the logical Twelf is based
+  UTT}_\Sigma$ \cite{norell08towards}, and the logical framework
+Twelf is based
 on the dependent type theory $\lambda^\Pi$, also known as LF
 \cite{pfenning99system}. Twelf was the basis of Lee, Crary, and
 Harper's formalization of Standard ML.  % Specifications evolve
@@ -145,12 +146,13 @@ statement is that the addition of the aforementioned features is {\it
 and revising the rest of the specification.  Some headway on this
 problem has been made by frameworks like the K semantic framework that
 are formal but not logically derived; the K semantic framework is
-based on a notion of rewriting rules \cite{rosu10overview}. Ellison
+based on a formal system 
+of rewriting rules \cite{rosu10overview}. Ellison
 and Ro\c{s}u's formalization of C was done in the K semantic
 framework.
 
 This thesis considers the specification of systems, particularly
-programming languages, in logical frameworks. In particular, we
+programming languages, in logical frameworks. We
 consider a particular family of logics, called {\it substructural
   logics}, in which logical propositions can be given an
 interpretation as rewriting rules as detailed by Cervesato and Scedrov
@@ -187,7 +189,7 @@ Many interesting stateful systems have a natural notion of {\it
   ordering} that is fundamental to their behavior. A very simple
 example is a push-down automaton (PDA) that reads a string of symbols
 left-to-right while maintaining and manipulating a separate stack of
-symbols. We can represent any configuration of the PDA as a sequence
+symbols. We can represent a PDA's internal configuration as a sequence
 with three regions:
 \[
 [~\mbox{the stack}~]
@@ -199,7 +201,7 @@ with three regions:
 where the symbols closest to the head are the top of the stack and the
 symbol waiting to be read from the string. If we represent the head as
 a token ${\sf hd}$, we can describe the behavior (the rules of the
-game) for a push-down automaton for checking a string for correct
+game) for the PDA that checks a string for correct
 nesting of angle braces by using two rewriting rules:
 \begin{align}
 \tag{push} {\sf hd}~{<} ~&\rightsquigarrow~ {<}~{\sf hd}
@@ -244,10 +246,10 @@ Because our goal is to use a framework that is both simple and
 logically motivated, we turn to a substructural logic called {\it
   ordered logic}, a fragment of which was originally proposed by
 Lambek for applications in computational
-linguistic~\cite{lambek58mathematics}. In ordered logic, hypotheses
-have an intrinsic notion their position relative to one another, and
-therefore they cannot be rearranged. The rewriting rules we considered
-above can be explained as propositions in ordered logic, where the
+linguistics \cite{lambek58mathematics}. In ordered logic, hypotheses
+are ordered relative to one another and
+cannot be rearranged. The rewriting rules we considered
+above can be expressed as propositions in ordered logic, where the
 tokens ${\sf hd}$, $>$, and $<$ are all treated as {\it atomic
   propositions}:
 \begin{align*}
@@ -261,7 +263,8 @@ $\lefti$, a binary connective for ordered implication. The curly
 braces $\{ \ldots \}$ can be ignored for now.
 
 The propositional fragment of ordered logic is
-Turing complete: it is a simple exercise to specify a Turing machine!
+Turing complete: it is in fact
+a simple exercise to specify a Turing machine!
 Nevertheless, first-order quantification helps us write
 specifications that are short and clear. For example, by using
 first-order quantification we can describe a 
@@ -371,8 +374,9 @@ focused logic.
 \section{Substructural operational semantics}
 \label{sec:intro-ssos}
 
-We are not primarily interested in representing systems like PDAs, and
-while application to the verification domain like the rewriting
+We are not especially interested in representing 
+simple systems like PDAs, and
+while application in the verification domain like the rewriting
 semantics of Boolean programs are an interesting application of \sls,
 they will not be a focus of this thesis. Instead, in Part~2 of the
 thesis, we will concentrate on specifying the operational semantics of
@@ -510,22 +514,22 @@ context.
 
 The \sls~framework admits many styles of specification. The SSOS
 specification above resides in the {\it concurrent} fragment of
-\sls. (This rewriting-like fragment is called concurrent in part
-because we can just as easily seed the process state with two
-propositions ${\sf eval}(e)$ and ${\sf eval}(e')$ that will evaluate
-to values concurrently, side-by-side in the process state.)
-Specifications in the concurrent fragment of \sls~can take many
-different forms, a point that we will discuss further further in
-Chapter~\ref{chapter-correspondence}.
+\sls. (This rewriting-like fragment is called concurrent because
+rewriting specifications are natularlly concurrent -- we can just as
+easily seed the process state with two propositions ${\sf eval}(e)$
+and ${\sf eval}(e')$ that will evaluate to values concurrently,
+side-by-side in the process state.)  Specifications in the concurrent
+fragment of \sls~can take many different forms, a point that we will
+discuss further in Chapter~\ref{chapter-correspondence}.
 
 On the other end of the spectrum, the {\it deductive} fragment of
 \sls~supports the specification of inductive definitions by the same
-methodology used to represent inductive definitions in the LF logical
-framework \cite{harper93framework}.  We can therefore use the
-deductive fragment of \sls~to specify a big-step operational semantics
-for call-by-value evaluation by inductively defining the judgment $\obj{e
-\Downarrow v}$, which expresses that the expression $\obj{e}$ evaluates to
-the value $\obj{v}$. On paper, this big-step operational semantics is
+methodology used to represent inductive definitions in LF
+\cite{harper93framework}.  We can therefore use the deductive fragment
+of \sls~to specify a big-step operational semantics for call-by-value
+evaluation by inductively defining the judgment $\obj{e \Downarrow
+  v}$, which expresses that the expression $\obj{e}$ evaluates to the
+value $\obj{v}$. On paper, this big-step operational semantics is
 expressed with two inference rules:
 \[
 \infer
@@ -667,31 +671,30 @@ programming language features.
 
 An overarching theme of Part~2 is that we can have our cake and eat it
 too by deploying the {\it logical correspondence}, an idea that was
-developed jointly with Ian Zerny in unpublished work and is explained
-in Chapter~\ref{chapter-correspondence}. In Chapter~\ref{chapter-absmachine}, 
-we show how we can use the logical
+developed jointly with Ian Zerny and that is explained in
+Chapter~\ref{chapter-correspondence}. In
+Chapter~\ref{chapter-absmachine}, we show how we can use the logical
 correspondence to directly connect the big-step semantics and SSOS
 specifications above; in fact, we can automatically and mechanically
 derive the latter from the former. As our example above showed,
-big-step operational
-semantics do not support combining the specification of a pure
-feature like call-by-value evaluation with the specification of a
-stateful feature like counters by concatenating the specifications,
-but SSOS specifications in ordered logic do support this form of
-combination. Using the automatic transformations described in
-Chapter~\ref{chapter-absmachine}, 
-we can specify pure features (like call-by-value
-evaluation) as a simpler big-step semantics specification, and then we
-can compose that specification with an SSOS specification of stateful
-features (like the counter) by mechanically transforming the big-step
-semantics part of the specification into SSOS. Further
-transformations, developed in joint work with Pfenning
-\cite{simmons11logical}, create new opportunities for modular
-extension; this is the topic of Chapter~\ref{chapter-destinations}. 
-These transformations also
-allow for the derivation of abstract analyses (such as control flow
-and alias analysis) from SSOS specifications, which is the focus of
-Chapter~\ref{chapter-approx}.
+big-step operational semantics do not support combining the
+specification of a pure feature (like call-by-value evaluation) with
+the specification of a stateful feature (like the counter). Or, at
+least, doing so requires more than concatenating the specifications.
+Using the automatic transformations described in
+Chapter~\ref{chapter-absmachine}, we can specify pure features (like
+call-by-value evaluation) as a simpler big-step semantics
+specification, and then we can compose that specification with an SSOS
+specification of stateful features (like the counter) by mechanically
+transforming the big-step semantics part of the specification into
+SSOS. In SSOS, the extension is modular: the call-by-value
+specification can be extended by just adding new rules for the
+counter.  Further transformations, developed in joint work with
+Pfenning \cite{simmons11logical}, create new opportunities for modular
+extension; this is the topic of Chapter~\ref{chapter-destinations}.
+These transformations also allow for the derivation of abstract
+analyses (such as control flow and alias analysis) from SSOS
+specifications, which is the focus of Chapter~\ref{chapter-approx}.
 
 \section{Invariants in substructural logic}
 
@@ -717,7 +720,7 @@ progress can be handled by stipulating that a deadlocked state is
 final.) Progress and preservation together imply the safety property
 that a language is free of unspecified behavior. 
 
-Chapter~9 discusses the use of {\it generative signatures} to
+Chapter~\ref{chapter-gen} discusses the use of {\it generative signatures} to
 describe well-formedness invariants of specifications. Generative
 signatures look a bit like context-free grammars, and they allow us to
 characterize contexts by a describing rewriting rules that generate
@@ -798,16 +801,19 @@ The grammar above describes a very coarse invariant of our SSOS
 specification, and it is possible to prove that specifications
 preserve more specific invariants. An important class of examples are
 invariants about the types of expressions and process states, which
-will be considered in Chapter~9. For almost any SSOS specification
-more complicated than the one given above, type invariants are
-necessary for proving the {\it progress theorem}, which implies that
-the specification is safe -- that is, free from undefined behavior.
-Chapter~10 will consider the use of generative invariants for proving
-safety properties of specifications.
+will be considered in Chapter~\ref{chapter-gen}.  For almost any SSOS
+specification more complicated than the one given above, type
+invariants are necessary for proving the {\it progress theorem}, which
+implies that the specification is safe -- that is, free from undefined
+behavior.  Chapter~\ref{chapter-safety} will consider the use of
+generative invariants for proving safety properties of specifications.
 
 \section{Contributions}
 
-We support our central thesis in the three
+We support our central thesis in the three parts. We will describe the
+three supporting thesis statements in this section and rephrase the
+major contributions associated with the three refinements of the
+primary thesis statements.
 
 \smallskip
 \begin{quote} {\bf Thesis (Part I):} {\it The methodology of
@@ -817,9 +823,10 @@ We support our central thesis in the three
 \smallskip
 
 \noindent
-The first major contribution of Part 1 of the thesis are the
+The first major contribution of Part 1 of the thesis is the
 development of {\it structural focalization}
-\cite{simmons11structural}, the application of structural focalization
+\cite{simmons11structural}, as well as 
+the application of structural focalization
 to linear logic (Chapter~\ref{chapter-foc}) and ordered linear lax
 logic (Chapter~\ref{chapter-order}). The second major contribution is
 the justification of the logical framework \sls~as a fragment of a
@@ -847,27 +854,27 @@ semantics specifications and the ordered abstract machine-style SSOS
 semantics that we introduced in Section~\ref{sec:intro-ssos}, and the
 destination-adding transformation given in
 Chapter~\ref{chapter-destinations} connects these specifications with
-the older {\it destination-passing style} SSOS specification. The
+the older {\it destination-passing style} of SSOS specification. The
 transformations in both chapters add new opportunities for modular
 extension -- that is, our ability to add new features to the language
 specification without revising existing rules.
 
 \smallskip
 \begin{quote} 
-  {\bf Thesis (Part III):} {\it \sls~specifications of the operational
-    semantics of programming language are a suitable basis for formal
-    reasoning about the properties of those programming languages.}
+  {\bf Thesis (Part III):} {\it The \sls~specification of the operational
+    semantics of a programming language is a suitable basis for formal
+    reasoning about the properties of the language.}
 \end{quote} 
 \smallskip 
 
 \noindent
 We discuss two techniques for formal reasoning about the properties of
-SSOS specifications in \sls. The use of generative signatures to
-describe invariants is discussed in Chapter~\ref{chapter-gen}, and the
-use of these invariants to prove safety properties of programming
-languages is discussed in Chapter~10. Abstract interpretation is
-a different kind of formal reasoning about operational semantics
-specifications. In Chapter~\ref{chapter-approx} we discuss the logical
-approximation methodology and show that it can be used to take SSOS
-specifications and derive known control flow and alias analyses that
-are correct by construction.
+SSOS specifications in \sls. In Chapter~\ref{chapter-approx} we
+discuss the logical approximation methodology and show that it can be
+used to take SSOS specifications and derive known control flow and
+alias analyses that are correct by construction.  The use of
+generative signatures to describe invariants is discussed in
+Chapter~\ref{chapter-gen}, and the use of these invariants to prove
+safety properties of programming languages is discussed in
+Chapter~\ref{chapter-safety}. Abstract interpretation is a different
+kind of formal reasoning about operational semantics specifications.
