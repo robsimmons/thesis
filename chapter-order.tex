@@ -27,24 +27,23 @@ late to advocate for these logics to be understood as
 are: generalizations of persistent logic that introduce more 
 expressive power. 
 
-In this chapter, I define a first-order ordered linear logic with a
-lax connective ${\ocircle}A$ in both unfocused
+In this chapter, we will define a first-order ordered linear logic
+with a lax connective ${\ocircle}A$ in both unfocused
 (Section~\ref{sec:ord-unfocused}) and focused
 (Section~\ref{sec:ord-focused}) flavors (this logic will henceforth be
 called \ollll, for ordered linear lax logic). Then, following the
-structural focalization methodology \cite{simmons11structural}, I
+structural focalization methodology \cite{simmons11structural}, we
 establish cut admissibility (Section~\ref{sec:ord-cut}), and identity
 expansion (Section~\ref{sec:ord-identity}) for focused~\ollll; with
 these results, it is possible to prove the soundness and completeness
 of focusing (Section~\ref{sec:ord-correctness}) for \ollll.  A
 fragment of this system will form the basis of the logical framework
-in Chapter~\ref{chapter-framework}, 
-and that framework will, in turn, underpin the rest of
-this thesis.
+in Chapter~\ref{chapter-framework}, and that framework will, in turn,
+underpin the rest of this thesis.
 
-It is worth clarifying why I am presenting the much richer \ollll~here
+Why present the rich logic \ollll~here
 if only the fragment detailed in Chapter~\ref{chapter-framework} 
-is needed. There are two
+is needed? There are two
 main reasons.  First, while we will use only a fragment of this logic
 in Chapter~\ref{chapter-framework}, 
 other fragments of the logic may well be interesting and
@@ -73,7 +72,7 @@ framework starting in Chapter~\ref{chapter-framework}.
 
 Ordered linear logic was the subject of Polakow's thesis
 \cite{polakow01ordered}. It extends linear logic with a notion of {\it
-  ordered resources}.  In ordered logic, for example, the linear
+  ordered resources}.  In ordered logic the linear
 multiplicative conjunction $A \otimes B$ of linear logic, which
 represents that we have both the resources to make an $A$ and a $B$,
 is replaced by a linear multiplicative conjunction $A \fuse B$, which
@@ -84,17 +83,17 @@ necessary to construct an $A$, can construct a $B$, splits into two
 propositions in ordered logic. The proposition $A \lefti B$ represents
 a resource that, given the resources necessary to construct an $A$
 {\it to the left}, can construct a $B$, and the proposition $A \righti
-B$ is symmetric. 
+B$ demands those resource to its right. 
 
 Ordered propositions were used by Lambek to model language
 \cite{lambek58mathematics}. The word ``clever'' is a adjective that,
-given a noun phrase to its right, constructs a noun phrase (``ideas''
-is a noun phrase, and so is ``clever ideas''). Therefore, the world
-``clever'' can be seen as an ordered resource ${\sf NounPharse \righti
+given a noun to its right, constructs a noun phrase (``ideas''
+is a noun, and ``clever ideas'' is a noun phrase). Therefore, the world
+``clever'' can be seen as an ordered resource ${\sf Phrase \righti
   NounPhrase}$. Similarly, the word ``quietly'' is an adverb that,
-given a verb phrase to its left, constructs a verb phrase (``sleeps''
-is a verb phrase, and so is ``sleeps quietly''). Therefore, the word
-``quietly'' can be seen as an ordered resource ${\sf VerbPhrase \lefti
+given a verb to its left, constructs a verb phrase (``sleeps''
+is a verb, and ``sleeps quietly'' is a verb phrase). Therefore, the word
+``quietly'' can be seen as an ordered resource ${\sf Verb \lefti
   VerbPhrase}$. The key innovation made by Polakow and Pfenning was
 integrating both persistent and linear logic into Lambek's system with
 the persistent exponential ${!}A$ and the mobile exponential
@@ -104,7 +103,7 @@ as ``bang $A$.''
  
 The primary sequent of ordered logic is
 $\oseq{\Gamma}{\Delta}{\Omega}{\isconc{A}}$, which expresses that $A$
-is an resource derivable from the persistent resources in $\Gamma$,
+is a resource derivable from the persistent resources in $\Gamma$,
 the ephemeral resources in $\Delta$, and the ephemeral, ordered
 resources in $\Omega$. The persistent context $\Gamma$ and the linear
 context $\Delta$ are multisets as before (so we think of $\Delta_1,
@@ -165,10 +164,11 @@ does not hold.
 {\oseq{\Gamma}{\Delta}{\Omega}{\islax{A}}}
 {\oseq{\Gamma}{\Delta}{\Omega}{\isconc{A}}}
 \]
-Conversely, if we know $\islax{A}$ the only thing we can prove is
+If we know $\islax{A}$, on the other hand, we cannot prove $\isconc{A}$,
+though we can prove
 $\isconc{{\ocircle}A}$, where ${\ocircle}A$ is the propositional
 internalization of the lax judgment (rule ${\ocircle}_R$ in
-Figure~\ref{fig:ordered-prop}).
+Figure~\ref{fig:ordered-prop}). % Furthermore, we can 
 
 Lax truth is handled with the use of matching constructs, thereby
 making the rule ${\it lax}$ rule above admissible just like ${\it
@@ -204,10 +204,11 @@ A, B, C  & ::= p \mid {\gnab}A \mid {!}A \mid {\ocircle}A
    \mid \\ & & & \qquad\exists \lf{a}{:}\tau. A \mid \forall \lf{a}{:}\tau 
    \mid \lf{t} \doteq_\tau \lf{s}
 \end{align*}
-The connectives and $\one$, $\zero$, $A \oplus B$, $\top$, $A \with B$
+The connectives and $\one$, $\zero$, $A \oplus B$, $\top$, and
+$A \with B$
 were not mentioned above but are closely analogous to their
 counterparts in linear logic. The first-order connectives $\exists
-\lf{a}{:}\tau. A$, $\forall \lf{a}{:}\tau$, and $\mid \lf{t}
+\lf{a}{:}\tau. A$, $\forall \lf{a}{:}\tau$, and $\lf{t}
 \doteq_\tau \lf{s}$ will be discussed presently.
 
 \subsection{First-order logic}
@@ -230,7 +231,7 @@ logical transformations presented in Chapter~\ref{chapter-destinations}
 and in the program
 analysis methodology in Chapter~\ref{chapter-approx}. 
 The left rule for equality $\lf{t}
-\doteq_\tau \lf{s}$, has a higher-order premise, in the sense that it
+\doteq_\tau \lf{s}$ has a higher-order premise, in the sense that it
 reflects over the definition of simultaneous term substitutions $\Psi'
 \vdash \lf{\sigma} : \Psi$ and over the syntactic equality judgment
 for first-order terms $\lf{t} = \lf{s}$.  We used this exact style of
@@ -240,7 +241,7 @@ based on Schroeder-Heister's treatment of definitional reflection
 
 In one sense, the left rule $\doteq_L$ is actually a rule schema:
 there is one premise for each substitution $\lf\sigma$ that is a
-unifier $\lf{t}$ and $\lf{s}$ (a unifier is any substitution
+unifier for $\lf{t}$ and $\lf{s}$ (a unifier is any substitution
 $\lf\sigma$ that makes $\lf{\sigma t}$ and $\lf{\sigma s}$
 syntactically identical). When we induct over the structure of proofs,
 there is correspondingly one smaller subderivation for each unifying
@@ -250,10 +251,10 @@ satisfiable equality problem like $\lf{x} \doteq_\tau \lf{x}$ it will have
 one premise for each well-formed substitution that substitutes a term
 of the appropriate type for $\lf{x}$.  However, as suggested by
 Zeilberger \cite{zeilberger08focusing}, it is more auspicious to take
-this higher-order formulation at face value: the premise is actually a
+the higher-order formulation at face value: the premise is actually a
 (meta-level) mapping -- a function -- that takes a substitution
 $\lf{\sigma}$, the codomain $\Psi'$ of that substitution, and any
-evidence necessary show that $\lf{\sigma}$ unifies $\lf{t}$ and
+evidence necessary to show that $\lf{\sigma}$ unifies $\lf{t}$ and
 $\lf{s}$ and returns a derivation of
 $\ofirstseq{\Psi'}{\lf{\sigma}\Gamma}{\lf{\sigma}\Delta}{\lf{\sigma}\Omega_L,\lf{\sigma}\Omega_R}{\lf{\sigma}
   U}$. When we induct over the structure of proofs, the result of
@@ -297,15 +298,16 @@ provable) to the following rule:
 Therefore, given a first-order domain in which any two terms are
 decidably either non-unifiable or unifiable with a most general
 unifier, we can choose to define the logic with two rules $\doteq_{\it
-  no}$ and $\doteq_{\it yes}$ is equivalent to defining the logic with
-$\doteq_L$; the 
+  no}$ and $\doteq_{\it yes}$; the resulting logic will be equivalent, 
+at the level of derivable sequents, to the logic defined with the $\doteq_L$
+rule.
 
 We have not yet thoroughly specified the type and term structure of
 first-order individuals; in Section~\ref{sec:sls-termlanguage} we
 clarify that these types and terms will actually be types and terms of
 Spine Form LF. This does mean that we will have to pay attention, in
 the proofs of this chapter, to the fact that the types of first-order
-terms $\tau$ are dependently typed and therefore may include terms
+terms $\tau$ are {\it dependent types} that may include terms
 $\lf{t}$. Particularly relevant in this chapter will be simultaneous
 substitutions $\lf\sigma$: the judgment $\Psi' \vdash \lf\sigma :
 \Psi$ expresses that $\lf\sigma$ can map terms and propositions
@@ -319,10 +321,11 @@ carefully in Section~\ref{sec:lf-simpletypesandhsubst} and in
 \label{sec:contexts}
 
 First-ordered linear lax logic has a lot of contexts -- the persistent
-context $\Gamma$, the linear context $\Delta$, and the ordered context
-$\Omega$, and the first-order context $\Psi$. In most rules
-these contexts primarily serve to obscure the logic's presentation
-and ensuring that the {\LaTeX} code of figures and displays remains
+context $\Gamma$, the linear context $\Delta$, the ordered context
+$\Omega$, and the first-order context $\Psi$. In most presentations
+of substructural logics, the many
+contexts primarily serve to obscure the logic's presentation
+and ensure that the {\LaTeX} code of figures and displays remains
 permanently unreadable. And there are yet more contexts we might want to 
 add, such as the affine contexts present in the Celf implementation
 \cite{schacknielsen08celf}.
@@ -336,7 +339,7 @@ can be generalized substantially: it would be possible to extend this
 presentation to the affine exponential ${@}A$, and we conjecture that
 the subexponentials discussed by Nigam and Miller
 \cite{nigam09algorithmic} as well as richer logics like the logic of
-bunched implications \cite{pym02semantics} could also be given a
+bunched implications \cite{pym02semantics} could be given a
 straightforward treatment using this notation.
 
 We write unified substructural contexts as either $\Delta$ or $\Xi$,
@@ -441,9 +444,10 @@ below:
 \]
 
 The second basic operation on contexts requires a new concept, {\it
-  frames} $\Theta$. Intuitively, we can view frames as a collection
-persistent, linear, and ordered contexts where the ordered context is
-missing a particular piece.  Informally, we can write this missing
+  frames} $\Theta$. Intuitively, we can view a frame as a the
+complete set of persistent, linear, and ordered contexts 
+where the ordered context is
+missing a particular piece.  We can write this missing
 piece as a box: $\Gamma; \Delta; \Omega_L, \Box,
 \Omega_R$. Alternatively, we can think of a frame as a one-hole context
 or Huet-style zipper \cite{huet97zipper} over the structure of
@@ -585,19 +589,20 @@ using the last of the three rules above:
 
 The consistent use of matching constructs like
 $\frameoff{\Theta}{\Delta}$ in the conclusion of rules is also what
-gives us the space to treat syntactically sequences of variable
-declarations as equivalent. As an example, $(x{:}\iseph{A},
+gives us the space to informally treat syntactically 
+distinct sequences of variable
+declarations as equivalent. As an example, we can think of $(x{:}\iseph{A},
 y{:}\iseph{B})$ and $(y{:}\iseph{B}, x{:}\iseph{A})$ as equivalent by
 virtue of the fact that they satisfy the same set of matching
 constructs. Obviously, this means that none of the matching constructs
-presented in the remainder of this section will rely on or preserve
-the ordering of ephemeral variable declarations.
+presented in the remainder of this section will observe
+the ordering of ephemeral or persistent variable declarations.
 
 
 \subsection{Multiplicative operations}
 
 To describe the multiplicative connectives of \ollll, including the critical
-connective of implication, we need to have multiplicative operations on 
+implication connectives, we need to have multiplicative operations on 
 contexts. As a construction, $\mkconj{\Xi_L}{\Xi_R}$ is just the
 syntactic concatenation of two contexts with distinct variable domains, and
 the unit $\mkunit$ is just the empty sequence. The matching constructs
@@ -613,7 +618,7 @@ in the conclusion of a rule, $\mkconj{\Xi_L}{\Xi_R}$ is a construction
 when it appears in the premise of a rule.
 
 \bigskip
-\begin{definition}[Conjunction]
+\begin{definition}[Conjunction]~\smallskip\\
 $\Xi$ matches $\matchunit$ if $\Xi$ contains only
 persistent judgments.
 
@@ -726,7 +731,7 @@ The exponentials ${!}$ and ${\gnab}$ do not have a construction form
 associated with them, unless we view the singleton
 construction forms $x{:}\ispers{T}$ and $x{:}\iseph{T}$ as
 being associated with these exponentials. The matching
-operation is quite simple: $\Xi$ matches $\restrictto{\Xi}{\mpers}$ if
+construct is quite simple: $\Xi$ matches $\restrictto{\Xi}{\mpers}$ if
 $\Xi$ contains no ephemeral or ordered judgments -- in other words,
 it says that $\Xi = \Gamma; \cdot; \cdot$. This form can then be used
 to describe the right rule for ${!}A$ in unfocused \ollll:
@@ -858,9 +863,9 @@ $U$.
 In a confluent presentation of focused logic like the one given for
 linear logic in Chapter~\ref{chapter-foc}, 
 that would be as far as we could take our
-simplifications. However, this presentation will match the fixed
+simplifications. However, this presentation will use the fixed
 presentation of logic from the structural focalization development
-\cite{simmons11structural}. Specifically, if there is more than one
+\cite{simmons11structural}. If there is more than one
 invertible proposition in a sequent, {\it only} the leftmost one will
 be treated as eligible to have a rule or matching applied to it. All the
 propositions in $\Delta$ are treated as being to the left of the
@@ -962,7 +967,8 @@ Negative propositions also have a refinement, $A^-_\mlax$, for
 negative propositions that do not end in an upshift ${\uparrow}A^+$ or
 in a negative atomic proposition $p^-$.  This is interesting as a
 formal artifact and there is very little overhead involved in putting
-it into our development, but the meaning of this class, as well as the
+it into our development, but the meaning of this 
+syntactic class, as well as the
 meaning of right-permeable atomic propositions $p^-_\mlax$, is
 unclear.  Certainly we do {\it not} want to include such propositions
 in our logical framework, as to do so would interfere with our
@@ -998,7 +1004,7 @@ Figure~\ref{fig:foc-add}, and the first-order connectives are treated
 in Figure~\ref{fig:foc-fo}. We follow the convention of using matching
 constructs in the conclusions of rules and constructions in the premises
 with the exception of rules that are at the leaves, such as 
-${\sf id}^+$ and ${\doteq}_R$, where we write out the matching
+${\it id}^+$ and ${\doteq}_R$, where we write out the matching
 condition as a premise. 
 
 These rules are all written with sequents
@@ -1023,11 +1029,11 @@ representatives of derivations: that is, $\foct{\Psi}{\Delta}{E}{U}$
 expresses that $E$ is a derivation of the sequent
 $\foc{\Psi}{\Delta}{U}$. To justify this close correspondence, we
 require the inductive structure of expressions to be faithful to the
-inductive structure of proofs; this is the primary reason that we
+inductive structure of proofs; this is one reason that we
 don't introduce the patterns that are common in other proof term
 assignments for focused logic
 \cite{watkins02concurrent,licata08focusing,krishnaswami09focusing}.
-(In Section~\ref{sec:framework-patterns}, a limited form of patterns
+(In Section~\ref{sec:framework-patterns}, a limited syntax for patterns
 is introduced as part of the logical framework \sls.)
 
 Proof terms for the left and right identity rules include angle
@@ -1056,8 +1062,9 @@ There are two caveats to the idea that expressions are representatives
 of derivations. One caveat is that, in order for there to be an actual
 correspondence between expressions and terms, we need to annotate all
 variables with the judgment they are associated with, and we need to
-annotate $\tinr{V}$, $\tinl{V}$, $\tpione{\Sp}$, and $\tpitwo{\Sp}$
-terms with the type of the branch not taken. Pfenning writes these as
+annotate the proof terms 
+$\tinr{V}$, $\tinl{V}$, $\tpione{\Sp}$, and $\tpitwo{\Sp}$ 
+with the type of the branch not taken. Pfenning writes these as
 superscripts \cite{pfenning08church}, but we will follow Girard
 in leaving them implicit \cite{girard89proofs}. The second caveat is
 that, because we do not explicitly represent the significant
@@ -1217,7 +1224,7 @@ $\lf \sigma(\forall{\lf{a}}{:}{\tau}.A^-)
 by rule $\forall_R$ it suffices to show 
 $\foc{\Psi', \lf{a}{:}\lf\sigma\tau}{\lf\sigma\Delta}{\lf{(\sigma, a/a)}A^-}$, 
 which is the same thing
-as $\foc{\Psi', \lf{a}{:}\sigma\tau}{\lf{(\sigma, a/a)}\Delta}{\lf{(\sigma, a/a)}A^-}$.
+as $\foc{\Psi', \lf{a}{:}\lf\sigma\tau}{\lf{(\sigma, a/a)}\Delta}{\lf{(\sigma, a/a)}A^-}$.
 The result
 follows by the induction hypothesis on $\lf{(\sigma, a/a)}$ and $N$. \smallskip
 
@@ -1244,7 +1251,7 @@ proposition $A^-$.  This alludes to the fact that our first-order
 terms are dependently typed (Section~\ref{sec:sls-termlanguage}).
 \end{proof}
 
-Given we write the constructive content of the variable substitution
+Given that we write the constructive content of the variable substitution
 theorem as $\lf\sigma{E}$, where $E$ is an expression,
 we can also write Theorem~\ref{thm:varsubst} as an admissible
 rule in one of two ways, both with and without proof terms:
@@ -1356,7 +1363,7 @@ As an admissible rule, we write these three cut principles generically
 as:
 \[
 \infer-[{\it unfocused\mbox{-}cut}]
-{\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}} \altv \istrue{\isconc C}}
+{\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}} \altv {\isconc C}}
 {\Delta \altv \isconc{A}
  &
  \tackon{\Theta}{x{:}\islvl{A}} \altv \isconc{C}}
@@ -1365,8 +1372,8 @@ as:
 In the negative focal substitution (as the leftist substitutions of
 cut admissibility), there is a corresponding use of
 $\restrictfrom{U}{\mlvl}$ to capture that we can use a proof of
-$\istrue{A}$ to discharge a hypothesis of $\istrue{A}$ in a proof of
-$\istrue{C}$ or a proof of $\islax{C}$, but that a proof of
+$\isconc{A}$ to discharge a hypothesis of $\istrue{A}$ in a proof of
+$\isconc{C}$ or a proof of $\islax{C}$, but that a proof of
 $\islax{A}$ can only discharge a hypothesis of $\istrue{A}$ in a proof
 of $\islax{C}$. 
 
@@ -1378,7 +1385,7 @@ of $\islax{C}$.
 It is a little wordy to say that, in a context or succedent, the only
 judgments involving suspensions are $(\ispers{\susp{p^+_\mpers}})$,
 $(\iseph{\susp{p^+_\meph}})$, $(\istrue{\susp{p^+}})$,
-$(\istrue{\susp{p^-}})$, and $(\islax{\susp{p^-_\mlax}})$, but this is a
+$(\isconc{\susp{p^-}})$, and $(\islax{\susp{p^-_\mlax}})$, but this is a
 critical precondition of cut admissibility property for focused
 \ollll. We'll call contexts and succedents with this property {\it
   suspension-normal}.
@@ -1402,7 +1409,7 @@ For suspension-normal $\Psi$, $A^+$, $A^-$, $\Delta$, $\Theta$, $\Xi$, and $U$,
       $\Xi$ matches $\frameoff{\Theta}{\Delta}$, ~
       and $\restrictfrom{U}{\mlvl}$, ~
       then $\foc{\Psi}{\Xi}{U}$.
-\item If $\foc{\Psi}{\Delta}{\istrue{A^-}}$, ~
+\item If $\foc{\Psi}{\Delta}{{A^-}}$, ~
          $\foc{\Psi}{\tackon{\Theta}{x{:}\islvl{A^-}}}{U}$, ~
          $\Delta$ is stable, \\ 
       and $\Xi$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$,
@@ -1418,7 +1425,7 @@ made by Pfenning in his work on structural cut elimination
 \cite{pfenning00structural}.  The first two parts of
 Theorem~\ref{thm:ord-cut} are the home of the {\it principal cases}
 that decompose both derivations simultaneously -- part 1 is for
-positive cut formulae and part 2 is for negative ct formula. The third
+positive cut formulas and part 2 is for negative cut formulas. The third
 part contains all the {\it left commutative cases} that perform case
 analysis and induction only on the first given derivation, and the
 fourth part contains all the {\it right commutative cases} that
@@ -1434,9 +1441,9 @@ why cut admissibility in a focused sequent calculus can use a more
 refined induction metric than cut admissibility in an unfocused
 sequent calculus. As noted previously (in \cite{simmons11structural}
 and in the proof of Theorem~\ref{thm:lincut}), the
-refined induction metric makes the theorem easier to prove.  For
-instance, the refined induction metric means that we do not need to
-rely on the fact that weakening and variable substitution preserve
+refined induction metric 
+does away with the precondition, essential to structural cut admissibility,
+that weakening and variable substitution preserve
 the size of derivations.
 
 Before discussing the proof, it is worth noting that this theorem
@@ -1466,7 +1473,7 @@ though the proofs in this chapter have not yet been mechanized.  A
 great deal of simplification is due to the use of the matching
 constructs $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$ and
 $\restrictfrom{U}{\mlvl}$. Without that notation, part 3 would split
-into two parts for $\mtrue$ and $\mlax$ and part 4 would split into
+into two parts for $\mconc$ and $\mlax$ and part 4 would split into
 three parts for $\mtrue$, $\meph$, and $\mpers$. The fifth part of the
 cut admissibility theorem in Section~\ref{sec:lincut} 
 (Theorem~\ref{thm:lincut}),
@@ -1486,7 +1493,7 @@ and twice as many cases that needed to be
 written down and checked.
 
 Picking a fixed inversion strategy prevents us from having to prove
-tedious, quadratically large confluence theorem discussed for linear
+the tedious, quadratically large confluence theorem discussed for linear
 logic in Section~\ref{sec:confluent-v-fixed} in order to characterize
 the canonical forms that we need as the basis of the logical framework
 \sls. This confluence theorem is certainly true, and we might want to
@@ -1524,12 +1531,12 @@ The remainder of this section will cover each of the four parts of
 this proof in turn. Most of the theorem will be presented at the level
 of proof terms, but for representative cases we will discuss what the
 manipulation of proof terms means in terms of sequents and matching
-constructs. The computational content of parts 1 and 2 is {\it principal
- substitution}, written as $(\subst{V}{N})^{A^+}$ and $(\subst{N}{\Sp})^{A^-}$,
-the computational content of part 3 is {\it leftist substitution},
-written as $\lsubsta{E}{N}{A^+}$, and the computational content 
-of part 4 is {\it rightist substitution}, written as 
-$\rsubsta{M}{x}{E}{A^-}$.
+constructs. The computational content of parts 1 and 2 is {\it
+  principal substitution}, written as $(\subst{V}{N})^{A^+}$ and
+$(\subst{N}{\Sp})^{A^-}$ respectively, the computational content of
+part 3 is {\it leftist substitution}, written as
+$\lsubsta{E}{N}{A^+}$, and the computational content of part 4 is {\it
+  rightist substitution}, written as $\rsubsta{M}{x}{E}{A^-}$.
 
 In many cases, we discuss the necessity of constructing
 certain contexts or frames; in general, we will state the necessary
@@ -2907,7 +2914,8 @@ mostly borne by the part of the context we leave implicit.
 Our proof of the correctness of focusing is based on erasure as
 described in Section~\ref{sec:lincorrectness}. 
 The argument follows the one from the
-structural focalization development, and the key component is {\it
+structural focalization development, and the key component is the
+set of {\it
   unfocused admissibility lemmas}, lemmas that establish that each of
 the reasoning steps that can be made in unfocused \ollll~are
 admissible inferences made on stable sequents in focused \ollll.
@@ -2961,6 +2969,11 @@ $x{:}\islvl{p^+_\mlvl}$, $x{:}\istrue{(A^-)^\circ}$, or
 $x{:}\istrue{(A^+)^\circ}$ (and in the process, either comes up with
 or reveals the suppressed variable names associated with focused
 negative propositions and inverting positive propositions).
+Erasure of succedents $U^\circ$ is similar: 
+$(\islvl{A^+})^\circ = \islvl{(A^+)^\circ}$,
+$(\islvl{\susp{p^-_\mlvl}})^\circ = \islvl{p^-_\mlvl}$, 
+$([A^-])^\circ = \isconc{(A^-)^\circ}$, and
+$(A^+)^\circ = \isconc{(A^+)^\circ}$. 
 
 \begin{figure}
 {\small \[
@@ -3429,9 +3442,9 @@ ${\lefti}_L$, look straightforward:
 \[
 \infer-
 {\foc{\Psi}{\matchconj{\Delta_1}{\Delta_2}}{\islvl{A^+ \fuse B^+}}}
-{\foc{\Psi}{\Delta_1}{\istrue{A^+}}
+{\foc{\Psi}{\Delta_1}{\isconc{A^+}}
  &
- \foc{\Psi}{\Delta_2}{\istrue{B^+}}}
+ \foc{\Psi}{\Delta_2}{\isconc{B^+}}}
 \quad
 \infer-
 {\foc{\Psi}{\frameoff{\Theta}{\matchconj{\Delta_A}{x{:}A^+ \lefti B^-}}}{U}}
@@ -3449,7 +3462,7 @@ like ${\fuse}_L$ and ${\lefti}_R$, require the presence of shifts:
 \quad
 \infer-
 {\foc{\Psi}{\Delta}{\islvl{{\downarrow}(A^+ \lefti B^-)}}}
-{\foc{\Psi}{\mkconj{x{:}\istrue{{\uparrow}A^+}}{\Delta}}{\istrue{{\downarrow}B^-}}}
+{\foc{\Psi}{\mkconj{x{:}\istrue{{\uparrow}A^+}}{\Delta}}{\isconc{{\downarrow}B^-}}}
 \]
 The presence of shifts is curious, due to our observation in
 Section~\ref{sec:ordpolarprop} that the shifts have much of the character
@@ -3475,7 +3488,7 @@ Now we have a logical fragment where every positive proposition is
 mobile and every negative proposition is observed to be
 right-permeable. Consider a derivation
 $\foc{\Psi}{\Delta}{\islax{A^+}}$ where $\Delta$ is stable and
-includes only linear and persistent judgments (that is, $\Delta$ matches
+includes only linear and persistent judgments (that is, 
 $\restrictto{\Delta}{\meph}$). It is simple to observe that, for every
 subderivation $\foc{\Psi'}{\Delta'}{U'}$, if $\Delta'$ is stable
 then $\Delta' = \restrictto{\Delta'}{\meph}$, and if $U$ is stable
@@ -3519,7 +3532,8 @@ admissibility lemmas in order to gain new ones that look like this:
 \]
 (To be clear, just as all the unfocused admissibility lemmas only applied
 to stable sequents, the unfocused admissibility lemmas above only apply when
-contexts and succedents are both stable and free of judgments ${\istrue{T}}$.)
+contexts and succedents are both stable and free of judgments 
+$\istrue{T}$ and ${\isconc{T}}$.)
 
 The point of this exercise is that, given the definition and
 metatheory of \ollll, there is a reasonably large family of related
