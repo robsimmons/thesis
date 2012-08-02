@@ -3,8 +3,8 @@
 
 The natural notion of ordering provided by ordered linear logic is
 quite convenient for encoding evolving systems that perform local
-manipulations to a stack-like structure structure.  The push-down
-automaton for generic bracket matching discussed in the introduction,
+manipulations to a stack-like structure.  The push-down
+automaton for generic bracket matching discussed in the introduction
 demonstrated this: we can now present that specification in
 Figure~\ref{fig:pda-ord} as an \sls~specification.
 
@@ -17,7 +17,7 @@ Figure~\ref{fig:pda-ord} as an \sls~specification.
 
 \noindent
 Tree structures were reasonably straightforward to encode in the
-ordered context as well, as we saw from the SSOS specifications for
+ordered context as well, as we saw from the SSOS specification for
 parallel pairs in Chapter~\ref{chapter-absmachine}. 
 
 At some point, however, the simple data structures that can be
@@ -34,9 +34,9 @@ expressive structures in the linear context of \sls. Instead of using
 order to capture the local relationships between different propositions,
 we use destinations. 
 
-Ordered logic does
-allow us to express any (flat, concurrent) specifications that 
-we could not express with linear logic alone. 
+Linear logic alone is able to 
+express any (flat, concurrent) specifications that 
+we could not express using ordered atomic propositions. 
 We will demonstrate that fact in this chapter by 
 % In Chapter~\ref{chapter-absmachine}, we showed that ordered
 % abstract machines were at least as expressive as (moded) natural
@@ -45,8 +45,10 @@ We will demonstrate that fact in this chapter by
 % concurrent specifications in linear logic are just as expressive as
 % concurrent specifications in ordered logic by 
 describing a transformation,
-{\it destination-adding}, from specifications in ordered logic
-to specifications in linear logic. This
+{\it destination-adding}, from specifications with ordered atomic
+propositions
+to specifications that only include linear and persistent atomic 
+propositions. This
 destination-adding transformation, which we originally presented in
 \cite{simmons11logical}, turns all ordered atomic propositions into
 linear atomic propositions, and tags them with two new arguments (the
@@ -92,7 +94,7 @@ semantics proofs so that they could be modularly extended with
 stateful features, the destination-adding translation exposes the
 control structure of specifications, allowing the language to be
 modularly extended with control effects and effects like
-synchronization in concurrent specifications.
+synchronization.
 
 \section{Logical transformation: destination-adding}
 \label{sec:destination-adding}
@@ -116,7 +118,7 @@ $\Pi. \lf{x_1}{:}\tau_1\ldots \Pi.\lf{x_n{}:}\tau_n.\,{\sf prop\,ord}$ that are
 declared in the signature into predicates with kind
 $\Pi. \lf{x_1}{:}\tau_1\ldots \Pi.\lf{x_n}{:}\tau_n.\, {\sf dest} \rightarrow
 {\sf dest} \rightarrow {\sf prop\,ord}$ in order for the translation
-of an ordered atomic proposition $p^+$ to remain a valid type in
+of an ordered atomic proposition $p^+$ to remain well-formed in
 the transformed signature.
 
 \begin{figure}
@@ -150,14 +152,14 @@ The destination-adding translation presented here is the same as the
 one presented in \cite{simmons11logical}, except that that the
 transformation operated on rules of the form $\forall
 \overline{x}. S_1 \righti \{ S_2 \}$ and ours will operate over rules
-of the form $\forall \overline{x}. S_1 \lefti \{ S_2 \}$. As discussed
-in Section~\ref{sec:defunc-uncurry}, the difference between $\righti$
-and $\lefti$ is irrelevant in this situation.\footnote{The monad $\{
-  S_2 \}$ did not actually appear in \cite{simmons11logical}, and the
-  presentation took polarity into account but was not explicitly
-  polarized. We are justified in reading the lax modality back in by
-  the erasure arguments discussed in
-  Section~\ref{sec:perm-fragments}.} The restriction to flat
+of the form $\forall \overline{x}. S_1 \lefti \{ S_2 \}$.\footnote{The
+  monad $\{ S_2 \}$ did not actually appear in
+  \cite{simmons11logical}, and the presentation took polarity into
+  account but was not explicitly polarized. We are justified in
+  reading the lax modality back in by the erasure arguments discussed
+  in Section~\ref{sec:perm-fragments}.} As discussed in
+Section~\ref{sec:defunc-uncurry}, the difference between $\righti$ and
+$\lefti$ is irrelevant in this situation. The restriction to flat
 specifications, on the other hand, is an actual limitation. We
 conjecture that the translation presented here, and the correctness
 proof presented in \cite{simmons11logical}, would extend to nested
@@ -165,7 +167,7 @@ proof presented in \cite{simmons11logical}, would extend to nested
 already quite tedious (though our explicit notation for patterns as
 partial derivations might help simplify the proof somewhat) and the
 limited transformation described by Figure~\ref{fig:destadd-pos}
-translation is given is sufficient for our purposes. Therefore, we
+ is sufficient for our purposes. Therefore, we
 will rely on the existing result, leaving the correctness of a more
 general development for future work.
 
@@ -195,7 +197,7 @@ equivalent to the specification in Figure~\ref{fig:destadd-pos} but
 that avoid unnecessary equalities and push existential quantifiers as
 far out as possible (which includes turning existential quantifiers
 $(\exists \lf x.\,A^+) \lefti B^-$ into universal quantifiers $\forall
-\lf x.\,A^+ \lefti B^-$). The result is an specification, equivalent
+\lf x.\,A^+ \lefti B^-$). The result is a specification, equivalent
 at the level of synthetic transitions, that looks like the one in
 Figure~\ref{fig:pda-lin}. We write the result of the
 destination-adding transformation on the signature $\Sigma$ as ${\it
@@ -284,23 +286,23 @@ $\Delta$ but not in the translation of $\Delta_o$.
 
 \begin{proof}
   This proof is given in detail in \cite[Appendix
-  A]{simmons11logical}, it involves a great deal of tedious tracking
+  A]{simmons11logical}. It involves a great deal of tedious tracking
   of destinations, but the intuition behind that tedious development
   is reasonably straightforward.
 
-  First, we need to prove that a right-focused proof of $\Delta
+  First, we need to prove that a right-focused proof of $\Psi; \Delta
   \vdash_{\Sigma} S$ implies that there is an analogous proof of
-  $\llbracket \Delta \rrbracket \vdash_{{\it Dest}(\Sigma)} [
+  $\llbracket \Psi; \Delta \rrbracket \vdash_{{\it Dest}(\Sigma)} [
   \llbracket S \rrbracket^{\lf{d_L}}_{\lf{d_R}} ]$, and conversely
-  that if we can prove $\Delta \vdash_{{\it Dest}(\Sigma)} [\llbracket
+  that if we can prove $\Psi; \Delta \vdash_{{\it Dest}(\Sigma)} [\llbracket
   S \rrbracket^{\lf{d_L}}_{\lf{d_R}}]$ in right focus under then
   linear translation, then it is possible to reconstruct an ordered
-  context $\Delta'$ such that $\llbracket \Delta'
-  \rrbracket^{\lf{d_L}}_{\lf{d_R}} = \Delta$ and $\Delta'
+  context $\Psi'; \Delta'$ such that $\llbracket \Psi'; \Delta'
+  \rrbracket = \Psi; \Delta$ and $\Psi'; \Delta'
   \vdash_{\Sigma} [S]$ by threading together the destinations from
   $\lf{d_L}$ to $\lf{d_R}$ in $\Delta$. Both directions are by
   structural induction on the given derivation. The critical property
-  it that it is possible to reconstruct the ordered context from the
+  is that it is possible to reconstruct the ordered context from the
   context of any right-focus sequent that arises during translation.
   Proving that property is where the flat structure of rules is
   particularly helpful; the use of positive atomic propositions comes
@@ -318,13 +320,12 @@ $\Delta$ but not in the translation of $\Delta_o$.
   \cite[Lemma 5]{simmons11logical}. Both directions are again by induction
   over the structure of the given pattern.
 
-  The theorem then follows from directly from these two lemmas.  There
+  The theorem then follows directly from these two lemmas.  There
   is a trivial induction on spines to handle the sequence of
   quantifiers, but the core of a flat rule is a proposition $S_1
   \lefti \{ S_2 \}$ -- we reconstruct the ordered context from the
-  value used to prove $S_1$ (the first set of lemmas), and then begin
-  inverting with the positive proposition $S_2$ in the context (the
-  second set of lemmas).
+  value used to prove $S_1$, and then begin
+  inverting with the positive proposition $S_2$ in the context.
 \end{proof}
 
 
@@ -543,15 +544,15 @@ correspondence between ordered abstract machine SSOS specifications
 and destination-passing SSOS specifications. (Destination-adding was
 useful in that context because it exposes information about the
 control structure of computations; this control structure can be
-harnessed by the program abstraction methodology described in the next
-chapter to derive program analyses.) In keeping with our broader use
-of the logical correspondence, this section will cover programming
-language features that are not easily expressible with ordered
-abstract machine SSOS specifications but that can be easily expressed
-with destination-passing SSOS specifications. Consequently, these are
-features that can be modularly added to (sequential) ordered abstract
-machine specifications that have undergone the destination-adding
-transformation.
+harnessed by the program abstraction methodology described in
+Chapter~\ref{chapter-approx} to derive program analyses.) In keeping
+with our broader use of the logical correspondence, this section will
+cover programming language features that are not easily expressible
+with ordered abstract machine SSOS specifications but that can be
+easily expressed with destination-passing SSOS
+specifications. Consequently, these are features that can be modularly
+added to (sequential) ordered abstract machine specifications that
+have undergone the destination-adding transformation.
 
 The semantics of parallelism and failure presented in
 Section~\ref{sec:modular-parallelism} are new. The semantics of
@@ -611,11 +612,12 @@ Figure~\ref{fig:dest-pair} demonstrates is that, with destinations, a
 linear proposition can be locally connected to {\it any finite number}
 of other propositions. Whereas in ordered abstract machine
 specifications the parallel structure of a computation had to be
-reconstructed by parsing the context in postfix, a linear
+reconstructed by parsing the context in postfix, a
 destination-passing specification uses destinations to thread together
 the treelike dependencies in the context. It would presumably be
 possible to consider a different version of the parallel
-operationalization that targeted this form of destination-passing
+operationalization that targeted this desirable form of 
+parallel destination-passing
 specification specifically, but we will not present such a
 transformation in this thesis. 
 
@@ -662,12 +664,14 @@ communication.
 
 New channels are created by evaluating $\interp{{\sf chan}\,c.e} =
 \lf{{\sf chan}\,\lambda c.\,\interp{e}}$, which introduces a new channel
-(an LF term of the type ${\sf channel}$ that has no constructors and
-substituted it for the bound variable $\lf{c}$ in $\obj{e}$). 
+(an LF term of the type ${\sf channel}$ that has no constructors) and
+substitutes it for the bound variable $\lf{c}$ in $\obj{e}$. 
 Synchronization happens when
-there is both a send $\obj{{\sf send}\,c\,e}$ in one computation and a
-receive $\obj{{\sf recv}\,c}$ in a different computation along the same
-channel. The expression $\obj{e}$ will first evaluate to a value $\obj{v}$ 
+there is both a send $\obj{{\sf send}\,c\,e}$ being evaluated
+in one part of the process state and a
+receive $\obj{{\sf recv}\,c}$ with the same
+channel being evaluated in a different part of the process state. 
+The expression $\obj{e}$ will first evaluate to a value $\obj{v}$ 
 (rule ${\sf ev/send}$). Communication is
 driven by rule ${\sf ev/send1}$, which allows computation to continue
 in both the sender and the receiver.
@@ -723,6 +727,7 @@ place.
 
 In small-step operational semantics, {\it labeled deduction} is used
 to describe specifications like the one above. At a high level,
+in a labeled transition system we
 inductively define a small step judgment $\obj{e
   ~{\stackrel{\footnotesize{\it lab}}{\longmapsto}}~ e'}$ with the
 property that \smallskip
@@ -857,7 +862,7 @@ the black hole in our specification of lazy call-by-need.
 \label{fig:examplefuturefunciton}
 \end{figure}
 
-Futures use of destinations to create new and potentially disconnected
+Futures use destinations to create new and potentially disconnected
 threads of computation, which can be seen in the example evaluation of
 $\obj{(\lambda x. {\sf s}\,x)\,({\sf s}\,{\sf z})}$ -- where
 $\obj{\lambda x.e}$ is interpreted as a future function $\lf{\sf
@@ -868,7 +873,7 @@ context into two disconnected threads of computation.  This was not
 possible in the ordered framework where every computation had to be
 somewhere specific in the ordered context relative to the current
 computation -- either to the left, or to the right. These threads are
-connected not by destinations by the variable $\lf x$, which the
+connected not by destinations but by the variable $\lf x$, which the
 primary computation needs the future to return before it can proceed.
 
 Note the similarity between the commented-out rule fragment in
@@ -939,8 +944,8 @@ is encoded in the context as a series of ${\sf cont}$ frames. In a
 destination-passing specification, it is therefore reasonable to
 associate a $\obj{k}$ continuation with the destination $\lf{d}$ that
 points to the topmost frame ${\sf cont}\,\lf{f}\,\lf{d}\,\lf{d'}$ in
-the stack $\obj{k}$ encoded in the process state. Destinations
-therefore stand for continuations in much the same way that introduced
+the stack $\obj{k}$ encoded in the process state. Destinations 
+stand for continuations in much the same way that introduced
 variables $\lf{x}$ in the environment semantics stand for the values
 $\lf{v}$ they are bound to through persistent ${\sf
   bind}\,\lf{x}\,\lf{v}$ propositions. In Figure~\ref{fig:dest-letcc},
