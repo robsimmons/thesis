@@ -1,9 +1,7 @@
 \chapter{Linear logical approximation}
 \label{chapter-approx}
 
-The abstract interpretation of programs relates the exact semantics of
-a programming language to a finite approximation of the semantics. A
-general recipe for constructing a sound program analysis is to (1)
+A general recipe for constructing a sound program analysis is to (1)
 specify the operational semantics of the underlying programming
 language via an interpreter, and (2) specify a terminating
 approximation of the interpreter itself. This is the basic idea behind
@@ -12,10 +10,10 @@ techniques for constructing approximations (for example, by exhibiting
 a Galois connection between concrete and abstract domains). The
 correctness proof must establish the appropriate relationship between
 the concrete and abstract computations and show that the abstract
-computation terminates. We need to vary both the specification of
-the operational semantics and the form of the approximation in order
-to obtain various kinds of program analyses, sometimes with
-considerable ingenuity.
+computation terminates. We need to vary both the specification of the
+operational semantics and the form of the approximation in order to
+obtain various kinds of program analyses, sometimes with considerable
+ingenuity.
 
 In this chapter, which is mostly derived from \cite{simmons11logical},
 we consider a new class of instances in the general schema of abstract
@@ -30,12 +28,12 @@ are executable program analyses.
 %\cite{mcallester02complexity,ganzinger02logical} to specifications
 %that use higher-order abstract syntax.
 
-The process described in this chapter does not claim to capture or be
-able to derive all possible interesting program analyses. For
+The process described in this chapter does not claim to capture or 
+derive all possible interesting program analyses. For
 instance, the methodology we describe only derives over-approximations
 (or {\it may-} analyses) that ensure all possible behaviors will be
-reported by the analysis. There is a whole separate class of program
-under-approximations (or {\it must-} analyses) that ensure that if a
+reported by the analysis. There is a whole separate class of 
+under-approximations (or {\it must-} analyses) which ensure that if a
 behavior is reported by the analysis it is possible; these are more
 closely associated with bug-finding and we will not consider them here
 \cite{godefroid10compositional}. Instead, we argue for the utility of
@@ -82,8 +80,9 @@ where ${\sf a}$ is present. We will cope with rules of this form by
 turning them into rules of the form ${\sf a} \lefti \{ \exists
 \lf{x}. {\sf b}\lf{(x)} \fuse \lf{x} \doteq \lf{t} \}$ for some
 $\lf{t}$, neutralizing the free existential variable as a notational
-definition. Notions of saturation that can cope with {\it free}
-existentially generated variables are interesting, but are beyond the
+definition. Notions of saturation that can cope with free
+existentially generated variables in other ways
+are interesting, but are beyond the
 scope of this thesis.
 
 A {\it minimal} saturated process state is one with no duplicated
@@ -112,8 +111,9 @@ semantics to argue that many program analyses could be {\it
 \sls~specifications can be seen as an extension of McAllester and
 Ganzinger's language (and, transitively, as a generalization of
 Datalog). We will not deal with cost semantics or efficiency, however,
-as our use of higher-order abstract syntax complicates McAllester and
-Ganzinger's cost semantics substantially.
+as our use of higher-order abstract syntax appears to complicate 
+McAllester and
+Ganzinger's cost semantics.
 
 Just as the term {\it persistent logic} was introduced in 
 Chapter~\ref{chapter-foc} to
@@ -167,7 +167,7 @@ ${\sf push}$ rule will lead to non-termination because the head
 $\exists \lf{m}. {\sf stack}\,\lf{x}\,\lf{l}\,\lf{m} \fuse {\sf
   hd}\,\lf{m}\,\lf{r}$ introduces a new existential parameter
 $\lf{m}$.  We can cope by adding a new conclusion $\lf{m} \doteq
-\lf{t}$, as adding new conclusions is the second step in the
+\lf{t}$; adding new conclusions is the second step in the
 approximation methodology. This, however, means we have to pick a
 $\lf{t}$.  The most general starting point for selecting a $\lf{t}$ is
 to apply Skolemization to the rule. By moving the existential
@@ -411,7 +411,8 @@ specified by Definition~\ref{def:approxversion}.
 \end{theorem}
 
 \begin{proof}
-As in \cite[Theorem 3]{simmons11logical}.
+  As in \cite[Theorem 3]{simmons11logical}.\robnote{Expand proof from
+    the HOSC paper.}
 \end{proof}
 
 The meaning of the meta-approximation theorem is that if (1) we can
@@ -435,7 +436,7 @@ for some program represented by the LF term $\lf{t} = \interp{e}$.
 This means that we
 can use the meta-approximation result to derive abstractions from
 initial expressions $\obj{e}$ using the saturating logic programming
-interpretation of persistent SSOS specifications.
+interpretation of approximated SSOS specifications.
 
 A control flow analysis is a fundamental analysis on functional
 programs, attributed to Shivers \cite{shivers88control}. It is used
@@ -469,10 +470,11 @@ possibilities.\footnote{This statement assumes that both of the
 When we {\it use} a control flow analysis, it is relevant that the
 calculation of which subexpressions evaluate to which values is done
 in service of a different goal: namely, determining which functions
-may be called from which calling sites. However, the primary goal of
+may be called from which calling sites. However, the ultimate goal of
 control flow analysis is irrelevant to our discussion of deriving
 control flow analyses from SSOS specifications, so we will concentrate
-on the question of subexpressions evaluate to which values. Before we
+on the question of which
+subexpressions evaluate to which values. Before we
 begin, however, we will address the issue of what it even means to be
 a (closed) subterm of an expression $\obj{e}$ that has been encoded
 with higher-order abstract syntax into the canonical forms of LF.
@@ -537,7 +539,7 @@ that there are three distinct subterms of $\lf{{\sf lam}\,(\lambda
 Another solution, discussed in the next
 section, is to uniquely tag the lambda expression with a label. This
 has the same effect of allowing us to associate the variable $x$
-with an different concrete term, the tag, that represents the site
+with a different concrete term, the tag, that represents the site
 where $x$ was bound.
 
 %Because we ensure that we {\it only} substitute terms
@@ -663,8 +665,8 @@ for facts of the form ${\sf cont}\,\lf{\sf app3}\,\lf{e}\,\lf{e'}$.  A
 fact of the form ${\sf cont}\,\lf{({\sf
     app1}\,e_2)}\,\lf{e_1}\,\lf{e}$ will only be derived when $\lf{e}
 = \lf{{\sf app}\,e_1\,e_2}$, so there are at most $n$ of these
-facts. A fact of the form ${\sf cont}\,\lf{{\sf app2}\,\lambda
-  x.\,e_0\,x}\,\lf{e_2}\,\lf{e}$ will only be derived when $\lf{e} =
+facts. A fact of the form ${\sf cont}\,\lf{({\sf app2}\,\lambda
+  x.\,e_0\,x)}\,\lf{e_2}\,\lf{e}$ will only be derived when $\lf{e} =
 \lf{{\sf app}\,\lf{e_1}\,\lf{e_2}}$ for some $\lf{e_1}$ that is also a
 subterm, so there are most $n^2$ of these facts too. This means that
 we can derive no more than $2n + 3n^2$ facts starting from a database
@@ -673,7 +675,8 @@ We could give a much more precise analysis than this, but this
 imprecise analysis certainly bounds the size of the database, ensuring
 termination, which was our goal.
 
-There is one important caveat to this analysis. If for some value
+There is one important caveat to the control flow analysis we have derived 
+analysis. If for some value
 $\obj{v}$ we consider the program $\interp{((\lambda x.x)\,(\lambda
   y.y))\,v}$, we might expect a reasonable control flow analysis to
 notice that only $\interp{\lambda y.y}$ is passed to the function
@@ -683,7 +686,7 @@ abstract syntax, however, $\interp{\lambda y.y}$ and $\interp{\lambda
   x.x}$ are $\alpha$-equivalent and therefore equal in the eyes of the
 logic programming interpreter. This is not a problem with correctness,
 but it means that our analysis may be less precise than expected,
-because it distinguishes only subterms, not {\it subterm
+because the analysis distinguishes only subterms, not {\it subterm
   occurrences}. One solution would be to add distinct labels to terms,
 marking the $\alpha$-equivalent $\obj{\lambda x.x}$ and $\obj{\lambda
   y.y}$ with their distinct positions in the overall term. Adding a
@@ -710,7 +713,7 @@ generates the fact ${\sf cont}\,\lf{\sf app3}\,\lf{(e({\sf
     var}(\lambda x.e_0\,x)))}\,\lf{e}$. This means that, in the course
 of evaluating some initial expression $\lf{e_{\it init}}$, the
 function $\lf{{\sf lam}(\lambda x.e_0\,x)}$ may be called from the
-call site $\lf{e}$ only if ${\sf cont}\,\lf{\sf app3}\,\lf{(e({\sf
+call site $\lf{e}$ only if ${\sf cont}\,\lf{\sf app3}\,\lf{(e_0({\sf
     var}(\lambda x.e_0\,x)))}\,\lf{e}$ appears in a saturated process
 state that includes the persistent atomic proposition ${\sf
   eval}\lf{(e_{\it init})}$.
@@ -751,9 +754,9 @@ $\obj{e_2}$ in an expression $\obj{\omega\,e_2}$, nor will it analyze
 the function body $\obj{e}$ in an expression $\obj{(\lambda
   x.e)\,\omega}$. Nielson et al.'s definition, on the other hand,
 demands that both $\obj{e_2}$ in $\obj{\omega\,e_2}$ and $\obj{e}$ in
-$\obj{(\lambda x.e)\,\omega}$ analyzed. In Nielson et al.'s Exercise
-3.4, they then point out that a modified analysis, which takes order
-of evaluation into account, is possible.
+$\obj{(\lambda x.e)\,\omega}$ be analyzed. In Exercise 3.4, of their
+book, Nielson et al.~point out that a modified analysis, which takes
+order of evaluation into account, is possible.
 
 \begin{figure}
 \begin{align*}
@@ -832,7 +835,7 @@ that $(\widehat{\sf C}, \widehat{\rho}) \models \obj{e}$.
       C}(\obj{\lambda x.e})$. In other words,
     ${\sf retn}\,\interp{\lambda x.e}\,\interp{\lambda x.e} \in
     \Delta$. This follows by rule ${\sf ev/lam}$ by the same reasoning given 
-   in more detail above. 
+   above. 
   
   \bigskip  
 
@@ -857,7 +860,7 @@ that $(\widehat{\sf C}, \widehat{\rho}) \models \obj{e}$.
   ${\sf eval}\,\interp{e_2} \in \Delta$. This same reasoning allows us
   to conclude that ${\sf cont}\,\lf{({\sf app2}\,(\lf \lambda
     x.\,\interp{e_0}))}\,\interp{e_2}\,\interp{e_1\,e_2} \in \Delta$ given
-  that $\obj{\lambda x.e_0}) \in \widehat{\sf
+  that $(\obj{\lambda x.e_0}) \in \widehat{\sf
     C}(\obj{e_1})$. 
 
   \medskip Third, given a $\obj{(\lambda x.e_0}) \in \widehat{\sf
@@ -870,7 +873,8 @@ that $(\widehat{\sf C}, \widehat{\rho}) \models \obj{e}$.
     x.\,\interp{e_0}))}\,\interp{e_2}\,\interp{e_1\,e_2} \in \Delta$, this
   follows by rule ${\sf ev/app2}$. 
 
-  \medskip The same reasoning allows us to conclude that $\obj{(\lambda
+  \medskip The same reasoning from ${\sf ev/app2}$ 
+   allows us to conclude that $\obj{(\lambda
     x.e_0}) \in \widehat{\sf C}(\obj{e_1})$ and ${\sf
     retn}\,\interp{v_2}\,\interp{e_2} \in \Delta$ together imply ${\sf
     eval}\,\interp{e_0} \in \Delta$ (and therefore that $(\widehat{\sf
@@ -893,7 +897,7 @@ and the call-by-future functions discussed in
 Figure~\ref{fig:dest-futures} from Section~\ref{sec:dest-futures},
 then the derived analysis would have satisfied a faithful
 representation of Nielson et al.'s acceptability relation. The proof,
-in this case, should the same lines as the proof of
+in this case, should proceed along the same lines as the proof of
 Theorem~\ref{thm:acceptablecfa}.
 
 %  which is given a coinductive
@@ -968,7 +972,7 @@ analysis presented as a saturating logic program in \cite[Chapter
 12.4]{aho07compilers}. We then worked backwards to get a SSOS
 semantics that allowed us to derive that logic program as closely as
 possible; the result was a monadic SSOS semantics. There should
-not, however, be any obstacle to deriving an alias analysis from a
+not be any obstacle to deriving an alias analysis from a
 semantics that looks more like the specifications elsewhere in this
 thesis.
 
