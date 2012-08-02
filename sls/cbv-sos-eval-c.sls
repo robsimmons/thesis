@@ -17,10 +17,10 @@ step/app1/1: plug E1' * cont (ap1 E2)
 step/app2/1: plug E2' * cont (ap2 E1) 
               >-> {plug (app E1 E2')}.
 
-ev: exp -> exp -> prop.
+evsos: exp -> exp -> prop.
 
-ev/steps: ev E V
-           <- (decomp E >-> {plug E'})
-           <- ev E' V.
+evsos/steps: evsos E V
+              <- (decomp E >-> {plug E'})
+              <- evsos E' V.
 
-ev/value: ev V V <- value V.
+evsos/value: evsos V V <- value V.
