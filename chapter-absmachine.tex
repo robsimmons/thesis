@@ -1789,8 +1789,8 @@ in Figure~\ref{fig:defuncexample}.
 & & {\sf ruleA} : {\sf a} \lefti \{ {\sf b} \fuse {\sf cont}~{\sf frameA1} \},
 \\
 & \qquad\qquad\qquad\qquad\qquad\qquad\qquad\qquad  \Longrightarrow & & {\sf ruleA1} : {\sf c} \fuse {\sf cont}~{\sf frameA1} \lefti \{ {\sf d} \},\\
-& & & {\sf frameA1} : {\sf frame},\\
-& & & {\sf frameA2} : {\sf frame},\\
+& & & {\sf frameB1} : {\sf frame},\\
+& & & {\sf frameB2} : {\sf frame},\\
 & {\sf ruleB} : {\sf c} \lefti \{ {\downarrow}({\sf d} 
        \lefti \{ {\downarrow}({\sf a} \fuse {\sf a} \lefti \{ {\sf b} \}) \}) \}
 & & {\sf ruleB} : {\sf c} \lefti \{ {\sf cont}~{\sf frameB1} \},
@@ -3438,8 +3438,10 @@ we would have to include the possibility of an exceptional outcome in
 every individual rule. For instance, this would be the 
 rule for evaluating $\interp{{\sf s}\,e} = \lf{{\sf succ}\,\interp{e}}$:
 
+\smallskip
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-fail-s-refun.sls}
+\smallskip
 
 \noindent
 Instead, this case is handled generically by rule ${\sf ev/error}$ in
@@ -3504,8 +3506,10 @@ continuations generically and that only return errors when {\it both}
 sub-computations have completed and at least one has signaled an
 error:
 
+\smallskip
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/ssos-fail-binary.sls}
+\smallskip
 
 \noindent
 This is a big improvement, because parallel pairs are again treated
