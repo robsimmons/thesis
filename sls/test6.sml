@@ -296,151 +296,21 @@ Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "sos.step.autodefun.sls";
 
-
-(*
-
-(* Figure 6.3 prelude, in-line with text. *)
-Frontend.reset ();
-Frontend.load "exp.sls";
-Frontend.load "cbv-sos-value.sls";
-Frontend.load "cbv-sos-step.sls";
-Frontend.read "#operationalize \"cbv-sos-proc2.auto.sls\"\n(ev ~> eval retn).";
-Frontend.load "ev.sls";
-Frontend.load "cbv-sos-steps.sls";
-Frontend.read "#operationalize stop.";
-
-Frontend.reset ();
-Frontend.load "exp.sls";
-Frontend.load "cbv-sos-value.sls";
-Frontend.load "cbv-sos-step.sls";
-Frontend.load "cbv-sos-proc2.auto.sls";
-
-(* Figure 6.3, left-hand side *)
-Frontend.reset ();
-Frontend.load "exp.sls";
-Frontend.load "cbv-sos-value.sls";
-Frontend.load "cbv-sos-step.sls";
-Frontend.load "evalretn.sls";
-Frontend.load "cbv-sos-proc2.sls";
-
-(* Figure 6.3, right-hand side *)
-Frontend.reset ();
-Frontend.load "exp.sls";
-Frontend.load "cbv-sos-value.sls";
-Frontend.load "cbv-sos-step.sls";
-Frontend.load "evalretn.sls";
-Frontend.load "cbv-sos-proc.sls";
-
-(* Figure 6.4 *)
-Frontend.reset ();
-Frontend.load "exp.sls";
-Frontend.load "cbv-uncurry.sls";
-
-
-
-
-
-
-(* FIGURE 6.7 -- Semantics of some pure functional features *)
-
-HEADING "Fig 6.7, left-hand side along with the bad case analysis rule";
+HEADING "Figure 6.26: Semantics of partial evaluation for lambda-circle \
+        \(lambda calculus fragment)";
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "cbv-ev-ssos-fun.sls";
-Frontend.read "#operationalize \"ssos-ml-core.auto.sls\"\n(ev ~> eval retn).";
-Frontend.load "ev.sls";
-Frontend.load "ev-minml-core.sls";
-Frontend.read "#operationalize stop.";
+Frontend.load "lc-ev2.sls";
 
-HEADING "Fig 6.7, checking the operationalization of the left-hand side";
-Frontend.reset ();
-Frontend.load "exp.sls";
-Frontend.load "evalretn.sls";
-Frontend.load "ssos-ml-core.auto.sls";
+HEADING "Figure 6.27: Semantics of partial evaluation for lambda-circle \
+        \(temporal fragment)";
+HEADING "Figure 6.27, Right-hand side";
+Frontend.load "lc-ssos-3.sls";
 
-
-
-
-(* FIGURE 6.8 - Semantics of nondeterminstic choice *)
-
-
-
-
-(* SECTION 6.4.2, Conditionals  and factoring *)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-HEADING "Figure 6.19, left-hand side (small-step evaluation)";
-Frontend.reset ();
-Frontend.load "exp.sls";
-Frontend.load "cbv-sos.sls";
-
-HEADING "Figure 6.19, right-hand side (small-step evaluation)";
-Frontend.reset ();
-Frontend.load "exp.sls";
-Frontend.read "cont: frame -> prop ord.";
-Frontend.load "cbv-sos-eval.sls";
-
-HEADING "Figure 6.20/6.21 left-hand side, natural semantics for lambdacircle";
+HEADING "Figure 6.27, Left-hand side";
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "ev.sls";
 Frontend.load "lc-ev2.sls";
 Frontend.load "lc-ev3.sls";
-
-HEADING "Figure 6.20/6.21 right-hand side, SSOS for lambdacircle";
-Frontend.reset ();
-Frontend.load "exp.sls";
-Frontend.load "cbv-ev-ssos-fun.sls";
-Frontend.load "lc-ev2.sls";
-Frontend.load "lc-ssos-3.sls";
-
-
-
-(*
-Frontend.reset ();
-Frontend.load "exp.sls";
-Frontend.read "#operationalize \"nat.auto.sls\"\n(inc ~> inc retn_inc)\n(plus ~> plus retn_plus).";
-Frontend.load "nat.sls";
-Frontend.read "#operationalize stop.";
-*)
-
-(*
-Frontend.reset ();
-
-
-Frontend.load "exp.sls";
-Frontend.read "#operationalize \"cbv-sos-ctx.auto.sls\"\n(step ~> eval retn).";
-Frontend.load "cbv-sos.sls";
-Frontend.read "#operationalize stop.";
-Frontend.reset ();
-
-Frontend.load "exp.sls";
-Frontend.load "cbv-sos-ctx.auto.sls";
-Frontend.reset ();
-
-
-Frontend.load "exp.sls";
-Frontend.read "#operationalize \"lc-ssos.auto.sls\"\n(ev0 ~> eval retn).";
-Frontend.load "lc-ev.sls";
-Frontend.read "#operationalize stop.";
-Frontend.reset ();
-
-Frontend.load "exp.sls";
-Frontend.load "lc-ssos.auto.sls";
-Frontend.reset ();
-*)
-
-*)
