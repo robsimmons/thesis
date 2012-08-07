@@ -97,7 +97,9 @@ Frontend.load "ev-minml-core.sls";
 Frontend.read "#operationalize stop.";
 
 HEADING "Figure 6.8, Right-hand side";
+Frontend.reset ();
 Frontend.load "exp.sls";
+Frontend.load "exp-miniml.sls";
 Frontend.load "cbv-ev-ssos-fun.sls";
 Frontend.load "ssos-minml-core.sls";
 
@@ -238,7 +240,7 @@ Frontend.read "append1: frame.";
 Frontend.read "carry: frame.";
 Frontend.load "plus.1.sls";
 
-HEADING "The autautomaticallyomatically generated program, \
+HEADING "The automatically generated program, \
         \before defunctionalization";
 Frontend.reset ();
 Frontend.load "nat.sls";
@@ -246,7 +248,7 @@ Frontend.read "#defunctionalize \"plus.autodefun.sls\" (cont frame : ord).";
 Frontend.load "plus.auto.sls";
 Frontend.read "#defunctionalize stop.";
 
-HEADING "The autautomaticallyomatically generated program, \
+HEADING "The automatically generated program, \
         \after defunctionalization, equivalent to 6.22";
 Frontend.reset ();
 Frontend.load "nat.sls";
@@ -268,6 +270,9 @@ Frontend.load "cbv-sos-b.sls";
 Frontend.read "#operationalize stop.";
 
 HEADING "Figure 6.24: The operationalization of evsos from Figure 6.23";
+Frontend.reset ();
+Frontend.load "exp.sls";
+Frontend.load "cbv-sos-step.sls";
 Frontend.load "cbv-sos-proc.sls";
 
 HEADING "The output of operationalization of evsos";

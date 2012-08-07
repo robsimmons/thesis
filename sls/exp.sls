@@ -65,17 +65,8 @@ bind1': exp -> frame.
 casez: exp -> frame.
 cases: (exp -> exp) -> frame.
 case1: exp -> (exp -> exp) -> frame.
-inc0: frame.
-p00: frame.
-p01: frame.
-p11: frame.
-p11: frame.
 ap1: exp -> frame.
 ap2: exp -> frame.
-pair1: frame.
-fst1: frame.
-snd1: frame.
-succ1: frame.
 app2': exp -> exp -> frame.
 send1: channel -> frame.
 throw1: exp -> frame.
