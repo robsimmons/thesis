@@ -64,7 +64,9 @@ HEADING "Figure 6.6: A first order ordered abstract machine semantics for CBV \
         \evaluation";
 Frontend.reset ();
 Frontend.load "exp.sls";
+Frontend.read "#destadd \"cbv.autodest.sls\" dest.";
 Frontend.load "cbv-ev-ssos-fun.sls";
+Frontend.read "#destadd stop.";
 
 HEADING "The automatically derived SSOS should be equivalent to the uncurried \
         \specification in 6.6";

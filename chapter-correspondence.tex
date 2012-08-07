@@ -195,8 +195,7 @@ Destination-passing specifications can then be transformed into a
 collecting semantics by {\it approximation}, which lets us obtain
 program analyses like control flow analysis. The operationalization
 and destination-adding transformations have been implemented within
-the \sls~prototype.\robnote{Finish implement destination-adding or
-  don't say that you did.} Approximation, on the other hand, requires
+the \sls~prototype. Approximation, on the other hand, requires
 significant input from the user and so is less reasonable to implement
 as an automatic transformation.
 
@@ -781,8 +780,7 @@ Figure~\ref{fig:modularcompose}. Individual language features are
 specified at the highest-level specification style that is reasonable
 and then automatically transformed into a single compatible
 specification by the transformations implemented in the
-\sls~prototype.\robnote{Implement destination-adding or backtrack on
-  this statement.} In such a specification, a change to a high-level
+\sls~prototype. In such a specification, a change to a high-level
 feature (turning call-by-value functions to call-by-name functions,
 for instance) can be made at the level of natural semantics and
 then propagated by transformation into the common (destination-passing
