@@ -102,8 +102,10 @@ HEADING "Figure 6.8, Right-hand side";
 Frontend.reset ();
 Frontend.load "exp.sls";
 Frontend.load "exp-miniml.sls";
+Frontend.read "#destadd \"miniml.autodest.sls\" dest eval retn.";
 Frontend.load "cbv-ev-ssos-fun.sls";
 Frontend.load "ssos-minml-core.sls";
+Frontend.read "#destadd stop.";
 
 HEADING "The operationalized natural semantics from 6.8";
 Frontend.reset ();
