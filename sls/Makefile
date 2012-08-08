@@ -57,5 +57,15 @@ check7:
 	celf figure-7.11.clf
 
 check8:
+	sml test8.sml < /dev/null
+	celf figure-8.1.clf
+	celf section-8.2-a.clf
+	celf section-8.2-b.clf
+	celf figure-8.2.clf
+	celf figure-8.3.clf
+	celf figure-8.4.clf
+	celf figure-8.5.clf
+	celf figure-8.7-8.8.clf
+	celf figure-8.9.clf
 
 checkA:
