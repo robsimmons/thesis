@@ -3,6 +3,7 @@
 *.auto.sls
 *.autodefun.sls
 *.autodest.sls
+*.clf
 chapter-1.tex
 chapter-2.tex
 chapter-3.tex
