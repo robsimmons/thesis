@@ -17,6 +17,7 @@ step/app1/1: plug E1' * cont (ap1 E2)
 step/app2/1: plug E2' * cont (ap2 E1) 
               >-> {plug (app E1 E2')}.
 
+#mode evsos + -.
 evsos: exp -> exp -> prop.
 
 evsos/steps: evsos E V
