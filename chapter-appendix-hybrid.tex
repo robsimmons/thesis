@@ -1,3 +1,247 @@
 \chapter{A hybrid specification of Mini-ML}
 \label{chapter-appendix-hybrid}
 
+In this section, we present the specification that was illustrated in
+Figure~\ref{fig:modularcompose} as a full \sls~specification. This
+specification is a hybrid or chimera: it has individual features that
+are presented using big-step natural semantics, nested ordered abstract
+machine semantics, flat ordered abstract machine semantics, and
+destination-passing semantics.
+
+Illustrating the logical correspondence methadology that we introduced
+in Chapter~\ref{chapter-correspondence} and exponded upon in
+Chapters~\ref{chapter-absmachine}~and~\ref{chapter-destinations}, all
+these specifications can transformed into a common flat
+destination-passing semantics. With the exception of Concurrent ML
+primitives, which were only alluded to in
+Section~\ref{sec:dest-synch}, all the pieces of this specification
+have been presented elsewhere in the thesis. The specification in this
+section is careful to present the entire \sls~specification, as
+opposed to other examples in which the relevant LF declarations were
+almost always ommitted.
+
+The lowest common denominator of destination-passing semantics can be
+represented in CLF, and the \sls~implementation is able to output CLF
+code readable in Schack-Nielsen's Celf implementation
+\cite{schacknielsen08celf}. The implemented logic programming engine
+of Celf is therefore able to {\it execute} Mini-ML programs encoded as
+terms of type ${\sf exp}$ in our hybrid specification.
+
+\section{Pure Mini-ML}
+
+There are various toy languages calling themselves ``Mini-ML'' in the
+liteature. All Mini-MLs reflect some of the flavor of functional
+programming while avoiding features such as complex pattern-matching
+and datatype declarations that make the core language of Standard ML
+\cite{milner97definition} a bit more complicated.  Of course, Mini-MLs
+universally avoid the sophisticated ML module language as well.
+
+Like the PCF language \cite{plotkin77lcf}, Mini-ML variants usually
+have at least a fixed-point operator, unary natural numbers, and
+functions. We add Boolean and pair values to this mix, as well as the
+arbitrary choice operator $\interp{e_1 \arb e_2} = \lf{{\sf
+  arb}\,\interp{e_1}\,\interp{e_2}}$ from
+Section~\ref{sec:choicefail}. The specification in
+Section~\ref{sec:compose-pure} is an encoding of the natural semantics
+judgment $\interp{e \Downarrow v} = {\sf ev}\,\interp{e}\,\interp{v}$
+presented throughout Chapter~\ref{chapter-absmachine}. The language is
+pure -- the only effect is nontermination -- so we can fully specify
+the language as a big-step operational semantics.
+
+\subsection{Syntax}
+
+\fvset{fontsize=\footnotesize}
+\VerbatimInput{sls/compose/pure-exp.sls}
+
+\subsection{Natural semantics}
+\label{sec:compose-pure}
+
+\fvset{fontsize=\footnotesize}
+\VerbatimInput{sls/compose/pure-natsem.sls}
+
+\section{State}
+
+The strength of an ordered abstract machine semantics specification is
+its ability to handle modular addition of {\it stateful}
+features. While Section~\ref{sec:richer-ordered-abstract} discussed
+the modular extension of {\it flat} ordered abstract machines, nested
+ordered abstract machines are also perfectly capable of handling
+stateful features such as mutable storage
+(Section~\ref{sec:mutable-storage}) and call-by-need recursive
+suspensions (Section~\ref{sec:call-by-need}).
+
+\subsection{Syntax}
+
+\fvset{fontsize=\footnotesize}
+\VerbatimInput{sls/compose/imp-exp.sls}
+
+\subsection{Nested ordered abstract machine semantics}
+\label{sec:compose-imp}
+
+In Section~\ref{sec:mutable-storage}, we discussed mutable storage as
+a flat ordered abstract machine (Figure~\ref{fig:ssos-mutable}), but
+it is equally straightforward to describe a nested ordered abstract
+machine for mutable storage.
+
+\bigskip
+\fvset{fontsize=\footnotesize}
+\VerbatimInput{sls/compose/imp-ordmachine.sls}
+
+\subsection{Flat ordered abstract machine semantics}
+\label{sec:compose-susp}
+
+In Section~\ref{sec:call-by-need}, we gave both a semantics for
+call-by-need recursive suspensions, both as a flat ordered abstract
+machine (Figure~\ref{fig:ssos-cbneed}) and a nested ordered abstract
+machine (Figure~\ref{fig:ssos-cbneed-refun}). However, the nested
+ordered abstract machine from Figure~\ref{fig:ssos-cbneed-refun} uses
+the with connective $A^- \with B^-$, and our implementation of
+defunctionalization transformation doesn't handle this connective.
+Therefore, we repeat the flat ordered abstract machine from
+Figure~\ref{fig:ssos-cbneed}.  Note, however, that there is no
+technical reason why $A^- \with B^-$ should be difficult to handle;
+the actual difficulty is mostly in terms of making sure uncurrying
+(Section~\ref{sec:defunc-uncurry}) does something sensible.
+
+\bigskip
+\fvset{fontsize=\footnotesize}
+\VerbatimInput{sls/compose/susp-ordmachine.sls}
+
+\section{Failure}
+
+The reason we introduced frames in Section~\ref{sec:defunc-type} was
+to allow the semantics of recoverable failure to talk generically
+about all continuations. In Section~\ref{sec:compose-control}, we
+generalize the semantics from Section~\ref{sec:failure}~by having exceptions
+carry a value.
+
+\subsection{Syntax}
+
+\fvset{fontsize=\footnotesize}
+\VerbatimInput{sls/compose/control-exp.sls}
+
+\subsection{Nested ordered abstract machine semantics}
+\label{sec:compose-control}
+
+\fvset{fontsize=\footnotesize}
+\VerbatimInput{sls/compose/control-ordmachine.sls}
+
+\section{Parallelism}
+
+While ordered abstract machines can represent parallel evaluation, and
+the operationalization transformation can expose it, parallel ordered
+abstract machines and the destination-adding transformation do not
+interact a helpful way. Therefore, for our hybrid specification,
+we will describe parallel evaluation at the destination-passing 
+level, as in Section~\ref{sec:modular-parallelism}.
+
+\subsection{Destination-passing semantics}
+
+Instead of the parallel pairs shown in
+Figure~\ref{fig:ssos-minml-core} and Figure~\ref{fig:dest-pair}, we
+will use a parallel let construct $\interp{{\sf letpar}\, (x_1,x_2) =
+  (e_1,e_2) \,{\sf in}\,e} = \lf{{\sf
+    letpar}\,\interp{e_1}\,\interp{e_2}\,\lambda x_1.\,\lambda
+  x_2.\,\interp{e}}$.
+
+\bigskip
+\fvset{fontsize=\footnotesize}
+\VerbatimInput{sls/compose/par-dest1.sls}
+
+\subsection{Integration of parallelism and exceptions}
+
+We have discussed two semantics for parallel evaluation. The first
+semantics, in Section~\ref{sec:failure}, only raised an error if both
+parallel branches terminated and one raised an error. The second
+semantics, in Section~\ref{sec:modular-parallelism}, raised an error
+if {\it either} branch raised an error, and then allowed the other
+branch to return a value.
+
+We will demonstrate a third option here, the sequential exception
+semantics used by Manticore~\cite{fluet08scheduling}. An error raised
+by the second scritnee $\obj{e_2}$ of $\obj{\sf letpar}$ will only be
+passed up the stack if the first scruitnee $\obj{e_1}$ returns a
+value. We also represent Manticore's {\it cancellation} -- if the
+first branch of a parallel evaluation raises an exception, then rather
+than passively waiting for the second branch to terminate we
+proactively walk up its stack attempting to cancel the computation.
+
+\bigskip
+\fvset{fontsize=\footnotesize}
+\VerbatimInput{sls/compose/par-dest2.sls}
+
+
+\section{Concurrency}
+
+Concurrent ML is an excellent example of the power of
+destination-passing specifications. The Concurrent ML primitives allow
+a computation to develop a rich interaction structure that does not
+mesh well with the use of ordered logic, but the destination-passing
+style allows for a clean specification that is fundamentally like the
+one used for simple synchronization in
+Section~\ref{sec:dest-synch}. This account directly follows Cervesato
+et al.'s account \cite{cervesato02concurrent}, similarly neglecting
+negative acknowledgements.
+
+\subsection{Syntax}
+
+\fvset{fontsize=\footnotesize}
+\VerbatimInput{sls/compose/concur-exp.sls}
+
+\subsection{Natural semantics}
+
+Many of the pieces of Concurrent ML do not interact concurrency
+directly; instead, they build channels and event values that drive
+synchronization. In our hybrid specification methadology, we can give
+these pure parts of the Concurrent ML specification a big-step
+natural semantics specification.
+
+\bigskip
+\fvset{fontsize=\footnotesize}
+\VerbatimInput{sls/compose/concur-natsem.sls}
+
+\subsection{Destination-passing semantics}
+
+The destination-passing semantics of Concurrent ML has three main
+parts.  The first part, a ${\sf spawn}$ primitive, creates a new
+disconnected thread of computation -- the same kind of disconnected
+thread that we used for the interaction of parallelism and failure in
+Section~\ref{sec:modular-parallelism}. The ${\sf newch}$ primitive 
+creates a new channel for communication.
+
+\bigskip
+\fvset{fontsize=\footnotesize}
+\VerbatimInput{sls/compose/concur-dest1.sls}
+\bigskip
+
+\noindent
+The critical feature of Concurrent ML is synchronization, which is
+much more complex than the simple synchronization described in
+Section~\ref{sec:dest-synch}, and has something of the flavor of the
+labels described in that section. An action can include many
+alternatives, but if a send and a recieve can simultaneously take
+place along a single channel, then the ${\sf synch/communicate}$ rule
+can enable both of the waiting ${\sf synch}$ expressions to proceed
+evaluating as ${\sf eval}$ expressions.
+
+Here as in Cervesato et al.'s specification, events are atomically
+paired up using the backward-chaining ${\sf action}$ rules, which are
+not transformed: the intent is for the ${\sf action}$ predicate to act 
+like a backtracking, backward-chaining logic programs in the course
+of evaluation.
+
+\bigskip
+\fvset{fontsize=\footnotesize}
+\VerbatimInput{sls/compose/concur-dest2.sls}
+
+
+\section{Composing the semantics}
+
+Within Standard ML, we can read the various specifications described
+in this appendix and use directives to successively operationalize,
+defunctionalize, add destinations, and output CLF that is readable by
+the Celf implementation.
+
+\bigskip
+\fvset{fontsize=\footnotesize}
+\VerbatimInput{sls/testA.sml}

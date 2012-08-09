@@ -69,3 +69,4 @@ check8:
 	celf figure-8.9.clf
 
 checkA:
+	sml testA.sml < /dev/null
