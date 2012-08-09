@@ -8,8 +8,8 @@ are presented using big-step natural semantics, nested ordered abstract
 machine semantics, flat ordered abstract machine semantics, and
 destination-passing semantics.
 
-Illustrating the logical correspondence methadology that we introduced
-in Chapter~\ref{chapter-correspondence} and exponded upon in
+Illustrating the logical correspondence methodology that we introduced
+in Chapter~\ref{chapter-correspondence} and expounded upon in
 Chapters~\ref{chapter-absmachine}~and~\ref{chapter-destinations}, all
 these specifications can transformed into a common flat
 destination-passing semantics. With the exception of Concurrent ML
@@ -18,7 +18,7 @@ Section~\ref{sec:dest-synch}, all the pieces of this specification
 have been presented elsewhere in the thesis. The specification in this
 section is careful to present the entire \sls~specification, as
 opposed to other examples in which the relevant LF declarations were
-almost always ommitted.
+almost always omitted.
 
 The lowest common denominator of destination-passing semantics can be
 represented in CLF, and the \sls~implementation is able to output CLF
@@ -30,7 +30,7 @@ terms of type ${\sf exp}$ in our hybrid specification.
 \section{Pure Mini-ML}
 
 There are various toy languages calling themselves ``Mini-ML'' in the
-liteature. All Mini-MLs reflect some of the flavor of functional
+literature. All Mini-MLs reflect some of the flavor of functional
 programming while avoiding features such as complex pattern-matching
 and datatype declarations that make the core language of Standard ML
 \cite{milner97definition} a bit more complicated.  Of course, Mini-MLs
@@ -159,8 +159,8 @@ branch to return a value.
 
 We will demonstrate a third option here, the sequential exception
 semantics used by Manticore~\cite{fluet08scheduling}. An error raised
-by the second scritnee $\obj{e_2}$ of $\obj{\sf letpar}$ will only be
-passed up the stack if the first scruitnee $\obj{e_1}$ returns a
+by the second scrutinee $\obj{e_2}$ of $\obj{\sf letpar}$ will only be
+passed up the stack if the first scrutinee $\obj{e_1}$ returns a
 value. We also represent Manticore's {\it cancellation} -- if the
 first branch of a parallel evaluation raises an exception, then rather
 than passively waiting for the second branch to terminate we
@@ -192,7 +192,7 @@ negative acknowledgements.
 
 Many of the pieces of Concurrent ML do not interact concurrency
 directly; instead, they build channels and event values that drive
-synchronization. In our hybrid specification methadology, we can give
+synchronization. In our hybrid specification methodology, we can give
 these pure parts of the Concurrent ML specification a big-step
 natural semantics specification.
 
@@ -219,7 +219,7 @@ The critical feature of Concurrent ML is synchronization, which is
 much more complex than the simple synchronization described in
 Section~\ref{sec:dest-synch}, and has something of the flavor of the
 labels described in that section. An action can include many
-alternatives, but if a send and a recieve can simultaneously take
+alternatives, but if a send and a receive can simultaneously take
 place along a single channel, then the ${\sf synch/communicate}$ rule
 can enable both of the waiting ${\sf synch}$ expressions to proceed
 evaluating as ${\sf eval}$ expressions.

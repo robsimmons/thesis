@@ -16,7 +16,8 @@ Frontend.read "#operationalize stop.";
 
 HEADING "ORDERED ABSTRACT MACHINES (nested)";
 Frontend.reset ();
-Frontend.read "#defunctionalize \"ord-flat.auto.sls\" (cont frame : ord).";
+Frontend.read "#defunctionalize \"ord-flat.auto.sls\" \
+\                 (cont frame : ord).";
 Frontend.load "ord-nested.auto.sls";
 Frontend.load "compose/imp-exp.sls";
 Frontend.load "compose/imp-ordmachine.sls";
@@ -24,7 +25,8 @@ Frontend.read "#defunctionalize stop.";
 
 HEADING "ORDERED ABSTRACT MACHINES (flat)";
 Frontend.reset ();
-Frontend.read "#destadd \"dest.auto.sls\" dest eval retn error casen caseb.";
+Frontend.read "#destadd \"dest.auto.sls\" \
+\                 dest eval retn error casen caseb.";
 Frontend.load "ord-flat.auto.sls";
 Frontend.load "compose/control-exp.sls";
 Frontend.load "compose/control-ordmachine.sls";
