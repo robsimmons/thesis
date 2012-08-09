@@ -41,7 +41,138 @@
 % consider an extra case (the term is a variable $\lf{a_i}$ from the
 % context) that is not possible in the closed world. 
 
-\section{Well-formed versus well-typed states}
+\section{Generalizing worlds}
+
+The regular world specifications used in Twelf are made up of {\it
+  blocks}. A block describes a little piece of an LF context, and
+is declared in the LF signature as follows:
+\[
+ {\sf blockname} :
+ {\sf some}~\{\lf{a_1}{:}\tau_1\}\ldots\{\lf{a_n}{:}\tau_n\}
+~{\sf block}~\{\lf{b_1}{:}\tau'_1\}\ldots\{\lf{b_m}{:}\tau'_m\}
+\]
+A block declaration is well formed in the signature $\Sigma$ if 
+$\left(\lf{a_1}{:}\tau_1,\ldots,\lf{a_{i-1}}{:} \tau_{i-1} \right)\vdash_\Sigma
+\tau_i \,{\sf type}$ for $1 \leq i \leq n$ and if 
+$\left(\lf{a_1}{:}\tau_1,\ldots,\lf{a_{n}}{:} \tau_{n},
+ \lf{b_1}{:}\tau'_1,\ldots,\lf{b_{j-1}}{:}\tau_{j-1}\right) \vdash_\Sigma
+\tau_j \,{\sf type}$ for $1 \leq j \leq m$. 
+
+The first list of LF variable bindings
+$\{\lf{a_1}{:}\tau_1\}\ldots\{\lf{a_n}{:}\tau_n\}$ that 
+come after the ${\sf some}$ describe the types
+of concrete LF terms that must exist for the block to be well formed.
+The second list of LF variable bindings represent the bindings that
+the block actually adds to the LF context. The regular worlds of 
+Twelf are defined as sets of block identifiers 
+$({\sf block1} \mid \ldots \mid {\sf blockn})$. A set of block identifiers
+and a Twelf signature $\Sigma$ define a world as follows: if
+\smallskip
+\begin{itemize}
+\item $\Psi$ is a well-formed
+LF context in the current world, 
+\item there is a $\lf{\sigma}$ such that
+$\Psi \vdash_\Sigma \lf{\sigma} :
+\lf{a_1}{:}\tau_1,\ldots,\lf{a_n}{:}\tau_n$, 
+\item ${\sf blockname}$ is one of the blocks in the current world, and
+\item ${\sf blockname} :
+ {\sf some}~\{\lf{a_1}{:}\tau_1\}\ldots\{\lf{a_n}{:}\tau_n\}
+~{\sf block}~\{\lf{b_1}{:}\tau'_1\}\ldots\{\lf{b_m}{:}\tau'_m\} \in \Sigma$,
+\end{itemize}
+\smallskip
+then $\Psi,
+\lf{b_1}{:}\lf\sigma\tau'_1,\ldots, \lf{b_m}{:}\lf\sigma\tau'_m$ is
+also a well-formed LF context in the current world. The empty LF context
+belongs to every regular world, so this definition gives us the rules for 
+generating a world -- a set of contexts -- from a series of block 
+declarations. 
+
+The simple world we have discussed previously (for
+example, in Section~\ref{sec:framework-reggenworld}) is the
+world that just contains arbitrary expression variables with LF type
+${\sf exp}$. This world can be described with the block ${\sf blockexp}$:
+\[
+ {\sf blockexp} : 
+ {\sf some}
+~{\sf block}~\{{\lf x}{:}{\sf exp}\}
+\]
+If we had a judgment ${\sf natvar}\,\lf{x}\,\lf{n}$ that associated
+every LF variable $\lf{x}{:}{\sf exp}$ with some natural nubmer
+$\lf{n}{:}{\sf nat}$, then in order to make sure that every expression
+variable was assocaited with some natural number we would use this
+world:
+\[
+ {\sf blocknatvar} : 
+ {\sf some}~\{{\lf n}{:}{\sf nat}\}
+~{\sf block}~\{{\lf x}{:}{\sf exp}\}~
+               \{\lf{\it nv}{:}{\sf natvar}\,\lf{x}\,\lf{n}\}
+\]
+The world described by the combination of ${\sf blockexp}$ and ${\sf
+  blocknatvar}$ is one where, every LF variable $\lf{x}{:}{\sf exp}$
+is associated with either zero or one LF variables of type ${\sf
+  natvar}\,\lf{x}\,\lf{n}$. Assuming that there are no constants of
+type ${\sf natvar}$, a property we can enforce with subrodination, this
+gives us a uniqueness property: if ${\sf natvar}\,\lf{x}\,\lf{n}$ and
+${\sf natvar}\,\lf{x}\,\lf{m}$, then $\lf{m} = \lf{n}$. 
+
+We can describe 
+\begin{align*}
+&{\sf blockname} : {\sf prop}\,{\sf pers},
+\\
+&{\sf blockname/gen} : 
+  \forall \lf{a_1}{:}\tau_1\ldots \forall\lf{a_n}{:}\tau_n.\,
+  {\sf blockname} 
+    \lefti
+  \{ \exists \lf{b_1}{:}\tau'_1 \ldots \lf{b_m}{:}\tau'_m.\,
+     \one
+  \}
+\intertext{So, our two examples would be written as follows:}
+&{\sf blockexp} : {\sf prop}\,{\sf pers},
+\\
+&{\sf blockexp/gen} : {\sf blockexp} \lefti
+  \{ \exists \lf{x}{:}{\sf exp}.\,\one\},
+\\
+&{\sf blocknatvar} : {\sf prop}\,{\sf pers},
+\\
+&{\sf blocknatvar/gen} : \forall \lf{n}{:}{\sf nat}.\,
+  {\sf blocknatvar} \lefti
+  \{ \exists \lf{x}{:}{\sf exp}.\,
+     \exists \lf{\it nv}{:}{\sf natvar}\,\lf{x}\,\lf{n}.\, \one \}
+\end{align*}
+Let the original signature be $\Sigma$ and the signature extended with
+one persistent proposition and one rule for every block be
+$\Sigma_{\it RW}$.  The regular world described by $({\sf block1} \mid
+\ldots \mid {\sf blockn})$ in Twelf is precisely the set of LF
+contexts $\Psi$ such that $(\cdot; x_1{:}{\sf block1}, \ldots,
+x_n{:}{\sf blockn}) \leadsto_{\Sigma_{RW}} (\Psi'; \Delta')$ and
+$(\Psi; \Delta) = \restrictsig{(\Psi'; \Delta')}{\Sigma}$.\footnote{We
+  also know, becuase of the structure of regular worlds created from
+  generative invariants, that $\Delta' = x_1{:}{\sf block1}, \ldots,
+  x_n{:}{\sf blockn}$, that $\restrictsig{(\Psi'; \Delta')}{\Sigma}$
+  is defined, and that $\Delta' = \cdot$. However, we won't know this
+  in general when we discuss generative invariants.} 
+
+From the structure of translated LF regular worlds, it is apparent
+that by replacing the proposition $\one$ in the heads of the ${\sf
+  block{*}/gen}$ rules, we can extend the language of regular worlds to
+allow the introduction of ordered, linear, and persistent
+\sls~propositions as well.
+
+
+\section{Invariants of ordered specifications}
+
+We have already covered one discussion of generative invariants for 
+ordered abstract machine SSOS specifications. In Figure 
+
+\begin{figure}[t]
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-order-prog.sls}
+\caption{Ordered abstract machine with parallel evaluation and failure}
+\label{fig:ssos-fail}
+\end{figure}
+
+
+\section{From well-formed to well-typed states}
 
 \section{Ambient state}
 

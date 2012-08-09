@@ -149,7 +149,7 @@ of this proposition is given in
 Figure~\ref{fig:unfocused-robot}.\footnote{In
   Chapter~\ref{chapter-framework} (and Section~\ref{sec:whytraces} in
   particular) we see that this view isn't quite precise enough, and
-  that the most natural representation of state change from the state
+  that the ``best'' representation of state change from the state
   $A$ to the state $B$ isn't really captured by derivations of the
   proposition $A \lolli B$ or by derivations of the sequent
   $\seq{\cdot}{A}{B}$.  However, this view remains a simple and useful
@@ -158,7 +158,7 @@ Figure~\ref{fig:unfocused-robot}.\footnote{In
 
 \input{figs/fig-unfocused-robot}
 
-It is precisely because linear logic contains this natural notion of
+It is precisely because linear logic contains this intuitive notion of
 state and state transition that a rich line of work, dating back to
 Chirmar's 1995 Ph.D. thesis, has sought to use linear logic as a {\it
   logical framework} for describing stateful systems
@@ -636,9 +636,9 @@ propositions (${\it id}^+$, ${\it id}^-$, $\eta^+$, and $\eta^-$)
 are the main nonstandard aspect of this presentation.  The $\eta^+$
 and $\eta^-$ rules are restricted to atomic propositions, and there is
 no other way for suspended propositions to be introduced into the
-context with rules, so it would seem be natural to restrict ${\it
-  id}^+$ to atomic propositions as well. Though the identity rules
-seem unnecessarily general, this generality will make it much easier
+context with rules. Therefore, it seems reasonable to restrict ${\it
+  id}^+$ to atomic propositions as well. However, 
+ this seemingly unnecessary generality will make it much easier
 to establish the standard metatheory of this sequent calculus. To see
 why this is the case, we will turn our attention to suspended
 propositions and the four admissible rules (two focal substitution
@@ -1960,7 +1960,7 @@ various modifications we discuss in this section complicate the
 treatment of focused logics as independently justifiable sequent
 calculi for linear logic. I suggest in
 Section~\ref{sec:permeable} that the last option, the incorporation of
-permeable atomic propositions, provides the most natural mechanism for
+permeable atomic propositions, is the most pleasing mechanism for
 incorporating the structure we desire into a focused presentation of
 linear logic.
 
@@ -2260,7 +2260,8 @@ used to replace one of the ${\it id}^+_2$ instances with an instance
 of ${\it id}^+_1$.
 
 \paragraph{Cut admissibility}
-While we might be willing to sacrifice the natural treatment of atomic
+While we might be willing to sacrifice the 
+straightforward interpretation of atomic
 propositions as stand-ins for arbitrary propositions, another instance
 of the same problematic pattern arises when we try to establish the
 critical cut admissibility theorem for the
@@ -2668,7 +2669,7 @@ rule for ${!}_R$ is derivable using these two rules:
 Note that the ${!}'_R$ rule is not invertible,
 because it forces the linear context to be empty, which means ${!}$
 must be positive. The ${\it valid}$
-rule, on the other hand, is invertible and naturally has an
+rule, on the other hand, is invertible and has an
 asynchronous or negative character,
 because it represents the invertible step of deciding to prove that
 $A$ is {\it valid} (true without recourse to any ephemeral resources)
@@ -2760,7 +2761,7 @@ translated as $F x^+$, where $x^+$ is the translation of $p^+$ as a
 persistent positive atomic proposition.
 
 Adjoint logic gives one answer to why, in Andreoli-style
-presentations of linear logic, we can't naturally substitute positive
+presentations of linear logic, we can't substitute positive
 propositions for positive atomic propositions when those positive
 atomic propositions appear suspended in the persistent linear context:
 because these propositions are actually stand-ins for {\it persistent}
@@ -3108,7 +3109,7 @@ propositions so that positive atoms never appear in the persistent
 context. From our perspective, this is a rather unusual
 recommendation, since it just returns us to linear logic without the
 atom optimization! The focused system in Section~\ref{sec:foclinlog},
-which we have argued is a more natural presentation, 
+which we have argued is a more fundamental presentation, 
 effectively avoid this problem.
 
 However, it's not necessary to view Andreoli's proliferation of rules
