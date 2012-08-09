@@ -152,11 +152,32 @@ $(\Psi; \Delta) = \restrictsig{(\Psi'; \Delta')}{\Sigma}$.\footnote{We
   is defined, and that $\Delta' = \cdot$. However, we won't know this
   in general when we discuss generative invariants.} 
 
-From the structure of translated LF regular worlds, it is apparent
-that by replacing the proposition $\one$ in the heads of the ${\sf
-  block{*}/gen}$ rules, we can extend the language of regular worlds to
-allow the introduction of ordered, linear, and persistent
-\sls~propositions as well.
+From the structure of translated LF regular worlds, it is hopefully
+apparent that by replacing the proposition $\one$ in the heads of the
+${\sf block{*}/gen}$ rules with more interesting positive
+\sls propositions,  we can extend the language of regular
+worlds to allow the introduction of ordered, linear, and persistent
+\sls~propositions as well. For instance, the persistent atomic proposition
+${\sf blockitem}$ and the rule
+${\sf blockitem/gen} : 
+\forall \lf{n}. \, {\sf blockitem} \lefti \{ {\sf item}\,\lf{n} \}$,
+where ${\sf item}$ is a linear predicate,
+describes the world of contexts that take the form
+$\left(\cdot; ~ x_1{:}\iseph{\susp{{\sf item}\,\lf{n_1}}}, ~
+         \ldots, ~
+         x_k{:}\iseph{\susp{{\sf item}\,\lf{n_k}}}\right)$
+for some numbers. This world, furthermore, is preserved
+under a rule like 
+\[
+  {\sf merge} : 
+  \forall \lf{n}.\,\forall\lf{m}.\,\forall\lf{p}.\,
+   {\sf item}\,\lf{n} \fuse
+   {\sf item}\,\lf{m} \fuse
+   {!}({\sf plus}\,\lf{n}\,\lf{m}\,\lf{p}) 
+    \lefti \{ {\sf item}\,\lf{p} \}
+\]
+where ${\sf plus}$ is a negative predicate defined as in 
+Figure~\ref{fig:plus}.
 
 
 \section{Invariants of ordered specifications}

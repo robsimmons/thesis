@@ -6,7 +6,7 @@
 6  chapter-absmachine      PUBLISH
 7  chapter-destinations    PUBLISH
 8  chapter-approx          PUBLISH
-9  chapter-gen             NO
+9  chapter-gen             PUBLISH
 10 chapter-safety          NO
 11 chapter-conclusion      NO
 A  chapter-appendix-hybrid PUBLISH
