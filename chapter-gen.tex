@@ -1,5 +1,61 @@
-\chapter{Generative specifications as invariants}
+\chapter{Generative invariants}
 \label{chapter-gen}
+
+So far in this thesis, we have presented \sls~and focused on its
+concurrent fragment primarily as a way of presenting transition
+systems. This view focuses on synthetic transitions as a way of
+relating process states. Another view of concurrent
+\sls~specifications as {\it grammars} for describing well-formed
+process states was presented in the discussions of adequacy in
+Section~\ref{sec:framework-reggenworld} and in
+Section~\ref{sec:nat-ssos-adequacy}. 
+
+The grammar-like specifications that describe well-formed process
+states are called {\it generative signatures}, and when a generative
+signature is used to describe an invariant that is preserved by all
+the synthetic transitions that some {\it other} signature makes
+possible, we call it a {\it generative invariant}. 
+
+\begin{definition}
+A {\em generative signature} defines a set of 
+\end{definition}
+
+
+While generative \sls~signatures can be productively used to describe
+sets of well-formed process states, we will only characterize what a
+generative signature in an informal sense. Given a specification that
+
+In this chapter, we argue that generative \sls~signatures
+are a reasonable basis for formally discussing invariants of
+\sls~specifications. This argument forms the centerpiece of the
+third component of our central thesis:
+
+\smallskip
+\begin{quote} 
+  {\bf Thesis (Part III):} {\it The \sls~specification of the operational
+    semantics of a programming language is a suitable basis for formal
+    reasoning about the properties of the language.}
+\end{quote} 
+\smallskip 
+
+\noindent
+The approximation methadology in Chatper~\ref{chapter-approx} is also
+relevant to this refinement of the thesis statement, as the the intent
+of approximation is program abstraction, a form of formal reasoning
+about the properties of the programming language.\footnote{One the
+  other hand, approximation is a sort of program transformation like
+  operationalization, defunctionalization, and destination adding,
+  which is why this chapter was presented in Part~II. This observation
+  illustrates that Chapter~\ref{chapter-approx} sits uncertainly
+  between Part~II and Part~III of this thesis.} This refinement of the
+thesis statement will be further supported in Chapter~\ref{chapter-safety}
+when we discuss the use of generative invariants to prove the progress
+property for SSOS specifications. As 
+
+
+
+
+
 
 % The relevant building blocks in our $\lambda$-calculus encoding are
 % just LF variables of type $\lf{a}{:}{\sf exp}$. It is sometimes
@@ -176,8 +232,32 @@ under a rule like
    {!}({\sf plus}\,\lf{n}\,\lf{m}\,\lf{p}) 
     \lefti \{ {\sf item}\,\lf{p} \}
 \]
+that combines two items, 
 where ${\sf plus}$ is a negative predicate defined as in 
-Figure~\ref{fig:plus}.
+Figure~\ref{fig:plus}.  
+
+To actually show that a generative invariant is observed, let
+$\Sigma_{\it item}$ be the signature including the ${\sf blockitem}$
+predicate and the ${\sf blockitem/gen}$ rule, and let $\Sigma_{\it
+  merge}$ be the signature including the ${\sf merge}$ rule. 
+The synthetic transition associated with ${\sf merge}$ 
+has the form 
+\[
+(\Psi; \Delta, x_1{:}\iseph{\susp{{\sf item}\,\lf{m}}},
+          x_2{:}\iseph{\susp{{\sf item}\,\lf{n}}}) 
+\leadsto_{\Sigma_{\it merge}} 
+ (\Psi; \Delta, x{:}\iseph{\susp{{\sf item}\,\lf{p}}})\]
+with the side condition that there is a derivaiton
+of $\Psi; \cdot \vdash_{\Sigma_{\it merge}} N : 
+    {\sf plus}\,\lf{n}\,\lf{m}\,\lf{p}$. 
+We are given a trace
+$T :: (\cdot; b{:}\ispers{\susp{{\sf blockitem}}}) \leadsto^*_{\Sigma_{\it item}}
+     (\Psi'; \Delta')$ where we know that
+$\restrictsig{(\Psi'; \Delta')}{\Sigma_{\it merge}}$ is defined and
+$\restrictsig{(\Psi'; \Delta')}{\Sigma_{\it merge}} = 
+ (\Psi, \Delta, x_1{:}\iseph{\susp{{\sf item}\,\lf{m}}},
+          x_2{:}\iseph{\susp{{\sf item}\,\lf{n}}})$. By induction
+and case analysis on the end of the trace $T$, as 
 
 
 \section{Invariants of ordered specifications}
@@ -185,7 +265,7 @@ Figure~\ref{fig:plus}.
 We have already covered one discussion of generative invariants for 
 ordered abstract machine SSOS specifications. In Figure 
 
-\begin{figure}[t]
+\begin{figure}[tp]
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/gen-order-prog.sls}
 \caption{Ordered abstract machine with parallel evaluation and failure}
