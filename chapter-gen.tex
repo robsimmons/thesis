@@ -11,24 +11,68 @@ Section~\ref{sec:framework-reggenworld} and in
 Section~\ref{sec:nat-ssos-adequacy}. 
 
 The grammar-like specifications that describe well-formed process
-states are called {\it generative signatures}, and when a generative
-signature is used to describe an invariant that is preserved by all
-the synthetic transitions that some {\it other} signature makes
-possible, we call it a {\it generative invariant}. 
+states are called {\it generative signatures}. We can give
+an informal definition of what constitutes a generative signature
+as follows:
 
-\begin{definition}
-A {\em generative signature} defines a set of 
+\bigskip
+\begin{definition}\label{def:gensig}
+  A {\em generative signature} is one where the ordered, linear, and
+  persistent atomic propositions can be separated into two sets -- the
+  {\em terminals} and the {\em nonterminals}. Synthetic transitions
+  enabled by a generative signature only consume (or reference) 
+  terminals and LF terms, but they produce both terminals 
+  and nonterminals.
 \end{definition}
+\bigskip
 
+\noindent
+The restriction operator $\restrictsig{(\Psi; \Delta)}{\Sigma}$
+introduced in Section~\ref{sec:framework-restriction} is an integral
+part of using generative signatures: if $(\Psi; \Delta)$ is
+well-defined under the generative signature $\Sigma_{\it Gen}$, and
+$\Sigma$ is any signature that includes all of the generative
+signature's terminals (and all of its LF bits) but none of its
+nonterminals, then $\restrictsig{(\Psi; \Delta)}{\Sigma}$ is only
+defined when the only remaining nonterminals in $\Delta$ are persistent
+and can be filtered out of $\Delta$. (As long as $\Sigma_{\it Gen}$
+and $\Sigma$ have the same LF declarations, the LF context 
+$\Psi$ won't have anything filtered out.) When the classification of
+terminals and nonterminals is clear, we will leave off the restricting
+signature and just write $\restrictsig{(\Psi; \Delta)}{}$.
 
-While generative \sls~signatures can be productively used to describe
-sets of well-formed process states, we will only characterize what a
-generative signature in an informal sense. Given a specification that
+In this way, a generative signature combined with an initial state
+(containing only nonterminals) describes a {\it formal language} of
+process states -- a set of states well-formed according to the
+generative signature. Generative signatures generalize context-free
+grammars, and as we pointed out in
+Section~\ref{sec:framework-reggenworld} and discuss further in
+Section~\ref{sec:gen-worlds}, they also generalize the regular worlds
+of Twelf \cite{schurmann00automating}. Definition~\ref{def:gensig} is
+intentionally broad, however. As a result, membership in the language
+described by a generative signature need not be
+decidable.\footnote{Proof: consider the initial state
+  $(x{:}\istrue{\susp{\sf gen}})$ and the rule $\forall
+  \lf{e}.\,\forall\lf{v}.\,{\sf gen} \fuse {!}({\sf
+    ev}\,\lf{e}\,\lf{v}) \lefti \{ {\sf terminating}\,\lf{e} \}$. The
+  predicate ${\sf gen}$ is a nonterminal, the predicate ${\sf
+    terminating}$ is a terminal, and ${\sf ev}$ is the encoding of
+  big-step evaluation $\obj{e \Downarrow v}$ from
+  Figure~\ref{fig:example-transform-cbv}.  The language described is
+  isomorphic to the set of terminating $\lambda$-calculus expressions,
+  and membership in that set is undecidable.} Future tractable analyses
+will therefore presumably be based upon further restrictions of the
+very general and mostly informal Definition~\ref{def:gensig}.
 
-In this chapter, we argue that generative \sls~signatures
-are a reasonable basis for formally discussing invariants of
-\sls~specifications. This argument forms the centerpiece of the
-third component of our central thesis:
+When membership in the language described by a generative signature
+and an initial state is preserved by the synthetic transitions in some
+other signature, we call the language of well-formed process states a
+{\it generative invariant} of that signature.  In this chapter, we
+argue that generative invariants are a reasonable way of talking about
+invariants of \sls~specifications, especially well-formedness or
+well-typedness invariants of substructural operational semantics
+specifications like the ones presented in Part II. This argument forms
+the centerpiece of the third refinement of our central thesis:
 
 \smallskip
 \begin{quote} 
@@ -39,18 +83,19 @@ third component of our central thesis:
 \smallskip 
 
 \noindent
-The approximation methadology in Chatper~\ref{chapter-approx} is also
-relevant to this refinement of the thesis statement, as the the intent
-of approximation is program abstraction, a form of formal reasoning
-about the properties of the programming language.\footnote{One the
-  other hand, approximation is a sort of program transformation like
-  operationalization, defunctionalization, and destination adding,
-  which is why this chapter was presented in Part~II. This observation
-  illustrates that Chapter~\ref{chapter-approx} sits uncertainly
-  between Part~II and Part~III of this thesis.} This refinement of the
-thesis statement will be further supported in Chapter~\ref{chapter-safety}
-when we discuss the use of generative invariants to prove the progress
-property for SSOS specifications. As 
+Zooming out a bit, the approximation methodology presented in
+Chapter~\ref{chapter-approx} is also relevant to this refinement of
+the thesis statement, as the the intent of approximation is program
+abstraction, a form of formal reasoning about the properties of the
+programming language.\footnote{One the other hand, approximation is a
+  program transformation like operationalization, defunctionalization,
+  and destination adding, which is why this chapter was presented in
+  Part~II. This observation illustrates that
+  Chapter~\ref{chapter-approx} sits uncertainly between Part~II and
+  Part~III of this thesis.} This refinement of the thesis statement
+will be further supported in Chapter~\ref{chapter-safety} when we
+discuss the use of generative invariants to prove the progress
+property, and therefore language safety, for SSOS specifications.
 
 
 
@@ -97,7 +142,8 @@ property for SSOS specifications. As
 % consider an extra case (the term is a variable $\lf{a_i}$ from the
 % context) that is not possible in the closed world. 
 
-\section{Generalizing worlds}
+\section{Regular worlds}
+\label{sec:gen-worlds}
 
 The regular world specifications used in Twelf are made up of {\it
   blocks}. A block describes a little piece of an LF context, and
@@ -153,9 +199,9 @@ ${\sf exp}$. This world can be described with the block ${\sf blockexp}$:
 ~{\sf block}~\{{\lf x}{:}{\sf exp}\}
 \]
 If we had a judgment ${\sf natvar}\,\lf{x}\,\lf{n}$ that associated
-every LF variable $\lf{x}{:}{\sf exp}$ with some natural nubmer
+every LF variable $\lf{x}{:}{\sf exp}$ with some natural number
 $\lf{n}{:}{\sf nat}$, then in order to make sure that every expression
-variable was assocaited with some natural number we would use this
+variable was associated with some natural number we would use this
 world:
 \[
  {\sf blocknatvar} : 
@@ -167,7 +213,7 @@ The world described by the combination of ${\sf blockexp}$ and ${\sf
   blocknatvar}$ is one where, every LF variable $\lf{x}{:}{\sf exp}$
 is associated with either zero or one LF variables of type ${\sf
   natvar}\,\lf{x}\,\lf{n}$. Assuming that there are no constants of
-type ${\sf natvar}$, a property we can enforce with subrodination, this
+type ${\sf natvar}$, a property we can enforce with subordination, this
 gives us a uniqueness property: if ${\sf natvar}\,\lf{x}\,\lf{n}$ and
 ${\sf natvar}\,\lf{x}\,\lf{m}$, then $\lf{m} = \lf{n}$. 
 
@@ -202,7 +248,7 @@ $\Sigma_{\it RW}$.  The regular world described by $({\sf block1} \mid
 contexts $\Psi$ such that $(\cdot; x_1{:}{\sf block1}, \ldots,
 x_n{:}{\sf blockn}) \leadsto_{\Sigma_{RW}} (\Psi'; \Delta')$ and
 $(\Psi; \Delta) = \restrictsig{(\Psi'; \Delta')}{\Sigma}$.\footnote{We
-  also know, becuase of the structure of regular worlds created from
+  also know, because of the structure of regular worlds created from
   generative invariants, that $\Delta' = x_1{:}{\sf block1}, \ldots,
   x_n{:}{\sf blockn}$, that $\restrictsig{(\Psi'; \Delta')}{\Sigma}$
   is defined, and that $\Delta' = \cdot$. However, we won't know this
@@ -247,7 +293,7 @@ has the form
           x_2{:}\iseph{\susp{{\sf item}\,\lf{n}}}) 
 \leadsto_{\Sigma_{\it merge}} 
  (\Psi; \Delta, x{:}\iseph{\susp{{\sf item}\,\lf{p}}})\]
-with the side condition that there is a derivaiton
+with the side condition that there is a derivation
 of $\Psi; \cdot \vdash_{\Sigma_{\it merge}} N : 
     {\sf plus}\,\lf{n}\,\lf{m}\,\lf{p}$. 
 We are given a trace
