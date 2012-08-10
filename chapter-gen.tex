@@ -97,16 +97,32 @@ will be further supported in Chapter~\ref{chapter-safety} when we
 discuss the use of generative invariants to prove the progress
 property, and therefore language safety, for SSOS specifications.
 
-
-
+In this chapter, we will first give a careful account of the
+relationship between generative signatures and regular worlds
+(Section~\ref{sec:gen-worlds}). We will then discuss invariants of
+operationalized ordered abstract machines more generally
+(Section~\ref{sec:gen-order}), and extend that discussion from
+well-{\it formed} process states to well-{\it typed} process states in
+Section~\ref{sec:gen-ordertp}.  This is not a large technical change,
+but conceptually it is an important step from thinking about
+adequacy-like properties to thinking about preservation theorems. In
+Section~\ref{sec:gen-state} we describe how generative invariants can
+be established for the sorts of stateful signatures considered in
+Section~\ref{sec:richer-ordered-abstract}. In
+Section~\ref{sec:gen-destinations} we consider invariants for
+specifications in the image of the destination-passing transformation,
+and in Section~\ref{sec:gen-letcc} we consider the peculiar case of
+first-class continuations, which require us to use persistent
+continuation frames. Finally, in Section~\ref{sec:gen-count} we
+introduce a more complicated class of generative invariants that
+capture the numerical properties of specifications that appear in the
+\sls~encoding of voting and auction protocols.
 
 
 
 % The relevant building blocks in our $\lambda$-calculus encoding are
 % just LF variables of type $\lf{a}{:}{\sf exp}$. It is sometimes
 % desirable to consider closed expressions, 
-
-
 
 % but in other examples they
 % involve multiple context elements that must appear in tandem. In
@@ -135,7 +151,6 @@ property, and therefore language safety, for SSOS specifications.
 % The {\it closed world assumption} -- considering terms in the absence
 % of any LF variables -- is the simplest one. 
 
-
 % The world affects the reasoning we have to do when we perform case
 % analysis: when we reason about terms of type ${\sf exp}$ defined in
 % the world that allows variables of type ${\sf exp}$, we have to
@@ -145,9 +160,12 @@ property, and therefore language safety, for SSOS specifications.
 \section{Regular worlds}
 \label{sec:gen-worlds}
 
-The regular world specifications used in Twelf are made up of {\it
-  blocks}. A block describes a little piece of an LF context, and
-is declared in the LF signature as follows:
+{\it Worlds} are sets of context: in LF, the {\it closed world} is
+just the singleton set containing only the empty LF context.  The
+regular world specifications used in Twelf
+\cite{schurmann00automating} are made up of {\it blocks}. A block
+describes a little piece of an LF context, and is declared in the LF
+signature as follows:
 \[
  {\sf blockname} :
  {\sf some}~\{\lf{a_1}{:}\tau_1\}\ldots\{\lf{a_n}{:}\tau_n\}
@@ -162,7 +180,7 @@ $\left(\lf{a_1}{:}\tau_1,\ldots,\lf{a_{n}}{:} \tau_{n},
 
 The first list of LF variable bindings
 $\{\lf{a_1}{:}\tau_1\}\ldots\{\lf{a_n}{:}\tau_n\}$ that 
-come after the ${\sf some}$ describe the types
+come after the ${\sf some}$ keyword describe the types
 of concrete LF terms that must exist for the block to be well formed.
 The second list of LF variable bindings represent the bindings that
 the block actually adds to the LF context. The regular worlds of 
@@ -189,7 +207,7 @@ belongs to every regular world, so this definition gives us the rules for
 generating a world -- a set of contexts -- from a series of block 
 declarations. 
 
-The simple world we have discussed previously (for
+The simple world that we have discussed previously (for
 example, in Section~\ref{sec:framework-reggenworld}) is the
 world that just contains arbitrary expression variables with LF type
 ${\sf exp}$. This world can be described with the block ${\sf blockexp}$:
@@ -210,14 +228,17 @@ world:
                \{\lf{\it nv}{:}{\sf natvar}\,\lf{x}\,\lf{n}\}
 \]
 The world described by the combination of ${\sf blockexp}$ and ${\sf
-  blocknatvar}$ is one where, every LF variable $\lf{x}{:}{\sf exp}$
+  blocknatvar}$ is one where every LF variable $\lf{x}{:}{\sf exp}$
 is associated with either zero or one LF variables of type ${\sf
   natvar}\,\lf{x}\,\lf{n}$. Assuming that there are no constants of
 type ${\sf natvar}$, a property we can enforce with subordination, this
 gives us a uniqueness property: if ${\sf natvar}\,\lf{x}\,\lf{n}$ and
 ${\sf natvar}\,\lf{x}\,\lf{m}$, then $\lf{m} = \lf{n}$. 
 
-We can describe 
+We can describe arbitrary blocks as a generative signature that adds
+one nonterminal and one rule. The nonterminal is a persistent atomic
+proposition that corresponds to the name of the block, and the rule
+corresponds to the content of the block.
 \begin{align*}
 &{\sf blockname} : {\sf prop}\,{\sf pers},
 \\
@@ -228,7 +249,7 @@ We can describe
   \{ \exists \lf{b_1}{:}\tau'_1 \ldots \lf{b_m}{:}\tau'_m.\,
      \one
   \}
-\intertext{So, our two examples would be written as follows:}
+\intertext{So, our two example blocks above can be written as follows:}
 &{\sf blockexp} : {\sf prop}\,{\sf pers},
 \\
 &{\sf blockexp/gen} : {\sf blockexp} \lefti
@@ -251,7 +272,9 @@ $(\Psi; \Delta) = \restrictsig{(\Psi'; \Delta')}{\Sigma}$.\footnote{We
   also know, because of the structure of regular worlds created from
   generative invariants, that $\Delta' = x_1{:}{\sf block1}, \ldots,
   x_n{:}{\sf blockn}$, that $\restrictsig{(\Psi'; \Delta')}{\Sigma}$
-  is defined, and that $\Delta' = \cdot$. However, we won't know this
+  is defined, and that $\Delta' = x_1{:}{\sf block1}, \ldots,
+x_n{:}{\sf blockn}$ and therefore 
+$\Delta = \cdot$. However, we won't know this
   in general when we discuss generative invariants.} 
 
 From the structure of translated LF regular worlds, it is hopefully
@@ -268,7 +291,9 @@ describes the world of contexts that take the form
 $\left(\cdot; ~ x_1{:}\iseph{\susp{{\sf item}\,\lf{n_1}}}, ~
          \ldots, ~
          x_k{:}\iseph{\susp{{\sf item}\,\lf{n_k}}}\right)$
-for some numbers. This world, furthermore, is preserved
+for some numbers $\lf{n_1}\ldots\lf{n_k}$. 
+
+This world, furthermore, is preserved
 under a rule like 
 \[
   {\sf merge} : 
@@ -281,8 +306,7 @@ under a rule like
 that combines two items, 
 where ${\sf plus}$ is a negative predicate defined as in 
 Figure~\ref{fig:plus}.  
-
-To actually show that a generative invariant is observed, let
+To actually show that this generative invariant is observed, let
 $\Sigma_{\it item}$ be the signature including the ${\sf blockitem}$
 predicate and the ${\sf blockitem/gen}$ rule, and let $\Sigma_{\it
   merge}$ be the signature including the ${\sf merge}$ rule. 
@@ -303,10 +327,33 @@ $\restrictsig{(\Psi'; \Delta')}{\Sigma_{\it merge}}$ is defined and
 $\restrictsig{(\Psi'; \Delta')}{\Sigma_{\it merge}} = 
  (\Psi, \Delta, x_1{:}\iseph{\susp{{\sf item}\,\lf{m}}},
           x_2{:}\iseph{\susp{{\sf item}\,\lf{n}}})$. By induction
-and case analysis on the end of the trace $T$, as 
-
+and case analysis on the end of the trace $T$, we get that 
+the trace $T$ is (concurrently) equal to 
+\begin{align*}
+   & \qquad (\cdot; b{:}\ispers{\susp{{\sf blockitem}}})
+\\ & T'
+\\ & \qquad (\Psi; \Delta)
+\\ & \trstep{x_1}{{\sf blockitem/gen}\,\lf{m}\,b}
+\\ & \trstep{x_2}{{\sf blockitem/gen}\,\lf{n}\,b}
+\\ & \qquad (\Psi; \Delta, x_1{:}\iseph{\susp{{\sf item}\,\lf{m}}},
+          x_2{:}\iseph{\susp{{\sf item}\,\lf{n}}})
+\intertext{We can re-generate the state after our synthetic
+  transition as follows:}
+   & \qquad (\cdot; b{:}\ispers{\susp{{\sf blockitem}}})
+\\ & T'
+\\ & \qquad (\Psi; \Delta)
+\\ & \trstep{x}{{\sf blockitem/gen}\,\lf{p}\,b}
+\\ & \qquad (\Psi; \Delta, x{:}\iseph{\susp{{\sf item}\,\lf{p}}})
+\end{align*}
+While this point was discussed carefully in
+Section~\ref{sec:sls-adequate} and a bit less carefully in
+Section~\ref{sec:nat-ssos-adequacy}, it is worth reprising how this
+induction and case analysis on the last steps works. If $T = T''; S$
+for any step $S$ and $S$ does not include $x_1$ or $x_2$ in its output
+interface $\left(\emptyset = S^{\bullet} \cap \{ x_1, x_2 \}\right)$, then 
 
 \section{Invariants of ordered specifications}
+\label{sec:gen-order}
 
 We have already covered one discussion of generative invariants for 
 ordered abstract machine SSOS specifications. In Figure 
@@ -320,8 +367,11 @@ ordered abstract machine SSOS specifications. In Figure
 
 
 \section{From well-formed to well-typed states}
+\label{sec:gen-ordertp}
 
 \section{Ambient state}
+\label{sec:gen-state}
+
 
 % \subsection{Store typing}
 
@@ -336,6 +386,7 @@ ordered abstract machine SSOS specifications. In Figure
 \label{sec:gen-letcc}
 
 \section{Counting invariants}
+\label{sec:gen-count}
 
 % \subsection{Parity}
 
