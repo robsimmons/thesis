@@ -235,6 +235,8 @@ type ${\sf natvar}$, a property we can enforce with subordination, this
 gives us a uniqueness property: if ${\sf natvar}\,\lf{x}\,\lf{n}$ and
 ${\sf natvar}\,\lf{x}\,\lf{m}$, then $\lf{m} = \lf{n}$. 
 
+\subsection{Regular worlds as generative signatures}
+
 We can describe arbitrary blocks as a generative signature that adds
 one nonterminal and one rule. The nonterminal is a persistent atomic
 proposition that corresponds to the name of the block, and the rule
@@ -293,8 +295,10 @@ $\left(\cdot; ~ x_1{:}\iseph{\susp{{\sf item}\,\lf{n_1}}}, ~
          x_k{:}\iseph{\susp{{\sf item}\,\lf{n_k}}}\right)$
 for some numbers $\lf{n_1}\ldots\lf{n_k}$. 
 
-This world, furthermore, is preserved
-under a rule like 
+\subsection{Preservation of regular worlds}
+
+The world described by ${\sf blockitem}$ and ${\sf blockitem/gen}$ is,
+furthermore, a generative invariant of a rule like 
 \[
   {\sf merge} : 
   \forall \lf{n}.\,\forall\lf{m}.\,\forall\lf{p}.\,
@@ -326,31 +330,73 @@ $T :: (\cdot; b{:}\ispers{\susp{{\sf blockitem}}}) \leadsto^*_{\Sigma_{\it item}
 $\restrictsig{(\Psi'; \Delta')}{\Sigma_{\it merge}}$ is defined and
 $\restrictsig{(\Psi'; \Delta')}{\Sigma_{\it merge}} = 
  (\Psi, \Delta, x_1{:}\iseph{\susp{{\sf item}\,\lf{m}}},
-          x_2{:}\iseph{\susp{{\sf item}\,\lf{n}}})$. By induction
-and case analysis on the end of the trace $T$, we get that 
-the trace $T$ is (concurrently) equal to 
-\begin{align*}
-   & \qquad (\cdot; b{:}\ispers{\susp{{\sf blockitem}}})
-\\ & T'
-\\ & \qquad (\Psi; \Delta)
-\\ & \trstep{x_1}{{\sf blockitem/gen}\,\lf{m}\,b}
-\\ & \trstep{x_2}{{\sf blockitem/gen}\,\lf{n}\,b}
-\\ & \qquad (\Psi; \Delta, x_1{:}\iseph{\susp{{\sf item}\,\lf{m}}},
-          x_2{:}\iseph{\susp{{\sf item}\,\lf{n}}})
-\intertext{We can re-generate the state after our synthetic
-  transition as follows:}
-   & \qquad (\cdot; b{:}\ispers{\susp{{\sf blockitem}}})
-\\ & T'
-\\ & \qquad (\Psi; \Delta)
-\\ & \trstep{x}{{\sf blockitem/gen}\,\lf{p}\,b}
-\\ & \qquad (\Psi; \Delta, x{:}\iseph{\susp{{\sf item}\,\lf{p}}})
-\end{align*}
+          x_2{:}\iseph{\susp{{\sf item}\,\lf{n}}})$. 
+%By a straightforward induction over the structure of $T$, we can conclude
+%that $\Delta' = \Delta, x_1{:}\iseph{\susp{{\sf item}\,\lf{m}}},
+%          x_2{:}\iseph{\susp{{\sf item}\,\lf{n}}}, b{:}\ispers{\susp{}})$
+
+
+
+
+
+To proceed, we need a lemma, which we can prove 
+by induction
+%
+and case analysis on the end of the trace $T$, that
+if $T ::
+(\cdot; b{:}\ispers{\susp{{\sf blockitem}}}) \leadsto^*_{\Sigma_{\it
+    item}} (\Psi'; \Delta', y{:}\iseph{\susp{{\sf item}\,\lf{k}}})$
+then $T = T'; \trstep{y}{{\sf blockitem/gen}\,\lf{k}\,b'}$.
 While this point was discussed carefully in
 Section~\ref{sec:sls-adequate} and a bit less carefully in
-Section~\ref{sec:nat-ssos-adequacy}, it is worth reprising how this
-induction and case analysis on the last steps works. If $T = T''; S$
-for any step $S$ and $S$ does not include $x_1$ or $x_2$ in its output
-interface $\left(\emptyset = S^{\bullet} \cap \{ x_1, x_2 \}\right)$, then 
+Section~\ref{sec:nat-ssos-adequacy}, it is worth repeating this
+lemma in detail. If we look
+at the last steps of the trace $T$, it must take one of the following
+two forms:
+\smallskip
+\begin{enumerate}
+\item $T = \left(T''; ~~ \trstep{y}{{\sf blockitem/gen}\,\lf{k}\,b'}
+  \right)$.
+  
+\item $T = \left(T''; ~~ S \right)$, where $y$ is not
+  introduced by $S$'s pattern (in the terminology of
+  Section~\ref{sec:linconcurrenteq}, $\emptyset = S^{\bullet}
+  \cap \{ y \}$).
+\end{enumerate}
+\smallskip
+In Case 1, the result is immediate, letting $T'$ be $T''$. In Case 2, we 
+use the induction hypothesis to get some $T'''$ such that
+$T'' = \left(T''';
+  \trstep{y}{{\sf blockitem/gen}\,\lf{k}\,b'}\right)$.
+We want to conclude by saying that 
+$T' = T'''; S$, but to do that we need to know that the trace
+$\left(\trstep{y}{{\sf blockitem/gen}\,\lf{k}\,b'};
+   S\right)$ is concurrently equal to the trace 
+$\left(S; 
+\trstep{y}{{\sf blockitem/gen}\,\lf{k}\,b'}\right)$.
+%
+Because $y$ are associated with ephemeral propositions, we
+know without any further inspection that they are not part of the
+input interface of $S$ (that $\emptyset = {^\bullet}S \cap \{ y
+\}$), which means the desired concurrent equality does hold. 
+
+Using two applications of this lemma (once where $y = x_1$ and $\lf{k} = \lf{m}$ and once where $y = x_2$ and $\lf{k} = \lf{n}$, we get that
+\begin{align*}
+T = ~ & \qquad (\Psi; \Delta, x_1{:}\iseph{\susp{{\sf item}\,\lf{m}}},
+          x_2{:}\iseph{\susp{{\sf item}\,\lf{n}}}) 
+\end{align*}
+
+ lemma, we can conclude that the trace we were given, 
+
+
+
+This is a
+particularly simple case, and it is simple because the output
+interfaces of the steps we're interested in do not include LF
+variables or variables associated with persistent
+propositions. Nevertheless, this simple assumption will suffice until
+we consider destinations in Section~\ref{sec:gen-destinations}.
+
 
 \section{Invariants of ordered specifications}
 \label{sec:gen-order}
@@ -378,7 +424,7 @@ ordered abstract machine SSOS specifications. In Figure
 
 % \subsection{Environment semantics}
 
-\section{Destinations-passing}
+\section{Destination-passing}
 \label{sec:gen-destinations}
 
 
