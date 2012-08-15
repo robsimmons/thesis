@@ -1007,6 +1007,7 @@ with a refinement of \ollll~proof terms when we consider complete
 reconfigures the structure of derivations and proof terms.
 
 \subsection{Process states}
+\label{sec:sls-processstates}
 
 A {\it process state} is a disembodied left-hand side of a sequent
 that we use to describe the intermediate states of concurrent
@@ -2031,7 +2032,7 @@ $\ctxinterp{k \rhd s} \leadsto_{\Sigma_{\it PDA}} \ctxinterp{k' \rhd
   s'}$ if and only if $\obj{k \rhd s} \mapsto \obj{k' \rhd s'}$, is
 straightforward and follows other developments.
 
-\subsection{Regular and generated worlds}
+\subsection{Generative signatures}
 \label{sec:framework-reggenworld}
 
 A critical aspect of any adequacy argument is an understanding of the
@@ -2042,37 +2043,14 @@ In the statement of adequacy for untyped $\lambda$-calculus terms
 require that the LF context $\Psi$ take the form $\lf{a_1}{:}{\sf
   exp},\ldots,\lf{a_n}{:}{\sf exp}$. In the adequacy theorems that
 have been presented for deductive logical frameworks, the structure of
-the context is always {\it regular} -- we can describe a set of
-building blocks that build small pieces of the context, and then
-define the set of valid contexts (the {\it world}) to be any context
-that can be built from a particular set of building blocks.  The
-simplest {\it regular worlds} are those that forbid the presence of
-any LF variables -- when we adequately encode unary natural numbers
-$\obj{n}$ as LF terms of type ${\sf nat}$, letting $\interp{\sf z} =
-\lf{\sf z}$ and letting $\interp{{\sf s} n} = \lf{s}\,\interp{n}$, we
-assume there aren't any free LF variables of type ${\sf nat}$! This is
-the {\it closed world assumption}, and regular worlds can be presented
-as a generalization of closed worlds.  Twelf contains both a syntax
-for declaring regular worlds and facilities for checking that a
-signature respects a particular regular world structure
-\cite{schurmann00automating}.
+the context is quite simple. We can describe a set of building
+blocks that build small pieces of the context, and then define the set
+of valid process states (the {\it world}) any process state that can be
+built from a particular set of building blocks.  
 
-The relevant building blocks in our $\lambda$-calculus encoding are
-just LF variables of type $\lf{a}{:}{\sf exp}$. In other LF examples
-regular worlds involve multiple context elements that must appear in
-tandem. In proving adequacy for typing derivations, for instance, we
-must generally assume that a variable $\lf{a}{:}{\sf exp}$ always
-appears in tandem with a variable $\lf{d}{:}({\sf
-  of}\,\lf{a}\,\lf{tp})$ that associates the variable with some closed
-LF term $\lf{tp}$ of type ${\sf typ}$ that encodes the type of that
-variable.
-
-Regular worlds remain sufficient for the encoding of stores in Linear
-LF \cite{cervesato02linear} and stacks in Ordered LF
-\cite{polakow01ordered}. Our PDA states, on the other hand, do not
-have a structure that can be described by Sch\"urmann's regular
-worlds language, because the process state is organized into three
-distinct zones:
+The structure of our PDA is too complex to represent as an arbitrary
+collection of building blocks. The process state is organized into
+three distinct zones:
 \[
 [~\mbox{the stack}~]
 ~
@@ -2080,18 +2058,12 @@ distinct zones:
 ~
 [~\mbox{the string being read}~]
 \]
-This structure {\it can} be described with a regular expression, but
-the structures that can be described by regular expressions are richer
-than those that can be described by the language of regular worlds
-given by Sch\"urmann and implemented in Twelf
-\cite{schurmann00automating}.
-
-The generalization we propose is a move from regular worlds
-descriptions to a description of worlds based on (something like)
-context-free grammars.  Conveniently, the something-like-context-free
-grammars we propose can be characterized within the
+We can't freely generate this structure with building blocks, but
+we can generate it with a context-free grammar. 
+Conveniently, context-free
+grammars characterized within the
 machinery of \sls~itself by describing {\it generative signatures}
-that can generate the set of process states we are interested in from
+that can generate a set of process states we are interested in from
 a single seed context.  The signature $\Sigma_{\it Gen}$ in
 Figure~\ref{fig:pda-gen} treats all the atomic propositions of
 $\Sigma_{\it PDA}$ -- the atomic propositions ${\sf L}$, ${\sf R}$ and
@@ -2138,7 +2110,8 @@ ${\sf hd}$ -- as {\it terminals}, and introduces three {\it
 An informal translation of the signature $\Sigma_{\it Gen}$ as a
 context-free grammar is given on the right-hand side of
 Figure~\ref{fig:pda-gen}. Observe that the sentences in the language
-$G$ encode the states of our PDA as a string. 
+$G$ encode the states of our PDA as a string. We will talk much more
+about generative signatures in Chapter~\ref{chapter-gen}.
 
 \subsection{Restriction}
 \label{sec:framework-restriction}
@@ -2443,7 +2416,7 @@ the first two lemmas treated trace composition as left-associative,
 but the induction we performed on traces in the next-to-last lemma
 treated trace composition as right-associative.
 
-\subsection{Generated world preservation}
+\subsection{Generative invariants}
 \label{sec:sls-pda-preservation}
 
 The generative signature $\Sigma_{\it Gen}$ precisely captures the
@@ -2827,17 +2800,16 @@ These two cases represent the only two synthetic transitions that are possible
 under the signature $\Sigma_{\it PDA}$, so we are done.
 \end{proof}
 
-Proving that generation under a generative signature like $\Sigma_{\it
-  Gen}$ is invariant under transitions in a signature like
-$\Sigma_{\it PDA}$ is something we will consider further
-in Chapter~\ref{chapter-gen}.  
-All such proofs essentially follow the structure of
-Theorem~\ref{thm:pda-preservation}. First, we enumerate the synthetic
-transitions associated with a given signature. Second, in each of those
-cases, we use the type of the synthetic transition to perform
-inversion on the structure of the given generative trace.
-Third, we construct a generative
-trace that establishes the fact that the invariant was preserved.
+Theorem~\ref{thm:pda-preservation} establishes that the generative
+signature $\Sigma_{\it Gen}$ is a {\it generative invariant} of the
+signature $\Sigma_{\it PDA}$. We consider theorems of this form
+further in Chapter~\ref{chapter-gen}, but they all essentially follow
+the structure of Theorem~\ref{thm:pda-preservation}. First, we
+enumerate the synthetic transitions associated with a given
+signature. Second, in each of those cases, we use the type of the
+synthetic transition to perform inversion on the structure of the
+given generative trace.  Third, we construct a generative trace that
+establishes the fact that the invariant was preserved.
 
 \subsection{Adequacy of the transition system}
 \label{sec:pda-adequacy}

@@ -4,16 +4,95 @@
 So far in this thesis, we have presented \sls~and focused on its
 concurrent fragment primarily as a way of presenting transition
 systems. This view focuses on synthetic transitions as a way of
-relating process states. Another view of concurrent
-\sls~specifications as {\it grammars} for describing well-formed
-process states was presented in the discussions of adequacy in
-Section~\ref{sec:framework-reggenworld} and in
-Section~\ref{sec:nat-ssos-adequacy}. 
+relating process states. This chapter will focus on another view of
+concurrent \sls~specifications as {\it grammars} for describing
+well-formed process states. This view was presented previously in the
+discussions of adequacy in Section~\ref{sec:framework-reggenworld} and
+in Section~\ref{sec:nat-ssos-adequacy}.
 
 The grammar-like specifications that describe well-formed process
-states are called {\it generative signatures}. We can give
-an informal definition of what constitutes a generative signature
-as follows:
+states are called {\it generative signatures}, and generative
+signatures can be used to specify sets of process states, or {\it
+  worlds}. By the anaology with grammars, we could also talk about
+{\it languages} of process states recognized by the grammar. In our
+previous discussions of adequacy in
+Section~\ref{sec:framework-reggenworld} and in
+Section~\ref{sec:nat-ssos-adequacy}, the relevant world was a set of
+process states that we could put in bijective correspondence with the
+states of an abstract machine.  
+
+Our primary use of generative specifications in this thesis is showing
+that, under some generative signature $\Sigma_{\it Gen}$ that defines
+a world $\mathcal W$, whenever $(\Psi; \Delta) \in \mathcal W$ and
+$(\Psi; \Delta) \leadsto_\Sigma (\Psi'; \Delta')$ -- where $\Sigma$ is
+some other signature that describes a transition system -- it is
+always the case that $(\Psi'; \Delta') \in \mathcal W$. In such a
+case, the world or language defined of well-formed process states is
+called a {\it generative invariant} of $\Sigma$.  The purpose of this
+chapter is to demonstrate that generative invariants are a reasonable
+way of talking about invariants of \sls~specifications, especially
+well-formedness or well-typedness invariants of substructural
+operational semantics specifications like the ones presented in Part
+II. This argument forms the centerpiece of the third refinement of our
+central thesis:
+
+\smallskip
+\begin{quote} 
+  {\bf Thesis (Part III):} {\it The \sls~specification of the operational
+    semantics of a programming language is a suitable basis for formal
+    reasoning about the properties of the language.}
+\end{quote} 
+\smallskip 
+
+\noindent
+Backing up a bit, the approximation methodology presented in
+Chapter~\ref{chapter-approx} is also relevant to this refinement of
+the thesis statement, as the the intent of approximation is program
+abstraction, a form of formal reasoning about the properties of the
+programming language. (One the other hand, approximation is a
+  program transformation like operationalization, defunctionalization,
+  and destination adding, which is why this chapter was presented in
+  Part~II. This observation illustrates that
+  Chapter~\ref{chapter-approx} sits uncertainly between Part~II and
+  Part~III of this thesis.) This refinement of the thesis statement
+will be further supported in Chapter~\ref{chapter-safety} when we
+discuss the use of generative invariants to prove the progress
+property, and therefore language safety, for SSOS specifications.
+
+In Section~\ref{sec:gen-worlds} we recaptulate how generative
+signatures define a world and show that {\it regular worlds} that
+Sch\"urmann implemented in Twelf \cite{schurmann00automating} fall out
+as a special case of the worlds described by generative signatures.
+We will then discuss invariants of operationalized ordered abstract
+machines more generally (Section~\ref{sec:gen-order}), and extend that
+discussion from well-{\it formed} process states to well-{\it typed}
+process states in Section~\ref{sec:gen-ordertp}.  This is not a large
+technical change, but conceptually it is an important step from
+thinking about adequacy-like properties to thinking about preservation
+theorems. In Section~\ref{sec:gen-state} we describe how generative
+invariants can be established for the sorts of stateful signatures
+considered in Section~\ref{sec:richer-ordered-abstract}. In
+Section~\ref{sec:gen-destinations} we consider invariants for
+specifications in the image of the destination-passing transformation,
+and in Section~\ref{sec:gen-letcc} we consider the peculiar case of
+first-class continuations, which require us to use persistent
+continuation frames. Finally, in Section~\ref{sec:gen-count} we
+introduce a more complicated class of generative invariants that
+capture the numerical properties of specifications that appear in the
+\sls~encoding of voting and auction protocols.
+
+\section{Worlds}
+\label{sec:gen-worlds}
+
+{\it Worlds} are nothing more or less than sets of process states
+$(\Psi; \Delta)$ -- in the discussion here, we will specifically
+exclude process states $(\Psi; \Delta)_{\lf\sigma}$ with a non-empty
+accompanying substituion $\lf\sigma$. (The accompanying substitutions
+were presented in Section~\ref{sec:sls-processstates}).
+
+A world is described by the combination of an initial process state
+and generative signature. We semi-formally define a generative
+signature as follows:
 
 \bigskip
 \begin{definition}\label{def:gensig}
@@ -27,30 +106,24 @@ as follows:
 \bigskip
 
 \noindent
-The restriction operator $\restrictsig{(\Psi; \Delta)}{\Sigma}$
-introduced in Section~\ref{sec:framework-restriction} is an integral
-part of using generative signatures: if $(\Psi; \Delta)$ is
+A generative signature describes a world with the help of the
+restriction operator $\restrictsig{(\Psi; \Delta)}{\Sigma}$ introduced
+in Section~\ref{sec:framework-restriction}. If $(\Psi; \Delta)$ is
 well-defined under the generative signature $\Sigma_{\it Gen}$, and
 $\Sigma$ is any signature that includes all of the generative
 signature's terminals (and all of its LF bits) but none of its
 nonterminals, then $\restrictsig{(\Psi; \Delta)}{\Sigma}$ is only
-defined when the only remaining nonterminals in $\Delta$ are persistent
-and can be filtered out of $\Delta$. (As long as $\Sigma_{\it Gen}$
-and $\Sigma$ have the same LF declarations, the LF context 
-$\Psi$ won't have anything filtered out.) When the classification of
-terminals and nonterminals is clear, we will leave off the restricting
-signature and just write $\restrictsig{(\Psi; \Delta)}{}$.
+defined when the only remaining nonterminals in $\Delta$ are
+persistent and can be filtered out of $\Delta$. (As long as
+$\Sigma_{\it Gen}$ and $\Sigma$ have the same LF declarations, the LF
+context $\Psi$ won't have anything filtered out.) When the
+classification of terminals and nonterminals is clear, we will leave
+off the restricting signature and just write $\restrictsig{(\Psi;
+  \Delta)}{}$.
 
-In this way, a generative signature combined with an initial state
-(containing only nonterminals) describes a {\it formal language} of
-process states -- a set of states well-formed according to the
-generative signature. Generative signatures generalize context-free
-grammars, and as we pointed out in
-Section~\ref{sec:framework-reggenworld} and discuss further in
-Section~\ref{sec:gen-worlds}, they also generalize the regular worlds
-of Twelf \cite{schurmann00automating}. Definition~\ref{def:gensig} is
-intentionally broad, however. As a result, membership in the language
-described by a generative signature need not be
+Definition~\ref{def:gensig} is intentionally quite broad -- it need
+not even be decidable whether a process state belongs to the world or
+language defined by a generative signature need not be
 decidable.\footnote{Proof: consider the initial state
   $(x{:}\istrue{\susp{\sf gen}})$ and the rule $\forall
   \lf{e}.\,\forall\lf{v}.\,{\sf gen} \fuse {!}({\sf
@@ -60,108 +133,18 @@ decidable.\footnote{Proof: consider the initial state
   big-step evaluation $\obj{e \Downarrow v}$ from
   Figure~\ref{fig:example-transform-cbv}.  The language described is
   isomorphic to the set of terminating $\lambda$-calculus expressions,
-  and membership in that set is undecidable.} Future tractable analyses
-will therefore presumably be based upon further restrictions of the
-very general and mostly informal Definition~\ref{def:gensig}.
-
-When membership in the language described by a generative signature
-and an initial state is preserved by the synthetic transitions in some
-other signature, we call the language of well-formed process states a
-{\it generative invariant} of that signature.  In this chapter, we
-argue that generative invariants are a reasonable way of talking about
-invariants of \sls~specifications, especially well-formedness or
-well-typedness invariants of substructural operational semantics
-specifications like the ones presented in Part II. This argument forms
-the centerpiece of the third refinement of our central thesis:
-
-\smallskip
-\begin{quote} 
-  {\bf Thesis (Part III):} {\it The \sls~specification of the operational
-    semantics of a programming language is a suitable basis for formal
-    reasoning about the properties of the language.}
-\end{quote} 
-\smallskip 
-
-\noindent
-Zooming out a bit, the approximation methodology presented in
-Chapter~\ref{chapter-approx} is also relevant to this refinement of
-the thesis statement, as the the intent of approximation is program
-abstraction, a form of formal reasoning about the properties of the
-programming language.\footnote{One the other hand, approximation is a
-  program transformation like operationalization, defunctionalization,
-  and destination adding, which is why this chapter was presented in
-  Part~II. This observation illustrates that
-  Chapter~\ref{chapter-approx} sits uncertainly between Part~II and
-  Part~III of this thesis.} This refinement of the thesis statement
-will be further supported in Chapter~\ref{chapter-safety} when we
-discuss the use of generative invariants to prove the progress
-property, and therefore language safety, for SSOS specifications.
-
-In this chapter, we will first give a careful account of the
-relationship between generative signatures and regular worlds
-(Section~\ref{sec:gen-worlds}). We will then discuss invariants of
-operationalized ordered abstract machines more generally
-(Section~\ref{sec:gen-order}), and extend that discussion from
-well-{\it formed} process states to well-{\it typed} process states in
-Section~\ref{sec:gen-ordertp}.  This is not a large technical change,
-but conceptually it is an important step from thinking about
-adequacy-like properties to thinking about preservation theorems. In
-Section~\ref{sec:gen-state} we describe how generative invariants can
-be established for the sorts of stateful signatures considered in
-Section~\ref{sec:richer-ordered-abstract}. In
-Section~\ref{sec:gen-destinations} we consider invariants for
-specifications in the image of the destination-passing transformation,
-and in Section~\ref{sec:gen-letcc} we consider the peculiar case of
-first-class continuations, which require us to use persistent
-continuation frames. Finally, in Section~\ref{sec:gen-count} we
-introduce a more complicated class of generative invariants that
-capture the numerical properties of specifications that appear in the
-\sls~encoding of voting and auction protocols.
+  and membership in that set is undecidable.} Future tractable
+analyses will therefore presumably be based upon further restrictions
+of the very general Definition~\ref{def:gensig}.
+Context-free grammars are one obvious specialization of generative
+signatures, and -- perhaps less obviously -- the regular worlds
+of Twelf \cite{schurmann00automating} are another. 
 
 
+\subsection{Regular worlds}
+\label{sec:gen-regularworlds}
 
-% The relevant building blocks in our $\lambda$-calculus encoding are
-% just LF variables of type $\lf{a}{:}{\sf exp}$. It is sometimes
-% desirable to consider closed expressions, 
-
-% but in other examples they
-% involve multiple context elements that must appear in tandem. In
-% proving adequacy for typing derivations, for instance, we must
-% frequently prove that a variable $\lf{a}{:}{\sf exp}$ always appears
-% in tandem with a variable $\lf{d}{:}({\sf of}\,\lf{a}\,\lf{tp})$ that
-% associates the variable with some closed LF term $\lf{tp}$ of type
-% ${\sf typ}$ that encodes the type of that variable.
-
-% These {\it regular worlds} are not just important for proving adequacy
-% theorems. They are a critical part of reasoning about LF terms: when
-% we quantify over the set of LF terms of a particular type, it is
-% always necessary to specify what world we are working with. In the
-% case of $\lambda$-calculus terms encoded in the type ${\sf exp}$, we
-% sometimes want to consider open expressions in the world of contexts
-% that take the form $\lf{a_1}{:}{\sf exp},\ldots,\lf{a_n}{:}{\sf exp}$
-% (for instance, when we are describing typing rules for open terms or
-% defining $\beta$-reduction under binders). We also sometimes want to
-% consider closed terms in the empty context (for instance, when we are
-% describing call-by-value evaluation of closed expressions).  This
-% choice affects the structure of case analysis: when reasoning
-% about closed expressions, we do not need to provide a base case for
-% when the expression is a variable, but when reasoning about open
-% expressions, we obviously do.
-
-% The {\it closed world assumption} -- considering terms in the absence
-% of any LF variables -- is the simplest one. 
-
-% The world affects the reasoning we have to do when we perform case
-% analysis: when we reason about terms of type ${\sf exp}$ defined in
-% the world that allows variables of type ${\sf exp}$, we have to
-% consider an extra case (the term is a variable $\lf{a_i}$ from the
-% context) that is not possible in the closed world. 
-
-\section{Regular worlds}
-\label{sec:gen-worlds}
-
-{\it Worlds} are sets of context: in LF, the {\it closed world} is
-just the singleton set containing only the empty LF context.  The
+The
 regular world specifications used in Twelf
 \cite{schurmann00automating} are made up of {\it blocks}. A block
 describes a little piece of an LF context, and is declared in the LF
@@ -175,14 +158,14 @@ A block declaration is well formed in the signature $\Sigma$ if
 $\left(\lf{a_1}{:}\tau_1,\ldots,\lf{a_{i-1}}{:} \tau_{i-1} \right)\vdash_\Sigma
 \tau_i \,{\sf type}$ for $1 \leq i \leq n$ and if 
 $\left(\lf{a_1}{:}\tau_1,\ldots,\lf{a_{n}}{:} \tau_{n},
- \lf{b_1}{:}\tau'_1,\ldots,\lf{b_{j-1}}{:}\tau_{j-1}\right) \vdash_\Sigma
+ \lf{b_1}{:}\tau'_1,\ldots,\lf{b_{j-1}}{:}\tau'_{j-1}\right) \vdash_\Sigma
 \tau_j \,{\sf type}$ for $1 \leq j \leq m$. 
 
 The first list of LF variable bindings
 $\{\lf{a_1}{:}\tau_1\}\ldots\{\lf{a_n}{:}\tau_n\}$ that 
 come after the ${\sf some}$ keyword describe the types
 of concrete LF terms that must exist for the block to be well formed.
-The second list of LF variable bindings represent the bindings that
+The second list of LF variable bindings represents the bindings that
 the block actually adds to the LF context. The regular worlds of 
 Twelf are defined as sets of block identifiers 
 $({\sf block1} \mid \ldots \mid {\sf blockn})$. A set of block identifiers
@@ -199,18 +182,17 @@ $\Psi \vdash_\Sigma \lf{\sigma} :
  {\sf some}~\{\lf{a_1}{:}\tau_1\}\ldots\{\lf{a_n}{:}\tau_n\}
 ~{\sf block}~\{\lf{b_1}{:}\tau'_1\}\ldots\{\lf{b_m}{:}\tau'_m\} \in \Sigma$,
 \end{itemize}
-\smallskip
-then $\Psi,
-\lf{b_1}{:}\lf\sigma\tau'_1,\ldots, \lf{b_m}{:}\lf\sigma\tau'_m$ is
-also a well-formed LF context in the current world. The empty LF context
-belongs to every regular world, so this definition gives us the rules for 
-generating a world -- a set of contexts -- from a series of block 
-declarations. 
+\smallskip then $\Psi, \lf{b_1}{:}\lf\sigma\tau'_1,\ldots,
+\lf{b_m}{:}\lf\sigma\tau'_m$ is also a well-formed LF context in the
+current world. The {\it closed world}, which is singleton set of a
+process every regular world, so this definition gives us the rules for
+generating a world -- a set of contexts -- from a series of block
+declarations.
 
-The simple world that we have discussed previously (for
-example, in Section~\ref{sec:framework-reggenworld}) is the
-world that just contains arbitrary expression variables with LF type
-${\sf exp}$. This world can be described with the block ${\sf blockexp}$:
+One simple example of a regular world (previously discussed in
+Section~\ref{sec:framework-reggenworld}) is the world that just
+contains arbitrary expression variables with LF type ${\sf exp}$. This
+world can be described with the block ${\sf blockexp}$:
 \[
  {\sf blockexp} : 
  {\sf some}
@@ -231,53 +213,51 @@ The world described by the combination of ${\sf blockexp}$ and ${\sf
   blocknatvar}$ is one where every LF variable $\lf{x}{:}{\sf exp}$
 is associated with either zero or one LF variables of type ${\sf
   natvar}\,\lf{x}\,\lf{n}$. Assuming that there are no constants of
-type ${\sf natvar}$, a property we can enforce with subordination, this
+type ${\sf natvar}$, a property we can easily enforce with subordination, this
 gives us a uniqueness property: if ${\sf natvar}\,\lf{x}\,\lf{n}$ and
 ${\sf natvar}\,\lf{x}\,\lf{m}$, then $\lf{m} = \lf{n}$. 
 
-\subsection{Regular worlds as generative signatures}
+\subsection{Regular worlds from generative signatures}
 
-We can describe arbitrary blocks as a generative signature that adds
-one nonterminal and one rule. The nonterminal is a persistent atomic
-proposition that corresponds to the name of the block, and the rule
-corresponds to the content of the block.
+A block declaration ${\sf blockname} :
+ {\sf some}~\{\lf{a_1}{:}\tau_1\}\ldots\{\lf{a_n}{:}\tau_n\}
+~{\sf block}~\{\lf{b_1}{:}\tau'_1\}\ldots\{\lf{b_m}{:}\tau'_m\}$ can
+be described by one rule in a generative signature:
 \begin{align*}
-&{\sf blockname} : {\sf prop}\,{\sf pers},
-\\
-&{\sf blockname/gen} : 
+&{\sf blockname} : 
   \forall \lf{a_1}{:}\tau_1\ldots \forall\lf{a_n}{:}\tau_n.\,
-  {\sf blockname} 
-    \lefti
   \{ \exists \lf{b_1}{:}\tau'_1 \ldots \lf{b_m}{:}\tau'_m.\,
      \one
   \}
-\intertext{So, our two example blocks above can be written as follows:}
-&{\sf blockexp} : {\sf prop}\,{\sf pers},
+\intertext{Because a regular world is just a set of blocks, 
+the generative signature corresponding
+to a regular world contains one rule for each block in the regular
+worlds's description.
+The world $({\sf blockexp} \mid {\sf blockvar})$ corresponds
+to the following generative signature:}
+&{\sf nat} : {\sf type}, 
 \\
-&{\sf blockexp/gen} : {\sf blockexp} \lefti
+&\mbox{\it \ldots declare constants of type ${\sf nat}$ \ldots }
+\\
+&{\sf exp} : {\sf type}, 
+\\
+&\mbox{\it \ldots declare constants of type ${\sf exp}$ \ldots }
+\\
+&{\sf blockexp} : 
   \{ \exists \lf{x}{:}{\sf exp}.\,\one\},
 \\
-&{\sf blocknatvar} : {\sf prop}\,{\sf pers},
-\\
-&{\sf blocknatvar/gen} : \forall \lf{n}{:}{\sf nat}.\,
-  {\sf blocknatvar} \lefti
+&{\sf blocknatvar} : \forall \lf{n}{:}{\sf nat}.\,
   \{ \exists \lf{x}{:}{\sf exp}.\,
      \exists \lf{\it nv}{:}{\sf natvar}\,\lf{x}\,\lf{n}.\, \one \}
 \end{align*}
-Let the original signature be $\Sigma$ and the signature extended with
-one persistent proposition and one rule for every block be
-$\Sigma_{\it RW}$.  The regular world described by $({\sf block1} \mid
-\ldots \mid {\sf blockn})$ in Twelf is precisely the set of LF
-contexts $\Psi$ such that $(\cdot; x_1{:}{\sf block1}, \ldots,
-x_n{:}{\sf blockn}) \leadsto_{\Sigma_{RW}} (\Psi'; \Delta')$ and
-$(\Psi; \Delta) = \restrictsig{(\Psi'; \Delta')}{\Sigma}$.\footnote{We
-  also know, because of the structure of regular worlds created from
-  generative invariants, that $\Delta' = x_1{:}{\sf block1}, \ldots,
-  x_n{:}{\sf blockn}$, that $\restrictsig{(\Psi'; \Delta')}{\Sigma}$
-  is defined, and that $\Delta' = x_1{:}{\sf block1}, \ldots,
-x_n{:}{\sf blockn}$ and therefore 
-$\Delta = \cdot$. However, we won't know this
-  in general when we discuss generative invariants.} 
+Call this regular world signature $\Sigma_{\it RW}$. It is an extremely
+simple example of a generative signature -- there are no
+terminals and no nonterminals -- so the restriction operator has
+no effect. The world described by $({\sf blockexp} \mid {\sf blocknatvar})$
+is identical to the set of LF contexts $\Psi$ such that
+$(\cdot; \cdot) \leadsto_{\Sigma_{RW}} (\Psi; \Delta)$.
+
+\subsection{Regular worlds in substructural specifications}
 
 From the structure of translated LF regular worlds, it is hopefully
 apparent that by replacing the proposition $\one$ in the heads of the
@@ -295,21 +275,52 @@ $\left(\cdot; ~ x_1{:}\iseph{\susp{{\sf item}\,\lf{n_1}}}, ~
          x_k{:}\iseph{\susp{{\sf item}\,\lf{n_k}}}\right)$
 for some numbers $\lf{n_1}\ldots\lf{n_k}$. 
 
-\subsection{Preservation of regular worlds}
-
-The world described by ${\sf blockitem}$ and ${\sf blockitem/gen}$ is,
-furthermore, a generative invariant of a rule like 
-\[
+The world described by this generative signature is an invariant of a
+rule like
+\begin{align*}
   {\sf merge} : 
   \forall \lf{n}.\,\forall\lf{m}.\,\forall\lf{p}.\,
    {\sf item}\,\lf{n} \fuse
    {\sf item}\,\lf{m} \fuse
    {!}({\sf plus}\,\lf{n}\,\lf{m}\,\lf{p}) 
     \lefti \{ {\sf item}\,\lf{p} \}
-\]
-that combines two items, 
-where ${\sf plus}$ is a negative predicate defined as in 
+\end{align*}
+that combines two items,
+where ${\sf plus}$ is  negative predicate defined with a deductive
+specification in 
 Figure~\ref{fig:plus}.  
+
+These substructural generalizations 
+
+
+
+
+The
+simplest {\it regular worlds} are those that forbid the presence of
+any LF variables -- when we adequately encode unary natural numbers
+$\obj{n}$ as LF terms of type ${\sf nat}$, letting $\interp{\sf z} =
+\lf{\sf z}$ and letting $\interp{{\sf s} n} = \lf{s}\,\interp{n}$, we
+assume there aren't any free LF variables of type ${\sf nat}$! This is
+the {\it closed world assumption}, and regular worlds can be presented
+as a generalization of closed worlds.  Twelf contains both a syntax
+for declaring regular worlds and facilities for checking that a
+signature respects a particular regular world structure
+\cite{schurmann00automating}.
+
+The relevant building blocks in our $\lambda$-calculus encoding are
+just LF variables of type $\lf{a}{:}{\sf exp}$. In other LF examples
+regular worlds involve multiple context elements that must appear in
+tandem. In proving adequacy for typing derivations, for instance, we
+must generally assume that a variable $\lf{a}{:}{\sf exp}$ always
+appears in tandem with a variable $\lf{d}{:}({\sf
+  of}\,\lf{a}\,\lf{tp})$ that associates the variable with some closed
+LF term $\lf{tp}$ of type ${\sf typ}$ that encodes the type of that
+variable.
+
+Regular worlds remain sufficient for the encoding of stores in Linear
+LF \cite{cervesato02linear} and stacks in Ordered LF
+\cite{polakow01ordered}. 
+
 To actually show that this generative invariant is observed, let
 $\Sigma_{\it item}$ be the signature including the ${\sf blockitem}$
 predicate and the ${\sf blockitem/gen}$ rule, and let $\Sigma_{\it

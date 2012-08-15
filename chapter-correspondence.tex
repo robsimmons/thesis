@@ -342,9 +342,9 @@ not and parallelism-enabling or not.)
 
 The nondeterministic choices that transformations can make give us a
 rigorous vocabulary for describing choices that otherwise seem
-ad hoc. An example of this can be found in the paper that introduced
+unmotivated. An example of this can be found in the paper that introduced
 the destination-adding and approximation transformations
-\cite{simmons11logical}. In that article, we had to motivate an ad-hoc
+\cite{simmons11logical}. In that article, we had to motivate an ad hoc
 change to the usual abstract machine semantics. In this thesis, by the
 time we encounter a similar specification in Chapter~\ref{chapter-approx}, 
 we will be
@@ -664,6 +664,41 @@ of \sls~propositions.
 Related work for program analyses methodology covered in 
 Chapter~\ref{chapter-approx} is
 discussed further in Section~\ref{sec:approximately-related}.
+
+\subsection*{Abstract machines in substructural logic}
+
+With the exception of our encodings of natural semantics, all our
+work on the logical correspondence takes place in the concurrent
+(rewriting-like) fragment of \sls. This is consistent with the
+tradition of substructural operational semantics, but there is another
+tradition of encoding abstract machines in substructural logical
+frameworks using frameworks that can be seen as {\it deductive}
+fragments of \sls. The resulting logical specifications are
+functionally similar to the big-step abstract machine specifications
+derived by Hannan and Miller, but like SSOS specifications they can
+take advantage of the substructural context for the purpose of modular
+extension (as discussed in the next section).
+
+This line of work dates back to Cervesato and Pfenning's formalization
+of Mini-ML with references in Linear LF \cite{cervesato02linear}; a
+mechanized preservation property for this specification was given by
+Reed \cite{reed09hybrid}. An extension to this technique, which uses
+Polakow's Ordered LF to represent control stacks, is presented by
+Felty and Momigliano and used to mechanize a preservation property
+\cite{felty12hybrid}. Both these styles of deductive big-step
+specification are useful for creating language specifications that can
+be modularly extended with stateful and control features, but neither
+does a good job with modular specification of concurrent or parallel
+features.
+
+Both of these specifications should be seen as different points in a
+larger story of logical correspondence that we are only beginning to
+treat in this thesis. The use of the ordered context in Felty and
+Momigliano's specification, in particular, is exactly analogous to the
+non-parallel ordered abstract machines in
+Chapter~\ref{chapter-absmachine}. We therefore posit the existence of
+a general transformation, similar to operationalization, that connects
+the two.
 
 \section{Transformation and modular extension}
 \label{sec:the-point-is-modular-extension}
