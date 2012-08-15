@@ -2,7 +2,7 @@ eval: exp -> prop ord.
 retn: exp -> prop ord.
 cont: frame -> prop ord.
 cont2: frame -> prop ord.
-error: exp -> prop ord.
+error: prop ord.
 handle: exp -> prop ord.
 
 #| Sequential let |#
