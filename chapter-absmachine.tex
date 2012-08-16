@@ -3444,6 +3444,41 @@ would get if we were to refunctionalize the defunctionalized
 specification of core Mini-ML from Figure~\ref{fig:ssos-minml-core}
 extended with rule ${\sf ev/error}$.
 
+% \subsubsection{Failures and natural semantics}
+
+% The big-step operational semantics 
+% \[
+% \infer
+% {\obj{{\sf fail} \Uparrow} \mathstrut}
+% {\obj{}}
+% \quad
+% \infer
+% {\obj{e_1\,e_2 \Uparrow}}
+% {\obj{e_1 \Uparrow}}
+% \quad
+% \infer
+% {\obj{e_1\,e_2 \Uparrow}}
+% {\obj{e_1 \Downarrow \lambda x.e}
+%  &
+%  \obj{e_2 \Uparrow}}
+% \quad
+% \infer
+% {\obj{{\sf try}\,e_1\,{\sf ow}\,e_2 \Downarrow v}}
+% {\obj{e_1 \Downarrow v}}
+% \quad
+% \infer
+% {\obj{{\sf try}\,e_1\,{\sf ow}\,e_2 \Downarrow v}}
+% {\obj{e_1 \Uparrow}
+%  &
+%  \obj{e_2 \Downarrow v}}
+% \quad
+% \infer
+% {\obj{{\sf try}\,e_1\,{\sf ow}\,e_2 \Uparrow}}
+% {\obj{e_1 \Uparrow}
+%  &
+%  \obj{e_2 \Uparrow}}
+% \]
+
 \subsubsection{Failures and the parallel translation}
 
 Our semantics of recoverable failure composes reasonably well with
@@ -3459,7 +3494,7 @@ eliminate the ${\sf cont}\,\lf{\sf pair1}$ frame from
 Figure~\ref{fig:ssos-minml-core} in this way, it breaks the invariant
 that the ordered propositions represent a branching tree written down
 in postfix. Recall that, without exceptions, a piece of process state
-in the process of evaluating $\interp{\langle {e_1}\,{e_2}\rangle}
+in the process of evaluating $\interp{\langle {e_1},{e_2}\rangle}
 = \lf{{\sf pair}\,\interp{e_1}\,\interp{e_2}}$ has the
 following form:
 \[

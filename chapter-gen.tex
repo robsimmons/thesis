@@ -298,7 +298,7 @@ sequential specifications \cite{felty12hybrid}. However, regular
 worlds and their generalizations are insufficient for all the
 invariants discussed in the remainder of this chapter.
 
-\subsection{Generative versus consumptive specifications}
+\subsection{Generative versus consumptive signatures}
 
 The use of regular worlds helps explain why generative signatures are
 {\it generative}. A earlier version of the results in this chapter and
@@ -349,10 +349,12 @@ consumptive signatures are a non-starter because there exists a
 substitution \mbox{$\lf{(x/\!\!/x_1, {\it nv}_1/\!\!/{\it nv}_1,
     x/\!\!/x_2, {\it nv}_2/\!\!/{\it nv}_2)}$} from $\Psi_{\it good}$
 to $\Psi_{\it bad}$. By variable substitution
-(Theorem~\ref{thm:varsubst}), under every possible signature
-$\Sigma$ if there exists a derivation of 
-$\Psi_{\it good} \vdash_\Sigma \islax{\sf gen}$ there also exists 
-a derivation of $\Psi_{\it bad} \vdash_\Sigma \islax{\sf gen}$. This is
+(Theorem~\ref{thm:varsubst}), under every possible signature $\Sigma$
+if there exists a derivation of $\Psi_{\it good} \vdash_\Sigma
+\islax{\sf gen}$ there also exists a derivation of $\Psi_{\it bad}
+\vdash_\Sigma \islax{\sf gen}$, so consumptive signatures as presented
+in \cite{simmons10type} cannot describe the (regular) world that
+includes $\Psi_{\it good}$ and rejects $\Psi_{\it bad}$. This is
 related to the issues of variable and pointer equality discussed in
 Section~\ref{sec:mutable-storage}.
 
@@ -360,123 +362,122 @@ The generative signatures used to describe state in
 Section~\ref{sec:gen-state} and destination-passing style in
 Section~\ref{sec:gen-destinations} rely critically on the
 regular-worlds-like uniqueness invariants that are provided by
-generative signatures and not by consumptive signatures.
-
-% To actually show that this generative invariant is observed, let
-% $\Sigma_{\it item}$ be the signature including the ${\sf blockitem}$
-% predicate and the ${\sf blockitem/gen}$ rule, and let $\Sigma_{\it
-%   merge}$ be the signature including the ${\sf merge}$ rule. 
-% The synthetic transition associated with ${\sf merge}$ 
-% has the form 
-% \[
-% (\Psi; \Delta, x_1{:}\iseph{\susp{{\sf item}\,\lf{m}}},
-%           x_2{:}\iseph{\susp{{\sf item}\,\lf{n}}}) 
-% \leadsto_{\Sigma_{\it merge}} 
-%  (\Psi; \Delta, x{:}\iseph{\susp{{\sf item}\,\lf{p}}})\]
-% with the side condition that there is a derivation
-% of $\Psi; \cdot \vdash_{\Sigma_{\it merge}} N : 
-%     {\sf plus}\,\lf{n}\,\lf{m}\,\lf{p}$. 
-% We are given a trace
-% $T :: (\cdot; b{:}\ispers{\susp{{\sf blockitem}}}) \leadsto^*_{\Sigma_{\it item}}
-%      (\Psi'; \Delta')$ where we know that
-% $\restrictsig{(\Psi'; \Delta')}{\Sigma_{\it merge}}$ is defined and
-% $\restrictsig{(\Psi'; \Delta')}{\Sigma_{\it merge}} = 
-%  (\Psi, \Delta, x_1{:}\iseph{\susp{{\sf item}\,\lf{m}}},
-%           x_2{:}\iseph{\susp{{\sf item}\,\lf{n}}})$. 
-% %By a straightforward induction over the structure of $T$, we can conclude
-% %that $\Delta' = \Delta, x_1{:}\iseph{\susp{{\sf item}\,\lf{m}}},
-% %          x_2{:}\iseph{\susp{{\sf item}\,\lf{n}}}, b{:}\ispers{\susp{}})$
-
-
-
-
-
-% To proceed, we need a lemma, which we can prove 
-% by induction
-% %
-% and case analysis on the end of the trace $T$, that
-% if $T ::
-% (\cdot; b{:}\ispers{\susp{{\sf blockitem}}}) \leadsto^*_{\Sigma_{\it
-%     item}} (\Psi'; \Delta', y{:}\iseph{\susp{{\sf item}\,\lf{k}}})$
-% then $T = T'; \trstep{y}{{\sf blockitem/gen}\,\lf{k}\,b'}$.
-% While this point was discussed carefully in
-% Section~\ref{sec:sls-adequate} and a bit less carefully in
-% Section~\ref{sec:nat-ssos-adequacy}, it is worth repeating this
-% lemma in detail. If we look
-% at the last steps of the trace $T$, it must take one of the following
-% two forms:
-% \smallskip
-% \begin{enumerate}
-% \item $T = \left(T''; ~~ \trstep{y}{{\sf blockitem/gen}\,\lf{k}\,b'}
-%   \right)$.
-  
-% \item $T = \left(T''; ~~ S \right)$, where $y$ is not
-%   introduced by $S$'s pattern (in the terminology of
-%   Section~\ref{sec:linconcurrenteq}, $\emptyset = S^{\bullet}
-%   \cap \{ y \}$).
-% \end{enumerate}
-% \smallskip
-% In Case 1, the result is immediate, letting $T'$ be $T''$. In Case 2, we 
-% use the induction hypothesis to get some $T'''$ such that
-% $T'' = \left(T''';
-%   \trstep{y}{{\sf blockitem/gen}\,\lf{k}\,b'}\right)$.
-% We want to conclude by saying that 
-% $T' = T'''; S$, but to do that we need to know that the trace
-% $\left(\trstep{y}{{\sf blockitem/gen}\,\lf{k}\,b'};
-%    S\right)$ is concurrently equal to the trace 
-% $\left(S; 
-% \trstep{y}{{\sf blockitem/gen}\,\lf{k}\,b'}\right)$.
-% %
-% Because $y$ are associated with ephemeral propositions, we
-% know without any further inspection that they are not part of the
-% input interface of $S$ (that $\emptyset = {^\bullet}S \cap \{ y
-% \}$), which means the desired concurrent equality does hold. 
-
-% Using two applications of this lemma (once where $y = x_1$ and $\lf{k} = \lf{m}$ and once where $y = x_2$ and $\lf{k} = \lf{n}$, we get that
-% \begin{align*}
-% T = ~ & \qquad (\Psi; \Delta, x_1{:}\iseph{\susp{{\sf item}\,\lf{m}}},
-%           x_2{:}\iseph{\susp{{\sf item}\,\lf{n}}}) 
-% \end{align*}
-
-%  lemma, we can conclude that the trace we were given, 
-
-
-
-% This is a
-% particularly simple case, and it is simple because the output
-% interfaces of the steps we're interested in do not include LF
-% variables or variables associated with persistent
-% propositions. Nevertheless, this simple assumption will suffice until
-% we consider destinations in Section~\ref{sec:gen-destinations}.
-
+generative signatures and not by consumptive signatures. (The progress
+and preservation proofs in \cite{simmons10type} consider neither
+mutable state nor destination-passing style.)
 
 \section{Invariants of ordered specifications}
 \label{sec:gen-order}
 
 We have already covered applications of generative invariants for
 ordered abstract machine SSOS specifications in
-Section~\ref{sec:nat-ssos-adequacy}. In this section, we will
-discuss a generalization of that result to 
+Section~\ref{sec:nat-ssos-adequacy}. In this section, we will discuss
+a generalization of that preservation property to abstract machines
+with parallel evaluation and recoverable failure.  
 
-adequacy
 
-
-In Figure~\ref{fig:gen-order-prog} we describe a flat ordered abstract
-machine with sequential features (a let-expression $\interp{{\sf
-    let}\,x = e\,{\sf in}\,e'} = \lf{{\sf let}\,\interp{e}\,\lambda
-  x.\interp{e'}}$), parallel features (parallel evaluation of the
-function and argument in an application, as discussed in
-Section~\ref{sec:trans-par} and Figure~\ref{fig:cbv-ev-ssos-par}),
-recoverable failure (as presented in Section~\ref{sec:failure} and
-Figure~\ref{fig:ssos-fail}).
-
-\begin{figure}[tp]
+\begin{figure}[t]
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/gen-order-prog.sls}
 \caption{Ordered abstract machine with parallel evaluation and failure}
 \label{fig:gen-order-prog}
 \end{figure}
 
+In Figure~\ref{fig:gen-order-prog} we describe a flat ordered abstract
+machine with parallel features (parallel evaluation of the function
+and argument in an application, as discussed in
+Section~\ref{sec:trans-par} and Figure~\ref{fig:cbv-ev-ssos-par}) and
+recoverable failure (as presented in Section~\ref{sec:failure} and
+Figure~\ref{fig:ssos-fail}). To make sure there was still an
+interesting sequential feature -- specifically, to make sure that
+there was a use for ${\sf cont}$ frames -- we also introduce a
+let-expression $\interp{{\sf let}\,x = e\,{\sf in}\,e'} = \lf{{\sf
+    let}\,\interp{e}\,\lambda x.\interp{e'}}$. The particular features
+are less important than the general setup, which effectively represents
+all the specifications from Chapter~\ref{chapter-absmachine} that used
+only ordered atomic propositions. 
+
+
+Our goal is to describe a generative signature that represents the
+well-formed process states of the specification in
+Figure~\ref{fig:gen-order-prog}. What determines whether a process
+state is well formed? The intended adequacy theorem was our guide in
+Section~\ref{sec:nat-ssos-adequacy}, and the intended progress theorem
+will guide our hand in Section~\ref{sec:gen-ordertp}. In this case, we
+will that every well-formed state should be {\it reachable}. That is,
+if $(x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\Sigma_{\it Gen}}
+\Delta$ and if $\Delta$ contains no instances of ${\sf gen}$, then
+there should be an expression $\obj{e}$ such that
+$(x{:}\istrue{\susp{{\sf eval}\,\interp{e}}}) \leadsto^* \Delta$ under
+the signature from Figure~\ref{fig:gen-order-prog}. (Because ${\sf
+  gen}$ is the only nonterminal, we can express that $\Delta$ contains
+no instances of ${\sf gen}$ with the restriction operator, writing
+$\restrictsig{\Delta}{}$.) We will discuss the proof of this property
+in Section~\ref{sec:well-formed-reachable}.
+
+The analogues of the unary grammar productions, associated with the
+terminals ${\sf eval}\,\lf{e}$, ${\sf retn}\,\lf{v}$, and ${\sf
+  error}$, are straightforward:
+%
+\smallskip
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-order-core.sls} 
+\smallskip 
+%
+As in Section~\ref{sec:nat-ssos-adequacy}, we use a
+deductively-defined judgment ${\sf value}\,\lf{v}$ to stipulate that
+we only return values. The process state $(y{:}\istrue{\susp{{\sf
+      retn}\,\interp{e_1\,e_2}}})$ is not well formed: the
+application expression $\obj{e_1\,e_2}$ is not a value, and
+there is no $\obj{e}$ such that $(x{:}\istrue{\susp{{\sf
+      eval}\,\interp{e}}}) \leadsto^* (y{:}\istrue{\susp{{\sf
+      retn}\,\interp{e_1\,e_2}}})$ under the signature from
+Figure~\ref{fig:gen-order-prog}.
+
+There is a potential catch when we consider the rules for sequential
+continuations ${\sf cont}\,\lf{f}$ and parallel continuations ${\sf
+  cont2}\,\lf{f}$. We expect a sequential continuation frame to be
+preceded by a single well-formed computation, and for a parallel
+continuation frame to be preceded by {\it two} well-formed
+computations, so this could be the first cut at the grammatical rules
+for continuations in the signature:
+%
+\smallskip
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-order-bad.sls} 
+\smallskip 
+%
+Even though ${\sf gen/cont}$ is exactly the rule for sequential
+continuations in Section~\ref{sec:nat-ssos-adequacy}, it does not work
+here.  Both parallel and sequential continuations are indexed by
+frames, but the parallel frame ${\sf app1}$ cannot appear in a
+sequential continuation, nor can the sequential frame $({\sf
+  let1}\,\lf{\lambda x.e\,x})$ appear in a parallel frame. 
+
+\begin{figure}[tp]
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-order.sls} 
+\caption{Generative invariant: well-formed process states}
+\label{fig:gen-order} 
+\end{figure}
+
+This is fundamentally no more complicated than the restrictions we
+placed on the ${\sf retn}\,\lf{v}$ production. All expressions (LF
+variables of type ${\sf exp}$) can appear in ${\sf exp}\,\lf{e}$
+propositions (and in ${\sf handle}\,\lf{e}$ propositions), but only
+some can appear in ${\sf retn}\,\lf{v}$ frames. We describe that
+subset of frames with the negative atomic proposition ${\sf
+  value}\,\lf{v}$, which is deductively defined. Similarly, only some
+frames can appear in ${\sf cont}\,\lf{f}$ propositions, and only some
+other frames can appear in ${\sf cont2}\,\lf{f}$. The former subset
+can be expressed by a negative atomic proposition ${\sf okf}\,\lf{f}$,
+and the latter by a negative atomic proposition ${\sf okf2}\,\lf{f}$.
+Both of these are deductively defined.  The full specification of this
+generative invariant is shown in Figure~\ref{fig:gen-order}.
+
+\subsection{Inversion on the generative signature}
+
+\subsection{Preservation of the generative invariant}
 
 \section{From well-formed to well-typed states}
 \label{sec:gen-ordertp}
