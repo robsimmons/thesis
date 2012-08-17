@@ -1,4 +1,5 @@
 value: exp -> prop.
+value/unit: value unit.
 value/lam: value (lam \x. E x).
 
 okf: frame -> prop.

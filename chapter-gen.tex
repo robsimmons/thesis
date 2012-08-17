@@ -541,7 +541,7 @@ of preservation.
 \\ then 
    $T = \left(T'; \trstep{y}{{\sf gen/retn}\,\lf{v}\,(\tfuser{x'}{\tbangr{N}})}\right)$,
 \\ where 
-   $\cdot \vdash_{\siggenorder} N : \isconc{\susp{{\sf value}\,\lf{v}}}$.
+   $\cdot \vdash_{\siggenorder} N : {{{\sf value}\,\lf{v}}}$.
 \medskip
 \item If 
    $T :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
@@ -624,7 +624,7 @@ be the same. (They are the same iff $T' = \emptytrace$.)
   \vdash_{\siggenorder} V : \left({\sf gen} \fuse {!}({{\sf
         okf}\,\lf{f}})\right)$. We get an $N$ such that $V =
   \tfuser{x'}{\tbangr{N}}$ and $\cdot \vdash_{\siggenorder} N :
-  \isconc{\susp{{\sf okf}\,\lf{f}}}$ by traditional type inversion
+  {{{\sf okf}\,\lf{f}}}$ by traditional type inversion
   on the structure of $V$.
 \end{proof}
 
@@ -643,17 +643,24 @@ $T_2 :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
   transitions possible under the signature in
   Figure~\ref{fig-gen-order-prog}, perform inversion on the structure
   of $T_1$, and then use the results of inversion to construct
-  $T_2$. We give a few illustrative cases.
+  $T_2$. We give three illustrative cases corresponding to the
+  fragment dealing with functions and parallel application.
 
 \begin{description}
+%%%%%%%%
+%%%%%%%%
+%%%%%%%%
 \item 
-  [$\trstep{y}{{\sf ev/unit}\,x}
+  [Case $\trstep{y}{{\sf ev/lam}\,\lf{(\lambda x. e)}\,x}
    ::
-   \tackon{\Theta}{x{:}\istrue{\susp{{\sf eval}\,\lf{\sf unit}}}}
+   \tackon{\Theta}
+     {x{:}\istrue{\susp{{\sf eval}\,\lf{({\sf lam}\,\lambda x.e)}}}}
    \leadsto
-   \tackon{\Theta}{y{:}\istrue{\susp{{\sf retn}\,\lf{\sf unit}}}}$]~
+   \tackon{\Theta}
+     {y{:}\istrue{\susp{{\sf retn}\,\lf{({\sf lam}\,\lambda x.e)}}}}$]~
 
-Applying inversion (Part 1) to the given trace, we have 
+\medskip
+Applying inversion (Part 1) to $T_1$, we have 
 
 \begin{tabbing}
 $T_1 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
@@ -662,25 +669,239 @@ $T_1 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
 \\
 \>\>$\tackon{\Theta}{x'{:}\istrue{\susp{\sf gen}}}$
 \\
-\>$\trstep{x}{{\sf gen/eval}\,\lf{\sf unit}\,x'}$
+\>$\trstep{x}{{\sf gen/eval}\,\lf{({\sf lam}\,\lambda x.e)}\,x'}$
 \\
-\>\>$\tackon{\Theta}{x{:}\istrue{\susp{{\sf eval}\,\lf{\sf unit}}}}$
+\>\>$\tackon{\Theta}
+       {x{:}\istrue{\susp{{\sf eval}\,\lf{({\sf lam}\,\lambda x.e)}}}}$
 \end{tabbing}
 
-Bar
+We can use $T'$ to construct $T_2$ as follows:
+
+\begin{tabbing}
+$T_2 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
+\\
+\>$T'$
+\\
+\>\>$\tackon{\Theta}{x'{:}\istrue{\susp{\sf gen}}}$
+\\
+\>$\trstep{y}{{\sf gen/retn}\,\lf{({\sf lam}\,\lambda x.e)}\,(\tfuser{x'}{\tbangr{({\sf value/lam}\,\lf{(\lambda x.e)})}})}$
+\\
+\>\>$\tackon{\Theta}
+     {y{:}\istrue{\susp{{\sf retn}\,\lf{({\sf lam}\,\lambda x.e)}}}}$
+\end{tabbing}
+
+%%%%%%%%
+%%%%%%%%
+%%%%%%%%
+\item 
+  [Case $\trstep{y}{{\sf ev/app}\,\lf{e_1}\,\lf{e_2}\,x}$]~
+
+\qquad
+  $::
+   \tackon{\Theta}
+     {x{:}\istrue{\susp{{\sf eval}\,\lf{({\sf app}\,e_1\,e_2)}}}}$
+
+\qquad\qquad
+  $\leadsto
+   \tackon{\Theta}
+     {y_1{:}\istrue{\susp{{\sf eval}\,\lf{e_1}}}, ~
+      y_2{:}\istrue{\susp{{\sf eval}\,\lf{e_2}}}, ~
+      y_3{:}\istrue{\susp{{\sf cont2}\,\lf{\sf app1}}}}$
+\medskip
+
+Applying inversion (Part 1) to $T_1$, we have 
+
+\begin{tabbing}
+$T_1 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
+\\
+\>$T'$
+\\
+\>\>$\tackon{\Theta}{x'{:}\istrue{\susp{\sf gen}}}$
+\\
+\>$\trstep{x}{{\sf gen/eval}\,\lf{({\sf app}\,e_1\,e_2)}\,x'}$
+\\
+\>\>$\tackon{\Theta}{x{:}\istrue{\susp{{\sf eval}\,\lf{({\sf app}\,e_1\,e_2)}}}}$
+\end{tabbing}
+
+We can use $T'$ to construct $T_2$ as follows:
+
+\begin{tabbing}
+$T_2 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
+\\
+\>$T'$
+\\
+\>\>$\tackon{\Theta}{x'{:}\istrue{\susp{\sf gen}}}$
+\\
+\>$\trstep{y_1',y_2',y}{{\sf gen/cont2}\,\lf{{\sf app1}}\,(\tfuser{x'}{\tbangr{{\sf okf2/app1}}})}$
+\\
+\>$\trstep{y_1}{{\sf gen/eval}\,\lf{e_1}\,y_1'}$
+\\
+\>$\trstep{y_2}{{\sf gen/eval}\,\lf{e_2}\,y_2'}$
+\\
+\>\>$\tackon{\Theta}{y{:}\istrue{\susp{{\sf retn}\,\lf{\sf unit}}}}$
+\end{tabbing}
+
+%%%%%%%%
+%%%%%%%%
+%%%%%%%%
+\item 
+  [Case $\trstep{y}{{\sf ev/app1}\,\lf{(\lambda x.\,e)}\,\lf{v_2}\,x}$]~
+
+\qquad
+  $::
+   \tackon{\Theta}{x_1{:}\istrue{\susp{{\sf retn}\,\lf{(\lambda x.\,e)}}}, ~
+                   x_2{:}\istrue{\susp{{\sf retn}\,\lf{v_2}}}, ~
+                   x_3{:}\istrue{\susp{{\sf cont2}\,\lf{\sf app1}}}}$
+
+\qquad\qquad
+  $\leadsto
+   \tackon{\Theta}{y{:}\istrue{\susp{{\sf eval}\,\lf{([v_2/x]e)}}}}$
+
+\medskip
+Applying inversion (Part 2, twice, and then Part 4) to $T_1$, we have
+
+\begin{tabbing}
+$T_1 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
+\\
+\>$T'$
+\\
+\>\>$\tackon{\Theta}{x'{:}\istrue{\susp{\sf gen}}}$
+\\
+\>$\trstep{x_1', x_2', x_3'}
+     {{\sf gen/cont2}\,\lf{\sf app1}\,(\tfuser{x'}{\tbangr{N}})}$
+\\
+\>$\trstep{x_1}
+     {{\sf gen/retn}\,\lf{({\sf lam}\,\lambda x.e)}\,
+        (\tfuser{x_1'}{\tbangr{N_1}})}$ 
+\\
+\>$\trstep{x_2}
+     {{\sf gen/retn}\,\lf{v_2}\,(\tfuser{x_2'}{\tbangr{N_2}})}$
+\\
+\>\>$\tackon{\Theta}{x_1{:}\istrue{\susp{{\sf retn}\,\lf{(\lambda x.\,e)}}}, ~
+                   x_2{:}\istrue{\susp{{\sf retn}\,\lf{v_2}}}, ~
+                   x_3{:}\istrue{\susp{{\sf cont2}\,\lf{\sf app1}}}}$
+\end{tabbing}
+
+We can use $T'$ to construct $T_2$ as follows:
+\begin{tabbing}
+$T_2 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
+\\
+\>$T'$
+\\
+\>\>$\tackon{\Theta}{x'{:}\istrue{\susp{\sf gen}}}$
+\\
+\>$\trstep{y}
+     {{\sf gen/eval}\,\lf{([v_2/x]e)}\,x'}$
+\\
+\>\>$\tackon{\Theta}{y{:}\istrue{\susp{{\sf eval}\,\lf{([v_2/x]e)}}}}$
+\end{tabbing}
+
 
 \end{description}
 
+\noindent
+The other cases, corresponding to the rules ${\sf ev/unit}$, ${\sf
+  ev/fail}$, ${\sf ev/catch}$, ${\sf ev/catcha}$, ${\sf ev/catchb}$,
+${\sf ev/error}$, ${\sf ev/errerr}$, ${\sf ev/errret}$, and ${\sf
+  ev/reterr}$ all follow the same lines: enumeration, inversion, and
+reconstruction. 
 \end{proof}
+
+Note that, in the case corresponding to the rule ${\sf
+  ev/app1}$, we obtained but did not use three terms $\cdot \vdash N :
+{{\sf okf2}\,\lf{\sf app1}}$, $\cdot \vdash N_1 : {\sf
+    value}\,\lf{({\sf lam}\,\lambda x.e)}$, and $\cdot \vdash N_2 :
+  {{\sf value}\,\lf{v_2}}$. By traditional inversion, we know
+  that $N = {\sf okf2/app1}$ and $N_1 = {\sf value/lam}\,\lf{(\lambda
+    x.e)}$, but that was not necessary to this theorem.
+
 
 \section{From well-formed to well-typed states}
 \label{sec:gen-ordertp}
 
-the LF encoding of an expression
-still has the LF type ${\sf exp}$.
+In order to describe those expressions whose evaluations never get
+stuck, we introduce object level types $\obj{\it tp}$ and define a
+typing judgment $\obj{\Gamma \vdash e : {\it tp}}$.  We encode
+object-level types as LF terms classified by the LF type ${\sf
+  typ}$. The unit type $\obj{\one} = \lf{\sf unittp}$ classifies units
+$\obj{\langle\rangle}$, and the function type $\interp{{\it tp}_1
+  \Rightarrow {\it tp}_2} = \lf{\sf arr}\,\interp{{\it
+    tp}_1}\,\interp{{\it tp}_2}$ classifies lambda expressions.
+
+\begin{figure}[tp]
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-order-of.sls} 
+\caption{Simple rules for expressions}
+\label{fig:gen-order-of} 
+\end{figure}
+
+In a syntax-directed type system, each syntactic construct is associated
+with a different typing rule.
+These are the typing rules necessary for describing the language
+constructs in Figure~\ref{fig:gen-order-prog}:
+\[
+\infer
+{\obj{\Gamma \vdash \langle\rangle : \one} \mathstrut}
+{\mathstrut}
+\qquad
+\infer
+{\obj{\Gamma \vdash \lambda x.e : {\it tp' \Rightarrow tp}} \mathstrut}
+{\obj{\Gamma, x{:}{\it tp'} \vdash e : {\it tp}} \mathstrut}
+\qquad
+\infer
+{\obj{\Gamma \vdash e_1\,e_2 : {\it tp}} \mathstrut}
+{\obj{\Gamma \vdash e_1 : {\it tp' \Rightarrow tp}}
+ &
+ \obj{\Gamma \vdash e_2 : {\it tp'}}
+ \mathstrut}
+\]
+\[
+\infer
+{\obj{\Gamma \vdash {\sf fail} : {\it tp}} \mathstrut}
+{}
+\qquad
+\infer
+{\obj{\Gamma \vdash {\sf try}\,e_1\,{\sf ow}\,e_2 : {\it tp}} \mathstrut}
+{\obj{\Gamma \vdash e_1 : {\it tp}} 
+ &
+ \obj{\Gamma \vdash e_2 : {\it tp}}
+ \mathstrut}
+\]
+We can adequately encode derivations of the judgment
+$\obj{x_1{:}{\it tp}_1, \ldots, x_n{:}{\it tp}_n \vdash e : {\it tp}}$ as 
+\sls~derivations $\lf{x_1}{:}{\sf exp}, \ldots, \lf{x_n}{:}{\sf exp}; 
+y_1 : \ispers{({\sf of}\,\lf{x_1}\,\interp{{\it tp}_1})}, \ldots,
+y_n : \ispers{({\sf of}\,\lf{x_1}\,\interp{{\it tp}_n})}
+\vdash {\sf of}\,\interp{e}\,\interp{\it tp}$ under the signature
+in Figure~\ref{fig:gen-order-of}.
+
+\begin{figure}[tp]
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-ordertp.sls} 
+\caption{Generative invariant: well-typed process states}
+\label{fig:gen-ordertp} 
+\end{figure}
 
 
-\section{Ambient state}
+This typing judgment allows us to describe well-formed initial states,
+but it is not sufficient to describe intermediate states. To this end,
+we describe typing rules for frames, refining the negative predicates
+${\sf okf}\,\lf{f}$ and ${\sf okf2}\,\lf{f}$ from
+Figure~\ref{fig:gen-order}. The \sls~proposition describing well-typed
+seqential frames is ${\sf off}\,\lf{f}\,\interp{{\it
+    tp}'}\,\interp{\it tp}$. This proposition expresses that the frame
+$\lf{f}$ {\it expects} a returned result with type $\obj{\it tp'}$ and
+{\it produces} a computation with type $\obj{{\it tp}}$.\footnote{The
+  judgment we encode in \sls~as $({\sf off}\,\lf{f}\,\interp{{\it
+      tp}'}\,\interp{\it tp})$ is written $\obj{f : {\it tp}'
+    \Rightarrow {\it tp}}$ in \cite[Chapter 27]{harper12practical}.}
+The parallel version is $({\sf off}\,\lf{f}\,\interp{{\it
+    tp}_1}\,\interp{{\it tp}_2}\,\interp{\it tp})$, and expects two
+subcomputation with types $\obj{{\it tp}_1}$ and $\obj{{\it tp}_2}$,
+respectively, in order to produce a computation of type $\obj{{\it
+    tp}}$.
+
+\section{State}
 \label{sec:gen-state}
 
 

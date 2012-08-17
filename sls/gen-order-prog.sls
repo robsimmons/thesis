@@ -22,7 +22,7 @@ ev/app1: retn (lam \x. E x) * retn V2 * cont2 app1
 ev/fail:   eval fail >-> {error}.
 ev/catch:  eval (catch E1 E2) >-> {eval E1 * handle E2}.
 ev/catcha: retn V * handle _ >-> {retn V}.
-ev/catcha: error * handle E2 >-> {eval E2}.
+ev/catchb: error * handle E2 >-> {eval E2}.
 
 ev/error:  error * cont _ >-> {error}.
 ev/errerr: error * error * cont2 _ >-> {error}.
