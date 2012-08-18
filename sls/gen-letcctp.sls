@@ -2,7 +2,7 @@ gen: typ -> dest -> prop pers.
 ofdest: dest -> typ -> prop pers.
 
 of/letcc: of (letcc \x. E x) T
-           <- (Pi x. of x (conttp T) -> of (E x) T).
+           <- (All x. of x (conttp T) -> of (E x) T).
 of/contn: of (contn D) (conttp T)
            <- ofdest D T.
 of/throw: of (throw E1 E2) T'
