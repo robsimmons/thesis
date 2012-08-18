@@ -1,0 +1,1 @@
+gen/item: {blue_ball * red_ball}.

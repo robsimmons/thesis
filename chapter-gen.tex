@@ -490,6 +490,7 @@ sequential continuation, nor can the sequential frame $({\sf
 \end{figure}
 
 \newcommand{\siggenorder}{\Sigma_{\it Gen\ref{fig:gen-order}}}
+\newcommand{\siggenordertp}{\Sigma_{\it Gen\ref{fig:gen-ordertp}}}
 
 This is fundamentally no more complicated than the restrictions we
 placed on the ${\sf retn}\,\lf{v}$ terminal. All expressions (LF
@@ -630,7 +631,7 @@ be the same. (They are the same iff $T' = \emptytrace$.)
 
 \subsection{Preservation of the generative invariant}
 
-\begin{theorem}[$\siggenorder$ is a generative invariant]
+\begin{theorem}[$\siggenorder$ is a generative invariant]\label{thm:siggenorder}
 If $T_1 :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder} 
    \Delta$ and $S :: \restrictsig{\Delta}{} \leadsto \Delta'$
 under the signature from Figure~\ref{fig:gen-order-prog}, then
@@ -749,7 +750,7 @@ $T_2 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
 
 \qquad
   $::
-   \tackon{\Theta}{x_1{:}\istrue{\susp{{\sf retn}\,\lf{(\lambda x.\,e)}}}, ~
+   \tackon{\Theta}{x_1{:}\istrue{\susp{{\sf retn}\,\lf{({\sf lam}\,\lambda x.\,e)}}}, ~
                    x_2{:}\istrue{\susp{{\sf retn}\,\lf{v_2}}}, ~
                    x_3{:}\istrue{\susp{{\sf cont2}\,\lf{\sf app1}}}}$
 
@@ -767,7 +768,7 @@ $T_1 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
 \\
 \>\>$\tackon{\Theta}{x'{:}\istrue{\susp{\sf gen}}}$
 \\
-\>$\trstep{x_1', x_2', x_3'}
+\>$\trstep{x_1', x_2', x_3}
      {{\sf gen/cont2}\,\lf{\sf app1}\,(\tfuser{x'}{\tbangr{N}})}$
 \\
 \>$\trstep{x_1}
@@ -777,7 +778,7 @@ $T_1 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
 \>$\trstep{x_2}
      {{\sf gen/retn}\,\lf{v_2}\,(\tfuser{x_2'}{\tbangr{N_2}})}$
 \\
-\>\>$\tackon{\Theta}{x_1{:}\istrue{\susp{{\sf retn}\,\lf{(\lambda x.\,e)}}}, ~
+\>\>$\tackon{\Theta}{x_1{:}\istrue{\susp{{\sf retn}\,\lf{({\sf lam}\,\lambda x.\,e)}}}, ~
                    x_2{:}\istrue{\susp{{\sf retn}\,\lf{v_2}}}, ~
                    x_3{:}\istrue{\susp{{\sf cont2}\,\lf{\sf app1}}}}$
 \end{tabbing}
@@ -888,7 +889,7 @@ but it is not sufficient to describe intermediate states. To this end,
 we describe typing rules for frames, refining the negative predicates
 ${\sf okf}\,\lf{f}$ and ${\sf okf2}\,\lf{f}$ from
 Figure~\ref{fig:gen-order}. The \sls~proposition describing well-typed
-seqential frames is ${\sf off}\,\lf{f}\,\interp{{\it
+sequential frames is ${\sf off}\,\lf{f}\,\interp{{\it
     tp}'}\,\interp{\it tp}$. This proposition expresses that the frame
 $\lf{f}$ {\it expects} a returned result with type $\obj{\it tp'}$ and
 {\it produces} a computation with type $\obj{{\it tp}}$.\footnote{The
@@ -897,12 +898,224 @@ $\lf{f}$ {\it expects} a returned result with type $\obj{\it tp'}$ and
     \Rightarrow {\it tp}}$ in \cite[Chapter 27]{harper12practical}.}
 The parallel version is $({\sf off}\,\lf{f}\,\interp{{\it
     tp}_1}\,\interp{{\it tp}_2}\,\interp{\it tp})$, and expects two
-subcomputation with types $\obj{{\it tp}_1}$ and $\obj{{\it tp}_2}$,
+sub-computation with types $\obj{{\it tp}_1}$ and $\obj{{\it tp}_2}$,
 respectively, in order to produce a computation of type $\obj{{\it
-    tp}}$.
+    tp}}$. These judgments are given in Figure~\ref{fig:gen-ordertp}. 
+
+The generative rules in Figure~\ref{fig:gen-ordertp} are our first
+use of an {\it indexed} nonterminal, ${\sf gen}\,\interp{\it tp}$, 
+which generates computations that, upon successful return, will produce
+values of type $\obj{\it tp}$. Despite this added complexity, 
+
+\bigskip
+\begin{theorem}[$\siggenordertp$ is a generative invariant]
+\label{thm:siggenordertp}
+If $T_1 :: (x{:}\istrue{\susp{{\sf gen}\,\lf{\it tp}_0}}) \leadsto^*_{\siggenordertp} 
+   \Delta$ and $S :: \restrictsig{\Delta}{} \leadsto \Delta'$
+under the signature from Figure~\ref{fig:gen-order-prog}, then
+$T_2 :: (x{:}\istrue{\susp{{\sf gen}\,\lf{\it tp}_0}}) \leadsto^*_{\siggenordertp} 
+   \Delta$
+\end{theorem}
+
+\begin{proof} As always, the proof proceeds by enumeration, inversion,
+  and reconstruction. We give two representative cases: 
+
+\begin{description}
+
+\item 
+  [Case $\trstep{y}{{\sf ev/app1}\,\lf{(\lambda x.\,e)}\,\lf{v_2}\,x}$]~
+
+\qquad
+  $::
+   \tackon{\Theta}{x_1{:}\istrue{\susp{{\sf retn}\,\lf{({\sf lam}\,\lambda x.\,e)}}}, ~
+                   x_2{:}\istrue{\susp{{\sf retn}\,\lf{v_2}}}, ~
+                   x_3{:}\istrue{\susp{{\sf cont2}\,\lf{\sf app1}}}}$
+
+\qquad\qquad
+  $\leadsto
+   \tackon{\Theta}{y{:}\istrue{\susp{{\sf eval}\,\lf{([v_2/x]e)}}}}$
+
+\medskip
+Applying inversion to $T_1$, we have
+
+\begin{tabbing}
+$T_1 = ~$ \= \qquad \= $(x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
+\\
+\>$T'$
+\\
+\>\>$\tackon{\Theta}{x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}}$
+\\
+\>$\trstep{x_1', x_2', x_3}
+     {{\sf gen/cont2}\,\lf{\sf app1}\,(\tfuser{x'}{\tbangr{({\sf off2/app1}\,\lf{{\it tp}'}\,\lf{\it tp})}})}$
+\\
+\>\>$\tackon{\Theta}
+     {x_1'{:}\istrue{\susp{{\sf gen}\,\lf{({\sf arr}\,{\it tp}'\,{\it tp})}}}, ~
+      x_2'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}'}}}, ~
+      x_3{:}\istrue{\susp{{\sf cont}\,\lf{\sf app1}}}}$
+\\
+\>$\trstep{x_1}
+     {{\sf gen/retn}\,\lf{({\sf lam}\,\lambda x.e)}\,
+        (\tfuser{x_1'}{\tfuser{\tbangr{({{\sf of/app}\,\tbangr{(\lambda \lf{x},{\it dx}.\,N_1)}})}}{\tbangr{N_{v1}}}})}$ 
+\\
+\>$\trstep{x_2}
+     {{\sf gen/retn}\,\lf{v_2}\,(\tfuser{x_2'}{\tfuser{\tbangr{N_2}}{\tbangr{N_{v2}}}})}$
+\\
+\>\>$\tackon{\Theta}{x_1{:}\istrue{\susp{{\sf retn}\,\lf{({\sf lam}\,\lambda x.\,e)}}}, ~
+                   x_2{:}\istrue{\susp{{\sf retn}\,\lf{v_2}}}, ~
+                   x_3{:}\istrue{\susp{{\sf cont2}\,\lf{\sf app1}}}}$
+\end{tabbing}
+where $\lf{x}{:}{\sf exp}; {\it dx} : \ispers{({\sf
+    of}\,\lf{x}\,\lf{{\it tp}'})} \vdash N_1 : {{\sf
+    of}\,\lf{e}\,\lf{\it tp}}$ and $\vdash N_2 : {\sf
+  of}\,\lf{v_2}\,\lf{{\it tp}'}$. With these derivations (the first of
+which was obtained with traditional inversion), variable
+substitution (Theorem~\ref{thm:varsubst}), and cut admissibility
+(Theorem~\ref{thm:ord-cut}), we have $\vdash \rsubst{N_2}{\it
+  dx}{(\lf{[v_2/x]}N_1)} : {\sf of}\,\lf{([v_2/x]e)}\,\lf{\it
+  tp}$.\footnote{We know by subordination that $\lf{x}$ is not free in
+  $\lf{\it tp}$, so $\lf{[v_2/x]{\it tp}} = \lf{\it tp}$.}  We can
+therefore use $T'$ to construct $T_2$ as follows:
+\begin{tabbing}
+$T_2 = ~$ \= \qquad \= $(x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
+\\
+\>$T'$
+\\
+\>\>$\tackon{\Theta}{x'{:}\istrue{\susp{{\sf gen}\,\lf{\it tp}}}}$
+\\
+\>$\trstep{y}
+     {{\sf gen/eval}\,\lf{([v_2/x]e)}\,(\tfuser{x'}{\tbangr{(\rsubst{N_2}{\it
+  dx}{(\lf{[v_2/x]}N_1)})}})}$
+\\
+\>\>$\tackon{\Theta}{y{:}\istrue{\susp{{\sf eval}\,\lf{([v_2/x]e)}}}}$
+\end{tabbing}
+
+%%%%
+%%%%
+%%%%
+\item 
+  [Case $\trstep{y_1,y_2}{{\sf ev/catch}\,\lf{(\lambda x.\,e)}\,\lf{v_2}\,x}$]~
+ 
+\qquad $:: \tackon{\Theta}{x{:}\istrue{\susp{{\sf eval}\,\lf{({\sf catch}\,e_1\,e_2)}}}}
+       \leadsto 
+        \tackon{\Theta}{y_1{:}\istrue{\susp{{\sf eval}\,\lf{e_1}}}, ~
+                   y_2{:}\istrue{\susp{{\sf handle}\,\lf{e_2}}}}$]~
+
+\medskip
+Applying inversion to $T_1$, we have
+
+\begin{tabbing}
+$T_1 = ~$ \= \qquad \= $(x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
+\\
+\>$T'$
+\\
+\>\>$\tackon{\Theta}{x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}}$
+\\
+\>$\trstep{x_1}
+     {{\sf gen/eval}\,\lf{({\sf catch}\,e_1\,e_2)}\,(\tfuser{x'}{\tbangr{({\sf of/catch}\,\tbangr{N_2}\,\tbangr{N_1})}})}$
+\\
+\>\>$\tackon{\Theta}{x{:}\istrue{\susp{{\sf eval}\,\lf{({\sf catch}\,e_1\,e_2)}}}}$
+\end{tabbing}
+where $\vdash N_1 : {\sf of}\,\lf{e_1}\,\lf{\it tp}$ and $\vdash N_2 :
+{\sf of}\,\lf{e_2}\,\lf{\it tp}$ were obtained by traditional
+inversion on a derivation of the proposition $({\sf of}\,\lf{({\sf
+    catch}\,e_1\,e_2)}\,\lf{\it tp})$. We can use $T'$ to construct $T_2$
+as follows:
+
+\begin{tabbing}
+$T_1 = ~$ \= \qquad \= $(x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
+\\
+\>$T'$
+\\
+\>\>$\tackon{\Theta}{x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}}$
+\\
+\>$\trstep{y_1',y_2}{{\sf gen/handle}\,\lf{e_2}\,(\tfuser{x'}{\tbangr{N_2}})}$
+\\
+\>$\trstep{y_1}{{\sf gen/eval}\,\lf{e_1}\,(\tfuser{y_1'}{\tbangr{N_1}})}$
+\\
+\>\>$\tackon{\Theta}{y_1{:}\istrue{\susp{{\sf eval}\,\lf{e_1}}}, ~
+                   y_2{:}\istrue{\susp{{\sf handle}\,\lf{e_2}}}}$
+\end{tabbing}
+
+
+\end{description}
+
+The other cases follow the same pattern.
+\end{proof}
+
+Therefore, we can see that dealing with type preservation is no more
+difficult than dealing with well-formedness invariants. Aside from the
+issues of adapting inversion theorems to generative traces,
+which were considered already in Section~\ref{sec:gen-order} and Theorem~\ref{thm:siggenorder}, 
+Theorem~\ref{thm:siggenordertp} follows the contours of a standard
+progress and preservation proof for an abstract machine like Harper's
+$\mathcal K\{{\sf nat}{\rightharpoonup}\}$ \cite[Chapter
+27]{harper12practical}. Even the addition of parallel evaluation in
+our specification poses no interesting extra challenges to the
+preservation theorem.
 
 \section{State}
 \label{sec:gen-state}
+
+Ambient state, encoded in linear and persistent propositions, was used
+to describe mutable storage in Section~\ref{sec:mutable-storage},
+call-by-need evaluation in Section~\ref{sec:call-by-need}, and the
+environment semantics in Section~\ref{sec:environment-semantics}. The
+technology needed to describe generative invariants for each of these
+specifications is similar. We will consider the extension of our
+program from Figure~\ref{fig:gen-order-prog} with the semantics of mutable
+storage from Figure~\ref{fig:ssos-mutable}. This specification adds
+a linear terminal, ${\sf cell}\,\lf{l}\,\lf{v}$, which is always uniquely
+associated with an LF variable $\lf{l}$. 
+
+\begin{figure}[tp]
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-state.sls} 
+\caption{Generative invariant: well-typed mutable storage}
+\label{fig:gen-state} 
+\end{figure}
+
+There is only one important trick needed for applying generative
+invariants to specifications with ambient state. Even if we are only
+considering well-formed specifications, it is not possible to simply
+add a generative rule $\forall \lf{v}.\, !({\sf value}\,\lf{v}) \lefti
+\{ \exists l.\,{\sf cell}\,\lf{l}\,\lf{v}\}$. This specification has a
+problem with {\it parameter dependency} -- we cannot use this rule to
+form a cell whose value mentions the cell's location $\lf{l}$, because
+\sls~forces us to pick a term $\lf{v}$ of LF type ${\sf exp}$ that is
+well-formed in a context that does not include the variable $\lf{l}$
+that this step introduces. But self-referential cells can easily arise
+in practice through the standard technique of back-patching.  Here is
+one simple example:
+\begin{align*}
+&
+(\cdot; ~ x{:}\istrue{\susp{{\sf eval}\,
+\interp{{\sf let}\,f = {\sf ref}\,\lambda x. x \,{\sf in}
+      f := \lambda x. (!f) x}}})\\
+& \qquad
+\leadsto^*
+(\lf{l}{:}{\sf mutable\_loc}; ~
+y_1{:}\istrue{\susp{{\sf retn}\,\lf{\sf unit}}}, ~
+y_2{:}\iseph{\susp{{\sf cell}\,\lf{l}\,\lf{({\sf lam}\,\lambda x.\,{\sf app}\,({\sf get}({\sf loc}\,l))\,x)}}})
+\end{align*}
+The solution is to create cells in two steps. The first rule, a ${\sf
+  promise}$ rule, creates the location and associates a linear
+nonterminal ${\sf gencell}$ with that location. A second ${\sf
+  fulfill}$ rule consumes that nonterminal and creates the actual
+mutable cell.  Because ${\sf gencell}$ is a linear nonterminal, the
+promise {\it must} be fulfilled in order for the final state to pass
+through the restriction operation. 
+
+To handle well-typed storage, we also introduce a persistent
+nonterminal ${\sf ofcell}\,\lf{l}\,\lf{\it tp}$ in
+Figure~\ref{fig:gen-state}.  Assumptions of this form can be used to
+assign types the open terms that arise in SSOS specifications with
+ambient state (rule ${\sf of/loc}$ in Figure~\ref{fig:gen-state}). As
+a persistent nonterminal, ${\sf ofcell}$ assumptions are not reflected
+in the operational semantics: the context restriction operation wipes
+them away from the context.
+
+XXX safety
+
 
 
 % \subsection{Store typing}
@@ -913,12 +1126,46 @@ respectively, in order to produce a computation of type $\obj{{\it
 \section{Destination-passing}
 \label{sec:gen-destinations}
 
+\begin{figure}[tp]
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-destinations.sls} 
+\caption{Generative invariant: destination-passing}
+\label{fig:gen-destinations} 
+\end{figure}
+
 
 \section{Persistent continuations}
 \label{sec:gen-letcc}
 
+\begin{figure}[tp]
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-letcc.sls} 
+\caption{Generative invariant: well-formed first-class continuations}
+\label{fig:gen-letcc} 
+\end{figure}
+
+\begin{figure}[tp]
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-letcctp.sls} 
+\caption{Generative invariant: well-typed first-class continuations}
+\label{fig:gen-letcc} 
+\end{figure}
+
+
 \section{Counting invariants}
 \label{sec:gen-count}
+
+Parity:
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-parity.sls} 
+
+\bigskip
+\noindent
+Counting:
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-count.sls} 
+
+
 
 % \subsection{Parity}
 
