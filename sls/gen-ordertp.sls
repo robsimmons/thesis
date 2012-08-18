@@ -1,6 +1,6 @@
 off: frame -> typ -> typ -> prop.
 off/let1: off (let1 \x. E' x) T' T
-           <- (Pi x. of x T' -> of (E' x) T).
+           <- (All x. of x T' -> of (E' x) T).
 
 off2: frame -> typ -> typ -> typ -> prop.
 off2/app1:  off2 app1 (arr T' T) T' T. 

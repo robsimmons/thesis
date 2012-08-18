@@ -54,7 +54,9 @@ recv: channel -> exp.
 letcc: (exp -> exp) -> exp.
 throw: exp -> exp -> exp.
 var: (exp -> exp) -> exp.
+let: exp -> (exp -> exp) -> exp.
 
+let1: (exp -> exp) -> frame.
 ref1: frame.
 get1: frame.
 set1: exp -> frame.
@@ -74,3 +76,9 @@ throw2: exp -> frame.
 
 dest: type.
 contn: dest -> exp.
+
+typ: type.
+unittp: typ.
+arr: typ -> typ -> typ.
+reftp: typ -> typ.
+conttp: typ -> typ.
