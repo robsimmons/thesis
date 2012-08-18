@@ -35,11 +35,18 @@ Frontend.load "gen-ordertp.sls";
 
 HEADING "Figure 9.5: Generative invariant: well-typed mutable storage";
 Frontend.load "ssos-mutable.sls";
-Frontend.load "gen-store.sls";
+Frontend.load "gen-state.sls";
 
-HEADING "Figure 9.5: Generative invariant: destination-passing";
+HEADING "Figure 9.6: Generative invariant: destination-passing";
 Frontend.reset ();
 Frontend.load "exp.sls";
-Frontend.load "gen-order-of.sls";
+Frontend.read "app1: exp -> frame.";
+Frontend.read "app2: (exp -> exp) -> frame.";
+Frontend.load "dest-cbv.sls";
+Frontend.read "pair1: frame.";
+Frontend.load "dest-pair.sls";
+Frontend.read "value: exp -> prop.";
+Frontend.read "of: exp -> typ -> prop.";
 Frontend.read "off: frame -> typ -> typ -> prop.";
 Frontend.read "off2: frame -> typ -> typ -> typ -> prop.";
+Frontend.load "gen-destinations.sls";
