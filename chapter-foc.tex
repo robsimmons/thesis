@@ -349,7 +349,7 @@ rules.\footnote{Synchronicity or polarity, a property of connectives,
   focused} phases, a single proposition is selected (the proposition
 {\it in focus}, which is either a positive proposition in right focus
 or a negative proposition in left focus). This
-proposition is then is decomposed repeatedly and
+proposition is then decomposed repeatedly and
 exhaustively using rules that are mostly non-invertible.
 
 If we consider this discipline applied to our robot example where all
@@ -565,7 +565,7 @@ stable sequents.
 Another reasonable presentation of linear logic, and the one we will
 adopt in this section, uses only one sequent form,
 $\mildseq{\Gamma}{\underline{\Delta}}{\underline{U}}$, that
-generalizes what is to allowed to to appear in the linear context
+generalizes what is allowed to appear in the linear context
 $\underline{\Delta}$ or in the succedent $\underline{U}$. We will use
 this interpretation to understand the logic described in
 Figure~\ref{fig:kaustuv-focused}. In addition to propositions $A^+$,
@@ -624,7 +624,7 @@ phrased as an admissible rule, which we indicate using a dashed line:
 \]
 In developments following Pfenning's structural cut admissibility
 methodology \cite{pfenning00structural}, it is critical that the
-weakening theorem {\it not} change the structure of proofs: that the
+weakening theorem {\it does not} change the structure of proofs: that the
 structure of the derivation $\mildseq{\Gamma}{\underline
   \Delta}{\underline U}$ is unchanged when we weaken it to
 $\mildseq{\Gamma, \Gamma'}{\underline \Delta}{\underline U}$. In
@@ -2824,10 +2824,11 @@ context.  Andreoli's atom optimization interferes with the structure
 of cut admissibility. The exponential optimization lacks a good
 interpretation in unfocused linear logic. The adjoint formulation of
 linear logic introduces persistent positive propositions as members of
-a syntactic class $X$ of persistent propositions which usually lies
-hidden in between the two right-synchronous and right-asynchronous
-(that is, positive and negative) halves of the ${!}$ connective; this
-approach works but requires a lot of extra machinery.
+a syntactic class $X$ of persistent propositions, a syntactic class
+that usually lies hidden in between the two right-synchronous and
+right-asynchronous (that is, positive and negative) halves of the
+${!}$ connective. This approach works but requires a lot of extra
+machinery.
 
 Our final attempt to logically motivate a notion of a persistent
 positive proposition will be based on an analysis of {\it

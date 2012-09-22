@@ -14,4 +14,4 @@ gen/retn: gen T D * !of V T * !value V >-> {retn V D}.
 gen/cont: gen T D * !off F T' T 
            >-> {Exists d'. gen T' d' * !ofdest d T' * !cont F d' D}.
 gen/dest: !ofdest D T * !off F T' T 
-            >-> {Exists d'. !ofdest d' T' * !cont F d' D}.
+           >-> {Exists d'. !ofdest d' T' * !cont F d' D}.
