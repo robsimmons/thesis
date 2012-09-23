@@ -129,7 +129,7 @@ signature as follows:
 
 \bigskip
 \begin{definition}\label{def:gensig}
-  A {\em generative signature} is one where the ordered, linear, and
+  A {\em generative signature} is one where the ordered, mobile, and
   persistent atomic propositions can be separated into two sets -- the
   {\em terminals} and the {\em nonterminals}. Synthetic transitions
   enabled by a generative signature only consume (or reference) 
@@ -299,11 +299,11 @@ From the structure of translated LF regular worlds, it is hopefully
 apparent that by replacing the proposition $\one$ in the heads of the
 generative ${\sf block*}$ rules with more interesting positive
 \sls~propositions,  we can extend the language of regular
-worlds to allow the introduction of ordered, linear, and persistent
+worlds to allow the introduction of ordered, mobile, and persistent
 \sls~propositions as well. For instance, the rule
 ${\sf blockitem} : 
 \forall \lf{n}. \, \{ {\sf item}\,\lf{n} \}$,
-where ${\sf item}$ is a linear predicate,
+where ${\sf item}$ is a mobile predicate,
 describes the world of contexts that take the form
 $\left(\cdot; ~ x_1{:}\iseph{\susp{{\sf item}\,\lf{n_1}}}, ~
          \ldots, ~
@@ -521,7 +521,7 @@ Both of these are deductively defined.  The full specification of this
 generative invariant is shown in Figure~\ref{fig:gen-order}; we will
 refer to this generative signature as $\siggenorder$
 
-\subsection{Inversion}
+\subsection{Inversion}\label{sec:inversion-genorder}
 
 Traditional inversion lemmas are a critical part of preservation
 properties for small-step operational semantics specifications. In 
@@ -986,13 +986,13 @@ follow.
          \leadsto^*_{\siggenordertp}
          \tackon{\Theta}{y{:}\istrue{\susp{{\sf eval}\,\lf{e}}}}$,
 \\ then 
-   $T = \left(T'; \trstep{y}{{\sf gen/eval}\,\lf{\it tp}\,\lf{e}\,(\tfuser{x'}{\tbangr{N}})}\right)$,
-\\ where $\cdot \vdash_{\siggenordertp} N : {\sf of}\,\lf{e}\,\lf{\it tp}$
+   $T = \left(T'; \trstep{y}{{\sf gen/eval}\,\lf{{\it tp}}\,\lf{e}\,(\tfuser{x'}{\tbangr{N}})}\right)$,
+\\ where $\cdot \vdash_{\siggenordertp} N : {\sf of}\,\lf{e}\,\lf{{\it tp}}$
 \medskip
 \item If 
    $T :: (x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
          \leadsto^*_{\siggenordertp}
-         \tackon{\Theta}{y_1{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}, ~
+         \tackon{\Theta}{y_1{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}'}}}, ~
                          y_2{:}\istrue{\susp{{\sf cont}\,\lf{f}}}}$,
 \\ then 
    $T = \left(T'; \trstep{y_1,y_2}{{\sf gen/cont}\,\lf{{\it tp}}\,\lf{f}\,\lf{{\it tp}'}\,(\tfuser{x'}{\tbangr{N}})}\right)$,
@@ -1002,10 +1002,10 @@ follow.
 \end{enumerate}
 In each instance above, 
 $T' :: (x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) \leadsto^*_{\siggenordertp}
-          \tackon{\Theta}{x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}'}}}}$,
+          \tackon{\Theta}{x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}}$,
 where the variables $x$ and $x'$ may or may not
 be the same. (They are the same iff $T' = \emptytrace$, and if they
-are the same that implies $\lf{{\it tp}_0} = \lf{{\it tp}'}$.)
+are the same that implies $\lf{{\it tp}_0} = \lf{{\it tp}}$.)
 \end{lemma}
 \bigskip
 
@@ -1098,7 +1098,7 @@ where
 \item[$\bullet$] $\cdot \vdash N : {\sf off2}\,\lf{\sf app1}\,\lf{{\it
       tp}''}\,\lf{{\it tp}'}\,\lf{{\it tp}}$.  By traditional
   inversion we know $\lf{\it{tp}''} = \lf{{\sf arr}\,{\it tp}'\,{\it
-      tp}}$ and $N = {\sf off2/app1}\,\lf{tp_1}\,\lf{tp_2}\,\lf{tp}$.
+      tp}}$ and $N = {\sf off2/app1}\,\lf{{\it tp}'}\,\lf{{\it tp}}$.
 \item[$\bullet$] $\cdot \vdash N_1 : {\sf of}\,\lf{({\sf lam}\,\lambda
     x.e)}\,\lf{tp''}$. By traditional inversion we know $N_1 = {\sf
     of/app}\,\tbangr{(\lambda \lf{x},{\it dx}.\,N_1')}$, where
@@ -1203,7 +1203,7 @@ further complicate the statement or proof of the preservation theorem.
 \section{State}
 \label{sec:gen-state}
 
-Ambient state, encoded in linear and persistent propositions, was used
+Ambient state, encoded in mobile and persistent propositions, was used
 to describe mutable storage in Section~\ref{sec:mutable-storage},
 call-by-need evaluation in Section~\ref{sec:call-by-need}, and the
 environment semantics in Section~\ref{sec:environment-semantics}. The
@@ -1211,7 +1211,7 @@ technology needed to describe generative invariants for each of these
 specifications is similar. We will consider the extension of our
 program from Figure~\ref{fig:gen-order-prog} with the semantics of
 mutable storage from Figure~\ref{fig:ssos-mutable}. This specification
-adds a linear atomic proposition ${\sf cell}\,\lf{l}\,\lf{v}$, which
+adds a mobile atomic proposition ${\sf cell}\,\lf{l}\,\lf{v}$, which
 the generative signature will treat as a new terminal.
 
 The intuition behind mutable cells is that they exist in 
@@ -1224,15 +1224,15 @@ general form:
   ~~ \iseph{\susp{{\sf cell}\,\lf{l_n}\,\lf{v_n}}}, 
   ~~ \ldots\right)\]
 %
-A naive attempt at describing well-formed process states with mutable
-state might mimic structure of regular worlds specifications with a
-rule like ${\sf gen/cell/bad} : \forall \lf{v}.\, {!}{\sf value}\,\lf{v}
-\lefti \{ \exists \lf{l}. {\sf cell}\,\lf{l}\,\lf{v} \}$. The problem
-with such a specification is that it makes it impossible to have a
-cell refer to itself, a situation that can easily happen in
-practice. The canonical example, using back-patching to implement
-recursion, is shown in Figure~\ref{fig:bigbackpatch}, which describes a
-trace classified by:
+Naively, we might attempt to describe well-formed process 
+mutable state as a regular world specification
+with a rule like ${\sf gen/cell/bad} : \forall \lf{v}.\, {!}{\sf
+  value}\,\lf{v} \lefti \{ \exists \lf{l}. {\sf cell}\,\lf{l}\,\lf{v}
+\}$. The problem with such a specification is that it makes it
+impossible to have a cell refer to itself, a situation that can easily
+happen in practice. The canonical example, using back-patching to
+implement recursion, is shown in Figure~\ref{fig:bigbackpatch}, which
+describes a trace classified by:
 
 {\small\begin{align*}
 &
@@ -1381,8 +1381,8 @@ The name of this problem is {\it parameter dependency} -- the term
 $\lf{v}$ in ${\sf gen/cell/bad}$ has to be instantiated before the
 parameter $\lf{l}$ is introduced. As a result, the trace in
 Figure~\ref{fig:bigbackpatch} includes a step
-$\trstep{x_{16},y_2}{{\sf
-    ev/set2}\,\ldots\,(\tfuser{x_{15}}{\tfuser{x_{14}}{y_1}})}$ that
+\[\trstep{x_{16},y_2}{{\sf
+    ev/set2}\,\ldots\,(\tfuser{x_{15}}{\tfuser{x_{14}}{y_1}})}\] that
 transitions from a state that can be described by
 Figure~\ref{fig:gen-order} extended with ${\sf gen/cell/bad}$ to a
 state that cannot be described by this signature. Thus, the extended
@@ -1396,20 +1396,21 @@ signature is not a generative invariant.
 \end{figure}
 
 The solution is to create cells in two steps. The first rule, a ${\sf
-  promise}$ rule, creates the location and associates a mobile
+  promise}$ rule, creates the location $\lf{l}$ and associates a mobile
 nonterminal ${\sf gencell}$ with that location. A second ${\sf
   fulfill}$ rule consumes that nonterminal and creates the actual
 mutable cell.  Because ${\sf gencell}$ is a mobile nonterminal, the
 promise {\it must} be fulfilled in order for the final state to pass
-through the restriction operation. As with ordered abstract machines,
+through the restriction operation. As we have already seen,
 there is not much of a technical difference between well-formedness
 invariants and well-typedness invariants; Figure~\ref{fig:gen-state}
-describes a well-typedness invariant. This specification introduces
+describes a generative signature that captures type information. 
+This specification introduces
 two nonterminals. The first is the aforementioned mobile nonterminal
 ${\sf gencell}\,\lf{l}\,\lf{\it tp}$, representing the promise to
 eventually create a cell corresponding to the location $\lf{l}$
 containing a value of object type $\lf{\it tp}$.  The second is a
-persistent nonterminal ${\sf ofcell}\,\lf{l}\,\lf{\it tp}$; the
+persistent nonterminal ${\sf ofcell}\,\lf{l}\,\lf{\it tp}$. The
 collection of ${\sf ofcell}$ propositions introduced by a generative
 trace collectively plays the role of a {\it store typing} in
 \cite[Chapter 13]{pierce02types} or a {\it signature} in \cite[Chapter
@@ -1417,60 +1418,63 @@ trace collectively plays the role of a {\it store typing} in
 
 \subsection{Inversion}
 
-The basic structure of existing inversion lemmas remain unchanged, but 
-these lemmas 
-must be modified to deal with the fact that derivations and
+When we add mutable state, we must significantly generalize the 
+{\it statement} of inversion lemmas. Derivations and
 expressions now exist in a world with arbitrary locations $\lf{l}{:}{\sf
   mutable\_loc}$ that are paired with persistent propositions
-$\ispers{{\sf ofcell}\,\lf{l}\,\lf{\it tp}}$. This purely persistent
-world fits the pattern of regular worlds. As such, it can be described either with the
+$\ispers{{\sf ofcell}\,\lf{l}\,\lf{\it tp}}$. 
+This purely persistent
+world fits the pattern of regular worlds. 
+As such, it can be described either with the
 single rule
 $\forall \lf{\it tp}.\,\{ \exists \lf{l}.\,{\sf
     ofcell}\,\lf{l}\,\lf{\it tp}\}$ or with the equivalent block
 \[{\sf some} ~ \lf{\it tp}{:}{\sf
   typ} ~ {\sf block} ~ \lf{l}{:}{\sf mutable\_loc}, x{:}\ispers{{\sf
     ofcell}\,\lf{l}\,\lf{\it tp}}.\]
+
+
 \begin{lemma}[Inversion -- Figure~\ref{fig:gen-state}, partial]~
 \begin{enumerate}
 \item If 
-   $T :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+   $T :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
          \leadsto^*_{\siggenstate}
          (\Psi; \tackon{\Theta}
-            {y{:}\istrue{\susp{{\sf eval}\,\lf{e}\,\lf{d}}}})$,
+            {y{:}\istrue{\susp{{\sf eval}\,\lf{e}}}})$,
 \\ then 
-   $T = \left(T'; \trstep{y}{{\sf gen/eval}\,\lf{\it tp}\,\lf{d}\,\lf{e}\,
+   $T = \left(T'; \trstep{y}{{\sf gen/eval}\,\lf{{\it tp}}\,\lf{e}\,
                                   (\tfuser{x'}{\tbangr{N}})}\right)$,
 \\ where
-   $\Psi; \Delta \vdash_{\siggenstate} N : {{\sf of}\,\lf{e}\,\lf{\it tp}}$,
-\\ $T' :: (\cdot; x{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+   $\Psi; \Delta \vdash_{\siggenstate} N : {{\sf of}\,\lf{e}\,\lf{{\it tp}}}$,
+\\ $T' :: (\cdot; x{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
        \leadsto^*_{\siggenstate}
        (\Psi'; \tackon{\Theta}
-          {x'{:}\istrue{\susp{{\sf gen}\,\lf{\it tp}\,\lf{d}}}})$, 
+          {x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}})$, 
 \\ and $\Delta$ is the persistent part of 
    $\tackon{\Theta}
-          {x'{:}\istrue{\susp{{\sf gen}\,\lf{\it tp}\,\lf{d}}}}$.
+          {x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}}$.
    
 \medskip
 \item If 
-   $T :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+   $T :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
          \leadsto^*_{\siggenstate}
          (\Psi; \tackon{\Theta}
-            {y_1{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}\,\lf{d}}}, ~
-             y_2{:}\istrue{\susp{{\sf cont}\,\lf{f}\,\lf{d}\,\lf{d'}}}})$,
+            {y_1{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}'}}}, ~
+             y_2{:}\istrue{\susp{{\sf cont}\,\lf{f}}}})$,
 \\ then 
-   $T = \left(T'; \trstep{\lf{d'},y_1,y_2}
-              {{\sf gen/cont}\,\lf{\it tp}\,\lf{d}\,\lf{f}\,\lf{{\it tp}'}\,
+   $T = \left(T'; \trstep{y_1,y_2}
+              {{\sf gen/cont}\,\lf{{\it tp}}\,\lf{f}\,\lf{{\it tp}'}\,
                 (\tfuser{x'}{\tbangr{N}})}\right)$,
 \\ where 
    $\Psi; \Delta \vdash_{\siggenstate} N : 
        {{{\sf off}\,\lf{f}\,\lf{{\it tp}'}\,\lf{{\it tp}}}}$,
-\\ $T' :: (\cdot; x{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+\\ $T' :: (\cdot; x{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
        \leadsto^*_{\siggenstate}
        (\Psi'; \tackon{\Theta}
-          {x'{:}\istrue{\susp{{\sf gen}\,\lf{\it tp}\,\lf{d}}}})$,
+          {x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}})$,
 \\ and $\Delta$ is the persistent part of 
    $\tackon{\Theta}
-          {x'{:}\istrue{\susp{{\sf gen}\,\lf{\it tp}\,\lf{d}}}}$.
+          {x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}}$.
 
 
 \medskip
@@ -1488,11 +1492,19 @@ $\forall \lf{\it tp}.\,\{ \exists \lf{l}.\,{\sf
 \\ and $\Delta$ is the persistent part of 
    $\tackon{\Theta}
           {x'{:}\iseph{\susp{{\sf gencell}\,\lf{l}\,\lf{\it tp}}}}$.
-\medskip
 \end{enumerate}
 \end{lemma}
+\bigskip
 
-The only new inversion lemma that is needed is the one listed 
+Despite complicating the statement of inversion theorems, the addition
+of mutable state does nothing to change the structure 
+of these theorems.
+The new inversion lemma (part 3 above) also follows the same
+pattern established in Section~\ref{sec:inversion-genorder}.
+
+\subsection{Uniqueness}
+
+\subsection{Preservation}
 
 % \subsection{Store typing}
 
