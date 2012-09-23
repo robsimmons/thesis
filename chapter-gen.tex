@@ -1482,16 +1482,17 @@ $\forall \lf{\it tp}.\,\{ \exists \lf{l}.\,{\sf
          \leadsto^*_{\siggenstate} 
          (\Psi; \tackon{\Theta}
             {y{:}\istrue{\susp{{\sf cell}\,\lf{{\it l}}\,\lf{v}}}})$,
-\\ then $T = (T'; \trstep{y}{{\sf gencell/fulfill}\,\lf{l}\,\lf{\it tp}\,\lf{v}\,(\tfuser{x'}{\tfuser{\tbangr{N}}{\tbangr{N_v}}})})$,
-\\ where $\Psi; \Delta \vdash_{\siggenstate} N : {\sf of}\,\lf{v}\,\lf{\it tp}$,
+\\ then $T = (T'; \trstep{y}{{\sf gencell/fulfill}\,\lf{l}\,\lf{\it tp}\,\lf{v}\,(\tfuser{x'}{\tfuser{x_t}{\tfuser{\tbangr{N}}{\tbangr{N_v}}}})})$,
+\\ where $x_t{:}\ispers{\susp{{\sf of}\,\lf{l}\,\lf{\it tp}}} \in \Delta$,
+   $\Psi; \Delta \vdash_{\siggenstate} N : {\sf of}\,\lf{v}\,\lf{\it tp}$,
    $\Psi; \Delta \vdash_{\siggenstate} N_v : {\sf value}\,\lf{v}$,
 \\ $T' :: (\cdot; x{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
        \leadsto^*_{\siggenstate}
        (\Psi'; \tackon{\Theta}
-          {x'{:}\istrue{\susp{{\sf gencell}\,\lf{l}\,\lf{\it tp}}}})$,
+          {x'{:}\istrue{\susp{{\sf gencell}\,\lf{l}}}})$,
 \\ and $\Delta$ is the persistent part of 
    $\tackon{\Theta}
-          {x'{:}\iseph{\susp{{\sf gencell}\,\lf{l}\,\lf{\it tp}}}}$.
+          {x'{:}\iseph{\susp{{\sf gencell}\,\lf{l}}}}$.
 \end{enumerate}
 \end{lemma}
 \bigskip
@@ -1499,12 +1500,77 @@ $\forall \lf{\it tp}.\,\{ \exists \lf{l}.\,{\sf
 Despite complicating the statement of inversion theorems, the addition
 of mutable state does nothing to change the structure 
 of these theorems.
-The new inversion lemma (part 3 above) also follows the same
+The new inversion lemma (part 3 above) follows the
 pattern established in Section~\ref{sec:inversion-genorder}.
 
 \subsection{Uniqueness}
 
+To prove that our generative invariant for mutable storage is
+maintained, we need one property besides inversion, which I will call
+the {\it unique index} property. This is the property that, under the
+generative signature described by $\siggenstate$, locations always map
+{\it uniquely} to persistent positive propositions 
+$x_t{:}{\sf ofcell}\,\lf{l}\,\lf{\it tp}$. 
+
+\bigskip
+\begin{lemma}[Unique indices of $\siggenstate$]~
+\begin{enumerate}
+\item
+If $T :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
+         \leadsto^*_{\siggenstate}
+         (\Psi; \Delta)$,
+\\ ${x}{:}\ispers{\susp{{\sf ofcell}\,\lf{l}\,\lf{\it tp}}} \in \Delta$, 
+\\ and 
+${y}{:}\ispers{\susp{{\sf ofcell}\,\lf{l}\,\lf{{\it tp}'}}} \in \Delta$, 
+\\ then $x = y$ and $\lf{tp} = \lf{{\it tp}'}$
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Induction on the structure of the trace $T$. 
+\end{proof}
+
+
+% We have to know that, given
+% the persistent proposition ${\sf ofcell}\,\lf{l}\,\lf{{\it tp}}$ and
+% the mobile proposition ${\sf gencell}\,\lf{l}\,\lf{{\it tp}'}$, we
+% need to know that $\lf{{\it tp}} = \lf{{\it tp}'}$.
+
+% $\{ {\sf ofcell/1} \}$
+% $\{ {\sf gencell/1}, {\sf cell/1} \}$
+% $\{ {\sf susp/1}, {\sf blackhole/1}, {\sf bind/1} \}$
+
+% While it is a subtle point, unique indices are a property of the logical
+% framework, but not the logic. 
+
 \subsection{Preservation}
+
+As it was with inversion, the statement of preservation is
+substantially altered by the addition of locations and mutable state,
+even though the structure of the proof is not.  In particular, because
+${\sf ofcell}$ is a {\it persistent} nonterminal, we have to expressly
+represent the fact that the restriction operator $\restrictsig{(\Psi;
+  \Delta)}{}$ will modify the context $\Delta$ by removing the store
+typing.
+
+\bigskip
+\begin{theorem}[$\siggenordertp$ is a generative invariant]
+\label{thm:siggenordertp}
+If $T_1 :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) 
+   \leadsto^*_{\siggenordertp} 
+   (\Psi; \Delta)$ and 
+   $S :: \restrictsig{(\Psi; \Delta)}{} \leadsto (\Psi'; \Delta')$
+under the combined signature from Figure~\ref{fig:gen-order-prog}
+and Figure~\ref{fig:ssos-mutable}, then
+$(\Psi'; \Delta') = \restrictsig{(\Psi'; \Delta'')}{}$ 
+for some $\Delta''$ such that 
+$T_2 :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) 
+   \leadsto^*_{\siggenordertp} 
+   (\Psi'; \Delta'')$.
+\end{theorem}
+
+\begin{proof}
+\end{proof}
 
 % \subsection{Store typing}
 

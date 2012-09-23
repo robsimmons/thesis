@@ -1,5 +1,5 @@
 ofcell: mutable_loc -> typ -> prop pers.
-gencell: mutable_loc -> typ -> prop lin.
+gencell: mutable_loc -> prop lin.
 
 of/loc: of (loc L) (reftp T)
          <- ofcell L T.
@@ -18,5 +18,6 @@ off/set1: off (set1 E) (reftp T) unittp
 off/set2: off (set2 L) T unittp
            <- ofcell L T.
 
-gencell/promise: {Exists l. !ofcell l T * $gencell l T}.
-gencell/fulfill: $gencell L T * !of V T * !value V >-> {$cell L V}.
+gencell/promise: {Exists l. !ofcell l T * $gencell l}.
+gencell/fulfill: $gencell L * !ofcell L T * !of V T * !value V 
+                  >-> {$cell L V}.
