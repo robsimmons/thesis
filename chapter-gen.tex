@@ -1,16 +1,15 @@
 \chapter{Generative invariants}
 \label{chapter-gen}
 
-So far in this thesis, we have presented \sls~and focused on its
-concurrent fragment primarily as a way of presenting transition
-systems. This view focuses on synthetic transitions as a way of
-relating pairs of process states, either with one transition $(\Psi;
-\Delta) \leadsto (\Psi'; \Delta')$ or with a series of transitions
-$(\Psi; \Delta) \leadsto^* (\Psi'; \Delta')$. This chapter will focus
-on another view of concurrent \sls~specifications as {\it grammars}
-for describing well-formed process states. This view was presented
-previously in the discussions of adequacy in
-Section~\ref{sec:framework-reggenworld} and in
+So far in this thesis, we have presented \sls~as a framework for
+presenting transition systems. This view focuses on synthetic
+transitions as a way of relating pairs of process states, either with
+one transition $(\Psi; \Delta) \leadsto (\Psi'; \Delta')$ or with a
+series of transitions $(\Psi; \Delta) \leadsto^* (\Psi';
+\Delta')$. This chapter will focus on another view of concurrent
+\sls~specifications as {\it grammars} for describing well-formed
+process states. This view was presented previously in the discussions
+of adequacy in Section~\ref{sec:framework-reggenworld} and in
 Section~\ref{sec:nat-ssos-adequacy}.
 
 The grammar-like specifications that describe well-formed process
@@ -31,7 +30,7 @@ $(\Psi; \Delta) \leadsto_\Sigma (\Psi'; \Delta')$ it is always the
 case that $(\Psi'; \Delta') \in \mathcal W$.  (The signature $\Sigma$,
 which allows the step to happen, is some other signature that describes
 the transition system we are studying.)  In such a case, the
-world or language defined of well-formed process states is called a
+world or language of well-formed process states is called a
 {\it generative invariant} of $\Sigma$.
 
 \subsection*{Type preservation}
@@ -40,8 +39,8 @@ The purpose of this chapter is to demonstrate that generative
 invariants are a reasonable way of talking about invariants of
 \sls~specifications, especially well-formedness and well-typedness
 invariants of substructural operational semantics specifications like
-the ones presented in Part II. Well-formedness invariants are
-important parts of discussions of adequacy, as we have already
+the ones presented in Part II. Well-formedness invariants are part adequacy
+theorems, as we have already
 seen. Well-typedness invariants are important because they allow us to
 prove {\it language safety}, the property (discussed way back in the
 introduction) that a language specification is completely free
@@ -79,20 +78,20 @@ central thesis:
 \begin{quote} 
   {\bf Thesis (Part III):} {\it The \sls~specification of the operational
     semantics of a programming language is a suitable basis for formal
-    reasoning about the properties of the language.}
+    reasoning about properties of the specified language.}
 \end{quote} 
 
 
 \subsection*{Overview}
 
 In Section~\ref{sec:gen-worlds} we review how generative signatures
-define a world and show how {\it regular worlds} that Sch\"urmann
+define a world and show how the {\it regular worlds} that Sch\"urmann
 implemented in Twelf \cite{schurmann00automating} fall out as a
 special case of the worlds described by generative signatures.  We
 will then discuss invariants of operationalized ordered abstract
 machines, introduced in Section~\ref{sec:nat-ssos-adequacy}, more
-generally (Section~\ref{sec:gen-order}). Then, in
-Section~\ref{sec:gen-ordertp}, we will extend that discussion from
+generally (Section~\ref{sec:gen-order}). In
+Section~\ref{sec:gen-ordertp} we will extend that discussion from
 well-{\it formed} process states to well-{\it typed} process states.
 This is not a large technical shift, but conceptually it is an
 important step from thinking about adequacy-like properties to
@@ -107,7 +106,7 @@ specifications in the image of the destination-adding transformation
 from Chapter~\ref{chapter-destinations}.  In
 Section~\ref{sec:gen-letcc} we consider the peculiar case of
 first-class continuations, which require us to use persistent
-continuation frames. 
+continuation frames as described in Section~\ref{sec:dest-continuations}. 
 %Finally, in Section~\ref{sec:gen-count} we
 %introduce a more complicated class of generative invariants that
 %capture the numerical properties of specifications that appear in the
@@ -148,7 +147,7 @@ $\Sigma$ is any signature that includes all of the generative
 signature's terminals (and all of its LF bits) but none of its
 nonterminals, then $\restrictsig{(\Psi; \Delta)}{\Sigma}$ is only
 defined when the only remaining nonterminals in $\Delta$ are
-persistent and can be filtered out of $\Delta$. (As long as
+persistent and can therefore be filtered out of $\Delta$. (As long as
 $\Sigma_{\it Gen}$ and $\Sigma$ have the same LF declarations, the LF
 context $\Psi$ won't have anything filtered out.) When the
 classification of terminals and nonterminals is clear, we will leave
@@ -156,7 +155,7 @@ off the restricting signature and just write $\restrictsig{(\Psi;
   \Delta)}{}$.
 
 Definition~\ref{def:gensig} is intentionally quite broad -- it need
-not even be decidable whether a process state belongs to the 
+not even be decidable whether a process state belongs to a particular
 world.\footnote{Proof: consider the initial state
   $(x{:}\istrue{\susp{\sf gen}})$ and the rule $\forall
   \lf{e}.\,\forall\lf{v}.\,{\sf gen} \fuse {!}({\sf
@@ -237,8 +236,8 @@ world can be described with the block ${\sf blockexp}$:
 If we had a judgment ${\sf natvar}\,\lf{x}\,\lf{n}$ that associated
 every LF variable $\lf{x}{:}{\sf exp}$ with some natural number
 $\lf{n}{:}{\sf nat}$, then in order to make sure that every expression
-variable was associated with some natural number we would use this
-world:
+variable was associated with some natural number we would use the world
+described by this block:
 \[
  {\sf blocknatvar} : 
  {\sf some}~\{{\lf n}{:}{\sf nat}\}
@@ -329,7 +328,7 @@ for the encoding of stores in Linear LF \cite{cervesato02linear} and
 stacks in Ordered LF \cite{polakow01ordered}. They also suffice
 to describe well-formedness invariants in Felty and Momigliano's
 sequential specifications \cite{felty12hybrid}. However, regular
-worlds are insufficient for all the
+worlds are insufficient for the
 invariants discussed in the remainder of this chapter.
 
 \subsection{Generative versus consumptive signatures}
@@ -337,7 +336,7 @@ invariants discussed in the remainder of this chapter.
 The example of regular worlds helps explain why generative signatures are
 {\it generative}. A earlier version of the results in this chapter and
 the next used {\it consumptive} signatures
-\cite{simmons10type}. Consumptive signatures are basically generative
+\cite{simmons10type}. Consumptive signatures are generative
 signatures with the arrows turned around: we consume well-formed
 contexts using consumptive rules like $\forall\lf{e}.\,{\sf
   eval}\,\lf{e} \lefti \{ {\sf gen} \}$ and $\forall \lf{f}.\,{\sf
@@ -347,22 +346,19 @@ rules like $\forall\lf{e}.\,{\sf gen}\lefti \{ {\sf eval}\,\lf{e} \}$
 and $\forall \lf{f}.\,{\sf gen} \lefti \{ {\sf gen} \fuse {\sf
   cont}\,\lf{f} \}$. 
 
-One advantage of consumptive signatures is that it lets us work with
-complete derivations, rather than traces. That is, using a consumptive
-signature, we can talk about the set of process states
+One arugable advantage of consumptive signatures is that it lets us
+work with complete derivations, rather than traces. That is, using a
+consumptive signature, we can talk about the set of process states
 $(\Psi; \Delta)$ where $\Psi; \Delta \vdash \islax{{\sf gen}}$ rather
 than the set of process states where $(\cdot; x{:}\istrue{\susp{\sf
     gen}}) \leadsto^* (\Psi; \Delta)$.\footnote{As long as $\Psi$ and
   $\Delta$ contain only nonterminals -- using consumptive signatures
   doesn't obviate the need for the restriction operation
   $\restrictsig{(\Psi; \Delta)}{}$ or some equivalent restriction
-  operation.}  Working with complete derivations instead of traces is
-familiar, but it does not especially simplify any of the proofs in
-\cite{simmons10type}.  Therefore, for for purely
-context-free-grammar-like invariants, such as the PDA invariant from
-Section~\ref{sec:framework-reggenworld} and the SSOS invariant from
-Section~\ref{sec:nat-ssos-adequacy}, generative and consumptive
-signatures are effectively equivalent.
+  operation.} For purely context-free-grammar-like invariants, such as
+the PDA invariant from Section~\ref{sec:framework-reggenworld} and the
+SSOS invariant from Section~\ref{sec:nat-ssos-adequacy}, generative
+and consumptive signatures are effectively equivalent.
 
 However, for generative signatures describing regular worlds, there is
 no notion of turning the arrows around to get an appropriate
@@ -408,10 +404,10 @@ mutable state nor destination-passing style.)
 \section{Invariants of ordered specifications}
 \label{sec:gen-order}
 
-We already covered applications of generative invariants for ordered
+We already introduced generative invariants for ordered
 abstract machine SSOS specifications in
-Section~\ref{sec:nat-ssos-adequacy}. In this section, we will discuss
-a generalization of that generative invariant to abstract machines
+Section~\ref{sec:nat-ssos-adequacy}. In this section, we will extend 
+that generative invariant to ordered abstract machines
 with parallel evaluation and recoverable failure.
 
 
@@ -428,8 +424,7 @@ and argument in an application, as discussed in
 Section~\ref{sec:trans-par} and Figure~\ref{fig:cbv-ev-ssos-par}) and
 recoverable failure (as presented in Section~\ref{sec:failure} and
 Figure~\ref{fig:ssos-fail}). To make sure there is still an
-interesting sequential feature -- specifically, to demonstrate the use
-of ${\sf cont}$ frames -- we also introduce a let-expression
+interesting sequential feature, we also introduce a let-expression
 $\interp{{\sf let}\,x = e\,{\sf in}\,e'} = \lf{{\sf
     let}\,\interp{e}\,\lambda x.\interp{e'}}$. The particular features
 are less important than the general setup, which effectively
@@ -446,7 +441,7 @@ Section~\ref{sec:nat-ssos-adequacy}, and the intended progress theorem
 will guide our hand in Section~\ref{sec:gen-ordertp}. In this case,
 our goal is that every well-formed state should be {\it
   reachable}. That is, if $(x{:}\istrue{\susp{\sf gen}})
-\leadsto^* \Delta$ and if $\Delta$ contains no
+\leadsto^* \Delta$ under the generative signature and if $\Delta$ contains no
 instances of ${\sf gen}$, then there should be an expression $\obj{e}$
 such that $(x{:}\istrue{\susp{{\sf eval}\,\interp{e}}}) \leadsto^*
 \Delta$ under the signature from
@@ -488,8 +483,9 @@ computations, suggesting these rules:
 \smallskip 
 %
 Even though ${\sf gen/cont}$ is exactly the rule for sequential
-continuations in Section~\ref{sec:nat-ssos-adequacy}, it does not work
-here.  Both parallel and sequential continuations are indexed by
+continuations in Section~\ref{sec:nat-ssos-adequacy}, this approach
+conflicts with our guiding principle of reachability.
+Both parallel and sequential continuations are indexed by
 frames, but the parallel frame ${\sf app1}$ cannot appear in a
 sequential continuation, nor can the sequential frame $({\sf
   let1}\,\lf{\lambda x.e\,x})$ appear in a parallel frame. 
@@ -660,7 +656,7 @@ idea that the grammar described by a generative signature is {\it
 a rule ${\sf gen/redundant} : {\sf gen} \lefti \{ {\sf gen} \}$ in
 $\Sigma_{\it Gen\ref{fig:gen-order}}$, for instance, then the final
 step $S$ could be
-$\trstep{y_1}{{\sf gen/redundant}\,y'}$, and this would our
+$\trstep{y_1}{{\sf gen/redundant}\,y'}$, and this would invalidate our
 inversion proof
 for parts 3, 4, and 6, as $S^{\bullet}$ would be $\{y_1\}$, a strict
 subset of the set $V$. 
@@ -682,8 +678,8 @@ The proof above could also be stated in form of case analysis on the
 form of the last step and induction. The reason for {\it not} doing
 that is more an issue of proof engineering: such a proof would require
 enumerating 7 cases for each of the 6 inversion lemmas, leading to
-proof whose size is $O(n^2)$ in which the majority of cases are
-redundant or boring. In this chapter, we will emphasize the principles
+proof whose size is in $O(n^2)$ where $n$ is the number of rules
+in the generative signature. In this chapter, we will emphasize the principles
 by which we can use to reason {\it concisely} about the specifications
 we are interested in.
 
@@ -700,7 +696,7 @@ $T_2 :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
 \begin{proof} As in the proofs of Theorem~\ref{thm:pda-preservation}
   and Theorem~\ref{thm:adequate-pres}, we enumerate the synthetic
   transitions possible under the signature in
-  Figure~\ref{fig-gen-order-prog}, perform inversion on the structure
+  Figure~\ref{fig:gen-order-prog}, perform inversion on the structure
   of $T_1$, and then use the results of inversion to construct
   $T_2$. We give three illustrative cases corresponding to the
   fragment dealing with functions and parallel application.
@@ -753,7 +749,7 @@ $T_2 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
 %%%%%%%%
 %%%%%%%%
 \item 
-  [Case $\trstep{y}{{\sf ev/app}\,\lf{e_1}\,\lf{e_2}\,x}$]~
+  [Case $\trstep{y_1, y_2, y_3}{{\sf ev/app}\,\lf{e_1}\,\lf{e_2}\,x}$]~
 
 \qquad
   $::
@@ -806,7 +802,7 @@ $T_2 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
 %%%%%%%%
 %%%%%%%%
 \item 
-  [Case $\trstep{y}{{\sf ev/app1}\,\lf{(\lambda x.\,e)}\,\lf{v_2}\,x}$]~
+  [Case $\trstep{y}{{\sf ev/app1}\,\lf{(\lambda x.\,e)}\,\lf{v_2}\,(\tfuser{x_1}{\tfuser{x_2}{x_3}})}$]~
 
 \qquad
   $::
@@ -966,7 +962,7 @@ respectively, in order to produce a computation of type $\obj{{\it
 The generative rules in Figure~\ref{fig:gen-ordertp} are our first use
 of an {\it indexed} nonterminal, ${\sf gen}\,\interp{\it tp}$, which
 generates computations that, upon successful return, will produce
-values of type $\obj{\it tp}$. 
+values $\obj{v}$ of type $\obj{\cdot \vdash v : {\it tp}}$. 
 
 \subsection{Inversion}
 
@@ -1049,7 +1045,7 @@ property in the proof below.
 \begin{description}
 
 \item 
-  [Case $\trstep{y}{{\sf ev/app1}\,\lf{(\lambda x.\,e)}\,\lf{v_2}\,x}$]~
+  [Case $\trstep{y}{{\sf ev/app1}\,\lf{(\lambda x.\,e)}\,\lf{v_2}\,(\tfuser{x_1}{\tfuser{x_2}{x_2}})}$]~
 
 \qquad
   $::
@@ -1111,7 +1107,7 @@ where
 With these derivations, 
 variable substitution (Theorem~\ref{thm:varsubst}), and cut
 admissibility (Theorem~\ref{thm:ord-cut}), we have a derivation of
-$\cdot \vdash \rsubst{N_2}{\it dx}{(\lf{[v_2/x]}N_1)} : {\sf
+$\cdot \vdash \rsubst{N_2}{\it dx}{(\lf{[v_2/x]}N_1')} : {\sf
   of}\,\lf{([v_2/x]e)}\,\lf{\it tp}$.\footnote{We know by
   subordination that $\lf{x}$ is not free in $\lf{\it tp}$, so
   $\lf{[v_2/x]{\it tp}} = \lf{\it tp}$.}  We can therefore use $T'$ to
@@ -1125,7 +1121,7 @@ $T_2 = ~$ \= \qquad \= $(x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
 \\
 \>$\trstep{y}
      {{\sf gen/eval}\,\lf{tp}\,\lf{([v_2/x]e)}\,(\tfuser{x'}{\tbangr{(\rsubst{N_2}{\it
-  dx}{(\lf{[v_2/x]}N_1)})}})}$
+  dx}{(\lf{[v_2/x]}N_1')})}})}$
 \\
 \>\>$\tackon{\Theta}{y{:}\istrue{\susp{{\sf eval}\,\lf{([v_2/x]e)}}}}$
 \end{tabbing}
@@ -1151,7 +1147,7 @@ $T_1 = ~$ \= \qquad \= $(x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
 \\
 \>\>$\tackon{\Theta}{x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}}$
 \\
-\>$\trstep{x_1}
+\>$\trstep{x}
      {{\sf gen/eval}\,\lf{\it tp}\,\lf{({\sf catch}\,e_1\,e_2)}\,(\tfuser{x'}{\tbangr{N}})}$
 \\
 \>\>$\tackon{\Theta}{x{:}\istrue{\susp{{\sf eval}\,\lf{({\sf catch}\,e_1\,e_2)}}}}$
@@ -1196,7 +1192,7 @@ Theorem~\ref{thm:siggenordertp} furthermore follows the contours of a standard
 progress and preservation proof for an abstract machine like Harper's
 $\mathcal K\{{\sf nat}{\rightharpoonup}\}$ \cite[Chapter
 27]{harper12practical}.  Unlike the on-paper formalism used by Harper,
-the addition of parallel evaluation in our specification poses does not
+the addition of parallel evaluation in our specification does not
 further complicate the statement or proof of the preservation theorem.
 
 
@@ -1224,14 +1220,15 @@ general form:
   ~~ \iseph{\susp{{\sf cell}\,\lf{l_n}\,\lf{v_n}}}, 
   ~~ \ldots\right)\]
 %
-Naively, we might attempt to describe well-formed process 
-mutable state as a regular world specification
-with a rule like ${\sf gen/cell/bad} : \forall \lf{v}.\, {!}{\sf
+Naively, we might attempt to describe such process 
+states with the block-like rule 
+${\sf gen/cell/bad} : \forall \lf{v}.\, {!}{\sf
   value}\,\lf{v} \lefti \{ \exists \lf{l}. {\sf cell}\,\lf{l}\,\lf{v}
-\}$. The problem with such a specification is that it makes it
-impossible to have a cell refer to itself, a situation that can easily
-happen in practice. The canonical example, using back-patching to
-implement recursion, is shown in Figure~\ref{fig:bigbackpatch}, which
+\}$. The problem with such a specification is that it makes 
+cells unable to refer to themselves, a situation that can easily
+happen in practice. A canonical example, using back-patching to
+implement recursion, is traced out 
+in Figure~\ref{fig:bigbackpatch}, which
 describes a trace classified by:
 
 {\small\begin{align*}
@@ -1407,9 +1404,9 @@ invariants and well-typedness invariants; Figure~\ref{fig:gen-state}
 describes a generative signature that captures type information. 
 This specification introduces
 two nonterminals. The first is the aforementioned mobile nonterminal
-${\sf gencell}\,\lf{l}\,\lf{\it tp}$, representing the promise to
-eventually create a cell corresponding to the location $\lf{l}$
-containing a value of object type $\lf{\it tp}$.  The second is a
+${\sf gencell}\,\lf{l}$, representing the promise to
+eventually create a cell corresponding to the location $\lf{l}$.  
+The second is a
 persistent nonterminal ${\sf ofcell}\,\lf{l}\,\lf{\it tp}$. The
 collection of ${\sf ofcell}$ propositions introduced by a generative
 trace collectively plays the role of a {\it store typing} in
@@ -1430,8 +1427,8 @@ single rule
 $\forall \lf{\it tp}.\,\{ \exists \lf{l}.\,{\sf
     ofcell}\,\lf{l}\,\lf{\it tp}\}$ or with the equivalent block
 \[{\sf some} ~ \lf{\it tp}{:}{\sf
-  typ} ~ {\sf block} ~ \lf{l}{:}{\sf mutable\_loc}, x{:}\ispers{{\sf
-    ofcell}\,\lf{l}\,\lf{\it tp}}.\]
+  typ} ~ {\sf block} ~ \lf{l}{:}{\sf mutable\_loc}, x : \ispers{\susp{{\sf
+    ofcell}\,\lf{l}\,\lf{\it tp}}}.\]
 
 
 \begin{lemma}[Inversion -- Figure~\ref{fig:gen-state}, partial]~
@@ -1446,7 +1443,7 @@ $\forall \lf{\it tp}.\,\{ \exists \lf{l}.\,{\sf
                                   (\tfuser{x'}{\tbangr{N}})}\right)$,
 \\ where
    $\Psi; \Delta \vdash_{\siggenstate} N : {{\sf of}\,\lf{e}\,\lf{{\it tp}}}$,
-\\ $T' :: (\cdot; x{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
+\\ $T' :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
        \leadsto^*_{\siggenstate}
        (\Psi'; \tackon{\Theta}
           {x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}})$, 
@@ -1468,7 +1465,7 @@ $\forall \lf{\it tp}.\,\{ \exists \lf{l}.\,{\sf
 \\ where 
    $\Psi; \Delta \vdash_{\siggenstate} N : 
        {{{\sf off}\,\lf{f}\,\lf{{\it tp}'}\,\lf{{\it tp}}}}$,
-\\ $T' :: (\cdot; x{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
+\\ $T' :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
        \leadsto^*_{\siggenstate}
        (\Psi'; \tackon{\Theta}
           {x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}})$,
@@ -1478,18 +1475,18 @@ $\forall \lf{\it tp}.\,\{ \exists \lf{l}.\,{\sf
 
 
 \medskip
-\item If $T :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+\item If $T :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
          \leadsto^*_{\siggenstate} 
          (\Psi; \tackon{\Theta}
             {y{:}\istrue{\susp{{\sf cell}\,\lf{{\it l}}\,\lf{v}}}})$,
 \\ then $T = (T'; \trstep{y}{{\sf gencell/fulfill}\,\lf{l}\,\lf{\it tp}\,\lf{v}\,(\tfuser{x'}{\tfuser{x_t}{\tfuser{\tbangr{N}}{\tbangr{N_v}}}})})$,
-\\ where $x_t{:}\ispers{\susp{{\sf of}\,\lf{l}\,\lf{\it tp}}} \in \Delta$,
+\\ where $x_t{:}\ispers{\susp{{\sf ofcell}\,\lf{l}\,\lf{\it tp}}} \in \Delta$,
    $\Psi; \Delta \vdash_{\siggenstate} N : {\sf of}\,\lf{v}\,\lf{\it tp}$,
    $\Psi; \Delta \vdash_{\siggenstate} N_v : {\sf value}\,\lf{v}$,
-\\ $T' :: (\cdot; x{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+\\ $T' :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
        \leadsto^*_{\siggenstate}
        (\Psi'; \tackon{\Theta}
-          {x'{:}\istrue{\susp{{\sf gencell}\,\lf{l}}}})$,
+          {x'{:}\iseph{\susp{{\sf gencell}\,\lf{l}}}})$,
 \\ and $\Delta$ is the persistent part of 
    $\tackon{\Theta}
           {x'{:}\iseph{\susp{{\sf gencell}\,\lf{l}}}}$.
@@ -1506,11 +1503,11 @@ pattern established in Section~\ref{sec:inversion-genorder}.
 \subsection{Uniqueness}
 
 To prove that our generative invariant for mutable storage is
-maintained, we need one property besides inversion, which I will call
-the {\it unique index} property. This is the property that, under the
-generative signature described by $\siggenstate$, locations always map
-{\it uniquely} to persistent positive propositions 
-$x_t{:}{\sf ofcell}\,\lf{l}\,\lf{\it tp}$. 
+maintained, we need one property besides inversion; we'll refer to it
+as the {\it unique index} property. This is the property that, under
+the generative signature described by $\siggenstate$, locations always
+map {\it uniquely} to persistent positive propositions $x_t{:}{\sf
+  ofcell}\,\lf{l}\,\lf{\it tp}$.
 
 \bigskip
 \begin{lemma}[Unique indices of $\siggenstate$]~
@@ -1554,8 +1551,8 @@ represent the fact that the restriction operator $\restrictsig{(\Psi;
 typing.
 
 \bigskip
-\begin{theorem}[$\siggenordertp$ is a generative invariant]
-\label{thm:siggenordertp}
+\begin{theorem}[$\siggenstate$ is a generative invariant]
+\label{thm:siggenstate}
 If $T_1 :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) 
    \leadsto^*_{\siggenordertp} 
    (\Psi; \Delta)$ and 
