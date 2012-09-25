@@ -686,10 +686,10 @@ we are interested in.
 \subsection{Preservation}
 
 \begin{theorem}[$\siggenorder$ is a generative invariant]\label{thm:siggenorder}
-If $T_1 :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder} 
+If $T_1 :: (x_0{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder} 
    \Delta$ and $S :: \restrictsig{\Delta}{} \leadsto \Delta'$
 under the signature from Figure~\ref{fig:gen-order-prog}, then
-$T_2 :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder} 
+$T_2 :: (x_0{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder} 
    \Delta'$
 \end{theorem}
 
@@ -718,7 +718,7 @@ $T_2 :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
 Applying inversion (Part 1) to $T_1$, we have 
 
 \begin{tabbing}
-$T_1 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
+$T_1 = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{\sf gen}})$
 \\
 \>$T'$
 \\
@@ -733,7 +733,7 @@ $T_1 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
 We can use $T'$ to construct $T_2$ as follows:
 
 \begin{tabbing}
-$T_2 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
+$T_2 = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{\sf gen}})$
 \\
 \>$T'$
 \\
@@ -767,7 +767,7 @@ $T_2 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
 Applying inversion (Part 1) to $T_1$, we have 
 
 \begin{tabbing}
-$T_1 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
+$T_1 = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{\sf gen}})$
 \\
 \>$T'$
 \\
@@ -781,7 +781,7 @@ $T_1 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
 We can use $T'$ to construct $T_2$ as follows:
 
 \begin{tabbing}
-$T_2 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
+$T_2 = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{\sf gen}})$
 \\
 \>$T'$
 \\
@@ -818,7 +818,7 @@ $T_2 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
 Applying inversion (Part 2, twice, and then Part 4) to $T_1$, we have
 
 \begin{tabbing}
-$T_1 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
+$T_1 = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{\sf gen}})$
 \\
 \>$T'$
 \\
@@ -841,7 +841,7 @@ $T_1 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
 
 We can use $T'$ to construct $T_2$ as follows:
 \begin{tabbing}
-$T_2 = ~$ \= \qquad \= $(x{:}\istrue{\susp{\sf gen}})$
+$T_2 = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{\sf gen}})$
 \\
 \>$T'$
 \\
@@ -1019,10 +1019,10 @@ always stays within the same world.
 \bigskip
 \begin{theorem}[$\siggenordertp$ is a generative invariant]
 \label{thm:siggenordertp}
-If $T_1 :: (x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) \leadsto^*_{\siggenordertp} 
+If $T_1 :: (x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) \leadsto^*_{\siggenordertp} 
    \Delta$ and $S :: \restrictsig{\Delta}{} \leadsto \Delta'$
 under the signature from Figure~\ref{fig:gen-order-prog}, then
-$T_2 :: (x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) \leadsto^*_{\siggenordertp} 
+$T_2 :: (x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) \leadsto^*_{\siggenordertp} 
    \Delta'$.
 \end{theorem}
 
@@ -1061,7 +1061,7 @@ property in the proof below.
 Applying inversion to $T_1$, we have
 
 \begin{tabbing}
-$T_1 = ~$ \= \qquad \= $(x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
+$T_1 = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
 \\
 \>$T'$
 \\
@@ -1113,7 +1113,7 @@ $\cdot \vdash \rsubst{N_2}{\it dx}{(\lf{[v_2/x]}N_1')} : {\sf
   $\lf{[v_2/x]{\it tp}} = \lf{\it tp}$.}  We can therefore use $T'$ to
 construct $T_2$ as follows:
 \begin{tabbing}
-$T_2 = ~$ \= \qquad \= $(x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
+$T_2 = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
 \\
 \>$T'$
 \\
@@ -1141,7 +1141,7 @@ $T_2 = ~$ \= \qquad \= $(x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
 Applying inversion to $T_1$, we have
 
 \begin{tabbing}
-$T_1 = ~$ \= \qquad \= $(x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
+$T_1 = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
 \\
 \>$T'$
 \\
@@ -1162,7 +1162,7 @@ know that $N = {\sf of/catch}\,\tbangr{N_2}\,\tbangr{N_1}$, where
 We can therefore use $T'$ to construct $T_2$ as follows:
 
 \begin{tabbing}
-$T_1 = ~$ \= \qquad \= $(x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
+$T_1 = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
 \\
 \>$T'$
 \\
@@ -1553,7 +1553,7 @@ typing.
 \bigskip
 \begin{theorem}[$\siggenstate$ is a generative invariant]
 \label{thm:siggenstate}
-If $T_1 :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) 
+If $T_1 :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) 
    \leadsto^*_{\siggenordertp} 
    (\Psi; \Delta)$ and 
    $S :: \restrictsig{(\Psi; \Delta)}{} \leadsto (\Psi'; \Delta')$
@@ -1561,14 +1561,94 @@ under the combined signature from Figure~\ref{fig:gen-order-prog}
 and Figure~\ref{fig:ssos-mutable}, then
 $(\Psi'; \Delta') = \restrictsig{(\Psi'; \Delta'')}{}$ 
 for some $\Delta''$ such that 
-$T_2 :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) 
+$T_2 :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) 
    \leadsto^*_{\siggenordertp} 
    (\Psi'; \Delta'')$.
 \end{theorem}
 
 \begin{proof}
 As always, the proof proceeds by enumeration, inversion, and reconstruction. 
-All the cases are\ldots 
+The only interesting cases are the three that actually manipulate state,
+corresponding to ${\sf ev/ref1}$, ${\sf ev/get1}$, and ${\sf ev/set2}$.
+
+\begin{description}
+%%%%%%%%
+%%%%%%%% ev/ref1
+%%%%%%%%
+\item
+  [Case $\trstep{\lf{l}, y_1, y_2}
+         {{\sf ev/ref1}\,\lf{v}\,(\tfuser{x_1}{x_2})}$]~
+
+\qquad 
+  $:: \left(\Psi; ~ 
+   \tackon{\Theta}{x_1{:}\istrue{\susp{{\sf retn}\,\lf{v}}}, ~
+                   x_2{:}\istrue{\susp{{\sf cont}\,\lf{\sf ref1}}}}
+   \right)$
+
+\qquad\qquad
+  $\leadsto \left(\Psi, ~ \lf{l}{:}{\sf mutable\_loc}; ~
+   \tackon{\Theta}{y_1{:}\iseph{\susp{{\sf cell}\,\lf{l}\,\lf{v}}}, ~
+                   y_2{:}\istrue{\susp{{\sf retn}\,\lf{({\sf loc}\,\lf{l})}}}}
+   \right)$
+
+   \medskip 
+   $T_1 :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) 
+    \leadsto \left(\Psi;
+     \tackon{\Theta'}{x_1{:}\istrue{\susp{{\sf retn}\,\lf{v}}}, ~
+                   x_2{:}\istrue{\susp{{\sf cont}\,\lf{\sf ref1}}}}
+     \right)$ for some $\Theta'$ such that, for all $\Delta$,
+   $\restrictsig{(\Psi; \tackon{\Theta'}{\Delta})}{} = (\Psi;
+   \tackon{\Theta}{\restrictsig{\Delta}{}})$. Applying 
+   inversion to $T_1$, we have
+
+   \medskip
+
+%%%%%%%%
+%%%%%%%% ev/get1
+%%%%%%%%
+\item
+  [Case $\trstep{y_1, y_2}
+         {{\sf ev/get1}\,\lf{l}\,\lf{v}\,(\tfuser{x_1}{\tfuser{x_2}{x_3}})}$]~
+
+\qquad 
+  $:: 
+   \tackon{\Theta}{}$
+
+\qquad\qquad
+  $\leadsto
+   \tackon{\Theta}{}$
+
+
+
+   Applying inversion to $T_1$, we have
+
+   \medskip
+
+%%%%%%%%
+%%%%%%%% ev/set2
+%%%%%%%%
+\item
+  [Case $\trstep{y_1, y_2}
+         {{\sf ev/set2}\,\lf{v_2}\,\lf{l}\,\lf{v_x}\,
+          (\tfuser{x_1}{\tfuser{x_2}{x_3}})}$]~
+
+\qquad 
+  $:: 
+   \tackon{\Theta}{}$
+
+\qquad\qquad
+  $\leadsto
+   \tackon{\Theta}{}$
+
+   \medskip
+   We have a $\Theta'$ such that for all $\Delta$ composed 
+   only of nonterminals, $\restrictsig{(\Psi;
+     \tackon{\Theta'}{\Delta})}{} = 
+     \tackon{\Theta}{\Delta}$. Applying 
+   inversion to $T_1$, we have
+
+\end{description}
+
 \end{proof}
 
 % \subsection{Store typing}
