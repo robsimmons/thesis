@@ -1,6 +1,8 @@
 ofcell: mutable_loc -> typ -> prop pers.
 gencell: mutable_loc -> prop lin.
 
+value/loc: value (loc L).
+
 of/loc: of (loc L) (reftp T)
          <- ofcell L T.
 of/ref: of (ref E) (reftp T)

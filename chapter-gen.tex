@@ -346,7 +346,7 @@ rules like $\forall\lf{e}.\,{\sf gen}\lefti \{ {\sf eval}\,\lf{e} \}$
 and $\forall \lf{f}.\,{\sf gen} \lefti \{ {\sf gen} \fuse {\sf
   cont}\,\lf{f} \}$. 
 
-One arugable advantage of consumptive signatures is that it lets us
+One arguable advantage of consumptive signatures is that it lets us
 work with complete derivations, rather than traces. That is, using a
 consumptive signature, we can talk about the set of process states
 $(\Psi; \Delta)$ where $\Psi; \Delta \vdash \islax{{\sf gen}}$ rather
@@ -1075,7 +1075,7 @@ $T_1 = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
 \>\>$\tackon{\Theta}
      {x_1'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}''}}}, ~
       x_2'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}'}}}, ~
-      x_3{:}\istrue{\susp{{\sf cont}\,\lf{\sf app1}}}}$
+      x_3{:}\istrue{\susp{{\sf cont2}\,\lf{\sf app1}}}}$
 \\
 \>$\trstep{x_1}
      {{\sf gen/retn}\,\lf{tp''}\,\lf{({\sf lam}\,\lambda x.e)}\,}
@@ -1554,7 +1554,7 @@ typing.
 \begin{theorem}[$\siggenstate$ is a generative invariant]
 \label{thm:siggenstate}
 If $T_1 :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) 
-   \leadsto^*_{\siggenordertp} 
+   \leadsto^*_{\siggenstate} 
    (\Psi; \Delta)$ and 
    $S :: \restrictsig{(\Psi; \Delta)}{} \leadsto (\Psi'; \Delta')$
 under the combined signature from Figure~\ref{fig:gen-order-prog}
@@ -1562,7 +1562,7 @@ and Figure~\ref{fig:ssos-mutable}, then
 $(\Psi'; \Delta') = \restrictsig{(\Psi'; \Delta'')}{}$ 
 for some $\Delta''$ such that 
 $T_2 :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) 
-   \leadsto^*_{\siggenordertp} 
+   \leadsto^*_{\siggenstate} 
    (\Psi'; \Delta'')$.
 \end{theorem}
 
@@ -1570,6 +1570,7 @@ $T_2 :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
 As always, the proof proceeds by enumeration, inversion, and reconstruction. 
 The only interesting cases are the three that actually manipulate state,
 corresponding to ${\sf ev/ref1}$, ${\sf ev/get1}$, and ${\sf ev/set2}$.
+The last two are similar, so we only give the case for ${\sf ev/get1}$.
 
 \begin{description}
 %%%%%%%%
@@ -1593,7 +1594,7 @@ corresponding to ${\sf ev/ref1}$, ${\sf ev/get1}$, and ${\sf ev/set2}$.
 
    \medskip 
    $T_1 :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) 
-    \leadsto \left(\Psi;
+    \leadsto^* \left(\Psi;
      \tackon{\Theta'}{x_1{:}\istrue{\susp{{\sf retn}\,\lf{v}}}, ~
                    x_2{:}\istrue{\susp{{\sf cont}\,\lf{\sf ref1}}}}
      \right)$ for some $\Theta'$ such that, for all $\Delta$,
@@ -1603,6 +1604,83 @@ corresponding to ${\sf ev/ref1}$, ${\sf ev/get1}$, and ${\sf ev/set2}$.
 
    \medskip
 
+\begin{tabbing}
+$T_1 = ~$ \= \qquad \= 
+    $(\cdot; ~ x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
+\\
+\>$T'$
+\\
+\>\>$(\Psi; ~ \tackon{\Theta'}
+      {x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}})$
+\\
+\>$\trstep{x_1', x_2}
+     {{\sf gen/cont}\,\lf{{\it tp}}\,\lf{\sf ref1}\,\lf{{\it tp}'}\,
+         (\tfuser{x'}{\tbangr{N}})}$
+\\ %%
+\>\>$(\Psi; ~ \tackon{\Theta'}
+     {x_1'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}'}}}, ~
+      x_2{:}\istrue{\susp{{\sf cont}\,\lf{\sf ref1}}}})$
+\\
+\>$\trstep{x_1}
+     {{\sf gen/retn}\,\lf{v}\,(\tfuser{x_1'}{\tfuser{\tbangr{N_1}}{\tbangr{N_{v1}}}})}$
+\\
+\>\>$(\Psi; ~ \tackon{\Theta'}{x_1{:}\istrue{\susp{{\sf retn}\,\lf{v}}}, ~
+                   x_2{:}\istrue{\susp{{\sf cont}\,\lf{\sf ref1}}}})$
+\end{tabbing}
+where $\Delta$ contains the persistent propositions from $\Theta'$ and where
+\begin{itemize}
+\item[$\bullet$] $\Psi; \Delta \vdash N : {\sf off}\,\lf{\sf ref1}\,\lf{{\it tp}'}\,\lf{{\it tp}}$.  By traditional
+  inversion we know $\lf{\it{tp}} = \lf{{\sf reftp}\,{\it tp}'}$ and $N = {\sf off/ref1}\,\lf{{\it tp}'}$.
+\item[$\bullet$] $\Psi; \Delta \vdash N_1 : {\sf of}\,\lf{v}\,\lf{tp'}$. 
+\item[$\bullet$] $\Psi; \Delta \vdash N_{v1} : {\sf value}\,\lf{v}$.
+\end{itemize}
+
+We can use $T'$ to construct $T_2$ as follows:
+\begin{tabbing}
+$T_2 = ~$ \= \qquad \= 
+    $(\cdot; ~x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
+\\
+\>$T'$
+\\
+\>\>$(\Psi; ~
+     \tackon{\Theta'}
+     {x'{:}\istrue{\susp{{\sf gen}\,\lf{({\sf ref}\,{\it tp}')}}}})$
+\\
+\>$\trstep{\lf{l}, z, y_1'}{{\sf gencell/promise}\,\lf{{\it tp}'}}$
+\\
+\>$\trstep{y_1}{{\sf gencell/fulfill}\,\lf{l}\,\lf{{\it tp}'}\,\lf{v}\,
+      (\tfuser{y_1'}{\tfuser{z}{\tfuser{\tbangr{N_1}}{\tbangr{N_{v1}}}}})}$
+\\
+\>\>$(\Psi, \lf{l}{:}{\sf mutable\_loc};$
+\\
+\>\>$\quad 
+     \tackon{\Theta'}
+     {z{:}\ispers{\susp{{\sf ofcell}\,\lf{l}\,\lf{{\it tp}'}}}, ~
+      y_1{:}\iseph{\susp{{\sf cell}\,\lf{l}\,\lf{v}}}, ~
+      x'{:}\istrue{\susp{{\sf gen}\,\lf{({\sf ref}\,{\it tp}')}}}})$
+\\
+\>$\trstep{y_2}
+     {{\sf gen/retn}\,\lf{({\sf reftp}\,{\it tp}')}\,\lf{({\sf loc}\,l)}\,(\tfuser{x'}{\tfuser{\tbangr{({\sf of/loc}\,\lf{l}\,\lf{{\it tp}'}\,z)}}{\tbangr{({\sf value/loc}\,\lf{l})}}})}$
+\\
+\>\>$(\Psi, \lf{l}{:}{\sf mutable\_loc};$
+\\
+\>\>$\quad 
+     \tackon{\Theta'}
+     {z{:}\ispers{\susp{{\sf ofcell}\,\lf{l}\,\lf{{\it tp}'}}}, ~
+      y_1{:}\iseph{\susp{{\sf cell}\,\lf{l}\,\lf{v}}}, ~
+      x'{:}\istrue{\susp{{\sf retn}\,\lf{({\sf loc}\,l)}}}})$
+\end{tabbing}
+
+Restriction removes the persistent nonterminal $z{:}\ispers{\susp{{\sf
+      ofcell}\,\lf{l}\,\lf{{\it tp}'}}}$ from the context, so the
+restriction of $T_2$'s output is $\left(\Psi, ~ \lf{l}{:}{\sf mutable\_loc}; ~
+   \tackon{\Theta}{y_1{:}\iseph{\susp{{\sf cell}\,\lf{l}\,\lf{v}}}, ~
+                   y_2{:}\istrue{\susp{{\sf retn}\,\lf{({\sf loc}\,\lf{l})}}}}
+   \right)$ as
+required.
+
+\medskip
+
 %%%%%%%%
 %%%%%%%% ev/get1
 %%%%%%%%
@@ -1611,53 +1689,156 @@ corresponding to ${\sf ev/ref1}$, ${\sf ev/get1}$, and ${\sf ev/set2}$.
          {{\sf ev/get1}\,\lf{l}\,\lf{v}\,(\tfuser{x_1}{\tfuser{x_2}{x_3}})}$]~
 
 \qquad 
-  $:: 
-   \tackon{\Theta}{}$
+  $:: \left(\Psi; ~
+   \tackon{\Theta}
+    {x_1{:}\istrue{\susp{{\sf retn}\,\lf{({\sf loc}\,l)}}}, ~
+     x_2{:}\istrue{\susp{{\sf cont}\,\lf{{\sf get1}}}}, ~
+     x_2{:}\iseph{\susp{{\sf cell}\,\lf{l}\,\lf{v}}}
+    }\right)$
 
 \qquad\qquad
-  $\leadsto
-   \tackon{\Theta}{}$
-
-
-
-   Applying inversion to $T_1$, we have
+  $\leadsto \left(\Psi; ~
+   \tackon{\Theta}
+    {y_1{:}\istrue{\susp{{\sf retn}\,\lf{v}}}, ~
+     y_2{:}\iseph{\susp{{\sf cell}\,\lf{l}\,\lf{v}}}
+    }\right)$
 
    \medskip
+   $T_1 :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) $\\
+    $ ~ \quad\qquad\leadsto^* \left(\Psi;
+     \tackon{\Theta'}{x_1{:}\istrue{\susp{{\sf retn}\,\lf{({\sf loc}\,l)}}}, 
+     x_2{:}\istrue{\susp{{\sf cont}\,\lf{{\sf get1}}}}, 
+     x_3{:}\iseph{\susp{{\sf cell}\,\lf{l}\,\lf{v}}}
+    }
+     \right)$ \\
+   for some $\Theta'$ such that, for all $\Delta$,
+   $\restrictsig{(\Psi; \tackon{\Theta'}{\Delta})}{} = (\Psi;
+   \tackon{\Theta}{\restrictsig{\Delta}{}})$. Applying 
+   inversion to $T_1$, we have
+
+   \medskip
+
+\begin{tabbing}
+$T_1 = ~$ \= \qquad \= 
+    $(\cdot; ~ x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
+\\
+\>$T'$
+\\
+\>\> $\left(\Psi; ~
+       \tackon{\Theta'}
+       {x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}, ~
+        x_3'{:}\iseph{\susp{{\sf gencell}\,\lf{l}}}
+       }\right)$
+\\
+\>$\trstep{x_3}{{\sf gencell/fulfill}\,\lf{l}\,\lf{{\it tp}'}\,\lf{v}\,
+      (\tfuser{x_3'}{\tfuser{z_1}{\tfuser{\tbangr{N_3}}{\tbangr{N_{v3}}}}})}$
+\\
+\>\> $\left(\Psi; ~
+       \tackon{\Theta'}
+       {x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}, ~
+        x_3{:}\iseph{\susp{{\sf cell}\,\lf{l}\,\lf{v}}}
+       }\right)$
+\\
+\>$\trstep{x_1',x_2}{{\sf gen/cont}\,
+     \lf{{\it tp}}\,\lf{{\sf get1}}\,\lf{{\it tp}''}\,
+     (\tfuser{x'}{\tbangr{N_2}})}$
+\\
+\>$\trstep{x_1}{{\sf gen/retn}\,\lf{{\it tp}''}\,\lf{({\sf loc}\,l)}\,
+     (\tfuser{x_1'}{\tfuser{\tbangr{N_1}}{\tbangr{N_{v1}}}})}$ 
+\\
+\>\>$\left(\Psi; ~
+   \tackon{\Theta}
+    {x_1{:}\istrue{\susp{{\sf retn}\,\lf{({\sf loc}\,l)}}}, ~
+     x_2{:}\istrue{\susp{{\sf cont}\,\lf{{\sf get1}}}}, ~
+     x_2{:}\iseph{\susp{{\sf cell}\,\lf{l}\,\lf{v}}}
+    }\right)$
+\end{tabbing}
+
+where $\Delta$ contains the persistent propositions from $\Theta'$ and where
+\begin{itemize}
+\item[$\bullet$] $\Psi; \Delta \vdash N_2 : {\sf off}\,\lf{{\sf get1}}\,\lf{{\it tp}''}\,\lf{{\it tp}}$. By traditional inversion we know $\lf{{\it tp}''} = \lf{{\sf reftp}\,{\it tp}}$ and $N_2 = {{\sf off/get1}\,\lf{\it tp}}$. 
+\item[$\bullet$] $\Psi; \Delta \vdash N_1 : {\sf of}\,\lf{({\sf loc}\,l)}\,\lf{({\sf reftp}\,\lf{{\it tp}})}$. By traditional inversion we know $N_1 = {\sf of/loc}\,\lf{l}\,\lf{{\it tp}}\,x_1''$ where $x_1''{:}\ispers{\susp{{\sf ofcell}\,\lf{l}\,\lf{{\it tp}}}} \in \Delta$.
+\item[$\bullet$] $x_3'{:}\ispers{\susp{{\sf ofcell}\,\lf{l}\,\lf{{\it tp}'}}} \in \Delta$.
+\item[$\bullet$] $\Psi; \Delta \vdash N_3 : {\sf of}\,\lf{v}\,\lf{{\it tp}'}$.
+\item[$\bullet$] $\Psi; \Delta \vdash N_{3v} : {\sf value}\,\lf{v}$.
+\end{itemize}
+By the uniqueness lemma, we have that $x_3' = x_1''$ and $\lf{{\it
+    tp}'} = \lf{{\it tp}}$. Therefore, we can use $T'$ to construct $T_2$
+as follows:
+
+\begin{tabbing}
+$T_1 = ~$ \= \qquad \= 
+    $(\cdot; ~ x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
+\\
+\>$T'$
+\\
+\>\> $\left(\Psi; ~
+       \tackon{\Theta'}
+       {x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}, ~
+        x_3'{:}\iseph{\susp{{\sf gencell}\,\lf{l}}}
+       }\right)$
+\\
+\>$\trstep{y_2}{{\sf gencell/fulfill}\,\lf{l}\,\lf{{\it tp}'}\,\lf{v}\,
+      (\tfuser{x_3'}{\tfuser{z_1}{\tfuser{\tbangr{N_3}}{\tbangr{N_{v3}}}}})}$
+\\
+\>\> $\left(\Psi; ~
+       \tackon{\Theta'}
+       {x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}, ~
+        y_2{:}\iseph{\susp{{\sf cell}\,\lf{l}\,\lf{v}}}
+       }\right)$
+\\
+\>$\trstep{y_1}{{\sf gen/retn}\,\lf{{\it tp}}\,\lf{v}\,
+     (\tfuser{x'}{\tfuser{\tbangr{N_3}}{\tbangr{N_{v3}}}})}$
+\\
+\>\> $\left(\Psi; ~
+       \tackon{\Theta'}
+       {y_1{:}\istrue{\susp{{\sf retn}\,\lf{v}}}, ~
+        y_2{:}\iseph{\susp{{\sf cell}\,\lf{l}\,\lf{v}}}
+       }\right)$
+\end{tabbing}
+
+$\left(\Psi, ~ \lf{l}{:}{\sf mutable\_loc}; ~
+   \tackon{\Theta}{y_1{:}\iseph{\susp{{\sf cell}\,\lf{l}\,\lf{v}}}, ~
+                   y_2{:}\istrue{\susp{{\sf retn}\,\lf{({\sf loc}\,\lf{l})}}}}
+   \right)$ is the restriction of $T_2$'s output, as
+required.
+
 
 %%%%%%%%
 %%%%%%%% ev/set2
 %%%%%%%%
-\item
-  [Case $\trstep{y_1, y_2}
-         {{\sf ev/set2}\,\lf{v_2}\,\lf{l}\,\lf{v_x}\,
-          (\tfuser{x_1}{\tfuser{x_2}{x_3}})}$]~
+% \item
+%   [Case $\trstep{y_1, y_2}
+%          {{\sf ev/set2}\,\lf{v_2}\,\lf{l}\,\lf{v_x}\,
+%           (\tfuser{x_1}{\tfuser{x_2}{x_3}})}$]~
 
-\qquad 
-  $:: 
-   \tackon{\Theta}{}$
+% \qquad 
+%   $:: \left(\Psi; ~
+%    \tackon{\Theta}
+%     {}\right)$
 
-\qquad\qquad
-  $\leadsto
-   \tackon{\Theta}{}$
+% \qquad\qquad
+%   $\leadsto \left(\Psi; ~
+%    \tackon{\Theta}
+%     {}\right)$
 
-   \medskip
-   We have a $\Theta'$ such that for all $\Delta$ composed 
-   only of nonterminals, $\restrictsig{(\Psi;
-     \tackon{\Theta'}{\Delta})}{} = 
-     \tackon{\Theta}{\Delta}$. Applying 
-   inversion to $T_1$, we have
+%    \medskip
+%    We have a $\Theta'$ such that for all $\Delta$ composed 
+%    only of nonterminals, $\restrictsig{(\Psi;
+%      \tackon{\Theta'}{\Delta})}{} = 
+%      \tackon{\Theta}{\Delta}$. Applying 
+%    inversion to $T_1$, we have
 
 \end{description}
-
+The other cases, notably ${\sf ev/set2}$, follow the 
+same pattern
 \end{proof}
-
-% \subsection{Store typing}
-
-
-% \subsection{Environment semantics}
 
 \section{Destination-passing}
 \label{sec:gen-destinations}
+
+Destination-passing style specifications, as discussed in 
+Chapter~\ref{chapter-dest}, 
 
 Generative invariants can be used to describe the invariants 
 associated with the destination-passing style specifications . Essentially,
@@ -1674,7 +1855,8 @@ The key issue is again the inversion lemma; the destination-passing
 style specification in Figure~\ref{fig:gen-destinations}
 
 \bigskip
-\begin{lemma}[Inversion -- Figure~\ref{fig:gen-destinations}, partial]~
+\begin{lemma}[Inversion -- Figure~\ref{fig:gen-destinations}, partial]
+SCRATCH THIS DO OVER~
 \label{lemma:inversion-destinations}
 \begin{enumerate}
 \item If 
