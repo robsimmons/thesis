@@ -553,13 +553,13 @@ by concurrent equality.
 \begin{lemma}[Inversion -- Figure~\ref{fig:gen-order}]~
 \begin{enumerate}
 \item If 
-   $T :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
+   $T :: (x_0{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
          \tackon{\Theta}{y{:}\istrue{\susp{{\sf eval}\,\lf{e}}}}$,
 \\ then 
    $T = \left(T'; \trstep{y}{{\sf gen/eval}\,\lf{e}\,x'}\right)$.
 \medskip
 \item If 
-   $T :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
+   $T :: (x_0{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
          \tackon{\Theta}{y{:}\istrue{\susp{{\sf retn}\,\lf{v}}}}$,
 \\ then 
    $T = \left(T'; \trstep{y}{{\sf gen/retn}\,\lf{v}\,(\tfuser{x'}{\tbangr{N}})}\right)$,
@@ -567,7 +567,7 @@ by concurrent equality.
    $\cdot \vdash_{\siggenorder} N : {{{\sf value}\,\lf{v}}}$.
 \medskip
 \item If 
-   $T :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
+   $T :: (x_0{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
          \tackon{\Theta}{y_1{:}\istrue{\susp{{\sf gen}}}, ~
                          y_2{:}\istrue{\susp{{\sf cont}\,\lf{f}}}}$,
 \\ then 
@@ -576,7 +576,7 @@ by concurrent equality.
    $\cdot \vdash_{\siggenorder} N : {{{\sf okf}\,\lf{f}}}$.
 \medskip
 \item If
-   $T :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
+   $T :: (x_0{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
          \tackon{\Theta}{y_1{:}\istrue{\susp{{\sf gen}}}, ~
                          y_2{:}\istrue{\susp{{\sf gen}}}, ~
                          y_3{:}\istrue{\susp{{\sf cont2}\,\lf{f}}}}$,
@@ -586,13 +586,13 @@ by concurrent equality.
    $\cdot \vdash_{\siggenorder} N : {{{\sf okf2}\,\lf{f}}}$.
 \medskip
 \item If 
-   $T :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
+   $T :: (x_0{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
          \tackon{\Theta}{y{:}\istrue{\susp{{\sf error}}}}$,
 \\ then 
    $T = \left(T'; \trstep{y}{{\sf gen/error}\,x'}\right)$.
 \medskip
 \item If 
-   $T :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
+   $T :: (x_0{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
          \tackon{\Theta}{y_1{:}\istrue{\susp{{\sf gen}}}, ~
                          y_2{:}\istrue{\susp{{\sf handle}\,\lf{e}}}}$,
 \\ then 
@@ -600,9 +600,9 @@ by concurrent equality.
 \medskip
 \end{enumerate}
 In each instance above, 
-$T' :: (x{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
+$T' :: (x_0{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
           \tackon{\Theta}{x'{:}\istrue{\susp{{\sf gen}}}}$,
-where the variables $x$ and $x'$ may or may not
+where the variables $x_0$ and $x'$ may or may not
 be the same. (They are the same iff $T' = \emptytrace$.)
 \end{lemma}
 
@@ -978,7 +978,7 @@ follow.
 \begin{lemma}[Inversion -- Figure~\ref{fig:gen-order}, partial]~
 \begin{enumerate}
 \item If 
-   $T :: (x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) 
+   $T :: (x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) 
          \leadsto^*_{\siggenordertp}
          \tackon{\Theta}{y{:}\istrue{\susp{{\sf eval}\,\lf{e}}}}$,
 \\ then 
@@ -986,7 +986,7 @@ follow.
 \\ where $\cdot \vdash_{\siggenordertp} N : {\sf of}\,\lf{e}\,\lf{{\it tp}}$
 \medskip
 \item If 
-   $T :: (x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
+   $T :: (x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
          \leadsto^*_{\siggenordertp}
          \tackon{\Theta}{y_1{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}'}}}, ~
                          y_2{:}\istrue{\susp{{\sf cont}\,\lf{f}}}}$,
@@ -997,9 +997,9 @@ follow.
 \medskip
 \end{enumerate}
 In each instance above, 
-$T' :: (x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) \leadsto^*_{\siggenordertp}
+$T' :: (x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) \leadsto^*_{\siggenordertp}
           \tackon{\Theta}{x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}}$,
-where the variables $x$ and $x'$ may or may not
+where the variables $x_0$ and $x'$ may or may not
 be the same. (They are the same iff $T' = \emptytrace$, and if they
 are the same that implies $\lf{{\it tp}_0} = \lf{{\it tp}}$.)
 \end{lemma}
@@ -1434,7 +1434,7 @@ $\forall \lf{\it tp}.\,\{ \exists \lf{l}.\,{\sf
 \begin{lemma}[Inversion -- Figure~\ref{fig:gen-state}, partial]~
 \begin{enumerate}
 \item If 
-   $T :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
+   $T :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
          \leadsto^*_{\siggenstate}
          (\Psi; \tackon{\Theta}
             {y{:}\istrue{\susp{{\sf eval}\,\lf{e}}}})$,
@@ -1443,7 +1443,7 @@ $\forall \lf{\it tp}.\,\{ \exists \lf{l}.\,{\sf
                                   (\tfuser{x'}{\tbangr{N}})}\right)$,
 \\ where
    $\Psi; \Delta \vdash_{\siggenstate} N : {{\sf of}\,\lf{e}\,\lf{{\it tp}}}$,
-\\ $T' :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
+\\ $T' :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
        \leadsto^*_{\siggenstate}
        (\Psi'; \tackon{\Theta}
           {x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}})$, 
@@ -1453,7 +1453,7 @@ $\forall \lf{\it tp}.\,\{ \exists \lf{l}.\,{\sf
    
 \medskip
 \item If 
-   $T :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
+   $T :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
          \leadsto^*_{\siggenstate}
          (\Psi; \tackon{\Theta}
             {y_1{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}'}}}, ~
@@ -1465,7 +1465,7 @@ $\forall \lf{\it tp}.\,\{ \exists \lf{l}.\,{\sf
 \\ where 
    $\Psi; \Delta \vdash_{\siggenstate} N : 
        {{{\sf off}\,\lf{f}\,\lf{{\it tp}'}\,\lf{{\it tp}}}}$,
-\\ $T' :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
+\\ $T' :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
        \leadsto^*_{\siggenstate}
        (\Psi'; \tackon{\Theta}
           {x'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}})$,
@@ -1475,7 +1475,7 @@ $\forall \lf{\it tp}.\,\{ \exists \lf{l}.\,{\sf
 
 
 \medskip
-\item If $T :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
+\item If $T :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
          \leadsto^*_{\siggenstate} 
          (\Psi; \tackon{\Theta}
             {y{:}\istrue{\susp{{\sf cell}\,\lf{{\it l}}\,\lf{v}}}})$,
@@ -1483,7 +1483,7 @@ $\forall \lf{\it tp}.\,\{ \exists \lf{l}.\,{\sf
 \\ where $x_t{:}\ispers{\susp{{\sf ofcell}\,\lf{l}\,\lf{\it tp}}} \in \Delta$,
    $\Psi; \Delta \vdash_{\siggenstate} N : {\sf of}\,\lf{v}\,\lf{\it tp}$,
    $\Psi; \Delta \vdash_{\siggenstate} N_v : {\sf value}\,\lf{v}$,
-\\ $T' :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
+\\ $T' :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
        \leadsto^*_{\siggenstate}
        (\Psi'; \tackon{\Theta}
           {x'{:}\iseph{\susp{{\sf gencell}\,\lf{l}}}})$,
@@ -1513,18 +1513,18 @@ map {\it uniquely} to persistent positive propositions $x_t{:}{\sf
 \begin{lemma}[Unique indices of $\siggenstate$]~
 \begin{enumerate}
 \item
-If $T :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
+If $T :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
          \leadsto^*_{\siggenstate}
          (\Psi; \Delta)$,
 \\ ${x}{:}\ispers{\susp{{\sf ofcell}\,\lf{l}\,\lf{\it tp}}} \in \Delta$, 
 \\ and 
 ${y}{:}\ispers{\susp{{\sf ofcell}\,\lf{l}\,\lf{{\it tp}'}}} \in \Delta$, 
-\\ then $x = y$ and $\lf{tp} = \lf{{\it tp}'}$
+\\ then $x = y$ and $\lf{tp} = \lf{{\it tp}'}$.
 \end{enumerate}
 \end{lemma}
 
 \begin{proof}
-Induction on the structure of the trace $T$. 
+Induction and case analysis on the last steps of the trace $T$. 
 \end{proof}
 
 
@@ -1837,19 +1837,255 @@ same pattern
 \section{Destination-passing}
 \label{sec:gen-destinations}
 
-Destination-passing style specifications, as discussed in 
-Chapter~\ref{chapter-dest}, 
+Destination-passing style specifications, as discussed in
+Chapter~\ref{chapter-destinations}, are not a focus of this thesis,
+but they deserve mention due to their importance in the context of the
+logical framework CLF. In this section, we will work with an
+operational semantics derived from the signature given in
+Figure~\ref{fig:dest-cbv} (sequential evaluation of function
+application) in Chatper~\ref{chatper-destinations}. To use sequential
+application instead of parallel evaluation of function application, we
+will need to give different typing rules for frames:
 
-Generative invariants can be used to describe the invariants 
-associated with the destination-passing style specifications . Essentially,
-the indexing analysis 
+\smallskip
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-sequential-app.sls}
+\smallskip
+
+\noindent
+Other than this change, our deductive typing rules stay the same.
+
+
+\begin{figure}[tp]
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-destinations2.sls} 
+\caption{Generative invariant: destination-passing (``obvious'' formulation)}
+\label{fig:gen-destinations2} 
+\end{figure}
+
+When we move from orderd abstract machines to destination-passing
+style, the most natural adaptation of generative invariants is
+arguably the one given in Figure~\ref{fig:gen-destinations}. In that
+figure, the core nonterminal is the mobile proposition ${\sf
+  gen}\,\lf{{\it tp}}\,\lf{d}$. The rule ${\sf gen/dest}$, which 
+creates destinations freely, is
+necessary, as we can see from the following sequence of 
+process states:
+\begin{align*}
+( \lf{d_0}{:}{\sf dest}&; ~
+       x_1{:}\iseph{\susp{{\sf eval}
+          \,\lf{\interp{(\lambda x.e)\,e_2}}\,\lf{d_0}}}
+) 
+\leadsto
+\\
+( \lf{d_0}{:}{\sf dest}, \lf{d_1}{:}{\sf dest}&; ~ 
+       x_2{:}\iseph{\susp{{\sf eval}\,\lf{\interp{(\lambda x.e)}}\,\lf{d_1}}}, ~
+       x_3{:}\iseph{\susp{{\sf cont}
+          \,\lf{({\sf app1}\,\interp{e_2})}\,\lf{d_1}\,\lf{d_0}}}
+)
+\leadsto
+\\
+( \lf{d_0}{:}{\sf dest}, \lf{d_1}{:}{\sf dest}&; ~ 
+       x_4{:}\iseph{\susp{{\sf retn}\,\lf{\interp{(\lambda x.e)}}\,\lf{d_1}}}, ~
+       x_3{:}\iseph{\susp{{\sf cont}
+          \,\lf{({\sf app1}\,\interp{e_2})}\,\lf{d_1}\,\lf{d_0}}}
+)
+\leadsto
+\\
+( \lf{d_0}{:}{\sf dest}, \lf{d_1}{:}{\sf dest}, \lf{d_2}{:}{\sf dest}&; ~ 
+       x_5{:}\iseph{\susp{{\sf eval}\,\lf{\interp{e_2}}\,\lf{d_2}}}, ~
+       x_6{:}\iseph{\susp{{\sf cont}
+          \,\lf{({\sf app2}\,\interp{\lambda x.e})}\,\lf{d_2}\,\lf{d_0}}}
+)
+\leadsto \ldots
+\end{align*}
+In the final state, $\lf{d_1}$ is isolated, no longer mentioned
+anywhere else in the process state, so ${\sf gen/dest}$ must be used
+to show that this final state is well-formed.
 
 \begin{figure}[tp]
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/gen-destinations.sls} 
-\caption{Generative invariant: destination-passing}
+\caption{Generative invariant: destination-passing (modified formulation)}
 \label{fig:gen-destinations} 
 \end{figure}
+
+We will not actually use the generative invariants described in
+Figure~\ref{fig:gen-destinations2} in this chapter, however. Instead,
+we will prefer the presentation in Figure~\ref{fig:gen-destinations}.
+There are two reasons for this. First and foremost, this formulation
+meshes better with the promise-then-fulfill pattern that was necessary
+for state in Figure~\ref{fig:gen-state} and that is also apparently
+necessary for continuations below. As a secondary consideration, when
+using the more obvious formulation we require more complicated
+inversion lemmas. In previous inversion lemmas, proving that ${\sf
+  gen/cont}$ could always be rotated to the end of a generative trace
+was simple, because it introduced no LF variables or persistent
+nonterminals. The ${\sf gen/cont}$ rule in
+Figure~\ref{fig:gen-destinations2} does introduce an LF variable
+$\lf{d'}$, invalidating the principle used in
+Section~\ref{sec:inversion-genorder}.
+
+The ${\sf dest/promise}$ run in Figure~\ref{fig:gen-destinations} is
+interesting in that it requires each destination $\lf{d'}$ to be
+created along with foreknowledge of the destination, $\lf{d}$, that
+the destination $\lf{d'}$ will return to. This effectively requires
+all the destinations into a tree structure from the moment of their
+creation onwards, a point that will become important when we modify
+Figure~\ref{fig:gen-destinations} to account for persistent
+destinations and $\obj{\sf letcc}$.
+
+\subsection{Uniqueness}
+
+One consequence of using the promise-then-fulfill pattern is that our
+unique index lemma becomes conceptually prior to our inversion lemma.
+
+\bigskip
+\begin{lemma}[Unique indices of $\siggendests$]~
+\begin{enumerate}
+\item
+If $T :: (\lf{d_0}{:}{\sf dest}; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
+         \leadsto^*_{\siggendests}
+         (\Psi; \Delta)$,
+\\ $x{:}\iseph{\susp{{\sf gendest}\,\lf{d}\,\lf{d_1}}} \in \Delta$, 
+\\ and 
+$y{:}\iseph{\susp{{\sf gendest}\,\lf{d}\,\lf{d_2}}} \in \Delta$, 
+\\ then $x = y$ and $\lf{d_1} = \lf{d_2}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Induction and case analysis on last steps of the trace $T$. 
+\end{proof}
+
+\subsection{Inversion}
+
+In order to prove inversion using uniqueness and the
+promise-then-fulfill style generative specification in
+Figure~\ref{fig:gen-destinations2}, we need a more general inversion
+lemma than the one we had before. Not only do we have to consider
+cases analagous to the ones described in
+Section~\ref{sec:inversion-genorder} (cases 1-3), we need another set
+of cases to deal with {\it partial} matches (cases 4 and 5). 
+
+\bigskip
+\begin{lemma}[Inversion -- Figure~\ref{fig:gen-destinations}]~
+\begin{enumerate}
+\item If 
+   $T :: (\lf{d_0}{:}{\sf dest}; ~
+            x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+         \leadsto^*_{\siggendests}
+         (\Psi; ~
+          \tackon{\Theta}
+           {y{:}\iseph{\susp{{\sf eval}\,\lf{e}\,\lf{d}}}})$,
+\\ then 
+   $T = \left(T';
+       \trstep{y}{{\sf gen/eval}\,\lf{{\it tp}}\,\lf{d}\,\lf{e}
+       \,(\tfuser{x'}{\tbangr{N}})}\right)$,
+\\ where
+   $\Psi; \Delta \vdash N : {\sf of}\,\lf{e}\,\lf{{\it tp}}$,
+\\ $T' :: (\lf{d_0}{:}{\sf dest}; ~
+            x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+         \leadsto^*_{\siggendests}
+         (\Psi; ~
+          \tackon{\Theta}
+           {x'{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}}\,\lf{d}}}})$,
+\\ and $\Delta$ is the persistent part of 
+   $\tackon{\Theta}
+           {x'{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}}\,\lf{d}}}}$.
+
+
+\medskip
+\item If 
+   $T :: (\lf{d_0}{:}{\sf dest}; ~
+            x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+         \leadsto^*_{\siggendests}
+         (\Psi; ~
+          \tackon{\Theta}
+           {y{:}\iseph{\susp{{\sf retn}\,\lf{v}\,\lf{d}}}})$,
+\\ then 
+   $T = \left(T';
+       \trstep{y}{{\sf gen/retn}\,\lf{{\it tp}}\,\lf{d}\,\lf{e}
+       \,(\tfuser{x'}{\tfuser{\tbangr{N}}{\tbangr{N_v}}})}\right)$,
+\\ where
+   $\Psi; \Delta \vdash N : {\sf of}\,\lf{e}\,\lf{{\it tp}}$,
+   $\Psi; \Delta \vdash N_v : {\sf value}\,\lf{v}$, 
+\\ $T' :: (\lf{d_0}{:}{\sf dest}; ~
+            x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+         \leadsto^*_{\siggendests}
+         (\Psi; ~
+          \tackon{\Theta}
+           {x'{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}}\,\lf{d}}}})$,
+\\ and $\Delta$ is the persistent part of 
+   $\tackon{\Theta}
+           {x'{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}}\,\lf{d}}}}$.
+
+
+\medskip
+\item If 
+   $T :: (\lf{d_0}{:}{\sf dest}; ~
+            x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})$
+\\
+   $~\qquad \qquad \leadsto^*_{\siggendests}
+         (\Psi; ~
+          \tackon{\Theta}
+           {y_1{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}'}\,\lf{d'}}}, ~
+            y_2{:}\iseph{\susp{{\sf cont}\,\lf{f}\,\lf{d'}\,\lf{d}}}})$,
+\smallskip
+\\ then 
+   $T = \left(T';
+       \trstep{y}{{\sf gen/cont}\,\lf{{\it tp}}\,\lf{d}\,\lf{f}\,\lf{{\it tp}'}
+       \,(\tfuser{x'}{\tfuser{\tbangr{N}}{z}})}\right)$,
+\\ where
+   $\Psi; \Delta \vdash N : {\sf off}\,\lf{e}\,\lf{{\it tp}'}\,\lf{{\it tp}}$,
+\\ $T' :: (\lf{d_0}{:}{\sf dest}; ~
+            x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})$
+\\ $~\qquad\qquad        \leadsto^*_{\siggendests}
+         (\Psi; ~
+          \tackon{\Theta}
+           {x'{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}}\,\lf{d}}}, ~
+            z{:}\iseph{\susp{{\sf gendest}\,\lf{d'}\,\lf{d}}}})$,
+\smallskip
+\\ and $\Delta$ is the persistent part of 
+   $\tackon{\Theta}
+           {x'{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}}\,\lf{d}}}, ~
+            z{:}\iseph{\susp{{\sf gendest}\,\lf{d'}\,\lf{d}}}}$.
+
+\medskip
+\item If 
+   $T :: (\lf{d_0}{:}{\sf dest}; ~
+            x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+         \leadsto^*_{\siggendests}
+         (\Psi; ~
+          \tackon{\Theta}
+           {y{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}}\,\lf{d}}}})$,
+
+
+\medskip
+\item If 
+   $T :: (\lf{d_0}{:}{\sf dest}; ~
+            x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+         \leadsto^*_{\siggendests}
+         (\Psi; ~
+          \tackon{\Theta}
+           {y{:}\iseph{\susp{{\sf cont}\,\lf{f}\,\lf{d'}\,\lf{d}}}})$,
+
+
+\medskip
+\end{enumerate}
+\end{lemma}
+
+\subsection{Preservation}
+
+ First, it allows us to hew to the 
+cardinal rule that inversion lemmas never produce 
+
+
+isolated invariants can be used to describe the invariants 
+associated with the destination-passing style specifications . Essentially,
+the indexing analysis 
+
+
 
 The key issue is again the inversion lemma; the destination-passing
 style specification in Figure~\ref{fig:gen-destinations}
@@ -1911,15 +2147,23 @@ how do we know that $\lf{d'} \in {^\bullet}S$? The answer comes in two parts.
 First, second position of 
 ${\sf gen}\,\lf{\it tp}\,\lf{d}$ is a unique index. 
 
+\subsection{Extensions}
+
+Parallel
+evaluation (Figure~\ref{fig:dest-pair}) and the alternate semantics of
+parallelism and faiulre (Figure~\ref{fig:dest-fail-paror}) are
+straightforward extensions to the development in this section.
+Synchronization (Section~\ref{sec:dest-synch}) and futures
+(Section~\ref{sec:dest-futures}) are just a bit more intersting from
+the perspective of generative invariants and presesrvation, but we
+will not develop them here.\footnote{A {\it progress} theorem for a
+  language with synchronization, which would fall under the scope of
+  Chapter~\ref{chapter-safety}, would require reasoning about
+  deadlocks and is oslsutside the scope of this thesis.}
+
+
 \section{Persistent continuations}
 \label{sec:gen-letcc}
-
-\begin{figure}[tp]
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/gen-destinations2.sls} 
-\caption{Generative invariant: destination-passing (alternate version)}
-\label{fig:gen-destinations2} 
-\end{figure}
 
 
 \begin{figure}[tp]
