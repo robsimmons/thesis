@@ -2413,12 +2413,18 @@ in Figure~\ref{fig:gen-future} is strong enough to prove progress.
 \section{Persistent continuations}
 \label{sec:gen-letcc}
 
+The final specification style we will cover in detail is the use of
+persistent continuations as discussed in
+Section~\ref{sec:dest-continuations} as a way of giving an SSOS
+semantics for first-class continuations (Figure~\ref{fig:dest-letcc}).
+An example 
 
 \begin{figure}[tp]
 \fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/gen-letcc.sls} 
-\caption{Generative invariant: well-formed first-class continuations}
-\label{fig:gen-letcc} 
+\VerbatimInput{sls/gen-letcc2.sls} 
+\caption{Generative invariant: persistent destinations and first-class
+  continuations}
+\label{fig:gen-letcc2} 
 \end{figure}
 
 \begin{figure}[tp]
