@@ -1835,6 +1835,33 @@ The other cases, notably ${\sf ev/set2}$, follow the
 same pattern
 \end{proof}
 
+
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-countstate.sls} 
+\caption{Two generative invariants for counting invariants}
+\label{fig:gen-countstate}
+\end{figure}
+\subsection{Revisiting pointer inequality}
+\label{sec:pointer-inequality}
+
+As we discussed in Section~\ref{sec:mutable-storage}, the fact that
+\sls~variables cannot be directly checked for inequality complicates
+the representation of languages that can check for the inequality of
+locations. One way of circumventing this shortcoming is by keeping a
+runtime counter in the form of an ephemeral atomic proposition ${\sf
+  count}\,\lf{n}$ that counts the number of currently allocated cells;
+the rule ${\sf ev/ref1}$ that allocates a new cell must be rewritten
+to access and increment this counter and to attach the counter's value
+to the new cell. Inequality of those natural number tags can then be
+used as a proxy for inequality of locations, since the equality or
+inequality of natural numbers is straightforward in \sls. 
+
+A generative signature like the one in Figure~\ref{fig:gen-countstate}
+could be used to represent the invariant that each location and each
+cell is associated with a unique natural number.
+
+
 \section{Destination-passing}
 \label{sec:gen-destinations}
 
@@ -2422,7 +2449,7 @@ While the setup of Figure~\ref{fig:gen-destinations} were designed to
 make the transition to persistent continuations and $\obj{\sf letcc}$
 seem less unusual, this section still represents a radical shift.  
 
-It should not be terribly suprising that the generative invariant for
+It should not be terribly surprising that the generative invariant for
 persistent continuations is rather different than the other generative
 invariants. Generative invariants capture the patterns in a
 specification, and the we have mostly concentrated on patterns of
@@ -2432,7 +2459,7 @@ continuations. The integration of continuations and parallel or
 concurrent evaluation is non-obvious; the proposal by Moreau and
 Ribbens in \cite{moreau96semantics} is not straightforward to adapt to
 the semantic specifications we gave in
-Chatper~\ref{chapter-destinations}.
+Chapter~\ref{chapter-destinations}.
 
 Consider again the ${\sf gendest/promise}$ rule from
 Figure~\ref{fig:gen-destinations}. Because the rule consumes no
@@ -2625,10 +2652,9 @@ Induction and case analysis on the last steps of a given trace.
 
 
 
-\section{Counting invariants}
-\label{sec:gen-count}
+\section{On mechanization}
 
-In this chapter, we have shown that generative invariants can descrbe
+In this chapter, we have shown that generative invariants can describe
 well-formedness and well-typedness properties of the full range of
 specifications discussed in Part II of this thesis. We have
 furthermore shown that these generative invariants are a suitable
@@ -2637,11 +2663,9 @@ All of these proofs have a common 3-step structure:
 
 \smallskip
 \begin{enumerate}
-\item Some number of very
-straightforward unique index properties, 
-\item An inversion lemma that is
-essentially derived mechanically from the structure of the generative
-signature, and
+\item Straightforward unique index properties,
+\item An inversion lemma that mimics the
+  structure of the generative signature, and
 \item A preservation theorem that proceeds by enumerating transitions,
 applying inversion to the given generative trace, and using the result
 to construct a new generative trace.
@@ -2656,47 +2680,47 @@ from a generative signature. Unique index properties may be less
 straightforward to synthesize, but like termination and mode
 properties in Twelf, they should be entirely straightforward to
 verify. Only the last part of step 3, the reconstruction that happens
-in a preservation theorem, has the flavor of a more general theorem
+in a preservation theorem, has the structure of a more general theorem
 proving task. Therefore, there is significant hope for mechanizing the
 tedious results in the results in this chapter in a framework that
 does much of the work of steps 1 and 2 automatically.
 
-\begin{figure}
-\noindent
-{\bf Counting down:}
-\smallskip
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/gen-count.sls} 
 
-\bigskip
-\noindent
-{\bf Counting up:}
-\smallskip
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/gen-count2.sls} 
-\caption{Two generative invariants for counting invaraints}
-\label{fig:gen-count}
-\end{figure}
 
-Certainly, however, many potentially interesting generative invariants
-will not be so easy to capture and verify correct. One example of this
-has come up in work by Henry de Young on voting protocols
-\cite{deyoung12linear}. In that setting, it is frequently crucial to
-maintain a single ephemeral proposition that collects information
-about a set of ephemeral propositions. The simplest example would
-be a mobile proposition ${\sf count}\,\lf{n}$ where the natural
-nubmer $\lf{n}$ represents the number of ${\sf item}$ propositions 
-present in the state. There are two obvious ways of representing
-this situation with a generative invariant, both shown in
-Figure~\ref{fig:gen-count}. 
+% \begin{figure}
+% \noindent
+% {\bf Counting down:}
+% \smallskip
+% \fvset{fontsize=\small,boxwidth=229pt}
+% \VerbatimInput{sls/gen-count.sls} 
 
-\label{sec:pointer-inequality}
+% \bigskip
+% \noindent
+% {\bf Counting up:}
+% \smallskip
+% \fvset{fontsize=\small,boxwidth=229pt}
+% \VerbatimInput{sls/gen-count2.sls} 
+% \caption{Two generative invariants for counting invaraints}
+% \label{fig:gen-count}
+% \end{figure}
 
-The other obvious use of counters in generative invariants is 
+% Certainly, however, many potentially interesting generative invariants
+% will not be so easy to capture and verify correct. One example of this
+% has come up in work by Henry de Young on voting protocols
+% \cite{deyoung12linear}. In that setting, it is frequently crucial to
+% maintain a single ephemeral proposition that collects information
+% about a set of ephemeral propositions. The simplest example would
+% be a mobile proposition ${\sf count}\,\lf{n}$ where the natural
+% nubmer $\lf{n}$ represents the number of ${\sf item}$ propositions 
+% present in the state. There are two obvious ways of representing
+% this situation with a generative invariant, both shown in
+% Figure~\ref{fig:gen-count}. However, reasoning about preservation
 
- a counter can be used to ensure that each destination
-in a mutable store . While \sls~variables cannot be directly
-checked for 
+
+
+%  a counter can be used to ensure that each destination
+% in a mutable store . While \sls~variables cannot be directly
+% checked for 
 
 % \subsection{Parity}
 
