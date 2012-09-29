@@ -2601,58 +2601,105 @@ Induction and case analysis on the last steps of a given trace.
 
 \bigskip
 \begin{theorem}[$\siggenletcc$ is a generative invariant] ~
-\label{thm:siggenletcc}
-\smallskip
+  \label{thm:siggenletcc}
+  \smallskip
 
-If $T_1 :: \left(\lf{d_0}{:}{\sf dest}; x_0{:}\ispers{\susp{{\sf
+  If $T_1 :: \left(\lf{d_0}{:}{\sf dest}; x_0{:}\ispers{\susp{{\sf
           ofdest}\,\lf{d_0}\,\lf{{\it tp}_0}}}, z{:}\iseph{\susp{{\sf
-          gen}}}\right) \leadsto^*_{\siggenletcc} \left(\Psi; \Delta \right)$
-
-If $T_1 :: (\lf{d_0}{:}{\sf dest}; x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}}) 
-   \leadsto^*_{\siggendests} 
-   (\Psi; \Delta)$ and there is a step
-   $S :: \restrictsig{(\Psi; \Delta)}{} \leadsto (\Psi'; \Delta')$
-under the signature from Figure~\ref{fig:dest-cbv}, then
-$T_2 :: (\lf{d_0}{:}{\sf dest}; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}}) 
-   \leadsto^*_{\siggendests} 
-   (\Psi'; \Delta')$.
+          gen}}}\right) \leadsto^*_{\siggenletcc} \left(\Psi; \Delta
+  \right)$ and $S :: \restrictsig{\left(\Psi; \Delta\right)}{}
+  \leadsto \left(\Psi'; \Delta'\right)$ under the signature from
+  Figure~\ref{sec:dest-continuations}, then $(\Psi'; \Delta') =
+  \restrictsig{\left(\Psi; \Delta\right)}{}$ for some $\Delta''$
+  such that $T_2 :: \left(\lf{d_0}{:}{\sf dest}; x_0{:}\ispers{\susp{{\sf
+          ofdest}\,\lf{d_0}\,\lf{{\it tp}_0}}}, z{:}\iseph{\susp{{\sf
+          gen}}}\right) \leadsto^*_{\siggenletcc} \left(\Psi'; \Delta''
+  \right)$.
 \end{theorem}
 
+\begin{proof}
+  As always, the proof proceeds by enumeration, inversion, and
+  reconstruction; the cases are all fundamentally similar to the ones
+  we have already seen.
+\end{proof}
 
-\bigskip
-
-
-\bigskip
-\begin{theorem}
-  If $T :: \left(\lf{d_0}{:}{\sf dest}; x_0{:}\ispers{\susp{{\sf
-          ofdest}\,\lf{d_0}\,\lf{{\it tp}_0}}}, z{:}{\sf gen}\right)
-  \leadsto \left(\Psi; \Delta\right)$, then every $d{:}{\sf dest} \in
-  \Psi$ can be associated uniquely with a stack $\obj{k} =
-  \obj{((\ldots({\sf halt}; f_1); \ldots) f_n)}$
-\end{theorem}
-
-(in the
-same way that 
 
 
 \section{Counting invariants}
 \label{sec:gen-count}
 
-Parity:
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/gen-parity.sls} 
+In this chapter, we have shown that generative invariants can descrbe
+well-formedness and well-typedness properties of the full range of
+specifications discussed in Part II of this thesis. We have
+furthermore shown that these generative invariants are a suitable
+basis for reasoning about type preservation in these specifications.
+All of these proofs have a common 3-step structure: 
 
-\bigskip
+\smallskip
+\begin{enumerate}
+\item Some number of very
+straightforward unique index properties, 
+\item An inversion lemma that is
+essentially derived mechanically from the structure of the generative
+signature, and
+\item A preservation theorem that proceeds by enumerating transitions,
+applying inversion to the given generative trace, and using the result
+to construct a new generative trace.
+\end{enumerate}
+\smallskip
+
 \noindent
-Counting:
+Despite the fact that the inversion lemmas in this chapter technically
+use induction, they do so in such a trivial way that is quite possible
+to imagine that inversion lemmas could be automatically synthesized
+from a generative signature. Unique index properties may be less
+straightforward to synthesize, but like termination and mode
+properties in Twelf, they should be entirely straightforward to
+verify. Only the last part of step 3, the reconstruction that happens
+in a preservation theorem, has the flavor of a more general theorem
+proving task. Therefore, there is significant hope for mechanizing the
+tedious results in the results in this chapter in a framework that
+does much of the work of steps 1 and 2 automatically.
+
+\begin{figure}
+\noindent
+{\bf Counting down:}
+\smallskip
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/gen-count.sls} 
 
+\bigskip
+\noindent
+{\bf Counting up:}
+\smallskip
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-count2.sls} 
+\caption{Two generative invariants for counting invaraints}
+\label{fig:gen-count}
+\end{figure}
 
+Certainly, however, many potentially interesting generative invariants
+will not be so easy to capture and verify correct. One example of this
+has come up in work by Henry de Young on voting protocols
+\cite{deyoung12linear}. In that setting, it is frequently crucial to
+maintain a single ephemeral proposition that collects information
+about a set of ephemeral propositions. The simplest example would
+be a mobile proposition ${\sf count}\,\lf{n}$ where the natural
+nubmer $\lf{n}$ represents the number of ${\sf item}$ propositions 
+present in the state. There are two obvious ways of representing
+this situation with a generative invariant, both shown in
+Figure~\ref{fig:gen-count}. 
+
+\label{sec:pointer-inequality}
+
+The other obvious use of counters in generative invariants is 
+
+ a counter can be used to ensure that each destination
+in a mutable store . While \sls~variables cannot be directly
+checked for 
 
 % \subsection{Parity}
 
 % \subsection{}
 
 % \subsection{Pointer inequality}
-\label{sec:pointer-inequality}
