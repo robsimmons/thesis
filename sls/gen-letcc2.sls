@@ -1,5 +1,5 @@
 gen: prop lin.
-ofdest: 
+ofdest: dest -> typ -> prop pers.
 gendest: dest -> dest -> prop lin.
 
 value/contn: value (contn D).

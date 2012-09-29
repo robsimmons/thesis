@@ -27,11 +27,10 @@ Our primary use of generative specifications in this thesis is showing
 that, under some generative signature $\Sigma_{\it Gen}$ that defines
 a world $\mathcal W$, whenever $(\Psi; \Delta) \in \mathcal W$ and
 $(\Psi; \Delta) \leadsto_\Sigma (\Psi'; \Delta')$ it is always the
-case that $(\Psi'; \Delta') \in \mathcal W$.  (The signature $\Sigma$,
-which allows the step to happen, is some other signature that describes
-the transition system we are studying.)  In such a case, the
-world or language of well-formed process states is called a
-{\it generative invariant} of $\Sigma$.
+case that $(\Psi'; \Delta') \in \mathcal W$.  (The signature $\Sigma$
+encodes the transition system we are studying.)  In such a case, the
+world or language of well-formed process states is called a {\it
+  generative invariant} of $\Sigma$.
 
 \subsection*{Type preservation}
 
@@ -39,9 +38,9 @@ The purpose of this chapter is to demonstrate that generative
 invariants are a reasonable way of talking about invariants of
 \sls~specifications, especially well-formedness and well-typedness
 invariants of substructural operational semantics specifications like
-the ones presented in Part II. Well-formedness invariants are part adequacy
-theorems, as we have already
-seen. Well-typedness invariants are important because they allow us to
+the ones presented in Part II. As we have already
+seen, well-formedness invariants are major part of adequacy
+theorems. Well-typedness invariants are important because they allow us to
 prove {\it language safety}, the property (discussed way back in the
 introduction) that a language specification is completely free
 from undefined behavior.
@@ -71,8 +70,8 @@ In SSOS specifications, generative specifications are analogous to
 typing judgments, and establishing a generative invariant is analogous
 to proving a preservation theorem. Progress theorems for SSOS
 specifications will be discussed in Chapter~\ref{chapter-safety}.
-This argument forms the centerpiece of the third refinement of our
-central thesis:
+These two chapters estabish the centerpiece of the third refinement of
+our central thesis:
 
 \smallskip
 \begin{quote} 
@@ -121,20 +120,18 @@ exclude process states $(\Psi; \Delta)_{\lf\sigma}$ with a non-empty
 accompanying substitution $\lf\sigma$.\footnote{These accompanying
   substitutions were presented in
   Section~\ref{sec:sls-processstates}.}
-
-A world is described by the combination of an initial process state
-and generative signature. We define a generative
-signature as follows:
+In this chapter, we will specify worlds by the combination of an
+initial process state and a generative signature.
 
 \bigskip
 \begin{definition}\label{def:gensig}
-  A {\em generative signature} is one where the ordered, mobile, and
-  persistent atomic propositions can be separated into two sets -- the
-  {\em terminals} and the {\em nonterminals}. Synthetic transitions
-  enabled by a generative signature only consume (or reference) 
-  nonterminals and LF terms, but their output variables can include
-  LF variables, variables associated with terminals, and variables
-  associated with nonterminals.
+  A {\em generative signature} is a \sls~signature where the ordered,
+  mobile, and persistent atomic propositions can be separated into two
+  sets -- the {\em terminals} and the {\em nonterminals}. Synthetic
+  transitions enabled by a generative signature only consume (or
+  reference) nonterminals and LF terms, but their output variables can
+  include LF variables, variables associated with terminals, and
+  variables associated with nonterminals.
 \end{definition}
 \bigskip
 
@@ -246,7 +243,7 @@ described by this block:
 \]
 The world described by the combination of ${\sf blockexp}$ and ${\sf
   blocknatvar}$ is one where every LF variable $\lf{x}{:}{\sf exp}$
-is associated with either zero or one LF variables of type ${\sf
+is associated with at most one LF variable of type ${\sf
   natvar}\,\lf{x}\,\lf{n}$. Assuming that there are no constants of
 type ${\sf natvar}$, a property we can easily enforce with subordination, this
 gives us a uniqueness property: if ${\sf natvar}\,\lf{x}\,\lf{n}$ and
@@ -341,7 +338,7 @@ signatures with the arrows turned around: we consume well-formed
 contexts using consumptive rules like $\forall\lf{e}.\,{\sf
   eval}\,\lf{e} \lefti \{ {\sf gen} \}$ and $\forall \lf{f}.\,{\sf
   gen} \fuse {\sf cont}\,\lf{f} \lefti \{ {\sf gen} \}$ instead of
-using generative 
+creating them with generative 
 rules like $\forall\lf{e}.\,{\sf gen}\lefti \{ {\sf eval}\,\lf{e} \}$
 and $\forall \lf{f}.\,{\sf gen} \lefti \{ {\sf gen} \fuse {\sf
   cont}\,\lf{f} \}$. 
@@ -487,8 +484,8 @@ continuations in Section~\ref{sec:nat-ssos-adequacy}, this approach
 conflicts with our guiding principle of reachability.
 Both parallel and sequential continuations are indexed by
 frames, but the parallel frame ${\sf app1}$ cannot appear in a
-sequential continuation, nor can the sequential frame $({\sf
-  let1}\,\lf{\lambda x.e\,x})$ appear in a parallel frame. 
+sequential continuation, nor can the sequential frame $\lf{({\sf
+  let1}\,\lf{\lambda x.e\,x})}$ appear in a parallel frame. 
 
 \begin{figure}[tp]
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -516,7 +513,7 @@ can be expressed by a negative atomic proposition ${\sf okf}\,\lf{f}$,
 and the latter by a negative atomic proposition ${\sf okf2}\,\lf{f}$.
 Both of these are deductively defined.  The full specification of this
 generative invariant is shown in Figure~\ref{fig:gen-order}; we will
-refer to this generative signature as $\siggenorder$
+refer to this generative signature as $\siggenorder$.
 
 \subsection{Inversion}\label{sec:inversion-genorder}
 
@@ -565,7 +562,12 @@ by concurrent equality.
 \\ then 
    $T = \left(T'; \trstep{y}{{\sf gen/retn}\,\lf{v}\,(\tfuser{x'}{\tbangr{N}})}\right)$,
 \\ where 
-   $\cdot \vdash_{\siggenorder} N : {{{\sf value}\,\lf{v}}}$.
+   $\cdot \vdash N : \isconc{{{{\sf value}\,\lf{v}}}}$.\footnote{In this
+chapter, the signature associated with every deductive derivation
+($\siggenorder$ in this case)
+is clear from the context and so we write 
+$\cdot \vdash N : \isconc{{{{\sf value}\,\lf{v}}}}$ instead of 
+$\cdot \vdash N : \isconc{{{{\sf value}\,\lf{v}}}}$.}
 \medskip
 \item If 
    $T :: (x_0{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
@@ -574,7 +576,7 @@ by concurrent equality.
 \\ then 
    $T = \left(T'; \trstep{y_1,y_2}{{\sf gen/cont}\,\lf{f}\,(\tfuser{x'}{\tbangr{N}})}\right)$,
 \\ where 
-   $\cdot \vdash_{\siggenorder} N : {{{\sf okf}\,\lf{f}}}$.
+   $\cdot \vdash N : \isconc{{{{\sf okf}\,\lf{f}}}}$.
 \medskip
 \item If
    $T :: (x_0{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
@@ -584,7 +586,7 @@ by concurrent equality.
 \\ then 
    $T = \left(T'; \trstep{y_1,y_2,y_3}{{\sf gen/cont2}\,\lf{f}\,(\tfuser{x'}{\tbangr{N}})}\right)$,
 \\ where 
-   $\cdot \vdash_{\siggenorder} N : {{{\sf okf2}\,\lf{f}}}$.
+   $\cdot \vdash N : \isconc{{{{\sf okf2}\,\lf{f}}}}$.
 \medskip
 \item If 
    $T :: (x_0{:}\istrue{\susp{\sf gen}}) \leadsto^*_{\siggenorder}
@@ -629,7 +631,7 @@ be the same. (They are the same iff $T' = \emptytrace$.)
   $S' = \trstep{y}{{\sf gen/retn}\,\lf{v}\,(\tfuser{x'}{\tbangr{N}})}$
   in part 2, and so on.  In each of the six parts, of course
   $S'{^\bullet} = {\it Var}$, so $\emptyset = S'{^\bullet} \cap {^\bullet}S$
-  and $\left(T'''; S'; S\right) = \left(T'''; S; S'\right)$, so we can
+  and $\left(T'''; S'; S\right) = \left(T'''; S; S'\right)$, and so we can
   conclude letting $T' = \left(T''; S\right)$.
 
   If $S^{\bullet} \cap {\it Var}$ is nonempty, we must show by case
@@ -670,9 +672,9 @@ subset of the set $V$.
 Conversely, if we tried to prove an inversion
 property about traces $(x{:}\istrue{\susp{\sf gen}})
 \leadsto^*_{\siggenorder} \tackon{\Theta}{y{:}\istrue{\susp{{\sf
-        gen}}}}$, this property would again fail, because $V = \{ y
-\}$ and in the case where the last step $S$ is driven by one of the
-rules ${\sf gen/cont}$, ${\sf gen/cont2}$, or ${\sf gen/handle}$
+        gen}}}}$, this property would again fail: $V = \{ y
+\}$, and in the case where the last step $S$ is driven by one of the
+rules ${\sf gen/cont}$, ${\sf gen/cont2}$, or ${\sf gen/handle}$,
 $S^{\bullet}$ will be a strict superset of $V$.
 
 The proof above could also be stated in form of case analysis on the
@@ -681,8 +683,7 @@ that is more an issue of proof engineering: such a proof would require
 enumerating 7 cases for each of the 6 inversion lemmas, leading to
 proof whose size is in $O(n^2)$ where $n$ is the number of rules
 in the generative signature. In this chapter, we will emphasize the principles
-by which we can use to reason {\it concisely} about the specifications
-we are interested in.
+by which we can use to reason {\it concisely} about specifications.
 
 \subsection{Preservation}
 
@@ -866,12 +867,13 @@ reconstruction.
 \end{proof}
 
 Note that, in the case corresponding to the rule ${\sf ev/app1}$, we
-obtained but did not use three terms $\cdot \vdash N : {{\sf
-    okf2}\,\lf{\sf app1}}$, $\cdot \vdash N_1 : {\sf value}\,\lf{({\sf
-    lam}\,\lambda x.e)}$, and $\cdot \vdash N_2 : {{\sf
-    value}\,\lf{v_2}}$. By traditional inversion on the structure of a
+obtained but did not use three terms $\cdot \vdash N : \isconc{{{\sf
+    okf2}\,\lf{\sf app1}}}$, $\cdot \vdash N_1 : \isconc{{\sf value}\,\lf{({\sf
+    lam}\,\lambda x.e)}}$, and $\cdot \vdash N_2 : \isconc{{{\sf
+    value}\,\lf{v_2}}}$. By traditional inversion on the structure of a
 deductive derivation, we know that $N = {\sf okf2/app1}$ and $N_1 =
-{\sf value/lam}\,\lf{(\lambda x.e)}$, but that was not necessary to
+{\sf value/lam}\,\lf{(\lambda x.e)}$, but that was not necessary to prove
+in
 this theorem.
 
 
@@ -887,12 +889,16 @@ $\interp{\langle\rangle} = \lf{\sf unit}$, and the function type $\interp{{\it t
   \Rightarrow {\it tp}_2} = \lf{\sf arr}\,\interp{{\it
     tp}_1}\,\interp{{\it tp}_2}$ classifies lambda expressions.
 
-\begin{figure}[tp]
+\begin{figure}[t]
 \fvset{fontsize=\small,boxwidth=229pt}
 \VerbatimInput{sls/gen-order-of.sls} 
-\caption{Typing rules for expressions}
 \label{fig:gen-order-of} 
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-ordertp.sls} 
+\caption{Generative invariant: well-typed process states}
+\label{fig:gen-ordertp} 
 \end{figure}
+
 
 In a syntax-directed type system, each syntactic construct is associated
 with a different typing rule.
@@ -934,12 +940,6 @@ y_n : \ispers{({\sf of}\,\lf{x_1}\,\interp{{\it tp}_n})}
 \vdash {\sf of}\,\interp{e}\,\interp{\it tp}$ under the signature
 in Figure~\ref{fig:gen-order-of}.
 
-\begin{figure}[tp]
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/gen-ordertp.sls} 
-\caption{Generative invariant: well-typed process states}
-\label{fig:gen-ordertp} 
-\end{figure}
 
 
 This typing judgment allows us to describe well-formed initial states,
@@ -963,13 +963,12 @@ respectively, in order to produce a computation of type $\obj{{\it
 The generative rules in Figure~\ref{fig:gen-ordertp} are our first use
 of an {\it indexed} nonterminal, ${\sf gen}\,\interp{\it tp}$, which
 generates computations that, upon successful return, will produce
-values $\obj{v}$ of type $\obj{\cdot \vdash v : {\it tp}}$. 
+values $\obj{v}$ such that $\obj{\cdot \vdash v : {\it tp}}$. 
 
 \subsection{Inversion}
 
 The structure of inversion lemmas is entirely unchanged
-aside for accounting for type indices. Establishing
-a pattern we will follow for the rest of the chapter, we only state
+aside for accounting for type indices. We only state
 two cases of the inversion lemma, the one corresponding to 
 ${\sf gen/eval}$ and the one corresponding to ${\sf gen/cont}$. 
 These two cases suffice to set up the template that all other cases
@@ -984,7 +983,7 @@ follow.
          \tackon{\Theta}{y{:}\istrue{\susp{{\sf eval}\,\lf{e}}}}$,
 \\ then 
    $T = \left(T'; \trstep{y}{{\sf gen/eval}\,\lf{{\it tp}}\,\lf{e}\,(\tfuser{x'}{\tbangr{N}})}\right)$,
-\\ where $\cdot \vdash_{\siggenordertp} N : {\sf of}\,\lf{e}\,\lf{{\it tp}}$
+\\ where $\cdot \vdash N : \isconc{{\sf of}\,\lf{e}\,\lf{{\it tp}}}$
 \medskip
 \item If 
    $T :: (x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
@@ -994,7 +993,7 @@ follow.
 \\ then 
    $T = \left(T'; \trstep{y_1,y_2}{{\sf gen/cont}\,\lf{{\it tp}}\,\lf{f}\,\lf{{\it tp}'}\,(\tfuser{x'}{\tbangr{N}})}\right)$,
 \\ where 
-   $\cdot \vdash_{\siggenordertp} N : {{{\sf off}\,\lf{f}\,\lf{{\it tp}'}\,\lf{{\it tp}}}}$.
+   $\cdot \vdash N : \isconc{{{{\sf off}\,\lf{f}\,\lf{{\it tp}'}\,\lf{{\it tp}}}}}$.
 \medskip
 \end{enumerate}
 In each instance above, 
@@ -1030,7 +1029,7 @@ $T_2 :: (x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) \leadsto^*_{\siggenor
 \bigskip
 In the proof of Theorem~\ref{thm:siggenorder}, we observed that the
 applicable inversion on the generative trace gave us derivations like
-$\cdot \vdash N : {{\sf okf2}\,\lf{\sf app1}}$. We did not need these
+$\cdot \vdash N : \isconc{{{\sf okf2}\,\lf{\sf app1}}}$. We did not need these
 side derivations to complete the proof, but we noted that they were
 amenable to traditional inversion. Traditional inversion will be
 critical in proving that the generative invariant described by
@@ -1092,13 +1091,13 @@ $T_1 = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
 \end{tabbing}
 where
 \begin{itemize}
-\item[$\bullet$] $\cdot \vdash N : {\sf off2}\,\lf{\sf app1}\,\lf{{\it
-      tp}''}\,\lf{{\it tp}'}\,\lf{{\it tp}}$.  By traditional
+\item[$\bullet$] $\cdot \vdash N : \isconc{{\sf off2}\,\lf{\sf app1}\,\lf{{\it
+      tp}''}\,\lf{{\it tp}'}\,\lf{{\it tp}}}$. \\ By traditional
   inversion we know $\lf{\it{tp}''} = \lf{{\sf arr}\,{\it tp}'\,{\it
       tp}}$ and $N = {\sf off2/app1}\,\lf{{\it tp}'}\,\lf{{\it tp}}$.
-\item[$\bullet$] $\cdot \vdash N_1 : {\sf of}\,\lf{({\sf lam}\,\lambda
-    x.e)}\,\lf{tp''}$. By traditional inversion we know there 
-    exists $N_1'$ where 
+\item[$\bullet$] $\cdot \vdash N_1 : \isconc{{\sf of}\,\lf{({\sf lam}\,\lambda
+    x.e)}\,\lf{{\sf arr}\,{\it tp}'\,{\it tp}}}$. \\
+By traditional inversion we know 
     $\lf{x}{:}{\sf exp}; {\it dx} : \ispers{{\sf of}\,\lf{x}\,\lf{\it
       tp'}} \vdash N_1' : \isconc{{\sf of}\,\lf{e}\,\lf{\it
         tp}}$.
@@ -1108,8 +1107,8 @@ where
 With these derivations, 
 variable substitution (Theorem~\ref{thm:varsubst}), and cut
 admissibility (Theorem~\ref{thm:ord-cut}), we have a derivation of
-$\cdot \vdash \rsubst{N_2}{\it dx}{(\lf{[v_2/x]}N_1')} : {\sf
-  of}\,\lf{([v_2/x]e)}\,\lf{\it tp}$.\footnote{We know by
+$\cdot \vdash \rsubst{N_2}{\it dx}{(\lf{[v_2/x]}N_1')} : \isconc{{\sf
+  of}\,\lf{([v_2/x]e)}\,\lf{\it tp}}$.\footnote{We know by
   subordination that $\lf{x}$ is not free in $\lf{\it tp}$, so
   $\lf{[v_2/x]{\it tp}} = \lf{\it tp}$.}  We can therefore use $T'$ to
 construct $T_2$ as follows:
@@ -1156,10 +1155,11 @@ $T_1 = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
 where $\cdot \vdash N : \sf of\,\lf{({\sf catch}\,e_1\,e_2)}\,\lf{\it tp}$. 
 
 \medskip
-By traditional inversion, we 
-know that $N = {\sf of/catch}\,\tbangr{N_2}\,\tbangr{N_1}$, where
- $\vdash N_1 : {\sf of}\,\lf{e_1}\,\lf{\it tp}$ and $\vdash N_2 :
-{\sf of}\,\lf{e_2}\,\lf{\it tp}$.
+By traditional inversion  on $N$ we 
+know
+ $\cdot \vdash N_1 : \isconc{{\sf of}\,\lf{e_1}\,\lf{\it tp}}$ and 
+$\cdot \vdash N_2 :
+\isconc{{\sf of}\,\lf{e_2}\,\lf{\it tp}}$.
 We can therefore use $T'$ to construct $T_2$ as follows:
 
 \begin{tabbing}
@@ -1194,7 +1194,7 @@ progress and preservation proof for an abstract machine like Harper's
 $\mathcal K\{{\sf nat}{\rightharpoonup}\}$ \cite[Chapter
 27]{harper12practical}.  Unlike the on-paper formalism used by Harper,
 the addition of parallel evaluation in our specification does not
-further complicate the statement or proof of the preservation theorem.
+further complicate the statement or the proof of the preservation theorem.
 
 
 \section{State}
@@ -1232,6 +1232,8 @@ implement recursion, is traced out
 in Figure~\ref{fig:bigbackpatch}, which
 describes a trace classified by:
 
+\vspace{-10pt}
+
 {\small\begin{align*}
 &
 \left(\cdot; ~~
@@ -1250,6 +1252,8 @@ x_{17}{:}\istrue{\susp{{\sf eval}\,
   \lf{[({\sf loc}\,l_1)/f, {\sf unit}/x]\interp{e})}}}
 \right)
 \end{align*}}
+
+\vspace{-10pt}
 
 \begin{sidewaysfigure}[p]\label{fig:bigbackpatch}\small
 \begin{align*}
@@ -1284,7 +1288,7 @@ x_2{:}\susp{{\sf cont}\,
   \lf{({\sf let1}\,\lambda f.\,
   \interp{{\sf let}\, x = (f := \lambda x. ({!}f) x)\,{\sf in}\,e})}}
 \\
-& \trstep{x_6,y_1}{{\sf ev/ref1}\,\ldots\,(\tfuser{x_5}{x_4})}
+& \trstep{\lf{l_1}, x_6,y_1}{{\sf ev/ref1}\,\ldots\,(\tfuser{x_5}{x_4})}
 \\
 &\qquad
 y_1{:}\susp{{\sf cell}\,\lf{l_1}\,\interp{\lambda x. \langle\rangle}}, ~~
@@ -1420,18 +1424,17 @@ When we add mutable state, we must significantly generalize the
 {\it statement} of inversion lemmas. Derivations and
 expressions now exist in a world with arbitrary locations $\lf{l}{:}{\sf
   mutable\_loc}$ that are paired with persistent propositions
-$\ispers{{\sf ofcell}\,\lf{l}\,\lf{\it tp}}$. 
-This purely persistent
+${{\sf ofcell}\,\lf{l}\,\lf{\it tp}}$.\footnote{This purely persistent
 world fits the pattern of regular worlds. 
 As such, it can be described either with the
 single rule
 $\forall \lf{\it tp}.\,\{ \exists \lf{l}.\,{\sf
     ofcell}\,\lf{l}\,\lf{\it tp}\}$ or with the equivalent block
-\[{\sf some} ~ \lf{\it tp}{:}{\sf
+${\sf some} ~ \lf{\it tp}{:}{\sf
   typ} ~ {\sf block} ~ \lf{l}{:}{\sf mutable\_loc}, x : \ispers{\susp{{\sf
-    ofcell}\,\lf{l}\,\lf{\it tp}}}.\]
+    ofcell}\,\lf{l}\,\lf{\it tp}}}.$}
 
-
+\bigskip
 \begin{lemma}[Inversion -- Figure~\ref{fig:gen-state}, partial]~
 \begin{enumerate}
 \item If 
@@ -1443,7 +1446,7 @@ $\forall \lf{\it tp}.\,\{ \exists \lf{l}.\,{\sf
    $T = \left(T'; \trstep{y}{{\sf gen/eval}\,\lf{{\it tp}}\,\lf{e}\,
                                   (\tfuser{x'}{\tbangr{N}})}\right)$,
 \\ where
-   $\Psi; \Delta \vdash_{\siggenstate} N : {{\sf of}\,\lf{e}\,\lf{{\it tp}}}$,
+   $\Psi; \Delta \vdash N : \isconc{{{\sf of}\,\lf{e}\,\lf{{\it tp}}}}$,
 \\ $T' :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
        \leadsto^*_{\siggenstate}
        (\Psi'; \tackon{\Theta}
@@ -1464,8 +1467,8 @@ $\forall \lf{\it tp}.\,\{ \exists \lf{l}.\,{\sf
               {{\sf gen/cont}\,\lf{{\it tp}}\,\lf{f}\,\lf{{\it tp}'}\,
                 (\tfuser{x'}{\tbangr{N}})}\right)$,
 \\ where 
-   $\Psi; \Delta \vdash_{\siggenstate} N : 
-       {{{\sf off}\,\lf{f}\,\lf{{\it tp}'}\,\lf{{\it tp}}}}$,
+   $\Psi; \Delta \vdash N : 
+       \isconc{{{{\sf off}\,\lf{f}\,\lf{{\it tp}'}\,\lf{{\it tp}}}}}$,
 \\ $T' :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
        \leadsto^*_{\siggenstate}
        (\Psi'; \tackon{\Theta}
@@ -1482,8 +1485,8 @@ $\forall \lf{\it tp}.\,\{ \exists \lf{l}.\,{\sf
             {y{:}\istrue{\susp{{\sf cell}\,\lf{{\it l}}\,\lf{v}}}})$,
 \\ then $T = (T'; \trstep{y}{{\sf gencell/fulfill}\,\lf{l}\,\lf{\it tp}\,\lf{v}\,(\tfuser{x'}{\tfuser{x_t}{\tfuser{\tbangr{N}}{\tbangr{N_v}}}})})$,
 \\ where $x_t{:}\ispers{\susp{{\sf ofcell}\,\lf{l}\,\lf{\it tp}}} \in \Delta$,
-   $\Psi; \Delta \vdash_{\siggenstate} N : {\sf of}\,\lf{v}\,\lf{\it tp}$,
-   $\Psi; \Delta \vdash_{\siggenstate} N_v : {\sf value}\,\lf{v}$,
+   $\Psi; \Delta \vdash N : \isconc{{\sf of}\,\lf{v}\,\lf{\it tp}}$,
+   $\Psi; \Delta \vdash N_v : \isconc{{\sf value}\,\lf{v}}$,
 \\ $T' :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
        \leadsto^*_{\siggenstate}
        (\Psi'; \tackon{\Theta}
@@ -1548,7 +1551,7 @@ substantially altered by the addition of locations and mutable state,
 even though the structure of the proof is not.  In particular, because
 ${\sf ofcell}$ is a {\it persistent} nonterminal, we have to expressly
 represent the fact that the restriction operator $\restrictsig{(\Psi;
-  \Delta)}{}$ will modify the context $\Delta$ by removing the store
+  \Delta)}{}$ will modify the context $\Delta$ by erasing the store
 typing.
 
 \bigskip
@@ -1594,8 +1597,8 @@ The last two are similar, so we only give the case for ${\sf ev/get1}$.
    \right)$
 
    \medskip 
-   $T_1 :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) 
-    \leadsto^* \left(\Psi;
+   $T_1 :: (\cdot; ~ x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) 
+    \leadsto^* \left(\Psi; ~
      \tackon{\Theta'}{x_1{:}\istrue{\susp{{\sf retn}\,\lf{v}}}, ~
                    x_2{:}\istrue{\susp{{\sf cont}\,\lf{\sf ref1}}}}
      \right)$ for some $\Theta'$ such that, for all $\Delta$,
@@ -1630,10 +1633,10 @@ $T_1 = ~$ \= \qquad \=
 \end{tabbing}
 where $\Delta$ contains the persistent propositions from $\Theta'$ and where
 \begin{itemize}
-\item[$\bullet$] $\Psi; \Delta \vdash N : {\sf off}\,\lf{\sf ref1}\,\lf{{\it tp}'}\,\lf{{\it tp}}$.  By traditional
+\item[$\bullet$] $\Psi; \Delta \vdash N : \isconc{{\sf off}\,\lf{\sf ref1}\,\lf{{\it tp}'}\,\lf{{\it tp}}}$.  By traditional
   inversion we know $\lf{\it{tp}} = \lf{{\sf reftp}\,{\it tp}'}$ and $N = {\sf off/ref1}\,\lf{{\it tp}'}$.
-\item[$\bullet$] $\Psi; \Delta \vdash N_1 : {\sf of}\,\lf{v}\,\lf{tp'}$. 
-\item[$\bullet$] $\Psi; \Delta \vdash N_{v1} : {\sf value}\,\lf{v}$.
+\item[$\bullet$] $\Psi; \Delta \vdash N_1 : \isconc{{\sf of}\,\lf{v}\,\lf{tp'}}$. 
+\item[$\bullet$] $\Psi; \Delta \vdash N_{v1} : \isconc{{\sf value}\,\lf{v}}$.
 \end{itemize}
 
 We can use $T'$ to construct $T_2$ as follows:
@@ -1645,7 +1648,7 @@ $T_2 = ~$ \= \qquad \=
 \\
 \>\>$(\Psi; ~
      \tackon{\Theta'}
-     {x'{:}\istrue{\susp{{\sf gen}\,\lf{({\sf ref}\,{\it tp}')}}}})$
+     {x'{:}\istrue{\susp{{\sf gen}\,\lf{({\sf reftp}\,{\it tp}')}}}})$
 \\
 \>$\trstep{\lf{l}, z, y_1'}{{\sf gencell/promise}\,\lf{{\it tp}'}}$
 \\
@@ -1706,9 +1709,9 @@ required.
 
    \medskip
    $T_1 :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) $\\
-    $ ~ \quad\qquad\leadsto^* \left(\Psi;
-     \tackon{\Theta'}{x_1{:}\istrue{\susp{{\sf retn}\,\lf{({\sf loc}\,l)}}}, 
-     x_2{:}\istrue{\susp{{\sf cont}\,\lf{{\sf get1}}}}, 
+    $ ~ \quad\qquad\leadsto^* \left(\Psi; ~
+     \tackon{\Theta'}{x_1{:}\istrue{\susp{{\sf retn}\,\lf{({\sf loc}\,l)}}}, ~ 
+     x_2{:}\istrue{\susp{{\sf cont}\,\lf{{\sf get1}}}}, ~
      x_3{:}\iseph{\susp{{\sf cell}\,\lf{l}\,\lf{v}}}
     }
      \right)$ \\
@@ -1757,11 +1760,11 @@ $T_1 = ~$ \= \qquad \=
 
 where $\Delta$ contains the persistent propositions from $\Theta'$ and where
 \begin{itemize}
-\item[$\bullet$] $\Psi; \Delta \vdash N_2 : {\sf off}\,\lf{{\sf get1}}\,\lf{{\it tp}''}\,\lf{{\it tp}}$. By traditional inversion we know $\lf{{\it tp}''} = \lf{{\sf reftp}\,{\it tp}}$ and $N_2 = {{\sf off/get1}\,\lf{\it tp}}$. 
-\item[$\bullet$] $\Psi; \Delta \vdash N_1 : {\sf of}\,\lf{({\sf loc}\,l)}\,\lf{({\sf reftp}\,\lf{{\it tp}})}$. By traditional inversion we know $N_1 = {\sf of/loc}\,\lf{l}\,\lf{{\it tp}}\,x_1''$ where $x_1''{:}\ispers{\susp{{\sf ofcell}\,\lf{l}\,\lf{{\it tp}}}} \in \Delta$.
+\item[$\bullet$] $\Psi; \Delta \vdash N_2 : \isconc{{\sf off}\,\lf{{\sf get1}}\,\lf{{\it tp}''}\,\lf{{\it tp}}}$. By traditional inversion we know $\lf{{\it tp}''} = \lf{{\sf reftp}\,{\it tp}}$ and $N_2 = {{\sf off/get1}\,\lf{\it tp}}$. 
+\item[$\bullet$] $\Psi; \Delta \vdash N_1 : \isconc{{\sf of}\,\lf{({\sf loc}\,l)}\,\lf{({\sf reftp}\,\lf{{\it tp}})}}$. By traditional inversion we know $N_1 = {\sf of/loc}\,\lf{l}\,\lf{{\it tp}}\,x_1''$ where $x_1''{:}\ispers{\susp{{\sf ofcell}\,\lf{l}\,\lf{{\it tp}}}} \in \Delta$.
 \item[$\bullet$] $x_3'{:}\ispers{\susp{{\sf ofcell}\,\lf{l}\,\lf{{\it tp}'}}} \in \Delta$.
-\item[$\bullet$] $\Psi; \Delta \vdash N_3 : {\sf of}\,\lf{v}\,\lf{{\it tp}'}$.
-\item[$\bullet$] $\Psi; \Delta \vdash N_{3v} : {\sf value}\,\lf{v}$.
+\item[$\bullet$] $\Psi; \Delta \vdash N_3 : \isconc{{\sf of}\,\lf{v}\,\lf{{\it tp}'}}$.
+\item[$\bullet$] $\Psi; \Delta \vdash N_{3v} : \isconc{{\sf value}\,\lf{v}}$.
 \end{itemize}
 By the uniqueness lemma, we have that $x_3' = x_1''$ and $\lf{{\it
     tp}'} = \lf{{\it tp}}$. Therefore, we can use $T'$ to construct $T_2$
@@ -1779,7 +1782,7 @@ $T_1 = ~$ \= \qquad \=
         x_3'{:}\iseph{\susp{{\sf gencell}\,\lf{l}}}
        }\right)$
 \\
-\>$\trstep{y_2}{{\sf gencell/fulfill}\,\lf{l}\,\lf{{\it tp}'}\,\lf{v}\,
+\>$\trstep{y_2}{{\sf gencell/fulfill}\,\lf{l}\,\lf{{\it tp}}\,\lf{v}\,
       (\tfuser{x_3'}{\tfuser{z_1}{\tfuser{\tbangr{N_3}}{\tbangr{N_{v3}}}}})}$
 \\
 \>\> $\left(\Psi; ~
@@ -1798,9 +1801,9 @@ $T_1 = ~$ \= \qquad \=
        }\right)$
 \end{tabbing}
 
-$\left(\Psi, ~ \lf{l}{:}{\sf mutable\_loc}; ~
-   \tackon{\Theta}{y_1{:}\iseph{\susp{{\sf cell}\,\lf{l}\,\lf{v}}}, ~
-                   y_2{:}\istrue{\susp{{\sf retn}\,\lf{({\sf loc}\,\lf{l})}}}}
+$\left(\Psi; ~
+   \tackon{\Theta}{y_1{:}\istrue{\susp{{\sf retn}\,\lf{({\sf loc}\,\lf{l})},
+                   y_2{:}\iseph{\susp{{\sf cell}\,\lf{l}\,\lf{v}}}}}}
    \right)$ is the restriction of $T_2$'s output, as
 required.
 
@@ -1832,7 +1835,7 @@ required.
 
 \end{description}
 The other cases, notably ${\sf ev/set2}$, follow the 
-same pattern
+same pattern.
 \end{proof}
 
 
@@ -1851,11 +1854,10 @@ the representation of languages that can check for the inequality of
 locations. One way of circumventing this shortcoming is by keeping a
 runtime counter in the form of an ephemeral atomic proposition ${\sf
   count}\,\lf{n}$ that counts the number of currently allocated cells;
-the rule ${\sf ev/ref1}$ that allocates a new cell must be rewritten
+the rule ${\sf ev/ref1}$ that allocates a new cell must be modified
 to access and increment this counter and to attach the counter's value
 to the new cell. Inequality of those natural number tags can then be
-used as a proxy for inequality of locations, since the equality or
-inequality of natural numbers is straightforward in \sls. 
+used as a proxy for inequality of locations.
 
 A generative signature like the one in Figure~\ref{fig:gen-countstate}
 could be used to represent the invariant that each location and each
@@ -1929,7 +1931,7 @@ process states:
 \end{align*}
 In the final state, $\lf{d_1}$ is isolated, no longer mentioned
 anywhere else in the process state, so ${\sf gen/dest}$ must be used
-to show that this final state is well-formed.
+in the generative trace showing that the last state above is well-typed.
 
 \begin{figure}[tp]
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -1938,18 +1940,19 @@ to show that this final state is well-formed.
 \label{fig:gen-destinations} 
 \end{figure}
 
-We will not actually use the generative invariants described in
+We will not use the form described in
 Figure~\ref{fig:gen-destinations2} in this chapter, however. Instead,
 we will prefer the presentation in Figure~\ref{fig:gen-destinations}.
 There are two reasons for this. First and foremost, this formulation
 meshes better with the promise-then-fulfill pattern that was necessary
-for state in Figure~\ref{fig:gen-state} and that is also apparently
-necessary for continuations below. As a secondary consideration, when
-using the more obvious formulation we require more complicated
-inversion lemmas. In previous inversion lemmas, proving that ${\sf
-  gen/cont}$ could always be rotated to the end of a generative trace
-was simple, because it introduced no LF variables or persistent
-nonterminals. The ${\sf gen/cont}$ rule in
+for state in Figure~\ref{fig:gen-state} and that is also necessary for
+continuations in Section~\ref{sec:gen-letcc} below. As a secondary
+consideration, using the first formulation would require us to 
+significantly change the structure of our inversion lemmas.
+In previous inversion lemmas, proving
+that ${\sf gen/cont}$ could always be rotated to the end of a
+generative trace was simple, because it introduced no LF variables or
+persistent nonterminals. The ${\sf gen/cont}$ rule in
 Figure~\ref{fig:gen-destinations2} does introduce an LF variable
 $\lf{d'}$, invalidating the principle used in
 Section~\ref{sec:inversion-genorder}.
@@ -1957,11 +1960,11 @@ Section~\ref{sec:inversion-genorder}.
 The ${\sf dest/promise}$ run in Figure~\ref{fig:gen-destinations} is
 interesting in that it requires each destination $\lf{d'}$ to be
 created along with foreknowledge of the destination, $\lf{d}$, that
-the destination $\lf{d'}$ will return to. This effectively requires
+the destination $\lf{d'}$ will return to. This effectively forces
 all the destinations into a tree structure from the moment of their
 creation onwards, a point that will become important when we modify
 Figure~\ref{fig:gen-destinations} to account for persistent
-destinations and $\obj{\sf letcc}$.
+destinations and first-class continuations.
 
 \subsection{Uniqueness and index sets}
 
@@ -2097,7 +2100,7 @@ of cases to deal with {\it partial} matches (cases 4 and 5).
        \trstep{y}{{\sf gen/eval}\,\lf{{\it tp}}\,\lf{d}\,\lf{e}
        \,(\tfuser{x'}{\tbangr{N}})}\right)$,
 \\ where
-   $\Psi; \Delta \vdash N : {\sf of}\,\lf{e}\,\lf{{\it tp}}$,
+   $\Psi; \Delta \vdash N : \isconc{{\sf of}\,\lf{e}\,\lf{{\it tp}}}$,
 \\ $T' :: (\lf{d_0}{:}{\sf dest}; ~
             x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
          \leadsto^*_{\siggendests}
@@ -2122,8 +2125,8 @@ of cases to deal with {\it partial} matches (cases 4 and 5).
        \trstep{y}{{\sf gen/retn}\,\lf{{\it tp}}\,\lf{d}\,\lf{v}
        \,(\tfuser{x'}{\tfuser{\tbangr{N}}{\tbangr{N_v}}})}\right)$,
 \\ where
-   $\Psi; \Delta \vdash N : {\sf of}\,\lf{e}\,\lf{{\it tp}}$,
-   $\Psi; \Delta \vdash N_v : {\sf value}\,\lf{v}$, 
+   $\Psi; \Delta \vdash N : \isconc{{\sf of}\,\lf{e}\,\lf{{\it tp}}}$,
+   $\Psi; \Delta \vdash N_v : \isconc{{\sf value}\,\lf{v}}$, 
 \\ $T' :: (\lf{d_0}{:}{\sf dest}; ~
             x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
          \leadsto^*_{\siggendests}
@@ -2152,7 +2155,7 @@ of cases to deal with {\it partial} matches (cases 4 and 5).
        \,\lf{{\it tp}}\,\lf{d}\,\lf{f}\,\lf{{\it tp}'}\,\lf{d'}
        \,(\tfuser{x'}{\tfuser{\tbangr{N}}{z}})}\right)$,
 \\ where
-   $\Psi; \Delta \vdash N : {\sf off}\,\lf{e}\,\lf{{\it tp}'}\,\lf{{\it tp}}$,
+   $\Psi; \Delta \vdash N : \isconc{{\sf off}\,\lf{e}\,\lf{{\it tp}'}\,\lf{{\it tp}}}$,
 \\ $T' :: (\lf{d_0}{:}{\sf dest}; ~
             x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})$
 \\ $~\qquad\qquad        \leadsto^*_{\siggendests}
@@ -2242,10 +2245,6 @@ Therefore, $S = \trstep{y_1, y_2}
       \lf{{\it tp}}\,\lf{d}\,\lf{f}\,\lf{{\it tp}'}\,\lf{d'}\,
       (\tfuser{x'}{\tfuser{\tbangr{N}}{z}})}$.
 \end{proof}
-
-Reasoning about the inversion using the unique index property is
-ultimately quite similar to the geometric reasoning used in our
-discussions of inversion for ordered abstract machines.
 
 \subsection{Preservation}
 
@@ -2338,16 +2337,16 @@ $T_1 = ~$ \= \qquad \= $(\lf{d_0}{:}{\sf dest}; ~ x_0{:}\iseph{\susp{{\sf gen}\,
 where $\Delta$ contains the persistent propositions from $\Theta$ and where
 \begin{itemize}
 \item[$\bullet$]  
-  $\Psi; \Delta \vdash N_2 : {\sf off}\,\lf{({\sf app1}\,\lf{e_2})}\,\lf{{\it tp}'}\,\lf{{\it tp}}$. 
+  $\Psi; \Delta \vdash N_2 : \isconc{{\sf off}\,\lf{({\sf app1}\,\lf{e_2})}\,\lf{{\it tp}'}\,\lf{{\it tp}}}$. 
   By traditional inversion we know there exists $\lf{{\it tp}''}$
   and $N_2'$ such that
   $\lf{{\it tp}'} = \lf{{\sf arr}\,{\it tp}''\,{\it tp}}$ and
   $\Psi; \Delta \vdash N_2' : \isconc{{\sf of}\,\lf{e_2}\,\lf{{\it tp}''}}$.
-\item[$\bullet$] $\Psi; \Delta \vdash N_1 : {\sf of}\,\lf{({\sf lam}\,\lambda
-    x.e)}\,\lf{{\sf arr}\,{\it tp}'\,{\it tp}}$. By traditional inversion we know there 
+\item[$\bullet$] $\Psi; \Delta \vdash N_1 : \isconc{{\sf of}\,\lf{({\sf lam}\,\lambda
+    x.e)}\,\lf{{\sf arr}\,{\it tp}'\,{\it tp}}}$. By traditional inversion we know there 
     exists $N_1'$ where 
-    $\Psi, \lf{x}{:}{\sf exp}; \Delta, {\it dx} : \ispers{{\sf of}\,\lf{x}\,\lf{\it
-      tp'}} \vdash N_1' : \isconc{{\sf of}\,\lf{e}\,\lf{\it
+    $\Psi, \lf{x}{:}{\sf exp}; \Delta, {\it dx} : \ispers{({\sf of}\,\lf{x}\,\lf{\it
+      tp'})} \vdash N_1' : \isconc{{\sf of}\,\lf{e}\,\lf{\it
         tp}}$.
 \end{itemize}
 We can use $T'$ to construct $T_2$ as follows: 
@@ -2405,13 +2404,11 @@ The other cases follow the same pattern.
 
 \subsection{Extensions}
 
-Describing generative invariants for parallel evaluation
+Generative invariants for parallel evaluation
 (Figure~\ref{fig:dest-pair}) and the alternate semantics of
 parallelism and failure (Figure~\ref{fig:dest-fail-paror}) as
-described in Section~\ref{sec:modular-parallelism} is a
-straightforward extension of the development in this section along the
-lines of parallel evaluation and failure for ordered abstract
-machines.
+described in Section~\ref{sec:modular-parallelism} are
+straightforward extensions of the development in this section.
 
 \begin{figure}[tp]
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -2432,8 +2429,8 @@ destination-passing in all our examples so far. The reason we do not
 pursue either of these examples further is that, while preservation is
 doable, the progress theorems that we turn to in
 Chapter~\ref{chapter-safety} are complicated. Progress as it is
-usually stated does not even hold for the specification with
-synchronization, due to the possibility of deadlocks. Progress does
+usually stated does not even hold for 
+synchronization due to the possibility of deadlocks. Progress does
 hold for futures, but it is not obvious that the generative invariant
 in Figure~\ref{fig:gen-future} is strong enough to prove progress.
 
@@ -2451,8 +2448,9 @@ seem less unusual, this section still represents a radical shift.
 
 It should not be terribly surprising that the generative invariant for
 persistent continuations is rather different than the other generative
-invariants. Generative invariants capture the patterns in a
-specification, and the we have mostly concentrated on patterns of
+invariants. Generative invariants capture patterns of
+specification, and the we have mostly concentrated on patterns that
+facilitate
 concurrency and communication. Persistent continuations, on the other
 hand, are a pattern mostly associated with first-class
 continuations. The integration of continuations and parallel or
@@ -2465,7 +2463,7 @@ Consider again the ${\sf gendest/promise}$ rule from
 Figure~\ref{fig:gen-destinations}. Because the rule consumes no
 nonterminals and is the only rule to introduce LF variables, any trace
 $T :: \left(\lf{d_0}{:}{\sf dest}; x_0{:}{\sf gen}\,\lf{{\it
-      tp}_0}\,\lf{d_0}\right) \leadsto^* \restrictsig{(\Psi;
+      tp}_0}\,\lf{d_0}\right) \leadsto^* {(\Psi;
   \Delta)}{}$ under $\siggendests$ can be factored into two parts $T =
 T_1; T_2$ where $T_1$ contains only steps that use ${\sf
   gendest/promise}$. The computational effect of
@@ -2508,13 +2506,14 @@ tree-structured map of destinations starting from an initial
 destination $\lf{d_0}$ and an initial persistent atomic proposition
 ${\sf ofdest}\,\lf{d_0}\,\lf{{\it tp}_0}$. This initial proposition
 takes over for the mobile proposition ${\sf gen}\,\lf{{\it
-    tp}_0}\,\lf{d_0}$ as the root of the stack; the linear ${\sf gen}$
+    tp}_0}\,\lf{d_0}$ as the root of the stack; the mobile ${\sf gen}$
 nonterminal no longer needs indices, and just serves to place a single
 ${\sf eval}$ or ${\sf retn}$ somewhere on the well-typed map of
 destinations. The initial state of our generative traces is therefore
 $\left(\lf{d_0}{:}{\sf dest}; x_0{:}\ispers{\susp{{\sf
         ofdest}\,\lf{d_0}\,\lf{{\it tp}_0}}}, z{:}\iseph{\susp{{\sf
-        gen}}}\right)$, and this is reflected in the 
+        gen}}}\right)$; this is reflected in the the preservation
+theorem.
 
 \bigskip
 \begin{lemma}[Unique indices of $\siggenletcc$] Both $\{ {\sf
@@ -2528,6 +2527,7 @@ $\left(\lf{d_0}{:}{\sf dest}; x_0{:}\ispers{\susp{{\sf
 Induction and case analysis on the last steps of a given trace.
 \end{proof}
 
+\newpage
 \begin{lemma}[Inversion -- Figure~\ref{fig:gen-letcc2}] ~
 \begin{enumerate}
 \item If $T :: \left(\lf{d_0}{:}{\sf dest}; ~ x_0{:}\ispers{\susp{{\sf
@@ -2650,7 +2650,7 @@ Induction and case analysis on the last steps of a given trace.
   we have already seen.
 \end{proof}
 
-
+\newpage
 
 \section{On mechanization}
 
@@ -2681,7 +2681,7 @@ straightforward to synthesize, but like termination and mode
 properties in Twelf, they should be entirely straightforward to
 verify. Only the last part of step 3, the reconstruction that happens
 in a preservation theorem, has the structure of a more general theorem
-proving task. Therefore, there is significant hope for mechanizing the
+proving task. Therefore, there is reason to hope that we can mechanize the
 tedious results in the results in this chapter in a framework that
 does much of the work of steps 1 and 2 automatically.
 
