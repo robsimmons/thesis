@@ -607,7 +607,7 @@ be the same. (They are the same iff $T' = \emptytrace$.)
 \end{lemma}
 
 \begin{proof}
-  Each case follows by induction and case analysis on the last steps
+  Each part follows by induction and case analysis on the last steps
   of $T$.  In each case, we know that the trace cannot be empty,
   because the variable bindings $y{:}\istrue{\susp{{\sf
         eval}\,\lf{e}}}$, $y{:}\istrue{\susp{{\sf retn}\,\lf{v}}}$,
@@ -633,10 +633,10 @@ be the same. (They are the same iff $T' = \emptytrace$.)
 
   If $S^{\bullet} \cap {\it Var}$ is nonempty, we must show by case
   analysis that $S^{\bullet} = {\it Var}$ and that furthermore $S$ is
-  the step we were looking for. This is easy in cases 1, 2, and 5
+  the step we were looking for. This is easy in parts 1, 2, and 5
   where ${\it Var}$ is a singleton set: there is only one rule that
   can produce an atomic proposition of type ${\sf gen}\,\lf{e}$, ${\sf
-    retn}\,\lf{v}$, or ${\sf error}$, respectively.  In case 3, we
+    retn}\,\lf{v}$, or ${\sf error}$, respectively.  In part 3, we
   observe that, if the variable bindings $y_1{:}\istrue{\susp{{\sf
         gen}}}$ and $y_2{:}\istrue{\susp{{\sf cont}\,\lf{f}}}$ appear
   in order in the substructural context, there is no step in the
@@ -646,7 +646,7 @@ be the same. (They are the same iff $T' = \emptytrace$.)
   for instance, because it would have to also place either another
   ${\sf gen}$ proposition or a ${\sf cont2}\,{\lf f}$ proposition to
   the right of $y_1$, and we know that a ${\sf cont}\,{\lf f}$
-  proposition actually appears in this position. Cases 4 and 6 work
+  proposition actually appears in this position. Parts 4 and 6 work
   by similar reasoning.
 \end{proof}
 
@@ -1096,9 +1096,9 @@ where
   inversion we know $\lf{\it{tp}''} = \lf{{\sf arr}\,{\it tp}'\,{\it
       tp}}$ and $N = {\sf off2/app1}\,\lf{{\it tp}'}\,\lf{{\it tp}}$.
 \item[$\bullet$] $\cdot \vdash N_1 : {\sf of}\,\lf{({\sf lam}\,\lambda
-    x.e)}\,\lf{tp''}$. By traditional inversion we know $N_1 = {\sf
-    of/app}\,\tbangr{(\lambda \lf{x},{\it dx}.\,N_1')}$, where
-  $\lf{x}{:}{\sf exp}; {\it dx} : \ispers{{\sf of}\,\lf{x}\,\lf{\it
+    x.e)}\,\lf{tp''}$. By traditional inversion we know there 
+    exists $N_1'$ where 
+    $\lf{x}{:}{\sf exp}; {\it dx} : \ispers{{\sf of}\,\lf{x}\,\lf{\it
       tp'}} \vdash N_1' : \isconc{{\sf of}\,\lf{e}\,\lf{\it
         tp}}$.
 \item[$\bullet$] $\cdot \vdash N_2 : {\sf of}\,\lf{v_2}\,\lf{{\it tp}'}$.
@@ -1693,7 +1693,7 @@ required.
    \tackon{\Theta}
     {x_1{:}\istrue{\susp{{\sf retn}\,\lf{({\sf loc}\,l)}}}, ~
      x_2{:}\istrue{\susp{{\sf cont}\,\lf{{\sf get1}}}}, ~
-     x_2{:}\iseph{\susp{{\sf cell}\,\lf{l}\,\lf{v}}}
+     x_3{:}\iseph{\susp{{\sf cell}\,\lf{l}\,\lf{v}}}
     }\right)$
 
 \qquad\qquad
@@ -1843,7 +1843,7 @@ but they deserve mention due to their importance in the context of the
 logical framework CLF. In this section, we will work with an
 operational semantics derived from the signature given in
 Figure~\ref{fig:dest-cbv} (sequential evaluation of function
-application) in Chatper~\ref{chatper-destinations}. To use sequential
+application) in Chapter~\ref{chatper-destinations}. To use sequential
 application instead of parallel evaluation of function application, we
 will need to give different typing rules for frames:
 
@@ -1863,7 +1863,7 @@ Other than this change, our deductive typing rules stay the same.
 \label{fig:gen-destinations2} 
 \end{figure}
 
-When we move from orderd abstract machines to destination-passing
+When we move from ordered abstract machines to destination-passing
 style, the most natural adaptation of generative invariants is
 arguably the one given in Figure~\ref{fig:gen-destinations}. In that
 figure, the core nonterminal is the mobile proposition ${\sf
@@ -1935,7 +1935,7 @@ creation onwards, a point that will become important when we modify
 Figure~\ref{fig:gen-destinations} to account for persistent
 destinations and $\obj{\sf letcc}$.
 
-\subsection{Uniqueness}
+\subsection{Uniqueness and index sets}
 
 One consequence of using the promise-then-fulfill pattern is that our
 unique index lemma becomes conceptually prior to our inversion lemma.
@@ -1944,19 +1944,105 @@ unique index lemma becomes conceptually prior to our inversion lemma.
 \begin{lemma}[Unique indices of $\siggendests$]~
 \begin{enumerate}
 \item
-If $T :: (\lf{d_0}{:}{\sf dest}; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
+If $T :: (\lf{d_0}{:}{\sf dest}; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
          \leadsto^*_{\siggendests}
          (\Psi; \Delta)$,
 \\ $x{:}\iseph{\susp{{\sf gendest}\,\lf{d}\,\lf{d_1}}} \in \Delta$, 
-\\ and 
+ and 
 $y{:}\iseph{\susp{{\sf gendest}\,\lf{d}\,\lf{d_2}}} \in \Delta$, 
 \\ then $x = y$ and $\lf{d_1} = \lf{d_2}$.
+
+\medskip
+\item
+If $T :: (\lf{d_0}{:}{\sf dest}; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+         \leadsto^*_{\siggendests}
+         (\Psi; \Delta)$,
+\\ $x{:}\iseph{\susp{{\sf gendest}\,\lf{d}\,\lf{d_1}}} \in \Delta$, 
+ and
+$y{:}\iseph{\susp{{\sf gen}\,\lf{\it tp}\,\lf{d}}} \in \Delta$,
+\\
+then there is a contradiction.
+
+\medskip
+\item
+If $T :: (\lf{d_0}{:}{\sf dest}; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+         \leadsto^*_{\siggendests}
+         (\Psi; \Delta)$,
+\\ $x{:}\iseph{\susp{{\sf gendest}\,\lf{d}\,\lf{d_1}}} \in \Delta$, 
+ and
+$y{:}\iseph{\susp{{\sf cont}\,\lf{\it f}\,\lf{d}\,\lf{d'}}} \in \Delta$,
+\\
+then there is a contradiction.
+
+\medskip
+\item
+If $T :: (\lf{d_0}{:}{\sf dest}; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+         \leadsto^*_{\siggendests}
+         (\Psi; \Delta)$,
+\\ $x{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_1}\,\lf{d}}} \in \Delta$, 
+ and 
+$y{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_2}\,\lf{d}}} \in \Delta$, 
+\\ then $x = y$ and $\lf{{\it tp}_1} = \lf{{\it tp}_2}$.
+
+\medskip
+\item
+If $T :: (\lf{d_0}{:}{\sf dest}; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+         \leadsto^*_{\siggendests}
+         (\Psi; \Delta)$,
+\\ $x{:}\iseph{\susp{{\sf cont}\,\lf{f_1}\,\lf{d}\,\lf{d_1}}} \in \Delta$, 
+ and 
+$y{:}\iseph{\susp{{\sf cont}\,\lf{f_2}\,\lf{d}\,\lf{d_2}}} \in \Delta$, 
+\\ then $x = y$, $\lf{f_1} = \lf{f_2}$, and $\lf{d_1} = \lf{d_2}$.
+
 \end{enumerate}
 \end{lemma}
 
 \begin{proof}
-Induction and case analysis on last steps of the trace $T$. 
+  Induction and case analysis on last steps of the trace $T$; each
+  part uses the previous parts (parts 2 and 3 use part 1, and parts 4
+  and 5 use parts 2 and 3).
 \end{proof}
+
+This lemma is a complicated way of expressing what is ultimately a
+very simple property: that the second position of ${\sf gendest}$ is a
+unique index and that it passes on that unique indexing to the second
+position of ${\sf gen}$ and the second position of ${\sf cont}$. 
+
+\bigskip
+\begin{definition}
+A set $S$ is a {\em unique index set} under a generative signature
+$\Sigma$ and an initial state $(\Psi; \Delta)$ if, whenever
+\begin{itemize}
+\item ${\sf a}/i \in S$, 
+\item ${\sf b}/j \in S$, 
+\item $(\Psi; \Delta) \leadsto^*_{\Sigma} (\Psi; \Delta)$, 
+\item $x{:}\islvl{\susp{{\sf a}\,\lf{t_1}\ldots \lf{t_n}}} \in \Delta$, and
+\item $y{:}\islvl{\susp{{\sf b}\,\lf{s_1}\ldots \lf{s_m}}}' \in \Delta$,
+\end{itemize}
+it is the case that $\lf{t_i} = \lf{s_j}$ implies $x = y$. Of course, if
+$x = y$, that in turn implies that ${\sf a} = {\sf b}$, 
+$i = j$, $n = m$, $\lf{t_k} = \lf{s_k}$ for $1 \leq k \leq n$, and 
+$\mlvl = \mlvl'$. 
+\end{definition}
+\bigskip
+
+The complicated lemma above can then be captured by the dramatically
+more concise statement: $\{ {\sf gendest}/2, {\sf gen}/2 \}$ and $\{
+{\sf gendest}/2, {\sf cont}/2 \}$ are both unique index sets under the
+signature $\siggendests$ and the initial state $(\lf{d_0}{:}{\sf
+  dest}; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it
+        tp}_0}\,\lf{d_0}}})$. In fact, we can extend the first unique
+index set to $\{ {\sf gendest}/2, {\sf gen}/2, {\sf eval}/2, {\sf
+  retn}/2 \}$. Stating that $\{ {\sf gendest}/2, {\sf gen}/2 \}$ was a
+unique index property previously required 3 distinct statements, and
+it would take 10 distinct statements to express that $\{ {\sf
+  gendest}/2, {\sf gen}/2, {\sf eval}/2, {\sf retn}/2 \}$ is a unique
+index property.\footnote{Four positive statements (similar to parts 1, 4, and 5 of the lemma above) along ${{4}\choose{2}} =
+  6$ negative ones (similar to parts 3 and 4 of the lemma above).}
+
+It's also possible for unique index sets to be simply (and,
+presumably, mechanically) checked. This amounts to a very simple
+preservation property.
 
 \subsection{Inversion}
 
@@ -1964,7 +2050,7 @@ In order to prove inversion using uniqueness and the
 promise-then-fulfill style generative specification in
 Figure~\ref{fig:gen-destinations2}, we need a more general inversion
 lemma than the one we had before. Not only do we have to consider
-cases analagous to the ones described in
+cases analogous to the ones described in
 Section~\ref{sec:inversion-genorder} (cases 1-3), we need another set
 of cases to deal with {\it partial} matches (cases 4 and 5). 
 
@@ -2005,7 +2091,7 @@ of cases to deal with {\it partial} matches (cases 4 and 5).
            {y{:}\iseph{\susp{{\sf retn}\,\lf{v}\,\lf{d}}}})$,
 \\ then 
    $T = \left(T';
-       \trstep{y}{{\sf gen/retn}\,\lf{{\it tp}}\,\lf{d}\,\lf{e}
+       \trstep{y}{{\sf gen/retn}\,\lf{{\it tp}}\,\lf{d}\,\lf{v}
        \,(\tfuser{x'}{\tfuser{\tbangr{N}}{\tbangr{N_v}}})}\right)$,
 \\ where
    $\Psi; \Delta \vdash N : {\sf of}\,\lf{e}\,\lf{{\it tp}}$,
@@ -2034,7 +2120,8 @@ of cases to deal with {\it partial} matches (cases 4 and 5).
 \smallskip
 \\ then 
    $T = \left(T';
-       \trstep{y}{{\sf gen/cont}\,\lf{{\it tp}}\,\lf{d}\,\lf{f}\,\lf{{\it tp}'}
+       \trstep{y_1, y_2}{{\sf gen/cont}
+       \,\lf{{\it tp}}\,\lf{d}\,\lf{f}\,\lf{{\it tp}'}\,\lf{d'}
        \,(\tfuser{x'}{\tfuser{\tbangr{N}}{z}})}\right)$,
 \\ where
    $\Psi; \Delta \vdash N : {\sf off}\,\lf{e}\,\lf{{\it tp}'}\,\lf{{\it tp}}$,
@@ -2051,115 +2138,276 @@ of cases to deal with {\it partial} matches (cases 4 and 5).
            {x'{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}}\,\lf{d}}}, ~
             z{:}\iseph{\susp{{\sf gendest}\,\lf{d'}\,\lf{d}}}}$.
 
-\medskip
-\item If 
-   $T :: (\lf{d_0}{:}{\sf dest}; ~
-            x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
-         \leadsto^*_{\siggendests}
-         (\Psi; ~
-          \tackon{\Theta}
-           {y{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}}\,\lf{d}}}})$,
+% \medskip
+% \item If 
+%    $T :: (\lf{d_0}{:}{\sf dest}; ~
+%             x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+%          \leadsto^*_{\siggendests}
+%          (\Psi; ~
+%           \tackon{\Theta}
+%            {y{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}}\,\lf{d}}}})$,
 
 
-\medskip
-\item If 
-   $T :: (\lf{d_0}{:}{\sf dest}; ~
-            x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
-         \leadsto^*_{\siggendests}
-         (\Psi; ~
-          \tackon{\Theta}
-           {y{:}\iseph{\susp{{\sf cont}\,\lf{f}\,\lf{d'}\,\lf{d}}}})$,
+% \medskip
+% \item If 
+%    $T :: (\lf{d_0}{:}{\sf dest}; ~
+%             x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+%          \leadsto^*_{\siggendests}
+%          (\Psi; ~
+%           \tackon{\Theta}
+%            {y{:}\iseph{\susp{{\sf cont}\,\lf{f}\,\lf{d'}\,\lf{d}}}})$,
 
 
 \medskip
 \end{enumerate}
 \end{lemma}
+
+\begin{proof}
+  As with other inversion lemmas, each case follows by induction and
+  case analysis on the last steps of $T$. The trace cannot be empty,
+  so $T = T''; S$ for some $T''$ and $S$, and we let ${\it Var}$ be
+  the set of relevant variables $\{y\}$ in parts 1 and 2, and
+  $\{y_1,y_2\}$ in part 3.
+
+  If $\emptyset = S^{\bullet} \cap {\it Var}$, the proof proceeds by
+  induction as it did in Section~\ref{sec:inversion-genorder}.
+
+  If $S^{\bullet} \cap {\it Var}$ is nonempty, then we must again show
+  by case analysis that $S^{\bullet} = {\it Var}$ and that furthermore
+  $S$ is the step we were looking for. As before, this is easy for the
+  unary grammar productions where ${\it Var}$ is a singleton set:
+  there is only one rule that can produce an atomic proposition 
+  ${\sf eval}\,\lf{e}\,\lf{d}$ or ${\sf retn}\,\lf{v}\,\lf{d}$. 
+
+  When ${\it Var}$ is not a singleton (which only happens in part 3
+  for this lemma), we must use the unique index property to reason
+  that if there is any overlap, that overlap must be total.
+  \begin{itemize}
+  \item Say $S = \trstep{y_1, y_2''}
+    {{\sf gen/cont}\,
+      \lf{{\it tp}}\,\lf{d''}\,\lf{f''}\,\lf{{\it tp}'}\,\lf{d'}\,
+      (\tfuser{x'}{\tfuser{\tbangr{N}}{z}})}$.
+
+      Then the final state contains
+      $y_2{:}\iseph{\susp{{\sf cont}\,\lf{f}\,\lf{d'}\,\lf{d}}}$
+      and
+      $y_2''{:}\iseph{\susp{{\sf cont}\,\lf{f''}\,\lf{d'}\,\lf{d''}}}$.
+      The shared $\lf{d'}$ and the unique index property 
+      ensures that $y_2 = y_2''$, $\lf{f} = \lf{f''}$, and
+      $\lf{d} = \lf{d''}$.
+
+  \smallskip
+  \item Say  $S = \trstep{y_1'', y_2}
+    {{\sf gen/cont}\,
+      \lf{{\it tp}}\,\lf{d}\,\lf{f}\,\lf{{\it tp}'''}\,\lf{d'}\,
+      (\tfuser{x'}{\tfuser{\tbangr{N}}{z}})}$.
+
+    Then the final state contains
+    $y_1{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}'}\,\lf{d'}}}$
+    and 
+    $y_1''{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}'''}\,\lf{d'}}}$.
+    The shared $\lf{d'}$ and the unique index property ensures that
+    $y_1 = y_1''$ and $\lf{{\it tp}'} = \lf{{\it tp}'''}$. 
+  \end{itemize}
+Therefore, $S = \trstep{y_1, y_2}
+    {{\sf gen/cont}\,
+      \lf{{\it tp}}\,\lf{d}\,\lf{f}\,\lf{{\it tp}'}\,\lf{d'}\,
+      (\tfuser{x'}{\tfuser{\tbangr{N}}{z}})}$.
+\end{proof}
+
+Reasoning about the inversion using the unique index property is
+ultimately quite similar to the geometric reasoning used in our
+discussions of inversion for ordered abstract machines.
 
 \subsection{Preservation}
 
- First, it allows us to hew to the 
-cardinal rule that inversion lemmas never produce 
+Once again in a situation where we have no persistent nonterminals, we
+can return to the simpler form of the preservation theorem used in
+Theorem~\ref{thm:siggenorder} and Theorem~\ref{thm:siggenordertp}
+(compared to the more complex formulation needed for
+Theorem~\ref{thm:siggenstate}).
 
-
-isolated invariants can be used to describe the invariants 
-associated with the destination-passing style specifications . Essentially,
-the indexing analysis 
-
-
-
-The key issue is again the inversion lemma; the destination-passing
-style specification in Figure~\ref{fig:gen-destinations}
-
-\bigskip
-\begin{lemma}[Inversion -- Figure~\ref{fig:gen-destinations}, partial]
-SCRATCH THIS DO OVER~
-\label{lemma:inversion-destinations}
-\begin{enumerate}
-\item If 
-   $T :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
-         \leadsto^*_{\siggendests}
-         (\Psi; \tackon{\Theta}
-            {y{:}\istrue{\susp{{\sf eval}\,\lf{e}\,\lf{d}}}})$,
-\\ then 
-   $T = \left(T'; \trstep{y}{{\sf gen/eval}\,\lf{\it tp}\,\lf{d}\,\lf{e}\,
-                                  (\tfuser{x'}{\tbangr{N}})}\right)$,
-\\ where
-   $\Psi \vdash_{\siggendests} N : {{\sf of}\,\lf{e}\,\lf{\it tp}}$ 
 \medskip
-\item If 
-   $T :: (\cdot; x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
-         \leadsto^*_{\siggendests}
-         (\Psi; \tackon{\Theta}
-            {y_1{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}\,\lf{d}}}, ~
-             y_2{:}\istrue{\susp{{\sf cont}\,\lf{f}\,\lf{d}\,\lf{d'}}}})$,
-\\ then 
-   $T = \left(T'; \trstep{\lf{d'},y_1,y_2}
-              {{\sf gen/cont}\,\lf{\it tp}\,\lf{d}\,\lf{f}\,\lf{{\it tp}'}\,
-                (\tfuser{x'}{\tbangr{N}})}\right)$,
-\\ where 
-   $\Psi \vdash_{\siggendests} N : 
-       {{{\sf off}\,\lf{f}\,\lf{{\it tp}'}\,\lf{{\it tp}}}}$.
-\medskip
-\end{enumerate}
-In each instance above, 
-$T' :: (\cdot; x{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
-       \leadsto^*_{\siggendests}
-       (\Psi'; \tackon{\Theta}
-          {x'{:}\istrue{\susp{{\sf gen}\,\lf{\it tp}\,\lf{d}}}})$,
-%
-where the variables $x$ and $x'$ may or may not
-be the same. (They are the same iff $T' = \emptytrace$, and if they
-are the same that implies that 
-$\lf{d_0} = \lf{d}$ and $\lf{{\it tp}_0} = \lf{\it tp}$.)
-\end{lemma}
+\begin{theorem}[$\siggendests$ is a generative invariant]
+\label{thm:siggendests}
+If $T_1 :: (\lf{d_0}{:}{\sf dest}; x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}}) 
+   \leadsto^*_{\siggendests} 
+   (\Psi; \Delta)$ and there is a step
+   $S :: \restrictsig{(\Psi; \Delta)}{} \leadsto (\Psi'; \Delta')$
+under the signature from Figure~\ref{fig:fig:dest-cbv}, then
+$T_2 :: (\lf{d_0}{:}{\sf dest}; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}}) 
+   \leadsto^*_{\siggendests} 
+   (\Psi'; \Delta')$.
+\end{theorem}
 
-Inversion for the generative signature in
-Figure~\ref{fig:gen-destinations} has one complication in particular: 
-we've broken one of our cardinal rules: the step we are interested in 
-isolating may introduce destinations of its own (part 2 of the lemma above).
-Therefore, if we are in a situation where 
-\[
-T = \left(T''; ~~ \trstep{\lf{d'},y_1,y_2}
-              {{\sf gen/cont}\,\lf{\it tp}\,\lf{d}\,\lf{f}\,\lf{{\it tp}'}\,
-                (\tfuser{x'}{\tbangr{N}})}; ~~ S\right)
-\]
-how do we know that $\lf{d'} \in {^\bullet}S$? The answer comes in two parts.
-First, second position of 
-${\sf gen}\,\lf{\it tp}\,\lf{d}$ is a unique index. 
+\begin{proof} As usual, we enumerate the synthetic transitions possible under
+the signature in Figure~\ref{fig:dest-cbv}, perform inversion 
+on the structure of $T_1$, and then use the results of inversion to
+construct $T_2$. We give one illustrative case. 
+
+\begin{description}
+%%%%%%%%
+%%%%%%%% ev/app1
+%%%%%%%%
+
+\item
+  [Case $\trstep{\lf{d_2}, y_1, y_2}
+    {{\sf ev/app1}\,\lf{(\lambda x. e)}\,\lf{d_1}\,\lf{e_2}\,\lf{d}\,
+      (\tfuser{x_1}{x_2})}$]~
+
+\qquad 
+  $:: \left(\Psi; ~
+   \tackon{\Theta}
+    {x_1{:}\iseph{\susp{{\sf retn}\,
+       \lf{({\sf lam}\, \lambda x.e)}\,\lf{d_1}}}, ~
+     x_2{:}\iseph{\susp{{\sf cont}\,\lf{({\sf app1}\,e_2)}\,\lf{d_1}\,\lf{d}}}
+    }\right)$
+
+\qquad\qquad
+  $\leadsto \left(\Psi, \lf{d_2}{:}{\sf dest}; ~
+   \tackon{\Theta}
+    {y_1{:}\iseph{\susp{{\sf eval}\,\lf{e_2}\,\lf{d_2}}}, ~
+     y_2{:}\iseph{\susp{{\sf cont}\,
+       \lf{({\sf app2}\,\lambda x.e)}\,\lf{d_2}\,\lf{d}}}
+    }\right)$
+
+\medskip
+Applying inversion (Part 2, then Part 3) to $T_1$, we have
+
+\begin{tabbing}
+$T_1 = ~$ \= \qquad \= $(\lf{d_0}{:}{\sf dest}; ~ x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})$
+\\
+\> $T'$
+\\
+\>\> $\left(\Psi; ~
+   \tackon{\Theta}
+    {x'{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}}\,\lf{d}}}, ~
+     z_1{:}\iseph{\susp{{\sf gendest}\,\lf{d_1}\,\lf{d}}}
+    }\right)$
+\\
+\> $\trstep{x_1', x_2}{{\sf gen/cont}\,
+       \lf{{\it tp}}\,\lf{d}\,\lf{({\sf app1}\,e_2)}\,
+       \lf{{\it tp}'}\,\lf{d_1}\,
+       (\tfuser{x'}{\tfuser{\tbangr{N_2}}{z_1}})}$
+\\
+\>\> $\left(\Psi; ~
+   \tackon{\Theta}
+    {x_1'{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}'}\,\lf{d_1}}}, ~
+     x_2{:}\iseph{\susp{{\sf cont}\,\lf{({\sf app1}\,e_2)}\,\lf{d_1}\,\lf{d}}}
+    }\right)$
+\\
+\> $\trstep{x_1}{{\sf gen/retn}\,
+       \lf{{\it tp}'}\,\lf{d_1}\,\lf{v}\,
+       (\tfuser{x_1'}{\tfuser{\tbangr{N_1}}{\tbangr{N_{v1}}}})}$
+\\
+\>\> $\left(\Psi; ~
+   \tackon{\Theta}
+    {x_1{:}\iseph{\susp{{\sf retn}\,\lf{({\sf lam}\,\lambda x.e)}\,\lf{d_1}}}, ~
+     x_2{:}\iseph{\susp{{\sf cont}\,\lf{({\sf app1}\,e_2)}\,\lf{d_1}\,\lf{d}}}
+    }\right)$
+\end{tabbing}
+
+where $\Delta$ contains the persistent propositions from $\Theta$ and where
+\begin{itemize}
+\item[$\bullet$]  
+  $\Psi; \Delta \vdash N_2 : {\sf off}\,\lf{({\sf app1}\,\lf{e_2})}\,\lf{{\it tp}'}\,\lf{{\it tp}}$. 
+  By traditional inversion we know there exists $\lf{{\it tp}''}$
+  and $N_2'$ such that
+  $\lf{{\it tp}'} = \lf{{\sf arr}\,{\it tp}''\,{\it tp}}$ and
+  $\Psi; \Delta \vdash N_2' : \isconc{{\sf of}\,\lf{e_2}\,\lf{{\it tp}''}}$.
+\item[$\bullet$] $\Psi; \Delta \vdash N_1 : {\sf of}\,\lf{({\sf lam}\,\lambda
+    x.e)}\,\lf{{\sf arr}\,{\it tp}'\,{\it tp}}$. By traditional inversion we know there 
+    exists $N_1'$ where 
+    $\Psi, \lf{x}{:}{\sf exp}; \Delta, {\it dx} : \ispers{{\sf of}\,\lf{x}\,\lf{\it
+      tp'}} \vdash N_1' : \isconc{{\sf of}\,\lf{e}\,\lf{\it
+        tp}}$.
+\end{itemize}
+We can use $T'$ to construct $T_2$ as follows: 
+
+\begin{tabbing}
+$T_2 = ~$ \= \qquad \= $(\lf{d_0}{:}{\sf dest}; ~ x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})$
+\\
+\> $T'$
+\\
+\>\> $\left(\Psi; ~
+   \tackon{\Theta}
+    {x'{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}}\,\lf{d}}}, ~
+     z_1{:}\iseph{\susp{{\sf gendest}\,\lf{d_1}\,\lf{d}}}
+    }\right)$
+\\
+\> $\trstep{}{{\sf dest/unused}\,\lf{d_1}\,\lf{d}\,z_1}$
+\\
+\> $\trstep{\lf{d_2}, z_2}{{\sf dest/promise}\,\lf{d}}$
+\\
+\>\> $\left(\Psi, \lf{d_2}{:}{\sf dest}; ~
+   \tackon{\Theta}
+    {x'{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}}\,\lf{d}}}, ~
+     z_2{:}\iseph{\susp{{\sf gendest}\,\lf{d_2}\,\lf{d}}}
+    }\right)$
+\\
+\> $\trstep{y_1',y_2}{{\sf gen/cont}\,\lf{{\it tp}}\,\lf{d}\,
+      \lf{({\sf app2}\lambda x. e)}\,\lf{{\it tp}''}\,\lf{d_2}}$
+\\
+\> \qquad\qquad\qquad\qquad
+     $(\tfuser{x'}{\tfuser{!({\sf off/app2}\,\lf{{\it tp}''}\,\lf{(\lambda x.e)}\,\lf{{\it tp}}\,(\lambda \lf{x}, {\it dx}.\,\tbangr{N_1'}))}{z_2}})$
+\\
+\>\> $\left(\Psi, \lf{d_2}{:}{\sf dest}; ~
+   \tackon{\Theta}
+    {y_1'{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}''}\,\lf{d_2}}}, ~
+     y_2{:}\iseph{\susp{{\sf cont}\,\lf{({\sf app2}\,\lambda x.e)}\,\lf{d_2}\,\lf{d}}}
+    }\right)$
+\\
+\> $\trstep{y_1, y_2}{{\sf gen/eval}\,\lf{{\it tp}''}\,\lf{d_2}\,\lf{e_2}\,
+      (\tfuser{y_1'}{\tbangr{N_2'}})}$
+\\
+\>\> $\left(\Psi, \lf{d_2}{:}{\sf dest}; ~
+   \tackon{\Theta}
+    {y_1{:}\iseph{\susp{{\sf eval}\,\lf{e_2}\,\lf{d_2}}}, ~
+     y_2{:}\iseph{\susp{{\sf cont}\,\lf{({\sf app2}\,\lambda x.e)}\,\lf{d_2}\,\lf{d}}}
+    }\right)$
+\end{tabbing}
+
+\medskip
+
+\end{description}
+
+\noindent
+The other cases follow the same pattern.
+\end{proof}
 
 \subsection{Extensions}
 
-Parallel
-evaluation (Figure~\ref{fig:dest-pair}) and the alternate semantics of
-parallelism and faiulre (Figure~\ref{fig:dest-fail-paror}) are
-straightforward extensions to the development in this section.
+Describing generative invariants for parallel evaluation
+(Figure~\ref{fig:dest-pair}) and the alternate semantics of
+parallelism and failure (Figure~\ref{fig:dest-fail-paror}) as
+described in Section~\ref{sec:modular-parallelism} is a
+straightforward extension of the development in this section along the
+lines of parallel evaluation and failure for ordered abstract
+machines.
+
+\begin{figure}[tp]
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-future.sls} 
+\caption{Generative invariant: futures}
+\label{fig:gen-future} 
+\end{figure}
+
 Synchronization (Section~\ref{sec:dest-synch}) and futures
-(Section~\ref{sec:dest-futures}) are just a bit more intersting from
-the perspective of generative invariants and presesrvation, but we
-will not develop them here.\footnote{A {\it progress} theorem for a
-  language with synchronization, which would fall under the scope of
-  Chapter~\ref{chapter-safety}, would require reasoning about
-  deadlocks and is oslsutside the scope of this thesis.}
+(Section~\ref{sec:dest-futures}) are just a bit more interesting from
+the perspective of generative invariants and preservation. The
+generative invariant for synchronization should be straightforward if
+we associate types with channels in the style of \cite[Section
+41.5]{harper12practical}. One possible approach to futures is sketched
+out in Figure~\ref{fig:gen-future}; it follows the same
+promise-then-fulfill pattern used for mutable storage and
+destination-passing in all our examples so far. The reason we do not
+pursue either of these examples further is that, while preservation is
+doable, the progress theorems that we turn to in
+Chapter~\ref{chapter-safety} are complicated. Progress as it is
+usually stated does not even hold for the specification with
+synchronization, due to the possibility of deadlocks. Progress does
+hold for futures, but it is not obvious that the generative invariant
+in Figure~\ref{fig:gen-future} is strong enough to prove progress.
 
 
 \section{Persistent continuations}
