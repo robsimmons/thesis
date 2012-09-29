@@ -132,7 +132,7 @@ signature as follows:
   persistent atomic propositions can be separated into two sets -- the
   {\em terminals} and the {\em nonterminals}. Synthetic transitions
   enabled by a generative signature only consume (or reference) 
-  terminals and LF terms, but their output variables can include
+  nonterminals and LF terms, but their output variables can include
   LF variables, variables associated with terminals, and variables
   associated with nonterminals.
 \end{definition}
@@ -501,6 +501,7 @@ sequential continuation, nor can the sequential frame $({\sf
 \newcommand{\siggenordertp}{\Sigma_{\it Gen\ref{fig:gen-ordertp}}}
 \newcommand{\siggenstate}{\Sigma_{\it Gen\ref{fig:gen-state}}}
 \newcommand{\siggendests}{\Sigma_{\it Gen\ref{fig:gen-destinations}}}
+\newcommand{\siggenletcc}{\Sigma_{\it Gen\ref{fig:gen-letcc2}}}
 
 This is fundamentally no more complicated than the restrictions we
 placed on the ${\sf retn}\,\lf{v}$ terminal. All expressions (LF
@@ -2417,7 +2418,41 @@ The final specification style we will cover in detail is the use of
 persistent continuations as discussed in
 Section~\ref{sec:dest-continuations} as a way of giving an SSOS
 semantics for first-class continuations (Figure~\ref{fig:dest-letcc}).
-An example 
+While the setup of Figure~\ref{fig:gen-destinations} were designed to
+make the transition to persistent continuations and $\obj{\sf letcc}$
+seem less unusual, this section still represents a radical shift.  
+
+It should not be terribly suprising that the generative invariant for
+persistent continuations is rather different than the other generative
+invariants. Generative invariants capture the patterns in a
+specification, and the we have mostly concentrated on patterns of
+concurrency and communication. Persistent continuations, on the other
+hand, are a pattern mostly associated with first-class
+continuations. The integration of continuations and parallel or
+concurrent evaluation is non-obvious; the proposal by Moreau and
+Ribbens in \cite{moreau96semantics} is not straightforward to adapt to
+the semantic specifications we gave in
+Chatper~\ref{chapter-destinations}.
+
+Consider again the ${\sf gendest/promise}$ rule from
+Figure~\ref{fig:gen-destinations}. Because the rule consumes no
+nonterminals and is the only rule to introduce LF variables, any trace
+$T :: \left(\lf{d_0}{:}{\sf dest}; x_0{:}{\sf gen}\,\lf{{\it
+      tp}_0}\,\lf{d_0}\right) \leadsto^* \restrictsig{(\Psi;
+  \Delta)}{}$ under $\siggendests$ can be factored into two parts $T =
+T_1; T_2$ where $T_1$ contains only steps that use ${\sf
+  gendest/promise}$. The computational effect of
+Theorem~\ref{thm:siggendests} is that $T_1$ grows to track the
+tree-structured shape of the stack, both past and present. We could
+record, if we wanted to, the {\it past} structure of the control stack
+by adding a persistent nonterminal ${\sf
+  ghostcont}\,\lf{f}\,\lf{d'}\,\lf{d}$ and modifying ${\sf dest/unused}$
+in Figure~\ref{fig:gen-destinations} as follows:
+
+\smallskip
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-ghost.sls}
+\smallskip
 
 \begin{figure}[tp]
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -2427,12 +2462,177 @@ An example
 \label{fig:gen-letcc2} 
 \end{figure}
 
-\begin{figure}[tp]
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/gen-letcctp.sls} 
-\caption{Generative invariant: well-typed first-class continuations}
-\label{fig:gen-letcc} 
-\end{figure}
+Once we make the move to persistent continuations, however, there's no
+need to create a ghost continuation, we can just have the rule ${\sf
+  dest/unused}$ (renamed to ${\sf dest/fulfill}$ in
+Figure~\ref{fig:gen-letcc2}) create the continuation itself.  To make
+this work, ${\sf dest/promise}$ predicts the type that will be
+associated with a newly-generated destination $\lf{d}$ by generating a
+persistent nonterminal ${\sf ofdest}\,\lf{d}\,\lf{{\it tp}}$. (This is
+just like how ${\sf gencell/promise}$ in Figure~\ref{fig:gen-state}
+predicts the type of a location $\lf{l}$ by generating a persistent
+nonterminal ${\sf ofcell}\,\lf{l}\,\lf{{\it tp}}$.) Then, ${\sf
+  dest/fulfill}$ checks to make sure that the generated continuation
+frame has the right type relative to the destinations it connects.
+
+Taken together, the rules ${\sf dest/promise}$ and ${\sf
+  dest/fulfill}$ in Figure~\ref{fig:gen-letcc2} create a
+tree-structured map of destinations starting from an initial
+destination $\lf{d_0}$ and an initial persistent atomic proposition
+${\sf ofdest}\,\lf{d_0}\,\lf{{\it tp}_0}$. This initial proposition
+takes over for the mobile proposition ${\sf gen}\,\lf{{\it
+    tp}_0}\,\lf{d_0}$ as the root of the stack; the linear ${\sf gen}$
+nonterminal no longer needs indices, and just serves to place a single
+${\sf eval}$ or ${\sf retn}$ somewhere on the well-typed map of
+destinations. The initial state of our generative traces is therefore
+$\left(\lf{d_0}{:}{\sf dest}; x_0{:}\ispers{\susp{{\sf
+        ofdest}\,\lf{d_0}\,\lf{{\it tp}_0}}}, z{:}\iseph{\susp{{\sf
+        gen}}}\right)$, and this is reflected in the 
+
+\bigskip
+\begin{lemma}[Unique indices of $\siggenletcc$] Both $\{ {\sf
+    ofdest}/1 \}$ and $\{ {\sf gendest}/1, {\sf cont}/2 \}$ are unique
+  index sets under the initial state
+  $\left(\lf{d_0}{:}{\sf dest}; x_0{:}\ispers{\susp{{\sf
+          ofdest}\,\lf{d_0}\,\lf{{\it tp}_0}}}, z{:}\iseph{\susp{{\sf gen}}}\right)$ and the signature $\siggenletcc$.
+\end{lemma}
+
+\begin{proof}
+Induction and case analysis on the last steps of a given trace.
+\end{proof}
+
+\begin{lemma}[Inversion -- Figure~\ref{fig:gen-letcc2}] ~
+\begin{enumerate}
+\item If $T :: \left(\lf{d_0}{:}{\sf dest}; ~ x_0{:}\ispers{\susp{{\sf
+          ofdest}\,\lf{d_0}\,\lf{{\it tp}_0}}}, ~ z{:}\iseph{\susp{{\sf
+          gen}}}\right) \leadsto^*_{\siggenletcc} \left(\Psi; ~
+    \tackon{\Theta}{y{:}\iseph{\susp{{\sf
+            eval}\,\lf{e}\,\lf{d}}}}\right)$,
+
+    then $T = (T'; \trstep{y}{{\sf gen/eval}\,\lf{d}\,\lf{{\it tp}}\,\lf{e}\,
+      (\tfuser{z'}{\tfuser{x}{\tbangr{N}}})})$,
+
+    where $x{:}\ispers{\susp{{\sf ofdest}\,\lf{d}\,\lf{{\it tp}}}} \in \Delta$,
+    $\Psi; \Delta \vdash N : \isconc{{\sf of}\,\lf{e}\,\lf{{\it tp}}}$,
+    
+    $T' :: \left(\lf{d_0}{:}{\sf dest}; ~ x_0{:}\ispers{\susp{{\sf
+          ofdest}\,\lf{d_0}\,\lf{{\it tp}_0}}}, ~ z{:}\iseph{\susp{{\sf
+          gen}}}\right) \leadsto^*_{\siggenletcc}
+          \left(\Psi; ~ \tackon{\Theta}{z'{:}\iseph{\susp{{\sf gen}}}}\right)$,
+
+    and $\Delta$ is the persistent part of 
+    $\left(\Psi; ~ \tackon{\Theta}{z'{:}\iseph{\susp{{\sf gen}}}}\right)$.
+
+\medskip
+\item If $T :: \left(\lf{d_0}{:}{\sf dest}; ~ x_0{:}\ispers{\susp{{\sf
+          ofdest}\,\lf{d_0}\,\lf{{\it tp}_0}}}, ~ z{:}\iseph{\susp{{\sf
+          gen}}}\right) \leadsto^*_{\siggenletcc} \left(\Psi; ~
+    \tackon{\Theta}{y{:}\iseph{\susp{{\sf
+            retn}\,\lf{v}\,\lf{d}}}}\right)$,
+
+    then $T = (T'; \trstep{y}{{\sf gen/retn}\,\lf{d}\,\lf{{\it tp}}\,\lf{v}\,
+      (\tfuser{z'}{\tfuser{x}{\tfuser{\tbangr{N}}{\tbangr{N_v}}}})})$,
+
+    where $x{:}\ispers{\susp{{\sf ofdest}\,\lf{d}\,\lf{{\it tp}}}} \in \Delta$,
+    $\Psi; \Delta \vdash N : \isconc{{\sf of}\,\lf{v}\,\lf{{\it tp}}}$,
+    $\Psi; \Delta \vdash N : \isconc{{\sf value}\,\lf{v}}$,
+    
+    $T' :: \left(\lf{d_0}{:}{\sf dest}; ~ x_0{:}\ispers{\susp{{\sf
+          ofdest}\,\lf{d_0}\,\lf{{\it tp}_0}}}, ~ z{:}\iseph{\susp{{\sf
+          gen}}}\right) \leadsto^*_{\siggenletcc}
+          \left(\Psi; ~ \tackon{\Theta}{z'{:}\iseph{\susp{{\sf gen}}}}\right)$,
+
+    and $\Delta$ is the persistent part of 
+    $\left(\Psi; ~ \tackon{\Theta}{z'{:}\iseph{\susp{{\sf gen}}}}\right)$.
+
+
+\medskip
+\item If $T :: \left(\lf{d_0}{:}{\sf dest}; ~ x_0{:}\ispers{\susp{{\sf
+          ofdest}\,\lf{d_0}\,\lf{{\it tp}_0}}},  ~ z{:}\iseph{\susp{{\sf
+          gen}}}\right)$
+
+   $~\qquad \qquad \leadsto^*_{\siggenletcc} \left(\Psi; ~
+    \tackon{\Theta}{y{:}\ispers{\susp{{\sf
+            cont}\,\lf{f}\,\lf{d'}\,\lf{d}}}}\right)$,
+\smallskip
+
+    then $T = (T'; \trstep{y}{{\sf dest/fulfill}\,\lf{d'}\,\lf{d}\,\lf{f}\,\lf{{\it tp}'}\,\lf{{\it tp}}\,
+      (\tfuser{y'}{\tfuser{\tbangr{N}}{\tfuser{x'}{x}}})})$,
+
+    where $x'{:}\ispers{\susp{{\sf ofdest}\,\lf{d'}\,\lf{{\it tp}'}}} 
+           \in \Delta$,
+    $x{:}\ispers{\susp{{\sf ofdest}\,\lf{d}\,\lf{{\it tp}}}} \in \Delta$,
+    $\Psi; \Delta \vdash N : 
+       \isconc{{\sf off}\,\lf{f}\,\lf{{\it tp}'}\,\lf{{\it tp}}}$
+
+    $T' :: \left(\lf{d_0}{:}{\sf dest}; x_0{:}\ispers{\susp{{\sf
+          ofdest}\,\lf{d_0}\,\lf{{\it tp}_0}}}, z{:}\iseph{\susp{{\sf
+          gen}}}\right)$
+
+   $~\qquad \qquad \leadsto^*_{\siggenletcc} \left(\Psi; ~
+          \tackon{\Theta}
+            {y'{:}\iseph{\susp{{\sf gendest}\,\lf{d'}\,\lf{d}}}}\right)$,
+
+    and $\Delta$ is the persistent part of 
+    $\left(\Psi; ~ \tackon{\Theta}
+      {z'{:}\iseph{\susp{{\sf gendest}\,\lf{d'}\,\lf{d}}}}\right)$.
+\smallskip
+ 
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+  Induction and case analysis on last steps of the trace $T$; each
+  case is individually quite simple because ${\it Var}$ is always a
+  singleton $\{ y \}$.  While we introduce a persistent atomic
+  proposition ${\sf cont}$ in Part 3, the step that introduces this
+  proposition can always be rotated to the end of a trace because
+  ${\sf cont}$ propositions cannot appear in the input interface of
+  any step in under the generative signature $\siggenletcc$. This is a
+  specific property of $\siggenletcc$, but it also follows from the
+  definition of generative signatures (Definition~\ref{def:gensig}),
+  which stipulates that transitions enabled by a generative signature
+  cannot consume or mention terminals like ${\sf cont}$.
+
+  As an aside, $z$ will always equal $z'$ in Parts 1 and 2, but we'll
+  never need to rely on this fact.
+\end{proof}
+
+
+\bigskip
+\begin{theorem}[$\siggenletcc$ is a generative invariant] ~
+\label{thm:siggenletcc}
+\smallskip
+
+If $T_1 :: \left(\lf{d_0}{:}{\sf dest}; x_0{:}\ispers{\susp{{\sf
+          ofdest}\,\lf{d_0}\,\lf{{\it tp}_0}}}, z{:}\iseph{\susp{{\sf
+          gen}}}\right) \leadsto^*_{\siggenletcc} \left(\Psi; \Delta \right)$
+
+If $T_1 :: (\lf{d_0}{:}{\sf dest}; x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}}) 
+   \leadsto^*_{\siggendests} 
+   (\Psi; \Delta)$ and there is a step
+   $S :: \restrictsig{(\Psi; \Delta)}{} \leadsto (\Psi'; \Delta')$
+under the signature from Figure~\ref{fig:dest-cbv}, then
+$T_2 :: (\lf{d_0}{:}{\sf dest}; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}}) 
+   \leadsto^*_{\siggendests} 
+   (\Psi'; \Delta')$.
+\end{theorem}
+
+
+\bigskip
+
+
+\bigskip
+\begin{theorem}
+  If $T :: \left(\lf{d_0}{:}{\sf dest}; x_0{:}\ispers{\susp{{\sf
+          ofdest}\,\lf{d_0}\,\lf{{\it tp}_0}}}, z{:}{\sf gen}\right)
+  \leadsto \left(\Psi; \Delta\right)$, then every $d{:}{\sf dest} \in
+  \Psi$ can be associated uniquely with a stack $\obj{k} =
+  \obj{((\ldots({\sf halt}; f_1); \ldots) f_n)}$
+\end{theorem}
+
+(in the
+same way that 
 
 
 \section{Counting invariants}

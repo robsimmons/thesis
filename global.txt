@@ -32,6 +32,7 @@ Realization: inductive definitions aren't partial, proofs are partial
 (LF view versus math view)
 
 
+
 CHANGES TO CONSIDER MAKING:
 
 springer LNCS not fully consistent. Editors? Location?
@@ -40,12 +41,8 @@ springer LNCS not fully consistent. Editors? Location?
 
 Page number from our LFMTP paper.
 
-Chatper~\ref{}?
-
 I removed some asterisk conditions from the last proof in 6.1; double
 check against the POPL version of the revised theorem that I didn't
 do anything sketchy.
 
-
-
-
+take more care with use of "parallel"
