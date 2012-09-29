@@ -1843,7 +1843,7 @@ but they deserve mention due to their importance in the context of the
 logical framework CLF. In this section, we will work with an
 operational semantics derived from the signature given in
 Figure~\ref{fig:dest-cbv} (sequential evaluation of function
-application) in Chapter~\ref{chatper-destinations}. To use sequential
+application) in Chapter~\ref{chapter-destinations}. To use sequential
 application instead of parallel evaluation of function application, we
 will need to give different typing rules for frames:
 
@@ -2221,7 +2221,7 @@ discussions of inversion for ordered abstract machines.
 
 \subsection{Preservation}
 
-Once again in a situation where we have no persistent nonterminals, we
+As we once again have no persistent nonterminals, we
 can return to the simpler form of the preservation theorem used in
 Theorem~\ref{thm:siggenorder} and Theorem~\ref{thm:siggenordertp}
 (compared to the more complex formulation needed for
@@ -2234,7 +2234,7 @@ If $T_1 :: (\lf{d_0}{:}{\sf dest}; x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}
    \leadsto^*_{\siggendests} 
    (\Psi; \Delta)$ and there is a step
    $S :: \restrictsig{(\Psi; \Delta)}{} \leadsto (\Psi'; \Delta')$
-under the signature from Figure~\ref{fig:fig:dest-cbv}, then
+under the signature from Figure~\ref{fig:dest-cbv}, then
 $T_2 :: (\lf{d_0}{:}{\sf dest}; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}}) 
    \leadsto^*_{\siggendests} 
    (\Psi'; \Delta')$.
