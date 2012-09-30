@@ -1,12 +1,12 @@
 of: exp -> typ -> prop.
 
 of/unit:  of unit unittp.
-of/lam:   of (lam \x. E x) (arr T' T)
-           <- (All x. of x T' -> of (E x) T).
-of/app:   of (app E1 E2) T
-           <- of E1 (arr T' T)
-           <- of E2 T'.
-of/fail:  of fail T.
-of/catch: of (catch E1 E2) T
-           <- of E1 T
-           <- of E2 T.
+of/lam:   of (lam \x. E x) (arr Tp' Tp)
+           <- (All x. of x Tp' -> of (E x) Tp).
+of/app:   of (app E1 E2) Tp
+           <- of E1 (arr Tp' Tp)
+           <- of E2 Tp'.
+of/fail:  of fail Tp.
+of/catch: of (catch E1 E2) Tp
+           <- of E1 Tp
+           <- of E2 Tp.

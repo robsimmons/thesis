@@ -7,6 +7,6 @@
 7  chapter-destinations    PUBLISH
 8  chapter-approx          PUBLISH
 9  chapter-gen             PUBLISH
-10 chapter-safety          NO
+10 chapter-safety          PUBLISH
 11 chapter-conclusion      NO
 A  appendix-hybrid         PUBLISH

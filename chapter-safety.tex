@@ -1,9 +1,188 @@
 \chapter{Safety for substructural specifications}
 \label{chapter-safety}
 
-\section{Well-formed states are reachable}
-\label{sec:well-formed-reachable}
+In Chapter~\ref{chapter-gen}, we showed how the preservation theorem
+could be established for a wide variety of SSOS semantics, both
+ordered abstract machines and destination-passing style semantics.
+The methodology of generative invariants we espoused goes
+significantly beyond previous work on proving preservation for
+operational semantics specifications in substructural logic.  Neither
+Linear LF encodings Pfenning, Cervesato, and Reed
+\cite{cervesato02linear,reed09hybrid}, nor the Ordered LF encodings of
+Felty and Momigliano \cite{felty12hybrid}, discussed preservation for
+concurrent specifications or for first-class continuations. 
+
+More fundamentally, however, this previous work does not even provide
+a {\it language} for talking about progress theorems, the critical
+companion of preservation theorems in reasoning about language safety.
+These previous approaches were universally based on complete
+derivations. These have the flavor of derivations in a big-step
+semantics, and it is difficult to talk about progress for big-step
+operational semantics. The purpose of this chapter is to establish that
+\sls's traces and steps, which correspond to partial proofs, provide
+a suitable basis for stating progress theorems (and therefore language
+safety theorems) and for proving 
 
 \section{Progress}
+
+In the case of ordered abstract machines, we want to prove that $T ::
+(x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
+\leadsto^*_{\siggenordertp} \Delta$ and $\restrictsig{\Delta}{}$ imply
+one of three possibilities:
+
+\smallskip
+\begin{enumerate}
+\item ${\Delta}{} \leadsto \Delta'$ under
+the signature from Figure~\ref{fig:gen-order-prog}, 
+\item $\Delta = y{:}\istrue{\susp{{\sf retn}\,\lf{v}}}$, or
+\item $\Delta = y{:}\istrue{\susp{{\sf error}}}$.
+\end{enumerate}
+\smallskip
+
+\noindent
+This is exactly the form of a traditional progress theorem: if a
+process state is well typed, it either takes a step under the dynamic
+semantics or is a final state (terminating with an error or returning
+a value).
+
+The presence of parallel evaluation in Figure~\ref{fig:gen-order-prog}
+necessitates that we generalize our induction hypothesis. The
+statement above is a straightforward corollary of
+Theorem~\ref{thm:prog-ordertp} below.
+
+\bigskip
+\begin{theorem}[Progress for ordered abstract machines]\label{thm:prog-ordertp}
+If $T :: \tackon{\Theta}{x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}}
+\leadsto_{\siggenordertp} \Delta$ and $\restrictsig{\Delta}{}$, then
+either $\Delta \leadsto \Delta'$ under the signature from 
+Figure~\ref{fig:gen-order-prog} for some $\Delta'$, or else 
+$T = \left(T_1; \trstep{y}{{\sf gen/retn}\,\lf{{\it tp}}\,\lf{v}\,x}; T_2\right)$, or else 
+$T = \left(T_1; \trstep{y}{{\sf gen/error}\,\lf{{\it tp}}\,x}; T_2\right)$.
+\end{theorem}
+
+\begin{proof}
+By induction and case analysis on the first steps of $T$. We cannot 
+have $T = \emptytrace$, because we cannot apply restriction to a context
+with nonterminals like ${\sf gen}\,\lf{{\it tp}}$ in it. 
+So $T = S; T'$, and either $x \notin {^\bullet}S$ or $x \in {^\bullet}S$. 
+
+If $x \notin {^\bullet}S$, then $T' ::
+\tackon{\Theta'}{x{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}}
+\leadsto_{\siggenordertp} \Delta$ and we can succeed by immediate appeal to the
+induction hypothesis.
+
+If $x \in {^\bullet}S$, then we perform case analysis on the possible
+transitions enabled by $\siggenordertp$:
+
+\medskip
+\begin{itemize}
+\item $S = \trstep{y}{{\sf gen/eval}\,\lf{e}\,\lf{{\it
+        tp}}\,{(\tfuser{x}{\tbangr{N}})}}$
+  where $\cdot \vdash N : \isconc{{\sf of}\,\lf{e}\,\lf{{\it tp}}}$.
+
+  Because ${\sf eval}$ is a terminal, $\Delta = \tackon{\Theta'}{y{:}\istrue{\susp{{\sf eval}\,\lf{e}}}}$, and we proceed by case
+  analysis on $N$ to show that the derivation can always take a step.
+
+\medskip
+\item $S = \trstep{y}{{\sf gen/retn}\,\lf{v}\,\lf{{\it tp}}\,(\tfuser{x}{\tfuser{\tbangr{N}}{\tbangr{N_v}}})}$ -- succeed immediately.
+
+\medskip
+\item $S = \trstep{y}{{\sf gen/error}\,\lf{{\it tp}}\,{x}}$ -- succeed immediately.
+
+\medskip
+\item $S = \trstep{y_1', y_2}{{\sf gen/cont}\,\lf{{\it tp}}\,\lf{f}\,\lf{{\it tp}'}\,(\tfuser{x}{\tbangr{N}})}$ where $\cdot \vdash N : \isconc{{\sf off}\,\lf{f}\,\lf{{\it tp}'}\,\lf{{\it tp}}}$.
+
+Invoke the i.h.~on  
+$T' :  \tackon{\Theta}{y_1'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}'}}}, ~ 
+                        y_2{:}\istrue{\susp{{\sf cont}\,\lf{f}}}}
+\leadsto_{\siggenordertp} \Delta$, and then perform case analysis on the result
+to prove that $\Delta \leadsto \Delta'$:
+
+\begin{itemize}
+\item If $\Delta \leadsto \Delta'$, then we're done. 
+\item If $T' = \left(T_1'; \trstep{y_1}{{\sf gen/retn}\,\lf{{\it tp}}\,\lf{v}\,(\tfuser{y_1'}{\tfuser{\tbangr{N'}}{\tbangr{N_v'}}})}; T_2'\right)$,
+\\
+then because ${\sf retn}$ and ${\sf cont}$ are 
+terminals, $\Delta = \tackon{\Theta'}{
+         y_1{:}\istrue{\susp{{\sf retn}\,\lf{v}}}, ~
+         y_2{:}\istrue{\susp{{\sf cont}\,\lf{f}}}}$, and we 
+proceed by
+simultaneous case analysis on $N$, $N'$, and $N_v'$ (canonical forms lemma). 
+\item If $T' = \left(T_1'; \trstep{y_1}{{\sf gen/error}\,\lf{{\it tp}}\,y_1'}; T_2'\right)$,
+\\
+then because ${\sf error}$ and ${\sf cont}$ are terminals,
+$\Delta = \tackon{\Theta'}{
+         y_1{:}\istrue{\susp{{\sf error}}}, ~
+         y_2{:}\istrue{\susp{{\sf cont}\,\lf{f}}}}$, and we have
+$\trstep{z}{{\sf ev/error}\,\lf{f}\,(\tfuser{y_1}{y_2})} :: \Delta \leadsto \tackon{\Theta'}{z{:}\istrue{\susp{{\sf error}}}}$.
+
+\end{itemize}
+
+\medskip
+\item $S = \trstep{y_1', y_2', y_3}{{\sf gen/cont2}\,\lf{{\it tp}}\,\lf{f}\,\lf{{\it tp}_1}\,\lf{{\it tp}_2}\,(\tfuser{x}{\tbangr{N}})}$
+where $\cdot \vdash N : \isconc{{\sf off2}\,\lf{f}\,\lf{{\it tp}_1}\, \lf{{\it tp}_2}\,\lf{{\it tp}}}$.
+
+
+Invoke the i.h.~twice on $T' :
+\tackon{\Theta}{y_1'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_1}}}, ~
+  y_2'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_2}}}, ~
+  y_3{:}\istrue{\susp{{\sf cont2}\,\lf{f}}}}$, once to see what happens
+to $y_1'$, and another time to see what happens to $y_2'$,
+and then perform case analysis on the result to prove that
+$\Delta \leadsto \Delta'$:
+
+\begin{itemize}
+\item If either invocation returns the first disjunctive possibility,
+  that $\Delta \leadsto \Delta'$, then we're done.
+
+\item
+If both invocations return the second disjunctive possibility, then
+ $T'$ contain two steps
+$\trstep{y_1}{{\sf gen/retn}\,\lf{{\it tp}_1}\,\lf{v_1}\,(\tfuser{y_1'}{\tfuser{\tbangr{N_1}}{\tbangr{N_{v1}}}})}$ and \\
+$\trstep{y_2}{{\sf gen/retn}\,\lf{{\it tp}_2}\,\lf{v_2}\,(\tfuser{y_2'}{\tfuser{\tbangr{N_2}}{\tbangr{N_{v2}}}})}$. Because ${\sf retn}$ and ${\sf cont}$
+are terminals, \\$\Delta = \tackon{\Theta'}{y_1{:}\istrue{\susp{{\sf retn}\,\lf{v_1}}}, ~ y_2{:}\istrue{\susp{{\sf retn}\,\lf{v_2}}}, ~ y_3{:}\istrue{\susp{{\sf cont2}\,\lf{f}}}}$, and we proceed
+by simultaneous case analysis on $N$, $N_1$, $N_{v1}$, $N_2$, and $N_{v2}$
+(canonical forms lemma). 
+
+\item In all the remaining cases, one of the subcomputations becomes
+  an error and the other one becomes another error or a returned
+  value.  In any of these cases, $\Delta \leadsto \Delta'$ by one of
+  the rules ${\sf ev/errret}$, ${\sf ev/reterr}$, or by ${\sf
+    ev/errerr}$.
+
+\end{itemize}
+
+\medskip
+\item $S = \trstep{y_1', y_2}{{\sf gen/handle}\,\lf{{\it tp}}\,\lf{e_2}\,(\tfuser{x}{\tbangr{N}})}$.
+
+Invoke the i.h.~on  
+$T' :  \tackon{\Theta}{y_1'{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}'}}}, ~ 
+                        y_2{:}\istrue{\susp{{\sf handle}\,\lf{e_2}}}}
+\leadsto_{\siggenordertp} \Delta$, and then perform case analysis on the result
+to prove that $\Delta \leadsto \Delta'$:
+
+\begin{itemize}
+\item If $\Delta \leadsto \Delta'$, then we're done. 
+\item If $T' = \left(T_1'; \trstep{y_1}{{\sf gen/retn}\,\lf{{\it tp}}\,\lf{v}\,(\tfuser{y_1'}{\tfuser{\tbangr{N'}}{\tbangr{N_v'}}})}; T_2'\right)$,
+\\
+then because ${\sf retn}$ and ${\sf cont}$ are 
+terminals, $\Delta = \tackon{\Theta'}{
+         y_1{:}\istrue{\susp{{\sf retn}\,\lf{v}}}, ~
+         y_2{:}\istrue{\susp{{\sf cont}\,\lf{f}}}}$, and 
+we have $\trstep{z}{{\sf ev/catcha}\,\lf{v}\,\lf{e_2}\,(\tfuser{y_1}{y_2})}
+:: \Delta \leadsto \tackon{\Theta'}{z{:}\istrue{\susp{{\sf retn}\,\lf{v}}}}$.
+
+\item If $T' = \left(T_1'; \trstep{y_1}{{\sf gen/error}\,\lf{{\it tp}}\,y_1'}; T_2'\right)$,
+\\
+then because ${\sf error}$ and ${\sf cont}$ are terminals,
+$\Delta = \tackon{\Theta'}{
+         y_1{:}\istrue{\susp{{\sf error}}}, ~
+         y_2{:}\istrue{\susp{{\sf handle}\,\lf{e}}}}$, and we have
+$\trstep{z}{{\sf ev/catchb}\,\lf{e_2}\,(\tfuser{y_1}{y_2})} :: \Delta \leadsto \tackon{\Theta'}{z{:}\istrue{\susp{{\sf eval}\,\lf{e_2}}}}$.
+
+\end{itemize}
+
+\end{itemize}
+\end{proof}
 
 \section{Safety}

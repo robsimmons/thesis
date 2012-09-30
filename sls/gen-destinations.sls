@@ -4,7 +4,7 @@ gendest: dest -> prop lin.
 dest/promise: {Exists d'. $gendest d' D}.
 dest/unused:  $gendest D' D >-> {1}
 
-gen/eval: $gen T D * !of E T >-> {$eval E D}.
-gen/retn: $gen T D * !of V T * !value V >-> {$retn V D}.
-gen/cont: $gen T D * !off F T' T * $gendest D' D
-           >-> {$gen T' D' * $cont F D' D}.
+gen/eval: $gen Tp D * !of E Tp >-> {$eval E D}.
+gen/retn: $gen Tp D * !of V Tp * !value V >-> {$retn V D}.
+gen/cont: $gen Tp D * !off F Tp' Tp * $gendest D' D
+           >-> {$gen Tp' D' * $cont F D' D}.

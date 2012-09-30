@@ -70,7 +70,7 @@ In SSOS specifications, generative specifications are analogous to
 typing judgments, and establishing a generative invariant is analogous
 to proving a preservation theorem. Progress theorems for SSOS
 specifications will be discussed in Chapter~\ref{chapter-safety}.
-These two chapters estabish the centerpiece of the third refinement of
+These two chapters establish the centerpiece of the third refinement of
 our central thesis:
 
 \smallskip
@@ -95,7 +95,6 @@ well-{\it formed} process states to well-{\it typed} process states.
 This is not a large technical shift, but conceptually it is an
 important step from thinking about adequacy-like properties to
 thinking about preservation theorems. 
-
 In Section~\ref{sec:gen-state}
 we describe how generative invariants can be established for the sorts
 of stateful signatures considered in
@@ -110,6 +109,17 @@ continuation frames as described in Section~\ref{sec:dest-continuations}.
 %introduce a more complicated class of generative invariants that
 %capture the numerical properties of specifications that appear in the
 %\sls~encoding of voting and auction protocols.
+
+All of these sections are essentially replaying the same
+two-or-three-step proof with variations. The first step, which is not
+always necessary, is reasoning about unique indices, a topic
+introduced in Section~\ref{sec:uniqueness-genstate} and refined in
+Section~\ref{sec:uniqueness-gendests}. The second step is to prove an
+inversion lemma which allows us to gather knowledge about the last
+steps of a generative trace based on our knowledge of the structure of
+the generated process state. The third step is a preservation lemma
+where we take in a generative trace, perform inversion upon it, and
+then use the results of inversion to construct a new generative trace.
 
 \section{Worlds}
 \label{sec:gen-worlds}
@@ -493,12 +503,6 @@ sequential continuation, nor can the sequential frame $\lf{({\sf
 \caption{Generative invariant: well-formed process states}
 \label{fig:gen-order} 
 \end{figure}
-
-\newcommand{\siggenorder}{\Sigma_{\it Gen\ref{fig:gen-order}}}
-\newcommand{\siggenordertp}{\Sigma_{\it Gen\ref{fig:gen-ordertp}}}
-\newcommand{\siggenstate}{\Sigma_{\it Gen\ref{fig:gen-state}}}
-\newcommand{\siggendests}{\Sigma_{\it Gen\ref{fig:gen-destinations}}}
-\newcommand{\siggenletcc}{\Sigma_{\it Gen\ref{fig:gen-letcc2}}}
 
 This is fundamentally no more complicated than the restrictions we
 placed on the ${\sf retn}\,\lf{v}$ terminal. All expressions (LF
@@ -1505,6 +1509,7 @@ The new inversion lemma (part 3 above) follows the
 pattern established in Section~\ref{sec:inversion-genorder}.
 
 \subsection{Uniqueness}
+\label{sec:uniqueness-genstate}
 
 To prove that our generative invariant for mutable storage is
 maintained, we need one property besides inversion; we'll refer to it
@@ -1967,6 +1972,7 @@ Figure~\ref{fig:gen-destinations} to account for persistent
 destinations and first-class continuations.
 
 \subsection{Uniqueness and index sets}
+\label{sec:uniqueness-gendests}
 
 One consequence of using the promise-then-fulfill pattern is that our
 unique index lemma becomes conceptually prior to our inversion lemma.
