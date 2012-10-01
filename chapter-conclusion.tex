@@ -2,40 +2,70 @@
 \label{chapter-conclusion}
 
 In this thesis, we have developed a logical framework of substructural
-logical specifications, \sls, based on a rewriting interpretation of
-ordered linear lax logic (\ollll). Part I discussed the design of this
-logical framework, and in the process firmly established the
-connection between 1) canonical forms and hereditary substitution in a
-logical framework and 2) focused derivations and cut admissibility in
-logic. The existance of this connection has been known for a decade,
-but this thesis gives the first account of the connection that
-generalizes to all logical connectives. This connection allowed the
-\sls~framework to be presented as a syntactic refinement of focused
-ordered linear lax logic; the steps and traces of \sls, which provide
-its rewriting interpretation, are justified as partial proofs in
-focused ordered linear lax logic.
+logical specifications (\sls) based on a rewriting interpretation of
+ordered linear lax logic (\ollll). Part I of the thesis discussed the
+design of this logical framework, and in the process firmly
+established the elegant connection between two sets of techniques:
 
-The \sls~framework is intended to act as a bridge between the world of
-logical frameworks, where deductive derivations are the principal
-objects of study, and the world of rewriting logic, where artifacts
-similar to \sls~traces are the principal objects of study. Part II of
-this thesis discusses a number of ways of describing operational
-semantics specifications in \sls, using ordered resources to encode
-control structures, using mobile/linear resources to encode mutable
-state and concurrent communication, and using persistent resources to
-represent memoization and binding. \sls~still hews more closely to the
-tradition of logical frameworks, but future work will hopefully reduce
-the remaining distance between operational semantics specifications in
-\sls~and rewriting logic-based approaches to operational semantics
-specifications.
+\smallskip
+\begin{enumerate}
+\item Canonical forms and hereditary
+substitution in a logical framework, on one hand, and 
+\item Focused derivations and cut
+admissibility in logic, on the other.
+\end{enumerate}
 
-The approximation methodology presented in
-Chapter~\ref{chapter-approx} is also relevant to this refinement of
-the thesis statement. Program abstraction is also a form of formal
-reasoning about the properties of the programming language. One the
-other hand, approximation is a program transformation like
-operationalization, defunctionalization, and destination adding, which
-is why this chapter was presented in Part~II. This observation
-illustrates that Chapter~\ref{chapter-approx} sits uncertainly between
-Part~II and Part~III of this thesis.)
+\smallskip
+\noindent 
+The existence of this connection has been known for a decade, but this
+thesis gives the first account of the connection that generalizes to
+all logical connectives. This connection allowed the \sls~framework to
+be presented as a syntactic refinement of focused ordered linear lax
+logic; the steps and traces of \sls, which provide its rewriting
+interpretation, are justified as partial proofs in focused ordered
+linear lax logic. \sls~does move beyond the connection with focused
+logic due to the introduction of concurrent equality, which allows
+logically independent steps in a trace to be reordered; we conjecture
+that the resulting equivalence relation imposed on our logical
+framework is analogous to the one given by multifocusing in logic.
 
+The \sls~framework acts as a bridge between the world of logical
+frameworks, where deductive derivations are the principal objects of
+study, and the world of rewriting logic, where rewriting sequences
+that are similar to \sls~traces are the principal objects of
+study. Part II of this thesis discusses a number of ways of describing
+operational semantics specifications in \sls, using ordered resources
+to encode control structures, using mobile/linear resources to encode
+mutable state and concurrent communication, and using persistent
+resources to represent memoization and binding. Different styles of
+specification were connected to each other through automatic and
+fully-correct transformations on \sls~specifications, a methodology we
+named the {\it logical correspondence}. Utilizing these
+transformations, it is possible to fuse together a single coherent
+\sls~specification of a MiniML language with concurrency, state, and
+communication using various different styles of specification,
+including natural semantics where appropriate. This is demonstrated in
+Appendix~\ref{appendix-hybrid}.
+
+% \sls~still hews more
+% closely to the tradition of logical frameworks, but future work will
+% hopefully reduce the remaining distance between operational semantics
+% specifications in \sls~and rewriting logic-based approaches to
+% operational semantics specifications.
+
+This thesis also discussed two different modes of reasoning formally
+about operational semantics specifications in \sls. The first mode,
+the program analysis methodology considered in
+Chapter~\ref{chapter-approx}, allows us to derive effectively
+executable abstractions of an operational semantics directly from an
+operational semantics specification in \sls. The second mode, the
+methodology of progress, preservation, and type safety, is considered
+in Chapter~\ref{chapter-gen} and Chapter~\ref{chapter-safety}. In a
+sense, this thesis has pushed our ability to reason {\it formally}
+about properties of \sls~specifications (and substructural operational
+semantics specifications in particular) some distance beyond our
+ability to {\it informally} reason about these specifications. An
+important direction for future work is moving beyond the
+misleadingly-sequential language of \sls~traces and developing a more
+user-friendly language for writing, talking, and thinking about 
+traces in \sls, especially generative traces. 
