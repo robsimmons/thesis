@@ -35,7 +35,7 @@ world or language of well-formed process states is called a {\it
 \subsection*{Type preservation}
 
 The purpose of this chapter is to demonstrate that generative
-invariants are a reasonable way of talking about invariants of
+invariants are a solid methodology for describing invariants of
 \sls~specifications, especially well-formedness and well-typedness
 invariants of substructural operational semantics specifications like
 the ones presented in Part II. As we have already
@@ -66,12 +66,12 @@ $\obj{\cdot \vdash e : {\it tp}}$, then either there is some
 $\obj{e'}$ such that $\obj{e \mapsto e'}$ or else $\obj{e}$ is already
 a value.
 
-In SSOS specifications, generative specifications are analogous to
-typing judgments, and establishing a generative invariant is analogous
-to proving a preservation theorem. Progress theorems for SSOS
+Establishing a generative invariant for an SSOS language specification
+is analogous to proving a preservation theorem in a small-step SOS
+language specification. Progress and safety theorems for SSOS
 specifications will be discussed in Chapter~\ref{chapter-safety}.
-These two chapters establish the centerpiece of the third refinement of
-our central thesis:
+These two chapters establish the centerpiece of the third refinement
+of our central thesis:
 
 \smallskip
 \begin{quote} 
@@ -93,7 +93,7 @@ generally (Section~\ref{sec:gen-order}). In
 Section~\ref{sec:gen-ordertp} we will extend that discussion from
 well-{\it formed} process states to well-{\it typed} process states.
 This is not a large technical shift, but conceptually it is an
-important step from thinking about adequacy-like properties to
+important step from thinking about adequacy properties to
 thinking about preservation theorems. 
 In Section~\ref{sec:gen-state}
 we describe how generative invariants can be established for the sorts
@@ -127,11 +127,14 @@ then use the results of inversion to construct a new generative trace.
 {\it Worlds} are nothing more or less than sets of process states
 $(\Psi; \Delta)$ -- in the discussion here, we will specifically
 exclude process states $(\Psi; \Delta)_{\lf\sigma}$ with a non-empty
-accompanying substitution $\lf\sigma$.\footnote{These accompanying
+accompanying substitution $\lf\sigma$;\footnote{These accompanying
   substitutions were presented in
-  Section~\ref{sec:sls-processstates}.}
-In this chapter, we will specify worlds by the combination of an
-initial process state and a generative signature.
+  Section~\ref{sec:sls-processstates}.} we don't need these
+accompanying substitutions for any of the properties we want to
+describe. 
+
+In this chapter, we will specify worlds with the combination of two
+artifacts: an initial process state and a generative signature.
 
 \bigskip
 \begin{definition}\label{def:gensig}
@@ -445,18 +448,26 @@ well-formed process states of the specification in
 Figure~\ref{fig:gen-order-prog}. What determines whether a process
 state is well formed? The intended adequacy theorem was our guide in
 Section~\ref{sec:nat-ssos-adequacy}, and the intended progress theorem
-will guide our hand in Section~\ref{sec:gen-ordertp}. In this case,
-our goal is that every well-formed state should be {\it
-  reachable}. That is, if $(x{:}\istrue{\susp{\sf gen}})
-\leadsto^* \Delta$ under the generative signature and if $\Delta$ contains no
+will guide our hand in Section~\ref{sec:gen-ordertp}. An obvious
+minimal requirement is that every state $\Delta$ such that
+$(x{:}\istrue{\susp{\sf eval}\,\interp{e}}) \leadsto^* \Delta$ under
+the signature from Figure~\ref{fig:gen-order-prog} must be well
+formed; otherwise well-formedness won't be invariant under evaluation!
+One option is therefore to make this correspondence precise, and to
+have the well formed states be {\it precisely} the states that are
+reachable in the process of evaluating syntactically valid expressions
+$\interp{e}$. That is, if $(x{:}\istrue{\susp{\sf gen}}) \leadsto^*
+\Delta$ under the generative signature and if $\Delta$ contains no
 instances of ${\sf gen}$, then there should be an expression $\obj{e}$
 such that $(x{:}\istrue{\susp{{\sf eval}\,\interp{e}}}) \leadsto^*
 \Delta$ under the signature from
 Figure~\ref{fig:gen-order-prog}. (Because ${\sf gen}$ is the only
 nonterminal, we can express that $\Delta$ contains no instances of
 ${\sf gen}$ with the restriction operator, writing
-$\restrictsig{\Delta}{}$.) We will discuss the proof of this property
-in Section~\ref{sec:well-formed-reachable}.
+$\restrictsig{\Delta}{}$.)\footnote{We won't discuss the proof of this
+  property, but the proof is not difficult to reconstruct; it follows
+  the same contours as the proof of progress given in
+  Chapter~\ref{chapter-safety}.}
 
 The analogues of the unary grammar productions, associated with the
 terminals ${\sf eval}\,\lf{e}$, ${\sf retn}\,\lf{v}$, and ${\sf
@@ -491,11 +502,12 @@ computations, suggesting these rules:
 %
 Even though ${\sf gen/cont}$ is exactly the rule for sequential
 continuations in Section~\ref{sec:nat-ssos-adequacy}, this approach
-conflicts with our guiding principle of reachability.
-Both parallel and sequential continuations are indexed by
-frames, but the parallel frame ${\sf app1}$ cannot appear in a
+conflicts with our guiding principle of reachability.  Both parallel
+continuation frames ${\sf cont}\,\lf{f}$ and sequential continuation
+frames ${\sf cont2}\,\lf{f}$ are indexed by LF terms $\lf{f}$ of type
+${\sf frame}$, but the parallel frame ${\sf app1}$ cannot appear in a
 sequential continuation, nor can the sequential frame $\lf{({\sf
-  let1}\,\lf{\lambda x.e\,x})}$ appear in a parallel frame. 
+    let1}\,\lf{\lambda x.e\,x})}$ appear in a parallel frame.
 
 \begin{figure}[tp]
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -527,12 +539,12 @@ traditional preservation theorems, we are often start with a derivation of
 $\obj{e_1\,e_2 \mapsto e_1'\,e_2}$ and another derivation of
 $\obj{\cdot \vdash e_1\,e_2 : {\it tp}}$. An inversion lemma then proceeds
 by case analysis on the structure of the derivation 
-$\obj{\cdot \vdash e : {\it tp}}$, and allows us to conclude that
+$\obj{\cdot \vdash e_1\,e_2 : {\it tp}}$, and allows us to conclude that
 $\obj{\cdot \vdash e_1 : {\it tp'} \Rightarrow {\it tp}}$
 and that $\obj{\cdot \vdash e_2 : {\it tp'} }$ for some object-level
 type $\obj{\it tp'}$.  In other words, an inversion lemma allows us to 
 take knowledge about a term's structure and obtain information about 
-the typing derivation's structure. 
+the structure of typing derivation. 
 
 Inversion on a generative signature is intuitively similar: we take
 information about the structure of a process state and use it to learn
@@ -540,16 +552,41 @@ about the generative trace that formed that process state. Concurrent
 equality (Section~\ref{sec:framework-concurrenteq}) is critical.
 None the parts of the lemma below would hold if we did not
 equate traces such as such as
-\[
-\trstep{x_1, x_2, x_3}{{\sf gen/cont2}\,\lf{f}\,(x' \fuse {\sf okf2/app1})}; ~
-\trstep{y_1}{{\sf gen/eval}\,\lf{e_1}\,x_1}; ~
-\trstep{y_2}{{\sf gen/eval}\,\lf{e_2}\,x_2}
-\]and\[
-\trstep{x_1, x_2, x_3}{{\sf gen/cont2}\,\lf{f}\,(x' \fuse {\sf okf2/app1})}; ~
-\trstep{y_2}{{\sf gen/eval}\,\lf{e_2}\,x_2}; ~
-\trstep{y_1}{{\sf gen/eval}\,\lf{e_1}\,x_1}
-\]
-by concurrent equality.
+\begin{align*}
+& \qquad (x'{:}\istrue{\susp{{\sf gen}}})
+\\
+& \trstep{x_1, x_2, x_3}{{\sf gen/cont2}\,\lf{f}\,(x' \fuse {\sf okf2/app1})}
+\\
+& \trstep{y_1}{{\sf gen/eval}\,\lf{e_1}\,x_1}
+\\
+& \trstep{y_2}{{\sf gen/eval}\,\lf{e_2}\,x_2}
+\\
+& \qquad (x_1{:}\istrue{\susp{{\sf eval}\,\lf{e_1}}}, ~
+          x_2{:}\istrue{\susp{{\sf eval}\,\lf{e_2}}}, ~
+          x_3{:}\istrue{\susp{{\sf cont2}\,\lf{f}}})
+\end{align*}
+and
+\begin{align*}
+& \qquad (x'{:}\istrue{\susp{{\sf gen}}})
+\\
+& \trstep{x_1, x_2, x_3}{{\sf gen/cont2}\,\lf{f}\,(x' \fuse {\sf okf2/app1})}
+\\
+& \trstep{y_2}{{\sf gen/eval}\,\lf{e_2}\,x_2}
+\\
+& \trstep{y_1}{{\sf gen/eval}\,\lf{e_1}\,x_1}
+\\
+& \qquad (x_1{:}\istrue{\susp{{\sf eval}\,\lf{e_1}}}, ~
+          x_2{:}\istrue{\susp{{\sf eval}\,\lf{e_2}}}, ~
+          x_3{:}\istrue{\susp{{\sf cont2}\,\lf{f}}})
+\end{align*}
+by concurrent equality. 
+
+The action of an inversion lemma is to
+conclude, based on the structure of a generated process state,
+something about one the last step in the trace that generated it. This
+is less immediate than inversion on derivations because concurrent
+traces can have many steps which can all equivalently be treated the
+last, such as the two ${\sf gen/eval}$ steps above.
 
 \bigskip
 \begin{lemma}[Inversion -- Figure~\ref{fig:gen-order}]~
@@ -642,7 +679,7 @@ be the same. (They are the same iff $T' = \emptytrace$.)
   analysis that $S^{\bullet} = {\it Var}$ and that furthermore $S$ is
   the step we were looking for. This is easy in parts 1, 2, and 5
   where ${\it Var}$ is a singleton set: there is only one rule that
-  can produce an atomic proposition of type ${\sf gen}\,\lf{e}$, ${\sf
+  can produce an atomic proposition of type ${\sf eval}\,\lf{e}$, ${\sf
     retn}\,\lf{v}$, or ${\sf error}$, respectively.  In part 3, we
   observe that, if the variable bindings $y_1{:}\istrue{\susp{{\sf
         gen}}}$ and $y_2{:}\istrue{\susp{{\sf cont}\,\lf{f}}}$ appear
@@ -866,7 +903,7 @@ $T_2 = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{\sf gen}})$
 The other cases, corresponding to the rules ${\sf ev/unit}$, ${\sf
   ev/fail}$, ${\sf ev/catch}$, ${\sf ev/catcha}$, ${\sf ev/catchb}$,
 ${\sf ev/error}$, ${\sf ev/errerr}$, ${\sf ev/errret}$, and ${\sf
-  ev/reterr}$ all follow the same lines: enumeration, inversion, and
+  ev/reterr}$ all proceed similarly by inversion and
 reconstruction. 
 \end{proof}
 
@@ -876,9 +913,7 @@ obtained but did not use three terms $\cdot \vdash N : \isconc{{{\sf
     lam}\,\lambda x.e)}}$, and $\cdot \vdash N_2 : \isconc{{{\sf
     value}\,\lf{v_2}}}$. By traditional inversion on the structure of a
 deductive derivation, we know that $N = {\sf okf2/app1}$ and $N_1 =
-{\sf value/lam}\,\lf{(\lambda x.e)}$, but that was not necessary to prove
-in
-this theorem.
+{\sf value/lam}\,\lf{(\lambda x.e)}$, but that was not necessary here.
 
 
 \section{From well-formed to well-typed states}
@@ -971,8 +1006,8 @@ values $\obj{v}$ such that $\obj{\cdot \vdash v : {\it tp}}$.
 
 \subsection{Inversion}
 
-The structure of inversion lemmas is entirely unchanged
-aside for accounting for type indices. We only state
+The structure of inversion lemmas is entirely unchanged, 
+except that it has to account for type indices. We only state
 two cases of the inversion lemma, the one corresponding to 
 ${\sf gen/eval}$ and the one corresponding to ${\sf gen/cont}$. 
 These two cases suffice to set up the template that all other cases
@@ -1030,17 +1065,16 @@ $T_2 :: (x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}}) \leadsto^*_{\siggenor
    \Delta'$.
 \end{theorem}
 
-\bigskip
-In the proof of Theorem~\ref{thm:siggenorder}, we observed that the
-applicable inversion on the generative trace gave us derivations like
-$\cdot \vdash N : \isconc{{{\sf okf2}\,\lf{\sf app1}}}$. We did not need these
-side derivations to complete the proof, but we noted that they were
-amenable to traditional inversion. Traditional inversion will be
-critical in proving that the generative invariant described by
-$\siggenordertp$ is preserved. Describing, proving, and mechanizing
-traditional inversion lemmas on deductive derivation is a solved
-problem; we merely point out when we are using a traditional inversion
-property in the proof below.
+\bigskip In the proof of Theorem~\ref{thm:siggenorder}, we observed
+that the applicable inversion on the generative trace gave us
+derivations like $\cdot \vdash N : \isconc{{{\sf okf2}\,\lf{\sf
+      app1}}}$. We did not need these side derivations to complete the
+proof, but we noted that they were amenable to traditional
+inversion. Traditional inversion will be critical in proving that the
+generative invariant described by $\siggenordertp$ is preserved. It is
+a solved problem to describe, prove, and mechanize traditional
+inversion lemmas on deductive derivations; we merely point out when we
+are using a traditional inversion property in the proof below.
 
 
 \begin{proof} As always, the proof proceeds by enumeration, inversion,
@@ -1230,8 +1264,8 @@ states with the block-like rule
 ${\sf gen/cell/bad} : \forall \lf{v}.\, {!}{\sf
   value}\,\lf{v} \lefti \{ \exists \lf{l}. {\sf cell}\,\lf{l}\,\lf{v}
 \}$. The problem with such a specification is that it makes 
-cells unable to refer to themselves, a situation that can easily
-happen in practice. A canonical example, using back-patching to
+cells unable to refer to themselves, a situation that can certainly
+occur. A canonical example, using back-patching to
 implement recursion, is traced out 
 in Figure~\ref{fig:bigbackpatch}, which
 describes a trace classified by:
@@ -1391,8 +1425,9 @@ Figure~\ref{fig:bigbackpatch} includes a step
     ev/set2}\,\ldots\,(\tfuser{x_{15}}{\tfuser{x_{14}}{y_1}})}\] that
 transitions from a state that can be described by
 Figure~\ref{fig:gen-order} extended with ${\sf gen/cell/bad}$ to a
-state that cannot be described by this signature. Thus, the extended
-signature is not a generative invariant.
+state that cannot be described by this signature. This means that
+${\sf gen/cell/bad}$ cannot be the basis of a 
+generative invariant: it's not invariant!
 
 \begin{figure}[t]
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -1402,25 +1437,27 @@ signature is not a generative invariant.
 \end{figure}
 
 The solution is to create cells in two steps. The first rule, a ${\sf
-  promise}$ rule, creates the location $\lf{l}$ and associates a mobile
-nonterminal ${\sf gencell}$ with that location. A second ${\sf
+  promise}$ rule, creates the location $\lf{l}$ and associates a
+mobile nonterminal ${\sf gencell}$ with that location. A second ${\sf
   fulfill}$ rule consumes that nonterminal and creates the actual
 mutable cell.  Because ${\sf gencell}$ is a mobile nonterminal, the
 promise {\it must} be fulfilled in order for the final state to pass
-through the restriction operation. As we have already seen,
-there is not much of a technical difference between well-formedness
-invariants and well-typedness invariants; Figure~\ref{fig:gen-state}
-describes a generative signature that captures type information. 
-This specification introduces
-two nonterminals. The first is the aforementioned mobile nonterminal
-${\sf gencell}\,\lf{l}$, representing the promise to
-eventually create a cell corresponding to the location $\lf{l}$.  
-The second is a
-persistent nonterminal ${\sf ofcell}\,\lf{l}\,\lf{\it tp}$. The
-collection of ${\sf ofcell}$ propositions introduced by a generative
-trace collectively plays the role of a {\it store typing} in
-\cite[Chapter 13]{pierce02types} or a {\it signature} in \cite[Chapter
-35]{harper12practical}.
+through the restriction operation. As we have already seen, there is
+not much of a technical difference between well-formedness invariants
+and well-typedness invariants; Figure~\ref{fig:gen-state} describes a
+generative signature that captures type information.  This
+specification introduces two nonterminals. The first is the
+aforementioned mobile nonterminal ${\sf gencell}\,\lf{l}$,
+representing the promise to eventually create a cell corresponding to
+the location $\lf{l}$.  The second is a persistent nonterminal ${\sf
+  ofcell}\,\lf{l}\,\lf{\it tp}$. The collection of ${\sf ofcell}$
+propositions introduced by a generative trace collectively plays the
+role of a {\it store typing} in \cite[Chapter 13]{pierce02types} or a
+{\it signature} in \cite[Chapter 35]{harper12practical}. This
+promise-then-fulfill pattern appears to be an significant one, and it
+can be described quite naturally in generative signatures, despite
+being absent from work on regular-worlds-based reasoning about LF
+and Linear LF specifications.
 
 \subsection{Inversion}
 
@@ -1579,7 +1616,14 @@ $T_2 :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
 As always, the proof proceeds by enumeration, inversion, and reconstruction. 
 The only interesting cases are the three that actually manipulate state,
 corresponding to ${\sf ev/ref1}$, ${\sf ev/get1}$, and ${\sf ev/set2}$.
-The last two are similar, so we only give the case for ${\sf ev/get1}$.
+Recall these three rules from Figure~\ref{}:
+\smallskip
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/ssos-mutable-summary.sls}
+\smallskip
+%
+Reasoning about the last two cases is similar, so we only give the
+cases for ${\sf ev/ref}$ and ${\sf ev/get1}$ below.
 
 \begin{description}
 %%%%%%%%
@@ -1866,7 +1910,10 @@ used as a proxy for inequality of locations.
 
 A generative signature like the one in Figure~\ref{fig:gen-countstate}
 could be used to represent the invariant that each location and each
-cell is associated with a unique natural number.
+cell is associated with a unique natural number. The techniques
+described in this chapter should therefore be sufficient to describe
+generative invariants of SSOS specifications that implement pointer
+inequality in this way.
 
 
 \section{Destination-passing}
@@ -1900,7 +1947,7 @@ Other than this change, our deductive typing rules stay the same.
 
 When we move from ordered abstract machines to destination-passing
 style, the most natural adaptation of generative invariants is
-arguably the one given in Figure~\ref{fig:gen-destinations}. In that
+arguably the one given in Figure~\ref{fig:gen-destinations2}. In that
 figure, the core nonterminal is the mobile proposition ${\sf
   gen}\,\lf{{\it tp}}\,\lf{d}$. The rule ${\sf gen/dest}$, which 
 creates destinations freely, is
@@ -1965,11 +2012,14 @@ Section~\ref{sec:inversion-genorder}.
 The ${\sf dest/promise}$ run in Figure~\ref{fig:gen-destinations} is
 interesting in that it requires each destination $\lf{d'}$ to be
 created along with foreknowledge of the destination, $\lf{d}$, that
-the destination $\lf{d'}$ will return to. This effectively forces
-all the destinations into a tree structure from the moment of their
+the destination $\lf{d'}$ will return to. This effectively forces all
+the destinations into a tree structure from the moment of their
 creation onwards, a point that will become important when we modify
 Figure~\ref{fig:gen-destinations} to account for persistent
-destinations and first-class continuations.
+destinations and first-class continuations. The root of this tree is the
+destination $\lf{d_0}$ that already exists in the initial process state
+$(\lf{d_0}{:}{\sf dest};
+x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})$.
 
 \subsection{Uniqueness and index sets}
 \label{sec:uniqueness-gendests}
@@ -2052,9 +2102,9 @@ $\Sigma$ and an initial state $(\Psi; \Delta)$ if, whenever
 \begin{itemize}
 \item ${\sf a}/i \in S$, 
 \item ${\sf b}/j \in S$, 
-\item $(\Psi; \Delta) \leadsto^*_{\Sigma} (\Psi; \Delta)$, 
-\item $x{:}\islvl{\susp{{\sf a}\,\lf{t_1}\ldots \lf{t_n}}} \in \Delta$, and
-\item $y{:}\islvl{\susp{{\sf b}\,\lf{s_1}\ldots \lf{s_m}}}' \in \Delta$,
+\item $(\Psi; \Delta) \leadsto^*_{\Sigma} (\Psi'; \Delta')$, 
+\item $x{:}\islvl{\susp{{\sf a}\,\lf{t_1}\ldots \lf{t_n}}} \in \Delta'$, and
+\item $y{:}\islvl{\susp{{\sf b}\,\lf{s_1}\ldots \lf{s_m}}}' \in \Delta'$,
 \end{itemize}
 it is the case that $\lf{t_i} = \lf{s_j}$ implies $x = y$. Of course, if
 $x = y$, that in turn implies that ${\sf a} = {\sf b}$, 
@@ -2448,21 +2498,33 @@ The final specification style we will cover in detail is the use of
 persistent continuations as discussed in
 Section~\ref{sec:dest-continuations} as a way of giving an SSOS
 semantics for first-class continuations (Figure~\ref{fig:dest-letcc}).
-While the setup of Figure~\ref{fig:gen-destinations} were designed to
+The two critical rules from Figure~\ref{fig:dest-letcc} are repeated
+below: ${\sf ev/letcc}$ captures the destination representing the
+current continuation and the rule ${\sf ev/throw2}$ throws away
+the continuation represented by $\lf{d_2}$ and throws computation to the
+continuation represented by the
+$\lf{\it dk}$. 
+
+\smallskip
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/dest-letcc-summary.sls}
+\smallskip
+
+\noindent
+While the setup of Figure~\ref{fig:gen-destinations} is designed to
 make the transition to persistent continuations and $\obj{\sf letcc}$
 seem less unusual, this section still represents a radical shift.  
 
 It should not be terribly surprising that the generative invariant for
 persistent continuations is rather different than the other generative
-invariants. Generative invariants capture patterns of
-specification, and the we have mostly concentrated on patterns that
-facilitate
+invariants. Generative invariants capture patterns of specification,
+and the we have mostly concentrated on patterns that facilitate
 concurrency and communication. Persistent continuations, on the other
 hand, are a pattern mostly associated with first-class
-continuations. The integration of continuations and parallel or
-concurrent evaluation is non-obvious; the proposal by Moreau and
-Ribbens in \cite{moreau96semantics} is not straightforward to adapt to
-the semantic specifications we gave in
+continuations. There is not an obvious way to integrate of
+continuations and parallel or concurrent evaluation, and the proposal
+by Moreau and Ribbens in \cite{moreau96semantics} is not
+straightforward to adapt to the semantic specifications we gave in
 Chapter~\ref{chapter-destinations}.
 
 Consider again the ${\sf gendest/promise}$ rule from
@@ -2533,7 +2595,6 @@ theorem.
 Induction and case analysis on the last steps of a given trace.
 \end{proof}
 
-\newpage
 \begin{lemma}[Inversion -- Figure~\ref{fig:gen-letcc2}] ~
 \begin{enumerate}
 \item If $T :: \left(\lf{d_0}{:}{\sf dest}; ~ x_0{:}\ispers{\susp{{\sf
