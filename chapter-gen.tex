@@ -148,21 +148,63 @@ artifacts: an initial process state and a generative signature.
 \end{definition}
 \bigskip
 
+
 \noindent
-A generative signature describes a world with the help of the
+A generative signature, together with an initial
+state $(\Psi_0; \Delta_0)$, describes a world with the help of the
 restriction operator $\restrictsig{(\Psi; \Delta)}{\Sigma}$ introduced
 in Section~\ref{sec:framework-restriction}. If $(\Psi; \Delta)$ is
 well-defined under the generative signature $\Sigma_{\it Gen}$, and
 $\Sigma$ is any signature that includes all of the generative
-signature's terminals (and all of its LF bits) but none of its
+signature's terminals and all of its LF declarations but none of its
 nonterminals, then $\restrictsig{(\Psi; \Delta)}{\Sigma}$ is only
 defined when the only remaining nonterminals in $\Delta$ are
-persistent and can therefore be filtered out of $\Delta$. (As long as
-$\Sigma_{\it Gen}$ and $\Sigma$ have the same LF declarations, the LF
-context $\Psi$ won't have anything filtered out.) When the
+persistent and can therefore be filtered out of $\Delta$.  
+%(As long as
+%$\Sigma_{\it Gen}$ and $\Sigma$ have the same LF declarations, the LF
+%context $\Psi$ won't have anything filtered out.) 
+When the
 classification of terminals and nonterminals is clear, we will leave
 off the restricting signature and just write $\restrictsig{(\Psi;
-  \Delta)}{}$.
+  \Delta)}{}$. 
+
+As a concrete example, let ${\sf nt/foo}$ be a persistent nonterminal,
+let ${\sf nt/bar}$ be an ordered nonterminal, and let ${\sf t/baz}$ be
+an ordered terminal. Then $\restrictsig{(x{:}\istrue{\susp{\sf
+      nt/bar}}, y{:}\istrue{\susp{\sf t/baz}})}{}$ is undefined,
+$\restrictsig{(y{:}\istrue{\susp{\sf t/baz}})}{} =
+{(y{:}\istrue{\susp{\sf t/baz}})}$, and
+$\restrictsig{(x{:}\ispers{\susp{\sf nt/foo}}, y{:}\istrue{\susp{\sf
+      t/baz}})}{} = {(y{:}\istrue{\susp{\sf t/baz}})}$.  Recalling the
+two-dimensional notation from Chapter~\ref{chapter-framework}, we can
+re-present these three statements as follows:
+
+\begin{center}
+\begin{tikzpicture} 
+\draw (.8,.5) node{$(y{:}\istrue{\susp{\sf t/baz}})$};
+\draw [thick,dash pattern = on 2.82842842712mm off 2mm,decorate,decoration={saw,amplitude=2mm,segment length=2mm}] 
+(-.5,0) -- (2.1,0); 
+\draw (.8,-.3) node{$(y{:}\istrue{\susp{\sf t/baz}})$};
+\end{tikzpicture} 
+\quad
+\begin{tikzpicture} 
+\draw (.8,.5) node{$(x{:}\ispers{\susp{\sf nt/foo}},
+  y{:}\istrue{\susp{\sf t/baz}})$};
+\draw [thick,dash pattern = on 2.82842842712mm off 2mm,decorate,decoration={saw,amplitude=2mm,segment length=2mm}] 
+(-2,0) -- (3.6,0); 
+\draw (.8,-.3) node{$(y{:}\istrue{\susp{\sf t/baz}})$};
+\end{tikzpicture}
+\quad
+\begin{tikzpicture} 
+\draw (.8,.5) node{$(x{:}\istrue{\susp{\sf nt/bar}},
+  y{:}\istrue{\susp{\sf t/baz}})$};
+\draw [thick,dash pattern = on 2.82842842712mm off 2mm,decorate,decoration={saw,amplitude=2mm,segment length=2mm}] 
+(-2,0) -- (3.6,0); 
+\draw (-2,.1) -- (3.6,.1); 
+\draw (.8,-.3) node{\color{white} $(y{:}\istrue{\susp{\sf t/baz}})$};
+\end{tikzpicture} 
+\end{center}
+
 
 Definition~\ref{def:gensig} is intentionally quite broad -- it need
 not even be decidable whether a process state belongs to a particular
@@ -199,12 +241,12 @@ signature as follows:
  {\sf some}~\{\lf{a_1}{:}\tau_1\}\ldots\{\lf{a_n}{:}\tau_n\}
 ~{\sf block}~\{\lf{b_1}{:}\tau'_1\}\ldots\{\lf{b_m}{:}\tau'_m\}
 \]
-A block declaration is well formed in the signature $\Sigma$ if 
-$\left(\lf{a_1}{:}\tau_1,\ldots,\lf{a_{i-1}}{:} \tau_{i-1} \right)\vdash_\Sigma
-\tau_i \,{\sf type}$ for $1 \leq i \leq n$ and if 
-$\left(\lf{a_1}{:}\tau_1,\ldots,\lf{a_{n}}{:} \tau_{n},
- \lf{b_1}{:}\tau'_1,\ldots,\lf{b_{j-1}}{:}\tau'_{j-1}\right) \vdash_\Sigma
-\tau_j \,{\sf type}$ for $1 \leq j \leq m$. 
+A block declaration is well formed in the signature $\Sigma$ if, 
+by the definition of well-formed signatures from Figure~\ref{fig:lf-form}, 
+$\cdot \vdash_\Sigma \lf{a_1}{:}\tau_1,\ldots,\lf{a_{n}}{:} \tau_{n}\,{\sf ctx}$
+and 
+$\lf{a_1}{:}\tau_1,\ldots,\lf{a_{i-1}}{:} \tau_{n}
+  \vdash_\Sigma \lf{b_1}{:}\tau'_1,\ldots,\lf{b_{m}}{:}\tau'_{m} \,{\sf ctx}$.
 
 The first list of LF variable bindings
 $\{\lf{a_1}{:}\tau_1\}\ldots\{\lf{a_n}{:}\tau_n\}$ that 
@@ -214,7 +256,7 @@ The second list of LF variable bindings represents the bindings that
 the block actually adds to the LF context. The regular worlds of 
 Twelf are defined as sets of block identifiers 
 $({\sf block1} \mid \ldots \mid {\sf blockn})$. A set of block identifiers
-and a Twelf signature $\Sigma$ define a world as follows: if
+and a Twelf signature $\Sigma$ inductively define a world as follows: if
 \smallskip
 \begin{itemize}
 \item $\Psi$ is a well-formed
@@ -229,8 +271,8 @@ $\Psi \vdash_\Sigma \lf{\sigma} :
 \end{itemize}
 \smallskip then $\Psi, \lf{b_1}{:}\lf\sigma\tau'_1,\ldots,
 \lf{b_m}{:}\lf\sigma\tau'_m$ is also a well-formed LF context in the
-current world. The {\it closed world}, which contains only the empty
-process state, is a subset of every regular world, so this definition
+current world. The {\it closed world}, containing no variables at all,
+ is a subset of every regular world, so this definition
 gives us the rules for generating a world -- a set of contexts -- from
 a series of block declarations.
 
@@ -255,12 +297,14 @@ described by this block:
                \{\lf{\it nv}{:}{\sf natvar}\,\lf{x}\,\lf{n}\}
 \]
 The world described by the combination of ${\sf blockexp}$ and ${\sf
-  blocknatvar}$ is one where every LF variable $\lf{x}{:}{\sf exp}$
-is associated with at most one LF variable of type ${\sf
+  blocknatvar}$ is one where every LF variable $\lf{x}{:}{\sf exp}$ is
+associated with at most one LF variable of type ${\sf
   natvar}\,\lf{x}\,\lf{n}$. Assuming that there are no constants of
-type ${\sf natvar}$, a property we can easily enforce with subordination, this
-gives us a uniqueness property: if ${\sf natvar}\,\lf{x}\,\lf{n}$ and
-${\sf natvar}\,\lf{x}\,\lf{m}$, then $\lf{m} = \lf{n}$. 
+type ${\sf natvar}$,\footnote{This is a property we can easily enforce
+  with subordination, which was introduced in
+  Section~\ref{sec:framework-lf-judgments}.} this gives us a
+uniqueness property: if ${\sf natvar}\,\lf{x}\,\lf{n}$ and ${\sf
+  natvar}\,\lf{x}\,\lf{m}$, then $\lf{m} = \lf{n}$.
 
 \subsection{Regular worlds from generative signatures}
 
@@ -306,8 +350,8 @@ $(\cdot; \cdot) \leadsto_{\Sigma_{RW}} (\Psi; \cdot)$.
 
 From the structure of translated LF regular worlds, it is hopefully
 apparent that by replacing the proposition $\one$ in the heads of the
-generative ${\sf block*}$ rules with more interesting positive
-\sls~propositions,  we can extend the language of regular
+generative ${\sf block*}$ rules with less trivial positive 
+\sls~propositions. In this way, we can extend the language of regular
 worlds to allow the introduction of ordered, mobile, and persistent
 \sls~propositions as well. For instance, the rule
 ${\sf blockitem} : 
@@ -343,33 +387,51 @@ invariants discussed in the remainder of this chapter.
 
 \subsection{Generative versus consumptive signatures}
 
-The example of regular worlds helps explain why generative signatures are
-{\it generative}. A earlier version of the results in this chapter and
-the next used {\it consumptive} signatures
-\cite{simmons10type}. Consumptive signatures are generative
+Through the example of regular worlds, we can explain why worlds are
+defined as sets of generated process states for a generative signature
+$\Sigma{\it Gen}$ and initial state $(\Psi; \Delta)$:
+\[ 
+\{ (\Psi''; \Delta'') \mid
+(\Psi; \Delta) \leadsto^*_{\Sigma{\it Gen}} (\Psi'; \Delta') \wedge
+\restrictsig{(\Psi'; \Delta')}{} = (\Psi''; \Delta'') \}
+\]
+as opposed to the apparently symmetric case where worlds
+are sets of process states that can generate 
+a final process state $(\Psi; \Delta)$ under a signature $\Sigma{\it Cons}$,
+which we will call a {\it consumptive} signature:
+\[ 
+\{ (\Psi''; \Delta'') \mid
+(\Psi'; \Delta') \leadsto^*_{\Sigma{\it Gen}} (\Psi; \Delta) \wedge
+\restrictsig{(\Psi'; \Delta')}{} = (\Psi''; \Delta'') \}
+\]
+
+A earlier version of the results in this chapter and
+the next used consumptive signatures
+\cite{simmons10type}. Consumptive signatures act like generative
 signatures with the arrows turned around: we consume well-formed
-contexts using consumptive rules like $\forall\lf{e}.\,{\sf
-  eval}\,\lf{e} \lefti \{ {\sf gen} \}$ and $\forall \lf{f}.\,{\sf
-  gen} \fuse {\sf cont}\,\lf{f} \lefti \{ {\sf gen} \}$ instead of
-creating them with generative 
+contexts using rules like $\forall\lf{e}.\,{\sf
+  eval}\,\lf{e} \lefti \{ {\sf safe} \}$ and $\forall \lf{f}.\,{\sf
+  safe} \fuse {\sf cont}\,\lf{f} \lefti \{ {\sf safe} \}$ instead of
+creating them with 
 rules like $\forall\lf{e}.\,{\sf gen}\lefti \{ {\sf eval}\,\lf{e} \}$
 and $\forall \lf{f}.\,{\sf gen} \lefti \{ {\sf gen} \fuse {\sf
   cont}\,\lf{f} \}$. 
-
-One arguable advantage of consumptive signatures is that it lets us
-work with complete derivations, rather than traces. That is, using a
+One nice property consumptive signatures is that it opens up the
+possibility of working with complete derivations 
+rather than traces. That is, using a
 consumptive signature, we can talk about the set of process states
-$(\Psi; \Delta)$ where $\Psi; \Delta \vdash \islax{{\sf gen}}$ rather
+$(\Psi; \Delta)$ where $\Psi; \Delta \vdash \islax{{\sf safe}}$ rather
 than the set of process states where $(\cdot; x{:}\istrue{\susp{\sf
     gen}}) \leadsto^* (\Psi; \Delta)$.\footnote{As long as $\Psi$ and
   $\Delta$ contain only nonterminals -- using consumptive signatures
   doesn't obviate the need for the restriction operation
   $\restrictsig{(\Psi; \Delta)}{}$ or some equivalent restriction
-  operation.} For purely context-free-grammar-like invariants, such as
+  operation.} 
+
+For purely context-free-grammar-like invariants, such as
 the PDA invariant from Section~\ref{sec:framework-reggenworld} and the
 SSOS invariant from Section~\ref{sec:nat-ssos-adequacy}, generative
 and consumptive signatures are effectively equivalent.
-
 However, for generative signatures describing regular worlds, there is
 no notion of turning the arrows around to get an appropriate
 consumptive signature. In particular, say
@@ -406,9 +468,9 @@ Section~\ref{sec:mutable-storage}.
 The generative signatures used to describe state in
 Section~\ref{sec:gen-state} and destination-passing style in
 Section~\ref{sec:gen-destinations} rely critically on the
-regular-worlds-like uniqueness invariants that are provided by
+uniqueness properties that are provided by
 generative signatures and not by consumptive signatures. (The progress
-and preservation proofs in \cite{simmons10type} consider neither
+and preservation proofs in \cite{simmons10type} considered neither
 mutable state nor destination-passing style.)
 
 \section{Invariants of ordered specifications}
@@ -428,7 +490,7 @@ with parallel evaluation and recoverable failure.
 \label{fig:gen-order-prog}
 \end{figure}
 
-In Figure~\ref{fig:gen-order-prog} we describe a flat ordered abstract
+In Figure~\ref{fig:gen-order-prog} we define a flat ordered abstract
 machine with parallel features (parallel evaluation of the function
 and argument in an application, as discussed in
 Section~\ref{sec:trans-par} and Figure~\ref{fig:cbv-ev-ssos-par}) and
