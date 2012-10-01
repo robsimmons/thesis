@@ -5,7 +5,7 @@ In Chapter~\ref{chapter-gen}, we showed how the preservation theorem
 could be established for a wide variety of SSOS semantics, both
 ordered abstract machines and destination-passing style semantics.
 The methodology of generative invariants we espoused goes
-significantly beyond previous work on proving preservation for
+significantly beyond previous work on type preservation for
 operational semantics specifications in substructural logic.  Neither
 Linear LF encodings Pfenning, Cervesato, and Reed
 \cite{cervesato02linear,reed09hybrid}, nor the Ordered LF encodings of
@@ -14,21 +14,66 @@ concurrent specifications or for first-class continuations.
 
 More fundamentally, however, this previous work does not even provide
 a {\it language} for talking about progress theorems, the critical
-companion of preservation theorems in reasoning about language safety.
-These previous approaches were universally based on complete
-derivations. These have the flavor of derivations in a big-step
-semantics, and it is difficult to talk about progress for big-step
-operational semantics. The purpose of this chapter is to establish that
-\sls's traces and steps, which correspond to partial proofs, provide
-a suitable basis for stating progress theorems (and therefore language
-safety theorems) and for proving 
+companion of type preservation theorems.  These previous approaches
+were universally based on complete derivations. These have the flavor
+of derivations in a big-step semantics, and it is far from easy to
+talk about progress for big-step operational semantics, when it is
+even possible. The purpose of this chapter is to establish that the
+\sls framework's traces $T$ and steps $S$, which correspond to partial
+proofs, provide a suitable basis for stating progress theorems (and
+therefore language safety theorems) and for proving these. 
+
+We do not discuss progress and safety for the full range of
+specifications from Part II or Chapter~\ref{chapter-gen},
+however. Instead, we will just discuss progress for the ordered
+abstract machine specification with parallelism and failure used as an
+example in Figure~\ref{fig:gen-order-prog} as a proof of concept.
+
+\section{Backwards and forwards through traces}
+
+In the last chapter, we worked on traces exclusively by induction and
+case analysis on the {\it last} steps of a generative trace.  This
+form of case analysis and induction also can be used to prove
+preservation for SSOS specifications of sequential languages and for
+the specification of a language with first-class continuations
+discussed in Section~\ref{sec:dest-continuations} and
+Section~\ref{sec:gen-letcc}. For the ordered abstract machine example
+from Figure~\ref{fig:gen-order-prog}, the other direction is more
+natural: we work by induction and case analysis on the {\it first}
+steps of a generative trace. The branching structure introduced by
+parallel continuation frames (that is, ordered propositions ${\sf
+  cont2}\,\lf{f}$) is what makes it more natural to work from the
+beginning of a generative trace, rather than the end.
+
+The proof of progress relies critically on one novel property: that
+transitions in the generative trace leave nonterminals
+alone. Formally, we need to know that if $\tackon{\Theta}{\Delta}
+\leadsto^*_{\Sigma{\it Gen}} \Delta'$ under some generative signature
+$\Sigma{\it Gen}$ and if $\Delta$ contains only terminals, then there
+is some $\Theta'$ such that the final state $\Delta'$ matches
+$\tackon{\Theta'}{\Delta}$. We will implicitly use this property in
+most of the cases of the progress theorem below.
+
+This property holds for all the generative signatures in
+Chatper~\ref{chapter-gen}, but establishing this property for
+generative signatures {\it in general} necessitates a further
+restriction of what counts as a generative signature
+(Definition~\ref{def:gensig}). To see why, let $\Delta =
+(x_1{:}\istrue{\susp{{\sf retn}\,\lf{v}}}, x_2{:}\istrue{\susp{{\sf
+      cont}\,\lf{f}}})$ and consider the generative rule $\forall
+\lf{e}. \lefti \{ {\sf eval}\,\lf{e} \}$, which is allowed under
+Definition~\ref{def:gensig}. This rule could ``break'' the context by
+dropping an ordered ${\sf eval}\,\lf{e}$ proposition in between $x_1$
+and $x_2$. A sufficient general condition for avoiding this problem in
+general is to demand that any generative rule that produces ordered
+atomic propositions mentions an ordered nonterminal as a premise.
 
 \section{Progress}
 
-In the case of ordered abstract machines, we want to prove that $T ::
+The progress property is that, if $T ::
 (x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
-\leadsto^*_{\siggenordertp} \Delta$ and $\restrictsig{\Delta}{}$ imply
-one of three possibilities:
+\leadsto^*_{\siggenordertp} \Delta$ and $\restrictsig{\Delta}{}$, then
+one of these three possibilities hold:
 
 \smallskip
 \begin{enumerate}
@@ -60,10 +105,26 @@ $T = \left(T_1; \trstep{y}{{\sf gen/retn}\,\lf{{\it tp}}\,\lf{v}\,x}; T_2\right)
 $T = \left(T_1; \trstep{y}{{\sf gen/error}\,\lf{{\it tp}}\,x}; T_2\right)$.
 \end{theorem}
 
+\bigskip
+
+In the proof of Theorem~\ref{thm:prog-ordertp}, we will not consider
+the details of the proof that already arise for traditional proofs of
+progress for abstract machines. These missing details can be factored
+into two lemmas. The first lemma is that if $\cdot \vdash N :
+\ispers{{\sf of}\,\lf{e}\,\lf{{\it tp}}}$, then the process state
+$\tackon{\Theta}{x{:}\istrue{\susp{{\sf eval}\,\lf{e}}}}$ can always
+take a step; this lemma justifies the classification of ${\sf eval}$
+as an {\it active} proposition as described in
+Section~\ref{sec:dest-synch} and in
+\cite{pfenning09substructural}. The second lemma is traditionally
+called a {\it canonical forms} lemma: it verifies, by case analysis on
+the structure of typing derivations and values, that well-typed
+values returned to a well-typed frames can always take a step.
+
 \begin{proof}
 By induction and case analysis on the first steps of $T$. We cannot 
 have $T = \emptytrace$, because we cannot apply restriction to a context
-with nonterminals like ${\sf gen}\,\lf{{\it tp}}$ in it. 
+containing the nonterminal ${\sf gen}\,\lf{{\it tp}}$.
 So $T = S; T'$, and either $x \notin {^\bullet}S$ or $x \in {^\bullet}S$. 
 
 If $x \notin {^\bullet}S$, then $T' ::
@@ -74,17 +135,17 @@ induction hypothesis.
 If $x \in {^\bullet}S$, then we perform case analysis on the possible
 transitions enabled by $\siggenordertp$:
 
-\medskip
 \begin{itemize}
 \item $S = \trstep{y}{{\sf gen/eval}\,\lf{e}\,\lf{{\it
         tp}}\,{(\tfuser{x}{\tbangr{N}})}}$
   where $\cdot \vdash N : \isconc{{\sf of}\,\lf{e}\,\lf{{\it tp}}}$.
 
   Because ${\sf eval}$ is a terminal, $\Delta = \tackon{\Theta'}{y{:}\istrue{\susp{{\sf eval}\,\lf{e}}}}$, and we proceed by case
-  analysis on $N$ to show that the derivation can always take a step.
+  analysis on $N$ to show that the derivation can always take a step
+  (${\sf eval}$ is an active proposition).
 
 \medskip
-\item $S = \trstep{y}{{\sf gen/retn}\,\lf{v}\,\lf{{\it tp}}\,(\tfuser{x}{\tfuser{\tbangr{N}}{\tbangr{N_v}}})}$ -- succeed immediately.
+\item $S = \trstep{y}{{\sf gen/retn}\,\lf{{\it tp}}\,\lf{v}\,(\tfuser{x}{\tfuser{\tbangr{N}}{\tbangr{N_v}}})}$ -- succeed immediately.
 
 \medskip
 \item $S = \trstep{y}{{\sf gen/error}\,\lf{{\it tp}}\,{x}}$ -- succeed immediately.
@@ -183,6 +244,79 @@ $\trstep{z}{{\sf ev/catchb}\,\lf{e_2}\,(\tfuser{y_1}{y_2})} :: \Delta \leadsto \
 \end{itemize}
 
 \end{itemize}
+
+\noindent
+This covers all possible first steps in the trace $T$, and thus completes
+the proof.
 \end{proof}
 
 \section{Safety}
+
+We conclude with the safety theorem for the ordered abstract machine
+specification in Figure~\ref{fig:gen-order-prog}. This theorem relates
+the encoding of the usual deductive formulation of the typing
+judgment, ${\sf of}\,\lf{e}\,\lf{{\it tp}}$, to a progress property
+state in terms of substructural process states.
+
+\bigskip
+\begin{theorem}[Safety for ordered abstract machines]~
+
+\smallskip
+If $\cdot \vdash N : {\sf of}\,\lf{e}\,\lf{{\it tp}}$
+and $T :: (x{:}\istrue{\susp{{\sf eval}\,e}}) \leadsto^* \Delta$
+under the signature from Figure~\ref{fig:gen-order-prog},
+then either $\Delta \leadsto \Delta'$ under this 
+signature, $\Delta = (y{:}\istrue{\susp{{\sf retn}\,\lf{v}}})$, or
+$\Delta = (y{:}\istrue{\susp{{\sf error}}})$.
+\end{theorem}
+
+\begin{proof}
+
+  First, by induction and case analysis on the last steps of $T$, we show
+  that for all $\Delta'$ such that $T' :: (x{:}\istrue{\susp{{\sf
+        eval}\,\lf{e}}}) \leadsto^* \Delta'$ under the signature
+  from Figure~\ref{fig:gen-order-prog}, we can construct
+  a generative trace $T_g :: (x_0{:}\istrue{\susp{{\sf
+        gen}\,\lf{{\it tp}}}}) \leadsto^*_{\siggenordertp} \Delta'$:
+
+  \bigskip
+  \noindent
+  {\bf Base case $T' = \emptytrace$}.
+
+  \smallskip
+  \noindent
+  Construct
+  $T_g = \trstep{x}{{\sf gen/eval}\,\lf{{\it tp}}\,\lf{e}\,(\tfuser{x_0}{\tbangr{N}})}:: (x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}})
+  \leadsto^*_{\siggenordertp} (x{:}\istrue{\susp{{\sf
+        eval}\,\lf{e}}})$.
+
+  \bigskip
+  \noindent
+  {\bf Inductive case $T' = T''; S$}, where $T'' :: (x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}) \leadsto^*_{\siggenordertp} \Delta''$ and $S :: \Delta'' \leadsto_{\siggenordertp} \Delta'$. 
+
+  \smallskip
+  \noindent
+  By the induction hypothesis, we have $T_g' :: (x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}) \leadsto_{\siggenordertp}^*
+  \Delta''$. By preservation (Theorem~\ref{thm:siggenordertp}) on 
+  $T_g'$ and $S$, we have $T_g' :: (x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}) \leadsto_{\siggenordertp}^*
+  \Delta'$.
+
+  \bigskip
+  \noindent
+  This means, in particular, that we can construct 
+  $T_g :: (x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}}}}) \leadsto_{\siggenordertp}^*
+  \Delta$. 
+
+  \bigskip
+  \noindent
+  By the progress theorem (Theorem~\ref{thm:prog-ordertp}) on $T_g$, 
+  there are three possibilities:
+  \begin{itemize}
+  \item If $\Delta \leadsto \Delta'$, then we're done.
+  \item If $T_g :: (T_1; \trstep{y}{{\sf gen/retn}\,\lf{{\it tp}}\,\lf{v}\,(\tfuser{x_0}{\tfuser{\tbangr{N'}}{\tbangr{N_v'}}})}; T_2)$, then by a trivial case on $T_1$ and $T_2$ we can conclude that both are empty and, therefore, that $\Delta = (y{:}\istrue{\susp{{\sf retn}\,\lf{v}}})$.
+  \item If $T_g :: (T_1; \trstep{y}{{\sf gen/error}\,\lf{{\it tp}}\,x_0}; T_2)$, then by a trivial case on $T_1$ and $T_2$ we can conclude that both are empty and, therefore, that $\Delta = (y{:}\istrue{\susp{{\sf error}}})$.
+  \end{itemize}
+
+  \noindent
+  This concludes the proof of safety.
+\end{proof}
