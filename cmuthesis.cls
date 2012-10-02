@@ -65,16 +65,19 @@
 \end{minipage}
 \end{center}
 
-\vskip 3em
+\vskip 2em
 
 \begin{center}
     School of Computer Science \\
+    Computer Science Department \\
     Carnegie Mellon University \\
-    Pittsburgh, PA 15213
+    Pittsburgh, PA
 \end{center}
 
+\vskip 2em
+
 \begin{center}
-    {\bf Thesis Committee:} \\
+    {\bf Thesis Committee} \\ ~ \\
     \@committee
 \end{center}
 \vspace{1em}
