@@ -1,24 +1,72 @@
 %hlf.
 
-count: type.
-foc: count.
-z: count.
-s: count -> count.
+small: type. 
+big: type.
+s: small.
+b: small -> big.
+
+%{ == Syntax == }%
 
 pol: type.
-+: pol.
--: pol.
+⁺: pol.
+⁻: pol.
 
-atm: pol -> type.
-prop: pol -> type.
-a: atm P -> prop P.
-u: prop - -> prop +.
-bang: prop - -> prop +.
-one: prop +.
-tensor: prop + -> prop + -> prop +.
-f: prop + -> prop -.
-lolli: prop + -> prop - -> prop -.
 
+%{ We define propositions in an environment with free atoms. }%
+atom: pol -> type.
+%block atom⁺: block {Q⁺: atom ⁺}.
+%block atom⁻: block {Q⁻: atom ⁻}.
+
+typ: pol -> type.
+a: atom P -> typ P.
+
+↓: typ ⁻ -> typ ⁺.
+!: typ ⁻ -> typ ⁺.
+1: typ ⁺.
+⊗: typ ⁺ -> typ ⁺ -> typ ⁺. %infix none 5 ⊗.
+
+↑: typ ⁺ -> typ ⁻.
+⊸: typ ⁺ -> typ ⁻ -> typ ⁻. %infix none 5 ⊸.
+
+
+%{ === Sequent calculus === }%
+
+%{ The judgments of the focused language (or, alternatively, syntax of 
+intrinsically typed spine form judgments) }%
+
+%{ Hypothetical judgments }%
+susp⁺: typ ⁺ -> @type. %name susp⁺ Z z.
+hyp: typ ⁻ -> @type. %name hyp X x.
+
+%{ An inversion or focus context Ω is a list of positive propositions. }%
+invctx: type. %name invctx _Ω.
+·: invctx.
+,: typ ⁺ -> invctx -> invctx. %infix right 3 ,.
+ 
+%{ Succedents }%
+stablesuc: type.
+susp⁻: typ ⁻ -> stablesuc. 
+true: typ ⁺ -> stablesuc.
+suc: type.
+inv: typ ⁻ -> suc.
+stab: stablesuc -> suc.
+
+%{ Sequent forms }%
+seqform: type.
+valform: typ ⁺ -> seqform.
+termform: invctx -> suc -> seqform.
+spineform: typ ⁻ -> stablesuc -> seqform.
+exp: seqform -> @type.
+%abbrev val = [A⁺] exp (valform A⁺).
+%abbrev term = [_Ω][U] exp (termform _Ω U).
+%abbrev spine = [A⁻][U] exp (spineform A⁻ U).
+
+%block v : some {A⁺: typ ⁺} block {w}{v: val A⁺ w}.
+%block sp : some {A⁻: typ ⁻} block {w}{γ}{sp: spine A⁻ γ w}.
+
+
+
+%.
 
 succ: type.
 exp: count -> succ -> @type.
@@ -31,6 +79,7 @@ ihyp:  prop + -> @type.
 hyp:   prop - -> @type.
 lsusp: prop + -> @type.
 lfoc:  prop - -> @type.
+%block 
 
 focusR:
   exp foc (rfoc A)

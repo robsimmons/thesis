@@ -22,7 +22,7 @@ of logical frameworks:
 \noindent
 The purpose of this chapter is to introduce the methodology of
 {\it structural focalization};
-this development is one of the major contributions of this work.
+this development is one of the major contributions of this work. 
 Linear logic is a fairly simple logic that nevertheless allows us to
 consider many of the issues that will arise in richer substructural
 logics like the one considered in Chapter~\ref{chapter-order}.
@@ -82,7 +82,7 @@ consumable resources. Linear conjunction $A \tensor B$ (``$A$ tensor
 $B$'') represents the resource built from the resources $A$ and $B$;
 if you have both a bowl of soup {\it and} a sandwich, that resource
 can be represented by the proposition ${\sf soup} \otimes {\sf
-  sandwich}$. Linear implication $A \lolli B$ (``$A$ lolly $B$'')
+  sandwich}$. Linear implication $A \lolli B$ (``$A$ lolli $B$'')
 represents a resource that can interact with another resource $A$ to
 produce a resource $B$. One robot with batteries not included could be
 represented as the linear resource $({\sf battery} \lolli {\sf
@@ -237,7 +237,7 @@ introduce a $\beta$-redex or make the term ill-typed).
 In any given equivalence class of typed LF terms, all the
 $\beta$-normal and $\eta$-long terms are $\alpha$-equivalent.
 Therefore, because $\alpha$-equivalence is decidable, the equivalence
-of typed LF terms is also decidable. 
+of typed LF terms is  decidable. 
 
 The uniqueness of $\beta$-normal and $\eta$-long terms within an
 equivalence class of lambda calculus terms (modulo
@@ -251,13 +251,13 @@ $\beta$-normal, $\eta$-long representatives of equivalence classes
 \cite{harper93framework}, a topic we will return to in 
 Section~\ref{sec:lf-adequacy}.
 
-More modern presentations of LF, such as Harper and Licata's
+Modern presentations of LF, such as Harper and Licata's
 \cite{harper07mechanizing}, follow the approach developed by Watkins
 et al.~\cite{watkins02concurrent} and define the logical framework so
 that it only contains these $\beta$-normal, $\eta$-long {\it canonical
   forms} of LF. This presentation of LF is called Canonical LF to
 distinguish it from the original presentation of LF in which the
-$\beta$-normal, $\eta$-long terms are just a subset of the possible
+$\beta$-normal, $\eta$-long terms are just a refinement of
 terms. A central component in this approach is {\it hereditary
   substitution}.  Hereditary substitution also establishes a
 normalization property for LF. Using hereditary substitution we can
@@ -293,12 +293,24 @@ programming paradigm based on proof search in classical linear logic
 in inessential ways is particularly problematic for proof search, as
 inessential differences between derivations correspond to unnecessary
 choice points that a proof search procedure will need to backtrack
-over. The presentation of focusing for intuitionistic linear logic in
-this section most closely resembles Chaudhuri's focused intuitionistic
-linear logic \cite{chaudhuri06focused}. 
-The major exception is the treatment of
-asynchronous rules as confluent rather than fixed, a point that will
-be discussed in Section~\ref{sec:confluent-v-fixed}.
+over. 
+
+The development in this section introduces {\it structural
+  focalization}, a methodology for deriving the correctness of a
+focused sequent calculus (Theorem~\ref{thm:linfocsound} and
+Theorem~\ref{thm:linfoccomplete}, Section~\ref{sec:lincorrectness}) as
+a consequence of the internal completeness (identity expansion,
+Theorem~\ref{thm:linidentity}, Section~\ref{sec:linindentity}) and
+internal soundness (cut admissibility, Theorem~\ref{thm:lincut},
+Section~\ref{sec:lincut}) of the focused system. This
+methodology is a substantial refinement of the method used by
+Chaudhuri to establish the correctness of focused intuitionistic
+linear logic \cite{chaudhuri06focused}, and because it relies on
+structural methods, structural focalization is more amenable to
+mechanized proof \cite{simmons11structural}.  Our focused sequent
+calculus also departs from Chaudhuri's by treating asynchronous rules
+as confluent rather than fixed, a point that will be discussed in
+Section~\ref{sec:confluent-v-fixed}.
 
 \subsection{Polarity}
 \label{sec:linpolar}

@@ -32,14 +32,15 @@ with a lax connective ${\ocircle}A$ in both unfocused
 (Section~\ref{sec:ord-unfocused}) and focused
 (Section~\ref{sec:ord-focused}) flavors (this logic will henceforth be
 called \ollll, for ordered linear lax logic). Then, following the
-structural focalization methodology \cite{simmons11structural}, we
-establish cut admissibility (Section~\ref{sec:ord-cut}), and identity
-expansion (Section~\ref{sec:ord-identity}) for focused~\ollll; with
-these results, it is possible to prove the soundness and completeness
-of focusing (Section~\ref{sec:ord-correctness}) for \ollll.  A
-fragment of this system will form the basis of the logical framework
-in Chapter~\ref{chapter-framework}, and that framework will, in turn,
-underpin the rest of this thesis.
+structural focalization methodology introduced in the previous
+chapter, we establish cut admissibility (Section~\ref{sec:ord-cut}),
+and identity expansion (Section~\ref{sec:ord-identity}) for
+focused~\ollll; with these results, it is possible to prove the
+soundness and completeness of focusing
+(Section~\ref{sec:ord-correctness}) for \ollll.  A fragment of this
+system will form the basis of the logical framework in
+Chapter~\ref{chapter-framework}, and that framework will, in turn,
+underpin the rest of this dissertation.
 
 Why present the rich logic \ollll~here
 if only the fragment detailed in Chapter~\ref{chapter-framework} 
@@ -70,7 +71,7 @@ framework starting in Chapter~\ref{chapter-framework}.
 \section{Ordered linear lax logic}
 \label{sec:ord-unfocused}
 
-Ordered linear logic was the subject of Polakow's thesis
+Ordered linear logic was the subject of Polakow's dissertation
 \cite{polakow01ordered}. It extends linear logic with a notion of {\it
   ordered resources}.  In ordered logic the linear
 multiplicative conjunction $A \otimes B$ of linear logic, which
@@ -863,9 +864,10 @@ $U$.
 In a confluent presentation of focused logic like the one given for
 linear logic in Chapter~\ref{chapter-foc}, 
 that would be as far as we could take our
-simplifications. However, this presentation will use the fixed
+simplifications. However, this presentation will use a fixed
 presentation of logic from the structural focalization development
-\cite{simmons11structural}. If there is more than one
+as described in Section~\ref{sec:confluent-v-fixed}. 
+If there is more than one
 invertible proposition in a sequent, {\it only} the leftmost one will
 be treated as eligible to have a rule or matching applied to it. All the
 propositions in $\Delta$ are treated as being to the left of the
@@ -983,8 +985,8 @@ variant of the lax truth ${\ocircle}A^+$ that puts no constraints on
 the form of the succedent, and the downshift ${\downarrow}A^-$ is
 like an ordered variant of the persistent and linear exponentials
 ${!}A^-$ and ${\gnab}A^-$ that puts no constraints on the form of the
-context. This point is implicit in Laurent's thesis
-\cite{laurent02etude}. In that thesis, Laurent defines the polarized
+context. This point is implicit in Laurent's dissertation
+\cite{laurent02etude}. In that dissertation, Laurent defines the polarized
 LLP {\it without} the shifts ${\uparrow}$ and ${\downarrow}$, so that
 the only connection points between the polarities are the
 exponentials. Were it not for atomic propositions, the resulting logic
@@ -1018,8 +1020,9 @@ derivations of left-focused sequents. The structure of
 values, terms, and spines is as follows:
 \input{proofterms-3}
 
-Expressions are treated as in the structural focalization development
-\cite{simmons11structural}. It is possible to take a ``Curry-style''
+%Expressions are treated as in the structural focalization development
+%\cite{simmons11structural}. 
+It is possible to take a ``Curry-style''
 view of expressions as {\it extrinsically} typed, which means we
 consider both well-typed and ill-typed expressions; the well-typed
 expressions are then those for which the sequent
@@ -1439,12 +1442,10 @@ commutative cases into different parts of the theorem
 \cite{pfenning00structural}. This separation of cases is the reason
 why cut admissibility in a focused sequent calculus can use a more
 refined induction metric than cut admissibility in an unfocused
-sequent calculus. As noted previously (in \cite{simmons11structural}
-and in the proof of Theorem~\ref{thm:lincut}), the
-refined induction metric 
-does away with the precondition, essential to structural cut admissibility,
-that weakening and variable substitution preserve
-the size of derivations.
+sequent calculus. As noted previously in the proof of
+Theorem~\ref{thm:lincut}, the refined induction metric does away with
+the precondition, essential to structural cut admissibility, that
+weakening and variable substitution preserve the size of derivations.
 
 Before discussing the proof, it is worth noting that this theorem
 statement is already a sort of victory. It is an extremely simple
@@ -1453,7 +1454,7 @@ statement of cut admissibility for a rather complex logic.
 \subsection{Optimizing the statement of cut admissibility}
 
 We will pick the cut admissibility proof
-from Chaudhuri's thesis \cite{chaudhuri06focused} as a representative
+from Chaudhuri's dissertation \cite{chaudhuri06focused} as a representative
 example of existing work on cut admissibility in focused logics.  His
 statement of cut admissibility for linear logic has 10 parts, 
 which are sorted into
@@ -1465,28 +1466,34 @@ requires a lot of code duplication -- that is, the proof of two
 different parts may both require a case that looks essentially the
 same.
 
-Observing this duplication, one of our goals in
-\cite{simmons11structural} was to give a short and mechanizable proof
-of the completeness of focusing that was entirely free of code
-duplication. The development in this chapter does the same for \ollll,
-though the proofs in this chapter have not yet been mechanized.  A
-great deal of simplification is due to the use of the matching
-constructs $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$ and
+% Observing this duplication, one of our goals in
+% \cite{simmons11structural} was to give a short and mechanizable proof
+% of the completeness of focusing that was entirely free of code
+% duplication. 
+The structural focalization development in this chapter gives a
+compact proof of the completeness of focusing that is entirely free of
+code duplication. 
+% Furthermore, based on the experience mechanizing
+% structural focalization developments for intuitionstic logic, we
+% believe that mechanizing this development is a reasonable future goal
+% \cite{simmons11structural}.  
+A great deal of simplification is due to
+the use of the matching constructs
+$\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$ and
 $\restrictfrom{U}{\mlvl}$. Without that notation, part 3 would split
 into two parts for $\mconc$ and $\mlax$ and part 4 would split into
 three parts for $\mtrue$, $\meph$, and $\mpers$. The fifth part of the
-cut admissibility theorem in Section~\ref{sec:lincut} 
-(Theorem~\ref{thm:lincut}),
-which is computationally a near-duplicate of the fourth part of the
-same theorem, is due to the lack of this device.
+cut admissibility theorem in Section~\ref{sec:lincut}
+(Theorem~\ref{thm:lincut}), which is computationally a near-duplicate
+of the fourth part of the same theorem, is due to the lack of this
+device.
 
 Further simplification is due to defining right-focused, inverting,
 and left-focused sequents as refinements of general sequents
-$\foc{\Psi}{\Delta}{U}$. This strategy was not used in the structural
-focalization development, and while no code duplication resulted, the
-statement of part 3 was split into two parts (for substituting into
-terms and spines) and the statement of part 4 was split in three (for
-substituting into values, terms, spines) \cite{simmons11structural}.
+$\foc{\Psi}{\Delta}{U}$. Without this approach, the
+statement of part 3 must be split into two parts (for substituting into
+terms and spines) and the statement of part 4 must be split in parts (for
+substituting into values, terms, spines). % \cite{simmons11structural}.
 Without either of the aforementioned simplifications, we would have 15
 parts in the statement of Theorem~\ref{thm:ord-cut} instead of four
 and twice as many cases that needed to be
@@ -1494,14 +1501,15 @@ written down and checked.
 
 Picking a fixed inversion strategy prevents us from having to prove
 the tedious, quadratically large confluence theorem discussed for linear
-logic in Section~\ref{sec:confluent-v-fixed} in order to characterize
-the canonical forms that we need as the basis of the logical framework
-\sls. This confluence theorem is certainly true, and we might want to
+logic in Section~\ref{sec:confluent-v-fixed}. % in order to characterize
+%the canonical forms that we need as the basis of the logical framework
+%\sls. 
+This confluence theorem is certainly true, and we might want to
 prove it for any number of reasons, but it is interesting that we can
 avoid it altogether in our current development.  A final improvement
 in our theorem statement is very subtle: insofar as our goal is to
 give a short proof of the completeness of focusing that avoids
-redundancy, the {\it particular} fixed inversion strategy we chose
+redundancy, the {\it particular} fixed inversion strategy we choose
 matters. The proof of Theorem~\ref{thm:lincut} duplicates many right
 commutative cases in both part 1 and part 4 (which map directly onto
 parts 1 and 4 of Theorem~\ref{thm:ord-cut} above). Our system

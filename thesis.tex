@@ -86,9 +86,9 @@ Dale Miller, INRIA-Saclay \& LIX/Ecole Polytechnique
 \maketitle
 
 % XXX MAKE DEDICATION
-\begin{dedication}
-To my grandparents
-\end{dedication}
+%\begin{dedication}
+%To my grandparents
+%\end{dedication}
 
 \pagestyle{plain} % for toc, was empty
 
@@ -100,34 +100,35 @@ To my grandparents
   flexible tool for designing, encoding, simulating, and reasoning
   about the formal systems that we are interested in. When said
   systems exhibit state and concurrency, however, existing logical
-  frameworks fall short of this promise. It is my contention that
-  logical frameworks based on a rewriting interpretation of
-  substructural logics, ordered and linear logic in particular, can
-  help. To this end, this dissertation introduces four methodologies
-  for developing and using logical frameworks based on a rewriting
-  interpretation of substructural logic and demonstrates their
-  application.
+  frameworks fall short of this promise. I contend that logical
+  frameworks based on a rewriting interpretation of substructural
+  logics, ordered and linear logic in particular, can help. To this
+  end, this dissertation introduces and demonstrates four
+  methodologies for developing and using logical frameworks that are
+  based on a rewriting interpretation of substructural logic.
 
-  {\it Structural focalization}, a synthesis of ideas from Andreoli's
-  focused sequent calculi and Watkins's hereditary substitution, can
-  be used to take a logic and define a restricted of derivations, the {\it
-    focused derivations}, that form the basis of a logical
-  framework. We apply this methodology to define \sls, a logical
-  framework for \underline{s}ubstructural \underline{l}ogical
+  {\it Structural focalization} is a synthesis of ideas from
+  Andreoli's focused sequent calculi and Watkins's hereditary
+  substitution. We can use structural focalization to take a logic and
+  define a restricted form of derivations, the {\it focused
+    derivations}, that form the basis of a logical framework. We apply
+  this methodology to define \sls, a logical framework for
+  \underline{s}ubstructural \underline{l}ogical
   \underline{s}pecifications, as a fragment of ordered linear lax
   logic.
 
-  The {\it logical correspondence} is a methodology for relating and
-  inter-deriving different styles of programming language specification
-  in \sls. The styles we connect range from very high level
-  specification styles like natural semantics, which do not fully
-  specify the control structure of programs, to low-level
+  {\it Logical correspondence} is a methodology for relating and
+  inter-deriving different styles of programming language
+  specification in \sls. The styles we connect range from very
+  high-level specification styles like natural semantics, which do not
+  fully specify the control structure of programs, to low-level
   specification styles like destination-passing, which provide
-  enormous control over concurrency and control flow. We then apply
-  this methodology to mechanically synthesize a low-level
-  destination-passing semantics for a toy fragment of Concurrent ML
-  from a specification that is higher-level except for the
-  relatively few rules that actually deal with concurrency.
+  detailed control over concurrency and control flow. We apply this
+  methodology to systematically synthesize a low-level
+  destination-passing semantics for a Mini-ML language extended with
+  stateful and concurrent primitives. The specification is mostly
+  high-level except for the relatively few rules that actually deal
+  with concurrency.
 
   {\it Linear logical approximation} is a methodology for deriving
   program analyses by performing abstract analysis on the
