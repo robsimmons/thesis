@@ -65,8 +65,17 @@ Iliano Cervesato, Carnegie Mellon Qatar \\
 Dale Miller, INRIA-Saclay \& LIX/Ecole Polytechnique
 }
 
-\support{}
-\disclaimer{}
+\support{This work was sponsored in part by a National Science
+  Foundation Graduate Research Fellowship, by the Funda\c{c}\~ao para
+  a Ci\^encia e a Tecnologia (Portuguese Foundation for Science and
+  Technology) through the Carnegie Mellon Portugal Program under Grant
+  NGN-44, by an X10 Innovation Award from IBM, and by a Siebel
+  Scholarship.}  
+
+\disclaimer{Any opinions, findings, conclusions or recommendations
+  expressed in this publication are those of the author and do not
+  necessarily reflect the views of any sponsoring institution or
+  government.}
 
 % copyright notice generated automatically from Year and author.
 % permission added if \permission{} given.
@@ -77,19 +86,62 @@ Dale Miller, INRIA-Saclay \& LIX/Ecole Polytechnique
 \maketitle
 
 % XXX MAKE DEDICATION
-% \begin{dedication}
-% This one's for Harry Q. Bovik
-% \end{dedication}
+\begin{dedication}
+To my grandparents
+\end{dedication}
 
 \pagestyle{plain} % for toc, was empty
 
 %% Obviously, it's probably a good idea to break the various sections of your thesis
 %% into different files and input them into this file...
 
-% XXX MAKE ABSTRACT
-% \begin{abstract}
-% A short summary.
-% \end{abstract}
+\begin{abstract}
+  A logical framework and its implementation should serve as a
+  flexible tool for designing, encoding, simulating, and reasoning
+  about the formal systems that we are interested in. When said
+  systems exhibit state and concurrency, however, existing logical
+  frameworks fall short of this promise. It is my contention that
+  logical frameworks based on a rewriting interpretation of
+  substructural logics, ordered and linear logic in particular, can
+  help. To this end, this dissertation introduces four methodologies
+  for developing and using logical frameworks based on a rewriting
+  interpretation of substructural logic and demonstrates their
+  application.
+
+  {\it Structural focalization}, a synthesis of ideas from Andreoli's
+  focused sequent calculi and Watkins's hereditary substitution, can
+  be used to take a logic and define a restricted of derivations, the {\it
+    focused derivations}, that form the basis of a logical
+  framework. We apply this methodology to define \sls, a logical
+  framework for \underline{s}ubstructural \underline{l}ogical
+  \underline{s}pecifications, as a fragment of ordered linear lax
+  logic.
+
+  The {\it logical correspondence} is a methodology for relating and
+  inter-deriving different styles of programming language specification
+  in \sls. The styles we connect range from very high level
+  specification styles like natural semantics, which do not fully
+  specify the control structure of programs, to low-level
+  specification styles like destination-passing, which provide
+  enormous control over concurrency and control flow. We then apply
+  this methodology to mechanically synthesize a low-level
+  destination-passing semantics for a toy fragment of Concurrent ML
+  from a specification that is higher-level except for the
+  relatively few rules that actually deal with concurrency.
+
+  {\it Linear logical approximation} is a methodology for deriving
+  program analyses by performing abstract analysis on the
+  \sls~encoding of the language's operational semantics. We
+  demonstrate this methodology by deriving a control flow analysis and
+  an alias analysis from suitable programming language specifications.
+
+\item {\it Generative invariants} are a powerful generalization of
+  both context-free grammars and LF's regular worlds that allow us
+  to express invariants of \sls~specifications in \sls. We show that
+  generative invariants can form the basis of
+  progress-and-preservation-style reasoning about programming
+  languages encoded in \sls.
+\end{abstract}
 
 % XXX MAKE ACKNOLWEDGEMENTS
 % \begin{acknowledgments}
@@ -106,11 +158,13 @@ Dale Miller, INRIA-Saclay \& LIX/Ecole Polytechnique
 %   - Henry De Young
 %   - POP group, generically
 % READERS: 
+%   - Sean McLaughlin
 %   - Jason Reed
 %   - Rowan Davies
-%   - Sean McLaughlin
 %   - Chris Martens 
 %   - Ian Zerny
+%   - Beniamino Accattoli
+%   - Ben Blum
 %   - Jonathan Aldrich, Roger Wolff, and the three anonymous HOSC reviewers
 %   - Three anonymous reviewers of the ICFP submission
 %   - Five anonymous reviewers of the LICS submission

@@ -47,20 +47,20 @@
 \end{array}
 ~
 \begin{array}{l}
-{\sf gl}(b) \fuse {\sf foo}({\sf tt}, {\sf f_0}) \lefti ~\\
+\forall b.\,{\sf gl}(b) \fuse {\sf foo}({\sf tt}, {\sf f_0}) \lefti ~\\
 \quad \{ {\sf gl}(b) \fuse {\sf foo}({\sf tt}, {\sf f_1}) \}\\[5pt]
-{\sf gl}(b) \fuse {\sf foo}({\sf ff}, {\sf f_0}) \lefti ~\\
+\forall b.\,{\sf gl}(b) \fuse {\sf foo}({\sf ff}, {\sf f_0}) \lefti ~\\
 \quad \{ {\sf gl}(b) \fuse {\sf foo}({\sf ff}, {\sf f_1}) \}\\[5pt]
-{\sf gl}(b) \fuse {\sf foo}(l, {\sf f_1}) \lefti \{ {\sf gl}({\sf ff}) \}\\[5pt]
-{\sf gl}(b) \fuse {\sf foo}(l, {\sf f_2}) \lefti \{ {\sf gl}({\sf tt}) \}\\
+\forall b.\,{\sf gl}(b) \fuse {\sf foo}(l, {\sf f_1}) \lefti \{ {\sf gl}({\sf ff}) \}\\[5pt]
+\forall b.\,{\sf gl}(b) \fuse {\sf foo}(l, {\sf f_2}) \lefti \{ {\sf gl}({\sf tt}) \}\\
 \\
 {\sf gl}({\sf tt}) \fuse {\sf main}({\sf m_0}) \lefti ~\\
 \quad \{ {\sf gl}({\sf tt}) \fuse {\sf main}({\sf m_1}) \}\\[5pt]
 {\sf gl}({\sf ff}) \fuse {\sf main}({\sf m_0}) \lefti ~\\
 \quad \{ {\sf gl}({\sf tt}) \fuse {\sf main}({\sf m_2})\}\\[5pt]
-{\sf gl}(b) \fuse {\sf main}({\sf m_1}) \lefti ~\\
+\forall b.\,{\sf gl}(b) \fuse {\sf main}({\sf m_1}) \lefti ~\\
 \quad \{ {\sf gl}(b) \fuse {\sf foo}(b,{\sf f_0}) \fuse {\sf main}({\sf m_0})\}\\[5pt]
-{\sf gl}(b) \fuse {\sf main}({\sf m_2}) \lefti \{ \one \}
+\forall b.\,{\sf gl}(b) \fuse {\sf main}({\sf m_2}) \lefti \{ \one \}
 \end{array}
 \]
 \caption{A Boolean program, encoded as a rewriting system and in \sls}

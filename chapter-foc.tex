@@ -8,8 +8,8 @@ we will repeat the development in this chapter in a much
 richer and more expressive setting, and in Chapter~\ref{chapter-framework} 
 we will carve out
 a fragment of this logic to use as the basis of \sls, our logical
-framework of substructural logical specifications. This part of the
-document contributes to the overall thesis by focusing on the design
+framework of substructural logical specifications. These three
+chapters contribute to the overall thesis by focusing on the design
 of logical frameworks:
 
 \smallskip
@@ -21,8 +21,8 @@ of logical frameworks:
 
 \noindent
 The purpose of this chapter is to introduce the methodology of
-structural focalization as developed in \cite{simmons11structural};
-this development is one of the major contributions of this thesis.
+{\it structural focalization};
+this development is one of the major contributions of this work.
 Linear logic is a fairly simple logic that nevertheless allows us to
 consider many of the issues that will arise in richer substructural
 logics like the one considered in Chapter~\ref{chapter-order}.
@@ -66,7 +66,7 @@ its classical and intuitionistic varieties -- treats the truth of a
 proposition as a {\it persistent resource}. That is, if we have
 evidence for the truth of a proposition, we can ignore that evidence
 if it is not needed and reuse the evidence as many times as we need
-to. Throughout this thesis, ``logic as it has been traditionally
+to. Throughout this document, ``logic as it has been traditionally
 understood as studied'' will be referred to as {\it persistent} logic
 to emphasize this treatment of evidence. 
 
@@ -78,24 +78,25 @@ comes in classical and intuitionistic flavors. We will favor
 intuitionistic linear logic in part because the propositions of
 intuitionistic linear logic (written $A$, $B$, $C$, \ldots) have a
 more natural correspondence with our physical intuitions about
-consumable resources. Linear conjunction $A \tensor B$ represents the
-resource built from the resources $A$ and $B$; if you have both a bowl
-of soup {\it and} a sandwich, that resource can be represented by the
-proposition ${\sf soup} \otimes {\sf sandwich}$. Linear implication $A
-\lolli B$ represents a resource that can interact with another
-resource $A$ to produce a resource $B$. One robot with batteries not
-included could be represented as the linear resource $({\sf battery}
-\lolli {\sf robot})$, and the linear resource $({\sf 6bucks} \lolli
-{\sf soup} \tensor {\sf sandwich})$ represents the ability to use \$6
-to obtain lunch -- but only once!\footnote{Conjunction will always
-  bind more tightly than implication, so this is equivalent to the
-  proposition ${\sf 6bucks} \lolli ({\sf soup} \tensor {\sf
-    sandwich})$.} Linear logic also has a connective ${!}A$
+consumable resources. Linear conjunction $A \tensor B$ (``$A$ tensor
+$B$'') represents the resource built from the resources $A$ and $B$;
+if you have both a bowl of soup {\it and} a sandwich, that resource
+can be represented by the proposition ${\sf soup} \otimes {\sf
+  sandwich}$. Linear implication $A \lolli B$ (``$A$ lolly $B$'')
+represents a resource that can interact with another resource $A$ to
+produce a resource $B$. One robot with batteries not included could be
+represented as the linear resource $({\sf battery} \lolli {\sf
+  robot})$, and the linear resource $({\sf 6bucks} \lolli {\sf soup}
+\tensor {\sf sandwich})$ represents the ability to use \$6 to obtain
+lunch -- but only once.\footnote{Conjunction will always bind more
+  tightly than implication, so this is equivalent to the proposition
+  ${\sf 6bucks} \lolli ({\sf soup} \tensor {\sf sandwich})$.} Linear
+logic also has a connective ${!}A$ (``bang $A$'' or ``of course $A$'')
 representing a persistent resource that can be used to generate any
 number of $A$ resources, including zero. Your local Panera, which
-allows six dollars to be exchanged for both soup and a sandwich any number
-of times, can be represented as the resource
-${!}({\sf 6bucks} \lolli {\sf soup} \tensor {\sf sandwich})$. 
+allows six dollars to be exchanged for both soup and a sandwich any
+number of times, can be represented as the resource ${!}({\sf 6bucks}
+\lolli {\sf soup} \tensor {\sf sandwich})$.
 
 \input{figs/fig-linear.tex}
 
@@ -112,8 +113,8 @@ intuitionistic linear logic.\footnote{In this chapter we will mostly
   x.A$. The ``why not'' connective $\mbox{?}A$ from classical linear
   logic is sometimes treated as a second exponential connective in
   intuitionistic linear logic \cite{chang03judgmental}, but we will
-  never ask ``why not?'' in the context of this thesis.} It corresponds most
-closely to Barber's dual intuitionistic linear logic
+  never ask ``why not?'' in the context of this dissertation.} It
+corresponds most closely to Barber's dual intuitionistic linear logic
 \cite{barber96dual}, but also to Andreoli's dyadic system
 \cite{andreoli92logic} and Chang et al.'s judgmental analysis of
 intuitionistic linear logic \cite{chang03judgmental}.
@@ -160,7 +161,7 @@ Figure~\ref{fig:unfocused-robot}.\footnote{In
 
 It is precisely because linear logic contains this intuitive notion of
 state and state transition that a rich line of work, dating back to
-Chirmar's 1995 Ph.D. thesis, has sought to use linear logic as a {\it
+Chirmar's 1995 dissertation, has sought to use linear logic as a {\it
   logical framework} for describing stateful systems
 \cite{chirimar95proof,cervesato02linear,
   cervesato02concurrent,pfenning04substructural,miller09formalizing,
@@ -195,7 +196,7 @@ first solution is to define an appropriate equivalence class of
 proofs, and the second solution is to define a complete set
 of canonical proofs.
 
-Using an appropriate equivalence class of proofs can be an effective
+Defining an appropriate equivalence relation on proofs can be an effective
 way of handling this inessential nondeterminism.  In
 linear logic as presented above, if the permutability of rules like
 ${!}_L$ and ${\otimes}_L$ is problematic, we can instead reason about
@@ -232,8 +233,8 @@ The weak normalization property for LF establishes that, given any
 typed LF term, we can find an equivalent term that is $\beta$-normal
 (no $\beta$-redexes of the form $(\lambda x.M) N$ exist) and
 $\eta$-long (replacing $N$ with $\lambda x.N\,x$ anywhere would
-introduce a $\beta$-redex or make the term ill-typed).  Furthermore,
-in any given equivalence class of typed LF terms, all the
+introduce a $\beta$-redex or make the term ill-typed).  
+In any given equivalence class of typed LF terms, all the
 $\beta$-normal and $\eta$-long terms are $\alpha$-equivalent.
 Therefore, because $\alpha$-equivalence is decidable, the equivalence
 of typed LF terms is also decidable. 
@@ -278,7 +279,7 @@ one focused derivation that derives the proposition
 ({\sf battery} \lolli {\sf robot}) \lolli {\sf robot}.\] 
 %
 We will furthermore see that the structure of this derivation matches
-the intuitive transition interpretation of the proposition, a point
+the intuitive transition interpretation, a point
 that is reinforced by the discussion of {\it synthetic inference
   rules} in Section~\ref{sec:linsynthetic}. 
 
@@ -294,9 +295,8 @@ inessential differences between derivations correspond to unnecessary
 choice points that a proof search procedure will need to backtrack
 over. The presentation of focusing for intuitionistic linear logic in
 this section most closely resembles Chaudhuri's focused intuitionistic
-linear logic \cite{chaudhuri06focused} and my presentation of
-polarized intuitionistic persistent logic
-\cite{simmons11structural}. The major exception is the treatment of
+linear logic \cite{chaudhuri06focused}. 
+The major exception is the treatment of
 asynchronous rules as confluent rather than fixed, a point that will
 be discussed in Section~\ref{sec:confluent-v-fixed}.
 
@@ -320,7 +320,7 @@ connectives {\it right}-asynchronous and {\it
   left}-synchronous. Similarly, it is common to call synchronous
 connectives {\it right}-synchronous and {\it left}-asynchronous.  We
 will instead use a different designation, calling the
-(right-)synchronous connectives {\it positive} ($\zero$, $\oplus$,
+(right-)synchronous connectives {\it positive} (${!}$, $\zero$, $\oplus$,
 $\one$, and $\otimes$ in full propositional linear logic) and calling
 the (right-)asynchronous connectives {\it negative} ($\lolli$, $\top$
 and $\with$ in full propositional linear logic); this assignment is
@@ -405,8 +405,9 @@ immediately with the ${\it id}$ rule. Letting $\Gamma = {\sf 6bucks}
  {\vdots}}}
 \]
 The trace (that is, the pair of a single bottom sequent and 
-a set of unproved top sequents) of a
-focused phase below an inversion phase is called a {\it synthetic
+a set of unproved top sequents) of an inversion phase stacked
+on top of a
+focused phase is called a {\it synthetic
   inference rule} by Chaudhuri, a point we will return to in
 Section~\ref{sec:linsynthetic}.
 
@@ -489,7 +490,7 @@ $(A)^\oplus$ in the polarized logic discussed below,\footnote{This
   from Andreoli's. This isomorphism does not hold relative to focused
   systems that follow Andreoli's design, a point we will return to in
   Section~\ref{sec:linhack}.} whereas the proofs of $(A)^{m+}$ in
-polarized logic are isomorphic to {\it unfocused} proofs of linear
+polarized logic are isomorphic to the {\it unfocused} proofs of linear
 logic as described in Figure~\ref{fig:linear}. Other polarization
 strategies correspond to different focused logics, as explored by
 Liang and Miller in \cite{liang09focusing}, so the presentation of
@@ -502,13 +503,11 @@ $(A^-)^\circ$ if and only if there is a focused derivation of $A^+$ or
 $A^-$.  Most existing proofs of the completeness of focusing only
 verify a weaker property: that there is an unfocused derivation of $A$
 if and only if there is a focused derivation of $A^\bullet$, where
-$A^\bullet$ is some polarization strategy.  There appear to be only
-two exceptions: Zeilberger's proof for classical persistent logic
-\cite{zeilberger08unity} and the author's own proof for intuitionistic
-persistent logic \cite{simmons11structural}; we will follow the latter
-development in this section, adapting it to MELL as necessary.
+$A^\bullet$ is some polarization strategy.  The only exception seems
+to be Zeilberger's proof for classical persistent logic
+\cite{zeilberger08unity}.
 
-In this thesis, we will be interested only in the structure of focused
+In this dissertation, we will be interested only in the structure of focused
 proofs, which corresponds to using the polarization strategy given by
 $A^\oplus$ and $A^\ominus$. Therefore, following Chaudhuri, it would
 be possible to achieve our objectives without the use of polarization.
@@ -544,11 +543,13 @@ where the proposition $A^-$ is in focus).
 \smallskip
 It is also possible to distinguish a fourth sequent form, the {\it
   stable} sequents, inversion sequents $\mildinv{\Gamma}{\Delta}{C}$
-where no asynchronous inversion remains to be done. A sequent 
-is stable when the context $\Delta$ contains only negative propositions
-$A^-$ and the succedent $C$ is a positive proposition $A^+$, but that
-is a sufficient condition for stability and cannot be
-a necessary one. If the process of inversion reaches a positive atomic
+where no asynchronous inversion remains to be done. A sufficient
+condition for stability is that the context $\Delta$ contains only negative 
+propositions
+$A^-$ and the succedent $C$ is a positive proposition $A^+$.
+However, this cannot be a {\it necessary} condition for stability
+due to the presence of atomic propositions. 
+If the process of inversion reaches a positive atomic
 proposition $p^+$ on the left or a negative atomic proposition $p^-$
 on the right, the proposition can be decomposed no further. When we
 reach an atomic proposition, we are therefore forced to {\it suspend}
@@ -627,9 +628,11 @@ methodology \cite{pfenning00structural}, it is critical that the
 weakening theorem {\it does not} change the structure of proofs: that the
 structure of the derivation $\mildseq{\Gamma}{\underline
   \Delta}{\underline U}$ is unchanged when we weaken it to
-$\mildseq{\Gamma, \Gamma'}{\underline \Delta}{\underline U}$. In
-contrast, the Structural Focalization development that this chapter
-follows does not rely on this property \cite{simmons11structural}.
+$\mildseq{\Gamma, \Gamma'}{\underline \Delta}{\underline U}$. It turns
+out that the development in this chapter does not rely on this property.
+% In
+% contrast, the Structural Focalization development that this chapter
+% follows does not rely on this property \cite{simmons11structural}.
 
 Suspended propositions ($\langle A^+ \rangle$ and $\langle
 A^- \rangle$) and the four rules that interact with suspended
@@ -674,19 +677,19 @@ applies only to atomic propositions. This treatment is not incorrect
 and is obviously analogous to the ${\it id}$ rule from the unfocused
 system. Nevertheless, I believe this to be a design error, and it is
 one that has historically made it unnecessarily difficult to prove the
-identity theorem for focused systems. This presentation uses {\it
-  suspensions}: suspended positive propositions $\langle A^+ \rangle$
-only appear in the linear context $\Delta$, and suspended negative
-propositions $\langle A^- \rangle$ only appear as succedents. They are
-treated as stable (we never break down a suspended proposition) and
-are only used to immediately prove a proposition in focus with one of
-the identity rules ${\it id}^+$ or ${\it id}^-$. The rules ${\it
-  id}^+$ and ${\it id}^-$ are more general focused versions of the
-unfocused ${\it id}$ rule. This extra generality does not influence
-the structure of proofs because suspended propositions can only be
-introduced into the context or the succedent by the $\eta^+$ and
-$\eta^-$ rules, and those rules {\it are} restricted to atomic
-propositions.
+identity theorem for focused systems. The alternative developed in
+this chapter is the use of suspensions. Suspended positive
+propositions $\langle A^+ \rangle$ only appear in the linear context
+$\Delta$, and suspended negative propositions $\langle A^- \rangle$
+only appear as succedents. They are treated as stable (we never break
+down a suspended proposition) and are only used to immediately prove a
+proposition in focus with one of the identity rules ${\it id}^+$ or
+${\it id}^-$. The rules ${\it id}^+$ and ${\it id}^-$ are more general
+focused versions of the unfocused ${\it id}$ rule. This extra
+generality does not influence the structure of proofs because
+suspended propositions can only be introduced into the context or the
+succedent by the $\eta^+$ and $\eta^-$ rules, and those rules {\it
+  are} restricted to atomic propositions.
 % The restriction of these
 % identity rules to suspended propositions allows us to maintain the
 % structure of the logic, but the generalization of the identity rules
@@ -761,15 +764,17 @@ then $\mildseq{\Gamma}{\Delta', \underline{\Delta}}{U}$.
 Unlike cut admissibility, which we discuss in
 Section~\ref{sec:lincut}, both of the focal substitution principles
 are straightforward inductions over the structure of the derivation
-containing the suspended proposition. The Structural Focalization
-development \cite{simmons11structural} discusses how, when we encode
+containing the suspended proposition. As an aside, when we encode
+%The Structural Focalization
+%development \cite{simmons11structural} discusses how, when we encode
 the focused sequent calculus for persistent logic in LF, a suspended
-positive premise can be encoded as a hypothetical right focus. This
-encoding makes the ${\it id}^+$ rule an instance of the hypothesis
-rule provided by LF and establishes Theorem~\ref{thm:fsubst-pos} ``for
-free'' as an instance of LF substitution. This is possible to do for
-negative focal substitution as well, but it is counterintuitive and
-relies on a peculiar use of LF's uniform function space.
+positive premise can be naturally encoded as a hypothetical right
+focus. This encoding makes the ${\it id}^+$ rule an instance of the
+hypothesis rule provided by LF and establishes
+Theorem~\ref{thm:fsubst-pos} ``for free'' as an instance of LF
+substitution. This is possible to do for negative focal substitution
+as well, but it is counterintuitive and relies on a peculiar use of
+LF's uniform function space \cite{simmons11structural}.
 
 The two substitution principles can be phrased as admissible rules for
 building derivations, like the ${\it weaken}$ rule above:
@@ -891,27 +896,43 @@ corollaries of identity expansion:
   {}}}
 \]
 
+
 \subsection{Cut admissibility}
 \label{sec:lincut}
 
 Cut admissibility, Theorem~\ref{thm:lincut} below, mostly follows the
 well-worn contours of a structural cut admissibility argument
-\cite{pfenning00structural}, so we defer a full discussion of cut
-admissibility until the next chapter, where we will give a tidier
-proof by incorporating more of the machinery of the Structural
-Focalization development.\footnote{The main ``untidy'' aspect of
-  Theorem~\ref{thm:lincut} is that the lack of a fixed inversion
-  order means that the right commutative cases -- cases in which the
-  last rule in the second given derivation is an invertible rule that
-  is not decomposing the principal cut formula $A^+$ -- must
-  be repeated in parts 1 and 4. (Pfenning's classification of the
-  cases of cut admissibility into principal, left commutative,
-  and right commutative cuts is discussed in Section~\ref{sec:ord-cut}.)
+\cite{pfenning00structural}. A slight inelegance of the proof given
+here is that some very similar cases must be considered more than once
+in different parts of the proof. The right commutative cases -- cases
+in which the last rule in the second given derivation is an invertible
+rule that is not decomposing the principal cut formula $A^+$ -- must
+be repeated in parts 1 and 4, for instance. (Pfenning's classification
+of the cases of cut admissibility into principal, left commutative,
+and right commutative cuts is discussed in Section~\ref{sec:ord-cut}.)
+In addition to this duplication, the proof of part 4 is almost
+identical in form to the proof of part 5. The proof of cut
+admissibility in the next chapter will eliminate both forms of
+duplication.
 
-  In addition to this duplication, the proof of part 4 is almost
-  identical in form to the proof of part 5. The proof in the 
-  next chapter will avoid both forms of duplication.}
+% The most notable exception is that we can
+%  so we defer a full discussion of cut
+% admissibility until the next chapter, where we will give a tidier
+% proof by incorporating more of the machinery of the Structural
+% Focalization development.\footnote{The main ``untidy'' aspect of
+%   Theorem~\ref{thm:lincut} is that the lack of a fixed inversion
+%   order means that the right commutative cases -- cases in which the
+%   last rule in the second given derivation is an invertible rule that
+%   is not decomposing the principal cut formula $A^+$ -- must
+%   be repeated in parts 1 and 4. (Pfenning's classification of the
+%   cases of cut admissibility into principal, left commutative,
+%   and right commutative cuts is discussed in Section~\ref{sec:ord-cut}.)
 %
+%   In addition to this duplication, the proof of part 4 is almost
+%   identical in form to the proof of part 5. The proof in the 
+%   next chapter will avoid both forms of duplication.}
+% %
+
 The most important caveat about 
 cut admissibility is that it is only applicable in the absence of any
 non-atomic suspended propositions. If we did not make this
@@ -961,7 +982,7 @@ contained in structure of parts 3, 4, and 5 -- these are the cases
 used to prove the completeness of focusing
 (Theorem~\ref{thm:linfoccomplete}). The discrepancy between the
 stability restrictions demanded for part 1 and part 2 is discussed
-below; the discrepancy is justified by the fact that these two parts
+below; this peculiarity is justified by the fact that these two parts
 need only be general enough to prove parts 3, 4, and 5.
 
 \begin{proof}
@@ -972,9 +993,13 @@ need only be general enough to prove parts 3, 4, and 5.
   same, either the first given derivation gets smaller (part 3)
   or the second given derivation gets smaller (parts 1, 4 and 5).
 
-  As noted in \cite{simmons11structural}, this termination argument is
+  %As noted in \cite{simmons11structural}, 
+  This termination argument is
   a refinement of the standard structural termination argument for cut
-  admissibility in unfocused logics \cite{pfenning00structural}. This
+  admissibility in unfocused logics \cite{pfenning00structural} -- in 
+  part 3, we don't need to know that the second given derivation stays
+  the same size, and in parts 1, 4, and 5 we don't need to know
+  that the first given derivation stays the same size. This
   refined termination argument is the reason that we do not require 
   rely on weakening preserving the structure of proofs. 
  
@@ -1130,7 +1155,7 @@ need only be general enough to prove parts 3, 4, and 5.
 
   {\small 
   \[
-  \infer[\it cut (5)]
+  \infer-[\it cut (5)]
   {\mildseq{\Gamma}{\cdot}{[{!}B^-]}}
   {\deduce{\mildseq{\Gamma}{\cdot}{A^-}}{\mathcal D}
    &
@@ -1149,7 +1174,7 @@ need only be general enough to prove parts 3, 4, and 5.
   \]}
 
 \noindent
-All the cases of the proof are written out in \cite{simmons12cut}.
+All the other cases follow the same pattern.
 \end{proof}
 
 % Each of these cases handles
@@ -1177,7 +1202,7 @@ duplicating the left commutative cuts between parts 2 and 3. On the
 other hand, we cannot make the theorem more specific, imposing extra
 stability conditions on part 1, without fixing the order in which
 invertible rules are applied. Fixing the order in which invertible
-rules are applied has some advantages, however; this is a point we
+rules are applied has some other advantages as well; this is a point we
 will return to in Section~\ref{sec:confluent-v-fixed}.
 
 \subsection{Correctness of focusing}
@@ -1659,8 +1684,7 @@ depth-first ordering is to isolate the invertible propositions ($A^+$
 on the left and $A^-$ on the right) in separate, ordered inversion
 contexts, and then to only work on the left-most proposition in the
 context. This is the way most focused logics are defined, including
-those by Andreoli, Chaudhuri, and myself (both in the Structural
-Focalization development and in the next chapter). This style of 
+those by Andreoli, Chaudhuri, and myself in the next chapter. This style of 
 presenting a focusing logic can be called a {\it fixed} presentation,
 as the inversion phase is fixed in a particular, though
 fundamentally arbitrary, shape. 
@@ -1727,7 +1751,7 @@ following Chaudhuri, call {\it synthetic inference rules}
 \label{sec:linsynthetic}
 
 Synthetic inference rules were introduced by Andreoli as the
-derivation fragments associated with a positive propositions {\it
+derivation fragments associated with {\it
   bipoles}. A monopole is the outermost negative (or positive)
 structure of a proposition, and a bipole is a monopole surrounded by
 positive (or, respectively, negative) propositions
@@ -1891,7 +1915,7 @@ robot-battery-store system.
 Despite the novel treatment of suspended propositions in
 Section~\ref{sec:foclinlog}, the presentation of linear logic given
 there is equivalent to the presentation in Chaudhuri's
-thesis \cite{chaudhuri06focused}, in the sense that the logic gives
+dissertation \cite{chaudhuri06focused}, in the sense that the logic gives
 rise to the same synthetic inference rules. It is {\it not} a faithful
 intuitionistic analogue to Andreoli's original presentation of focusing
 \cite{andreoli92logic}, though the presentation in Pfenning's course notes is
@@ -1998,7 +2022,8 @@ similar to proving ${[a^+]}$ in focus for a positive atomic
 proposition. This gives us license to treat stable sequents that prove
 a pseudo-positive proposition not as a stable sequent that appears in
 synthetic inference rules but as an immediate subgoal that gets folded
-into the subgoal. If $a^-$ is pseudo-positive, the persistent
+into the synthetic inference rule. 
+If $a^-$ is pseudo-positive, the persistent
 proposition ${\downarrow}a^- \lolli {\downarrow}b^- \lolli c^-$ can be
 associated with these two synthetic inference rules:
 \[
@@ -2253,7 +2278,7 @@ one new case of identity expansion, which is unproblematic:
 
 Even though the identity expansion theorem is unproblematic, we can
 illuminate one problem with the atom optimization by considering
-suspended atomic propositions.
+the substitution of arbitrary propositions for atomic propositions.
 %
 Previously, when we substituted a positive
 proposition for an atomic proposition, the proof's structure remained
@@ -2774,7 +2799,7 @@ translated as $F x^+$, where $x^+$ is the translation of $p^+$ as a
 persistent positive atomic proposition.
 
 Adjoint logic gives one answer to why, in Andreoli-style
-presentations of linear logic, we can't substitute positive
+presentations of linear logic, we can't easily substitute positive
 propositions for positive atomic propositions when those positive
 atomic propositions appear suspended in the persistent linear context:
 because these propositions are actually stand-ins for {\it persistent}
@@ -2847,7 +2872,7 @@ syntactic refinement of the positive propositions.\footnote{Permeable
 The admissible identity expansion rules, like the admissible identity
 rule present in most unfocused sequent calculus systems, help us
 write down compact proofs. If $F(n) = p_1^+ \otimes \ldots \otimes
-p_n^+$, then the size of the smallest proof of
+p_n^+$, then the number of steps in the smallest proof of
 $\mildseq{\Gamma}{F(n)}{F(n)}$ is in $\Omega(n)$. However, by using
 the admissible identity expansion rule $\eta^+$, we can represent the
 proof in a compact way:
@@ -2871,7 +2896,7 @@ $\mildseq{\Gamma}{\Delta}{\one}$ or $\mildseq{\Gamma}{\Delta}{{!}A^-}$
 and we know, by the syntactic structure of $\Delta$, that inversion
 will empty the linear context. One instance of this pattern is the 
 sequent
-$\mildseq{\Gamma}{G(n)}{{!}G(n)}$ where $G(n) = {!}p_1^+ \otimes
+$\mildseq{\Gamma}{G(n)}{{!}{\uparrow}G(n)}$ where $G(n) = {!}p_1^+ \otimes
 \ldots \otimes {!}p_n^+$. Our goal will be to 
 prove such a sequent succinctly 
 by suspending the proposition $G(n)$
@@ -3015,7 +3040,7 @@ in Section~\ref{sec:foclinlog}, to present identity expansion as
 conceptually prior to atomic propositions. In such a retelling, the
 $\eta^+$ and $\eta^-$ rules can be motivated as the necessary base
 cases of identity expansion when we have propositional variables that
-stand for positive and negative propositions,
+stand for unknown positive and negative propositions,
 respectively. Conversely, we can now present a new class of {\it
   permeable} atomic propositions $p^+_p$ that stand in for arbitrary
 permeable propositions $A^+_p$. These add a new base case to permeable
@@ -3082,7 +3107,7 @@ permeable proposition $A$ is interprovable with ${!}A$ and let
 $(p^+_p)^\circ = {!}p^+_p$. 
 
 The erasure of permeable propositions $p^+_p$ in the focused
-logic as ${!}p^+_p$ in the unfocused logic reveals that
+logic to ${!}p^+_p$ in the unfocused logic reveals that
 permeable propositions, which we motivated entirely from a discussion
 of identity expansion, are effectively a logical treatment of
 separation. Rather than ${\pbang}$, a separate proposition that we
@@ -3123,8 +3148,8 @@ propositions so that positive atoms never appear in the persistent
 context. From our perspective, this is a rather unusual
 recommendation, since it just returns us to linear logic without the
 atom optimization! The focused system in Section~\ref{sec:foclinlog},
-which we have argued is a more fundamental presentation, 
-effectively avoid this problem.
+which we have argued is a more fundamental presentation
+(following Chaudhuri), effectively avoid this problem.
 
 However, it's not necessary to view Andreoli's proliferation of rules
 as a problem with the logic; rather, it is possible to view it merely
@@ -3170,7 +3195,7 @@ previously:
 {\mildseq{\Gamma}{\Delta, \langle c^+ \rangle}{U}}
 \]
 
-This modified notation need not only be used in synthetic connectives;
+This modified notation need not be reserved for synthetic connectives;
 we can also use it to combine the two positive identity rules ${\it
   id}^+_1$ and ${\it id}^+_2$ (in the exponential-optimized system) or,
 equivalently, ${\it id}^+$ and ${\it id}^+_p$ (in the system

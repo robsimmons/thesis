@@ -46,3 +46,9 @@ check against the POPL version of the revised theorem that I didn't
 do anything sketchy.
 
 take more care with use of "parallel"
+
+ANTECEDENT?
+
+Part~I, Part~II, Part~III
+
+The THESIS is a sentence, the DISSERTATION is a book

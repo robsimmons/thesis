@@ -10,7 +10,7 @@ series of transitions $(\Psi; \Delta) \leadsto^* (\Psi';
 \sls~specifications as {\it grammars} for describing well-formed
 process states. This view was presented previously in the discussions
 of adequacy in Section~\ref{sec:framework-reggenworld} and in
-Section~\ref{sec:nat-ssos-adequacy}.
+Section~\ref{sec:nat-ssos-adequacy}. 
 
 The grammar-like specifications that describe well-formed process
 states are called {\it generative signatures}, and generative
@@ -23,32 +23,28 @@ Section~\ref{sec:nat-ssos-adequacy}, the relevant world was a set of
 process states that we could put in bijective correspondence with the
 states of an abstract machine.
 
-Our primary use of generative specifications in this thesis is showing
-that, under some generative signature $\Sigma_{\it Gen}$ that defines
-a world $\mathcal W$, whenever $(\Psi; \Delta) \in \mathcal W$ and
-$(\Psi; \Delta) \leadsto_\Sigma (\Psi'; \Delta')$ it is always the
-case that $(\Psi'; \Delta') \in \mathcal W$.  (The signature $\Sigma$
-encodes the transition system we are studying.)  In such a case, the
-world or language of well-formed process states is called a {\it
-  generative invariant} of $\Sigma$.
+Generative signatures a significant extension of traditional grammars,
+both because of the presence of dependent types and because of the
+presence of linear and persistent resources in \sls. However, we will
+not endeavor to student generative signatures in their own right in
+this chapter or this thesis. Rather, we will use generative signatures
+for one very specific purpose: showing that, under some generative
+signature $\Sigma_{\it Gen}$ that defines a world $\mathcal W$,
+whenever $(\Psi; \Delta) \in \mathcal W$ and $(\Psi; \Delta)
+\leadsto_\Sigma (\Psi'; \Delta')$ it is always the case that $(\Psi';
+\Delta') \in \mathcal W$.  (The signature $\Sigma$ encodes the
+transition system we are studying.)  In such a case, the world or
+language of well-formed process states is called a {\it generative
+  invariant} of $\Sigma$.
 
 \subsection*{Type preservation}
 
-The purpose of this chapter is to demonstrate that generative
-invariants are a solid methodology for describing invariants of
-\sls~specifications, especially well-formedness and well-typedness
-invariants of substructural operational semantics specifications like
-the ones presented in Part II. As we have already
-seen, well-formedness invariants are major part of adequacy
-theorems. Well-typedness invariants are important because they allow us to
-prove {\it language safety}, the property (discussed way back in the
-introduction) that a language specification is completely free
-from undefined behavior.
-
-We don't generally expect all syntactically well-formed expressions
-$\obj{e}$ to be free of undefined behavior. When we want to prove
-language safety for a small-step SOS specification like $\obj{e
-  \mapsto e'}$ from Section~\ref{sec:evaluationcontexts} and the
+Narrowing our focus even further, in this chapter our sole use of
+generative invariants in this chapter is describing well-formedness
+and well-typedness invariants of the sorts of substructural
+operational semantics specifications presented in Part II.  When we
+want to prove language safety for a small-step SOS specification like
+$\obj{e \mapsto e'}$ from Section~\ref{sec:evaluationcontexts} and the
 beginning of Chapter~\ref{chapter-absmachine}, we also define a
 judgment $\obj{x_1{:}{\it tp_1},\ldots, x_n{:}{\it tp_n} \vdash e :
   {\it tp}}$.  This {\it typing judgment} expresses that $\obj{e}$ has
@@ -56,7 +52,37 @@ type $\obj{\it tp}$ if the expression variables $\obj{x_1, \ldots,
   x_n}$ are respectively assumed to have the types $\obj{\it tp_1,
   \ldots, tp_n}$. (Note that $\obj{\it tp}$ is an {\it object-level
   type} as described in Section~\ref{sec:gen-ordertp}, not an LF type
-$\tau$ from Chapter~\ref{chapter-framework}.) Using the typing
+$\tau$ from Chapter~\ref{chapter-framework}.)
+
+Safety The preservation proof in a standard ``safety = progress +
+preservation'' formulation of type safety is, of course, a statement
+about invariants.
+
+Well-typedness invariants are important because they allow us to
+prove {\it language safety}, the property (discussed way back in the
+introduction) that a language specification is completely free
+from undefined behavior.
+
+
+Preservation in an SOS specification says that if $\obj{e
+  \mapsto e'}$ and $\obj{e}$ has type $\obj{\it tp}$, then $\obj{e'}$
+has type $\obj{\it tp}$ as well -- the type is invariant under
+evaluation.
+
+
+
+The purpose of this chapter is to demonstrate that generative
+invariants are a solid methodology for describing invariants of
+\sls~specifications, especially well-formedness and well-typedness
+invariants of substructural operational semantics specifications like
+the ones presented in Part II. As we have already
+seen, well-formedness invariants are major part of adequacy
+theorems. 
+
+We don't generally expect all syntactically well-formed expressions
+$\obj{e}$ to be free of undefined behavior. 
+
+ Using the typing
 judgment, we can prove the safety theorem -- all well-typed
 expressions are free from undefined behavior -- by way of two
 theorems. The first theorem is {\it preservation}: if $\obj{\cdot
@@ -754,39 +780,41 @@ be the same. (They are the same iff $T' = \emptytrace$.)
   process state. Therefore, $T =
   T''; S$ for some $T''$ and $S$. 
 
-  There are two ways of formulating the proof of this inversion lemma;
-  we will sketch out the specific formulation, which does a great deal
-  of explicit case analysis, as well as a more generic formulation
-  that attempts to avoid this case analysis. 
+  There are two ways of formulating the proof of this inversion lemma.
+  The specific formulation does a great deal of explicit case analysis
+  but is closer in style to the preservation lemmas. We also give a
+  more generic formulation of the proof which avoids this case
+  analysis, in large part by operating in terms of the input and
+  output interfaces introduced in
+  Section~\ref{sec:framework-concurrenteq}.
 
   \paragraph{Specific formulation (Part 4)} ~
 
    \noindent
-   We're given $(T''; S) :: (x_0{:}\istrue{\susp{{\sf gen}}})
-  \leadsto^*_{\siggenorder} \tackon{\Theta}{y_1{:}\istrue{\susp{{\sf
-          gen}}}, ~ y_2{:}\istrue{\susp{{\sf gen}}}, ~ y_3{:}\istrue{\susp{{\sf cont}\,\lf{f}}}}$, and we
-  perform case analysis on $S$. We give two representative cases:
+   Given $(T''; S) :: (x_0{:}\istrue{\susp{{\sf gen}}})
+   \leadsto^*_{\siggenorder} \tackon{\Theta}{y_1{:}\istrue{\susp{{\sf
+           gen}}}, ~ y_2{:}\istrue{\susp{{\sf gen}}}, ~
+     y_3{:}\istrue{\susp{{\sf cont2}\,\lf{f}}}}$, we perform case
+   analysis on $S$. We give two representative cases:
 
   \begin{description}
   \item[Case $S = \trstep{z}{{\sf gen/eval}\,\lf{e}\,x''}$]~
 
-    It cannot be the case that $z = y_1$, $z = y_2$, or $z = y_3$ -- the
-    propositions don't match. So we can say that
-    $\tackon{\Theta}{y_1{:}\istrue{\susp{{\sf gen}}}, ~
-      y_2{:}\istrue{\susp{{\sf gen}}}, ~
-      y_3{:}\istrue{\susp{{\sf cont}\,\lf{f}}}} =
-    \tackon{\Theta'}{z{:}\istrue{\susp{{\sf eval}\,\lf{e}}}}$; informally,
-    we can say that there is a frame $\Theta_{2H}$ with two holes
-    such that both are equal to
-         $\tackon{
-             \tackon{\Theta_{2H}}
-                {y_1{:}\istrue{\susp{{\sf gen}}}, ~ 
-                 y_2{:}\istrue{\susp{{\sf cont}\,\lf{f}}}}}
-             {z{:}\istrue{\susp{{\sf eval}\,\lf{e}}}}$.
-    (We haven't actually introduced frames with two holes,
-    though the reasoning we do with two-hole contexts here could be done
-    following the structure of the cut admissibility proof,
-    Theorem~\ref{thm:ord-cut}.)
+    We have that $\tackon{\Theta}{y_1{:}\istrue{\susp{{\sf gen}}}, ~
+      y_2{:}\istrue{\susp{{\sf gen}}}, ~ y_3{:}\istrue{\susp{{\sf
+            cont}\,\lf{f}}}} = \tackon{\Theta'}{z{:}\istrue{\susp{{\sf
+            eval}\,\lf{e}}}}$.  
+    It cannot be the case that $z = y_1$, $z = y_2$, or $z = y_3$ --
+    the propositions don't match. Therefore, we can informally
+    describe the substructural context as a frame $\Theta_{2H}$ with
+    two holes that are filled as $\tackon{
+      \tackon{\Theta_{2H}} {y_1{:}\istrue{\susp{{\sf gen}}}, ~
+        y_2{:}\istrue{\susp{{\sf gen}}}, ~
+        y_3{:}\istrue{\susp{{\sf cont2}\,\lf{f}}}}}
+    {z{:}\istrue{\susp{{\sf eval}\,\lf{e}}}}$.  (We haven't actually
+    introduced frames with two holes; the reasoning we do with
+    two-hole contexts here could be done following the structure of
+    the cut admissibility proof, Theorem~\ref{thm:ord-cut}.)
 
     \medskip
     If we 
@@ -808,11 +836,11 @@ $T'' = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{\sf gen}})$
              \tackon{\Theta_{2H}}
                 {y_1{:}\istrue{\susp{{\sf gen}}}, ~ 
                  y_2{:}\istrue{\susp{{\sf gen}}}, ~ 
-                 y_3{:}\istrue{\susp{{\sf cont}\,\lf{f}}}}}
+                 y_3{:}\istrue{\susp{{\sf cont2}\,\lf{f}}}}}
              {x''{:}\istrue{\susp{{\sf gen}}}}$
 \end{tabbing}
 
-The steps $\trstep{y_1, y_2}{{\sf gen/cont}\,\lf{f}\,x'}$
+The steps $\trstep{y_1, y_2, y_3}{{\sf gen/cont2}\,\lf{f}\,(\tfuser{x'}{\tbangr{N}})}$
 and $\trstep{z}{{\sf gen/eval}\,\lf{e}\,x''}$ can be permuted, so 
 we let $T' = T'''; \trstep{z}{{\sf gen/eval}\,\lf{e}\,x''}$ and have
 
@@ -839,7 +867,7 @@ $T = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{\sf gen}})$
              \tackon{\Theta_{2H}}
                 {y_1{:}\istrue{\susp{{\sf gen}}}, ~ 
                  y_2{:}\istrue{\susp{{\sf gen}}}, ~ 
-                 y_3{:}\istrue{\susp{{\sf cont}\,\lf{f}}}}}
+                 y_3{:}\istrue{\susp{{\sf cont2}\,\lf{f}}}}}
              {z{:}\istrue{\susp{{\sf eval}\,\lf{e}}}}$
 \end{tabbing}
 
@@ -857,9 +885,9 @@ $T = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{\sf gen}})$
     \medskip The only other possibilities allowed by the propositions
     associated with variables are that $z_1 = x_2$, which is impossible
     because it would force $z_2 = x_3$ and therefore force
-    $\sf{gen}$ to equal ${\sf cont}\,\lf{f}$, and that $z_2 = x_1$, which
+    $\sf{gen}$ to equal ${\sf cont2}\,\lf{f}$, and that $z_2 = x_1$, which
     is impossible because it would force $z_3 = x_2$ and therefore force
-    ${\sf cont}\,\lf{f'}$ to equal ${\sf gen}$. 
+    ${\sf cont2}\,\lf{f'}$ to equal ${\sf gen}$. 
 
   \end{description}
 
@@ -928,11 +956,11 @@ more straightforward case analysis is that the generic formulation is
 much more compact. The specific formulation in its full elaboration
 would require enumerating 7 cases for each of the 6 inversion lemmas,
 leading to proof whose size is in $O(n^2)$ where $n$ is the number of
-rules in the generative signature, and this enormous proof does very
+rules in the generative signature. This enormous proof does very
 little to capture the intuitive reasons why the steps we are
-interested in can always be rotated to the end. In this chapter, we
-will emphasize the principles by which we can use to reason {\it
-  concisely} about specifications.
+interested in can always be rotated to the end. A goal of this chapter
+to reason we will emphasize the principles by which we can use to
+reason {\it concisely} about specifications.
 
 \subsection{Preservation}
 
@@ -2231,8 +2259,15 @@ inequality in this way.
 
 Destination-passing style specifications, as discussed in
 Chapter~\ref{chapter-destinations}, are not a focus of this thesis,
-but they deserve mention due to their importance in the context of the
-logical framework CLF. In this section, we will work with an
+but they deserve mention for two reasons. First, they are of paramount
+importance in the context of the logical framework CLF, a framework
+that lacks \sls's notions of order. Second, destination-passing
+inspired the progress and preservation proofs for distributed systems
+that were consdered by Cervesato and Sans
+\cite{cervesato13substructural}; this section establishes that their
+reasoning can be formalized in the context of the \sls~framework.
+
+In this section, we will work with an
 operational semantics derived from the signature given in
 Figure~\ref{fig:dest-cbv} (sequential evaluation of function
 application) in Chapter~\ref{chapter-destinations}. To use sequential
