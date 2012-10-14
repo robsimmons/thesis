@@ -27,7 +27,7 @@ already-specified \ollll~outright as a logical framework.
   An implementation based on these proof terms would need to consider
   type reconstruction and/or bidirectional typechecking to recover the
   omitted information, but we will not consider those issues in this
-  thesis.
+  dissertation.
 
 \item{\it Separating concurrent and deductive reasoning.} Comparing
   CLF to \ollll~leads us to
@@ -83,7 +83,7 @@ already-specified \ollll~outright as a logical framework.
   reconstruction, which motivated Schack-Nielson to remove $\top$ from
   the Celf implementation of CLF
   \cite{schacknielsen11implementing}. Even though those considerations
-  are outside the scope of this thesis, the presence of $\top$ causes
+  are outside the scope of this dissertation, the presence of $\top$ causes
   other pervasive difficulties: for instance, the presence of $\top$
   complicates the discussion of concurrent equality in CLF. We therefore
   follow Schack-Nielson in removing $\top$ from \sls.
@@ -746,7 +746,7 @@ e$.
 
 In this section, we will describe the restricted set of polarized
 \ollll~propositions and focused \ollll~proof terms that make up the
-logical framework \sls. For the remainder of the thesis, we will work
+logical framework \sls. For the remainder of the dissertation, we will work
 exclusively with the following positive and negative
 \sls~propositions, which are a syntactic refinement of the positive
 and negative propositions of polarized \ollll:
@@ -987,7 +987,7 @@ desirable for two main reasons. First, the proof terms of
 focused \ollll~make it inconvenient (though not impossible) to talk
 about concurrent equality
 (Section~\ref{sec:framework-concurrenteq}). Second, one of our primary
-uses of \sls~in this thesis will be to talk about {\it traces}, which
+uses of \sls~in this dissertation will be to talk about {\it traces}, which
 correspond roughly to partial proofs
 \[
 \deduce
@@ -1750,11 +1750,11 @@ being reordered at all: we can say that $(S_1,S_2) \in I$ if
 $\emptyset = S_1{^\bullet} \cap {^\bullet}S_2 = {^\circledast}S_1 =
 {^\circledast}S_2$. It is unlikely that this condition is satisfying
 in general, but it is sufficient for all the examples in this
-thesis. In the remainder of this thesis, we will define concurrent
+dissertation. Therefore, we will define concurrent
 equality on the basis of this simple solution.  Nevertheless, three
 other possibilities are worth considering; all three are
-equivalent to this simple solution as far as the examples in this
-thesis are concerned.
+equivalent to this simple solution as far as the examples given here 
+are concerned.
 
 \paragraph{Restricting open propositions} Part of the problem with the
 example above was that there were variables free in the {\it type} of
@@ -1772,7 +1772,7 @@ $\emptyset = S_1{^\bullet} \cap {^\bullet}S_2 = {^\circledast}S_1 \cap
 {^\bullet}S_2 = {^\bullet}S_1 \cap {^\circledast}S_2$. 
 
 While this
-restriction would be sufficient for the examples in this thesis, it
+restriction would be sufficient for the examples in this dissertation, it
 would preclude a conjectured extension of the destination-adding
 transformation given in Chapter~\ref{chapter-destinations} to nested
 specifications (nested versus flat specifications are discussed in
@@ -2881,7 +2881,7 @@ The prototype implementation of \sls~contains a parser and typechecker
 for the SLS language, and is available from
 \url{https://github.com/robsimmons/sls}. Code that is checked by this
 prototype implementation will appear frequently in the rest of this
-thesis, always in a \verb|fixed-width font|.
+document, always in a \verb|fixed-width font|.
 
 \begin{figure}
 \newcommand{\thingamajig}{=}
@@ -2983,7 +2983,7 @@ that uses the pseudo-positive negative atomic propositions described
 in Section~\ref{sec:pseudopositive}. 
 
 
-In the code examples given in the remainder of this thesis, we will
+In the code examples given in the remainder of this document, we will
 use these optional annotations in a consistent way.  We will omit the
 optional \verb|$A| annotations only in specifications with no ordered
 atomic propositions, and we will omit the optional \verb|!A|
@@ -3000,7 +3000,7 @@ One logic programming interpretation of CLF was explored by the
 Lollimon implementation \cite{lopez05monadic} and adapted by the Celf
 implementation
 \cite{schacknielsen08celf,schacknielsen11implementing}. Logic
-programming interpretations of \sls~are not a focus this thesis, but
+programming interpretations of \sls~are not a focus this dissertation, but
 we will touch on a few points in this section.
 
 Logic programming is important because it provides us with operational
@@ -3562,8 +3562,8 @@ large.
 
 The decision to use LF as a first-order domain of quantification
 rather than using a fully-dependent system is based on several
-considerations. First and foremost, this choice was sufficient for the
-purposes of this thesis. In fact, for the purposes of this thesis, we
+considerations. First and foremost, this choice was sufficient for our
+purposes here. In fact, for the purposes of this dissertation, we
 could have used an even simpler term language of simply-typed LF
 \cite{pfenning08church}. Two other logic programming interpretations
 of \sls-like frameworks, Lollimon \cite{lopez05monadic} and Ollibot
@@ -3571,7 +3571,7 @@ of \sls-like frameworks, Lollimon \cite{lopez05monadic} and Ollibot
 languages. Canonical LF and Spine Form LF are, at this point,
 sufficiently well understood that the additional overhead of fully
 dependently-typed terms is not a significant burden, and there are
-many examples beyond the scope of this thesis where dependent types are
+many examples beyond the scope of this dissertation where dependent types are
 useful.
 
 On a theoretical level, it is a significant simplification when we
@@ -3589,7 +3589,7 @@ itself. For the purposes of showing that a logical framework can be
 carved out from a focused logic -- the central thesis of this and the
 previous two chapters -- it is easiest to break this circular
 dependency. We conjecture that this complication is no great obstacle,
-but this thesis avoids the issue.
+but our approach avoids the issue.
 
 On a practical level, there are advantages to using a well-understood
 term language. The \sls~prototype implementation
@@ -3597,8 +3597,7 @@ term language. The \sls~prototype implementation
 engine of Twelf to reconstruct LF terms. Schack-Nielsen's
 implementation of type reconstruction for Celf is complicated by the
 requirements of dealing with type reconstruction for a substructural
-term language, a consideration that is orthogonal to this
-thesis \cite{schacknielsen08celf}. 
+term language, a completely orthogonal consideration \cite{schacknielsen08celf}. 
 
 Finally, it is not clear that the addition of full CLF-like dependency
 comes with great expressive benefit. 

@@ -1,8 +1,8 @@
 \chapter{On logical correspondence}
 \label{chapter-correspondence}
 
-In Part 1, we defined \sls, a logical framework of substructural
-logical specifications. For the purposes of this thesis, we are
+In Part~I, we defined \sls, a logical framework of substructural
+logical specifications. For the purposes of this dissertation, we are
 primarily interested in using \sls~as a framework for specifying the
 operational semantics of programming languages, especially stateful
 and concurrent programming languages. This is not a new idea: one of
@@ -289,7 +289,9 @@ $\left(y{:}\istrue{\left( {\sf p_1(\lf{c})} \lefti \{ {\sf p_2(\lf{c})} \} \righ
 x{:}\susp{\sf p_1(\lf{c})}\right)
 \not \leadsto$. Another example of the evolution of a 
 process state with nested rules is given 
-in Figure~\ref{fig:ho-evo-ex}.
+in Figure~\ref{fig:ho-evo-ex}.\footnote{See
+  Appendix~\ref{appendix-procsum} for a summary of the notation used for
+  \sls~steps, traces, process states, and frames.}
 %
 The choice of nested versus flat specification does not impact
 expressiveness, but it does influence our ability to read
@@ -342,14 +344,14 @@ not and parallelism-enabling or not.)
 
 The nondeterministic choices that transformations can make give us a
 rigorous vocabulary for describing choices that otherwise seem
-unmotivated. An example of this can be found in the paper that introduced
-the destination-adding and approximation transformations
+unmotivated. An example of this can be found in the paper that
+introduced the destination-adding and approximation transformations
 \cite{simmons11logical}. In that article, we had to motivate an ad hoc
-change to the usual abstract machine semantics. In this thesis, by the
-time we encounter a similar specification in Chapter~\ref{chapter-approx}, 
-we will be
-able to see that this change corresponds to omitting tail-recursion
-optimization in the process of operationalization.
+change to the usual abstract machine semantics. In this dissertation,
+by the time we encounter a similar specification in
+Chapter~\ref{chapter-approx}, we will be able to see that this change
+corresponds to omitting tail-recursion optimization in the process of
+operationalization.
 
 Our taxonomy does a good job of capturing the scope of existing work
 on SSOS specifications.  Figure~\ref{fig:class-prevwork} shows
@@ -423,7 +425,7 @@ described above captures the scope of previous work.
 \section{Related work}
 \label{sec:correspondence-related}
 
-This part of the thesis draws from many different sources of
+This part of the dissertation draws from many different sources of
 inspiration. In this section, we survey this related work and, where
 applicable, outline how our use of logical correspondence differs from
 existing work.
@@ -431,15 +433,15 @@ existing work.
 \subsection*{Partiality in deductive computation}
 
 The genesis of the operationalization transformation discussed in
-Chapter~\ref{chapter-absmachine} 
-can be found in the treatment of the operational semantics
-of LF in Tom Murphy VII's thesis~\cite{murphy08modal}; this treatment
-can be seen as a synthesis of the operational interpretation of
-natural semantics explored in Cl\'ement's et al.'s early work on
-natural semantics in TYPOL and the approach to theorem proving
-pioneered by Twelf~\cite{pfenning99system}.
+Chapter~\ref{chapter-absmachine} can be found in the treatment of the
+operational semantics of LF in Tom Murphy VII's
+dissertation~\cite{murphy08modal}; this treatment can be seen as a
+synthesis of the operational interpretation of natural semantics
+explored in Cl\'ement's et al.'s early work on natural semantics in
+TYPOL and the approach to theorem proving pioneered by
+Twelf~\cite{pfenning99system}.
 
-In his thesis, Murphy described a natural semantics for Lambda 5, a
+In his dissertation, Murphy described a natural semantics for Lambda 5, a
 distributed programming language, and encoded that specification in
 Twelf. He then wanted to interpret that natural semantics as an {\it
   operational} semantics for Lambda 5 in the style of Cl\'ement et
@@ -693,7 +695,7 @@ features.
 
 Both of these specifications should be seen as different points in a
 larger story of logical correspondence that we are only beginning to
-treat in this thesis. The use of the ordered context in Felty and
+explore in this dissertation. The use of the ordered context in Felty and
 Momigliano's specification, in particular, is exactly analogous to the
 non-parallel ordered abstract machines in
 Chapter~\ref{chapter-absmachine}. We therefore posit the existence of
@@ -760,7 +762,7 @@ of transforming natural semantics into abstract machines and in the
 study of abstract machines that are in the image of this
 translation. It is possible to view the logical correspondence in the
 same light, but that is not how logical correspondence will be used in
-this thesis.  Indeed, it is not our intent to advocate strongly for the
+this document.  Indeed, it is not our intent to advocate strongly for the
 use of natural semantics specifications at all; recall that natural
 semantics were used to illustrate problems with {\it non}-modularity
 in language specification in Section~\ref{sec:intro-ssos}.
@@ -770,7 +772,7 @@ Figure~\ref{fig:class-transform} in an expressly directed fashion,
 operationalizing natural semantics as ordered abstract machines and
 transforming ordered abstract machines into destination-passing
 semantics without giving too much thought to the opposite
-direction. In the context of this thesis, the reason that
+direction. In the context of this dissertation, the reason that
 transformations are important is that they {\it expose more of the
   semantics to manipulation and modular extension}.  The
 operationalization transformation in Chapter~\ref{chapter-destinations} 
@@ -792,21 +794,22 @@ flow analysis in Chapter~\ref{chapter-approx}.
 % semantics are not amenable to modular extension and abstract
 % interpretation.
 
-In the next three chapters that make up Part~2 of this thesis, we will
-present natural semantics specifications and substructural operational
-semantics specifications in a number of styles. We do so with the
-confidence that these specifications can be automatically transformed
-into the ``lowest common denominator'' of flat destination-passing
-specifications.  Certainly, this means that we should be unconcerned
-about using a higher-level style such as the ordered abstract machine
-semantics, or even natural semantics, when that seems appropriate. If
-we need the richer structure of destination-passing semantics later
-on, the specification can be automatically transformed.  Using the
-original, high-level specifications, the composition of different
-language features may appear to be a tedious and error-prone process of
-revision, but after transformation into the lowest-common-denominator
-specification style, composition can be performed by simply
-concatenating the specifications.
+In the next three chapters that make up Part~II of this dissertation,
+we will present natural semantics specifications and substructural
+operational semantics specifications in a number of styles. We do so
+with the confidence that these specifications can be automatically
+transformed into the ``lowest common denominator'' of flat
+destination-passing specifications.  Certainly, this means that we
+should be unconcerned about using a higher-level style such as the
+ordered abstract machine semantics, or even natural semantics, when
+that seems appropriate. If we need the richer structure of
+destination-passing semantics later on, the specification can be
+automatically transformed.  Using the original, high-level
+specifications, the composition of different language features may
+appear to be a tedious and error-prone process of revision, but after
+transformation into the lowest-common-denominator specification style,
+composition can be performed by simply concatenating the
+specifications.
 
 Taking this idea to its logical conclusion,
 Appendix~\ref{appendix-hybrid} presents the hybrid operational

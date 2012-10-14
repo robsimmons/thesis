@@ -1,16 +1,18 @@
 \chapter{Generative invariants}
 \label{chapter-gen}
 
-So far in this thesis, we have presented \sls~as a framework for
-presenting transition systems. This view focuses on synthetic
-transitions as a way of relating pairs of process states, either with
-one transition $(\Psi; \Delta) \leadsto (\Psi'; \Delta')$ or with a
-series of transitions $(\Psi; \Delta) \leadsto^* (\Psi';
-\Delta')$. This chapter will focus on another view of concurrent
-\sls~specifications as {\it grammars} for describing well-formed
-process states. This view was presented previously in the discussions
-of adequacy in Section~\ref{sec:framework-reggenworld} and in
-Section~\ref{sec:nat-ssos-adequacy}. 
+So far, we have presented \sls~as a framework for presenting
+transition systems. This view focuses on synthetic transitions as a
+way of relating pairs of process states, either with one transition
+$(\Psi; \Delta) \leadsto (\Psi'; \Delta')$ or with a series of
+transitions $(\Psi; \Delta) \leadsto^* (\Psi'; \Delta')$.\footnote{See
+  Appendix~\ref{appendix-procsum} for a summary of the notation used for
+  steps, traces, process states, and frames.} This chapter will focus on
+another view of concurrent \sls~specifications as {\it grammars} for
+describing well-formed process states. This view was presented
+previously in the discussions of adequacy in
+Section~\ref{sec:framework-reggenworld} and in
+Section~\ref{sec:nat-ssos-adequacy}.
 
 The grammar-like specifications that describe well-formed process
 states are called {\it generative signatures}, and generative
@@ -23,26 +25,26 @@ Section~\ref{sec:nat-ssos-adequacy}, the relevant world was a set of
 process states that we could put in bijective correspondence with the
 states of an abstract machine.
 
-Generative signatures a significant extension of traditional grammars,
-both because of the presence of dependent types and because of the
-presence of linear and persistent resources in \sls. However, we will
-not endeavor to student generative signatures in their own right in
-this chapter or this thesis. Rather, we will use generative signatures
-for one very specific purpose: showing that, under some generative
-signature $\Sigma_{\it Gen}$ that defines a world $\mathcal W$,
-whenever $(\Psi; \Delta) \in \mathcal W$ and $(\Psi; \Delta)
-\leadsto_\Sigma (\Psi'; \Delta')$ it is always the case that $(\Psi';
-\Delta') \in \mathcal W$.  (The signature $\Sigma$ encodes the
-transition system we are studying.)  In such a case, the world or
-language of well-formed process states is called a {\it generative
-  invariant} of $\Sigma$.
+Generative signatures are a significant extension of context-free 
+grammars, both because of the presence of dependent types and because
+of the presence of linear and persistent resources in \sls. However,
+we will not endeavor to study generative signatures in their own
+right in this chapter or this dissertation. Rather, we will use
+generative signatures for one very specific purpose: showing that,
+under some generative signature $\Sigma_{\it Gen}$ that defines a
+world $\mathcal W$, whenever $(\Psi; \Delta) \in \mathcal W$ and
+$(\Psi; \Delta) \leadsto_\Sigma (\Psi'; \Delta')$ it is always the
+case that $(\Psi'; \Delta') \in \mathcal W$.  (The signature $\Sigma$
+encodes the transition system we are studying.)  In such a case, the
+world or language of well-formed process states is called a {\it
+  generative invariant} of $\Sigma$.
 
 \subsection*{Type preservation}
 
 Narrowing our focus even further, in this chapter our sole use of
-generative invariants in this chapter is describing well-formedness
+generative invariants will be describing well-formedness
 and well-typedness invariants of the sorts of substructural
-operational semantics specifications presented in Part II.  When we
+operational semantics specifications presented in Part~II.  When we
 want to prove language safety for a small-step SOS specification like
 $\obj{e \mapsto e'}$ from Section~\ref{sec:evaluationcontexts} and the
 beginning of Chapter~\ref{chapter-absmachine}, we also define a
@@ -54,54 +56,38 @@ type $\obj{\it tp}$ if the expression variables $\obj{x_1, \ldots,
   type} as described in Section~\ref{sec:gen-ordertp}, not an LF type
 $\tau$ from Chapter~\ref{chapter-framework}.)
 
-Safety The preservation proof in a standard ``safety = progress +
-preservation'' formulation of type safety is, of course, a statement
-about invariants.
-
-Well-typedness invariants are important because they allow us to
-prove {\it language safety}, the property (discussed way back in the
-introduction) that a language specification is completely free
-from undefined behavior.
-
-
-Preservation in an SOS specification says that if $\obj{e
-  \mapsto e'}$ and $\obj{e}$ has type $\obj{\it tp}$, then $\obj{e'}$
-has type $\obj{\it tp}$ as well -- the type is invariant under
-evaluation.
-
-
+Well-typedness invariants are important because they allow us to prove
+{\it language safety}, the property (discussed way back in the
+introduction) that a language specification is completely free from
+undefined behavior.  The standard ``safety = progress + preservation''
+formulation of type safety is primarily a statement about
+invariants. We specify some property (``well-typed with type $\obj{\it
+  tp}$''), show that it is invariant under execution (preservation:
+``if $\obj{e \mapsto e'}$ and $\obj{e}$ has type $\obj{\it tp}$, then
+$\obj{e'}$ has type $\obj{\it tp}$''), and show that any state with
+that property has well-defined behavior (progress: ``if $\obj{e}$ has
+type $\obj{\it tp}$, it steps or is a value'').  
 
 The purpose of this chapter is to demonstrate that generative
 invariants are a solid methodology for describing invariants of
 \sls~specifications, especially well-formedness and well-typedness
 invariants of substructural operational semantics specifications like
-the ones presented in Part II. As we have already
-seen, well-formedness invariants are major part of adequacy
-theorems. 
-
-We don't generally expect all syntactically well-formed expressions
-$\obj{e}$ to be free of undefined behavior. 
-
- Using the typing
-judgment, we can prove the safety theorem -- all well-typed
-expressions are free from undefined behavior -- by way of two
-theorems. The first theorem is {\it preservation}: if $\obj{\cdot
-  \vdash e : {\it tp}}$ and $\obj{e \mapsto e'}$ then $\obj{\cdot
-  \vdash e' : {\it tp}}$. The second theorem is {\it progress}: if
-$\obj{\cdot \vdash e : {\it tp}}$, then either there is some
-$\obj{e'}$ such that $\obj{e \mapsto e'}$ or else $\obj{e}$ is already
-a value.
-
-Establishing a generative invariant for an SSOS language specification
-is analogous to proving a preservation theorem in a small-step SOS
-language specification. Progress and safety theorems for SSOS
-specifications will be discussed in Chapter~\ref{chapter-safety}.
+the ones presented in Part~II. As we have already seen,
+well-formedness invariants are major part of adequacy theorems. In the
+next chapter, we will show that well-typedness invariants are
+sufficient for proving progress theorems, meaning that generative
+invariants can form the basis of progress-and-preservation-style
+safety theorems for programming languages specified in \sls.
+% Establishing a generative invariant for an SSOS language specification
+% is analogous to proving a preservation theorem in a small-step SOS
+% language specification. Progress and safety theorems for SSOS
+% specifications will be discussed in Chapter~\ref{chapter-safety}.
 These two chapters establish the centerpiece of the third refinement
 of our central thesis:
 
 \smallskip
 \begin{quote} 
-  {\bf Thesis (Part III):} {\it The \sls~specification of the operational
+  {\bf Thesis (Part~III):} {\it The \sls~specification of the operational
     semantics of a programming language is a suitable basis for formal
     reasoning about properties of the specified language.}
 \end{quote} 
@@ -112,25 +98,48 @@ of our central thesis:
 In Section~\ref{sec:gen-worlds} we review how generative signatures
 define a world and show how the {\it regular worlds} that Sch\"urmann
 implemented in Twelf \cite{schurmann00automating} fall out as a
-special case of the worlds described by generative signatures.  We
+special case of the worlds described by generative signatures.  
+After this, we essentially play the same game 
+
+play out a similar proof of preservation
+five t
+
+\smallskip
+\begin{itemize}
+\item In Section~\ref{sec:gen-order} we extend the well-formedness
+  invariant for sequential ordered abstract machines
+  (Section~\ref{sec:nat-ssos-adequacy}) to parallel ordered abstract
+  machines with failure, setting up the basic pattern.
+\item In Section~\ref{sec:gen-ordertp} we switch from specifying
+  well-{\it formed} process states to specifying well-{\it typed}
+  process states.  This is not a large technical shift, but
+  conceptually it is an important step from thinking about adequacy
+  properties to thinking about preservation theorems.
+\item In Section~\ref{sec:gen-state} we describe how generative
+  invariants can be established for the sorts of stateful signatures
+  considered in Section~\ref{sec:richer-ordered-abstract}. This
+  requires us to consider {\it uniqueness} properties of
+  specifications (Section~\ref{sec:uniqueness-genstate}).
+\item In Section~\ref{sec:gen-destinations} we consider invariants for
+  specifications in the image of the destination-adding transformation
+  from Chapter~\ref{chapter-destinations}. This formalization, which
+  is in essence a \sls~encoding of Cervesato and Sans's type system
+  from \cite{cervesato13substructural}, 
+\item In Section~\ref{sec:gen-letcc} we consider the peculiar case of
+  first-class continuations, which require us to use persistent
+  continuation frames as described in
+  Section~\ref{sec:dest-continuations}.
+\end{itemize}
+\smallskip
+
+We
 will then discuss invariants of operationalized ordered abstract
 machines, introduced in Section~\ref{sec:nat-ssos-adequacy}, more
-generally (Section~\ref{sec:gen-order}). In
-Section~\ref{sec:gen-ordertp} we will extend that discussion from
-well-{\it formed} process states to well-{\it typed} process states.
-This is not a large technical shift, but conceptually it is an
-important step from thinking about adequacy properties to
-thinking about preservation theorems. 
-In Section~\ref{sec:gen-state}
-we describe how generative invariants can be established for the sorts
-of stateful signatures considered in
-Section~\ref{sec:richer-ordered-abstract}. In
+generally (Section~\ref{sec:gen-order}). 
+ In
 Section~\ref{sec:gen-destinations} we consider invariants for
 specifications in the image of the destination-adding transformation
-from Chapter~\ref{chapter-destinations}.  In
-Section~\ref{sec:gen-letcc} we consider the peculiar case of
-first-class continuations, which require us to use persistent
-continuation frames as described in Section~\ref{sec:dest-continuations}. 
+from Chapter~\ref{chapter-destinations}.  
 %Finally, in Section~\ref{sec:gen-count} we
 %introduce a more complicated class of generative invariants that
 %capture the numerical properties of specifications that appear in the
@@ -702,7 +711,7 @@ decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}]
 \draw (1.85,.55) node{\begin{turn}{30} \small ${\sf gen/eval}$ \end{turn}};
 \end{tikzpicture} 
 \end{center}
-\caption{Graphical representation of Part 1 of the inversion lemma
+\caption{Graphical representation of part 1 of the inversion lemma
 for $\siggenorder$}\label{fig:show-inversion}
 \end{figure}
 
@@ -2258,7 +2267,7 @@ inequality in this way.
 \label{sec:gen-destinations}
 
 Destination-passing style specifications, as discussed in
-Chapter~\ref{chapter-destinations}, are not a focus of this thesis,
+Chapter~\ref{chapter-destinations}, are not a focus of this dissertation,
 but they deserve mention for two reasons. First, they are of paramount
 importance in the context of the logical framework CLF, a framework
 that lacks \sls's notions of order. Second, destination-passing
@@ -3056,7 +3065,7 @@ Induction and case analysis on the last steps of a given trace.
   Induction and case analysis on last steps of the trace $T$; each
   case is individually quite simple because ${\it Var}$ is always a
   singleton $\{ y \}$.  While we introduce a persistent atomic
-  proposition ${\sf cont}$ in Part 3, the step that introduces this
+  proposition ${\sf cont}$ in part 3, the step that introduces this
   proposition can always be rotated to the end of a trace because
   ${\sf cont}$ propositions cannot appear in the input interface of
   any step in under the generative signature $\siggenletcc$. This is a
@@ -3065,7 +3074,7 @@ Induction and case analysis on the last steps of a given trace.
   which stipulates that transitions enabled by a generative signature
   cannot consume or mention terminals like ${\sf cont}$.
 
-  As an aside, $z$ will always equal $z'$ in Parts 1 and 2, but we'll
+  As an aside, $z$ will always equal $z'$ in parts 1 and 2, but we'll
   never need to rely on this fact.
 \end{proof}
 
@@ -3131,7 +3140,7 @@ decoration={snake,amplitude=.3mm,segment length=3mm,post length=1mm}]
 
 In this chapter, we have shown that generative invariants can describe
 well-formedness and well-typedness properties of the full range of
-specifications discussed in Part II of this thesis. We have
+specifications discussed in Part~II of this dissertation. We have
 furthermore shown that these generative invariants are a suitable
 basis for reasoning about type preservation in these specifications.
 All of these proofs have a common 3-step structure: 

@@ -13,10 +13,10 @@ This document has endeavored to support the following thesis:
 
 In the service of this thesis, we first developed a logical framework
 of substructural logical specifications (\sls) based on a rewriting
-interpretation of ordered linear lax logic (\ollll). Part I of the
-thesis discussed the design of this logical framework, and in the
-process firmly established the elegant connection between two sets of
-techniques:
+interpretation of ordered linear lax logic (\ollll). Part~I of the
+dissertation discusses the design of this logical framework, and in
+the process firmly establishes the elegant connection between two sets
+of techniques:
 
 \smallskip
 \begin{enumerate}
@@ -30,7 +30,7 @@ admissibility in logic, on the other.
 \noindent 
 The broad outlines of this connection have been known for a decade,
 but this dissertation gives the first account of the connection that
-generalizes to all logical connectives. This connection allowed the
+generalizes to all logical connectives. This connection allows the
 \sls~framework to be presented as a syntactic refinement of focused
 ordered linear lax logic; the steps and traces of \sls, which provide
 its rewriting interpretation, are justified as partial proofs in
@@ -46,18 +46,19 @@ The \sls~framework acts as a bridge between the world of logical
 frameworks, where deductive derivations are the principal objects of
 study, and the world of rewriting logic, where rewriting sequences
 that are similar to \sls~traces are the principal objects of
-study. Part II of this thesis discusses a number of ways of describing
-operational semantics specifications in \sls, using ordered resources
-to encode control structures, using mobile/linear resources to encode
-mutable state and concurrent communication, and using persistent
-resources to represent memoization and binding. Different styles of
-specification were connected to each other through systematic
-transformations on \sls~specifications that we proved to be generally
-sound, a methodology named the {\it logical correspondence}, following
-Danvy et al.'s functional correspondence. Most of the systematic
-transformations discussed in Chapter~\ref{chapter-absmachine} and
+study. Part~II of this dissertation discusses a number of ways of
+describing operational semantics specifications in \sls, using ordered
+resources to encode control structures, using mobile/linear resources
+to encode mutable state and concurrent communication, and using
+persistent resources to represent memoization and binding. Different
+styles of specification are connected to each other through
+systematic transformations on \sls~specifications that we prove to be
+generally sound, a methodology named the {\it logical correspondence},
+following Danvy et al.'s functional correspondence. Most of the
+systematic transformations discussed in
+Chapter~\ref{chapter-absmachine} and
 Chapter~\ref{chapter-destinations} -- operationalization,
-defunctionalization, and destination-adding -- were implemented in the
+defunctionalization, and destination-adding -- are implemented in the
 \sls~prototype implementation. Utilizing this implementation, we show
 in Appendix~\ref{appendix-hybrid} that it is possible to fuse together
 a single coherent \sls~specification of a MiniML language with
@@ -70,21 +71,21 @@ of specification, including natural semantics where appropriate.
 % specifications in \sls~and rewriting logic-based approaches to
 % operational semantics specifications.
 
-This thesis also discussed two different methodologies for formally
-reasoning about properties of operational semantics specifications in
-\sls. The program analysis methodology considered in
+This dissertation also discusses two different methodologies for
+formally reasoning about properties of operational semantics
+specifications in \sls. The program analysis methodology considered in
 Chapter~\ref{chapter-approx} allows us to derive effectively
 executable abstractions of an operational semantics directly from an
 operational semantics specification in \sls. The methodology of
 progress, preservation, and type safety considered in
-Chapter~\ref{chapter-gen} and Chapter~\ref{chapter-safety} was
+Chapter~\ref{chapter-gen} and Chapter~\ref{chapter-safety} is
 presented as a natural extension of traditional ``safety = progress +
-preservation'' reasoning. In a sense, this thesis has pushed our
-ability to reason {\it formally} about properties of
-\sls~specifications (and substructural operational semantics
-specifications in particular) some distance beyond our ability to {\it
-  informally} reason about these specifications. An important
-direction for future work will be to move beyond the
+preservation'' reasoning. In a sense, the work described in this
+document has pushed our ability to reason {\it formally} about
+properties of \sls~specifications (and substructural operational
+semantics specifications in particular) some distance beyond our
+ability to {\it informally} reason about these specifications. An
+important direction for future work will be to move beyond the
 misleadingly-sequential language of \sls~traces and develop a more
 user-friendly language for writing, talking, and thinking about traces
 in \sls, especially generative traces.
