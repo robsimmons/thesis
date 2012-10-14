@@ -1,0 +1,162 @@
+\chapter{Process states summary}
+\label{appendix-procsum}
+
+In this dissertation, we emphasize the use of {\it process states} to
+describe the internal states of the evolving systems we are interested in.
+This view is an extension of Miller's {\it processes-as-formula}
+interpretation \cite{miller92pi,deng12relating}. Of course, a process
+state is not a formula; Section~\ref{sec:whytraces} discusses our
+emphasis on \sls~process states instead of \sls~formulas as the fundamental
+representation of the internal states of evolving systems.
+
+A process state as defined in Chapter~\ref{chapter-framework} has the
+form $(\Psi; \Delta)_{\lf{\sigma}}$, though outside of
+Chapter~\ref{chapter-framework} we never use the associated
+substitution $\lf{\sigma}$, writing $(\Psi; \Delta)$ to indicate the
+empty substitution $\lf{\sigma} = \lf{\cdot}$. The first-order context
+$\Psi$, which is sometimes omitted, is also called the {\it LF
+  context} in \sls~because Spine Form LF is the first-order term
+language of \sls~(Section~\ref{sec:sls-termlanguage}). $\Delta$ is a
+{\it substructural context}.
+
+\section{Substructural contexts}
+
+A substructural context (written as $\Delta$ and occasionally as $\Xi$)
+is a sequence of variable bindings $x{:}\islvl{T}$ -- all the
+variables $x$ bound in a context must be distinct. In \sls, $\mlvl$ is
+either $\mtrue$ (ordered resources), $\meph$ (mobile resources, also
+called ephemeral or linear resources), or $\mpers$ (persistent
+resources). 
+
+In stable process states, $T$ is usually a {\it suspended positive
+  atomic proposition} $\susp{Q}$.  The permeability of a positive
+atomic proposition (ordered, mobile/linear/ephemeral, or persistent)
+is one of its intrinsic properties (Section~\ref{sec:permeable},
+Section~\ref{sec:ordpolarprop}), so we can write $x{:}\susp{Q}$
+instead of $x{:}\istrue{\susp{Q}}$, $x{:}\iseph{\susp{Q}}$, or
+$x{:}\ispers{\susp{Q}}$ if the permeability of $Q$ is known from the
+context. So the encoding of the string \obj{\mbox{{\sf [
+      \textless~\textgreater~( [ ] )}}}, described in the introduction
+as
+\[
+{\sf 
+  left(sq) ~~
+  left(an) ~~
+  right(an) ~~
+  left(pa) ~~
+  left(sq) ~~
+  right(sq) ~~
+  right(pa)}
+\]
+is more properly described as
+{\footnotesize \[ 
+{
+  x_1{:}\susp{\sf left(sq)}, ~~
+  x_2{:}\susp{\sf left(an)}, ~~
+  x_3{:}\susp{\sf right(an)}, ~~
+  x_4{:}\susp{\sf left(pa)}, ~~
+  x_5{:}\susp{\sf left(sq)}, ~~
+  x_6{:}\susp{\sf right(sq)}, ~~
+  x_7{:}\susp{\sf right(pa)}
+}
+\]}We write $x_1{:}{\susp{\sf left(sq)}}$ instead of
+$x_1{:}\istrue{\susp{\sf left(sq)}}$ above, leaving implicit the fact that 
+${\sf left}$ and ${\sf right}$ are ordered predicates.
+
+
+It is also possible, in {\it nested} \sls~specifications
+(Section~\ref{section-introtologicalcorrespondence},
+Section~\ref{sec:operationalization}), to have variable bindings
+$x{:}\istrue{A^-}$, $x{:}\iseph{A^-}$, and $x{:}\ispers{A^-}$. These
+nested specifications act much like rules in the \sls~signature,
+though mobile rules ($x{:}\iseph{A^-}$) can only be used one time, and
+ordered rules ($x{:}\istrue{A^-}$) can only be used one time and only
+in one particular part of the context (Figure~\ref{fig:ho-evo-ex}).
+
+Chapter~\ref{chapter-order} treats substructural contexts strictly as
+sequences, but in later chapters we treat substructural contexts in a
+more relaxed fashion, allowing mobile/linear/ephemeral and persistent
+variable bindings to be tacitly reordered relative to one another
+other and relative to ordered propositions. In this relaxed reading,
+$(x_1{:}\istrue{\susp{Q_1}}, x_2{:}\istrue{\susp{Q_2}})$ and
+$(x_2{:}\istrue{\susp{Q_2}}, x_1{:}\istrue{\susp{Q_1}})$ are not
+equivalent contexts but $(x_3{:}\ispers{\susp{Q_3}},
+x_2{:}\istrue{\susp{Q_2}})$ and $(x_2{:}\istrue{\susp{Q_2}},
+x_3{:}\ispers{\susp{Q_3}})$ are. % $x_3{:}\ispers{\susp{Q_3}},
+% x_4{:}\iseph{\susp{Q_4}}$ and $x_4{:}\iseph{\susp{Q_4}},
+% x_3{:}\ispers{\susp{Q_3}}$ are equivalent as well.
+
+A {\it frame}
+$\Theta$ represents a context with a hole in it. The notation
+$\tackon{\Theta}{\Delta}$ tacks the substructural context $\Delta$
+into the hole in $\Theta$; the context and the frame must have
+disjoint variable domains for this to make sense. In
+Chapter~\ref{chapter-order}, frames are interrupted sequences of variable
+bindings
+$x_1{:}\islvl{T_1},\ldots x_n{:}\islvl{T_n}, \Box,
+x_{n+1}{:}\islvl{T_{n+1}}, \ldots x_m{:}\islvl{T_{m}}$, where the box
+represents the hole. In later chapters, this is relaxed in
+keeping with the relaxed treatment of contexts modulo reordering
+of mobile and persistent variable bindings.
+
+\section{Steps and traces}
+
+Under focusing, a \sls~proposition can correspond to some number of
+synthetic transitions (Section~\ref{sec:linsynthetic},
+Section~\ref{sec:framework-concurrent}). The declaration ${\sf rule} :
+Q_1 \fuse Q_2 \lefti \{ Q_3 \fuse Q_2 \}$\footnote{This is
+  synonymous with the proposition $Q_1 \fuse Q_2 \lefti
+  {\ocircle}(Q_3 \fuse Q_2)$ (Section~\ref{sec:slsframework}).}  in an
+\sls~signature $\Sigma$, where $Q_1$ is ordered, $Q_2$ is mobile, and
+$Q_3$ is persistent, is associated with this synthetic transition:
+\[
+\tackon{\Theta}{x_1{:}\istrue{\susp{Q_1}}, ~~ 
+                x_2{:}\iseph{\susp{Q_2}}} 
+ \leadsto_\Sigma
+\tackon{\Theta}{y_1{:}\ispers{\susp{Q_3}}, ~~
+                y_2{:}\iseph{\susp{Q_2}}}
+\]
+The variable bindings $x_1$ and $x_2$ no longer appear in
+$\tackon{\Theta}{y_1{:}\ispers{\susp{Q_3}},
+  y_2{:}\iseph{\susp{Q_2}}}$. The proof terms associated with
+synthetic transitions are {\it steps}
+(Section~\ref{sec:framework-concurrent}), and the step corresponding
+to the synthetic transition above is written as $\trstep{y_1,
+  y_2}{{\sf rule}\,(\tfuser{x_1}{x_2})}$. As described in
+Section~\ref{sec:framework-concurrent}, we can relate the step to the
+synthetic transition like this:
+\[
+\trstep{y_1, y_2}{{\sf
+    rule}\,(\tfuser{x_1}{x_2})}
+::
+\tackon{\Theta}{x_1{:}\istrue{\susp{Q_1}}, ~~ 
+                x_2{:}\iseph{\susp{Q_2}}} 
+ \leadsto_\Sigma
+\tackon{\Theta}{y_1{:}\ispers{\susp{Q_3}}, ~~
+                y_2{:}\iseph{\susp{Q_2}}}
+\]
+As described in Section~\ref{sec:presentingtraces}, we can also use
+a more Hoare-logic inspired notation:
+\begin{align*}
+&\qquad
+\tackon{\Theta}{x_1{:}\istrue{\susp{Q_1}}, ~~ 
+                x_2{:}\iseph{\susp{Q_2}}} 
+\\
+&\trstep{y_1, y_2}{{\sf
+    rule}\,(\tfuser{x_1}{x_2})}
+\\
+&\qquad
+\tackon{\Theta}{y_1{:}\ispers{\susp{Q_3}}, ~~
+                y_2{:}\iseph{\susp{Q_2}}}
+\end{align*}
+
+The reflexive-transitive closure of $\leadsto_{\Sigma}$ is
+$\leadsto^*_{\Sigma}$, and the proof terms witnessing these sequences
+of synthetic transitions are {\it traces} $T ::= \emptytrace \mid S
+\mid T; T$.  {\it Concurrent equality} (Section~\ref{sec:framework-concurrenteq}) is an equivalence relation on
+traces that allows us to rearrange the steps $S_1 = \trstep{P_1}{R_1}$
+and $S_2 = \trstep{P_2}{R_2}$ in a trace when the variables introduced
+by $P_1$ (the output interface of $S_1$, written $S_1{^\bullet}$) are
+not mentioned in $R_2$ (the input interface of $S_2$, written
+${^\bullet}S_2$) and vice versa.
+

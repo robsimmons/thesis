@@ -9,4 +9,5 @@
 9  chapter-gen             PUBLISH
 10 chapter-safety          PUBLISH
 11 chapter-conclusion      PUBLISH
-A  appendix-hybrid         PUBLISH
+A  appendix-procsum        PUBLISH
+B  appendix-hybrid         PUBLISH

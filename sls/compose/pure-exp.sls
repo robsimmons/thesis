@@ -12,4 +12,4 @@ unit: exp.                               ; <>
 pair: exp -> exp -> exp.                 ; <e1, e2>
 fst: exp -> exp.                         ; e.1
 snd: exp -> exp.                         ; e.2
-
+arb: exp -> exp -> exp.                  ; e1 ?? e2

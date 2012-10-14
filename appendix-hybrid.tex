@@ -14,11 +14,11 @@ Chapters~\ref{chapter-absmachine}~and~\ref{chapter-destinations}, all
 these specifications can transformed into a common flat
 destination-passing semantics. With the exception of Concurrent ML
 primitives, which were only alluded to in
-Section~\ref{sec:dest-synch}, all the pieces of this specification
-have been presented elsewhere in the thesis. The specification in this
-section is careful to present the entire \sls~specification, as
-opposed to other examples in which the relevant LF declarations were
-almost always omitted.
+Section~\ref{sec:dest-synch}, all the pieces of this specification (or
+very similar variants) have been presented elsewhere in the
+dissertation. The specification in this section is careful to present
+the entire \sls~specification, as opposed to other examples in which
+the relevant LF declarations were almost always omitted.
 
 The lowest common denominator of destination-passing semantics can be
 represented in CLF, and the \sls~implementation is able to output CLF
@@ -100,7 +100,7 @@ defunctionalization transformation doesn't handle this connective.
 Therefore, we repeat the flat ordered abstract machine from
 Figure~\ref{fig:ssos-cbneed}.  Note, however, that there is no
 technical reason why $A^- \with B^-$ should be difficult to handle;
-the actual difficulty is mostly in terms of making sure uncurrying
+any actual difficulty is mostly in terms of making sure uncurrying
 (Section~\ref{sec:defunc-uncurry}) does something sensible.
 
 \bigskip

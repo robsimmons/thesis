@@ -97,15 +97,15 @@ Dale Miller, INRIA-Saclay \& LIX/Ecole Polytechnique
 
 \begin{abstract}
   A logical framework and its implementation should serve as a
-  flexible tool for designing, encoding, simulating, and reasoning
-  about the formal systems that we are interested in. When said
-  systems exhibit state and concurrency, however, existing logical
-  frameworks fall short of this promise. I contend that logical
-  frameworks based on a rewriting interpretation of substructural
-  logics, ordered and linear logic in particular, can help. To this
-  end, this dissertation introduces and demonstrates four
-  methodologies for developing and using logical frameworks that are
-  based on a rewriting interpretation of substructural logic.
+  flexible tool for specifying, simulating, and reasoning about formal
+  systems. When the formal systems we are interested in exhibit state
+  and concurrency, however, existing logical frameworks fall short of
+  this goal. Logical frameworks based on a rewriting interpretation of
+  substructural logics, ordered and linear logic in particular, can
+  help. To this end, this dissertation introduces and demonstrates
+  four methodologies for developing and using substructural logical
+  frameworks for specifying and reasoning about stateful and
+  concurrent systems.
 
   {\it Structural focalization} is a synthesis of ideas from
   Andreoli's focused sequent calculi and Watkins's hereditary
@@ -136,7 +136,7 @@ Dale Miller, INRIA-Saclay \& LIX/Ecole Polytechnique
   demonstrate this methodology by deriving a control flow analysis and
   an alias analysis from suitable programming language specifications.
 
-\item {\it Generative invariants} are a powerful generalization of
+  {\it Generative invariants} are a powerful generalization of
   both context-free grammars and LF's regular worlds that allow us
   to express invariants of \sls~specifications in \sls. We show that
   generative invariants can form the basis of
@@ -165,6 +165,7 @@ Dale Miller, INRIA-Saclay \& LIX/Ecole Polytechnique
 %   - Chris Martens 
 %   - Ian Zerny
 %   - Beniamino Accattoli
+%   - Lindsey Kuper
 %   - Ben Blum
 %   - Jonathan Aldrich, Roger Wolff, and the three anonymous HOSC reviewers
 %   - Three anonymous reviewers of the ICFP submission
@@ -243,6 +244,8 @@ Dale Miller, INRIA-Saclay \& LIX/Ecole Polytechnique
 \input{chapter-conclusion}
 
 \appendix
+
+\input{appendix-procsum}
 
 \input{appendix-hybrid}
 
