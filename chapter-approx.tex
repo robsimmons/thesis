@@ -83,7 +83,7 @@ $\lf{t}$, neutralizing the free existential variable as a notational
 definition. Notions of saturation that can cope with free
 existentially generated variables in other ways
 are interesting, but are beyond the
-scope of this thesis.
+scope of this dissertation.
 
 A {\it minimal} saturated process state is one with no duplicated
 propositions; we can compute a minimal process state from any
@@ -129,7 +129,7 @@ programming on purely-persistent specifications and like simple
 committed-choice forward chaining on specifications with no persistent
 propositions. We refined this interpretation and gave it a cost
 semantics in \cite{simmons08linear}, but this more sophisticated
-interpretation is not relevant to the examples in this thesis.
+interpretation is not relevant to the examples in this dissertation.
 
 \section{Using approximation}
 \label{sec:pda-approxme}
@@ -374,7 +374,9 @@ the process states they generalize: that is, if $(\Psi_g; \Delta_g)$
 is a generalization of $(\Psi; \Delta)$ and $(\Psi; \Delta)
 \leadsto_\Sigma (\Psi'; \Delta')$ then $(\Psi_g; \Delta_g)
 \leadsto_{\Sigma_a} (\Psi'_g; \Delta'_g)$ where $(\Psi'_g; \Delta'_g)$
-is a generalization of $(\Psi'; \Delta')$. This is true, and we will
+is a generalization of $(\Psi'; \Delta')$. This property, 
+{\it one-step simulation}, is true
+\cite[Lemma~6]{simmons11logical}, and we will
 prove it as a corollary on the way to the proof of
 Theorem~\ref{thm:metapprox}.  However, we are not interested in
 generalization per se; rather, we're interested in a stronger
@@ -411,8 +413,56 @@ specified by Definition~\ref{def:approxversion}.
 \end{theorem}
 
 \begin{proof}
-  As in \cite[Theorem 3]{simmons11logical}.\robnote{Expand proof from
-    the HOSC paper.}
+  The central lemma is one-step simulation, mentioned above, which is
+  established by induction on the structure of the step. A multi-step
+  {\it simulation} lemma immediately follows by induction on
+  traces: If $\Sigma_a$ is an approximate version of $\Sigma$,
+  $(\Psi_g; \Delta_g)$ is a generalization of $(\Psi; \Delta)$ and
+  $(\Psi; \Delta) \leadsto^*_\Sigma (\Psi'; \Delta')$ then $(\Psi_g;
+  \Delta_g) \leadsto^*_{\Sigma_a} (\Psi'_g; \Delta'_g)$ where
+  $(\Psi'_g; \Delta'_g)$ is a generalization of $(\Psi'; \Delta')$
+  \cite[Lemma 7]{simmons11logical}.
+
+  The {\it monotonicity} lemma establishes that transitions in a
+  purely-persistent specification only increase the generality of a
+  process state: if $(\Psi; \Delta) \leadsto^*_\Sigma (\Psi';
+  \Delta')$ and $\Sigma$ defines no ordered or mobile predicates, then
+  $(\Psi'; \Delta')$ is a generalization of $(\Psi; \Delta)$
+  \cite[Lemma 8]{simmons11logical}.
+
+  We use the monotonicity lemma to prove the {\it saturation} lemma:
+  if $(\Psi; \Delta) \leadsto^*_\Sigma (\Psi_s; \Delta_s)$, $\Sigma$
+  defines no ordered or mobile predicates, and $(\Psi_s; \Delta_s)$,
+  then whenever $(\Psi; \Delta) \leadsto^*_\Sigma (\Psi'; \Delta')$
+  $(\Psi_s; \Delta_s)$ is a generalization of $(\Psi'; \Delta')$. The
+  proof proceeds by induction on the last steps of the trace
+  witnessing $(\Psi; \Delta) \leadsto^*_\Sigma (\Psi'; \Delta')$.
+  \begin{itemize}
+  \item In the base case, $(\Psi; \Delta) = (\Psi'; \Delta')$ and we
+    appeal to monotonicity.
+
+  \item In the inductive case, we have $(\Psi; \Delta)
+    \leadsto^*_\Sigma (\Psi''; \Delta'') \leadsto_\Sigma (\Psi';
+    \Delta')$.  By the induction hypothesis we have that $(\Psi_s;
+    \Delta_s)$ is a generalization of $(\Psi''; \Delta'')$, and by
+    one-step simulation $(\Psi_s; \Delta_s) \leadsto_\Sigma (\Psi_s';
+    \Delta_s')$ such that $(\Psi_s'; \Delta_s')$ is a generalization
+    of $(\Psi'; \Delta')$. But saturation means that $\Psi_s =
+    \Psi'_s$ and that all the propositions in $\Delta'_s$ already
+    appear in $\Delta_s$, so $(\Psi_s; \Delta_s)$ must be a
+    generalization of $(\Psi'; \Delta')$ as well. \cite[Lemma
+    9]{simmons11logical}
+  \end{itemize}
+
+  Finally, we prove meta-approximation. Consider a trace $(\Psi_0;
+  \Delta_0) \leadsto^*_\Sigma (\Psi_n; \Delta_n)$ of the original
+  program. By the simulation lemma, there is a trace $(\Psi_0;
+  {\lf\sigma}\Delta_0) \leadsto^*_{\Sigma_a} (\Psi_n'; \Delta_n')$ where
+  $(\Psi_n'; \Delta_n')$ is a generalization of $(\Psi_n; \Delta_n)$.
+  By the saturation lemma, $(\Psi_a; \Delta_a)$ is a generalization of
+  $(\Psi_n'; \Delta_n')$, and so because generalization is transitive,
+  $(\Psi_a; \Delta_a)$ is a generalization of $(\Psi_0; \Delta_0)$,
+  which is what we needed to show \cite[Theorem 3]{simmons11logical}.
 \end{proof}
 
 The meaning of the meta-approximation theorem is that if (1) we can
@@ -974,7 +1024,7 @@ semantics that allowed us to derive that logic program as closely as
 possible; the result was a monadic SSOS semantics. There should
 not be any obstacle to deriving an alias analysis from a
 semantics that looks more like the specifications elsewhere in this
-thesis.
+dissertation.
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -1169,7 +1219,7 @@ properties of concurrent protocols that were encoded in the logic
 There are a number of significant difference between our work and
 Bozzano et al.'s, however. The style they use to encode protocols is
 significantly different from any of the SSOS specification styles
-presented in this thesis. They used a general purpose approximation,
+presented in this dissertation. They used a general purpose approximation,
 which could therefore potentially be mechanized in the same way we
 mechanized transformations like operationalization; in contrast, the
 meta-approximation result described here captures a whole class of

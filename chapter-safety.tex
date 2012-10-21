@@ -21,18 +21,19 @@ impossible to talk about progress for such specifications. The purpose
 of this chapter is to establish that the \sls~framework's traces $T$
 and steps $S$, which correspond to partial proofs, provide a suitable
 basis for stating progress theorems (and therefore language safety
-theorems) and for proving these.
+theorems) and for proving these theorems.
 
 We do not discuss progress and safety for the full range of
-specifications from Part II or Chapter~\ref{chapter-gen},
+specifications from Part~II or Chapter~\ref{chapter-gen},
 however. Instead, we will just discuss progress for two examples: the
 ordered abstract machine specification with parallelism and failure
 used as an example in Figure~\ref{fig:gen-order-prog}, and the
-extension of this specification with mutable storage. These two
-examples serve to get across all the concepts necessary to prove
-progress theorems for SSOS specifications. Ultimately, it is not only
-possible to prove progress and safety theorems using SSOS specifications
-in \sls; it's also reasonably straightforward. 
+extension of this specification with mutable storage. The rest is left
+for future work, though we claim that these two examples serve to get
+across all the concepts necessary to prove progress theorems for SSOS
+specifications. Ultimately, it is not only possible to prove progress
+and safety theorems using SSOS specifications in \sls; it's also
+reasonably straightforward.
 
 \section{Backwards and forwards through traces}
 
@@ -41,9 +42,10 @@ case analysis on the {\it last} steps of a generative trace.  This
 form of case analysis and induction on the last steps of a trace can
 also be used to prove progress for sequential SSOS specifications, and
 it is actually necessary to prove progress for SSOS specifications
-with first-class continuations (discussed in in
+with first-class continuations (discussed in
 Section~\ref{sec:dest-continuations} and Section~\ref{sec:gen-letcc})
-in this way. However, for the ordered abstract machine example from
+in this way, though we leave the details of this argument as future
+work. However, for the ordered abstract machine example from
 Figure~\ref{fig:gen-order-prog}, the other direction is more natural:
 we work by induction and case analysis on the {\it first} steps of a
 generative trace. The branching structure introduced by parallel
@@ -67,7 +69,7 @@ restriction of what counts as a generative signature
 (Definition~\ref{def:gensig}). To see why, let $\Delta =
 (x_1{:}\istrue{\susp{{\sf retn}\,\lf{v}}}, x_2{:}\istrue{\susp{{\sf
       cont}\,\lf{f}}})$ and consider the generative rule $\forall
-\lf{e}. \lefti \{ {\sf eval}\,\lf{e} \}$, which is allowed under
+\lf{e}. \{ {\sf eval}\,\lf{e} \}$, which is allowed under
 Definition~\ref{def:gensig}. This rule could ``break'' the context by
 dropping an ordered ${\sf eval}\,\lf{e}$ proposition in between $x_1$
 and $x_2$. A sufficient general condition for avoiding this problem in
@@ -215,7 +217,7 @@ $\Delta \leadsto \Delta'$:
 If both invocations return the second disjunctive possibility, then
  $T'$ contain two steps
 $\trstep{y_1}{{\sf gen/retn}\,\lf{{\it tp}_1}\,\lf{v_1}\,(\tfuser{y_1'}{\tfuser{\tbangr{N_1}}{\tbangr{N_{v1}}}})}$ and \\
-$\trstep{y_2}{{\sf gen/retn}\,\lf{{\it tp}_2}\,\lf{v_2}\,(\tfuser{y_2'}{\tfuser{\tbangr{N_2}}{\tbangr{N_{v2}}}})}$. Because ${\sf retn}$ and ${\sf cont}$
+$\trstep{y_2}{{\sf gen/retn}\,\lf{{\it tp}_2}\,\lf{v_2}\,(\tfuser{y_2'}{\tfuser{\tbangr{N_2}}{\tbangr{N_{v2}}}})}$. Because ${\sf retn}$ and ${\sf cont2}$
 are terminals, \\$\Delta = \tackon{\Theta'}{y_1{:}\istrue{\susp{{\sf retn}\,\lf{v_1}}}, ~ y_2{:}\istrue{\susp{{\sf retn}\,\lf{v_2}}}, ~ y_3{:}\istrue{\susp{{\sf cont2}\,\lf{f}}}}$, and we proceed
 by simultaneous case analysis on $N$, $N_1$, $N_{v1}$, $N_2$, and $N_{v2}$
 (canonical forms lemma). 
@@ -265,13 +267,60 @@ This covers all possible first steps in the trace $T$, and thus completes
 the proof.
 \end{proof}
 
-\section{Progress for stateful specifications}
+\section{Progress with mutable storage}
 \label{sec:progess-mutable}
 
-(There's one twist that's needed to establish safety for mutable state
-and first-class continuations, an at-least-one indexing property that
-is roughly the dual. Talk about this property and describe progress
-for the specification with mutable storage.)\robnote{Finish!}
+Developing progress proofs to for stateful specifications requires a
+property that is the flip side of unique index sets
+(Definition~\ref{def:uniqueindexset},
+Section~\ref{sec:uniqueness-gendests}). Unique index sets require that there
+will be only ever be {\it at most one} proposition of a certain form, 
+and the dual property, {\it assured index sets}, require that there is always
+{\it at least one} proposition of a certain form. 
+
+\bigskip
+\begin{definition}
+  A set $S$ is an {\em assured index set} at a type $\tau$ under a
+  generative signature $\Sigma$ and an initial state $(\Psi; \Delta)$
+  if, whenever $(\Psi; \Delta) \leadsto^*_{\Sigma} (\Psi'; \Delta')$,
+  then $\Psi \vdash_\Sigma \lf{t} : \tau$ implies that, for some ${\sf
+    a}/i \in S$, $x{:}\islvl{\susp{{\sf a}\,\lf{t_1}\ldots\lf{t_n}}}
+  \in \Delta'$ where $\lf{t_i} = \lf{t}$. 
+\end{definition}
+\bigskip
+
+The set $\{ {\sf gencell}/1, {\sf cell}/1 \}$ is also a unique index
+set under $\siggenstate$, and the same set for $\siggenstate$ at type
+${\sf mutable\_loc}$.  The latter property is critical to finishing
+the extension of Theorem~\ref{thm:prog-ordertp} proof in certain cases
+where we invoke the canonical forms lemma. When we invoked the
+canonical forms lemma in the ${\sf cont}$ branch of that proof, we
+started with the knowledge that $\Delta = \tackon{\Theta'}{
+  y_1{:}\istrue{\susp{{\sf retn}\,\lf{v}}}, ~ y_2{:}\istrue{\susp{{\sf
+        cont}\,\lf{f}}}}$. Two new outcomes are introduced when we
+introduce mutable state as discussed in
+Section~\ref{sec:mutable-storage} and Section~\ref{sec:gen-state}.
+The first is the possibility that $\lf{v} = \lf{{\sf loc}\,l}$ while
+$\lf{f} = \lf{\sf get1}$, and the second is the possibility that
+$\lf{f} = \lf{{\sf set2}\,l}$. In each case, we cannot proceed with
+rule ${\sf ev/get1}$ or rule ${\sf ev/set2}$, respectively, unless we
+also know that there is a variable binding $z{:}{\sf
+  cell}\,\lf{l}\,\lf{v'}$ in $\Delta$. We know precisely this because
+$\{ {\sf gencell}/1, {\sf cell}/1 \}$ is an assured index set, because
+$\Psi \vdash \lf{l} {:} {\sf mutable\_loc}$, and because ${\sf
+  gencell}$ propositions, as nonterminals, cannot appear in the
+generated process state $\Delta$. Therefore, in the former case we can
+produce a step $\trstep{y', z'}{{\sf
+    ev/get1}\,\lf{l}\,\lf{v'}\,(\tfuser{y_1}{\tfuser{y_2}{z}})}$, and
+in the later case we can produce a step $\trstep{y', z'}{{\sf
+    ev/set2}\,\lf{v}\,\lf{l}\,\lf{v'}\,(\tfuser{y_1}{\tfuser{y_2}{z}})}$.
+
+A similar use of assured index sets arises if we try to prove progress
+for a specification using letcc (Section~\ref{sec:dest-continuations}
+and Section~\ref{sec:gen-letcc}). We begin with a destination
+$\lf{d}$ and need to use the fact that $\{ {\sf gendest}/1, {\sf
+  cont}/2 \}$ is an assured index set to confirm that we have some
+continuation frame to return to. 
 
 \section{Safety}
 
@@ -338,8 +387,8 @@ Figure~\ref{fig:gen-order-prog} for some $\Delta'$, or else
   there are three possibilities:
   \begin{itemize}
   \item If $\Delta \leadsto \Delta'$, then we're done.
-  \item If $T_g :: (T_1; \trstep{y}{{\sf gen/retn}\,\lf{{\it tp}}\,\lf{v}\,(\tfuser{x_0}{\tfuser{\tbangr{N'}}{\tbangr{N_v'}}})}; T_2)$, then by a trivial case on $T_1$ and $T_2$ we can conclude that both are empty and, therefore, that $\Delta = (y{:}\istrue{\susp{{\sf retn}\,\lf{v}}})$.
-  \item If $T_g :: (T_1; \trstep{y}{{\sf gen/error}\,\lf{{\it tp}}\,x_0}; T_2)$, then by a trivial case on $T_1$ and $T_2$ we can conclude that both are empty and, therefore, that $\Delta = (y{:}\istrue{\susp{{\sf error}}})$.
+  \item If $T_g :: (T_1; \trstep{y}{{\sf gen/retn}\,\lf{{\it tp}}\,\lf{v}\,(\tfuser{x_0}{\tfuser{\tbangr{N'}}{\tbangr{N_v'}}})}; T_2)$, then by a trivial case analysis on $T_1$ and $T_2$ we can conclude that both are empty and, therefore, that $\Delta = (y{:}\istrue{\susp{{\sf retn}\,\lf{v}}})$.
+  \item If $T_g :: (T_1; \trstep{y}{{\sf gen/error}\,\lf{{\it tp}}\,x_0}; T_2)$, then by a trivial case analysis on $T_1$ and $T_2$ we can conclude that both are empty and, therefore, that $\Delta = (y{:}\istrue{\susp{{\sf error}}})$.
   \end{itemize}
 
   \noindent

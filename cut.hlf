@@ -11,7 +11,6 @@ pol: type.
 ⁺: pol.
 ⁻: pol.
 
-
 %{ We define propositions in an environment with free atoms. }%
 atom: pol -> type.
 %block atom⁺: block {Q⁺: atom ⁺}.
@@ -37,6 +36,9 @@ intrinsically typed spine form judgments) }%
 %{ Hypothetical judgments }%
 susp⁺: typ ⁺ -> @type. %name susp⁺ Z z.
 hyp: typ ⁻ -> @type. %name hyp X x.
+%block zatom: some {Q : atom ⁺} block {w}{z: susp⁺ (a Q) w}.
+%block xpers: some {A : typ ⁻} block {x: hyp A e}.
+%block xeph: some {A : typ ⁻} block {w}{x: hyp A w}. 
 
 %{ An inversion or focus context Ω is a list of positive propositions. }%
 invctx: type. %name invctx _Ω.

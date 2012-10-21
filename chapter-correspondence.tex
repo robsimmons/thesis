@@ -47,15 +47,16 @@ styles:
 
 
 \noindent
-Each of these three styles is, in a very formal sense, more
-expressive than the last: there are automatic and
-provably-correct transformations from the less expressive styles
-(natural semantics and ordered abstract machines) to the more
-expressive styles (ordered abstract machines and destination-passing,
-respectively).  Our investigation of provably-correct transformations
-on \sls~specifications therefore justifies our classification scheme
-for SSOS specifications. We call this idea the {\it logical
-  correspondence}, and it is the focus of this part of the thesis:
+Each of these three styles is, in a very formal sense, more expressive
+than the last: there are automatic and provably-correct
+transformations from the less expressive styles (natural semantics and
+ordered abstract machines) to the more expressive styles (ordered
+abstract machines and destination-passing, respectively).  Our
+investigation of provably-correct transformations on
+\sls~specifications therefore justifies our classification scheme for
+SSOS specifications. We call this idea the {\it logical
+  correspondence}, and it is the focus of this refinement of our
+central thesis:
 
 \smallskip
 \begin{quote} 
@@ -269,29 +270,26 @@ do with whether it is possible to return to a previous point a
 programs execution structure and is discussed, along with first-class
 continuations, in Section~\ref{sec:dest-continuations}. 
 
-Another
-distinction is between  {\it nested} and {\it flat}
+Another distinction is between {\it nested} and {\it flat}
 specifications. This distinction applies to all concurrent
 \sls~specifications, not just those that specify substructural
-operational semantics. Flat
-specifications include rewriting rules $\left( p_1 \fuse \ldots \fuse
-  p_n \lefti \{ q_1 \fuse \ldots \fuse q_m \} \right)$ where the head
-of the rule $\{ q_1 \fuse \ldots \fuse q_m \}$ contains only atomic
-propositions. Nested \sls~specifications, on the other hand,
-contain {\it rules} in the conclusions of rules; when the rule fires,
-the resulting process state contains the rule. 
-A rule $A^+ \lefti \{ B^+ \}$ in the context can only fire if a piece 
-of the context
-matching $A^+$ appears to its left, so  $\left(x{:}\susp{\sf p_1(\lf{c})}, ~
-y{:}\istrue{\left( {\sf p_1(\lf{c})} \lefti \{ {\sf p_2(\lf{c})} \} \right)}\right)
-\leadsto \left(z{:}\susp{\sf p_2(\lf{c})}\right)$, whereas 
-$\left(y{:}\istrue{\left( {\sf p_1(\lf{c})} \lefti \{ {\sf p_2(\lf{c})} \} \right)},~
-x{:}\susp{\sf p_1(\lf{c})}\right)
-\not \leadsto$. Another example of the evolution of a 
-process state with nested rules is given 
-in Figure~\ref{fig:ho-evo-ex}.\footnote{See
-  Appendix~\ref{appendix-procsum} for a summary of the notation used for
-  \sls~steps, traces, process states, and frames.}
+operational semantics. Flat specifications include rewriting rules
+$\left( p_1 \fuse \ldots \fuse p_n \lefti \{ q_1 \fuse \ldots \fuse
+  q_m \} \right)$ where the head of the rule $\{ q_1 \fuse \ldots
+\fuse q_m \}$ contains only atomic propositions. Nested
+\sls~specifications, on the other hand, contain {\it rules} in the
+conclusions of rules; when the rule fires, the resulting process state
+contains the rule.  A rule $A^+ \lefti \{ B^+ \}$ in the context can
+only fire if a piece of the context matching $A^+$ appears to its
+left, so $\left(x{:}\susp{\sf p_1(\lf{c})}, ~ y{:}\istrue{\left( {\sf
+        p_1(\lf{c})} \lefti \{ {\sf p_2(\lf{c})} \} \right)}\right)
+\leadsto \left(z{:}\susp{\sf p_2(\lf{c})}\right)$, whereas
+$\left(y{:}\istrue{\left( {\sf p_1(\lf{c})} \lefti \{ {\sf
+        p_2(\lf{c})} \} \right)},~ x{:}\susp{\sf p_1(\lf{c})}\right)
+\not \leadsto$. Another example of the evolution of a process state
+with nested rules is given in
+Figure~\ref{fig:ho-evo-ex}. (Appendix~\ref{appendix-procsum} gives a
+summary of the notation used for process states.)
 %
 The choice of nested versus flat specification does not impact
 expressiveness, but it does influence our ability to read
