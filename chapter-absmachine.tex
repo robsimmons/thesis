@@ -469,16 +469,16 @@ atomic propositions, the signature will {\it remain} well-formed if we
 instead assign that proposition to the class $p^-_d$ of atomic
 propositions that get left in the deductive fragment. The only effect
 is that some rules that were previously of the form ${\sf r} : C$ will
-become rules of the form ${\sf r} : D$.\footnote{The reverse does not hold:
-the proposition ${!}(\forall\lf{x}{:}\tau.\,p^+_\mpers \lefti p^-_d)
-\lefti p^-_d$ has the form $D$, but the proposition
-${!}(\forall\lf{x}{:}\tau.\,p^+_\mpers \lefti p^-_c)
-\lefti p^-_c$ does {\it not} have the form $C$.} In other words, we don't have to
-operationalize anything! If {\it all} atomic propositions are of the
-form $p^-_d$ so that they remain deductive, then the propositions
-$p^-_c$ and $C$ are irrelevant, and the restriction above describes
-all persistent, deductive specifications -- essentially, any signature
-that could be executed by the standard logic programming
+become rules of the form ${\sf r} : D$.\footnote{The reverse does not
+  hold: the proposition ${!}(\forall\lf{x}{:}\tau.\,p^+_\mpers \lefti
+  p^-_d) \lefti p^-_d$ has the form $D$, but the proposition
+  ${!}(\forall\lf{x}{:}\tau.\,p^+_\mpers \lefti p^-_c) \lefti p^-_c$
+  does {\it not} have the form $C$.} If we turn this dial all the way,
+we won't operationalize anything! If {\it all} atomic propositions are
+of the form $p^-_d$ so that they remain deductive, then the
+propositions $p^-_c$ and $C$ are irrelevant, and the restriction above
+describes all persistent, deductive specifications -- essentially, any
+signature that could be executed by the standard logic programming
 interpretation of LF \cite{pfenning89elf}. The operationalization
 transformation will be the identity on such a specification.
 
@@ -834,7 +834,7 @@ us the ordered abstract machine in Figure~\ref{fig:cbv-ev-ssos-tail}.
 \subsection{Parallelism}
 \label{sec:trans-par}
 
-Both the basic transformation and the tail-recursive transformation
+Both the basic and the tail-recursive transformations
 are sequential: if $x{:}{\sf eval}\,\interp{e} \leadsto^* \Delta$,
 then the process state $\Delta$ contains at most one proposition ${\sf
   eval}\,\interp{e'}$ or ${\sf retn}\,\interp{v}$ that can potentially
@@ -1762,17 +1762,28 @@ This completes the proof.
 \label{sec:defunctionalization}
 
 Defunctionalization is a procedure for turning nested
-\sls~specifications into flat \sls~specifications. The
-defunctionalization procedure implemented in the \sls~prototype is
-actually three transformations. The first is properly a
+\sls~specifications into flat \sls~specifications.  The key idea is
+that a nested rule can always be simulated by a distinguished atomic
+proposition by inserting a rule into the signature that teach the
+atomic proposition how to act like the nested rule. (Or, looking at it
+the other way around, the new atomic propositions act like triggers
+for the additional rules.)  The correctness of defunctionalization
+follows from a simple lock-step bisimulation argument -- if a trigger
+can cause a rule in the defunctionalized signature to fire, then that
+trigger corresponds to a nested rule in the context that can fire
+immediately in the non-defunctionalized process state, and vice-versa.
+
+The defunctionalization procedure implemented in the \sls~prototype is
+actually three transformations.  The first is properly a
 defunctionalization transformation (Section~\ref{sec:defunc-defunc}),
 the second is an uncurrying transformation
 (Section~\ref{sec:defunc-uncurry}), and the third is a refactoring
 that transforms a family of ${\sf cont}$-like predicates into a single
 ${\sf cont}$ predicate and a family of frames
-(Section~\ref{sec:defunc-type}). One example of the full three-part
-defunctionalization transformation on a propositional signature is given 
-in Figure~\ref{fig:defuncexample}.
+(Section~\ref{sec:defunc-type}). We will explain each of these
+transformations in turn; one example of the full three-part
+defunctionalization transformation on a propositional signature is
+given in Figure~\ref{fig:defuncexample}.
 
 \begin{figure}[ht]
 \begin{align*}
@@ -2590,7 +2601,7 @@ all the situations where $\obj{e}$ can get stuck, which is
 verbose and error-prone \cite[Section~7.3]{harper12practical}.
 
 Our ability to reason about evaluations that go wrong is an artifact
-the fact that \sls~allows us to talk about traces $T$ that represent
+of the fact that \sls~allows us to talk about traces $T$ that represent
 the process of incomplete proof search in addition to talking about
 complete proofs.  A trace that reaches a state that is not a final
 ${\sf retn}\,\interp{v}$ state but that cannot step further, like $T
@@ -2614,7 +2625,7 @@ particular operational strategy with traces.
 
 It is great that we're able to reason about nondeterministic
 specifications in the output of the operationalization transformation!
-However, a complication arises if we try to to encode a Mini-ML feature
+However, a complication arises if we try to encode a Mini-ML feature
 that was conspicuously missing from Figure~\ref{fig:ssos-minml-core}:
 the elimination form for natural numbers $\interp{{\sf case}\,e\,{\sf
     of}\,{\sf z} \Rightarrow e_z \mid {\sf s}\,x \Rightarrow e_s} =
@@ -2740,7 +2751,7 @@ verify this fact. In fact, the two specifications are also equivalent
 if we understand natural semantics in terms of the success or failure
 backtracking proof search, though the factored presentation
 avoids redundantly re-evaluating the scrutinee. 
-It is only when interpret the natural semantics
+It is only when we interpret the natural semantics
 specification through the lens of non-backtracking backward chaining
 (also called flat resolution) that the specifications differ.
 
@@ -2835,10 +2846,11 @@ of natural semantics as flat resolution as opposed to backward
 chaining with backtracking. Maintaining this non-backtracking
 intuition means that some natural semantics specifications, such as
 those for case analysis, need to be revised. Such revisions are always
-possible by factoring, however, so we can conclude that {\it in the
-  context of natural semantics specifications} the form of deductive
-computation (Section~\ref{sec:framework-logicprog-deductive}) that we
-are most interested in is flat resolution.
+possible by factoring \cite{poswolsky03factoring}; therefore, we can
+conclude that {\it in the context of natural semantics specifications}
+the form of deductive computation
+(Section~\ref{sec:framework-logicprog-deductive}) that we are most
+interested in is flat resolution.
 
 Under the operationalization transformation, traces represent the
 internal structure of proof search, and a non-extendable (and
@@ -2875,15 +2887,15 @@ reasons the logical correspondence in \sls~is interesting is because,
 once we translate from a less expressive style (natural semantics) to
 a more expressive style (ordered abstract machine semantics), we can
 consider new modular extensions in the more expressive style that were
-not possible in the less expressive style. As we discussed in the
-introduction, extending a natural semantics with state requires us to
-revise every existing rule, whereas a SSOS specification can be
-extended in a modular fashion: we just insert new rules
-that deal with state. The
-opportunities for modular extension are part of what distinguishes the
-logical correspondence we have presented from the work by Hannan and
-Miller \cite{hannan92operational} and Ager \cite{ager04natural}. Both
-of those papers translated natural semantics into a syntactic
+not possible in the less expressive style. As we discussed in
+Chapter~\ref{chapter-introduction}, extending a natural semantics with
+state requires us to revise every existing rule, whereas a SSOS
+specification can be extended in a modular fashion: we just insert new
+rules that deal with state. The opportunities for modular extension
+are part of what distinguishes the logical correspondence we have
+presented from the work by Hannan and Miller
+\cite{hannan92operational} and Ager \cite{ager04natural}. Both of
+those papers translated natural semantics into a syntactic
 specification of abstract machines; such specifications are not
 modularly extensible to the degree that concurrent \sls~specifications
 are.
@@ -2908,7 +2920,7 @@ make this difficult or impossible.  A more modular semantics of
 parallel evaluation will be presented in
 Section~\ref{sec:modular-parallelism}. 
 
-This section will present extensions to the sequential, first-order
+This section will present extensions to the sequential, flat
 abstract machine for parallel evaluation presented in
 Figure~\ref{fig:cbv-ev-ssos-fun}. We first presented 
 most of these specifications in
@@ -2924,30 +2936,38 @@ most of these specifications in
 \subsection{Mutable storage}
 \label{sec:mutable-storage}
 
-Classic stateful programming languages feature mutable storage,
-which forms the basis of imperative algorithms. We will consider
-ML-style references, which add four new syntax forms to the language.
-The first three create ($\interp{{\sf ref}\,e} = \lf{{\sf
-  ref}\,\interp{e}}$), dereference ($\interp{{!}e} = \lf{{\sf
-  get}\,\interp{e}}$), and update ($\interp{e_1 := e_2} = \lf{{\sf
-  set}\,\interp{e_1}\,\interp{e_2}}$) dynamically allocated 
-cells in the heap. 
-The fourth, $\lf{{\sf loc}\,l}$, is a value that represents pointers
-to allocated memory. The term $\lf{l}$ is of a type ${\sf mutable\_loc}$
-that has no constructors; locations $\lf{l}$ can only be allocated at
-runtime.
+Classic stateful programming languages feature mutable storage, which
+forms the basis of imperative algorithms. We will consider ML-style
+references, which add four new syntax forms to the language.  The
+first three create ($\interp{{\sf ref}\,e} = \lf{{\sf
+    ref}\,\interp{e}}$), dereference ($\interp{{!}e} = \lf{{\sf
+    get}\,\interp{e}}$), and update ($\interp{e_1 := e_2} = \lf{{\sf
+    set}\,\interp{e_1}\,\interp{e_2}}$) dynamically allocated cells in
+the heap.  The fourth, $\lf{{\sf loc}\,l}$, is a value that represents
+pointers to allocated memory. The term $\lf{l}$ is of a type ${\sf
+  mutable\_loc}$ that has no constructors; locations $\lf{l}$ can only
+be allocated at runtime. We also introduce a new {\it linear} atomic
+proposition ${\sf cell}\,\lf{l}\,\lf{v}$ representing a piece of
+allocated memory (at location $\lf{l}$) and its contents (the value
+$\lf{v}$). (Recall from Section~\ref{sec:prototype} that, in the ASCII
+notation for \sls, these linear propositions are written
+\verb'$cell L V', as \verb'$' is used as the ASCII representation of
+the mobile modality ${\gnab}A$.)
 
-We also introduce a new {\it linear} atomic proposition ${\sf
-  cell}\,\lf{l}\,\lf{v}$ representing a piece of allocated memory (at
-location $\lf{l}$) and its contents (the value $\lf{v}$). Recall that,
-without mutable state or parallel computation, we maintain the
-invariant that the process state $\Delta$ is made up of either a ${\sf
-  eval}\,\lf{e}$ proposition or a ${\sf retn}\,\lf{v}$ proposition to
-the left of some number of ${\sf cont}\,\lf{f}$ propositions. Once we
-add mutable state, the first-order (or LF) context $\Psi$, which has
-been empty in the SSOS semantics we have considered so far, becomes
-non-empty. We maintain the invariant that the context has one
-mutable location for each allocated cell:
+A collection of linear propositions acts much like one of Jeannin and
+Kozen's {\it capsules} \cite{jeannin12computing}, but unlike capsule
+formulations (and most other existing specification frameworks), we
+can introduce state in this way without revising any of the rules
+introduced in the previous section. Without mutable state or parallel
+computation, specifications such as the one in
+Figure~\ref{fig:ssos-minml-core} maintain the invariant that the
+process state $\Delta$ is made up of either a ${\sf eval}\,\lf{e}$
+proposition or a ${\sf retn}\,\lf{v}$ proposition to the left of some
+number of ${\sf cont}\,\lf{f}$ propositions. Once we add mutable
+state, the first-order (or LF) context $\Psi$, which has been empty in
+the SSOS semantics we have considered so far, becomes non-empty. We
+maintain the invariant that the context has one mutable location for
+each allocated cell:
 \[
 (\lf{l_1}{:}{\sf mutable\_loc}, \ldots, \lf{l_n}{:}{\sf mutable\_loc}; ~~
  x_1{:}\susp{{\sf cell}\,\lf{l_1}\,\lf{v_1}}, \ldots, 
@@ -3906,7 +3926,7 @@ first subgoal of ${\sf ev/steps}$, the proposition ${!}({\sf
 time we have actually encountered the effect of the $\opsubst{D}$
 operation discussed in Section~\ref{sec:trans-basic}.
 
-\begin{figure}[tp]
+\begin{figure}[t]
 \begin{minipage}[b]{0.9\linewidth}
 \fvset{fontsize=\small,boxwidth=auto}
 \VerbatimInput{sls/cbv-sos-eval-c.sls}

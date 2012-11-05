@@ -22,21 +22,24 @@ parallel pairs in Chapter~\ref{chapter-absmachine}.
 
 At some point, however, the simple data structures that can be
 naturally encoded in an ordered context become too limiting. When we
-reach this point, we turn to {\it destinations}. Destinations (terms
-of type ${\sf dest}$) are a bit like the locations $\lf l$ introduced
-in the specification of mutable storage in
+reach this point, we turn to {\it destinations}, which allow us to
+glue control flow together in much more flexible ways. Destinations
+(terms of type ${\sf dest}$) are a bit like the locations $\lf l$
+introduced in the specification of mutable storage in
 Section~\ref{sec:mutable-storage}. They have no constructors: they are
 only introduced as variables by existential quantification, which
 means they can freely be subject to unification when the conclusion of
 a rule declares them to be equal (as described in
 Section~\ref{sec:slsframework}). Destinations allow us to encode very
 expressive structures in the linear context of \sls. Instead of using
-order to capture the local relationships between different propositions,
-we use destinations. 
+order to capture the local relationships between different
+propositions, we use destinations.
 
-Linear logic alone is able to 
-express any (flat, concurrent) specifications that 
-we could not express using ordered atomic propositions. 
+Linear logic alone is able to express any (flat, concurrent)
+specifications that we could not express using ordered atomic
+propositions. In other words, we did not ever {\it need} order, it was
+just more plesant to use order to capture simple control structures.
+%
 We will demonstrate that fact in this chapter by 
 % In Chapter~\ref{chapter-absmachine}, we showed that ordered
 % abstract machines were at least as expressive as (moded) natural
@@ -149,7 +152,7 @@ the transformed signature.
 
 
 The destination-adding translation presented here is the same as the
-one presented in \cite{simmons11logical}, except that that the
+one presented in \cite{simmons11logical}, except that the
 transformation operated on rules of the form $\forall
 \overline{x}. S_1 \righti \{ S_2 \}$ and ours will operate over rules
 of the form $\forall \overline{x}. S_1 \lefti \{ S_2 \}$.\footnote{The
@@ -215,7 +218,7 @@ We don't perform this simplification for a number of reasons. First
 and foremost, the transformation described in
 Figure~\ref{fig:destadd-pos} more closely follows the previous work by
 Morrill, Moot, Piazza, and van Benthem discussed in
-Section~\ref{sec:correspondence-related}, and transformation as given
+Section~\ref{sec:correspondence-related}, and using the transformation as given
 simplifies the correctness proof (Theorem~\ref{thm:destcorrect}).
 Pragmatically, the additional existential quantifiers also give us
 more structure to work with when considering program abstraction in
@@ -555,7 +558,7 @@ have undergone the destination-adding transformation.
 The semantics of parallelism and failure presented in
 Section~\ref{sec:modular-parallelism} are new. The semantics of
 futures (Section~\ref{sec:dest-futures}) and synchronization
-(Section~\ref{sec:dest-synch}) are a based on the specifications first
+(Section~\ref{sec:dest-synch}) are based on the specifications first
 presented in the CLF tech report \cite{cervesato02concurrent}. The
 semantics of first-class continuations
 (Section~\ref{sec:dest-continuations}) were presented previously in
@@ -607,17 +610,17 @@ directly connected to at most two other ordered propositions: the
 proposition immediately to the left in the ordered context, and the
 proposition immediately to the right in the ordered context. What
 Figure~\ref{fig:dest-pair} demonstrates is that, with destinations, a
-linear proposition can be locally connected to {\it any finite number}
-of other propositions. Whereas in ordered abstract machine
-specifications the parallel structure of a computation had to be
-reconstructed by parsing the context in postfix, a
-destination-passing specification uses destinations to thread together
-the treelike dependencies in the context. It would presumably be
-possible to consider a different version of the parallel
-operationalization that targeted this desirable form of 
-parallel destination-passing
-specification specifically, but we will not present such a
-transformation in this thesis. 
+linear proposition can be locally connected to {\it any fixed finite
+  number} of other propositions. (If we encode lists of
+  destinations, this need not even be fixed!) Whereas in ordered
+abstract machine specifications the parallel structure of a
+computation had to be reconstructed by parsing the context in postfix,
+a destination-passing specification uses destinations to thread
+together the treelike dependencies in the context. It would presumably
+be possible to consider a different version of the parallel
+operationalization that targeted this desirable form of parallel
+destination-passing specification specifically, but we will not
+present such a transformation in this thesis.
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -638,7 +641,8 @@ returns successfully (rule ${\sf term/retn}$) or with an error (rule
 ${\sf term/err}$). It would also be possible to add rules
 like $\forall \lf{d}.\,\forall\lf{d'}.\,{\sf cont}\,\lf{d'}\,\lf{d} \fuse {\sf terminate}\,\lf{d} \lefti \{ {\sf
   terminate}\,\lf{d'} \}$ that actively aborted the useless branch instead
-of passively waiting for it to finish.
+of passively waiting for it to finish. (In a language with state, this 
+can make an observable difference in the results of computation.)
 
 \subsection{Synchronization}
 \label{sec:dest-synch}
@@ -750,7 +754,7 @@ $\obj{v}$, and
 %
 Labels essentially serve to pass messages up through the inductive
 structure of a proposition.  In destination-passing SSOS semantics, on
-the other hand, the internal structure of $e$ is spread out as an
+the other hand, the internal structure of $e$ is spread out as a
 series of frames throughout the context, and so the innermost redexes
 of terms can be directly connected. It would be interesting (but
 probably quite nontrivial) to consider a translation from labeled
@@ -962,7 +966,7 @@ does not change the behavior of any SSOS specifications we have
 discussed if linear ${\sf cont}$ predicates are turned into persistent
 ${\sf cont}$ predicates.
 
-Turning ${\sf cont}$ into a persistent predicate does not greatly
+Turning ${\sf cont}$ into a persistent predicate does not, on its own,
 influence the transitions that are possible, so in a sense we have not
 changed our SSOS semantics very much in order to add first-class
 continuations. However, the implicit representation of stacks in the

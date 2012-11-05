@@ -64,12 +64,13 @@ Iliano Cervesato, Carnegie Mellon Qatar \\
 Dale Miller, INRIA-Saclay \& LIX/Ecole Polytechnique
 }
 
-\support{This work was sponsored in part by a National Science
-  Foundation Graduate Research Fellowship, by the Funda\c{c}\~ao para
-  a Ci\^encia e a Tecnologia (Portuguese Foundation for Science and
-  Technology) through the Carnegie Mellon Portugal Program under Grant
-  NGN-44, by an X10 Innovation Award from IBM, and by a Siebel
-  Scholarship.}  
+\support{This research was sponsored by the National Science
+  Foundation Graduate Research Fellowship; National Science Foundation
+  under research grant number CNS-0716469; US Army Research Office
+  under grant number DAAD-190210389; Funda\c{c}\~ao para a Ci\^encia e
+  a Tecnologia (Portuguese Foundation for Science and Technology) via
+  the Carnegie Mellon Portugal Program under grant NGN-44; X10
+  Innovation Award from IBM; and Siebel Scholar Program.}  
 
 \disclaimer{Any opinions, findings, conclusions or recommendations
   expressed in this publication are those of the author and do not
@@ -145,56 +146,60 @@ Dale Miller, INRIA-Saclay \& LIX/Ecole Polytechnique
 
 % XXX MAKE ACKNOLWEDGEMENTS
 \begin{acknowledgments}
-  I cannot begin to acknowledge the debt of gratitude I owe to to my
-  my advisor, Frank Pfenning. Frank has provided me extraordinary
-  guidance from the moment I arrived in Wean Hall and started asking
-  incredibly naive questions about these curious logical propositions
-  $A \lolli B$ and ${!}A$, and nearly all of the ideas in this
-  document were either developed or critically refined during our many
-  conversations. I also want to thank my committee, Robert Harper,
-  Andr{\'e} Platzer, Iliano Cervesato, and Dale Miller. Iliano's
-  extremely timely and detailed feedback during the summer and fall of
-  2012 was especially important to making this final document as
-  intelligible as it is.
+  I cannot begin to fully acknowledge the debt of gratitude I owe to
+  to my advisor, Frank Pfenning. Frank has provided me with
+  extraordinary guidance from the moment I arrived in Wean Hall and
+  started asking incredibly naive questions about these curious
+  logical propositions $A \lolli B$ and ${!}A$. Nearly all of the
+  ideas in this document were either developed or critically refined
+  during our many conversations over the past seven years. I also want
+  to thank my committee, Robert Harper, Andr{\'e} Platzer, Iliano
+  Cervesato, and Dale Miller. Iliano's extremely timely and detailed
+  feedback during the summer and fall of 2012 was especially important
+  to making this final document as intelligible as it is.
 
-  A lot of people outside of the committee have also given me helpful
-  feedback on bits and pieces of this document, large and small. While
-  I'm surely leaving some people out, I want to acknowledge the
-  feedback that I got from Sean McLaughlin, Jason Reed, Rowan Davies,
-  Chris Martens, Ian Zerny, Beniamino Accattoli, Lindsey Kuper, and
-  Ben Blum. Beyond this group, the conversations I have had with Noam
-  Zeilberger, Dan Licata, Bernardo Toninho, William Lovas, Henry
-  DeYoung, and both the Spring 2012 Linear Logic class and the CMU POP
-  group as a whole were incredibly important to the process of writing
-  this document.  I'd also like to acknowledge the generally excellent
-  feedback I've received through anonymous review on the various
-  papers that found their way into this document; not everyone has a
-  positive experience with reviewing, and so I really appreciate the
-  degree to which the positive reviews I've gotten have been
-  constructive and the degree to which the negative reviews I've
-  gotten have been fair.
+  Many, many people have given me helpful feedback on this document
+  and the various papers that went into it, especially Sean
+  McLaughlin, Jason Reed, Rowan Davies, Chris Martens, Ian Zerny,
+  Beniamino Accattoli, Jonathan Aldrich, Roger Wolff, Lindsey Kuper,
+  and Ben Blum.  Beyond this group, the conversations I have had with
+  Noam Zeilberger, Dan Licata, Bernardo Toninho, William Lovas,
+  Carsten Sch{\"u}rmann, Henry DeYoung, Anders Schack-Nielsen, David
+  Baelde, Taus Brock-Nannestad, Karl Crary, Carlo Angiuli, and both
+  the Spring 2012 Linear Logic class and the CMU POP group as a whole
+  were incredibly important as I developed the ideas that are
+  presented here.  I'd also like to acknowledge the high-quality
+  feedback I've received through anonymous review during my time in
+  graduate school. Not everyone has a positive experience with peer
+  review, and I appreciate the degree to which the positive reviews
+  I've received have been constructive and the degree to which the
+  negative reviews I've received have been fair.
 
-  I want to thank the people who got me to graduate school in
-  Pittsburgh in the first place. I owe so much of who I am to my
-  family -- Mom, Dad, and Elizabeth -- and I would never have gotten
-  to grad school in the first place, nor made it through, without
-  their unwavering love, support, and patience (so much patience). I
-  have been blessed with innumerable academic and professional mentors
-  as well; I want to especially thank Jessica Hunt, Andrew Appel,
-  David Walker, Sriram Rajamani, and Aditya Nori.
+  And then there's the bigger picture.  So much of who I am is due to
+  my family -- my extended family of grandparents, aunts, uncles, and
+  cousins, but especially Mom, Dad, and Elizabeth. I would never have
+  gotten to grad school in the first place, nor made it through,
+  without their unwavering love, support, and patience (so much
+  patience).
 
-  I also must think the caring, quirky, and diverse community that has
-  helped me remember that there are things I care about above and
-  beyond writing funny Greek symbols in TeX files.  Rachel, of course;
-  I couldn't have done this without you and if I could have it
-  wouldn't have been much fun. I'd also like to thank Jen, Jamie,
-  Lauren, Pete, Laurie, Carsten, Nawshin, Tom, Mary, Thomas, Emily,
-  Nick, various Mikes, and all my fellow Dec/5 troublemakers, espresso
-  elves, extraordinary Yinzerstars, and SIGBOVIK organizers.
+  I have been fortunate to have the guidance of many, many exceptional
+  academic and professional mentors along the way. I want to
+  especially thank Jessica Hunt, Andrew Appel, David Walker, Sriram
+  Rajamani, and Aditya Nori, who have each contributed unique and
+  valuable pieces to my mathematical education.
 
-  Finally, I want to thank my various Words With Friends buddies:
-  Cyrus, Mom, Jonas, Chris, Ed, and Ellen. Having that narrow point of
-  contact with the outside world was really important some days.
+  I also must thank the caring, quirky, and diverse Pittsburgh
+  community that has helped me remember that there are things I care
+  about above and beyond writing funny Greek symbols in notebooks and
+  TeX files.  Rachel Gougian, of course, who stuck beside me for the
+  whole ride -- I couldn't have done this without you, and even if I
+  could have it wouldn't have been much fun. There was also Jen,
+  Jamie, Pete, Laurie, Carsten, Nawshin, Tom, Jim, Mary, Thomas,
+  Emily, Nick, Mike, and all my fellow Dec/5 troublemakers, espresso
+  elves, talented Yinzerstars, SIGBOVIK organizers, and Words with
+  Friends buddies.  
+
+  It's been a privilege and a blessing. Thanks, everybody.
 
 % COMMITTEE: Frank Robert Andr\`e Iliano Dale
 % MENTORS (who aren't also committee):

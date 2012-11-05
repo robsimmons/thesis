@@ -164,7 +164,7 @@ not specify whether $\obj{e_1}$ or $\obj{e_2}$ should be evaluated in
 some particular order or in parallel; the TYPOL-to-Prolog compiler
 could have reasonably made several choices in such a situation. More
 fundamentally, the logic programming interpretation inserts semantic
-information into to a natural semantics specification that is not
+information into a natural semantics specification that is not
 present when we view the specification as an inductive definition
 (though it might be just as accurate to say that the logic programming
 interpretation preserves meaning that is lost when the specification
@@ -179,8 +179,10 @@ when the specification is interpreted as an inductive definition.
 
 We will present a transformation from \sls-encoded natural semantics
 specifications into ordered abstract machines by a transformation
-called {\it operationalization}. The basic idea of operationalization
-is to model backward-chaining logic programming (in the sense of
+called {\it operationalization}. The transformation from natural
+semantics to ordered abstract machines is only an instance of a much
+more general picture. The basic idea of operationalization is to model
+backward-chaining logic programming (in the sense of
 Section~\ref{sec:framework-logicprog-deductive}) as forward-chaining
 logic programming (in the sense of
 Section~\ref{sec:framework-logicprog-trace}). The transformation

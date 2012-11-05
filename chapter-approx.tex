@@ -34,8 +34,9 @@ instance, the methodology we describe only derives over-approximations
 (or {\it may-} analyses) that ensure all possible behaviors will be
 reported by the analysis. There is a whole separate class of 
 under-approximations (or {\it must-} analyses) which ensure that if a
-behavior is reported by the analysis it is possible; these are more
-closely associated with bug-finding and we will not consider them here
+behavior is reported by the analysis it is possible; %these are more
+%closely associated with bug-finding and 
+we will not consider under-approximations here
 \cite{godefroid10compositional}. Instead, we argue for the utility of
 our methodology by deriving two fundamental and rather different
 over-approximation-based analyses: a context-insensitive control flow
@@ -747,7 +748,7 @@ the next section demonstrates the use of such labels.
 
 \subsection{Correctness}
 
-The termination analysis for to the derived specification in
+The termination analysis for the derived specification in
 Figure~\ref{fig:dest-cfa-2}, together with the meta-approximation
 theorem (Theorem~\ref{thm:metapprox}), ensures that we have derived
 some sort of program analysis. How do we know that it is a control 
@@ -1109,7 +1110,7 @@ critical: SSOS specifications do not have a mechanism for enforcing
 the stack discipline of Algol-like languages.\footnote{It is, however,
   possible to represent Algol-like languages that maintain a stack
   discipline even though the machinery of \sls~does not enforce that
-  stack discipline. This is analogous to situation with pointer
+  stack discipline. This is analogous to the situation with pointer
   equality discussed in Section~\ref{sec:mutable-storage}, as a stack
   discipline is an invariant that can be maintained in \sls~even
   though the framework's proof theory does not enforce the invariant.}

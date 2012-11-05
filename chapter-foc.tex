@@ -257,13 +257,15 @@ et al.~\cite{watkins02concurrent} and define the logical framework so
 that it only contains these $\beta$-normal, $\eta$-long {\it canonical
   forms} of LF. This presentation of LF is called Canonical LF to
 distinguish it from the original presentation of LF in which the
-$\beta$-normal, $\eta$-long terms are just a refinement of
-terms. A central component in this approach is {\it hereditary
-  substitution}.  Hereditary substitution also establishes a
-normalization property for LF. Using hereditary substitution we can
-easily take a regular LF term and transform it into a Canonical LF
-term. By a separate theorem, we can prove that the normalized term
-will be equivalent to the original term
+$\beta$-normal, $\eta$-long terms are just a refinement of terms. A
+central component in this approach is {\it hereditary substitution};
+in Chapter~\ref{chapter-ordered}, we will make the connections between
+hereditary substitution and the focused cut admissibility property we
+prove in this chapter more explicit.  Hereditary substitution also
+establishes a normalization property for LF. Using hereditary
+substitution we can easily take a regular LF term and transform it
+into a Canonical LF term. By a separate theorem, we can prove that the
+normalized term will be equivalent to the original term
 \cite{martens12lf}. %\footnote{This process is the same as the way we use cut
 %  admissibility to prove cut elimination.} 
  % An important point is that the normalization theorem we prove
@@ -646,20 +648,22 @@ out that the development in this chapter does not rely on this property.
 % contrast, the Structural Focalization development that this chapter
 % follows does not rely on this property \cite{simmons11structural}.
 
-Suspended propositions ($\langle A^+ \rangle$ and $\langle
-A^- \rangle$) and the four rules that interact with suspended
-propositions (${\it id}^+$, ${\it id}^-$, $\eta^+$, and $\eta^-$)
-are the main nonstandard aspect of this presentation.  The $\eta^+$
-and $\eta^-$ rules are restricted to atomic propositions, and there is
-no other way for suspended propositions to be introduced into the
-context with rules. Therefore, it seems reasonable to restrict ${\it
-  id}^+$ to atomic propositions as well. However, 
- this seemingly unnecessary generality will make it much easier
-to establish the standard metatheory of this sequent calculus. To see
-why this is the case, we will turn our attention to suspended
-propositions and the four admissible rules (two focal substitution
-principles and two identity expansion principles) that interact with
-them.
+Suspended propositions ($\langle A^+ \rangle$ and $\langle A^-
+\rangle$) and the four rules that interact with suspended propositions
+(${\it id}^+$, ${\it id}^-$, $\eta^+$, and $\eta^-$) are the main
+nonstandard aspect of this presentation.  The $\eta^+$ and $\eta^-$
+rules, which allow us to stop decomposing a proposition that we are
+eagerly decomposing with invertible rules, are restricted to atomic
+propositions, and there is no other way for suspended propositions to
+be introduced into the context with rules. It seems reasonable to
+restrict the two rules that capture the identity principles, ${\it
+  id}^+$ and ${\it id}^-$, to atomic propositions as well.  However,
+the seemingly unnecessary generality of these two identity rules makes
+it much easier to establish the standard metatheory of this sequent
+calculus. To see why this is the case, we will turn our attention to
+suspended propositions and the four admissible rules (two focal
+substitution principles and two identity expansion principles) that
+interact with suspended propositions.
 
 
 \subsection{Suspended propositions}
@@ -1012,8 +1016,8 @@ need only be general enough to prove parts 3, 4, and 5.
   the second given derivation stays the same size, and in parts 1, 4,
   and 5 we don't need to know that the first given derivation stays
   the same size. This refined termination argument is the reason that
-  we do not need admissible weakening to preserve the structure of
-  proofs.
+  we do not need to prove that admissible weakening preserves the
+  structure of proofs.
  
   We schematically present one or two illustrative cases for each part
   of the proof.
@@ -1209,13 +1213,13 @@ second given derivation $\mildseq{\Gamma}{\Delta',A^+}{U}$, and part 2
 of the theorem, which does require stability of $\Delta$ in the first
 given derivation $\mildseq{\Gamma}{\Delta}{A^-}$. The theorem would
 still hold for non-stable $\Delta$, but we do not need the more
-general theorem, and the less general theorem allows us to avoid
-duplicating the left commutative cuts between parts 2 and 3. On the
-other hand, we cannot make the theorem more specific, imposing extra
-stability conditions on part 1, without fixing the order in which
-invertible rules are applied. Fixing the order in which invertible
-rules are applied has some other advantages as well; this is a point we
-will return to in Section~\ref{sec:confluent-v-fixed}.
+general theorem, and the less general theorem is easier to prove -- it
+allows us to avoid duplicating the left commutative cuts between parts
+2 and 3. On the other hand, we cannot make the theorem more specific,
+imposing extra stability conditions on part 1, without fixing the
+order in which invertible rules are applied. Fixing the order in which
+invertible rules are applied has some other advantages as well; this
+is a point we will return to in Section~\ref{sec:confluent-v-fixed}.
 
 \subsection{Correctness of focusing}
 \label{sec:lincorrectness}
