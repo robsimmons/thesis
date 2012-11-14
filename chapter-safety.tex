@@ -13,9 +13,10 @@ Felty and Momigliano \cite{felty12hybrid}, discussed preservation for
 concurrent specifications or for first-class continuations. 
 
 More fundamentally, however, this previous work does not even provide
-a {\it language} for talking about progress theorems, the critical
-companion of type preservation theorems.  These previous approaches
-were universally based on complete derivations. These have the flavor
+a {\it language} for talking about progress theorems, the other critical
+companion of type safety theorems.  These previous approaches
+were universally based on complete derivations. These
+complete derivations have the flavor
 of derivations in a big-step semantics, and it is difficult or even
 impossible to talk about progress for such specifications. The purpose
 of this chapter is to establish that the \sls~framework's traces $T$
@@ -72,8 +73,8 @@ restriction of what counts as a generative signature
 \lf{e}. \{ {\sf eval}\,\lf{e} \}$, which is allowed under
 Definition~\ref{def:gensig}. This rule could ``break'' the context by
 dropping an ordered ${\sf eval}\,\lf{e}$ proposition in between $x_1$
-and $x_2$. A sufficient general condition for avoiding this problem in
-general is to demand that any generative rule that produces ordered
+and $x_2$. A sufficient general condition for avoiding this problem 
+is to demand that any generative rule that produces ordered
 atomic propositions mentions an ordered nonterminal as a premise.
 (This is related to the property called {\it separation} in 
 \cite{simmons08linear}.)
@@ -123,12 +124,11 @@ $T = \left(T_1; \trstep{y}{{\sf gen/error}\,\lf{{\it tp}}\,x}; T_2\right)$.
 \end{theorem}
 
 \bigskip
-
-In the proof of Theorem~\ref{thm:prog-ordertp}, we will not consider
-the details of the proof that already arise for traditional proofs of
+In the proof of Theorem~\ref{thm:prog-ordertp}, we will not 
+detail the parts of the proof that already arise in traditional proofs of
 progress for abstract machines. These missing details can be factored
 into two lemmas. The first lemma is that if $\cdot \vdash N :
-\ispers{{\sf of}\,\lf{e}\,\lf{{\it tp}}}$, then the process state
+\isconc{{\sf of}\,\lf{e}\,\lf{{\it tp}}}$, then the process state
 $\tackon{\Theta}{x{:}\istrue{\susp{{\sf eval}\,\lf{e}}}}$ can always
 take a step; this lemma justifies the classification of ${\sf eval}$
 as an {\it active} proposition as described in
@@ -271,7 +271,7 @@ the proof.
 \label{sec:progess-mutable}
 
 Developing progress proofs to for stateful specifications requires a
-property that is the flip side of unique index sets
+property that is dual to unique index sets
 (Definition~\ref{def:uniqueindexset},
 Section~\ref{sec:uniqueness-gendests}). Unique index sets require that there
 will be only ever be {\it at most one} proposition of a certain form, 
@@ -289,9 +289,11 @@ and the dual property, {\it assured index sets}, require that there is always
 \end{definition}
 \bigskip
 
-The set $\{ {\sf gencell}/1, {\sf cell}/1 \}$ is also a unique index
-set under $\siggenstate$, and the same set for $\siggenstate$ at type
-${\sf mutable\_loc}$.  The latter property is critical to finishing
+The set $\{ {\sf gencell}/1, {\sf cell}/1 \}$ is both a unique
+index set and an assured index set 
+under $\siggenstate$ and the initial state 
+$(\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{\it tp}}})$.
+The latter property is critical to finishing
 the extension of Theorem~\ref{thm:prog-ordertp} proof in certain cases
 where we invoke the canonical forms lemma. When we invoked the
 canonical forms lemma in the ${\sf cont}$ branch of that proof, we
@@ -315,20 +317,21 @@ produce a step $\trstep{y', z'}{{\sf
 in the later case we can produce a step $\trstep{y', z'}{{\sf
     ev/set2}\,\lf{v}\,\lf{l}\,\lf{v'}\,(\tfuser{y_1}{\tfuser{y_2}{z}})}$.
 
-A similar use of assured index sets arises if we try to prove progress
-for a specification using letcc (Section~\ref{sec:dest-continuations}
-and Section~\ref{sec:gen-letcc}). We begin with a destination
-$\lf{d}$ and need to use the fact that $\{ {\sf gendest}/1, {\sf
-  cont}/2 \}$ is an assured index set to confirm that we have some
-continuation frame to return to. 
+%% A similar use of assured index sets arises if we try to prove progress
+%% for a specification using letcc (Section~\ref{sec:dest-continuations}
+%% and Section~\ref{sec:gen-letcc}). We begin with a destination
+%% $\lf{d}$ and need to use the fact that $\{ {\sf gendest}/1, {\sf
+%%   cont}/2 \}$ is an assured index set to confirm that we have some
+%% continuation frame to return to. 
 
+\newpage
 \section{Safety}
 
 We conclude by presenting the safety theorem for the ordered abstract
 machine specification from Figure~\ref{fig:gen-order-prog}. This
 theorem relates the encoding of the usual deductive formulation of the
 typing judgment, ${\sf of}\,\lf{e}\,\lf{{\it tp}}$, to a progress
-property state in terms of substructural process states.
+property stated in terms of substructural process states.
 
 \bigskip
 \begin{theorem}[Safety for ordered abstract machines]~

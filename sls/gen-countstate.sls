@@ -1,4 +1,4 @@
-gencount/finalize: $gencount N >-> {$counter (s N)}.
+gencount/finalize: $gencount N >-> {$counter N}.
 
 gencell/promise: $gencount N 
                   >-> {Exists l. 

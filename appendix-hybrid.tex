@@ -190,7 +190,7 @@ negative acknowledgements.
 
 \subsection{Natural semantics}
 
-Many of the pieces of Concurrent ML do not interact concurrency
+Many of the pieces of Concurrent ML do not interact with concurrency
 directly; instead, they build channels and event values that drive
 synchronization. In our hybrid specification methodology, we can give
 these pure parts of the Concurrent ML specification a big-step
@@ -206,7 +206,7 @@ The destination-passing semantics of Concurrent ML has three main
 parts.  The first part, a ${\sf spawn}$ primitive, creates a new
 disconnected thread of computation -- the same kind of disconnected
 thread that we used for the interaction of parallelism and failure in
-Section~\ref{sec:modular-parallelism}. The ${\sf newch}$ primitive 
+Section~\ref{sec:modular-parallelism}. The $\obj{\sf newch}$ primitive 
 creates a new channel for communication.
 
 \bigskip
@@ -221,8 +221,9 @@ Section~\ref{sec:dest-synch}, and has something of the flavor of the
 labels described in that section. An action can include many
 alternatives, but if a send and a receive can simultaneously take
 place along a single channel, then the ${\sf synch/communicate}$ rule
-can enable both of the waiting ${\sf synch}$ expressions to proceed
-evaluating as ${\sf eval}$ expressions.
+can enable both of the waiting ${\sf synch}\,\lf{v}\,\lf{d}$ 
+propositions to proceed
+evaluating as ${\sf eval}$ propositions.
 
 Here as in Cervesato et al.'s specification, events are atomically
 paired up using the backward-chaining ${\sf action}$ rules, which are

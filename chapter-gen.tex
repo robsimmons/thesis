@@ -33,7 +33,7 @@ under some generative signature $\siggen$ that defines a
 world $\mathcal W$, whenever $(\Psi; \Delta) \in \mathcal W$ and
 $(\Psi; \Delta) \leadsto_\Sigma (\Psi'; \Delta')$ it is always the
 case that $(\Psi'; \Delta') \in \mathcal W$.  (The signature $\Sigma$
-encodes the transition system we are studying.)  In such a case, the
+encodes the transition system we are studying.)  In such a case, a
 world or language of well-formed process states is called a {\it
   generative invariant} of $\Sigma$.
 
@@ -80,7 +80,7 @@ safety theorems for programming languages specified in \sls.
 % is analogous to proving a preservation theorem in a small-step SOS
 % language specification. Progress and safety theorems for SSOS
 % specifications will be discussed in Chapter~\ref{chapter-safety}.
-These two chapters support of the third refinement
+These two chapters support the third refinement
 of our central thesis:
 
 \smallskip
@@ -190,7 +190,7 @@ off the restricting signature and just write $\restrictsig{(\Psi;
 As a concrete example, let ${\sf nt/foo}$ be a persistent nonterminal,
 let ${\sf nt/bar}$ be an ordered nonterminal, and let ${\sf t/baz}$ be
 an ordered terminal. Then $\restrictsig{(x{:}\istrue{\susp{\sf
-      nt/bar}}, y{:}\istrue{\susp{\sf t/baz}})}{}$ is undefined,
+      nt/bar}}, y{:}\istrue{\susp{\sf t/baz}})}{}$ is not defined,
 $\restrictsig{(y{:}\istrue{\susp{\sf t/baz}})}{} =
 {(y{:}\istrue{\susp{\sf t/baz}})}$, and
 $\restrictsig{(x{:}\ispers{\susp{\sf nt/foo}}, y{:}\istrue{\susp{\sf
@@ -199,6 +199,15 @@ two-dimensional notation from Chapter~\ref{chapter-framework}, we can
 re-present these three statements as follows:
 
 \begin{center}
+\begin{tikzpicture} 
+\draw (.8,.5) node{$(x{:}\istrue{\susp{\sf nt/bar}},
+  y{:}\istrue{\susp{\sf t/baz}})$};
+\draw [thick,dash pattern = on 2.82842842712mm off 2mm,decorate,decoration={saw,amplitude=2mm,segment length=2mm}] 
+(-2,0) -- (3.6,0); 
+\draw (-2,.1) -- (3.6,.1); 
+\draw (.8,-.3) node{\color{white} $(y{:}\istrue{\susp{\sf t/baz}})$};
+\end{tikzpicture} 
+\quad
 \begin{tikzpicture} 
 \draw (.8,.5) node{$(y{:}\istrue{\susp{\sf t/baz}})$};
 \draw [thick,dash pattern = on 2.82842842712mm off 2mm,decorate,decoration={saw,amplitude=2mm,segment length=2mm}] 
@@ -213,15 +222,6 @@ re-present these three statements as follows:
 (-2,0) -- (3.6,0); 
 \draw (.8,-.3) node{$(y{:}\istrue{\susp{\sf t/baz}})$};
 \end{tikzpicture}
-\quad
-\begin{tikzpicture} 
-\draw (.8,.5) node{$(x{:}\istrue{\susp{\sf nt/bar}},
-  y{:}\istrue{\susp{\sf t/baz}})$};
-\draw [thick,dash pattern = on 2.82842842712mm off 2mm,decorate,decoration={saw,amplitude=2mm,segment length=2mm}] 
-(-2,0) -- (3.6,0); 
-\draw (-2,.1) -- (3.6,.1); 
-\draw (.8,-.3) node{\color{white} $(y{:}\istrue{\susp{\sf t/baz}})$};
-\end{tikzpicture} 
 \end{center}
 
 
@@ -341,7 +341,7 @@ be described by one rule in a generative signature:
 the generative signature corresponding
 to a regular world contains one rule for each block in the regular
 worlds description.
-The world $({\sf blockexp} \mid {\sf blockvar})$ corresponds
+The world described by $({\sf blockexp} \mid {\sf blockvar})$ corresponds
 to the following generative signature:}
 &{\sf nat} : {\sf type}, 
 \\
@@ -432,8 +432,8 @@ creating them with
 rules like $\forall\lf{e}.\,{\sf gen}\lefti \{ {\sf eval}\,\lf{e} \}$
 and $\forall \lf{f}.\,{\sf gen} \lefti \{ {\sf gen} \fuse {\sf
   cont}\,\lf{f} \}$. 
-One nice property consumptive signatures is that it opens up the
-possibility of working with complete derivations 
+One tempting property of consumptive signatures is that they open
+up the possibility of working with complete derivations 
 rather than traces. That is, using a
 consumptive signature, we can talk about the set of process states
 $(\Psi; \Delta)$ where $\Psi; \Delta \vdash \islax{{\sf safe}}$ rather
@@ -478,7 +478,7 @@ also exists a derivation of $\Psi_{\it bad} \vdash_\Sigma \islax{\sf
 %\cite{simmons10type} cannot describe the (regular) world that includes
 %$\Psi_{\it good}$ and rejects $\Psi_{\it bad}$. 
 This is related to the
-issues of variable and pointer equality discussed in
+issues of variable and pointer (in)equality discussed in
 Section~\ref{sec:mutable-storage}.
 
 The generative signatures used to describe state in
@@ -585,7 +585,7 @@ continuations in Section~\ref{sec:nat-ssos-adequacy}, this approach
 conflicts with our guiding principle of reachability.  Both parallel
 continuation frames ${\sf cont}\,\lf{f}$ and sequential continuation
 frames ${\sf cont2}\,\lf{f}$ are indexed by LF terms $\lf{f}$ of type
-${\sf frame}$, but the parallel frame ${\sf app1}$ cannot appear in a
+${\sf frame}$, but the parallel frame $\lf{\sf app1}$ cannot appear in a
 sequential continuation, nor can the sequential frame $\lf{({\sf
     let1}\,\lf{\lambda x.e\,x})}$ appear in a parallel frame.
 
@@ -620,7 +620,7 @@ $\obj{e_1\,e_2 \mapsto e_1'\,e_2}$ and another derivation of
 $\obj{\cdot \vdash e_1\,e_2 : {\it tp}}$. An inversion lemma then proceeds
 by case analysis on the structure of the derivation 
 $\obj{\cdot \vdash e_1\,e_2 : {\it tp}}$, and allows us to conclude that
-$\obj{\cdot \vdash e_1 : {\it tp'} \Rightarrow {\it tp}}$
+$\obj{\cdot \vdash e_1 : {\it tp'} \rightharpoonup {\it tp}}$
 and that $\obj{\cdot \vdash e_2 : {\it tp'} }$ for some object-level
 type $\obj{\it tp'}$.  In other words, an inversion lemma allows us to 
 take knowledge about a term's structure and obtain information about 
@@ -641,8 +641,8 @@ equate traces such as
 \\
 & \trstep{y_2}{{\sf gen/eval}\,\lf{e_2}\,x_2}
 \\
-& \qquad (x_1{:}\istrue{\susp{{\sf eval}\,\lf{e_1}}}, ~
-          x_2{:}\istrue{\susp{{\sf eval}\,\lf{e_2}}}, ~
+& \qquad (y_1{:}\istrue{\susp{{\sf eval}\,\lf{e_1}}}, ~
+          y_2{:}\istrue{\susp{{\sf eval}\,\lf{e_2}}}, ~
           x_3{:}\istrue{\susp{{\sf cont2}\,\lf{f}}})
 \end{align*}
 and
@@ -655,8 +655,8 @@ and
 \\
 & \trstep{y_1}{{\sf gen/eval}\,\lf{e_1}\,x_1}
 \\
-& \qquad (x_1{:}\istrue{\susp{{\sf eval}\,\lf{e_1}}}, ~
-          x_2{:}\istrue{\susp{{\sf eval}\,\lf{e_2}}}, ~
+& \qquad (y_1{:}\istrue{\susp{{\sf eval}\,\lf{e_1}}}, ~
+          y_2{:}\istrue{\susp{{\sf eval}\,\lf{e_2}}}, ~
           x_3{:}\istrue{\susp{{\sf cont2}\,\lf{f}}})
 \end{align*}
 by concurrent equality. 
@@ -766,7 +766,7 @@ be the same. (They are the same iff $T' = \emptytrace$.)
   because the variable bindings $y{:}\istrue{\susp{{\sf
         eval}\,\lf{e}}}$, $y{:}\istrue{\susp{{\sf retn}\,\lf{v}}}$,
   $y_2{:}\istrue{\susp{{\sf cont}\,\lf{f}}}$,
-  $y_3{:}\istrue{\susp{{\sf cont2}\,f}}$, $y{:}\istrue{\susp{{\sf
+  $y_3{:}\istrue{\susp{{\sf cont2}\,\lf{f}}}$, $y{:}\istrue{\susp{{\sf
         error}}}$, and $y_2{:}\istrue{\susp{{\sf handle}\,\lf{e}}}$,
   respectively, appear in the final process state but not the initial
   process state. Therefore, $T =
@@ -896,9 +896,9 @@ $T = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{\sf gen}})$
   variables. By the induction hypothesis we then get that $T'' = T''';
   S'$, where $S' = \trstep{y}{{\sf gen/eval}\,\lf{e}\,x'}$ in part 1,
   $S' = \trstep{y}{{\sf gen/retn}\,\lf{v}\,(\tfuser{x'}{\tbangr{N}})}$
-  in part 2, and so on.  In each of the six parts, of course
+  in part 2, and so on.  In each of the six parts,
   $S'{^\bullet} = {\it Var}$, so $\emptyset = S'{^\bullet} \cap {^\bullet}S$
-  and $\left(T'''; S'; S\right) = \left(T'''; S; S'\right)$, and so we can
+  and $\left(T'''; S'; S\right) = \left(T'''; S; S'\right)$. We can
   conclude letting $T' = \left(T''; S\right)$.
 
   If, on the other hand, $S^{\bullet} \cap {\it Var}$ is nonempty, we
@@ -924,7 +924,7 @@ The inversion lemma can be intuitively connected with the
 idea that the grammar described by a generative signature is {\it
   unambiguous}. This will not hold in general. If there was
 a rule ${\sf gen/redundant} : {\sf gen} \lefti \{ {\sf gen} \}$ in
-$\Sigma_{\siggenorder}$, for instance, then the final
+${\siggenorder}$, for instance, then the final
 step $S$ could be
 $\trstep{y_1}{{\sf gen/redundant}\,y'}$, and this would invalidate our
 inversion lemma
@@ -1181,7 +1181,8 @@ obtained but did not use three terms $\cdot \vdash N : \isconc{{{\sf
     value}\,\lf{v_2}}}$. 
 By traditional inversion on the structure of a
 deductive derivation, we know that $N = {\sf okf2/app1}$ and $N_1 =
-{\sf value/lam}\,\lf{(\lambda x.e)}$, but that was also not necessary here.
+{\sf value/lam}\,\lf{(\lambda x.e)}$, but that fact
+was also not necessary here.
 
 
 \section{From well-formed to well-typed states}
@@ -1193,7 +1194,7 @@ typing judgment $\obj{\Gamma \vdash e : {\it tp}}$.  We encode
 object-level types as LF terms classified by the LF type ${\sf
   typ}$. The unit type $\interp{\one} = \lf{\sf unittp}$ classifies units
 $\interp{\langle\rangle} = \lf{\sf unit}$, and the function type $\interp{{\it tp}_1
-  \Rightarrow {\it tp}_2} = \lf{\sf arr}\,\interp{{\it
+  \rightharpoonup {\it tp}_2} = \lf{\sf arr}\,\interp{{\it
     tp}_1}\,\interp{{\it tp}_2}$ classifies lambda expressions.
 
 \begin{figure}[t]
@@ -1217,12 +1218,12 @@ constructs in Figure~\ref{fig:gen-order-prog}:
 {\mathstrut}
 \qquad
 \infer
-{\obj{\Gamma \vdash \lambda x.e : {\it tp' \Rightarrow tp}} \mathstrut}
+{\obj{\Gamma \vdash \lambda x.e : {\it tp' \rightharpoonup tp}} \mathstrut}
 {\obj{\Gamma, x{:}{\it tp'} \vdash e : {\it tp}} \mathstrut}
 \qquad
 \infer
 {\obj{\Gamma \vdash e_1\,e_2 : {\it tp}} \mathstrut}
-{\obj{\Gamma \vdash e_1 : {\it tp' \Rightarrow tp}}
+{\obj{\Gamma \vdash e_1 : {\it tp' \rightharpoonup tp}}
  &
  \obj{\Gamma \vdash e_2 : {\it tp'}}
  \mathstrut}
@@ -1242,8 +1243,8 @@ constructs in Figure~\ref{fig:gen-order-prog}:
 We can adequately encode derivations of the judgment
 $\obj{x_1{:}{\it tp}_1, \ldots, x_n{:}{\it tp}_n \vdash e : {\it tp}}$ as 
 \sls~derivations $\lf{x_1}{:}{\sf exp}, \ldots, \lf{x_n}{:}{\sf exp}; 
-y_1 : \ispers{({\sf of}\,\lf{x_1}\,\interp{{\it tp}_1})}, \ldots,
-y_n : \ispers{({\sf of}\,\lf{x_1}\,\interp{{\it tp}_n})}
+y_1 {:} \ispers{({\sf of}\,\lf{x_1}\,\interp{{\it tp}_1})}, \ldots,
+y_n {:} \ispers{({\sf of}\,\lf{x_1}\,\interp{{\it tp}_n})}
 \vdash {\sf of}\,\interp{e}\,\interp{\it tp}$ under the signature
 in Figure~\ref{fig:gen-order-of}.
 
@@ -1469,7 +1470,7 @@ $T_2 = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})$
 %%%%
 %%%%
 \item 
-  [Case $\trstep{y_1,y_2}{{\sf ev/catch}\,\lf{(\lambda x.\,e)}\,\lf{v_2}\,x}$]~
+  [Case $\trstep{y_1,y_2}{{\sf ev/catch}\,\lf{(\lambda x.e)}\,\lf{v_2}\,x}$]~
  
 \qquad $:: \tackon{\Theta}{x{:}\istrue{\susp{{\sf eval}\,\lf{({\sf catch}\,e_1\,e_2)}}}}
        \leadsto 
@@ -1824,7 +1825,7 @@ ${\sf some} ~ \lf{\it tp}{:}{\sf
 \item If $T :: (\cdot; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}}})
          \leadsto^*_{\siggenstate} 
          (\Psi; \tackon{\Theta}
-            {y{:}\istrue{\susp{{\sf cell}\,\lf{{\it l}}\,\lf{v}}}})$,
+            {y{:}\iseph{\susp{{\sf cell}\,\lf{{\it l}}\,\lf{v}}}})$,
 \\ then $T = (T'; \trstep{y}{{\sf gencell/fulfill}\,\lf{l}\,\lf{\it tp}\,\lf{v}\,(\tfuser{x'}{\tfuser{x_t}{\tfuser{\tbangr{N}}{\tbangr{N_v}}}})})$,
 \\ where $x_t{:}\ispers{\susp{{\sf ofcell}\,\lf{l}\,\lf{\it tp}}} \in \Delta$,
    $\Psi; \Delta \vdash N : \isconc{{\sf of}\,\lf{v}\,\lf{\it tp}}$,
@@ -1983,9 +1984,9 @@ cases for ${\sf ev/ref}$ and ${\sf ev/get1}$ below.
     \leadsto^* \left(\Psi; ~
      \tackon{\Theta'}{x_1{:}\istrue{\susp{{\sf retn}\,\lf{v}}}, ~
                    x_2{:}\istrue{\susp{{\sf cont}\,\lf{\sf ref1}}}}
-     \right)$ for some $\Theta'$ such that, for all $\Delta$,
-   $\restrictsig{(\Psi; \tackon{\Theta'}{\Delta})}{} = (\Psi;
-   \tackon{\Theta}{\restrictsig{\Delta}{}})$. Applying 
+     \right)$ for some $\Theta'$ such that, for all $\Xi$,
+   $\restrictsig{(\Psi; \tackon{\Theta'}{\Xi})}{} = (\Psi;
+   \tackon{\Theta}{\restrictsig{\Xi}{}})$. Applying 
    inversion to $T_1$, we have
 
    \medskip
@@ -2097,9 +2098,9 @@ required.
      x_3{:}\iseph{\susp{{\sf cell}\,\lf{l}\,\lf{v}}}
     }
      \right)$ \\
-   for some $\Theta'$ such that, for all $\Delta$,
-   $\restrictsig{(\Psi; \tackon{\Theta'}{\Delta})}{} = (\Psi;
-   \tackon{\Theta}{\restrictsig{\Delta}{}})$. Applying 
+   for some $\Theta'$ such that, for all $\Xi$,
+   $\restrictsig{(\Psi; \tackon{\Theta'}{\Xi})}{} = (\Psi;
+   \tackon{\Theta}{\restrictsig{\Xi}{}})$. Applying 
    inversion to $T_1$, we have
 
    \medskip
@@ -2258,7 +2259,7 @@ dissertation, but they deserve mention for two reasons. First, they
 are of paramount importance in the context of the logical framework
 CLF, a framework that lacks \sls's notions of order. Second, the work
 of Cervesato and Sans \cite{cervesato13substructural} is the most
-closely related work on describing the types of progress and
+closely related work on describing progress and
 preservation properties for SSOS-like specifications; their work
 closely resembles a destination-passing specification. As such, the
 preservation property given in this section can be viewed an encoding
@@ -2351,7 +2352,7 @@ Figure~\ref{fig:gen-destinations2} does introduce an LF variable
 $\lf{d'}$, invalidating the principle used in
 Section~\ref{sec:inversion-genorder}.
 
-The ${\sf dest/promise}$ run in Figure~\ref{fig:gen-destinations} is
+The ${\sf dest/promise}$ rule in Figure~\ref{fig:gen-destinations} is
 interesting in that it requires each destination $\lf{d'}$ to be
 created along with foreknowledge of the destination, $\lf{d}$, that
 the destination $\lf{d'}$ will return to. This effectively forces all
@@ -2361,7 +2362,7 @@ Figure~\ref{fig:gen-destinations} to account for persistent
 destinations and first-class continuations. The root of this tree is the
 destination $\lf{d_0}$ that already exists in the initial process state
 $(\lf{d_0}{:}{\sf dest};
-x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})$.
+x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})$.
 
 \subsection{Uniqueness and index sets}
 \label{sec:uniqueness-gendests}
@@ -2374,7 +2375,7 @@ conceptually prior to our inversion lemma.
 \begin{lemma}[Unique indices of $\siggendests$]~
 \begin{enumerate}
 \item
-If $T :: (\lf{d_0}{:}{\sf dest}; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+If $T :: (\lf{d_0}{:}{\sf dest}; x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
          \leadsto^*_{\siggendests}
          (\Psi; \Delta)$,
 \\ $x{:}\iseph{\susp{{\sf gendest}\,\lf{d}\,\lf{d_1}}} \in \Delta$, 
@@ -2384,7 +2385,7 @@ $y{:}\iseph{\susp{{\sf gendest}\,\lf{d}\,\lf{d_2}}} \in \Delta$,
 
 \medskip
 \item
-If $T :: (\lf{d_0}{:}{\sf dest}; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+If $T :: (\lf{d_0}{:}{\sf dest}; x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
          \leadsto^*_{\siggendests}
          (\Psi; \Delta)$,
 \\ $x{:}\iseph{\susp{{\sf gendest}\,\lf{d}\,\lf{d_1}}} \in \Delta$, 
@@ -2395,7 +2396,7 @@ then there is a contradiction.
 
 \medskip
 \item
-If $T :: (\lf{d_0}{:}{\sf dest}; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+If $T :: (\lf{d_0}{:}{\sf dest}; x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
          \leadsto^*_{\siggendests}
          (\Psi; \Delta)$,
 \\ $x{:}\iseph{\susp{{\sf gendest}\,\lf{d}\,\lf{d_1}}} \in \Delta$, 
@@ -2406,7 +2407,7 @@ then there is a contradiction.
 
 \medskip
 \item
-If $T :: (\lf{d_0}{:}{\sf dest}; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+If $T :: (\lf{d_0}{:}{\sf dest}; x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
          \leadsto^*_{\siggendests}
          (\Psi; \Delta)$,
 \\ $x{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_1}\,\lf{d}}} \in \Delta$, 
@@ -2416,7 +2417,7 @@ $y{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_2}\,\lf{d}}} \in \Delta$,
 
 \medskip
 \item
-If $T :: (\lf{d_0}{:}{\sf dest}; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
+If $T :: (\lf{d_0}{:}{\sf dest}; x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}})
          \leadsto^*_{\siggendests}
          (\Psi; \Delta)$,
 \\ $x{:}\iseph{\susp{{\sf cont}\,\lf{f_1}\,\lf{d}\,\lf{d_1}}} \in \Delta$, 
@@ -2460,7 +2461,7 @@ The complicated lemma above can then be captured by the dramatically
 more concise statement: $\{ {\sf gendest}/1, {\sf gen}/2 \}$ and $\{
 {\sf gendest}/1, {\sf cont}/2 \}$ are both unique index sets under the
 signature $\siggendests$ and the initial state $(\lf{d_0}{:}{\sf
-  dest}; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it
+  dest}; x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it
         tp}_0}\,\lf{d_0}}})$. In fact, we can extend the first unique
 index set to $\{ {\sf gendest}/1, {\sf gen}/2, {\sf eval}/2, {\sf
   retn}/2 \}$. Stating that $\{ {\sf gendest}/1, {\sf gen}/2 \}$ was a
@@ -2468,7 +2469,7 @@ unique index property previously required 3 distinct statements, and
 it would take 10 distinct statements to express that $\{ {\sf
   gendest}/1, {\sf gen}/2, {\sf eval}/2, {\sf retn}/2 \}$ is a unique
 index property.\footnote{Four positive statements (similar to parts 1, 4, and 5 of the lemma above) along ${{4}\choose{2}} =
-  6$ negative ones (similar to parts 3 and 4 of the lemma above).}
+  6$ negative ones (similar to parts 2 and 3 of the lemma above).}
 The unique index property for cells (Section~\ref{sec:uniqueness-genstate}) 
 can be rephrased by saying that $\{ {\sf ofcell}/1 \}$ is a unique index
 set; $\{ {\sf gencell}/1, {\sf cell}/1 \}$ is also a unique index set 
@@ -2665,7 +2666,7 @@ If $T_1 :: (\lf{d_0}{:}{\sf dest}; x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}
    (\Psi; \Delta)$ and there is a step
    $S :: \restrictsig{(\Psi; \Delta)}{} \leadsto (\Psi'; \Delta')$
 under the signature from Figure~\ref{fig:dest-cbv}, then
-$T_2 :: (\lf{d_0}{:}{\sf dest}; x_0{:}\istrue{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}}) 
+$T_2 :: (\lf{d_0}{:}{\sf dest}; x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it tp}_0}\,\lf{d_0}}}) 
    \leadsto^*_{\siggendests} 
    (\Psi'; \Delta')$.
 
@@ -2915,8 +2916,8 @@ Chapter~\ref{chapter-destinations}.
 Consider again the ${\sf gendest/promise}$ rule from
 Figure~\ref{fig:gen-destinations}. Because the rule consumes no
 nonterminals and is the only rule to introduce LF variables, any trace
-$T :: \left(\lf{d_0}{:}{\sf dest}; x_0{:}{\sf gen}\,\lf{{\it
-      tp}_0}\,\lf{d_0}\right) \leadsto^* {(\Psi;
+$T :: \left(\lf{d_0}{:}{\sf dest}; x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it
+      tp}_0}\,\lf{d_0}}}\right) \leadsto^* {(\Psi;
   \Delta)}{}$ under $\siggendests$ can be factored into two parts $T =
 T_1; T_2$ where $T_1$ contains only steps that use ${\sf
   gendest/promise}$. The computational effect of
@@ -2958,7 +2959,7 @@ Taken together, the rules ${\sf dest/promise}$ and ${\sf
 tree-structured map of destinations starting from an initial
 destination $\lf{d_0}$ and an initial persistent atomic proposition
 ${\sf ofdest}\,\lf{d_0}\,\lf{{\it tp}_0}$, and the ${\sf
-  dest/fulfull}$ rule ensures that every destination on this map
+  dest/fulfill}$ rule ensures that every destination on this map
 encodes a specific and well-typed stack of frames that can be read off
 by following destinations back to the root $\lf{d_0}$.  The initial
 ${\sf ofdest}$ proposition takes over for the mobile proposition ${\sf

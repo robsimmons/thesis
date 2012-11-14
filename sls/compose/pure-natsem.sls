@@ -55,7 +55,7 @@ ev/pair:  ev (pair E1 E2) (pair V1 V2)
 ev/fst:   ev (fst E) V1
            <- ev E (pair V1 V2).
 
-ev/snd:   ev (fst E) V2
+ev/snd:   ev (snd E) V2
            <- ev E (pair V1 V2).
 
 ev/arb1:  ev (arb E1 E2) V
