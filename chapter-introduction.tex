@@ -86,9 +86,11 @@ Notably, this is true about most of the programming languages used to
 implement our calculators, program our robot army control systems,
 enforce our security protocols, and interact with our high-frequency
 trading systems. In the last decade, however, we have finally begun to
-see the emergence of operational semantics specifications (the
-``rules of the game'' for a programming language) that are truly
-formal. A notable aspect of this recent work is that the formalization
+see the emergence of operational semantics specifications (the ``rules
+of the game'' for a programming language) for real-world programming
+languages that are truly formal.
+%
+A notable aspect of this recent work is that the formalization
 effort is not done simply for formalization's sake. Ellison and Ro{\c
   s}u's formal semantics of C can be used to check individual programs
 for undefined behavior, unsafe situations where the rules of the game
@@ -103,11 +105,13 @@ Mathematics, by contrast, has a century-long tradition of insisting on
 absolute formality (at least in principle: practice often falls far
 short).
 %
-Over time, this tradition
-has become a collaboration between practicing mathematicians and
-practicing computer scientists, because while humans are reasonable
-judges of clarity, computers have an absolutely superhuman patience
-for checking all the formal details of an argument.  One aspect of
+Over time, this tradition has become a collaboration between
+practicing mathematicians and practicing computer scientists, because
+while humans are reasonable judges of clarity, computers have
+absolutely superhuman patience when it comes to checking all the
+formal details of an argument.
+%
+One aspect of
 this collaboration has been the development of {\it logical
   frameworks}. In a logical framework, the language of specifications
 is derived from the language of logic, which gives specifications in a
@@ -326,8 +330,11 @@ Scedrov's multiset rewriting language $\omega$
 As an extension to CLF, the logical framework we develop is able to
 specify systems like the $\pi$-calculus, security protocols, and Petri
 nets that can be encoded in CLF \cite{cervesato02concurrent}. The
-addition of ordered logic allows us to easily incorporate systems that
-are naturally understood as string rewriting systems. An example from
+addition of ordered logic allows us to easily incorporate
+specifications that are naturally expressed as string rewriting
+systems.
+%
+An example from
 the verification domain, taken from Bouajjani and Esparza
 \cite{bouajjani06rewriting}, is shown in Figure~\ref{fig:canonical}.
 The left-hand side of the figure is a simple Boolean program: the
@@ -413,7 +420,7 @@ and another, ${\sf retn}(\obj{v})$, carries an evaluated value
 $\obj{v}$.  The third atomic proposition, ${\sf cont}(\obj{f})$,
 contains a {\it continuation frame} $\obj{f}$ that represents some
 partially evaluated value: $\obj{f} = \obj{\Box\,e_2}$ contains an
-expression $\obj{e_1\,e_2}$ waiting on the evaluation of $\obj{e_1}$
+expression $\obj{e_2}$ waiting on the evaluation of $\obj{e_1}$
 to a value, and $\obj{f} = \obj{(\lambda x.e)\,\Box}$ contains
 an function $\obj{\lambda x.e}$ waiting on the evaluation of
 $\obj{e_2}$ to a value. These frames are arranged in a
@@ -455,8 +462,8 @@ in-place with ${\sf retn}(\obj{\lambda x.e})$:
       the result.}
 %
 {\sf ev/app2}&: ~~
-  {\sf retn}\,(\obj{v_2}) \fuse {\sf cont}\,(\obj{(\lambda x.e})\,\Box)
-    \lefti \{ {\sf eval}\,([\obj{v_2}/\obj{x}]\obj{e}) \}
+  {\sf retn}\,(\obj{v_2}) \fuse {\sf cont}\,(\obj{(\lambda x.e)\,\Box})
+    \lefti \{ {\sf eval}\,(\obj{[\obj{v_2}/\obj{x}]\obj{e}}) \}
 %
 \end{align*}
 
@@ -515,8 +522,8 @@ The \sls~framework admits many styles of specification. The SSOS
 specification above resides in the {\it concurrent} fragment of
 \sls. (This rewriting-like fragment is called concurrent because
 rewriting specifications are naturally concurrent -- we can just as
-easily seed the process state with two propositions ${\sf eval}(e)$
-and ${\sf eval}(e')$ that will evaluate to values concurrently and
+easily seed the process state with two propositions ${\sf eval}(\obj{e})$
+and ${\sf eval}(\obj{e'})$ that will evaluate to values concurrently and
 independently,
 side-by-side in the process state.)  Specifications in the concurrent
 fragment of \sls~can take many different forms, a point that we will
@@ -545,7 +552,7 @@ expressed with two inference rules:
  \obj{{[\obj{v_2}/\obj{x}]\obj{e_2}} \Downarrow v} \mathstrut}
 \]
 Big-step operational semantics specifications are compact and elegant,
-but they are not particularly {\it modular}. As a (rather contrived)
+but they are not particularly {\it modular}. As a (contrived but illustrative)
 example, consider the addition of a incrementing counter $\obj{\sf
   count}$ to the language of expressions $\obj{e}$. The counter is
 a piece of runtime state, and every time $\obj{\sf count}$ is evaluated,
@@ -679,8 +686,8 @@ correspondence to directly connect the big-step semantics and SSOS
 specifications above; in fact, we can automatically and mechanically
 derive the latter from the former. As our example above showed,
 big-step operational semantics do not support combining the
-specification of a pure feature (like call-by-value evaluation) with
-the specification of a stateful feature (like the counter). Or, at
+specification of pure features (like call-by-value evaluation) with
+the specification of a stateful feature (like the counter) -- or, at
 least, doing so requires more than concatenating the specifications.
 Using the automatic transformations described in
 Chapter~\ref{chapter-absmachine}, we can specify pure features (like
@@ -711,16 +718,13 @@ Chapter~\ref{chapter-approx}.
 
 \section{Invariants in substructural logic}
 
-{\it Invariants} are fundamental for reasoning about any evolving
-system. From a verification or model-checking viewpoint, invariants
-are usually expressed in terms of temporal logics like LTL and are
-usually verified by model checking or exhaustive search
-\cite[Chapter 10]{clavel11ltl}. Existing work
-on verifying properties of rewriting specifications has generally
-approached the problem from a model checking perspective. 
-
-In Part~III we offer an approach to invariants that is complementary to
-the model checking approach.  From a programming languages
+A prominent theme in work on model checking and rewriting logic is
+expressing invariants in terms of temporal logics like LTL and
+verifying these properties with exhaustive state-space exploration
+\cite[Chapter 10]{clavel11ltl}.
+In Part~III of this dissertation
+we offer an approach to invariants that is complementary to
+this model checking approach.  From a programming languages
 perspective, invariants are often associated with {\it types}. Type
 invariants are well-formedness criteria on programs that are weak
 enough to be preserved by state transitions (a property called {\it
@@ -735,7 +739,8 @@ that a language is free of unspecified behavior.
 
 Chapter~\ref{chapter-gen} discusses the use of {\it generative signatures} to
 describe well-formedness invariants of specifications. Generative
-signatures look a bit like context-free grammars, and they allow us to
+signatures look like a generalization of 
+context-free grammars, and they allow us to
 characterize contexts by a describing rewriting rules that generate
 legal or well-formed
 process states in the same way that context-free grammars characterize
@@ -826,9 +831,9 @@ specifications.
 
 The three parts of this dissertation support three different
 aspects of our central thesis, which we can state as refined thesis
-statements which support the central thesis. We will presently discuss
+statements that support the central thesis. We will presently discuss
 these supporting thesis statements along with the major contributions
-associated with each the refinements.
+associated with each of the refinements.
 
 \smallskip
 \begin{quote} {\bf Thesis (Part I):} {\it The methodology of
@@ -868,8 +873,9 @@ semantics that we introduced in Section~\ref{sec:intro-ssos}. The
 destination-adding transformation given in
 Chapter~\ref{chapter-destinations} connects these specifications with
 the older {\it destination-passing style} of SSOS specification. In
-both chapters add new opportunities for modular extension -- that is,
-our ability to add new features to the language specification without
+both chapters the transformations we discuss 
+add new opportunities for modular extension -- that is,
+new opportunities to add features to the language specification without
 revising existing rules. The transformations in these chapters are
 implemented in the \sls~prototype, as demonstrated by the development
 in Appendix~\ref{appendix-hybrid}.

@@ -3,14 +3,26 @@
 
 \[
 \infer[{\exists}_{R}]
-{\foct{\Psi}{\Delta}{\texistsr{t}{V}}{[\exists \lf{a}{:}\tau.A^+]}}
+{\foct{\Psi}{\Delta}{\texistsr{\lf{t}}{V}}{[\exists \lf{a}{:}\tau.A^+]}}
 {\Psi \vdash \lf{t} : \tau
  &
  \foct{\Psi}{\Delta}{V}{[\lf{[t/a]}A^+]}}
 \quad
 \infer[{\exists}_L]
-{\foct{\Psi}{\frameoff{\Theta}{\exists \lf{a}{:}\tau.A^+}}{\texistsl{a}{N}}{U}}
+{\foct{\Psi}{\frameoff{\Theta}{\exists \lf{a}{:}\tau.A^+}}{\texistsl{\lf{a}}{N}}{U}}
 {\foct{\Psi, \lf{a}{:}\tau}{\tackon{\Theta}{A^+}}{N}{U}}
+\]
+\vspace{-5pt}
+\[
+\infer[\forall_R]
+{\foct{\Psi}{\Delta}{\tforallr{\lf a}{N}}{\forall \lf a{:}\tau.A^-}}
+{\foct{\Psi, \lf a{:}\tau}{\Delta}{N}{A^-}}
+\quad
+\infer[{\forall}_L]
+{\foct{\Psi}{\frameoff{\Theta}{[\forall \lf a{:}\tau.A^-]}}{\tforalll{\lf t}{\Sp}}{U}}
+{\Psi \vdash \lf t : \tau
+ &
+ \foct{\Psi}{\tackon{\Theta}{[\lf{[t/a]}A^-]}}{\Sp}{U}}
 \]
 \vspace{-5pt}
 \[
@@ -29,18 +41,6 @@
  &
  \foct{\Psi'}{\tackon{\lf\sigma\Theta}{\cdot}}{\phi(\lf\sigma)}{\lf\sigma U}
  }
-\]
-\vspace{-5pt}
-\[
-\infer[\forall_R]
-{\foct{\Psi}{\Delta}{\tforallr{\lf a}{N}}{\forall \lf a{:}\tau.A^-}}
-{\foct{\Psi, \lf a{:}\tau}{\Delta}{N}{A^-}}
-\quad
-\infer[{\forall}_L]
-{\foct{\Psi}{\frameoff{\Theta}{[\forall \lf a{:}\tau.A^-]}}{\tforalll{\lf t}{\Sp}}{U}}
-{\Psi \vdash \lf t : \tau
- &
- \foct{\Psi}{\tackon{\Theta}{[\lf{[t/a]}A^-]}}{\Sp}{U}}
 \]
 
 

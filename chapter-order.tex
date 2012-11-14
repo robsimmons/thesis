@@ -53,7 +53,7 @@ and in particular the discussion of substructural contexts in
 Section~\ref{sec:contexts}, introduces a presentation style and
 infrastructure that I believe will generalize to focused presentations
 of richer logics, such as the logic of bunched
-implications~\cite{pym02semantics}, non-commutative linear logic (or
+implications~\cite{pym02semantics}, non-associative ordered logic (or
 ``rigid logic'') \cite{simmons09linear}, subexponential logics
 \cite{nigam09algorithmic}, and so on.
 
@@ -73,17 +73,18 @@ framework starting in Chapter~\ref{chapter-framework}.
 
 Ordered linear logic was the subject of Polakow's dissertation
 \cite{polakow01ordered}. It extends linear logic with a notion of {\it
-  ordered resources}.  In ordered logic the linear
+  ordered resources}.  The 
 multiplicative conjunction $A \otimes B$ of linear logic, which
 represents that we have both the resources to make an $A$ and a $B$,
-is replaced by a linear multiplicative conjunction $A \fuse B$, which
+is replaced in ordered logic
+by an ordered multiplicative conjunction $A \fuse B$, which
 represents that we have the resources to make an $A$, and they're to
 the left of the resources necessary to make a $B$. Linear implication
 $A \lolli B$, which represents a resource that, given the resources
 necessary to construct an $A$, can construct a $B$, splits into two
 propositions in ordered logic. The proposition $A \lefti B$ represents
 a resource that, given the resources necessary to construct an $A$
-{\it to the left}, can construct a $B$, and the proposition $A \righti
+{\it to the left}, can construct a $B$; the proposition $A \righti
 B$ demands those resource to its right. 
 
 Ordered propositions were used by Lambek to model language
@@ -113,8 +114,6 @@ ordered context $\Omega$ is a sequence of propositions, as in
 Gentzen's original presentation of sequent calculi, and {\it not} a
 multiset.  This means that the two ordered contexts $\Omega_1,
 \Omega_2$ and $\Omega_2, \Omega_1$ are, in general, not the same.
-
-\input{figs/fig-ordered-prop}
 
 The presentation of ordered linear lax logic in
 Figure~\ref{fig:ordered-prop} uses an ordered logic adaptation of the
@@ -151,6 +150,8 @@ else both the linear and ordered contexts are empty and $p$ is present in the
 persistent context. This notion will be called {\it sole membership} 
 in Section~\ref{sec:fundamental-operations-on-contexts}.
 
+\input{figs/fig-ordered-prop}
+
 Ordered linear lax logic also encompasses Fairtlough and Mendler's lax
 logic \cite{fairtlough97propositional} as reconstructed by Pfenning
 and Davies \cite{pfenning01judgmental} and adapted to linear logic is
@@ -158,8 +159,7 @@ the basis of the CLF logical framework \cite{watkins02concurrent}.
 The judgment $\islax{A}$ is the foundation of ordered logic, and is
 usually interpreted as truth under some unspecified constraint
 or as a weaker version of truth: if we know $\isconc{A}$
-then we can conclude $\islax{A}$, but the opposite entailment
-does not hold. 
+then we can conclude $\islax{A}$:
 \[
 \infer-[{\it lax}]
 {\oseq{\Gamma}{\Delta}{\Omega}{\islax{A}}}
@@ -339,8 +339,8 @@ contexts $\Psi$.  The particular way we define substructural contexts
 can be generalized substantially: it would be possible to extend this
 presentation to the affine exponential ${@}A$, and we conjecture that
 the subexponentials discussed by Nigam and Miller
-\cite{nigam09algorithmic} as well as richer logics like the logic of
-bunched implications \cite{pym02semantics} could be given a
+\cite{nigam09algorithmic} -- as well as richer logics like the logic of
+bunched implications \cite{pym02semantics} -- could be given a
 straightforward treatment using this notation.
 
 We write unified substructural contexts as either $\Delta$ or $\Xi$,
@@ -445,8 +445,8 @@ below:
 \]
 
 The second basic operation on contexts requires a new concept, {\it
-  frames} $\Theta$. Intuitively, we can view a frame as a the
-complete set of persistent, linear, and ordered contexts 
+  frames} $\Theta$. Intuitively, we can view a frame as a
+set of persistent, linear, and ordered contexts 
 where the ordered context is
 missing a particular piece.  We can write this missing
 piece as a box: $\Gamma; \Delta; \Omega_L, \Box,
@@ -865,11 +865,11 @@ In a confluent presentation of focused logic like the one given for
 linear logic in Chapter~\ref{chapter-foc}, 
 that would be as far as we could take our
 simplifications. However, this presentation will use a fixed
-presentation of logic from the structural focalization development
+presentation of logic 
 as described in Section~\ref{sec:confluent-v-fixed}. 
 If there is more than one
 invertible proposition in a sequent, {\it only} the leftmost one will
-be treated as eligible to have a rule or matching applied to it. All the
+be eligible to have a rule or matching applied to it. All the
 propositions in $\Delta$ are treated as being to the left of the
 succedent $U$, so we always prioritize inversion on positive
 propositions in $\Delta$. With this additional restriction, it is
@@ -889,9 +889,9 @@ the rules for in Section~\ref{sec:ord-proof-terms} below, are:
 \begin{itemize}
 \item Right focused sequents $\foc{\Psi}{\Delta}{[A^+]}$ (where
   $\Delta$ is stable, containing only variable declarations
-  $x{:}\islvl{A^-}$ or $x{:}\islvl{\susp{A^+}}$),
+  $x{:}\islvl{A^-}$ or $z{:}\islvl{\susp{A^+}}$),
 \item Inversion sequents $\foc{\Psi}{\Delta}{U}$ (where $\Delta$ contains
-  variable declarations $x{:}\islvl{A^-}$, $x{:}\islvl{\susp{A^+}}$ and
+  variable declarations $x{:}\islvl{A^-}$, $z{:}\islvl{\susp{A^+}}$ and
   inverting positive propositions $A^+$ and where $U$ is either 
   $\islvl{A^+}$, $\islvl{\susp{A^-}}$, or an inverting negative
   proposition $A^-$), 
@@ -900,7 +900,7 @@ the rules for in Section~\ref{sec:ord-proof-terms} below, are:
   negative propositions in $U$.
 \item Left focused sequents $\foc{\Psi}{\tackon{\Theta}{[A^+]}}{U}$
   (where $\Theta$ and $U$ are stable -- $\Theta$ contains only
-  variable declarations $x{:}\islvl{A^-}$ or $x{:}\islvl{\susp{A^+}}$ and
+  variable declarations $x{:}\islvl{A^-}$ or $z{:}\islvl{\susp{A^+}}$ and
   $U$ is either $\islvl{A^+}$ or $\islvl{\susp{A^-}}$).
 \end{itemize}
 
@@ -1240,7 +1240,7 @@ we know that $\Delta$ matches $\frameoff{\Theta}{[\forall \lf{a}{:}\tau.A]}$.
 We need a lemma that tells us that $\lf\sigma\Delta$ matches
 $\frameoff{\lf\sigma\Theta}{[\forall \lf{a}{:}\tau.\lf{(\sigma, a/a)}A^-]}$; then,
 by rule $\forall_L$, it suffices to show 
-$\foc{\Psi'}{\tackon{\lf\sigma\Theta}{[\lf{[\sigma{t}/a](\sigma, a/a)}A^-]}}
+$\foc{\Psi'}{\tackon{\lf\sigma\Theta}{[\lf{[\sigma{t}/a]}(\lf{(\sigma, a/a)}A^-)]}}
   {\lf\sigma{U}}$, which is the same thing as
 $\foc{\Psi'}{\tackon{\lf\sigma\Theta}{[\lf{\sigma}(\lf{[t/a]}A^-)]}}
   {\lf\sigma{U}}$. This follows by the induction hypothesis on $\lf\sigma$ and
@@ -1320,9 +1320,10 @@ proposition that we have a focused proof $V$ of, so the result we are
 looking for is $V$.
 
 The computational
-content of negative focal substitution is the substitution of a spine $\Sp$,
-which represents a continuation, out of an expression $E$ waiting on that 
-continuation, written $[E]\Sp$. As an admissible rule, negative focal
+content of negative focal substitution is the substitution of a spine $\Sp$
+out of an expression $E$. $\Sp$ represents a continuation, and the 
+expression $E$ is waiting on that continuation.
+As an admissible rule, negative focal
 substitution is represented as follows:
 \[
 \infer-[{\it subst}^-]
@@ -1339,45 +1340,65 @@ looking for is $\Sp$.
 \end{proof}
 
 Pay attention to the way compound matching constructs are being
-used. In unfocused \ollll, using the compound notation
-effectively means that a single statement:
-\begin{center}
-If $\Delta \altv \isconc{A}$, ~
-$\tackon{\Theta}{x{:}\islvl{A}} \altv \isconc{C}$, ~
-and $\Delta'$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$, ~
-then $\Delta' \altv C$.
-\end{center}
-can simultaneously express 
-three cut
-principles: \smallskip
+used. If we separate the substructural context out into its 
+persistent, linear, and ordered constituents, the 
+${\it subst}^+$ rule can be seen as effectively expressing
+three admissible principles simultaneously:
+\smallskip
 \begin{itemize}
-\item If $\oseq{\Gamma}{\cdot}{\cdot}{\isconc A}$ 
-      and $\oseq{\Gamma, A}{\Delta'}{\Omega'}{\isconc{C}}$,
-      then $\oseq{\Gamma}{\Delta'}{\Omega'}{\isconc C}$.
-\item If $\oseq{\Gamma}{\Delta}{\cdot}{\isconc A}$ 
-      and $\oseq{\Gamma}{\Delta', A}{\Omega'}{\isconc C}$,
-      then $\oseq{\Gamma}{\Delta', \Delta}{\Omega'}{\isconc C}$.
-\item If $\oseq{\Gamma}{\Delta}{\Omega}{\isconc A}$ 
-      and $\oseq{\Gamma}{\Delta'}{\Omega_L, A, \Omega_R}{\isconc C}$,\\
-      then $\oseq{\Gamma}{\Delta',\Delta}{\Omega_L, \Omega, \Omega_R}{\isconc C}$.
+\item If $\foc{\Psi}{\Gamma; \Delta; \Omega}{[A^+]}$
+      and $\foc{\Psi}{\Gamma; \Delta'; \Omega_L, {\susp{A^+}}, \Omega_R}{U}$,
+      then $\foc{\Psi}{\Gamma; \Delta, \Delta'; \Omega_L, \Omega, \Omega_R}{U}$.
+\item If $\foc{\Psi}{\Gamma; \Delta; \cdot}{[A^+_\meph]}$
+      and $\foc{\Psi}{\Gamma; \Delta', \susp{A^+_\meph}; \Omega'}{U}$,
+      then $\foc{\Psi}{\Gamma; \Delta, \Delta'; \Omega'}{U}$.
+\item If $\foc{\Psi}{\Gamma; \cdot; \cdot}{[A^+_\mpers]}$
+      and $\foc{\Psi}{\Gamma, \susp{A^+_\mpers}; \Delta'; \Omega'}{U}$,
+      then $\foc{\Psi}{\Gamma; \Delta'; \Omega'}{U}$.
 \end{itemize}
 \smallskip
-As an admissible rule, we write these three cut principles generically
-as:
-\[
-\infer-[{\it unfocused\mbox{-}cut}]
-{\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}} \altv {\isconc C}}
-{\Delta \altv \isconc{A}
- &
- \tackon{\Theta}{x{:}\islvl{A}} \altv \isconc{C}}
-\]
 
-In the negative focal substitution (as the leftist substitutions of
-cut admissibility), there is a corresponding use of
+%% In unfocused \ollll, using the compound notation
+%% effectively means that a single statement:
+%% \begin{center}
+%% If $\Delta \altv \isconc{A}$, ~
+%% $\tackon{\Theta}{x{:}\islvl{A}} \altv \isconc{C}$, ~
+%% and $\Delta'$ matches $\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}}$, ~
+%% then $\Delta' \altv C$.
+%% \end{center}
+%% can simultaneously express 
+%% three cut
+%% principles: \smallskip
+%% \begin{itemize}
+%% \item If $\oseq{\Gamma}{\cdot}{\cdot}{\isconc A}$ 
+%%       and $\oseq{\Gamma, A}{\Delta'}{\Omega'}{\isconc{C}}$,
+%%       then $\oseq{\Gamma}{\Delta'}{\Omega'}{\isconc C}$.
+%% \item If $\oseq{\Gamma}{\Delta}{\cdot}{\isconc A}$ 
+%%       and $\oseq{\Gamma}{\Delta', A}{\Omega'}{\isconc C}$,
+%%       then $\oseq{\Gamma}{\Delta', \Delta}{\Omega'}{\isconc C}$.
+%% \item If $\oseq{\Gamma}{\Delta}{\Omega}{\isconc A}$ 
+%%       and $\oseq{\Gamma}{\Delta'}{\Omega_L, A, \Omega_R}{\isconc C}$,\\
+%%       then $\oseq{\Gamma}{\Delta',\Delta}{\Omega_L, \Omega, \Omega_R}{\isconc C}$.
+%% \end{itemize}
+%% \smallskip
+%% As an admissible rule, we write these three cut principles generically
+%% as:
+%% \[
+%% \infer-[{\it unfocused\mbox{-}cut}]
+%% {\frameoff{\Theta}{\restrictto{\Delta}{\mlvl}} \altv {\isconc C}}
+%% {\Delta \altv \isconc{A}
+%%  &
+%%  \tackon{\Theta}{x{:}\islvl{A}} \altv \isconc{C}}
+%% \]
+
+\noindent
+In negative focal substitution, as in the leftist substitutions of
+cut admissibility, there is a corresponding use of
 $\restrictfrom{U}{\mlvl}$ to capture that we can use a proof of
-$\isconc{A}$ to discharge a hypothesis of $\istrue{A}$ in a proof of
+$\isconc{\susp{A^-}}$ to discharge a hypothesis of ${[A^-]}$ in a proof of
 $\isconc{C}$ or a proof of $\islax{C}$, but that a proof of
-$\islax{A}$ can only discharge a hypothesis of $\istrue{A}$ in a proof
+$\islax{\susp{A^-_\mlax}}$ can only discharge a hypothesis of 
+${[A^-_\mlax]}$ in a proof
 of $\islax{C}$. 
 
 
@@ -1438,13 +1459,14 @@ derivation.
 In Pfenning's work on structural cut elimination, this classification
 of cases was informal, but the structure of our cut admissibility
 proofs actually isolates the principal, left commutative, and right
-commutative cases into different parts of the theorem
-\cite{pfenning00structural}. This separation of cases is the reason
+commutative cases into different parts of the theorem. 
+This separation of cases is the reason
 why cut admissibility in a focused sequent calculus can use a more
 refined induction metric than cut admissibility in an unfocused
 sequent calculus. As noted previously in the proof of
 Theorem~\ref{thm:lincut}, the refined induction metric does away with
-the precondition, essential to structural cut admissibility, that
+the precondition, essential to Pfenning's proof of 
+structural cut admissibility, that
 weakening and variable substitution preserve the size of derivations.
 
 Before discussing the proof, it is worth noting that this theorem
@@ -1463,8 +1485,8 @@ proof structure to handle the extra lax and mobile connectives in
 \ollll, we would need a dramatically larger number of
 cases. Furthermore, at a computational level, Chaudhuri's proof
 requires a lot of code duplication -- that is, the proof of two
-different parts may both require a case that looks essentially the
-same.
+different parts will frequently each require a case that looks essentially the
+same in both parts.
 
 % Observing this duplication, one of our goals in
 % \cite{simmons11structural} was to give a short and mechanizable proof
@@ -1492,8 +1514,9 @@ Further simplification is due to defining right-focused, inverting,
 and left-focused sequents as refinements of general sequents
 $\foc{\Psi}{\Delta}{U}$. Without this approach, the
 statement of part 3 must be split into two parts (for substituting into
-terms and spines) and the statement of part 4 must be split in parts (for
-substituting into values, terms, spines). % \cite{simmons11structural}.
+terms and spines) and the statement of part 4 must be split into 
+three parts (for
+substituting into values, terms, and spines). % \cite{simmons11structural}.
 Without either of the aforementioned simplifications, we would have 15
 parts in the statement of Theorem~\ref{thm:ord-cut} instead of four
 and twice as many cases that needed to be
@@ -1684,6 +1707,7 @@ reasoning explicitly about the premise every time.
 \item[--] $(\subst{\tinr{V_2}}{\toplusl{N_1}{N_2}})^{A^+ \oplus B^+} 
            = (\subst{V_2}{N_2})^{B^+}$
 
+\newpage
 \item[--] $(\subst{\texistsr{\lf{t}}{V_1}}{\texistsl{a}{N_1}})^{\exists \lf{a}{:}\tau.A^+}
            = (\subst{V_1}{\lf{[t/a]}N_1})^{\lf{[t/a]}A^+}$ \smallskip\\
   We must show $\foc{\Psi}{\Xi}{U}$, where
@@ -1754,6 +1778,8 @@ negative principal substitution is ${\it cut}^-$:
    A derivation of $\foc{\Psi}{\Delta}{\islvl{\susp{p^-_\mlvl}}}$ is not
    quite a proof of $\foc{\Psi}{\Xi}{U}$, so we need an exchange-like 
    lemma that we can get one from the other. \smallskip
+
+\newpage
 
 \item[--] $(\subst{\tupr{N}}{\tupl{M}})^{{\uparrow}A^+} = \lsubsta{N}{M}{A^+}$
 
@@ -2270,6 +2296,8 @@ two frames are stated but not proven.
 %   $\foc{\Psi}{\tackon{\Theta_\Delta}{y{:}\iseph{B^-}}}{U}$, and 
 %   the result follows by rule ${\gnab}_L$. 
 
+\newpage
+
 \item[--] $\rsubsta{M}{x}{(\tbangl{y}{N})}{A^-} 
            = \tbangl{y}{(\rsubsta{M}{x}{N}{A^-})}$\smallskip\\
   We must show $\foc{\Psi}{\Xi}{U}$, where
@@ -2457,6 +2485,7 @@ two frames are stated but not proven.
 
 \smallskip
   
+
 \item[--] $\rsubsta{M}{x}{\tpione{\Sp}}{A^-} 
            = \tpione{(\rsubsta{M}{x}{\Sp}{A^-})}$
 \item[--] $\rsubsta{M}{x}{\tpitwo{\Sp}}{A^-} 
@@ -3110,7 +3139,7 @@ If $\foc{\Psi}{\Delta}{U}$, then $\Psi; \Delta^\circ \altv U^\circ$.
     {\tfocusr
       {\tgnabr
         {\etana
-          {\tfocusl{x}{\tupl{\tdownl{x'}{~\tfocusl{x'}{\tnil}}}}}
+          {\tfocusl{x}{\tupl{(\tdownl{x'}{~(\tfocusl{x'}{\tnil})})}}}
           {A^-}}}}
     {{\uparrow}{\downarrow}A^-}}{\islvl{{\gnab}A^-}}}
 {\foct{\Psi}{\Delta}{N}{\istrue{{\downarrow}A^-}}}
@@ -3128,7 +3157,7 @@ If $\foc{\Psi}{\Delta}{U}$, then $\Psi; \Delta^\circ \altv U^\circ$.
     {\tfocusr
       {\tbangr
         {\etana
-          {\tfocusl{x}{\tupl{\tdownl{x'}{~\tfocusl{x'}{\tnil}}}}}
+          {\tfocusl{x}{\tupl{(\tdownl{x'}{~(\tfocusl{x'}{\tnil})})}}}
           {A^-}}}}
     {{\uparrow}{\downarrow}A^-}}{\islvl{{!}A^-}}}
 {\foct{\Psi}{\Delta}{N}{\istrue{{\downarrow}A^-}}}
@@ -3385,8 +3414,8 @@ multiplicative, exponential fragment of \ollll}
 Unfocused admissibility has a structure that is unchanged from the
 previous discussion in the proof of the completeness of focusing for
 linear logic (Theorem~\ref{thm:linfoccomplete} in
-Section~\ref{sec:lincorrectness}). In this presentation, as in the
-structural focalization development, we present unfocused
+Section~\ref{sec:lincorrectness}). In this presentation,
+we present unfocused
 admissibility primarily on the level of proof terms. The resulting
 presentation is quite dense; proofs of this variety really ought to be
 mechanized, though we leave that for future work.
@@ -3404,7 +3433,7 @@ propositions, like ${\downarrow}{\uparrow}{\downarrow}{\uparrow}A^+$
 and $A^+$ erase to the same unpolarized proposition
 $(A^+)^\circ$. 
 For the same reason, Figure~\ref{fig:admit-mell} contains four
-${\it init}$-like rules, since atomic propositions can come in positive
+${\it id}$-like rules, since atomic propositions can come in positive
 and negative varieties and can appear in the context either suspended or not.
 
 We can view unfocused admissibility as creating an abstraction layer
@@ -3505,7 +3534,7 @@ restrictions that the focused ${\gnab}_R$ and ${\ocircle}_L$ rules
 make are {\it always satisfiable}, the same property that we previously
 observed of focused shift rules ${\downarrow}_R$ and ${\uparrow}_L$.
 In our syntactic fragment, in other words, the exponentials 
-${\gnab}$ and ${\ocircle}$ have become effective {\it replacements} for
+${\gnab}$ and ${\ocircle}$ have become effective replacements for
 ${\downarrow}$ and ${\uparrow}$. 
 
 The cut and identity theorems survive our restriction of the logic
@@ -3555,7 +3584,7 @@ here corresponds to regular linear logic. In the erasure of polarized
 $({\ocircle}A^+)^\circ = (A^+)^\circ$ and $({\gnab}A^-)^\circ =
 (A^-)^\circ$.  Additionally, the two implications are conflated: $(A^+
 \lefti B^-)^\circ = (A^+ \righti B^-)^\circ = (A^+)^\circ \lolli
-(B^+)^\circ$. Beyond that, and the renaming of fuse to tensor -- $(A^+
+(B^-)^\circ$. Beyond that, and the renaming of fuse to tensor -- $(A^+
 \fuse B^+)^\circ = (A^+)^\circ \otimes (B^+)^\circ$ -- the structure
 of erasure remains intact, and we can 
 meaningfully focalize unfocused linear logic derivations into focused 
@@ -3609,12 +3638,12 @@ discuss further in Section~\ref{sec:why-not-fully-dependent}, this
 turns out not to be a severe limitation given the way we want to use
 \ollll.
 
-It is not obvious how the substitution 
+It is not immediately obvious how the substitution 
 $\rsubst{M}{x}{E}$ could be defined without accounting for the 
 full structure of derivations. The rightist substitution function,
 in particular, is computationally dependent
 on the implicit bookkeeping associated with the matching constructs, and
-that bookkeeping is far more of a difficulty in our setting than the
+that bookkeeping is  more of an obstacle in our setting than the
 implicit type annotations. 
 The problem, if we wish to see it as a problem, is that we cannot
 substitute a derivation $M$ of $\foc{\Psi}{\Delta}{A^-}$

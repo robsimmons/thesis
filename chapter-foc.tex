@@ -4,7 +4,7 @@
 In this chapter, we present linear logic as a logic with the ability
 to express aspects of state and state transition in a natural way.  In
 Chapter~\ref{chapter-order} 
-we will repeat the development in this chapter in a much
+we will repeat the development from this chapter in a much
 richer and more expressive setting, and in Chapter~\ref{chapter-framework} 
 we will carve out
 a fragment of this logic to use as the basis of \sls, our logical
@@ -161,7 +161,7 @@ Figure~\ref{fig:unfocused-robot}.\footnote{In
 
 It is precisely because linear logic contains this intuitive notion of
 state and state transition that a rich line of work, dating back to
-Chirmar's 1995 dissertation, has sought to use linear logic as a {\it
+Chirimar's 1995 dissertation, has sought to use linear logic as a {\it
   logical framework} for describing stateful systems
 \cite{chirimar95proof,cervesato02linear,
   cervesato02concurrent,pfenning04substructural,miller09formalizing,
@@ -248,8 +248,8 @@ of LF, a deductive system is said to be {\it adequately encoded} as
 an LF type family in the case that there is a compositional bijection
 between the formal objects in the deductive system and these
 $\beta$-normal, $\eta$-long representatives of equivalence classes
-\cite{harper93framework}, a topic we will return to in 
-Section~\ref{sec:lf-adequacy}.
+\cite{harper93framework}. (Adequacy is a topic we will return to in 
+Section~\ref{sec:lf-adequacy}.)
 
 Modern presentations of LF, such as Harper and Licata's
 \cite{harper07mechanizing}, follow the approach developed by Watkins
@@ -259,7 +259,7 @@ that it only contains these $\beta$-normal, $\eta$-long {\it canonical
 distinguish it from the original presentation of LF in which the
 $\beta$-normal, $\eta$-long terms are just a refinement of terms. A
 central component in this approach is {\it hereditary substitution};
-in Chapter~\ref{chapter-ordered}, we will make the connections between
+in Chapter~\ref{chapter-order}, we will make the connections between
 hereditary substitution and the focused cut admissibility property we
 prove in this chapter more explicit.  Hereditary substitution also
 establishes a normalization property for LF. Using hereditary
@@ -274,9 +274,9 @@ normalized term will be equivalent to the original term
 
 Our analogue to the canonical forms of LF will be the {\it focused
   derivations} of linear logic that are presented in the next
-section. In Section~\ref{sec:foclinlog} below, we will present 
+section. In Section~\ref{sec:foclinlog} below, we present 
 focused linear logic and see that there is exactly 
-one focused derivation that derives the proposition
+one focused derivation of the proposition
 \[{!}({\sf 6bucks} \lolli {\sf battery}) \otimes {\sf 6bucks} \otimes
 ({\sf battery} \lolli {\sf robot}) \lolli {\sf robot}.\] 
 %
@@ -629,6 +629,7 @@ $\mildseq{\Gamma}{\Delta, [A^-]}{U}$ or
 $\mildseq{\Gamma}{\Delta}{[A^+]}$, we can assume that $\Delta$ and $U$
 are stable.
 
+\newpage
 The persistent context of a focused derivation can always be weakened
 by adding more persistent resources.  This weakening property can be
 phrased as an admissible rule, which we indicate using a dashed line:
@@ -720,7 +721,7 @@ a natural-deduction-like flavor: we can substitute a derivation
 right-focused on $A^+$ for a suspended positive proposition $\langle
 A^+ \rangle$ in a context.
 
-\bigskip
+\newpage
 \begin{theorem}[Focal substitution (positive)]\label{thm:fsubst-pos}~\\
 If $\mildseq{\Gamma}{\Delta}{[A^+]}$ 
 and $\mildseq{\Gamma}{\underline{\Delta'}, \langle A^+ \rangle}
@@ -1625,7 +1626,7 @@ search and canonical derivations if we do not address it in some way.
 The different possibilities for addressing this nondeterminism within
 an inversion phase echo the discussion of nondeterminism in LF from
 the beginning of the chapter.  We can, as suggested in that
-introduction, declare that all proofs which differ only by the order
+discussion, declare that all proofs which differ only by the order
 of their invertible, non-focused rules be treated as equivalent. It is
 possible to establish that all possible inversion orderings will lead
 to the same set of stable sequents, which lets us know that all of
@@ -1660,7 +1661,7 @@ doubly-shifted side derivations in our presentation, are trivial in this
 modified presentation.  Unfortunately, the proof of unfocused cut,
 while simple, is tedious and long. Gentzen's original proof of cut
 admissibility \cite{gentzen35untersuchungen} and Pfenning's mechanization
-\cite{pfenning00structural} all scale linearly with the number of
+\cite{pfenning00structural} both scale linearly with the number of
 connectives and rules in the logic; the proofs of identity expansion, cut
 admissibility, soundness of focusing, and completeness of focusing
 presented in this chapter do too. There is no known proof of the
@@ -1786,7 +1787,7 @@ sequents.\footnote{If we had established the unfocused cut rule
   arbitrary inverting sequents, it would have enabled an
   interpretation that puts all unfocused sequents on similar footing,
   but that is not our goal here.}
-The second idea is that the bottommost rule in the proof of 
+The second idea is that the bottom-most rule in the proof of 
 a stable sequent must be one of the following:
 \smallskip
 \begin{itemize}
@@ -2130,7 +2131,7 @@ ${!}{\uparrow}p^+ \lolli {\uparrow}p^+$ in the focusing system we have
 presented). 
 
 There seem to be three ways of adapting the atom optimization to a polarized
-setting. The first option would be to add an initial sequent that 
+setting. The first approach is to add an initial sequent that 
 directly mimics the one in Andreoli's system, while adding an additional
 requirement to the {\it copy} rule that $A^-$ is not a shifted positive
 atomic proposition:
@@ -2676,7 +2677,7 @@ separation into a logical property instead of a meta-logical property.
 \label{sec:moreprim}
 
 We introduced ${\pbang}p^+$ as a connective defined as
-${!}{\downarrow}p^+$ -- that is, the regular ${!}A^-$ connective plus
+${!}{\uparrow}p^+$ -- that is, the regular ${!}A^-$ connective plus
 a little something extra, the shift. After our experience with
 modifying the rules of ${\pbang}$, we can motivate adjoint logic by
 trying to view ${\pbang}$ as a more primitive connective -- that is,
@@ -2743,7 +2744,7 @@ the first, purely positive, component of the ${!}$ connective.
 If the $\pbang$ connective is the first part of the $!$ connective,
 can we characterize the rest of the connective? Giving a reasonable
 answer necessarily requires a more general account of the $\pbang$
-connective -- a {\it unfocused} logic where it is generally applicable
+connective -- an {\it unfocused} logic where it is generally applicable
 rather than restricted to positive atomic propositions. In other
 words, to account for the behavior of $\pbang$, we must give a more
 primitive logic into which linear logic can be faithfully encoded.

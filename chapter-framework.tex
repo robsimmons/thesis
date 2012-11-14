@@ -52,7 +52,9 @@ already-specified \ollll~outright as a logical framework.
   extending deductive logical frameworks like LF and LLF. Derivations
   that prove $\islax{A^+}$, on the other hand, fall into the {\it
     concurrent fragment} of CLF and SLS and can encode evolving
-  systems.
+  systems. These fragments have interesting
+  logic programming interpretations, which we explore in
+  Section~\ref{sec:framework-logicprog}.
  
 \item{\it Partial proofs.} The design of CLF makes it difficult to
   reason about and manipulate the proof terms corresponding to partial
@@ -74,19 +76,19 @@ already-specified \ollll~outright as a logical framework.
   The removal of $\zero$ and $A^+ \oplus B^+$, and the restrictions we
   place on $\lf{t} \doteq_\tau \lf{s}$, also assist in imposing an
   equivalence relation, {\it concurrent equality}, on \sls~terms
-  \ref{sec:framework-concurrenteq}. Concurrent equality is a coarser
+  in Section \ref{sec:framework-concurrenteq}. Concurrent equality is a coarser
   equivalence relation than the $\alpha$-equivalence of \ollll~terms.
 
 \item{\it Removal of $\top$.} The presence of $\top$ causes pervasive
   problems in the design of substructural logical frameworks. Many of
   these problems arise at the level of implementation and type
-  reconstruction, which motivated Schack-Nielson to remove $\top$ from
+  reconstruction, which motivated Schack-Nielsen to remove $\top$ from
   the Celf implementation of CLF
   \cite{schacknielsen11implementing}. Even though those considerations
   are outside the scope of this dissertation, the presence of $\top$ causes
   other pervasive difficulties: for instance, the presence of $\top$
   complicates the discussion of concurrent equality in CLF. We therefore
-  follow Schack-Nielson in removing $\top$ from \sls.
+  follow Schack-Nielsen in removing $\top$ from \sls.
 
 \end{itemize}
 \smallskip
@@ -97,7 +99,7 @@ convenience and readability, {\it restrict} the propositions of
 syntax for partial proofs feasible, and {\it extend} \ollll~with a
 syntax for partial proofs and a coarser equivalence relation.
 
-In Section~\ref{sec:sls-termlanguage} we give a brief presentation of
+In Section~\ref{sec:sls-termlanguage} we review
 the term language for \sls, Spine Form LF.
 %
 In Section~\ref{sec:slsframework} we present \sls~as a fragment of
@@ -110,7 +112,7 @@ encoding from LF to \sls, in the process introducing {\it generative
 %
 In Section~\ref{sec:prototype} we cover the \sls~prototype
 implementation, and in Section~\ref{sec:framework-logicprog} we review
-some intuitions about logic programming in the \sls. 
+some intuitions about logic programming in \sls. 
 %
 Finally, in Section~\ref{sec:designdecisions}, we discuss some of the
 decisions reflected in the design of \sls~and how some decisions could
@@ -157,7 +159,7 @@ presentations like the ones we have considered thus far.
 
 The syntax of Spine Form LF is extended in two places to handle \sls:
 rules ${\sf r} : A^-$ in the signature contain negative \sls~types
-$A^-$ (it would be possible to separate out the LF portion of
+$A^-$ (though it would be possible to separate out the LF portion of
 signatures from the \sls~rules), and several new base kinds
 are introduced for the sake of \sls~-- ${\sf prop}$, ${\sf prop}\,{\sf
   ord}$, ${\sf prop}\,{\sf lin}$, and ${\sf prop}\,{\sf pers}$.
@@ -607,7 +609,7 @@ variables $\lf{a}$, which is important for one of the two types of
 equality $\lf{t} \doteq_\tau \lf{s}$ that \sls~supports. The judgments
 $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$, $\Psi
 \vdash_{\Sigma,\subord} \kappa\,{\sf kind}$, and $\Psi
-\vdash_{\Sigma,\subord} \tau\,{\sf type}$ similarly take contexts
+\vdash_{\Sigma,\subord} \tau\,{\sf type}$ take contexts
 $\Psi$, kinds $\kappa$, and types $\tau$ and ensure that they are
 well-formed in the current signature or (if applicable) context.  The
 judgment $\Psi \vdash_{\Sigma,\subord} \lf{t}{:} \tau$ takes a term
@@ -704,7 +706,7 @@ in the forward direction and by induction on the structure of
 terms $\lf{t}$ with type ${\sf exp}$ in the reverse direction.
 \end{proof}
 
-We express the constructive content of this theorem as a bijective
+We express the constructive content of this theorem as an invertible
 function $\interp{e} = \lf{t}$ from object language terms $\obj{e}$ to
 representations LF terms $\lf{t}$ of type ${\sf exp}$:
 \smallskip
@@ -808,7 +810,7 @@ The formation judgments for \sls~types are given in
 Figure~\ref{fig:sls-propform}.  As discussed in the introduction to
 this chapter, the removal of ${\uparrow}A^+$ and $p^-_\mlax$ is
 fundamental to the separation of the deductive and concurrent
-fragments of \sls; all the other restrictions made to the language are
+fragments of \sls; most of the other restrictions made to the language are
 for the purpose of giving partial proofs a list-like structure.  In
 particular, all positive propositions whose left rules have more or
 less than one premise are restricted. The propositions $\zero$ and
@@ -824,8 +826,8 @@ is aimed at allowing the inclusion of equality in \sls~in a sufficiently
 restricted form. The intent of these restrictions is to 
 ensure that, whenever we decompose
 a positive proposition $\lf{s} \doteq \lf{t}$ on the left, we have
-that $\lf{s} = \lf{a}$ for some variable $\lf{a}$ in the context
-and $\lf{a}$ is not free in $\lf{t}$. When
+that $\lf{s}$ is some variable $\lf{a}$ in the context
+and that $\lf{a}$ is not free in $\lf{t}$. When
 this is the case, $\lf{[t/a]}$ is always a most general unifier of
 $\lf{s} = \lf{a}$ and $\lf{t}$, which in turn means that the left rule
 for equality in \ollll
@@ -857,8 +859,8 @@ with zero premises, and the proposition $\zero$ was excluded from
 \sls~precisely to prevent us from needing to deal with positive
 inversion rules with zero premises.\footnote{The other side of this
   observation is that, if we allow the proposition $\zero$ and adapt
-  the logical framework accordingly, it might be possible to reduce or
-  eliminate the restrictions we have placed on equality.}
+  the logical framework accordingly, it might be possible to relax the
+  restrictions we have placed on equality.}
 
 There are two distinct conditions under which we can be sure that
 unification problems always have a most general solution -- when
@@ -867,7 +869,7 @@ used as a {\it notational definition}
 \cite{pfenning99algorithms}. Equality of pure variable types is
 used in the destination-adding transformation in
 Chapter~\ref{chapter-destinations}, and notational definitions are
-used extensively Chapter~\ref{chapter-approx}.
+used extensively in Chapter~\ref{chapter-approx}.
 
 \paragraph{Pure variables} Equality at an atomic type $p$ that is {\it
   not subordinate to itself} ($p \not\prec_\subord p$) is always
@@ -888,11 +890,12 @@ effect on the structure of synthetic inference rules. When we check a
 universal quantifier $\forall \lf{a}{:}p. A^-$ or existential
 quantifier $\exists \lf{a}{:}p.A^+$, we are allowed to introduce one
 term $\lf{t}$ that will be forced, by the use of equality, to be
-unified with this newly-introduced variable. Then we can mention that
-equality later by writing $\lf{a} \doteq_p \lf{t}$ in the proposition
-by adding the $\lf{a} \doteq_p \lf{t}$ to the set of constraints
-$\mathcal C$ and then using the second formation rule for $\lf{t}
-\doteq_p \lf{s}$ in Figure~\ref{fig:sls-propform}.
+unified with this newly-introduced variable. 
+%
+By adding the $\lf{a} \doteq_p \lf{t}$ to the set of constraints
+$\mathcal C$, we allow ourselves to mention $\lf{a} \doteq_p \lf{t}$
+later on in the proposition by using the second formation rule for equality
+in Figure~\ref{fig:sls-propform}.
 
 The notational definition $\lf{a} \doteq_p \lf{t}$ 
 must be reachable from its
@@ -938,7 +941,7 @@ unification problem $\lf{t} \doteq \lf{s}$.
 Figure~\ref{fig:sls-ctxform} describes the well-formed substructural
 contexts in \sls. The judgment $\Psi \vdash_{\Sigma,\subord} T\,{\sf
   left}$ is used to check stable bindings $x{:}\islvl{A^-}$ and
-$z{:}\islvl{p^+_\mlvl}$ that can appear as a part of stable,
+$z{:}\islvl{\susp{p^+_\mlvl}}$ that can appear as a part of stable,
 inverting, or left-focused sequents; the judgment $\Psi
 \vdash_{\Sigma,\subord} \Delta\,{\sf stable}$ just maps this judgment
 over the context. The judgment $\Psi \vdash_{\Sigma,\subord}
@@ -1062,7 +1065,8 @@ the succedent
 $\islax{\lf{[b/a]}A^+}$.
 
 A process state is therefore written as $(\Psi; \Delta)_{\lf{\sigma}}$
-and is well-formed under signature $\Sigma$ and subordination relation
+and is well-formed under the signature $\Sigma$ and 
+the subordination relation
 $\subord$ if $\Psi \vdash_{\Sigma,\subord} \Delta\,{\sf inv}$
 (which presumes that $\vdash_{\Sigma,\subord} \Psi\,{\sf ctx}$, as
 defined in Figure~\ref{fig:lf-form}) and if $\Psi \vdash \lf{\sigma} :
@@ -1118,6 +1122,33 @@ could have been omitted.
 %In almost all cases, the substitution $\lf\sigma$ associated with a process
 %state is the identity and will be omitted, and the LF context $\Psi$
 %will frequently be omitted as well. 
+
+\subsection{Patterns}
+\label{sec:framework-patterns}
+
+ % With the restrictions we have made to unificaiton, we can 
+% treat $\doteq_L$ as always having one premise, so all remaining
+% left rules for positive atomic propositions have exactly one 
+% premise. 
+
+%
+A {\it pattern} is a syntactic entity that captures the list-like
+structure of left inversion on positive propositions. The \ollll~proof
+term for the proposition
+%
+$(\exists \lf{a}.\,{\sf p}\,\lf{a} 
+             \fuse {\gnab}A^-
+             \fuse {\downarrow}B^-) \lefti C^-$,
+%
+is somewhat inscrutable:
+${\tlaml{\texistsl{\lf{a}}
+    {\tfusel{\tfusel{\tetap{x}{\tgnabl{y}{\tdownl{z}{N}}}}}}}}$. The
+\sls~proof of this proposition, which uses patterns, is
+$(\lambda \lf{a},x,y,z.\, N)$. The pattern $P = \lf{a}, x,y,z$ captures
+the structure of left inversion on the positive proposition 
+$\exists \lf{a}.\,{\sf p}\,\lf{a} 
+             \fuse {\gnab}A^-
+             \fuse {\downarrow}B^-$.
 
 \begin{figure}
 \fbox{$P :: (\Psi; \Delta)_{\lf{\sigma}}
@@ -1209,32 +1240,6 @@ could have been omitted.
 \end{figure}
 
 
-\subsection{Patterns}
-\label{sec:framework-patterns}
-
- % With the restrictions we have made to unificaiton, we can 
-% treat $\doteq_L$ as always having one premise, so all remaining
-% left rules for positive atomic propositions have exactly one 
-% premise. 
-
-%
-A {\it pattern} is a syntactic entity that captures the list-like
-structure of left inversion on positive propositions. The \ollll~proof
-term for the proposition
-%
-$(\exists \lf{a}.\,{\sf p}\,\lf{a} 
-             \fuse {\gnab}A^-
-             \fuse {\downarrow}B^-) \lefti C^-$,
-%
-is somewhat inscrutable:
-${\tlaml{\texistsl{\lf{a}}
-    {\tfusel{\tfusel{\tetap{x}{\tgnabl{y}{\tdownl{z}{N}}}}}}}}$. The
-\sls~proof of this proposition, which uses patterns, is
-$(\lambda \lf{a},x,y,z.\, N)$. The pattern $P = \lf{a}, x,y,z$ captures
-the structure of left inversion on the positive proposition 
-$\exists \lf{a}.\,{\sf p}\,\lf{a} 
-             \fuse {\gnab}A^-
-             \fuse {\downarrow}B^-$.
 
 The grammar of patterns is straightforward.
 % 
@@ -1315,7 +1320,7 @@ R & ::= \tfocusl{x}{\Sp}
 N & ::= R
    \mid \lambda P.N 
    \mid N_1 \with N_2
-   \mid \tforallr{\lf{a}}{N}
+   \mid \lambda \lf{a}.{N}
    \mid \tlet{T}{V}
 \\
 &\mbox{\sls~spines (Figure~\ref{fig:sls-spines})}&
@@ -1448,7 +1453,7 @@ the lax modality in \ollll:
     {\Delta}
     {\islax{A^+}}\mathstrut} 
   {\deduce{\vdots\mathstrut}
-    {\vspace{-4pt}\infer[]
+    {\vspace{-4pt}\infer[{\it focus}_R]
      {\foc{\Psi'}
       {\Delta'}
       {\islax{\lf{\sigma'}A^+}}}
@@ -1627,8 +1632,9 @@ partial \ollll~derivations, the two traces above are distinct. In this
 section, we introduce a coarser equivalence relation, {\it concurrent
   equality}, that allows us to treat traces that differ only in the
 interleaving of independent and concurrent steps as being equal.  The
-previous section considered the proof terms of \sls~as a fragment of
-\ollll~better able to talk about partial proofs.  The introduction of
+previous section considered the proof terms of \sls~as a 
+fragment of
+\ollll~that is better able to talk about partial proofs.  The introduction of
 concurrent equality takes a step beyond \ollll, because it breaks the
 bijective correspondence between \ollll~proofs and \sls~proofs. As the
 example above indicates, there are simply more \ollll~proofs than
@@ -2063,7 +2069,7 @@ three distinct zones:
 We can't freely generate this structure with building blocks, but
 we can generate it with a context-free grammar. 
 Conveniently, context-free
-grammars characterized within the
+grammars can be characterized within the
 machinery of \sls~itself by describing {\it generative signatures}
 that can generate a set of process states we are interested in from
 a single seed context.  The signature $\Sigma_{\it Gen}$ in
@@ -2151,7 +2157,7 @@ declares the terminals.
 
 \item
   We will also use $\restrictsig{(\Psi; \Delta)}{\Sigma}$ as a
-  judgment which expresses that the function as defined.
+  judgment which expresses that the function is defined.
 
 \end{itemize}
 \end{definition}
@@ -2245,7 +2251,7 @@ By induction on $\obj{k}$.
 \item If $\obj{k} = \obj{k' {\sf <}}$, we have 
 $T' :: ({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
 ({\ctxinterp{k'}, x''{:}\istrue{\susp{\sf gen\_stack}}})$ by the induction
-hypothesis, so $T = (T'; \trstep{x_1, x_2}{{\sf stack/left}\,x'}) :: 
+hypothesis, so $T = (T'; \trstep{x_1, x_2}{{\sf stack/left}\,x''}) :: 
 ({x{:}\istrue{\susp{\sf gen\_stack}}}) \leadsto^*_{\Sigma_{\it Gen}} 
 ({\ctxinterp{k'}, x_1{:}\istrue{\susp{\sf L}}, x_2{:}\istrue{\susp{\sf gen\_stack}}})$
 \end{itemize}
@@ -2262,16 +2268,16 @@ By induction on $\obj{s}$.
 (y{:}\istrue{\susp{\sf gen\_string}})$
 \item If $\obj{s} = \obj{{\sf <}s' }$, we have 
 $T' :: ({y{:}\istrue{\susp{\sf gen\_string}}}) \leadsto^*_{\Sigma_{\it Gen}} 
-(y'{:}\istrue{\susp{\sf gen\_string}}, \ctxinterp{s'})$ by the induction
-hypothesis, so $T = (T'; \trstep{y_1, y_2}{{\sf string/left}\,y'}) :: 
+(y''{:}\istrue{\susp{\sf gen\_string}}, \ctxinterp{s'})$ by the induction
+hypothesis, so $T = (T'; \trstep{y_1, y_2}{{\sf string/left}\,y''}) :: 
 ({y{:}\istrue{\susp{\sf gen\_string}}}) \leadsto^*_{\Sigma_{\it Gen}} 
 (y_1{:}\istrue{\susp{\sf gen\_string}},
  y_2{:}\istrue{\susp{\sf L}},
 \ctxinterp{s'})$
 \item If $\obj{s} = \obj{{\sf >}s' }$, we have 
 $T' :: ({y{:}\istrue{\susp{\sf gen\_string}}}) \leadsto^*_{\Sigma_{\it Gen}} 
-(y'{:}\istrue{\susp{\sf gen\_string}}, \ctxinterp{s'})$ by the induction
-hypothesis, so $T = (T'; \trstep{y_1, y_2}{{\sf string/right}\,y'}) :: 
+(y''{:}\istrue{\susp{\sf gen\_string}}, \ctxinterp{s'})$ by the induction
+hypothesis, so $T = (T'; \trstep{y_1, y_2}{{\sf string/right}\,y''}) :: 
 ({y{:}\istrue{\susp{\sf gen\_string}}}) \leadsto^*_{\Sigma_{\it Gen}} 
 (y_1{:}\istrue{\susp{\sf gen\_string}},
  y_2{:}\istrue{\susp{\sf R}},
@@ -2369,7 +2375,7 @@ analysis.  If we didn't implicitly rely on concurrent equality in this
 way, the resulting proof would have twice as many cases.  We will take
 these finite uses of concurrent equality for granted when we specify
 that a proof proceeds by case analysis on the first steps of $T$ (or,
-conversely, by case analysis on the last steps of $T$).
+conversely, by case analysis on the last steps of $T$). 
 
 \begin{lemma} If 
 $T :: (g{:}\istrue{\susp{\sf gen}}) 
@@ -2702,7 +2708,7 @@ T'' = & \qquad
                    x_g{:}\istrue{\susp{\sf gen\_stack}}, ~~
                    h'{:}\istrue{\susp{\sf hd}}, ~~
                    y_g'{:}\istrue{\susp{\sf gen\_string}}}\\
-& \trstep{y_g,y}{{\sf string/left}\,y_g'};\\
+& \trstep{y_g,y}{{\sf string/left}\,y_g'}\\
 & \qquad \tackon{\Theta}{
                    x_g{:}\istrue{\susp{\sf gen\_stack}}, ~~
                    h'{:}\istrue{\susp{\sf hd}}, ~~
@@ -2769,7 +2775,7 @@ T'' = & \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
                    h'{:}\istrue{\susp{\sf hd}}, ~~
                    y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
                    y{:}\istrue{\susp{\sf R}}}\\
-& \trstep{x, x_g}{{\sf stack/left}\,x_g'};\\
+& \trstep{x, x_g}{{\sf stack/left}\,x_g'}\\
 & \qquad \tackon{\Theta}{x{:}\istrue{\susp{\sf L}}, ~~
                    x_g{:}\istrue{\susp{\sf gen\_stack}}, ~~
                    h'{:}\istrue{\susp{\sf hd}}, ~~
@@ -2781,7 +2787,7 @@ T''' = & \qquad ({g{:}\istrue{\susp{\sf gen}}})\\
 & \qquad \tackon{\Theta}{x_g'{:}\istrue{\susp{\sf gen\_stack}}, ~~
                    h'{:}\istrue{\susp{\sf hd}}, ~~
                    y_g'{:}\istrue{\susp{\sf gen\_string}}}\\
-& \trstep{y_g, y}{{\sf string/right}\,y_g'};\\
+& \trstep{y_g, y}{{\sf string/right}\,y_g'}\\
 & \qquad \tackon{\Theta}{x_g'{:}\istrue{\susp{\sf gen\_stack}}, ~~
                    h'{:}\istrue{\susp{\sf hd}}, ~~
                    y_g{:}\istrue{\susp{\sf gen\_string}}, ~~
@@ -2927,8 +2933,8 @@ implementation, we write the lax modality ${\ocircle}A$ in ASCII as
 \verb|{A}| -- recall that in Section~\ref{sec:slsframework} we
 introduced the $\{ A^+ \}$ notation from CLF as a synonym for
 Fairtlough and Mendler's ${\ocircle}A^+$.  The exponential ${\gnab}A$
-doesn't have an ASCII representation, so we write \verb|$A| when $A$
-is mobile. Upshifts and downshifts are always inferred: this means
+doesn't have an ASCII representation, so we write \verb|$A|.
+Upshifts and downshifts are always inferred: this means
 that we can't write down ${\uparrow}{\downarrow}A$ or
 ${\downarrow}{\uparrow}A$, but neither of these \ollll~propositions
 are part of the \sls~fragment anyway.
@@ -2939,8 +2945,8 @@ B^-$ can be written as \verb|A -o B| or \verb|$A >-> B| in the
 \sls~implementation, and ${!}A^- \lefti B^-$ can be written as
 \verb|A -> B| or \verb|!A >-> B|.  This final proposition is
 ambiguous, because \verb|X -> Y| can be an abbreviation for ${!}X
-\lefti Y$ or $\Pi \lf{a}{:}X. Y$, but \sls~can figure out whether the
-proposition or classifier was intended by analyzing the structure of
+\lefti Y$ or $\Pi \lf{a}{:}X. Y$, but \sls~can figure out which form
+was intended by analyzing the structure of
 \verb|Y|. Also note that we could have just as easily made
 \verb|A -o B| an abbreviation for \verb|$A ->> B|, but we had to pick
 one and the choice absolutely doesn't matter.  All arrows can also be
@@ -2976,7 +2982,8 @@ propositions, we can write the positive proposition ${\sf a} \fuse
 \verb|(a * b * c)|, \verb|(a * $b * c)|, \verb|(a * b * !c)|, or
 \verb|(a * $b * !c)|. Without these annotations, it is difficult to
 tell at a glance which propositions are ordered, linear, or persistent
-when a signature uses more than one proposition. When all of these
+when a signature uses more than one variety of
+proposition. When all of these
 optional annotations are included, the rules in a signature that uses
 positive atomic propositions look the same as rules in a signature
 that uses the pseudo-positive negative atomic propositions described
@@ -3005,7 +3012,7 @@ we will touch on a few points in this section.
 
 Logic programming is important because it provides us with operational
 intuitions about the intended behavior of the systems we specify in
-\sls. One specific set of these intuitions will form the basis of the
+\sls. One specific set of intuitions will form the basis of the
 operationalization transformations on \sls~specifications considered
 in Chapter~\ref{chapter-absmachine}. 
 Additionally, logic programming intuitions are relevant
@@ -3060,11 +3067,9 @@ back to the work by Miller et al.~on uniform proofs
 \cite{miller91uniform}.  An even older concept, Clark's {\it
   negation-as-failure} \cite{clark87negation}, is based on a {\it
   partial completeness} criteria for logic programming interpreters.
-Partial correctness demands that if the
-interpreter reports that it has found a proof of a goal-directed
-sequent, such a proof should exist. Partial completeness, on the other
-hand, demands that if the interpreter gives up up on finding a proof,
-no proof should exist. (The interpreter is also allowed to run forever
+Partial completeness 
+demands that if the interpreter gives up up on finding a proof,
+no proof should exist. (The interpreter is allowed to run forever
 without succeeding or giving up.)  Partial completeness requires {\it
   backtracking} in backward-chaining search: if we we try to prove
 $\foc{\Psi}{\Delta}{\isconc{\susp{p^-}}}$ by focusing on a particular
@@ -3123,7 +3128,8 @@ whenever we perform deductive computation to derive $({\sf
   plus}\,\lf{n}\,\lf{m}\,\lf{p})$ where $\lf{n}$ and $\lf{m}$ are
 fully specified, any unspecified portion of $\lf{p}$ must be fully
 specified in any completed derivation. Well-moded predicates can be
-treated as nondeterministic partial functions from their inputs (the
+treated as nondeterministic (in the sense of potentially having zero,
+one, or many outputs) partial functions from their inputs (the
 indices marked ``${+}$'' in the mode) to their outputs (the indices
 marked ``${-}$'' in the mode). A predicate can sometimes be given more
 than one mode: $({\sf plus}\,{+}\,{-}\,{+})$ is a valid mode for ${\sf
@@ -3267,8 +3273,8 @@ GAMMA can be partially or completely understood in terms of forward
 chaining in linear logic \cite{cervesato09relating,paola96linear}, and
 the ordered aspects of \sls~allow it to capture fragments of rewriting
 logic. Rewriting logic, and in particular the Maude implementation of
-rewriting logic \cite{clavel11ltl}, implements the committed choice
-interpretation and exhaustive search interpretations, as well as a
+rewriting logic \cite{clavel11ltl}, implements both the committed choice
+and the exhaustive search interpretations, as well as a
 {\it model checking} interpretation that characterize sets of process
 states or traces using logical formulas. Constraint handling
 rules \cite{betz10complete} and concurrent constraint programming
@@ -3291,11 +3297,11 @@ In the logic programming interpretation of CLF used by Lollimon and
 Celf, backtracking backward chaining is associated with the deductive
 fragment, and committed-choice forward chaining is associated with the
 lax modality. We will refer to an adaptation of the Lollimon/Celf
-semantics to \sls~as LCI (``Lollimon/Celf Interpreter'') for
+semantics to \sls~as ``the Lollimon semantics'' for
 brevity in this section.
 
 Forward chaining and backward chaining have an uneasy relationship in
-LCI. Consider the following \sls~signature:
+the Lollimon semantics. Consider the following \sls~signature:
 \begin{align*}
  \Sigma_{\it Demo} = \cdot, 
 ~&{\sf posA} : {\sf prop}\,{\sf ord}, 
@@ -3313,11 +3319,12 @@ under this signature: it is represented by the proof term ${\sf
       fwdruleAB}\,x}}{y})$. The partially complete interpretation of
 backward chaining stipulates that an interpreter tasked with finding a
 proof of ${\sf negD}$ should either find this proof or never
-terminate, but LCI only admits this interpretation for purely
+terminate, but the Lollimon semantics only admits this interpretation for purely
 deductive proofs. To see why, consider backward-chaining search
 attempting to prove ${\sf negD}$ in a closed context.  This can only
 be done with the rule ${\sf bwdrule}$, generating the subgoal ${\sf
-  posA} \lefti {\ocircle}{\sf posB}$.  At this point, LCI will switch
+  posA} \lefti {\ocircle}{\sf posB}$.  At this point, the Lollimon semantics 
+will switch
 from backward chaining to forward chaining and attempt to satisfy this
 subgoal by constructing a trace $(x{:}\istrue{\susp{\sf posA}})
 \leadsto (y{:}\istrue{\susp{\sf posB}})$.
@@ -3329,14 +3336,15 @@ $(\trstep{y}{{\sf fwdruleAB}\,x}) :: (x{:}\istrue{\susp{\sf posA}})
 $(\trstep{y}{{\sf fwdruleAC}\,x})::(x{:}\istrue{\susp{\sf posA}})
 \leadsto (y{:}\istrue{\susp{\sf posC}})$.  Forward chaining can
 plausibly come up with either one, and if it happens to derive the
-second one, the subgoal fails. LCI then tries to backtrack to find
+second one, the subgoal fails. Lollimon
+then tries to backtrack to find
 other rules that can prove the conclusion ${\sf negD}$, but there are
-none, so LCI will report that it failed to prove ${\sf negD}$.
+none, so the Lollimon semantics will report a failure to prove ${\sf negD}$.
 
 This example indicates that it is difficult to make backward chaining
 (in its default backtracking form) reliant on committed-choice forward
-chaining (in its default committed-choice form) in the style of
-Lollimon or Celf. Either we can restrict forward chaining to confluent
+chaining (in its default committed-choice form) in the 
+Lollimon semantics. Either we can restrict forward chaining to confluent
 systems (excluding $\Sigma_{\it Demo}$) or else we can give up on the
 usual partially complete interpretation of backward chaining.  In the
 other direction, however, it is entirely natural to make forward
@@ -3403,7 +3411,7 @@ $x{:}\sf{foo}$; we must simply ensure that there are no propositions
 of the form $\ldots \lefti {\sf foo}$ or $\ldots \righti {\sf foo}$ in
 the signature or context. (In fact, this is essentially the
 \sls~version of the subordination criteria that allows us to conclude
-that an LF type was only inhabited by variables in 
+that an LF type is only inhabited by variables in 
 Section~\ref{sec:slsframework}.)  Note that, in full \ollll, this task
 would not be so easy: we might prove $\isconc{\susp{\sf foo}}$
 indirectly by forward chaining. This is one reason why association of
@@ -3426,21 +3434,23 @@ this example, can be called {\it
 more generally than \sls's positive atomic propositions. A positive
 atomic proposition is necessarily associated with one of the three
 judgments $\mtrue$, $\meph$, or $\mpers$, but pseudo-positive
-propositions can associate with any of the contexts. This,
-incidentally, gives pseudo-positive atoms in CLF or \sls~the flavor of
+propositions can associate with any of the contexts. This
+gives pseudo-positive atoms in CLF or \sls~the flavor of
 positive atomic propositions under Andreoli's atom optimization
 (Section~\ref{sec:atomopt}).
 
 It is, of course, possible to consistently associate particular
 pseudo-positive propositions with particular modalities, which means
 that pseudo-positive propositions can subsume the positive
-propositions of \sls. The tradeoff between positive and
+propositions of \sls. The trade-off between positive and
 pseudo-positive propositions could be resolved either way. By
 including positive atomic propositions, we made \sls~more complicated,
-but in a local way -- we needed a few more kinds and a few more
-rules. On the other hand, if we used pseudo-positive propositions, the
-notion of synthetic transitions would be intertwined with the
-subordination-like analysis that enforces their correct usage.
+but in a local way -- we needed a few more kinds (the kinds ${\sf
+  prop\,ord}$, ${\sf prop\,lin}$, and ${\sf prop\,pers}$, to be
+precise) and a few more rules. On the other hand, if we used
+pseudo-positive propositions, the notion of synthetic transitions
+would be intertwined with the subordination-like analysis that
+enforces their correct usage.
 
 \subsection{The need for traces}
 \label{sec:whytraces}
@@ -3511,8 +3521,8 @@ process state, we should have concluded ${\sf robot} \fuse {!}({\sf
 %
 The problem with encoding traces as complete proofs, then, is that
 values cannot be forced to 
-precisely capture the structure of contexts, especially when there are
-no variables or persistent propositions. Cervesato and Scedrov
+precisely capture the structure of contexts, especially when dealing
+with variables or persistent propositions. Cervesato and Scedrov
 approach this problem by severely restricting the logic and changing
 the interpretation of the existential quantifier so that it acts like
 a nominal quantifier on the right \cite{cervesato09relating}. The
@@ -3565,8 +3575,8 @@ rather than using a fully-dependent system is based on several
 considerations. First and foremost, this choice was sufficient for our
 purposes here. In fact, for the purposes of this dissertation, we
 could have used an even simpler term language of simply-typed LF
-\cite{pfenning08church}. Two other logic programming interpretations
-of \sls-like frameworks, Lollimon \cite{lopez05monadic} and Ollibot
+\cite{pfenning08church}. Two other logic programming interpreters for
+\sls-like frameworks, Lollimon \cite{lopez05monadic} and Ollibot
 \cite{pfenning09substructural}, are in fact based on simply-typed term
 languages. Canonical LF and Spine Form LF are, at this point,
 sufficiently well understood that the additional overhead of fully
