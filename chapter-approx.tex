@@ -219,8 +219,8 @@ and what it means for it to accept a string.  To use the linear PDA
 specification in Figure~\ref{fig:pda-lin}, we encode a string as a
 sequence of linear atomic propositions ${\it ptok}_1\ldots {\it
   ptok}_n$, where each ${\it ptok}_i$ either has the form ${\sf
-  left}\,\lf{tok_i}\,{\sf d_i}\,{\sf d_{i+1}}$ or the form ${\sf
-  right}\,\lf{tok_i}\,{\sf d_i}\,{\sf d_{i+1}}$. The term $\lf{tok_i}$
+  left}\,\lf{tok_i}\,\lf{\sf d_i}\,\lf{\sf d_{i+1}}$ or the form ${\sf
+  right}\,\lf{tok_i}\,\lf{\sf d_i}\,\lf{\sf d_{i+1}}$. The term $\lf{tok_i}$
 that indicates whether we're talking about a left/right parenthesis,
 curly brace, square brace, etc., and $\lf{{\sf d_0}\ldots{\sf
     d_{n+1}}}$ are $n+2$ constants of type {\it dest}.\footnote{We
@@ -323,7 +323,7 @@ version of another specification:
   {\sf prop}\,{\sf lvl}$ declared in $\Sigma$ has a corresponding
   predicate ${\sf a} : \Pi \lf{x_1}{:}\tau_1 \ldots \Pi \lf{x_n}{:}\tau_n.\,
   {\sf prop}\,{\sf pers}$ in $\Sigma_a$ and if for every rule ${\sf
-    r} : \forall \overline{x}.\,A_1^+ \lefti \{ A_2^+ \}$ in $\Sigma$ there
+    r} : \forall \lf{\overline{x}}.\,A_1^+ \lefti \{ A_2^+ \}$ in $\Sigma$ there
   is a corresponding rule ${\sf r} : \forall \lf{\overline{x}}.\,B_1^+ \lefti
   \{ B_2^+ \}$ in $\Sigma_a$ such that:
   \begin{itemize}
@@ -433,7 +433,8 @@ specified by Definition~\ref{def:approxversion}.
 
   We use the monotonicity lemma to prove the {\it saturation} lemma:
   if $(\Psi; \Delta) \leadsto^*_\Sigma (\Psi_s; \Delta_s)$, $\Sigma$
-  defines no ordered or mobile predicates, and $(\Psi_s; \Delta_s)$,
+  defines no ordered or mobile predicates, and $(\Psi_s; \Delta_s)$
+  is saturated,
   then whenever $(\Psi; \Delta) \leadsto^*_\Sigma (\Psi'; \Delta')$
   $(\Psi_s; \Delta_s)$ is a generalization of $(\Psi'; \Delta')$. The
   proof proceeds by induction on the last steps of the trace
@@ -589,9 +590,9 @@ that there are three distinct subterms of $\lf{{\sf lam}\,(\lambda
 
 Another solution, discussed in the next
 section, is to uniquely tag the lambda expression with a label. This
-has the same effect of allowing us to associate the variable $x$
+has the same effect of allowing us to associate the variable $\obj{x}$
 with a different concrete term, the tag, that represents the site
-where $x$ was bound.
+where $\obj{x}$ was bound.
 
 %Because we ensure that we {\it only} substitute terms
 %of the form $\lf{{\sf var}(\lambda x.e\,x)}$ into functions of the form
@@ -635,7 +636,7 @@ Chapters~\ref{chapter-correspondence}~and~\ref{chapter-absmachine},
 we now have a principled account for this
 extra frame and rule: it is precisely the pattern we get from
 operationalizing a natural semantics {\it without} tail-recursion
-optimization and then applying defunctionalization.
+optimization and then applying defunctionalization and destination-adding.
 
 \subsection{Approximation to 0CFA}
 
@@ -670,7 +671,7 @@ this end, we need recall the question that we intend to answer with
 control flow analysis: what values may a given subexpression evaluate
 to? A destination passing specification attempts to return a value to
 a destination: we will instead return {\it to an expression} by
-equating destinations $d$ with the expressions they represent. One way
+equating destinations $\lf{d}$ with the expressions they represent. One way
 to do this would be to introduce a new constructor $\lf{\sf d}: {\sf
   exp} \rightarrow {\sf dest}$, but we can equivalently conflate the
 two types ${\sf exp}$ and ${\sf dest}$ to get the specification in
@@ -726,8 +727,8 @@ We could give a much more precise analysis than this, but this
 imprecise analysis certainly bounds the size of the database, ensuring
 termination, which was our goal.
 
-There is one important caveat to the control flow analysis we have derived 
-analysis. If for some value
+There is one important caveat to the control flow analysis we have derived. 
+If for some value
 $\obj{v}$ we consider the program $\interp{((\lambda x.x)\,(\lambda
   y.y))\,v}$, we might expect a reasonable control flow analysis to
 notice that only $\interp{\lambda y.y}$ is passed to the function
@@ -1021,8 +1022,8 @@ In this section, we work in the other direction: the starting point
 for this specification was the interprocedural object-oriented alias
 analysis presented as a saturating logic program in \cite[Chapter
 12.4]{aho07compilers}. We then worked backwards to get a SSOS
-semantics that allowed us to derive that logic program as closely as
-possible; the result was a monadic SSOS semantics. There should
+semantics that allowed us to derive Aho et~al.'s logic program as closely as
+possible. The result is a monadic SSOS semantics. There should
 not be any obstacle to deriving an alias analysis from a
 semantics that looks more like the specifications elsewhere in this
 dissertation.
@@ -1055,17 +1056,18 @@ In the previous languages we have considered, values $\obj{v}$ were a
 syntactic refinement of the expressions $\obj{e}$. In contrast, our monadic
 language will differentiate the two: there are five expression forms
 and three values that we will consider. An expression $\interp{\lambda
-  x.e} = \lf{{\sf fun}\,\lambda x.\interp{e}}$ evaluates to a value
-$\interp{\lambda^l x.e} = \lf{{\sf lam}\,l\,\lambda x.\interp{e}}$, where
+  x.m_0} = \lf{{\sf fun}\,\lambda x.\interp{m_0}}$ evaluates to a value
+$\interp{\lambda^l x.m_0} = \lf{{\sf lam}\,l\,\lambda x.\interp{m_0}}$, where
 the label $\obj{l}$ represents the source code position where the function
-was bound. When we evaluate the command $\interp{{\sf
-    bnd}^l \, y \leftarrow \lambda x.e \,{\sf in}\,m}$, the value
-$\interp{\lambda^l x.e}$ gets bound to $\obj{y}$ in the body of the command
+was bound. (A function value is a command $\obj{m_0}$ with one free variable.)
+When we evaluate the command $\interp{{\sf
+    bnd}^l \, y \leftarrow \lambda x.m_0 \,{\sf in}\,m}$, the value
+$\interp{\lambda^l x.m_0}$ gets bound to $\obj{y}$ in the body of the command
 $\obj{m}$ (rule ${\sf ev/fun}$ in Figure~\ref{fig:ssos-monadic}).
 
 The second expression form is a function call: $\interp{f\,x} = \lf{{\sf
   app}\,f\,x}$. To evaluate a function call, we expect a function value
-(which is a command $\obj{m_0}$ with one free variable) to be bound to the
+to be bound to the
 variable $\obj{f}$; we then store the rest of the current command on the
 stack and evaluate the command $\obj{m_0}$ to a value. Note that the rule
 ${\sf ev/call}$ in Figure~\ref{fig:ssos-monadic} also stores the call
@@ -1114,12 +1116,12 @@ the stack discipline of Algol-like languages.\footnote{It is, however,
   equality discussed in Section~\ref{sec:mutable-storage}, as a stack
   discipline is an invariant that can be maintained in \sls~even
   though the framework's proof theory does not enforce the invariant.}
-The other major difference is that Harper's version of Algol does not
-allow expressions to access the state.  For our language to behave
-similarly, the expressions $\obj{\sf newpair}$, $\obj{x.{\sf fst}}$,
-$\obj{x.{\sf snd}}$, $\obj{x.{\sf fst} := y}$, and $\obj{x.{\sf snd}
-  := y}$ would need to be commands and not expressions; we make them
-expressions only for the convenience of a more regular presentation.
+%% The other major difference is that Harper's version of Algol does not
+%% allow expressions to access the state.  For our language to behave
+%% similarly, the expressions $\obj{\sf newpair}$, $\obj{x.{\sf fst}}$,
+%% $\obj{x.{\sf snd}}$, $\obj{x.{\sf fst} := y}$, and $\obj{x.{\sf snd}
+%%   := y}$ would need to be commands and not expressions; we make them
+%% expressions only for the convenience of a more regular presentation.
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}

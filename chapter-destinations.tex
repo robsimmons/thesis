@@ -3,9 +3,10 @@
 
 The natural notion of ordering provided by ordered linear logic is
 quite convenient for encoding evolving systems that perform local
-manipulations to a stack-like structure.  The push-down
-automaton for generic bracket matching discussed in the introduction
-demonstrated this: we can now present that specification in
+manipulations to a stack-like structure.  This was demonstrated
+by the push-down
+automaton for generic bracket matching discussed in the introduction.
+We can now present that specification in
 Figure~\ref{fig:pda-ord} as an \sls~specification.
 
 \begin{figure}[ht]
@@ -36,9 +37,9 @@ order to capture the local relationships between different
 propositions, we use destinations.
 
 Linear logic alone is able to express any (flat, concurrent)
-specifications that we could not express using ordered atomic
+specifications that can be expressed using ordered atomic
 propositions. In other words, we did not ever {\it need} order, it was
-just more plesant to use order to capture simple control structures.
+just a more pleasant way to capture simple control structures.
 %
 We will demonstrate that fact in this chapter by 
 % In Chapter~\ref{chapter-absmachine}, we showed that ordered
@@ -54,7 +55,7 @@ to specifications that only include linear and persistent atomic
 propositions. This
 destination-adding transformation, which we originally presented in
 \cite{simmons11logical}, turns all ordered atomic propositions into
-linear atomic propositions, and tags them with two new arguments (the
+linear atomic propositions and tags them with two new arguments (the
 destinations of the destination-adding transformation). These extra
 destinations serve as a link between a formerly-ordered atomic
 proposition and its two former neighbors in the ordered context.  When
@@ -71,7 +72,9 @@ Figure~\ref{fig:pda-lin}.
 
 The specification in Figure~\ref{fig:pda-lin}, like every other
 specification that results from destination-adding, has no occurrences
-of ${\downarrow}A^-$ and no ordered atomic propositions.  As a result,
+of ${\downarrow}A^-$ (the transformation has not been adapted
+to nested rules) and no ordered atomic propositions (these are
+specifically removed by the transformation).  As a result,
 we write \verb|hd L M| instead of \verb|$hd L M|, omitting the
 optional linearity indicator \verb|$| on the linear atomic
 propositions as discussed in
@@ -103,7 +106,7 @@ synchronization.
 \label{sec:destination-adding}
 
 The translation we define operates on rules the form $\forall
-\overline{x}. S_1 \lefti \{ S_2 \}$, where $S_1$ must contain at least
+\lf{\overline{x}}. S_1 \lefti \{ S_2 \}$, where $S_1$ must contain at least
 one ordered atomic proposition. The syntactic category $S$ is
 a refinement of the positive types $A^+$ defined by the following
 grammar:
@@ -154,8 +157,8 @@ the transformed signature.
 The destination-adding translation presented here is the same as the
 one presented in \cite{simmons11logical}, except that the
 transformation operated on rules of the form $\forall
-\overline{x}. S_1 \righti \{ S_2 \}$ and ours will operate over rules
-of the form $\forall \overline{x}. S_1 \lefti \{ S_2 \}$.\footnote{The
+\lf{\overline{x}}. S_1 \righti \{ S_2 \}$ and ours will operate over rules
+of the form $\forall \lf{\overline{x}}. S_1 \lefti \{ S_2 \}$.\footnote{The
   monad $\{ S_2 \}$ did not actually appear in
   \cite{simmons11logical}, and the presentation took polarity into
   account but was not explicitly polarized. We are justified in
@@ -166,9 +169,9 @@ $\lefti$ is irrelevant in this situation. The restriction to flat
 specifications, on the other hand, is an actual limitation. We
 conjecture that the translation presented here, and the correctness
 proof presented in \cite{simmons11logical}, would extend to nested
-\sls~specifications. However, the correctness proofs in that work are
+\sls~specifications. However, the detailed correctness proofs in that work are
 already quite tedious (though our explicit notation for patterns as
-partial derivations might help simplify the proof somewhat) and the
+partial derivations can simplify the proof somewhat) and the
 limited transformation described by Figure~\ref{fig:destadd-pos}
  is sufficient for our purposes. Therefore, we
 will rely on the existing result, leaving the correctness of a more
@@ -292,16 +295,16 @@ $\Delta$ but not in the translation of $\Delta_o$.
   is reasonably straightforward.
 
   First, we need to prove that a right-focused proof of $\Psi; \Delta
-  \vdash_{\Sigma} S$ implies that there is an analogous proof of
+  \vdash_{\Sigma} [S]$ implies that there is an analogous proof of
   $\llbracket \Psi; \Delta \rrbracket \vdash_{{\it Dest}(\Sigma)} [
-  \llbracket S \rrbracket^{\lf{d_L}}_{\lf{d_R}} ]$, and conversely
-  that if we can prove $\Psi; \Delta \vdash_{{\it Dest}(\Sigma)} [\llbracket
+  \llbracket S \rrbracket^{\lf{d_L}}_{\lf{d_R}} ]$. Conversely,
+  if we can prove $\Psi; \Delta \vdash_{{\it Dest}(\Sigma)} [\llbracket
   S \rrbracket^{\lf{d_L}}_{\lf{d_R}}]$ in right focus under then
   linear translation, then it is possible to reconstruct an ordered
   context $\Psi'; \Delta'$ such that $\llbracket \Psi'; \Delta'
   \rrbracket = \Psi; \Delta$ and $\Psi'; \Delta'
   \vdash_{\Sigma} [S]$ by threading together the destinations from
-  $\lf{d_L}$ to $\lf{d_R}$ in $\Delta$. Both directions are by
+  $\lf{d_L}$ to $\lf{d_R}$ in $\Delta$. Both directions are established by
   structural induction on the given derivation. The critical property
   is that it is possible to reconstruct the ordered context from the
   context of any right-focus sequent that arises during translation.
@@ -488,23 +491,23 @@ transitions in the transformed specification that can reuse the atomic
 proposition ${\sf a}\,\lf{d_2}\,\lf{d_3}$ in a way that doesn't correspond to
 any series of transitions in ordered logic:
 \begin{align*}
-&  x_1{:}\susp{{\sf a}\,\lf{d_0}\,\lf{d_1}}, 
-   x_2{:}\susp{{\sf b}\,\lf{d_1}\,\lf{d_2}}, 
-   x_3{:}\susp{{\sf a}\,\lf{d_2}\,\lf{d_3}}, 
-   x_4{:}\susp{{\sf b}\,\lf{d_3}\,\lf{d_4}}, 
-   x_5{:}\susp{{\sf a}\,\lf{d_4}\,\lf{d_5}}
+&  x_1{:}\ispers{\susp{{\sf a}\,\lf{d_0}\,\lf{d_1}}}, 
+   x_2{:}\iseph{\susp{{\sf b}\,\lf{d_1}\,\lf{d_2}}}, 
+   x_3{:}\ispers{\susp{{\sf a}\,\lf{d_2}\,\lf{d_3}}}, 
+   x_4{:}\iseph{\susp{{\sf b}\,\lf{d_3}\,\lf{d_4}}}, 
+   x_5{:}\ispers{\susp{{\sf a}\,\lf{d_4}\,\lf{d_5}}}
 \\ \leadsto~
-&  x_1{:}\susp{{\sf a}\,\lf{d_0}\,\lf{d_1}}, 
-   \underline{x{:}\susp{{\sf b}\,\lf{d_0}\,\lf{d_3}}}, 
-   x_3{:}\susp{{\sf a}\,\lf{d_2}\,\lf{d_3}}, 
-   x_4{:}\susp{{\sf b}\,\lf{d_3}\,\lf{d_4}}, 
-   x_5{:}\susp{{\sf a}\,\lf{d_4}\,\lf{d_5}}
+&  x_1{:}\ispers{\susp{{\sf a}\,\lf{d_0}\,\lf{d_1}}}, 
+   \underline{x{:}\iseph{\susp{{\sf b}\,\lf{d_0}\,\lf{d_3}}}}, 
+   x_3{:}\ispers{\susp{{\sf a}\,\lf{d_2}\,\lf{d_3}}}, 
+   x_4{:}\iseph{\susp{{\sf b}\,\lf{d_3}\,\lf{d_4}}}, 
+   x_5{:}\ispers{\susp{{\sf a}\,\lf{d_4}\,\lf{d_5}}}
 \\ \leadsto~
-&  x_1{:}\susp{{\sf a}\,\lf{d_0}\,\lf{d_1}}, 
-   x{:}\susp{{\sf b}\,\lf{d_0}\,\lf{d_3}}, 
-   x_3{:}\susp{{\sf a}\,\lf{d_2}\,\lf{d_3}}, 
-   \underline{x'{:}\susp{{\sf b}\,\lf{d_2}\,\lf{d_5}}}, 
-   x_5{:}\susp{{\sf a}\,\lf{d_4}\,\lf{d_5}}
+&  x_1{:}\ispers{\susp{{\sf a}\,\lf{d_0}\,\lf{d_1}}}, 
+   x{:}\iseph{\susp{{\sf b}\,\lf{d_0}\,\lf{d_3}}}, 
+   x_3{:}\ispers{\susp{{\sf a}\,\lf{d_2}\,\lf{d_3}}}, 
+   \underline{x'{:}\iseph{\susp{{\sf b}\,\lf{d_2}\,\lf{d_5}}}}, 
+   x_5{:}\ispers{\susp{{\sf a}\,\lf{d_4}\,\lf{d_5}}}
 \end{align*}
 In the
 first process state, there is a path 
@@ -528,21 +531,21 @@ destination-passing and then turning some propositions persistent is
 an {\it abstraction}: if the original system can make a series of
 transitions, the transformed system can simulate those transitions,
 but the reverse may not be true. In any case, we can observe that, for
-many of systems we are interested in, the partially-persistent
+many of systems we are interested in, a partially-persistent
 destination-passing specification can only make transitions that were
 possible in the ordered specification.  The push-down automata with
 persistent ${\sf stack}$, ${\sf left}$, and ${\sf right}$ is one
 example of this, and we can similarly make the ${\sf cont}$ predicate
 persistent in SSOS~specifications without introducing any new
-transitions. Turing the ${\sf cont}$ predicate persistent will in
-fact be necessary for the discussion of first-class
+transitions. Turing the ${\sf cont}$ predicate persistent will 
+be necessary for the discussion of first-class
 continuations in Section~\ref{sec:dest-continuations}.
 
 \section{Exploring the richer fragment}
 
 In \cite{simmons11logical}, we were interested in exact logical
 correspondence between ordered abstract machine SSOS specifications
-and destination-passing SSOS specifications. (Destination-adding was
+and destination-passing SSOS specifications. (Destination-adding is
 useful in that context because it exposes information about the
 control structure of computations; this control structure can be
 harnessed by the program abstraction methodology described in
@@ -617,7 +620,7 @@ abstract machine specifications the parallel structure of a
 computation had to be reconstructed by parsing the context in postfix,
 a destination-passing specification uses destinations to thread
 together the treelike dependencies in the context. It would presumably
-be possible to consider a different version of the parallel
+be possible to consider a different version of parallel
 operationalization that targeted this desirable form of parallel
 destination-passing specification specifically, but we will not
 present such a transformation in this thesis.
@@ -640,7 +643,7 @@ forked.  Those two rules also leave behind a linear proposition ${\sf
 returns successfully (rule ${\sf term/retn}$) or with an error (rule
 ${\sf term/err}$). It would also be possible to add rules
 like $\forall \lf{d}.\,\forall\lf{d'}.\,{\sf cont}\,\lf{d'}\,\lf{d} \fuse {\sf terminate}\,\lf{d} \lefti \{ {\sf
-  terminate}\,\lf{d'} \}$ that actively aborted the useless branch instead
+  terminate}\,\lf{d'} \}$ that actively abort the useless branch instead
 of passively waiting for it to finish. (In a language with state, this 
 can make an observable difference in the results of computation.)
 
@@ -754,7 +757,7 @@ $\obj{v}$, and
 %
 Labels essentially serve to pass messages up through the inductive
 structure of a proposition.  In destination-passing SSOS semantics, on
-the other hand, the internal structure of $e$ is spread out as a
+the other hand, the internal structure of $\obj{e}$ is spread out as a
 series of frames throughout the context, and so the innermost redexes
 of terms can be directly connected. It would be interesting (but
 probably quite nontrivial) to consider a translation from labeled
@@ -885,7 +888,9 @@ the specifications of call-by-need evaluation
 needing an unavailable value was immediately fatal. With
 specifications, needing an unavailable value is not immediately fatal:
 the main thread of computation is stuck, but only until the future's
-promise is fulfilled.
+promise is fulfilled. (This again violates the classification of ${\sf eval}$
+as active; as before, this could again be fixed by adding a new
+latent proposition.)
 
 The destination-passing semantics of futures interact seamlessly with
 the semantics of synchronization and parallelism, but not with the

@@ -179,7 +179,7 @@ computation:
 \smallskip
 %
 The goal of the operationalization transformation is to represent this
-deductive computation as specification in the concurrent fragment of
+deductive computation as a specification in the concurrent fragment of
 \sls. (To be sure, ``concurrent'' will seem 
 like a strange word to use at first, as
 the specifications we write in the concurrent fragment of \sls~will 
@@ -345,8 +345,9 @@ The \sls~encoding of our example natural semantics is shown in
 Figure~\ref{fig:example-transform-cbv} alongside the transformed
 specification, which has the form of an ordered abstract machine
 semantics, though it is different than the ordered abstract machine
-semantics presented in the introduction. We say the specification
-above is {\it nested}, as ${\sf ev/app}$ is a rule that, when it
+semantics presented in the introduction. The specification in 
+Figure~\ref{fig:example-transform-cbv} is 
+{\it nested}, as ${\sf ev/app}$ is a rule that, when it
 participates in a transition, produces a new rule $(\forall
 \lf{E}.\,{\sf retn}\,\lf{({\sf lam}\,\lambda x.\,E\,x)} \lefti \{
 \ldots \})$ that lives in the context. (In contrast, the ordered
@@ -452,7 +453,8 @@ G & ::= p^-_d
     \mid p^+_\mpers \lefti G
     \mid {!}D \lefti G
 \end{align*}
-For now, we can restrict our attention to signatures where all atomic
+For most of this chapter, we will 
+restrict our attention to signatures where all atomic
 propositions have the form $p^-_c$ and where all rules have the form
 $C$. This makes the classes $p^-_d$, $D$, and $G$ irrelevant and
 effectively restricts rules to the Horn fragment.  Propositions
@@ -878,7 +880,7 @@ intermediate states look like this:
   ~~~~~~
   y{:}\istrue{({\sf retn} \lefti {\it cont})}
 \]
-Note that $(\mbox{subgoal 1})$ is intended to represent some nonempty
+Note that {\it subgoal 1} is intended to represent some nonempty
 sequence of ordered propositions, not a single proposition. With the
 parallelism-enabling transformation, subgoal 1 will be able to perform
 parallel search for its own subgoals:
@@ -893,8 +895,7 @@ parallel search for its own subgoals:
 \]
 The two subcomputations \mbox{\it (subgoal 1.1)} and \mbox{\it (subgoal
   1.2)} are next to one another in the ordered context, but the
-postfix 
-structure that transformed specifications impose on the
+postfix structure imposed on the
 process state ensures that the only way they
 can interact is if they both finish (becoming $z_{1.1}{:}\susp{{\sf
     retn}_{1.1}}$ and $z_{1.2}{:}\susp{{\sf retn}_{1.2}}$, 
@@ -912,8 +913,9 @@ is what determines the assignments for the variables in
 $\lf{\overline{x_k}}$ when we perform moded proof search. Independence
 between premises requires that the free variables of $\lf{t^{\it
     in}_k}$ cannot include any variables in $\lf{\overline{x_m}}$ for
-$i \leq m < k$; the well-modeness of the rule already ensures that the
-free variables in $\lf{\overline{x_m}}$ for $k \leq m \leq j$.
+$i \leq m < k$; the well-modedness of the rule already ensures that 
+$\lf{t^{\it in}_k}$ does not contain any variables in 
+$\lf{\overline{x_m}}$ for $k \leq m \leq j$.
 
 \smallskip
 \begin{itemize}
@@ -1059,8 +1061,8 @@ The only interesting case is where $D = {!}p^-_c \lefti D'$
   $\slst{\Sigma}{\Psi}{\Gamma, [D]}{\Sp'}{\susp{p^-_d}}$
   \` (given)
   \\
-  $T :: (\Psi; \opsubst{\Gamma}, x{:}{\sf eval\_a}\,\lf{t_1})
-    \leadsto^*_{\transop{\Sigma}} (\Psi; \opsubst{\Gamma}, y{:}{\sf retn\_a}\,\lf{t_2})$
+  $T :: (\Psi; \opsubst{\Gamma}, x{:}\susp{{\sf eval\_a}\,\lf{t_1}})
+    \leadsto^*_{\transop{\Sigma}} (\Psi; \opsubst{\Gamma}, y{:}\susp{{\sf retn\_a}\,\lf{t_2}})$
   \` (ind. hyp. (part 4) on $N$)
   \\
   $\slst{\transop{\Sigma}}{\Psi}{\Gamma, [\opsubst{D'}]}{\Sp''}{\susp{p_d^-}}$
@@ -1161,7 +1163,7 @@ We need a trace $T :: (\Psi;
   \tackon{\opsubst{\Theta}}
   {x_{n}{:}{\susp{{\sf eval\_a}\,\lf{(\sigma_{n}{t^{\it in}_n})}}}})
   \leadsto^*_{\transop{\Sigma}} 
-  (\Psi; \tackon{\opsubst{\Theta}}{y{:}{\sf retn\_a}\,\lf{(\sigma_n{t_{n+1}})}})$; 
+  (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,\lf{(\sigma_n{t_{n+1}})}}})$; 
   this follows from the
   outer induction hypothesis (part 4) on $N$. 
   \bigskip
@@ -1176,7 +1178,7 @@ We need a trace $T :: (\Psi;
   $\lf{\sigma_i} = \lf{(\sigma_{i-1}, \overline{s_i}/\overline{x_i})}$
   \` (definition of $\lf{\sigma_i}$)
   \\
-  $\slst{\transop{\Sigma}}{\Psi}{\Gamma, [\opbasic{A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i}}]}{\Sp'}{\susp{{\ocircle} C^+ \} }}$
+  $\slst{\transop{\Sigma}}{\Psi}{\Gamma, [\opbasic{A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i}}]}{\Sp'}{\susp{{\ocircle} C^+ }}$
   \` (by inner ind. hyp.)
   \\
   $\lambda P.T :: (\Psi; \tackon{\opsubst{\Theta}}{C^+}) 
@@ -1274,15 +1276,16 @@ We need a trace $T :: (\Psi;
   \\
   $\lambda P'.T' :: (\Psi, \tackon{\opsubst{\Theta}}{C^+}) 
        \leadsto^*_{\transop{\Sigma}}
-        (\Psi, \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,s}})$ 
+        (\Psi, \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,\lf{s}}})$ 
  \` ''\qquad\qquad~
   \end{tabbing}
   We  conclude  by letting $T = 
   \left(T_0; \tstep{P'}{y_{ij}}{(\lf{\overline{s_i}}; \ldots \lf{\overline{s_j}}; (\tfuser{y_i}{\tfuser{\ldots}{y_j}}); \Sp')}; T'\right)$.
-  \bigskip
+
+\newpage
 
 \item $\opbasic{{!}G,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}} = \forall
-  \lf{\overline{x_i}}.\, {!}\lf{\sigma_{i-1}}\opsubst{G} \lefti
+  \lf{\overline{x_i}}.\, {!}(\lf{\sigma_{i-1}}\opsubst{G}) \lefti
   \opbasic{A^+_i,\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}$
 
   \begin{tabbing}
@@ -1648,7 +1651,7 @@ the operationalization transformation:
   $\lf\sigma{A^+_{j}}$ for $i < j \leq n$, and 
   a trace $T' :: (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,\lf{(\sigma t_{n+1})}}})
   \leadsto^*_{\transop{\Sigma}}
- (\Psi; \Delta_z)$. The remaining value of $\lf\sigma A_i = \sigma{p^+_\mpers}$
+ (\Psi; \Delta_z)$. The remaining value of $\lf\sigma A_i = \lf\sigma{p^+_\mpers}$
   is just $z$.
   \bigskip
 
@@ -1764,7 +1767,7 @@ This completes the proof.
 Defunctionalization is a procedure for turning nested
 \sls~specifications into flat \sls~specifications.  The key idea is
 that a nested rule can always be simulated by a distinguished atomic
-proposition by inserting a rule into the signature that teach the
+proposition by inserting a rule into the signature that teaches the
 atomic proposition how to act like the nested rule. (Or, looking at it
 the other way around, the new atomic propositions act like triggers
 for the additional rules.)  The correctness of defunctionalization
@@ -1912,7 +1915,7 @@ nested ${\sf ev/app}$ rule from Figure~\ref{fig:cbv-ev-ssos-tail}:
 %
 \intertext{This step turns ${\sf ev/app}$ into a flat rule; we repeat
   defunctionalization on ${\sf ev/app1}$ to get a completely flat
-  specification. This introduces a new proposition ${\sf ev\_app2}$
+  specification. This introduces a new proposition ${\sf cont\_app2}$
   that keeps track of the free variable $\lf{E}$ with type ${\sf exp}
   \rightarrow {\sf exp}$.}
 %
@@ -2321,10 +2324,12 @@ the necessary result.
 % generative traces, which allows us to say that only one generative
 % trace is possible in each case, requires more justification. We will
 % postpone a further discussion of this for now, however.
-This is the most interesting part of the adequacy proof.
-With this property established, the
-final step is a straightforward enumeration as Theorem~\ref{thm:pda-adequacy}
-in Section~\ref{sec:pda-adequacy} was.
+This is the most interesting part of the adequacy proof, and a
+generalization of this preservation proof is carefully considered in
+Section~\ref{sec:gen-order} along with a more detailed discussion of
+the relevant inversion principles.  With this property established,
+the final step is a straightforward enumeration as
+Theorem~\ref{thm:pda-adequacy} in Section~\ref{sec:pda-adequacy} was.
 
 \bigskip
 \begin{theorem}[Adequacy of the transition system]\label{thm:stepad3}
@@ -2334,7 +2339,8 @@ if and only if $\obj{s \mapsto s'}$.
 \bigskip
 
 \noindent
-Again, the proof is a straightforward enumeration, and again, an
+As in Section~\ref{sec:pda-adequacy}, 
+the proof is a straightforward enumeration. An
 immediate corollary of Theorems~\ref{thm:adequacy-states}-\ref{thm:stepad3}
 is the stronger adequacy result that 
 if $\ctxinterp{s} \leadsto_{\Sigma_{\it CBV}} \Delta$
@@ -2488,7 +2494,8 @@ Figure~\ref{fig:cbv-ev-ssos-fun}.  Traditional abstract machine
 semantics are syntactic and do not handle parallel evaluation;
 therefore, it is not possible to show that this ordered abstract
 machine adequately encodes a traditional abstract machine presentation
-of Mini-ML.
+of Mini-ML. Nevertheless, the SSOS specification as a whole adapts
+seamlessly to the presence of this new feature.
 
 As we discussed in Chapter~\ref{chapter-framework}, 
 when we treat a natural semantics
@@ -2845,7 +2852,8 @@ $\obj{e_2 \Downarrow v}$. This implies an operational interpretation
 of natural semantics as flat resolution as opposed to backward
 chaining with backtracking. Maintaining this non-backtracking
 intuition means that some natural semantics specifications, such as
-those for case analysis, need to be revised. Such revisions are always
+those for case analysis, need to be revised. It is a folk theorem
+that such revisions are always
 possible by factoring \cite{poswolsky03factoring}; therefore, we can
 conclude that {\it in the context of natural semantics specifications}
 the form of deductive computation
@@ -2861,13 +2869,12 @@ search for a trace $(x{:}\susp{{\sf eval}\,\interp{e}}) \leadsto^*
 specification using committed-choice forward chaining, the operational
 behavior will coincide with the behavior of flat resolution in the
 original specification. Alternatively, if we take the exhaustive search
-or model checking
 interpretation of an operationalized specification and attempt to
 answer, one way or the other, whether a trace of the form
 $(x{:}\susp{{\sf eval}\,\interp{e}}) \leadsto^* (y{:}\susp{{\sf
     retn}\,\interp{v}})$ can be constructed, then the operational
 behavior of the interpreter will coincide with the behavior of
-backward chaining with backtracking in the original specification.
+backtracking backward chaining in the original specification.
 
 Therefore, operationalization can be said to connect backward
 chaining in the deductive fragment of \sls~to forward chaining in the
@@ -2975,8 +2982,9 @@ each allocated cell:
  \Delta)
 \]
 where $\Delta$ has the form described before. Because the ${\sf
-  cell}\,\lf{l_i}\,\lf{v_i}$ propositions are linear, the order of cells and
-their placement relative to $\Delta$ are irrelevant.
+  cell}\,\lf{l_i}\,\lf{v_i}$ propositions are mobile, the order
+of cells is irrelevant, as is the placement of these cells relative
+to the control structure encoded in the context $\Delta$.
 
 The semantics of mutable storage are presented in
 Figure~\ref{fig:ssos-mutable}. Rule ${\sf ev/get}$ in that figure
@@ -2996,7 +3004,7 @@ as follows:
 \end{align*}
 Again, it is critical, when reading this transition, to account for the fact
 that ${\sf retn}$ and ${\sf cont}$ are ordered predicates but ${\sf
-  cell}$ is a linear predicate.
+  cell}$ is a mobile predicate.
 
 The ${\sf set}$ rules are similar, except that we also evaluate a new
 value $\lf{v_2}$ and restore that value to the process state instead
@@ -3049,7 +3057,7 @@ references {\it cannot} be further extended to include the tests for
 reference equality that languages like Standard ML or OCaml have, since
 locations are described only as variables. 
 
-The workaround to this problem is to maintain an association between 
+One workaround to this problem is to maintain an association between 
 distinct variables $\lf{l}$ and distinct concrete terms (usually
 distinct natural numbers) in the process state. It is possible
 to use generative signatures to enforce that all well-formed
@@ -3099,7 +3107,7 @@ extension to the \sls~framework is beyond the scope of this thesis,
 however. Luckily, aside from being unable to elegantly represent tests
 for pointer inequality or the entirety of Harper's Modernized Algol
 \cite[Chapter 35]{harper12practical}, we will not miss name generation
-facilities too much in the context of this thesis. One of the most important
+facilities much in the context of this thesis. One of the most important
 use cases of name generation and nominal abstraction is in reasoning
 {\it about} logical specifications within a uniform logic
 \cite{gacek11nominal}, and this thesis does not consider a uniform {\it
@@ -3240,7 +3248,7 @@ atomic proposition ${\sf susp}\,\lf{l}\,\lf{(\lambda x.\interp{e})}$
   ev/thunk}$).
 
 When we apply the $\lf{\sf force}$ operator to an expression that
-returns ${\sf issusp}\,l$ for the first time, the location $\lf{l}$
+returns $\lf{{\sf issusp}\,l}$ for the first time, the location $\lf{l}$
 stops being associated with a linear atomic proposition of the form
 ${\sf susp}\,\lf{l}\,\lf{(\lambda x.\interp{e})}$ and becomes
 associated with a linear atomic proposition of the form ${\sf
@@ -3255,7 +3263,7 @@ premise ${\sf retn}\,\lf{({\sf issusp}\,l)} \fuse {\sf cont}\,\lf{\sf
   force1} \fuse {\sf blackhole}\,\lf{l}$ could instead be used to loop
 endlessly or signal failure. This possibility is represented in
 Figure~\ref{fig:ssos-cbneed} by the commented-out rule fragment --
-\verb\#| this is comment syntax |#\.
+\verb'#| this is comment syntax |#'.
 
 Once a suspended expression has been fully evaluated (rule ${\sf ev/force2b}$),
 the black hole is removed and the location $\lf{l}$ is persistently associated
@@ -3347,11 +3355,11 @@ are irrelevant.
 
 Toninho, Caires, and Pfenning have observed that call-by-need and
 call-by-value can both be seen in a larger family of {\it sharing}
-evaluation strategies (if and when the argument to $\lambda x. e$ is
+evaluation strategies (if and when the argument to $\obj{\lambda x. e}$ is
 evaluated, the work of evaluating that argument to a value is shared
-across all occurrences of $x$). Call-by-name, in contrast, is called a
+across all occurrences of $\obj{x}$). Call-by-name, in contrast, is called a
 {\it copying} evaluation strategy, since the unevaluated argument of
-$\lambda x. e$ is copied to all occurrences of $x$
+$\obj{\lambda x. e}$ is copied to all occurrences of $\obj{x}$
 \cite{toninho12functions}. This relationship between the lazy
 call-by-need semantics from Figure~\ref{fig:ssos-by-need} and
 call-by-value is better presented by giving a variant of what we
@@ -3382,7 +3390,7 @@ function argument $\lf{v_2}$ is returned to that frame (rule ${\sf
   ev/appenv2}$), we create the same persistent binding ${\sf
   bind}\,\lf{x}\,\lf{v_2}$ that was generated by rule ${\sf ev/susp1'}$ in
 Figure~\ref{fig:ssos-by-need} and proceed to evaluate the function
-body. Upon encountering the free variable $x$ in the course of
+body. Upon encountering the free variable $\lf{x}$ in the course of
 evaluation, the same rule ${\sf ev/bind'}$ from
 Figure~\ref{fig:ssos-by-need} will return the right value.
 
@@ -3669,8 +3677,8 @@ as a deductive \sls~specification, the definition of
 $\obj{\{ e \| \mu \}_{\Psi} \Downarrow \{ v \| \mu' \}_{\Psi'}}$ cannot.
 Nevertheless, the example above suggests
 that a carefully-defined formalism for statefully-modular natural
-semantics specifications could be similarly compiled into (or, indeed,
-{\it defined in terms of}) the operationalization of specifications
+semantics specifications could be similarly compiled into (or
+defined in terms of) the operationalization of specifications
 into \sls.
 
 There is a great deal of work on special-purpose formalisms for the 
@@ -3715,6 +3723,13 @@ operationalization and defunctionalization transformations to natural
 semantics specifications. However, both transformations are general
 and can be applied to many different specifications. 
 
+\begin{figure}
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/plus.sls}
+\caption{Backward-chaining logic program for binary addition}
+\label{fig:plus}
+\end{figure}
+
 In this section, we will consider the meaning of
 operationalization on three other types of deductive
 \sls~specifications: an algorithmic specification of addition by 
@@ -3748,12 +3763,6 @@ to transform only some of the predicates in a program.
 % (as alluded to in Footnote~\ref{returntypefootnote}
 % above).
 
-\begin{figure}
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/plus.sls}
-\caption{Backward-chaining logic program for binary addition}
-\label{fig:plus}
-\end{figure}
 
 \begin{figure}
 \fvset{fontsize=\small,boxwidth=229pt}
@@ -3835,6 +3844,14 @@ semantics and abstract machines presented in
 precisely is left for future work.
 
 
+\begin{figure}[tp]
+\begin{minipage}[b]{0.9\linewidth}
+\fvset{fontsize=\small,boxwidth=auto}
+\VerbatimInput{sls/cbv-sos-b.sls}
+\end{minipage}
+\caption{SOS evaluation}
+\label{fig:cbv-sos-b}
+\end{figure}
 
 \subsection{Operationalizing SOS specifications}
 \label{sec:evaluationcontexts}
@@ -3846,20 +3863,13 @@ operational semantics, {\it structural operational semantics} (SOS)
 specifications \cite{plotkin04structural}, though we did define the
 small-step judgment $\interp{e \mapsto e'} = {\sf
   step}\,\interp{e}\,\interp{e'}$ for call-by-value evaluation in the
-beginning of this chapter.  That SOS specification is repeated as an
+beginning of this chapter.  The SOS specification from 
+that discussion is encoded as an
 SLS specification in Figure~\ref{fig:cbv-sos-b}. The figure also
 defines the judgment $\interp{e_1 \mapsto^* v} = {\sf
   evsos}\,\interp{e}\,\interp{v}$ that implements big-step evaluation
 in terms of the small-step SOS specification.
 
-\begin{figure}[tp]
-\begin{minipage}[b]{0.9\linewidth}
-\fvset{fontsize=\small,boxwidth=auto}
-\VerbatimInput{sls/cbv-sos-b.sls}
-\end{minipage}
-\caption{SOS evaluation}
-\label{fig:cbv-sos-b}
-\end{figure}
 
 
 There are several ways that we can contemplate operationalizing the
@@ -3875,7 +3885,9 @@ evaluation relation for an indefinite number of steps as we extend the
 trace. While the specification is almost trivial, it still captures
 something of the essence of an SSOS specification -- atomic transitions are
 interpreted as steps (by way the inductively-defined relation ${\sf
-  step}\,\interp{e}\,\interp{e'}$) and nonterminating computations are
+  step}\,\interp{e}\,\interp{e'}$) and potentially
+nonterminating or failing
+computations are
 interpreted as traces. This specification is also the first case where
 we have performed operationalization on only part of a specification.
 In the terminology of Section~\ref{sec:trans-subset},
@@ -3917,7 +3929,7 @@ that end up being transformed.
 In the other direction, we can consider operationalizing only the
 predicate ${\sf step}$, which implies that the rules ${\sf
   value/lam}$, and ${\sf evsos/steps}$ and ${\sf evsos/value}$ to the
-category $C$ and placing ${\sf step/app1}$, ${\sf step/app2}$, and
+category $D$ and placing ${\sf step/app1}$, ${\sf step/app2}$, and
 ${\sf step/appred}$ in the category $C$ of rules that end up being
 transformed into the concurrent fragment.  The result of this
 transformation is shown in Figure~\ref{fig:cbv-sos}. The
@@ -3944,7 +3956,7 @@ $\beta$-reduction, and instead of ${\sf retn}$ we have ${\sf plug}$,
 since the relevant action is to plug the reduced expression back into
 the larger term.  When we operationalized natural semantics, the
 structure of the suspended ${\sf cont}\,\lf{f}$ propositions was
-analogous to the control stacks $k$ of abstract machine
+analogous to the control stacks $\obj{k}$ of abstract machine
 specifications. In our operationalized SOS specification, the
 structure of the ${\sf cont}\,\lf{f}$ propositions is analogous to
 {\it evaluation contexts}, often written as $\obj{E[]}$.
@@ -4074,14 +4086,13 @@ judgment that tracks all the variables in $\obj\Psi$.
 \end{figure}
 
 The evaluation judgment $\obj{e \Downarrow_{\Psi} v}$ and the partial
-evaluation judgment $\obj{e \Downarrow^n_{Psi} e'}$ only interact in
+evaluation judgment $\obj{e \Downarrow^n_{\Psi} e'}$ only interact in
 \rowan~through the temporal fragment, which mediates between the two
 judgments by way of two expressions. The first, $\obj{{\sf next}\,e}$, says
 that the enclosed expression $\obj{e}$ should be evaluated one time step
 later than the surrounding expression.  The second, $\obj{{\sf prev}\,e}$,
 says that the enclosed expression should be evaluated one time step
-{\it before} the surrounding expression. There's no way to evaluate
-$\obj{{\sf prev}\,e \Downarrow_{\Psi} v}$ at time 0, so when we evaluate
+{\it before} the surrounding expression. When we evaluate
 $\obj{{\sf prev}\,e}$ at time 1 it is necessary that $\obj{e}$ evaluates to 
 $\obj{{\sf
   next}\,e'}$, as $\obj{{\sf prev}\,({\sf next}\,e')}$ at time step 1 will
@@ -4122,9 +4133,10 @@ This natural semantics specification is represented on the left-hand
 side of Figure~\ref{fig:lc}. Due to the structure of the ${\sf
   evn/lam}$ rule, we {\it cannot} operationalize the ${\sf evn}$
 predicate: it does not have the structure of a $C$ proposition as
-described in Section~\ref{sec:trans-subset}. Rule ${\sf evn/lam}$ has 
+described in Section~\ref{sec:trans-subset}. Rule ${\sf evn/lam}$ 
+does, however, have
 the structure of a $D$ proposition if we assign ${\sf evn}$ to the 
-class of predicates that are not operationalized, however.
+class of predicates that are not operationalized.
 Therefore, it is possible to
 operationalize the ${\sf ev}$ predicate without operationalizing the
 ${\sf evn}$ predicate. This leaves the rules in
@@ -4139,7 +4151,7 @@ step. Conversely, the ${\sf ev/prev}$ rule contains a subgoal of ${\sf
   eval}\,\lf{E} \lefti \{ {\sf retn}\,\lf{({\sf next}\,V)} \}$ that uses
 a concurrent derivation to create a deductive derivation.  This makes the
 right-hand side of Figure~\ref{fig:lc} the only \sls~specification in
-this thesis that exhibits an arbitrarily nested dependency between
+this dissertation that exhibits an arbitrarily nested dependency between
 concurrent and deductive reasoning.
 
 The natural semantics of \rowan~are not, on a superficial level,

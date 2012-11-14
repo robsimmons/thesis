@@ -47,7 +47,7 @@ styles:
 
 
 \noindent
-Each of these three styles is, in a very formal sense, more expressive
+Each of these three styles is, in a formal sense, more expressive
 than the last: there are automatic and provably-correct
 transformations from the less expressive styles (natural semantics and
 ordered abstract machines) to the more expressive styles (ordered
@@ -177,9 +177,10 @@ interpreter, on the other hand, will either succeed, run forever, or
 give up, thereby distinguishing two cases that are indistinguishable
 when the specification is interpreted as an inductive definition.
 
-We will present a transformation from \sls-encoded natural semantics
-specifications into ordered abstract machines by a transformation
-called {\it operationalization}. The transformation from natural
+We will present a transformation 
+called {\it operationalization} from \sls-encoded natural semantics
+specifications into ordered abstract machines.
+The transformation from natural
 semantics to ordered abstract machines is only an instance of a much
 more general picture. The basic idea of operationalization is to model
 backward-chaining logic programming (in the sense of
@@ -188,7 +189,7 @@ logic programming (in the sense of
 Section~\ref{sec:framework-logicprog-trace}). The transformation
 reifies and exposes the internal structure of backward-chaining
 search, making evaluation order and parallelism explicit. That exposed
-structure, in turn, enables us to reason about the difference between
+structure enables us to reason about the difference between
 non-termination and failure. In turn, ordered abstract machine
 specifications can be transformed into destination-passing
 specifications by a transformation called {\it destination-adding},
@@ -268,8 +269,8 @@ There are many other smaller design decisions that can be made in the
 creation of a substructural operational semantics, two of which are
 represented in this figure. One distinction, destination-passing
 with linear continuations versus persistent continuations, has to 
-do with whether it is possible to return to a previous point a
-programs execution structure and is discussed, along with first-class
+do with whether it is possible to return to a previous point in a
+program's execution and is discussed, along with first-class
 continuations, in Section~\ref{sec:dest-continuations}. 
 
 Another distinction is between {\it nested} and {\it flat}
@@ -279,7 +280,7 @@ operational semantics. Flat specifications include rewriting rules
 $\left( p_1 \fuse \ldots \fuse p_n \lefti \{ q_1 \fuse \ldots \fuse
   q_m \} \right)$ where the head of the rule $\{ q_1 \fuse \ldots
 \fuse q_m \}$ contains only atomic propositions. Nested
-\sls~specifications, on the other hand, contain {\it rules} in the
+\sls~specifications, on the other hand, may contain {\it rules} in the
 conclusions of rules; when the rule fires, the resulting process state
 contains the rule.  A rule $A^+ \lefti \{ B^+ \}$ in the context can
 only fire if a piece of the context matching $A^+$ appears to its
@@ -471,7 +472,7 @@ classical (like Leroy and Grall's approach, described below) or else
 depends on a separate proof of equivalence with a small-step
 operational semantics.
 
-Murphy's proof only works because his formulation of Lambda 5 was {\it
+Murphy's proof only works because his formulation of Lambda 5 is {\it
   intrinsically typed}, meaning that, using the facilities provided by
 LF's dependent types, he enforced that only well-typed terms could
 possibly be evaluated. (His general proof technique should apply more
@@ -638,7 +639,7 @@ various names. The transformation is not strictly analogous to
 Reynold's defunctionalization transformations on functional programs
 \cite{reynolds72definitional}, but it is based upon the same idea: we
 take an independently transitioning object like a function (or, in our
-case, negative propositions in the process state) and turn it into
+case, a negative proposition in the process state) and turn it into
 data and an application function.  In our case, the data is a positive
 atomic proposition in the process state and the application function
 is a rule in the signature that explains how the positive atomic
@@ -663,7 +664,7 @@ uniform logical fragment, whereas the transformation we describe
 handles a specific (though useful) fragment of the much richer logic
 of \sls~propositions.
 
-Related work for program analyses methodology covered in 
+Related work for program analysis methodology covered in 
 Chapter~\ref{chapter-approx} is
 discussed further in Section~\ref{sec:approximately-related}.
 
@@ -773,8 +774,8 @@ operationalizing natural semantics as ordered abstract machines and
 transforming ordered abstract machines into destination-passing
 semantics without giving too much thought to the opposite
 direction. In the context of this dissertation, the reason that
-transformations are important is that they {\it expose more of the
-  semantics to manipulation and modular extension}.  The
+transformations are important is that they expose more of the
+  semantics to manipulation and modular extension.  The
 operationalization transformation in Chapter~\ref{chapter-destinations} 
 exposes the order of
 evaluation, and the \sls~framework then makes it possible to modularly
