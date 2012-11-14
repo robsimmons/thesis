@@ -1,4 +1,4 @@
-offuture: exp -> tp -> prop pers.
+offuture: exp -> typ -> prop pers.
 genfuture: dest -> exp -> prop lin.
 
 of/future: of X Tp <- offuture X Tp.

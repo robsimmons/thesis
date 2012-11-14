@@ -1,4 +1,4 @@
-CM.make "../../r/sls/sources.cm";
+CM.make "../../sls/sources.cm";
 Frontend.init ();
 fun HEADING s = print ("\n\n== "^s^" ==\n\n");
 
