@@ -695,7 +695,9 @@ computation, {\it passive} propositions like ${\sf
   cont}\,\lf{f}\,\lf{d'}\,\lf{d}$ that do not drive computation, and
 {\it latent} propositions like ${\sf retn}\,\lf{f}\,\lf{d}$ that may
 or may not drive computation based on the ambient environment of
-passive propositions. The specification in Figure~\ref{fig:dest-synch}
+passive propositions. 
+
+The specification in Figure~\ref{fig:dest-synch}
 does not respect this classification because a proposition of the form
 ${\sf eval}\,\lf{({\sf recv}\,c)}\,\lf{d}$ cannot immediately
 transition. We could restore this classification by having a rule

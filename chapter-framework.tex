@@ -214,7 +214,7 @@ important refinement are {\it atomic classifiers} $\lfroot{\sf
   a}{\spi}$, which we abbreviate as $p$.
 
 LF spines $\lf\spi$ are just sequences of terms $\lf{(t_1; (\ldots;
-  (t_n;())\ldots))}$; we will follow common convention and write
+  (t_n;())\ldots))}$; we follow common convention and write
 $\lf{h\,t_1\ldots t_n}$ as a convenient shorthand for the atomic term
 $\lf{\lfroot{h}{(t_1; \ldots; (t_n;())\ldots)}}$; similarly, we will
 write ${\sf a}\,\lf{t_1\ldots t_n}$ as a shorthand for atomic
@@ -1171,7 +1171,7 @@ $\exists \lf{a}.\,{\sf p}\,\lf{a}
 {P :: (\Psi; \tackon{\Theta}{z{:}\islvl{\susp{p^+_\mlvl}}})_{\lf{\sigma}}
            \Longrightarrow_{\Sigma,\subord}
         (\Psi'; \Delta')_{\lf{\sigma'}}}
-\quad
+~~
 \infer[{\downarrow}_L]
 {x,P :: (\Psi; \frameoff{\Theta}{{\downarrow}A^-})_{\lf{\sigma}}
            \Longrightarrow_{\Sigma,\subord}
@@ -1188,7 +1188,7 @@ $\exists \lf{a}.\,{\sf p}\,\lf{a}
 {P :: (\Psi; \tackon{\Theta}{x{:}\iseph{A^-}})_{\lf{\sigma}}
            \Longrightarrow_{\Sigma,\subord}
         (\Psi'; \Delta')_{\lf{\sigma'}}}
-\quad
+~~
 \infer[{\bang}_L]
 {x,P :: (\Psi; \frameoff{\Theta}{{!}A^-})_{\lf{\sigma}}
            \Longrightarrow_{\Sigma,\subord}
@@ -2269,7 +2269,7 @@ By induction on $\obj{s}$.
 \item If $\obj{s} = \obj{{\sf <}s' }$, we have 
 $T' :: ({y{:}\istrue{\susp{\sf gen\_string}}}) \leadsto^*_{\Sigma_{\it Gen}} 
 (y''{:}\istrue{\susp{\sf gen\_string}}, \ctxinterp{s'})$ by the induction
-hypothesis, so $T = (T'; \trstep{y_1, y_2}{{\sf string/left}\,y''}) :: 
+hyp., so $T = (T'; \trstep{y_1, y_2}{{\sf string/left}\,y''}) :: 
 ({y{:}\istrue{\susp{\sf gen\_string}}}) \leadsto^*_{\Sigma_{\it Gen}} 
 (y_1{:}\istrue{\susp{\sf gen\_string}},
  y_2{:}\istrue{\susp{\sf L}},
@@ -2277,7 +2277,7 @@ hypothesis, so $T = (T'; \trstep{y_1, y_2}{{\sf string/left}\,y''}) ::
 \item If $\obj{s} = \obj{{\sf >}s' }$, we have 
 $T' :: ({y{:}\istrue{\susp{\sf gen\_string}}}) \leadsto^*_{\Sigma_{\it Gen}} 
 (y''{:}\istrue{\susp{\sf gen\_string}}, \ctxinterp{s'})$ by the induction
-hypothesis, so $T = (T'; \trstep{y_1, y_2}{{\sf string/right}\,y''}) :: 
+hyp., so $T = (T'; \trstep{y_1, y_2}{{\sf string/right}\,y''}) :: 
 ({y{:}\istrue{\susp{\sf gen\_string}}}) \leadsto^*_{\Sigma_{\it Gen}} 
 (y_1{:}\istrue{\susp{\sf gen\_string}},
  y_2{:}\istrue{\susp{\sf R}},
@@ -3422,7 +3422,7 @@ When it is the case that  $\foc{\Psi}{\Delta_1}{\isconc{\susp{\sf
 $x{:}\sf{foo}$, we can
 associate the rule ${\gnab}{\sf foo} \fuse
 {\gnab}{\sf bar} \lefti \ocircle({\downarrow}({\gnab}{\sf baz}))$
-with the synthetic transition $(\Psi;
+with a unique synthetic transition of the form $(\Psi;
 \matchconj{\Delta}{\matchconj{x{:}{\islvl{\sf foo}}}{y{:}{\islvl{\sf
         bar}'}}}) \leadsto (\Psi; \mkconj{\Delta}{z{:}\iseph{\susp{\sf
       baz}}})$ under the condition that neither $\mlvl$ or $\mlvl'$

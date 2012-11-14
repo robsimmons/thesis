@@ -29,8 +29,8 @@ are executable program analyses.
 %that use higher-order abstract syntax.
 
 The process described in this chapter does not claim to capture or 
-derive all possible interesting program analyses. For
-instance, the methodology we describe only derives over-approximations
+derive all possible interesting program analyses. 
+The methodology we describe only derives over-approximations
 (or {\it may-} analyses) that ensure all possible behaviors will be
 reported by the analysis. There is a whole separate class of 
 under-approximations (or {\it must-} analyses) which ensure that if a
@@ -926,12 +926,13 @@ that $(\widehat{\sf C}, \widehat{\rho}) \models \obj{e}$.
   follows by rule ${\sf ev/app2}$. 
 
   \medskip The same reasoning from ${\sf ev/app2}$ 
-   allows us to conclude that $\obj{(\lambda
+   allows us to conclude that both $\obj{(\lambda
     x.e_0}) \in \widehat{\sf C}(\obj{e_1})$ and ${\sf
     retn}\,\interp{v_2}\,\interp{e_2} \in \Delta$ together imply ${\sf
     eval}\,\interp{e_0} \in \Delta$ (and therefore that $(\widehat{\sf
     C}, \widehat{\rho}) \models \obj{e_0}$ by the coinduction
-  hypothesis, the fourth thing we needed to prove) and that ${\sf
+  hypothesis, the fourth thing we needed to prove) in addition to implying 
+  ${\sf
     cont}\,\lf{\sf app3}\,\interp{e_0}\,\interp{e_1\,e_2} \in \Delta$ (which
   with ${\sf ev/app3}$ implies $\widehat{\sf C}(\obj{e_0}) \subseteq
   \widehat{\sf C}(\obj{e_1\,e_2})$, the last thing we needed to

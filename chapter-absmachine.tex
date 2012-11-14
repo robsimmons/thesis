@@ -980,8 +980,11 @@ correctness of the nondeterministic transformation.
 
 Correctness is fundamentally the property that
 we have $\slss{\Sigma}{\Psi}{\Gamma}{\susp{p^-_d}}$ if and only if 
+we have
 $\slss{\transop{\Sigma}}{\Psi}{\opsubst{\Gamma}}{\susp{p^-_d}}$
-and $\slss{\Sigma}{\Psi}{\Gamma}{\susp{{\sf a_c}\,\lf{t_1}\,\lf{t_2}}}$ if and only if
+and that we have
+$\slss{\Sigma}{\Psi}{\Gamma}{\susp{{\sf a_c}\,\lf{t_1}\,\lf{t_2}}}$ 
+if and only if we have a trace
 $(\Psi; \mkconj{\Gamma}{{\sf eval\_a}\,\lf{t_1}}) \leadsto^*_{\transop{\Sigma}} (\Psi; \mkconj{\Gamma}{{\sf retn}\,({\sf retn\_a}\,\lf{t_2})})$. We label the
 forward direction ``completeness'' and the backward direction ``soundness,''
 but directional assignment is (as usual) somewhat arbitrary. 
@@ -1357,7 +1360,7 @@ propositions of the form $R$, and if $\Gamma$ matches
 $z{:}\susp{{\sf retn\_z}\,\lf{t_z}}$, 
 then 
 \begin{enumerate}
-\item If $\Delta$ matches 
+\item If $\Delta$ matches \\
 $\frameoff{\Theta}
  {\matchconj
   {x_1{:}\susp{{\sf retn\_b1}\,\lf{t_1}}}
@@ -1365,7 +1368,7 @@ $\frameoff{\Theta}
     {\ldots}
     {\matchconj 
       {x_n{:}\susp{{\sf retn\_bn}\,\lf{t_n}}}
-      {y{:}{(\forall \lf{\overline{x}}.\,{\sf retn\_b1}\,\lf{s_1} \fuse \ldots \fuse {\sf retn\_bn}\,\lf{s_n} \lefti S)}}}}}$ and 
+      {y{:}{(\forall \lf{\overline{x}}.\,{\sf retn\_b1}\,\lf{s_1} \fuse \ldots \fuse {\sf retn\_bn}\,\lf{s_n} \lefti S)}}}}}$ and \\
 $T :: (\Psi; \Delta) \leadsto^*_{\transop{\Sigma}}
 (\Psi; \Gamma)$, then 
 $T = \tstep{P}{y}{(\lf{\overline{u}}; (\tfuser{x_1}{\tfuser{\ldots}{x_n}}); \Sp)}; T'$
@@ -1401,8 +1404,9 @@ three cases of Theorem~\ref{thm:opersound} are straightforward
 transformations from deductive proofs to deductive proofs, and the last
 two cases are the key. In the last two cases, we take a trace that, by
 its type, must contain the information needed to 
-reconstruct a deductive proof, and we use induction and inversion to
-read off the form of that proof.
+reconstruct a deductive proof.
+% and we use induction and inversion to
+%read off the form of that proof.
 
 \bigskip
 \begin{theorem}[Soundness of operationalization]\label{thm:opersound}
@@ -1579,7 +1583,7 @@ the operationalization transformation:
 \begin{itemize}
 \item $\opbasic{}{t_{n+1}}{\sigma_n} = {\ocircle}({\sf retn\_a}\,\lf{(\sigma_{n}{t_{n+1}})})$
 
-  \bigskip
+  \medskip
   This is a base case: there are no values to construct. By inversion on the
   type of $P$ we know it has the form
   $y :: (\Psi; \tackon{\opsubst{\Theta}}{{\sf retn\_a}\,\lf{(\sigma_{n}{t_{n+1}})}}) \Longrightarrow_{\transop{\Sigma}} (\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,\lf{(\sigma_{n}{t_{n+1}})}}})$. 
@@ -1587,24 +1591,27 @@ the operationalization transformation:
   Let $\lf{\sigma} = \lf{\sigma_n}$
   and we are done; the trace $T$ is the necessary trace. 
   %
+  
+  \smallskip
   Because
   $(\Psi; \tackon{\opsubst{\Theta}}{{\sf retn\_a}\,\lf{(\sigma_{n}{t_{n+1}})}})$
   decomposes to 
   $(\Psi; \tackon{\opsubst{\Theta}}{y{:}\susp{{\sf retn\_a}\,\lf{(\sigma_{n}{t_{n+1}})}}})$, we let $\lf{\sigma} = \lf{\sigma_n}$ and we are done.
-  \bigskip
+  \medskip
 
 \item $\opbasic{{!}{\sf a_c}\,\lf{t^{\it in}_n}\,\lf{t_{n+1}}}{t_{n+1}}{\sigma_{n-1}} 
   = {\ocircle}({\sf eval\_a}\,(\sigma_{n-1}{t^{\it in}_n}))$
 
-  \bigskip
+  \medskip
   This is also a base case: we have one value of type 
   ${!}{\sf a_c}\,\lf{({\sigma}t^{\it in}_n)}\,\lf{({\sigma}t_{n+1})}$ to construct, where
   $\lf{\sigma} \supseteq \lf{\sigma_{n-1}}$. By inversion on the type of
-  $P$ we know it has the form 
+  $P$ we know that the pattern has the form 
   $y :: (\Psi; \tackon{\opsubst{\Theta}}{{\sf eval\_a}\,\lf{(\sigma_{n}{t^{\it in}_{n}})}}) \Longrightarrow_{\transop{\Sigma}}
      (\Psi; \tackon{\opsubst{\Theta}}
-            {y{:}\susp{{\sf eval\_a}\,\lf{(\sigma_{n}{t^{\it in}_{n}})}}})$, 
-  meaning that $T :: (\Psi; \tackon{\opsubst{\Theta}}
+            {y{:}\susp{{\sf eval\_a}\,\lf{(\sigma_{n}{t^{\it in}_{n}})}}})$.
+  This means we also have 
+  that $T :: (\Psi; \tackon{\opsubst{\Theta}}
             {y{:}\susp{{\sf eval\_a}\,\lf{(\sigma_{n}{t^{\it in}_{n}})}}})
     \leadsto^*_{\transop{\Sigma}}
  (\Psi; \Delta_z)$.
@@ -1637,12 +1644,12 @@ the operationalization transformation:
   a $\lf{\sigma} \supseteq \lf{\sigma_{n-1}}$ such that $\lf{\sigma{t_{n+1}}} = \lf{s}$. The value we needed to construct is just 
   $\tbangr{{N}}$, and the trace $T'$ is in the form we need,
   so we are done.
-  \bigskip
+  \medskip
 
 \item $\opbasic{p^+_\mpers,A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}} 
   = \forall \overline{x_i}.\, \sigma_{i-1}{p^+}_\mpers \lefti \opbasic{A^+_{i+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}$
  
-  \bigskip
+  \medskip
   By type inversion, the spine
   $\Sp = \lf{\overline{u_i}}; z; \Sp'$.
   Let $\lf{\sigma_i} = \lf{(\sigma_{i-1},\overline{u_i}/\overline{x_i})}$. The
@@ -1653,7 +1660,7 @@ the operationalization transformation:
   \leadsto^*_{\transop{\Sigma}}
  (\Psi; \Delta_z)$. The remaining value of $\lf\sigma A_i = \lf\sigma{p^+_\mpers}$
   is just $z$.
-  \bigskip
+  \medskip
 
 \item $\opbasic{{!}p^-_{ci},\ldots,{!}p^-_{cj},A^+_{j+1},\ldots,A^+_n}{t_{n+1}}{\sigma_{i-1}}$
   \\

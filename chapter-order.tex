@@ -1225,10 +1225,12 @@ is $N$, a derivation of $\foc{\Psi,\lf{a}{:}\tau}{\Delta}{A^-}$. Because
 $\lf \sigma(\forall{\lf{a}}{:}{\tau}.A^-) 
  = \forall{\lf{a}}{:}{\lf\sigma\tau}.\lf{(\sigma, a/a)}{A^-}$,
 by rule $\forall_R$ it suffices to show 
-$\foc{\Psi', \lf{a}{:}\lf\sigma\tau}{\lf\sigma\Delta}{\lf{(\sigma, a/a)}A^-}$, 
-which is the same thing
-as $\foc{\Psi', \lf{a}{:}\lf\sigma\tau}{\lf{(\sigma, a/a)}\Delta}{\lf{(\sigma, a/a)}A^-}$.
-The result
+$\foc{\Psi', \lf{a}{:}\lf\sigma\tau}{\lf\sigma\Delta}{\lf{(\sigma, a/a)}A^-}$.
+
+\smallskip
+This is the same thing
+as $\foc{\Psi', \lf{a}{:}\lf\sigma\tau}{\lf{(\sigma, a/a)}\Delta}{\lf{(\sigma, a/a)}A^-}$;
+the result
 follows by the induction hypothesis on $\lf{(\sigma, a/a)}$ and $N$. \smallskip
 
 \item[--]
@@ -1241,9 +1243,13 @@ We need a lemma that tells us that $\lf\sigma\Delta$ matches
 $\frameoff{\lf\sigma\Theta}{[\forall \lf{a}{:}\tau.\lf{(\sigma, a/a)}A^-]}$; then,
 by rule $\forall_L$, it suffices to show 
 $\foc{\Psi'}{\tackon{\lf\sigma\Theta}{[\lf{[\sigma{t}/a]}(\lf{(\sigma, a/a)}A^-)]}}
-  {\lf\sigma{U}}$, which is the same thing as
+  {\lf\sigma{U}}$.
+
+\smallskip
+This is the same thing as
 $\foc{\Psi'}{\tackon{\lf\sigma\Theta}{[\lf{\sigma}(\lf{[t/a]}A^-)]}}
-  {\lf\sigma{U}}$. This follows by the induction hypothesis on $\lf\sigma$ and
+  {\lf\sigma{U}}$; the result 
+follows by the induction hypothesis on $\lf\sigma$ and
 $\Sp$.
 
 \end{itemize}
@@ -1707,7 +1713,7 @@ reasoning explicitly about the premise every time.
 \item[--] $(\subst{\tinr{V_2}}{\toplusl{N_1}{N_2}})^{A^+ \oplus B^+} 
            = (\subst{V_2}{N_2})^{B^+}$
 
-\newpage
+
 \item[--] $(\subst{\texistsr{\lf{t}}{V_1}}{\texistsl{a}{N_1}})^{\exists \lf{a}{:}\tau.A^+}
            = (\subst{V_1}{\lf{[t/a]}N_1})^{\lf{[t/a]}A^+}$ \smallskip\\
   We must show $\foc{\Psi}{\Xi}{U}$, where
@@ -1779,7 +1785,6 @@ negative principal substitution is ${\it cut}^-$:
    quite a proof of $\foc{\Psi}{\Xi}{U}$, so we need an exchange-like 
    lemma that we can get one from the other. \smallskip
 
-\newpage
 
 \item[--] $(\subst{\tupr{N}}{\tupl{M}})^{{\uparrow}A^+} = \lsubsta{N}{M}{A^+}$
 
@@ -1964,7 +1969,8 @@ composition frame are stated but not proven.
   \end{itemize}
   $\Xi$ matches $\frameoff{(\Theta{\circ}\Theta_B)}{\exists \lf{a}{:}\tau.B^+}$
   and $\tackon{(\Theta{\circ}\Theta_B)}{B^+}$ matches 
-  $\frameoff{\Theta}{\tackon{\Theta_B}{B^+}}$. By variable weakening (a special case of variable substitution),
+  $\frameoff{\Theta}{\tackon{\Theta_B}{B^+}}$. 
+  By variable weakening,
   $M$ is also a derivation of $\foc{\Psi, \lf{a}{:}\tau}{\tackon{\Theta}{A^+}}{U}$,
   so by the induction hypothesis on $N$ and $M$ we have
   $\foc{\Psi, \lf{a}{:}\tau}{\tackon{(\Theta{\circ}\Theta_B)}{B^+}}{U}$, 
@@ -2052,8 +2058,8 @@ composition frame are stated but not proven.
     {\matchconj{[B_1^+ \righti B_2^-]}{\Delta_B}}$
   and $\tackon{(\Theta{\circ}\Theta_B)}{[B_2^-]}$ matches 
   $\frameoff{\Theta}{\tackon{\Theta_B}{[B_2^-]}}$.
-  By the induction hypothesis on $\Sp$ and $M$ we have
-  $\lsubsta{\Sp}{M}{A^+}$, a derivation of
+  By invoking the induction hypothesis to substitute $M$ out of $\Sp$, we have
+  $\lsubsta{\Sp}{M}{A^+}$, which is a derivation of
   $\foc{\Psi}{\tackon{(\Theta{\circ}\Theta_B)}{[B_2^-]}}{U}$.
   The required result follows by rule ${\righti}_L$ on $V$ and 
   $\lsubsta{\Sp}{M}{A^+}$.  \smallskip
@@ -2251,8 +2257,8 @@ two frames are stated but not proven.
   part 1 of cut admissibility on $M$ and $\Sp$. 
 
   If $\mlvl$ is $\mpers$, $\Xi$ doesn't match $\frameoff{\Theta'}{\Delta}$,
-  since $\Theta'$ has an extra variable declaration $x{:}\ispers{A^-}$. Instead,
-  we have that 
+  as $\Theta'$ has an extra variable declaration $x{:}\ispers{A^-}$. Instead,
+  we know 
     $\tackon{\Theta}{[A^-]}$ matches 
    $\frameoff{\Theta_{[A^-]}}{\restrictto{\Delta}{\mpers}}$
   and $\tackon{\Theta_{[A^-]}}{x{:}\ispers{A^-}} = \tackon{\Theta'}{[A^-]}$,
@@ -2295,8 +2301,6 @@ two frames are stated but not proven.
 %   By the induction hypothesis on $M$ and $N$ we have
 %   $\foc{\Psi}{\tackon{\Theta_\Delta}{y{:}\iseph{B^-}}}{U}$, and 
 %   the result follows by rule ${\gnab}_L$. 
-
-\newpage
 
 \item[--] $\rsubsta{M}{x}{(\tbangl{y}{N})}{A^-} 
            = \tbangl{y}{(\rsubsta{M}{x}{N}{A^-})}$\smallskip\\
@@ -2465,7 +2469,7 @@ two frames are stated but not proven.
   and the result follows by rule ${\righti}_L$ on 
   $\rsubsta{M}{x}{V}{A^-}$ and $\Sp$.
 
-  In the second case ($x$ is a variable declaration in $\Theta'$ only),
+  In the second case ($x$ is in $\Theta'$ only),
   $\Xi$ matches 
   $\frameoff{\Theta_\Delta}{\matchconj{[B_1^+ \righti B_2^-]}{\Delta_A}}$,
   $\tackon{\Theta_\Delta}{[B_2^-]}$ matches
@@ -2477,7 +2481,7 @@ two frames are stated but not proven.
   $\foc{\Psi}{\tackon{\Theta_\Delta}{[B_2^-]}}{U}$, and the result follows
   by rule ${\righti}_L$ on $V$ and $\rsubsta{M}{x}{\Sp}{A^-}$.
 
-  In the third case ($x$ is a variable declaration in $\Theta'$ and $\Delta_A$), 
+  In the third case ($x$ is in $\Theta'$ and $\Delta_A$), 
   $\Xi$ matches 
   $\frameoff{\Theta_\Delta}{\matchconj{[B_1^+ \righti B_2^-]}{\Delta_A'}}$,
   where $\Theta_\Delta$ and $\Delta_A'$ have the same properties as before,
@@ -2576,7 +2580,7 @@ mostly borne by the part of the context we leave implicit.
   $N$ is a derivation of 
   $\foc{\Psi}{\tackon{\Theta}{z{:}\istrue{\susp{{\downarrow}A^-}}}}{U}$. 
   We construct a context $\Xi$ that contains only the persistent
-  propositions from $\Delta$. This means that 
+  propositions from $\Delta$. This means  
   $\frameoff{\Theta}{\Xi, x{:}\istrue{A^-}}$ matches 
   $\tackon{\Theta}{x{:}\istrue{A^-}}$. We can then derive:
   \[\footnotesize \infer[{\downarrow}_L]
@@ -3682,8 +3686,8 @@ of $\Xi$, then $\Xi$ matches $[\Delta/(x{:}\islvl{A^-})]\Xi$.
  \rsubst{M}{x}{E} = E'}
 \]
 Using this formulation of {\it rcut}, it becomes unproblematic to
-define $\rsubst{M}{x}{(\tfuser{V_1}{V_2})}$ to be
-$\tfuser{(\rsubst{M}{x}{V_1})}{(\rsubst{M}{x}{V_2})}$, as we are
+define $\rsubst{M}{x}{(\tfuser{V_1}{V_2})}$ as substituting $M$
+into both $V_1$ and $V_2$, as we are
 allowed to substitute for $x$ even in terms where the variable cannot
 appear. Using this strategy, it should be possible to describe and
 formalize the development in this chapter with proof terms that do

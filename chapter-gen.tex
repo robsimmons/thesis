@@ -68,7 +68,7 @@ type $\obj{\it tp}$, it steps or is a value'').
 
 The purpose of this chapter is to demonstrate that generative
 invariants are a solid methodology for describing invariants of
-\sls~specifications, especially well-formedness and well-typedness
+\sls~specifications, especially well-formedness and -typedness
 invariants of substructural operational semantics specifications like
 the ones presented in Part~II. As we have already seen,
 well-formedness invariants are major part of adequacy theorems. In the
@@ -935,6 +935,7 @@ for parts 3, 4, and 6.
 % wrong order, then a trace $(x{:}\istrue{\susp{\sf gen}})
 % \leadsto^*_{\siggenorder} \tackon{\Theta}{y{:}\istrue{\susp{{\sf
 %         gen}}}}$
+
 Conversely, if we tried to prove an inversion
 property about traces $(x{:}\istrue{\susp{\sf gen}})
 \leadsto^*_{\siggenorder} \tackon{\Theta}{y{:}\istrue{\susp{{\sf
@@ -1088,6 +1089,7 @@ $T_1 = ~$ \= \qquad \= $(x_0{:}\istrue{\susp{\sf gen}})$
 \>\>$\tackon{\Theta}{x{:}\istrue{\susp{{\sf eval}\,\lf{({\sf app}\,e_1\,e_2)}}}}$
 \end{tabbing}
 
+\newpage\noindent
 We can use $T'$ to construct $T_2$ as follows:
 
 \begin{tabbing}
@@ -2913,9 +2915,17 @@ by Moreau and Ribbens in \cite{moreau96semantics} is not
 straightforward to adapt to the semantic specifications we gave in
 Chapter~\ref{chapter-destinations}.
 
+\begin{figure}[tp]
+\fvset{fontsize=\small,boxwidth=229pt}
+\VerbatimInput{sls/gen-letcc2.sls} 
+\caption{Generative invariant: persistent destinations and first-class
+  continuations}
+\label{fig:gen-letcc2} 
+\end{figure}
+
 Consider again the ${\sf gendest/promise}$ rule from
-Figure~\ref{fig:gen-destinations}. Because the rule consumes no
-nonterminals and is the only rule to introduce LF variables, any trace
+Figure~\ref{fig:gen-destinations}. The rule consumes no
+nonterminals and is the only rule introducing LF variables, so any 
 $T :: \left(\lf{d_0}{:}{\sf dest}; x_0{:}\iseph{\susp{{\sf gen}\,\lf{{\it
       tp}_0}\,\lf{d_0}}}\right) \leadsto^* {(\Psi;
   \Delta)}{}$ under $\siggendests$ can be factored into two parts $T =
@@ -2933,13 +2943,6 @@ in Figure~\ref{fig:gen-destinations} as follows:
 \VerbatimInput{sls/gen-ghost.sls}
 \smallskip
 
-\begin{figure}[tp]
-\fvset{fontsize=\small,boxwidth=229pt}
-\VerbatimInput{sls/gen-letcc2.sls} 
-\caption{Generative invariant: persistent destinations and first-class
-  continuations}
-\label{fig:gen-letcc2} 
-\end{figure}
 
 Once we make the move to persistent continuations, however, there's no
 need to create a ghost continuation, we can just have the rule ${\sf
