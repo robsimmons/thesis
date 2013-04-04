@@ -76,21 +76,34 @@
 
 \vskip 2em
 
-\begin{center}
-    {\bf Thesis Committee} \\ ~ \\
-    \@committee
-\end{center}
+% \begin{center}
+%     {\bf Thesis Committee} \\ ~ \\
+%     \@committee
+% \end{center}
 \vspace{1em}
 \begin{center}
     \em
-    Submitted in partial fulfillment of the requirements \\
-    for the degree of Doctor of Philosophy.
+    This document is based upon the thesis by the same title, \\
+    published as a Carnegie Mellon University tech report \\ 
+    CMU-CS-12-142 on November 14, 2012. \\
+
+    \bigskip
+
+    It contains only minor revisions and corrections. \\
+    A summary of these corrections can be found at \\ 
+    \url{http://typesafety.net/thesis}. \\
+ 
+    \bigskip
+
+    Please cite the official thesis when referencing this work.
+%    Submitted in partial fulfillment of the requirements \\
+%    for the degree of Doctor of Philosophy.
 \end{center}
 
 
 \vfill
 
-\@ifundefined{@permission}{\@copyrightnotice{Copyright \copyright\ \@Year\ \@author}}{\@copyrightnotice{Copyright \copyright\ \@Year\ \@author. \@permission}}
+\@ifundefined{@permission}{\@copyrightnotice{Copyright \@author}}{\@copyrightnotice{Copyright \copyright\ \@Year\ \@author. \@permission}}
 
 \@ifundefined{@support}{}{{\medskip\footnotesize\noindent\@support\par}}
 
