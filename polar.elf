@@ -19,16 +19,20 @@ atom: pol -> type. %name atom Q q.
 typ: pol -> type. %name typ A.
 c: atom P -> typ P.
 
+i: type. %name i T t.
+
 ↓: typ ⁻ -> typ ⁺.
 ⊥: typ ⁺.
 ∨: typ ⁺ -> typ ⁺ -> typ ⁺. %infix none 5 ∨.
 ⊤⁺: typ ⁺.
 ∧⁺: typ ⁺ -> typ ⁺ -> typ ⁺. %infix none 5 ∧⁺.
+∃: (i -> typ ⁺) -> typ ⁺.
 
 ↑: typ ⁺ -> typ ⁻.
 ⊤⁻: typ ⁻.
 ∧⁻: typ ⁻ -> typ ⁻ -> typ ⁻. %infix none 5 ∧⁻.
 ⊃: typ ⁺ -> typ ⁻ -> typ ⁻. %infix right 5 ⊃.
+∀: (i -> typ ⁻) -> typ ⁻.
 
 %{ Judgments (only one unless we're in the middle of an identity expansion) }%
 suc: type. %name suc Suc γ.
@@ -58,7 +62,8 @@ hyp: hjmt -> type. %name hyp X x.
 %abbrev hyp⁺ = [Q⁺] hyp (h⁺ Q⁺).
 %abbrev hyp⁻ = [A⁻] hyp (h⁻ A⁻). 
 %block x : some {A: hjmt} block {x: hyp A}.
-%block gamma = (atom⁺ | atom⁻ | x). %% World for derivations, cut
+%block univ : block {t:i}.
+%block gamma = (atom⁺ | atom⁻ | x | univ). %% World for derivations, cut
 
 rfoc: typ ⁺ -> type. %name rfoc V.
 conc: pos -> suc -> type. %name conc N.
@@ -72,6 +77,7 @@ cR: hyp⁺ Q⁺ -> rfoc (c Q⁺).
 ↓R: conc · (A⁻ true) -> rfoc (↓ A⁻).
 ∨R₁: rfoc A⁺ -> rfoc (A⁺ ∨ B⁺).
 ∨R₂: rfoc B⁺ -> rfoc (A⁺ ∨ B⁺).
+∃R: {T} rfoc (A⁺ T) -> rfoc (∃ A⁺).
 ⊤⁺R: rfoc ⊤⁺.
 ∧⁺R: rfoc A⁺ -> rfoc B⁺ -> rfoc (A⁺ ∧⁺ B⁺).
 
@@ -81,12 +87,15 @@ cL: (hyp⁺ Q⁺ -> conc _Ω Suc) -> conc (c Q⁺ , _Ω) Suc.
 ↓L: (hyp⁻ A⁻ -> conc _Ω Suc) -> conc (↓ A⁻ , _Ω) Suc.
 ⊥L: conc (⊥ , _Ω) Suc.
 ∨L: conc (A⁺ , _Ω) Suc -> conc (B⁺ , _Ω) Suc -> conc (A⁺ ∨ B⁺ , _Ω) Suc.
+∃L: ({T:i} conc (A⁺ T , _Ω) Suc) -> conc ((∃ A⁺) , _Ω) Suc.
+
 ⊤⁺L: conc _Ω Suc -> conc (⊤⁺ , _Ω) Suc.
 ∧⁺L: conc (A⁺ , B⁺ , _Ω) Suc -> conc (A⁺ ∧⁺ B⁺ , _Ω) Suc.
 ↑R: rfoc A⁺ -> conc · (↑ A⁺ true).
 ⊤⁻R: conc · (⊤⁻ true).
 ∧⁻R: conc · (A⁻ true) -> conc · (B⁻ true) -> conc · (A⁻ ∧⁻ B⁻ true).
 ⊃R: conc (A⁺ , ·) (B⁻ true) -> conc · (A⁺ ⊃ B⁻ true).
+∀R: ({t:i} conc · ((A⁻ t) true)) -> conc · (∀ A⁻ true).
 
 %{ ``Sp ::= nil ∣ {N} ∣ π₁;Sp ∣ π₂;Sp ∣ V;Sp'' }%
 p⁻: lfoc (c Q⁻) (c Q⁻ true).
@@ -94,6 +103,7 @@ p⁻: lfoc (c Q⁻) (c Q⁻ true).
 ∧⁻L₁: lfoc A⁻ Suc -> lfoc (A⁻ ∧⁻ B⁻) Suc.
 ∧⁻L₂: lfoc B⁻ Suc -> lfoc (A⁻ ∧⁻ B⁻) Suc.
 ⊃L: rfoc A⁺ -> lfoc B⁻ Suc -> lfoc (A⁺ ⊃ B⁻) Suc.
+∀L: {T:i} lfoc (A⁻ T) Suc -> lfoc (∀ A⁻) Suc.
 
 
 %{ == Cut admissibility == }%
@@ -188,6 +198,9 @@ leftSp: {A⁺} big
 -: subst⁺ (A⁺ ∨ B⁺) S (∨R₂ V) (∨L N₁ N₂) N'
   <- subst⁺ B⁺ S V N₂ (N': conc _Ω (C⁻ true)).
 
+-: subst⁺ (∃ A⁺) S (∃R T V) (∃L N) N'
+  <- subst⁺ (A⁺ T) S V (N T) N'.
+
 -: subst⁺ ⊤⁺ S ⊤⁺R (⊤⁺L N) N.
 
 -: subst⁺ (A⁺ ∧⁺ B⁺) S (∧⁺R V₁ V₂) (∧⁺L N) N'
@@ -214,6 +227,9 @@ leftSp: {A⁺} big
 -: subst⁻ (A⁻ ∧⁻ B⁻) S (∧⁻R M₁ M₂) (∧⁻L₂ Sp) St N'
   <- subst⁻ B⁻ S M₂ Sp St (N': conc · (C⁻ true)).
 
+-: subst⁻ (∀ A⁻) S (∀R [x] M x: conc · ((A⁻ x) true)) (∀L T Sp) St N'
+    <- subst⁻ (A⁻ T) S (M T) Sp St (N': conc · (C⁻ true)).
+
 %{ === Rightist substitution (right commutative cuts) === }%
 
 %{ ``[[M/x]]V = V' '' }%
@@ -228,6 +244,9 @@ leftSp: {A⁺} big
 
 -: rightV A⁻ S M ([x] ∨R₂ (V x)) (∨R₂ V')
   <- rightV A⁻ S M ([x] V x) (V': rfoc C₂⁺).
+
+-: rightV A⁻ S M ([x] ∃R T (V x)) (∃R T V')
+  <- rightV A⁻ S M ([x] V x) V'.
 
 -: rightV A⁻ S M ([x] ⊤⁺R) ⊤⁺R.
 
@@ -256,6 +275,9 @@ leftSp: {A⁺} big
   <- rightN A⁻ S M ([x] N₁ x) (N₁': conc (B₁ , _Ω) (C⁻ true))
   <- rightN A⁻ S M ([x] N₂ x) (N₂': conc (B₂ , _Ω) (C⁻ true)).
 
+-: rightN A⁻ S M ([x] ∃L ([t:i] N x t)) (∃L N')
+  <- ({t:i} rightN A⁻ S M ([x] N x t) (N' t)).
+
 -: rightN A⁻ S M ([x] ⊤⁺L (N x)) (⊤⁺L N')
   <- rightN A⁻ S M ([x] N x) (N': conc _Ω (C⁻ true)).
 
@@ -274,6 +296,9 @@ leftSp: {A⁺} big
   <- rightN A⁻ S M ([x] N₁ x) (N₁': conc · (C₁⁻ true))
   <- rightN A⁻ S M ([x] N₂ x) (N₂': conc · (C₂⁻ true)).
 
+-: rightN A⁻ S M ([x:hyp⁻ A⁻] ∀R ([t:i] N x t)) (∀R N')
+    <- ({t:i} rightN A⁻ S M ([x'] N x' t) (N' t)).
+
 %{ ``[[M/x]]Sp = Sp' '' }%
 
 -: rightSp A⁻ S M ([x] p⁻) p⁻.
@@ -290,6 +315,10 @@ leftSp: {A⁺} big
 
 -: rightSp A⁻ S M ([x] ∧⁻L₂ (Sp x)) (∧⁻L₂ Sp')
   <- rightSp A⁻ S M ([x] Sp x) (Sp': lfoc B₂⁻ (C⁻ true)).
+
+-: rightSp A⁻ S M ([x] ∀L T (Sp x)) (∀L T Sp')
+  <- rightSp A⁻ S M ([x] Sp x) Sp'.
+
 
 %{ === Leftist substitution (left commutative cuts) === }%
 
@@ -309,6 +338,9 @@ leftSp: {A⁺} big
 -: leftN A⁺ S (∨L M₁ M₂) N St (∨L M₁' M₂')
   <- leftN A⁺ S M₁ N St (M₁': conc (B₁⁺ , _Ω) (C⁻ true))
   <- leftN A⁺ S M₂ N St (M₂': conc (B₂⁺ , _Ω) (C⁻ true)).
+
+-: leftN A⁺ S (∃L M) N St (∃L M')
+  <- ({t} leftN A⁺ S (M t) N St (M' t)).
 
 -: leftN A⁺ S (⊤⁺L M) N St (⊤⁺L M')
   <- leftN A⁺ S M N St (M': conc _Ω (C⁻ true)).
@@ -332,6 +364,9 @@ leftSp: {A⁺} big
 
 -: leftSp A⁺ S (∧⁻L₂ Sp) N St (∧⁻L₂ Sp')
   <- leftSp A⁺ S Sp N St (Sp': lfoc B₂⁻ (C⁻ true)).
+
+-: leftSp A⁺ S (∀L T Sp) N St (∀L T Sp')
+  <- leftSp A⁺ S Sp N St Sp'.
 
 %{ === Wrap-up === }%
 
@@ -408,6 +443,9 @@ expand⁺: {A⁺} (rfoc A⁺ -> conc _Ω Suc)
   <- expand⁺ A⁺ ([v: rfoc A⁺] N (∨R₁ v)) (N₁: conc (A⁺ , _Ω) Suc)
   <- expand⁺ B⁺ ([v: rfoc B⁺] N (∨R₂ v)) (N₂: conc (B⁺ , _Ω) Suc).
 
+-: expand⁺ (∃ A⁺) ([v: rfoc (∃ A⁺)] N v) (∃L N')
+  <- ({t} expand⁺ (A⁺ t) ([v: rfoc (A⁺ t)] N (∃R t v)) (N' t)).
+
 -: expand⁺ ⊤⁺ ([v: rfoc ⊤⁺] N v) (⊤⁺L (N ⊤⁺R)).
 
 -: expand⁺ (A⁺ ∧⁺ B⁺) ([v: rfoc (A⁺ ∧⁺ B⁺)] N v) (∧⁺L N₂)
@@ -435,6 +473,10 @@ expand⁺: {A⁺} (rfoc A⁺ -> conc _Ω Suc)
        expand⁻ B⁻ ([γ][st][sp: lfoc B⁻ γ] N γ st (⊃L v sp))
          (N₁ v: conc · (B⁻ true)))
   <- expand⁺ A⁺ ([v: rfoc A⁺] N₁ v) (N₂: conc (A⁺ , ·) (B⁻ true)).
+
+-: expand⁻ (∀ A⁻) ([γ][st][sp: lfoc (∀ A⁻) γ] N γ st sp) (∀R N')
+  <- ({t:i} expand⁻ (A⁻ t) ([γ][st][sp: lfoc (A⁻ t) γ] N γ st (∀L t sp))
+      (N' t: conc · ((A⁻ t) true))).
 
 %worlds (aleph)
   (expand⁺ _ _ _)
@@ -758,6 +800,65 @@ adm-∧⁻L₂: (hyp⁻ B⁻ -> conc · (C⁻ true))
 %worlds (gamma) (adm-∧⁻L₂ _ _).
 %total [] (adm-∧⁻L₂ _ _).
 
+%{ ==== Universal quantification ==== }%
+
+adm-∀R: ({t} conc · ((A⁻ t) true)) -> conc · ((∀ A⁻) true) -> type.
+%mode adm-∀R +N -N'.
+
+-: adm-∀R N (∀R N).
+
+%worlds (gamma) (adm-∀R _ _).
+%total [] (adm-∀R _ _).
+
+adm-∀L: (hyp⁻ (A⁻ T) -> conc · (C⁻ true))
+         -> (hyp⁻ (∀ A⁻) -> conc · (C⁻ true))
+         -> type.
+%mode adm-∀L +N -N'.
+
+-: adm-∀L (N: hyp⁻ (A⁻ T) -> conc · (C⁻ true)) N'
+  <- ({x: hyp⁻ (∀ A⁻)}
+       expand⁻ (A⁻ T) ([γ][st][sp: lfoc (A⁻ T) γ] foc x st (∀L T sp))
+         (NId x: conc · ((A⁻ T) true)))
+  <- ({x: hyp⁻ (∀ A⁻)}
+       rightN _ (b s) (NId x) ([x₁: hyp⁻ (A⁻ T)] N x₁)
+         (N' x: conc · (C⁻ true))).
+
+%worlds (gamma) (adm-∀L _ _).
+%total [] (adm-∀L _ _).
+
+%{ ==== Existential quantification ==== }%
+
+adm-∃R: conc · (↑ (A⁺ T) true)
+         -> conc · (↑ (∃ A⁺) true)
+         -> type.
+%mode adm-∃R +N -N'.
+
+-: adm-∃R N N'
+  <- expand⁺ (A⁺ T) ([v: rfoc (A⁺ T)] ↑R (∃R T v)) (Nid: conc ((A⁺ T), ·) (↑ (∃ A⁺) true))
+  <- subst⁻ _ s N (↑L Nid) s↑ (N').
+
+%worlds (gamma) (adm-∃R _ _ ).
+%total [] (adm-∃R _ _).
+
+adm-∃L: ({t:i} hyp⁻ (↑ (A⁺ t)) -> conc · (C⁻ true))
+         -> (hyp⁻ (↑ (∃ A⁺)) -> conc · (C⁻ true))
+         -> type.
+%mode adm-∃L +N -N'.
+
+-: adm-∃L (N: {t:i} hyp⁻ (↑ (A⁺ t)) -> conc · (C⁻ true)) N'
+  <- ({t:i}{x: hyp⁻ (↑ (A⁺ t))} shift (N t x) (NShift₁ t x: conc · (↑ (↓ C⁻) true)))
+  <- ({t:i} expand⁺ (A⁺ t)
+       ([v: rfoc (A⁺ t)] ↑R (∃R t (↓R (↑R v))))
+       (NId t: conc ((A⁺ t) , ·) ((↑ (∃ [t] ↓ (↑ (A⁺ t)))) true)))
+  <- ({x: hyp⁻ (↑ (∃ A⁺))}
+       leftN _ (b s) (∃L NId) (∃L ([t] ↓L (NShift₁ t))) s↑
+         (NShift x: conc ((∃ A⁺) , ·) (↑ (↓ C⁻) true)))
+  <- ({x: hyp⁻ (↑ (∃ A⁺))}
+       unshift (foc x s↑ (↑L (NShift x))) (N' x: conc · (C⁻ true))).
+
+%worlds (gamma) (adm-∃L _ _).
+%total [] (adm-∃L _ _).
+
 %{ ==== Shift removal ==== }%
 
 shifthyp: (hyp⁻ A⁻ -> conc · (C⁻ true))
@@ -782,6 +883,8 @@ or: prop -> prop -> prop.
 tt: prop.
 and: prop -> prop -> prop.
 imp: prop -> prop -> prop.
+all: (i -> prop) -> prop.
+ex: (i -> prop) -> prop.
 
 props: type. %name props _Ψ.
 ○: props.
@@ -805,6 +908,8 @@ t↓: t A⁻ P -> t (↓ A⁻) P.
 t⊤⁻: t ⊤⁻ tt.
 t∧⁻: t A⁻ P₁ -> t B⁻ P₂ -> t (A⁻ ∧⁻ B⁻) (and P₁ P₂).
 t⊃: t A⁺ P₁ -> t B⁻ P₂ -> t (A⁺ ⊃ B⁻) (imp P₁ P₂).
+t∀: ({x:i} t (A⁻ x) (P x)) -> t (∀ A⁻) (all P).
+t∃: ({x:i} t (A⁻ x) (P x)) -> t (∃ A⁻) (ex P).
 
 %mode t +A -P.
 %worlds (gamma) (t _ _).
@@ -863,6 +968,14 @@ impL: right P₁
       -> (left P₂ -> right Q)
       -> (left (imp P₁ P₂) -> right Q).
 
+allR: ({t} right (P t)) -> right (all P).
+
+allL: {T:i} (left (P T) -> right Q) -> left (all P) -> right Q.
+
+exR: {T:i} right (P T) -> right (ex P).
+
+exL: ({t} left (P t) -> right Q) -> left (ex P) -> right Q.
+
 nil: right P -> right' ○ P.
 
 cons: (left P -> right' _Ψ Q) -> right' (P ; _Ψ) Q.
@@ -882,7 +995,7 @@ soundhyp: hyp A -> th A P -> left P -> type.
 %block soundhyps: some {A}{P}{T: th A P} 
   block {x: hyp A}{h: left P}{_: soundhyp x T h}.
 
-%block soundctx = (atom⁺ | atom⁻ | soundhyps).
+%block soundctx = (atom⁺ | atom⁻ | soundhyps | univ).
 
 %mode +{A} -{P} +{X} -{T: th A P} -{H} soundhyp X T H.
 %worlds (soundctx) (soundhyp _ _ _).
@@ -918,6 +1031,9 @@ sound-lem: th (h⁺ Q) P -> left P -> left (a Q) -> type.
 -: soundV (∨R₂ V) (t∨ _ T₂) (orR₂ D)
   <- soundV V T₂ D.
 
+-: soundV (∃R X V) (t∃ T) (exR X D)
+  <- soundV V (T X) D.
+
 -: soundV ⊤⁺R t⊤⁺ ttR.
 
 -: soundV (∧⁺R V₁ V₂) (t∧⁺ T₁ T₂) (andR D₁ D₂)
@@ -940,6 +1056,9 @@ sound-lem: th (h⁺ Q) P -> left P -> left (a Q) -> type.
   <- soundN N₁ t· T₁ (nil D₁)
   <- soundN N₂ t· T₂ (nil D₂).
 
+-: soundN (∀R N) t· (t∀ T) (nil (allR D))
+  <- ({x:i} soundN (N x) t· (T x) (nil (D x))).
+
 -: soundN (cL [x: hyp⁺ Q⁺] N x) (t, tc TΩ) TCQ (cons D)
   <- ({x: hyp⁺ Q⁺}{h: left (a Q⁺)} 
        soundhyp x t⁺ h ->
@@ -956,7 +1075,7 @@ sound-ffL: {_Ψ} left ff
 -: sound-ffL _ H (cons D) 
   <- {h} sound-ffL _ H (D h).
 %mode +{_Ψ} +{Q} +{H: left ff} -{D: right' _Ψ Q} sound-ffL _Ψ H D.
-%worlds (atom⁺ | atom⁻ | h) (sound-ffL _ _ _). 
+%worlds (atom⁺ | atom⁻ | h | univ) (sound-ffL _ _ _).
 %total _Ψ (sound-ffL _Ψ _ _).
 
 -: soundN ⊥L TΩ TCQ (cons D)
@@ -970,7 +1089,7 @@ sound-orL: {_Ψ} left (or P₁ P₂)
 -: sound-orL _ H ([h₁] cons (D₁ h₁)) ([h₂] cons (D₂ h₂)) (cons D) 
   <- {h} sound-orL _ H ([h₁] D₁ h₁ h) ([h₂] D₂ h₂ h) (D h).
 %mode sound-orL +_Ψ +H +D₁ +D₂ -D.
-%worlds (atom⁺ | atom⁻ | h) (sound-orL _ _ _ _ _). 
+%worlds (atom⁺ | atom⁻ | h | univ) (sound-orL _ _ _ _ _).
 %total _Ψ (sound-orL _Ψ _ _ _ _).
 
 -: soundN (∨L N₁ N₂) (t, (t∨ T₁ T₂) TΩ) TCQ (cons D)
@@ -978,18 +1097,32 @@ sound-orL: {_Ψ} left (or P₁ P₂)
   <- soundN N₂ (t, T₂ TΩ) TCQ (cons (D₂: left P₂ -> right' _Ψ Q))
   <- ({h: left (or P₁ P₂)} sound-orL _ h D₁ D₂ (D h)).
 
+sound-exL: {_Ψ} left (ex P)
+        -> ({t} left (P t) -> right' _Ψ Q)
+        -> right' _Ψ Q -> type.
+-: sound-exL _ H ([t][h₁] nil (D t h₁)) (nil (exL D H)).
+-: sound-exL _ H ([t][h₁] cons (D t h₁)) (cons D')
+  <- ({h} sound-exL _ H ([t][h₁] D t h₁ h) (D' h)).
+%mode sound-exL +_Ψ +H +D -D'.
+%worlds (atom⁺ | atom⁻ | h | univ) (sound-exL _ _ _ _).
+%total _Ψ (sound-exL _Ψ _ _ _).
+
+-: soundN (∃L N) (t, (t∃ T) TΩ) TCQ (cons D')
+  <- ({x} soundN (N x) (t, (T x) TΩ) TCQ (cons (D x)))
+  <- ({h: left (ex P)} sound-exL _ h D (D' h)).
+
 -: soundN (⊤⁺L N) (t, t⊤⁺ TΩ) TCQ (cons [h: left tt] D)
   <- soundN N TΩ TCQ (D: right' _Ψ Q).
 
 sound-andL: {_Ψ} left (and P₁ P₂)
          -> (left P₁ -> left P₂ -> right' _Ψ Q)
          -> right' _Ψ Q -> type.
--: sound-andL _ H ([h₁] [h₂] nil (D₁ h₁ h₂)) 
+-: sound-andL _ H ([h₁] [h₂] nil (D₁ h₁ h₂))
      (nil (andL₁ ([h₁] andL₂ ([h₂] D₁ h₁ h₂) H) H)).
--: sound-andL _ H ([h₁] [h₂] cons (D₁ h₁ h₂)) (cons D) 
+-: sound-andL _ H ([h₁] [h₂] cons (D₁ h₁ h₂)) (cons D)
   <- {h} sound-andL _ H ([h₁] [h₂] D₁ h₁ h₂ h) (D h).
 %mode sound-andL +_Ψ +H +D₁ -D.
-%worlds (atom⁺ | atom⁻ | h) (sound-andL _ _ _ _).
+%worlds (atom⁺ | atom⁻ | h | univ) (sound-andL _ _ _ _).
 %total _Ψ (sound-andL _Ψ _ _ _).
 
 -: soundN (∧⁺L N) (t, (t∧⁺ T₁ T₂) TΩ) TCQ (cons D)
@@ -1011,6 +1144,9 @@ sound-andL: {_Ψ} left (and P₁ P₂)
 -: soundSp (∧⁻L₂ Sp) (t∧⁻ T₁ T₂) TCQ (andL₂ ([h₂: left P₂] D h₂))
   <- soundSp Sp T₂ TCQ (D: left P₂ -> right Q).
 
+-: soundSp (∀L X Sp) (t∀ T: t (∀ A⁻) (all P)) TCQ (allL X ([h: left (P X)] D h))
+  <- soundSp Sp (T X) TCQ (D: left (P X) -> right Q).
+
 %worlds (soundctx)
   (soundV _ _ _)
   (soundN _ _ _ _)
@@ -1029,9 +1165,9 @@ the context for soundness, but the computational interpretation runs the
 opposite way 'round. }%
 
 completehyp: left P -> th A P -> hyp A -> type.
-%block completehyps: some {A}{P}{T: th A P} 
+%block completehyps1: some {A}{P}{T: th A P}
   block {x: hyp A}{h: left P}{_: completehyp h T x}.
-
+%block completehyps = (completehyps1 | univ).
 %block completectx = (atom⁺ | atom⁻ | completehyps).
 
 %mode completehyp +H -T -X.
@@ -1160,6 +1296,33 @@ corL: small
   <- completehyp H (t⁻ TH) X
   <- corL S TH (orL D₁ D₂ H) refl T (N: hyp⁻ A⁻ -> conc · (C⁻ true)).
 
+%{ ==== Existential Quantification ==== }%
+
+-: complete S (exR X D) (t↑ (t∃ T)) M
+  <- complete S D (t↑ (T X)) (N: conc · (↑ (A⁺ X) true))
+  <- adm-∃R N (M: conc · (↑ (∃ A⁺) true)).
+
+cexL: small
+   -> t B⁻ (ex P)
+   -> {D: right Q} id D (exL D₁ (H: left (ex P)))
+   -> t C⁻ Q
+   -> (hyp⁻ B⁻ -> conc · (C⁻ true))
+   -> type.
+%mode cexL +S +TH +D +Id +T -M.
+
+-: cexL S (t↑ (t↓ TH)) D Id T M
+  <- cexL S TH D Id T (N: hyp⁻ B⁻ -> conc · (C⁻ true))
+  <- shifthyp N (M: hyp⁻ (↑ (↓ B⁻)) -> conc · (C⁻ true)).
+
+-: cexL S (t↑ (t∃ T)) (exL D (H: left (ex P))) refl T' N'
+  <- ({z:i}{x₁: hyp⁻ (↑ (B⁺ z))}{h₁: left (P z)}
+       completehyp h₁ (t⁻ (t↑ (T z))) x₁ ->
+         complete (b s) (D z h₁) T' (N z x₁: conc · (C⁻ true)))
+  <- adm-∃L N (N': hyp⁻ (↑ (∃ B⁺)) -> conc · (C⁻ true)).
+
+-: complete (b S) (exL D H) T (N X)
+  <- completehyp H (t⁻ TH) X
+  <- cexL S TH (exL D H) refl T (N: hyp⁻ A⁻ -> conc · (C⁻ true)).
 
 %{ ==== Conjunction ==== }%
 
@@ -1238,10 +1401,40 @@ candL₂: small
   <- completehyp H (t⁻ TH) X
   <- candL₂ S TH (andL₂ D₂ H) refl T (M: hyp⁻ A⁻ -> conc · (C⁻ true)).
 
+
+%{ ==== Universal Quantification ==== }%
+
+-: complete S (allR D) (t∀ T) M
+  <- ({x} complete S (D x) (T x) (N x: conc · ((A⁻ x) true)))
+  <- adm-∀R N (M: conc · ((∀ A⁻) true)).
+
+callL: small
+    -> t B⁻ (all P)
+    -> {D: right Q} id D (allL X D₁ (H: left (all P)))
+    -> t C⁻ Q
+    -> (hyp⁻ B⁻ -> conc · (C⁻ true))
+    -> type.
+%mode callL +S +TH +D +Id +T -M.
+
+-: callL S (t↑ (t↓ TH)) D Id T M
+  <- callL S TH D Id T (N: hyp⁻ B⁻ -> conc · (C⁻ true))
+  <- shifthyp N (M: hyp⁻ (↑ (↓ B⁻)) -> conc · (C⁻ true)).
+
+-: callL S (t∀ (T:{x:i} t (A⁻ x) (P x))) (allL (X:i) (D₁: left (P X) -> right Q) (H: left (all P))) refl T₂ M
+  <- ({x₂: hyp⁻ (A⁻ X)}{h₂: left (P X)}
+        completehyp h₂ (t⁻ (T X)) x₂ ->
+          complete (b s) (D₁ h₂) T₂ (N₂ x₂: conc · (C⁻ true)))
+  <- adm-∀L N₂ (M: hyp⁻ (∀ A⁻) -> conc · (C⁻ true)).
+
+-: complete (b S) (allL Z (D₁:left (P Z) -> right Q) (D₂:left (all P))) (T:t C⁻ Q) (M X:conc · (C⁻ true))
+  <- completehyp D₂ (t⁻ TH) (X)
+  <- callL S TH (allL Z D₁ D₂) refl T (M).
+
+
 %{ ==== Implication ==== }%
 
 -: complete S (impR D₁) (t⊃ T₁ T₂) M
-  <- ({x: hyp⁻ (↑ A⁺)}{h: left P₁} 
+  <- ({x: hyp⁻ (↑ A⁺)}{h: left P₁}
        completehyp h (t⁻ (t↑ T₁)) x ->
          complete S (D₁ h) T₂ (N₁ x: conc · (B⁻ true)))
   <- adm-⊃R N₁ (M: conc · (A⁺ ⊃ B⁻ true)).
@@ -1271,16 +1464,21 @@ cimpL: small
 
 %worlds (completehyps) 
   (corL _ _ _ _ _ _)
+  (cexL _ _ _ _ _ _)
   (candL₁ _ _ _ _ _ _)
   (candL₂ _ _ _ _ _ _)
+  (callL _ _ _ _ _ _)
   (cimpL _ _ _ _ _ _)
   (complete _ _ _ _).
-%total {(D DorL DandL₁ DandL₂ DimpL) 
-        (S SorL SandL₁ SandL₂ SimpL)
-        (T TorL TandL₁ TandL₂ TimpL)}
+
+%total {(D DorL DexL DandL₁ DandL₂ DallL DimpL)
+        (S SorL SexL SandL₁ SandL₂ SallL SimpL)
+        (T TorL TexL TandL₁ TandL₂ TallL TimpL)}
   (corL SorL TorL DorL _ _ _)
+  (cexL SexL TexL DexL _ _ _)
   (candL₁ SandL₁ TandL₁ DandL₁ _ _ _)
   (candL₂ SandL₂ TandL₂ DandL₂ _ _ _)
+  (callL SallL TallL DallL _ _ _)
   (cimpL SimpL TimpL DimpL _ _ _)
   (complete S D T _).
 
@@ -1310,8 +1508,12 @@ polarize: {P} t (A⁻: typ ⁻) P -> type.
 -: polarize (imp P₁ P₂) (t⊃ (t↓ T₁) T₂)
   <- polarize P₁ T₁
   <- polarize P₂ T₂.
+-: polarize (all P) (t∀ T)
+  <- ({t} polarize (P t) (T t)).
+-: polarize (ex P) (t↑ (t∃ [x] (t↓ (T x))))
+  <- ({t} polarize (P t) (T t)).
 
-%worlds (atom⁺ | atom⁻) (polarize _ _).
+%worlds (atom⁺ | atom⁻ | univ) (polarize _ _).
 %total P (polarize P _).
 
 %block translate: some {A}{P}{TH: th A P} 
