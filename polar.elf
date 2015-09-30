@@ -1,4 +1,6 @@
 %{ Focusing for polarized logic. (Unicode variant) }%
+%{ Robert J. Simmons }%
+%{ Includes extensions to first-order logic (post-thesis) by Sean McLaughlin }%
 
 small: type.
 big: type.
